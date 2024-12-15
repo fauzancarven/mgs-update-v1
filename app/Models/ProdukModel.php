@@ -82,4 +82,7 @@ class ProdukModel extends Model
         return $dt->generate();
     }
     
+    public function add_produk($method){
+        echo json_encode(array("status"=>true,"data"=>$method["data"])); 
+    }
 }

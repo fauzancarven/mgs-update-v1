@@ -10,6 +10,7 @@ use App\Models\ProdukunitModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianModel;
 use App\Models\ProdukvarianvalueModel;
+use App\Models\ProdukModel;
 use App\Models\VendorModel;
 use Config\Services; 
 
@@ -189,9 +190,10 @@ class ActionController extends BaseController
     }
     public function produk_add(){
         $request = Services::request();
-        $models = new ProdukvarianvalueModel(); 
+        $models = new ProdukModel(); 
         if ($request->getMethod(true) === 'POST') {  
-            
+            $postData = $request->getPost(); 
+            echo $models->add_produk($postData); 
         }
     }
     public function item_unit_add(){ 

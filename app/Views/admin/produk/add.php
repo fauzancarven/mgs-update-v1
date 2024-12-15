@@ -730,9 +730,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             for(var i = 0; i< arr_varian_detail_old.length;i++){
                 var truedata = 0; 
                 $.each(arr_varian_detail_old[i]["varian"], function(key1, value1) {  
-                    $.each(key, function(key2, value2) { 
-                        console.log(key2,key1) 
-                        console.log(value1,value2) 
+                    $.each(key, function(key2, value2) {  
                         if(key1==key2 && value1 == value2 ){
                             truedata++;
                         } 
@@ -859,8 +857,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                 </div>    
                             </div>  
                         </div>`;
-        }  
-        console.log(checkedData);
+        }   
         var headerhtml = ` 
                         <div class="form-inline p-2 w-100">
                             <div class="input-group input-group-sm w-100 ">
@@ -1004,9 +1001,17 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     
                 }   
             });
-        }
-
-        return; 
+            $(".btn-detail").click(function(){
+                var detail = $(this).parent().parent().find(".detail");
+                if($(detail).hasClass("hide")){
+                    $(detail).removeClass("hide");
+                    $(this).find("i").removeClass("fa-rotate-180");
+                }else{ 
+                    $(detail).addClass("hide");
+                    $(this).find("i").addClass("fa-rotate-180");
+                }
+            });
+        } 
     }
 
     load_data_varian();
@@ -1072,6 +1077,19 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             return; 
         } 
         
+        var arr_var = [];
+        for(var i = 0 ; i < data_varian.length;i++){    
+            let arr = {"varian": data_varian[i]["varian"],"value":[]}; 
+            for(var j = 0; j < data_varian[i]["value"].length;j++){ 
+                let value = { 
+                    "id" : data_varian[i]["value"][j]["id"],
+                    "text" : data_varian[i]["value"][j]["text"],
+                };
+                arr["value"].push(value);
+            }   
+            arr_var.push(arr)
+        } 
+        console.log(JSON.stringify(arr_var));
         const hargaTerendah = arr_varian_detail.reduce((min, current) => Math.min(min, current.hargajual), Infinity);
         const hargaTertinggi = arr_varian_detail.reduce((max, current) => Math.max(max, current.hargajual), -Infinity);
         var data_produk = {
@@ -1079,6 +1097,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             "name" : $("#produk-name").val(),
             "deskripsi" : $("#produk-detail").val(),
             "vendor" : $("#produk-vendor").val().join("|"), 
+            "varian" : JSON.stringify(arr_var), 
             "price_range" : (hargaTerendah == hargaTertinggi ? hargaTerendah : hargaTerendah + " - " + hargaTertinggi),
         }
         var data_produk_detail = arr_varian_detail;
@@ -1127,11 +1146,11 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 isProcessingSave = false;
                 $("#btn-add-produk").html(old_text);
  
-                Swal.fire({
-                    icon: 'error',
-                    text: xhr["responseJSON"]['message'], 
-                    confirmButtonColor: "#3085d6", 
-                });
+                // Swal.fire({
+                //     icon: 'error',
+                //     text: xhr["responseJSON"]['message'], 
+                //     confirmButtonColor: "#3085d6", 
+                // });
             }
         }); 
     });
