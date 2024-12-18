@@ -1,5 +1,5 @@
 
-<div class="modal fade" id="modal-add-produk" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="modal-add-produk-label"  >
+<div class="modal fade" id="modal-add-produk" data-bs-focused="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="modal-add-produk-label"  >
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -77,7 +77,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     <div class="label-border-right position-relative" >
                         <span class="label-dialog">Varian</span>
                         <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="add-varian" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem;">
-                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            <i class="fas fa-plus"></i>
                             <span class="fw-bold">
                                 &nbsp;Tambah Varian
                             </span>
@@ -112,7 +112,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
     <div class="modal-dialog modal-dialog-centered">  
         <div class="modal-content" name="form-action">
             <div class="modal-header">
-                <h6 class="modal-title"><i class="fas fa-crop-alt" aria-hidden="true"></i> &nbsp;Edit Gambar</h5>
+                <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0">
@@ -435,11 +435,13 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         load_data_list_varian();
     }
     item_produk_varian_add = async function(){ 
-        if (!activeSelect2Varian) return;
+        if (!activeSelect2Varian) return; 
+        $("#modal-add-produk").modal("hide");
         Swal.fire({
             title: 'Tambah Varian Baru',
             input: 'text',
             buttonsStyling: false,
+            showCancelButton: true,
             showCancelButton: true,
             customClass: {
                 confirmButton: 'btn btn-primary mx-1',
@@ -479,10 +481,14 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     'success'
                 );  
             }
-        });
+            
+            $("#modal-add-produk").modal("show");
+        }); 
     }
     item_produk_varian_value_add = async function(){
         if (!activeSelect2VarianValue) return;
+        
+        $("#modal-add-produk").modal("hide");
         Swal.fire({
             title: 'Tambah Varian ' + $(activeSelect2VarianValue).data("type") + ' Baru',
             input: 'text',
@@ -527,6 +533,8 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     'success'
                 );  
             }
+            
+            $("#modal-add-produk").modal("show");
         });
     }
     load_data_varian = function(){
@@ -723,31 +731,28 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 // Kunci belum ada, tambahkan
                 arr_varian.push({ key: kunci, values: [nilai] });
             }
-        }
- 
-        function get_arr_val_old(key,param){
-            var value = ""; 
-            for(var i = 0; i< arr_varian_detail_old.length;i++){
-                var truedata = 0; 
-                $.each(arr_varian_detail_old[i]["varian"], function(key1, value1) {  
-                    $.each(key, function(key2, value2) {  
-                        if(key1==key2 && value1 == value2 ){
-                            truedata++;
-                        } 
-                    });   
-                });    
-                  
-                if(Object.keys(arr_varian_detail_old[i]["varian"]).length == truedata){
-                    value = arr_varian_detail_old[i][param];
-                } 
+        } 
+        function get_arr_val_old(varian_baru, tipe_harga) {
+            const varian_lama = arr_varian_detail_old.find((item) =>
+                Object.keys(varian_baru).every((k) => item.varian[k] === varian_baru[k])
+            );
+
+            if (!varian_lama) {
+                // Cari varian lama dengan kunci yang ada di varian baru
+                const varian_lama_filtered = arr_varian_detail_old.find((item) =>
+                Object.keys(varian_baru).filter((k) => item.varian[k] !== undefined).every((k) => item.varian[k] === varian_baru[k])
+                );
+
+                return varian_lama_filtered ? varian_lama_filtered[tipe_harga] : "";
             }
-            return value;
-        }  
-         
+
+            return varian_lama ? varian_lama[tipe_harga] : "";
+        } 
+
         //default add vendor
         if($("#produk-vendor").select2("data").length == 0) checkedData = false;
         for(var i = 0; i < $("#produk-vendor").select2("data").length;i++){    
-            replaceOrInsertValue("Vendor", $("#produk-vendor").select2("data")[i]["code"]); 
+            replaceOrInsertValue("vendor", $("#produk-vendor").select2("data")[i]["code"]); 
         } 
 
         for(var j = 0; j < data_varian.length;j++){  
@@ -779,7 +784,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 "varian": arr_varian_list[i],
                 "pcsM2":  (get_arr_val_old(arr_varian_list[i],"pcsM2") == "" ? "-" : get_arr_val_old(arr_varian_list[i],"pcsM2")),
                 "berat": (get_arr_val_old(arr_varian_list[i],"berat") == "" ? "0" : get_arr_val_old(arr_varian_list[i],"berat")),
-                "satuanid": (get_arr_val_old(arr_varian_list[i],"satuanid") == "" ? "1" : get_arr_val_old(arr_varian_list[i],"satuanid")),
+                "satuan_id": (get_arr_val_old(arr_varian_list[i],"satuan_id") == "" ? "1" : get_arr_val_old(arr_varian_list[i],"satuan_id")),
                 "satuantext": (get_arr_val_old(arr_varian_list[i],"satuantext") == "" ? "Pcs" : get_arr_val_old(arr_varian_list[i],"satuantext")),
                 "hargajual": (get_arr_val_old(arr_varian_list[i],"hargajual") == "" ? "0" : get_arr_val_old(arr_varian_list[i],"hargajual")),
                 "hargabeli": (get_arr_val_old(arr_varian_list[i],"hargabeli") == "" ? "0" : get_arr_val_old(arr_varian_list[i],"hargabeli")),
@@ -795,10 +800,10 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                 <div class="col-10 col-md-4 my-2"> 
                                     <div class="row">`; 
             $.each(arr_varian_detail[i]["varian"], function(key, value) {   
-                    headerVarian += `<div class="col"><span class="label-head-dialog">${key}</span></div>`;  
+                    headerVarian += `<div class="col"><span class="label-head-dialog text-capitalize">${key}</span></div>`;  
                     detailhtml +=  `<div class="col-12 col-md"> 
-                                        <span class="label-head-dialog">
-                                            <span class="d-inline-block d-md-none" style="width:70px">${key}</span>
+                                        <span class="label-head-dialog ">
+                                            <span class="d-inline-block d-md-none text-capitalize" style="width:70px">${key}</span>
                                             <span class="d-inline-block d-md-none">:</span>
                                             ${value}
                                         </span>  
@@ -824,7 +829,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                         <div class="mb-3">
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Satuan</span>
                                             <div class="input-group"> 
-                                                <select class="form-select form-select-sm satuanid" data-id="${i}" style="width:100%"></select>   
+                                                <select class="form-select form-select-sm satuan_id" data-id="${i}" style="width:100%"></select>   
                                             </div>     
                                         </div>  
                                     </div> 
@@ -944,7 +949,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 });
 
                 //  Satuan 
-                var elsatuan = $(element).find(".satuanid");  
+                var elsatuan = $(element).find(".satuan_id");  
                 elsatuan.select2({
                     placeholder: "Pilih", 
                     dropdownParent: $("#modal-add-produk .modal-content"),  
@@ -982,10 +987,10 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 })
                 .on("select2:select", function(e) {    
                     var data = e.params.data;  
-                    arr_varian_detail[$(elsatuan).data("id")]["satuanid"] = data.id; 
+                    arr_varian_detail[$(elsatuan).data("id")]["satuan_id"] = data.id; 
                     arr_varian_detail[$(elsatuan).data("id")]["satuantext"] = data.text; 
                 });   
-                var newOption = new Option(arr_varian_detail[$(elsatuan).data("id")]["satuantext"],arr_varian_detail[$(elsatuan).data("id")]["satuanid"], true, true);
+                var newOption = new Option(arr_varian_detail[$(elsatuan).data("id")]["satuantext"],arr_varian_detail[$(elsatuan).data("id")]["satuan_id"], true, true);
                 $(elsatuan).append(newOption).trigger('change'); 
                 $(elsatuan).select2("close");
  
@@ -1088,14 +1093,13 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 arr["value"].push(value);
             }   
             arr_var.push(arr)
-        } 
-        console.log(JSON.stringify(arr_var));
+        }  
         const hargaTerendah = arr_varian_detail.reduce((min, current) => Math.min(min, current.hargajual), Infinity);
         const hargaTertinggi = arr_varian_detail.reduce((max, current) => Math.max(max, current.hargajual), -Infinity);
         var data_produk = {
             "category" : $("#produk-kategori").val(),
             "name" : $("#produk-name").val(),
-            "deskripsi" : $("#produk-detail").val(),
+            "detail" : $("#produk-detail").val(),
             "vendor" : $("#produk-vendor").val().join("|"), 
             "varian" : JSON.stringify(arr_var), 
             "price_range" : (hargaTerendah == hargaTertinggi ? hargaTerendah : hargaTerendah + " - " + hargaTertinggi),
@@ -1108,9 +1112,10 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         if (isProcessingSave) {
             return;
         }  
+
         isProcessingSave = true; 
         let old_text = $(this).html();
-        $(this).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(this).html('<span class="spinner-border spinner-border-sm pe-2"></span><span class="ps-2" role="status">Loading...</span>');
         
         $.ajax({ 
             dataType: "json",
@@ -1121,17 +1126,16 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 "detail": data_produk_detail,
                 "image": data_produk_image, 
             },
-            success: function(data) {   
+            success: function(data) {    
                 isProcessingSave = false;
-                $(this).html(old_text); 
-
+                $("#btn-add-produk").html(old_text);
                 if(data["status"]===true){
                     Swal.fire({
                         icon: 'success',
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
-                    }).then((result) => { 
-                       // $("#modal-add-produk").modal("hide");
+                    }).then((result) => {  
+                       $("#modal-add-produk").modal("hide");
                     }); 
                 }else{
                     Swal.fire({
@@ -1140,17 +1144,11 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                         confirmButtonColor: "#3085d6", 
                     });
                 }
-            },
-            error : function(xhr, textStatus, errorThrown){ 
                 
+            },
+            error : function(xhr, textStatus, errorThrown){  
                 isProcessingSave = false;
-                $("#btn-add-produk").html(old_text);
- 
-                // Swal.fire({
-                //     icon: 'error',
-                //     text: xhr["responseJSON"]['message'], 
-                //     confirmButtonColor: "#3085d6", 
-                // });
+                $("#btn-add-produk").html(old_text); 
             }
         }); 
     });

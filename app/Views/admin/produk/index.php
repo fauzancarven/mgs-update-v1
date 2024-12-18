@@ -42,9 +42,9 @@
         <table class="table table-borderless table-hover mb-0" id="table-produk">
             <thead class=" ">
                 <tr class="">
-                    <th class="py-lg-4 py-3 px-lg-2 px-0">Kategori</th>  
                     <th data-priority="1" class="py-lg-4 py-3 px-lg-2 px-0">Kode</th> 
                     <th data-priority="3" class="py-lg-4 py-3 px-lg-2 px-0">Nama</th>  
+                    <th class="py-lg-4 py-3 px-lg-2 px-0">Kategori</th>  
                     <th class="py-lg-4 py-3 px-lg-2 px-0">Vendor</th>  
                     <th class="py-lg-4 py-3 px-lg-2 px-0">Harga</th>  
                     <th data-priority="2" class="py-lg-4 py-3 px-lg-2 px-0 text-end"><i class="ti-settings"></i></th>
@@ -89,13 +89,16 @@
             }
         }, 
         "columns": [
-            { data: "category" }, 
             { data: "code"},
             { data: "name" }, 
-            { data: "vendor" }, 
-            { data: "price_range" }, 
+            { data: "category_name" ,orderable: false }, 
+            { data: "vendor_detail" ,orderable: false }, 
+            { data: "price_range" ,orderable: false }, 
             { data: "action" ,orderable: false , className:"action-td"}, 
-        ], 
+        ],
+        "rowCallback": function(row, data) {
+            $(row).attr('data-id', data.id);
+        } 
     }); 
     $("#input-search-data").keyup(function(){
         table.ajax.reload(null, false).responsive.recalc().columns.adjust();
@@ -103,6 +106,129 @@
     $("#btn-search-data").click(function(){
         table.ajax.reload(null, false).responsive.recalc().columns.adjust();
     })
+
+      // Tampilkan detail ketika baris diklik
+    $('#table-produk tbody button').on('click', function(event) {
+        event.stopPropagation();
+    }); 
+    table.on('click', 'tr', function(event) {
+        var target = $(event.target);  
+        if (
+            target.closest('button').length ||  
+            target.parents().hasClass("varian-item") ||  
+            target.parents().hasClass("varian")  ||  
+            target.parent().hasClass("varian-item") ||  
+            target.parent().hasClass("varian") ||  
+            target.hasClass("varian") ||  
+            target.hasClass("varian-item") ||  
+            target.closest('th').length
+        ) {
+            return;
+        }
+
+        if (table.row(this).child.isShown()) {
+            table.row(this).child.hide();
+        } else {
+            var data = table.row(this).data(); 
+            var detailHtml = `  
+                        <div class="row m-2 border-bottom varian">
+                            <div class="col-12 col-md-4 mb-2 d-none d-md-block"> 
+                                <div class="row"> 
+                                    <span class="label-head-dialog">Varian</span>   
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-8 mb-2 d-none d-md-block">
+                                <div class="row"> 
+                                    <div class="col-2"> 
+                                        <span class="label-head-dialog">Berat</span>   
+                                    </div> 
+                                    <div class="col-2"> 
+                                        <span class="label-head-dialog">Satuan</span>   
+                                    </div> 
+                                    <div class="col-2"> 
+                                        <span class="label-head-dialog">Isi /M<sup>2</sup></span>   
+                                    </div> 
+                                    <div class="col-3"> 
+                                        <span class="label-head-dialog">Harga Beli</span>   
+                                    </div> 
+                                    <div class="col-3"> 
+                                        <span class="label-head-dialog">Harga Jual</span>   
+                                    </div> 
+                                </div>
+                            </div> 
+                        </div> `; 
+            $.each(JSON.parse(data.produk_detail), function(index, value) {
+            //     detailHtml += '<tr><td>' + value.nama_produk + '</td><td>' + value.harga + '</td></tr>';
+                detailHtml +=  `
+                            <div class="row m-2 border-bottom varian-item" data-id="${index}">
+                                <div class="col-10 col-md-4 my-2"> 
+                                    <div class="row">
+                                        <div class="col-12 col-md"> 
+                                            <span class="label-head-dialog ">  
+                                                ${value.varian}
+                                            </span>  
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="col-1 col-md-0 my-2 d-inline-block d-md-none"> 
+                                    <button class="btn btn-sm btn-primary btn-detail"><i class="fa-solid fa-chevron-up"></i></button>
+                                </div>
+                                <div class="col-12 col-md-8 my-2 detail">
+                                    <div class="row"> 
+                                        <div class="col-6 col-md-2 px-1"> 
+                                            <div class="mb-3">
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Berat</span>
+                                                <div class="input-group mb-3"> 
+                                                    <input type="text" class="form-control form-control-sm input-form berat" value="${value["berat"]}" data-id="${index}" disabled>
+                                                    <span class="input-group-text font-std">(g)</span>
+                                                </div> 
+                                            </div>
+                                        </div> 
+                                        <div class="col-6 col-md-2 px-1">  
+                                            <div class="mb-3">
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Satuan</span>
+                                                <div class="input-group"> 
+                                                    <select class="form-select form-select-sm satuan_id" data-id="${index}" style="width:100%" disabled>
+                                                        <option selected>${value["name"]}</option>
+                                                    </select>   
+                                                </div>     
+                                            </div>  
+                                        </div> 
+                                        <div class="col-12 col-md-2 px-1"> 
+                                            <div class="mb-3">
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Isi M/<sup>2</sup></span>
+                                                <div class="input-group"> 
+                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="${index}" value="${value["pcsm2"]}" disabled>
+                                                </div>   
+                                            </div>  
+                                        </div> 
+                                        <div class="col-6 col-md-3 px-1"> 
+                                            <div class="mb-3">
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga Beli</span>
+                                                <div class="input-group">  
+                                                    <span class="input-group-text font-std">Rp.</span> 
+                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="${index}" value="${value["hargabeli"]}" disabled>
+                                                </div>   
+                                            </div>  
+                                        </div> 
+                                        <div class="col-6 col-md-3 px-1"> 
+                                            <div class="mb-3">
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga Jual</span>
+                                                <div class="input-group"> 
+                                                    <span class="input-group-text font-std">Rp.</span>
+                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="${index}" value="${value["hargajual"]}" disabled>
+                                                </div>   
+                                            </div>      
+                                        </div> 
+                                    </div>    
+                                </div>   
+                            </div>  `;
+            }); 
+            table.row(this).child(detailHtml, { className: 'child-row-baru' }).show();
+        }
+
+    }); 
+
     add_click = function(el){ 
          // INSERT LOADER BUTTON
          if (isProcessingAdd) {
@@ -210,13 +336,7 @@
                 });
             }
             isProcessingDelete = false;
-            $(el).html(old_text);
-
-            Swal.fire({
-                icon: 'error',
-                text: xhr["responseJSON"]['message'], 
-                confirmButtonColor: "#3085d6", 
-            });
+            $(el).html(old_text); 
         });
     }
 
