@@ -1,1136 +1,637 @@
-<?= $this->extend('website/layouts/main') ?>
+      
+<?php $this->extend('website/template'); ?>
 
-<?= $this->section('content') ?>
- <!-- ========================  Header content ======================== -->
-
- <section class="header-content">
-
-<div class="owl-slider">
-
-    <!-- === slide item === -->
-
-    <div class="item" style="background-image:url(<?= base_url()?>assets/images/carousel/brj_2.png)">
-        <div class="box">
-            <div class="container text-center">
-                <h2 class="title animated h1" data-animation="fadeInDown">Industrial Architecture</h2>
-                <div class="animated" data-animation="fadeInUp">
-                    Bata Expose dan Bata Tempel merupakan material finishing yang sangat khas untuk arsitektur Industrial yang dipadukan dengan furniture recycle.
-                </div>
-                <div class="animated" data-animation="fadeInUp">
-
-                    <a href="https://wa.me/6285217952625" target="_blank" class="btn btn-clean"> Hubungi Kami</a>
-                    <a href="" target="_blank" class="btn btn-main"><i class="icon icon-cart"></i> Lihat Produk</a>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- === slide item === -->
-
-    <div class="item" style="background-image:url(<?= base_url()?>assets/images/carousel/brj_1.png)">
-        <div class="box">
-            <div class="container text-center">
-                <h2 class="title animated h1" data-animation="fadeInDown">Modern & Classic Taste</h2>
-                <div class="animated" data-animation="fadeInUp">Produk Bata yang tinggi peminat dan tak lekang oleh waktu sangat cocok dipakai untuk Arsitektur modern ataupun klasik</div>
-                <div class="animated" data-animation="fadeInUp">
-                    <a href="https://wa.me/6285217952625" target="_blank" class="btn btn-clean"> Hubungi Kami</a>
-                    <a href="" target="_blank" class="btn btn-main"><i class="icon icon-cart"></i> Lihat Produk</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- === slide item === -->
-
-    <div class="item" style="background-image:url(<?= base_url()?>assets/images/carousel/brj_3.png)">
-        <div class="box">
-            <div class="container text-center">
-                <h2 class="title animated h1" data-animation="fadeInDown">
-                    Multipurpose Product
-                </h2>
-                <div class="desc animated" data-animation="fadeInUp">
-                    Bata Expose dan Bata Tempel bisa digunakan di berbagai bagian rumah seperti dinding, pagar maupun fasad rumah.
-                </div>
-                <div class="animated" data-animation="fadeInUp">
-                    <a href="https://wa.me/6285217952625" target="_blank" class="btn btn-clean"> Hubungi Kami</a>
-                    <a href="" target="_blank" class="btn btn-main"><i class="icon icon-cart"></i> Lihat Produk</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div> <!--/owl-slider-->
-</section>
-
-<!-- ========================  Icons slider ======================== -->
-
-
-
-<!-- ========================  Products widget ======================== -->
-
-<section class="products">
-
-<div class="container">
-
-    <!-- === header title === -->
-
-    <header id="product">
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8 text-center">
-                <h2 class="title">Popular products</h2>
-                <div class="text">
-                    <p>Produk Best Seller kami</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="row">
-
-        <!-- === product-item 1 === -->
-
-        <div class="col-md-4 col-xs-6">
-
-            <article>
-                <div class="info">
-                    <span class="add-favorite added">
-                        <a href="javascript:void(0);" data-title="Add to favorites" data-title-added="Added to favorites list"><i class="icon icon-heart"></i></a>
-                    </span>
-                    <span>
-                        <a href="#product-1" class="mfp-open" data-title="Quick wiew"><i class="icon icon-eye"></i></a>
-                    </span>
-                </div>
-                <div class="btn btn-add">
-                    <i class="icon icon-cart"></i>
-                </div>
-                <div class="figure-grid">
-                    <div class="image">
-                        <a href="#product-1" class="mfp-open">
-                            <img src="<?= base_url()?>assets/images/product/Bata-Expose-Gat-10.png" alt="" width="300px" />
-                        </a>
-                    </div>
-                    <div class="text">
-                        <h2 class="title h4">
-                            <a href="#">Bata Expose Gat 10</a>
-                        </h2>
-                        <h5 class="title h6">21 x 10 x 5 cm</h5> 
-                        <sup>Rp. 3000,- /Pcs</sup> 
-                        <span class="description clearfix">Gubergren amet dolor ea diam takimata consetetur facilisis blandit et aliquyam lorem ea duo labore diam sit et consetetur nulla</span>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- === product-item 2 === -->
-
-        <div class="col-md-4 col-xs-6">
-            <article>
-                <div class="info">
-                    <span class="add-favorite added">
-                        <a href="javascript:void(0);" data-title="Add to favorites" data-title-added="Added to favorites list"><i class="icon icon-heart"></i></a>
-                    </span>
-                    <span>
-                        <a href="#product-2" class="mfp-open" data-title="Quick wiew"><i class="icon icon-eye"></i></a>
-                    </span>
-                </div>
-                <div class="btn btn-add">
-                    <i class="icon icon-cart"></i>
-                </div>
-                <div class="figure-grid">
-                    <div class="image">
-                        <a href="#product-2" class="mfp-open">
-                            <img src="<?= base_url()?>assets/images/product/Bata-Expose-MRC-Natural.png" alt="" width="300px" />
-                        </a>
-                    </div>
-                    <div class="text">
-                        <h2 class="title h4"><a href="#">Bata Expose MRC Natural</a></h2> 
-                        <h5 class="title h6">20 x 10 x 5 cm</h5> 
-                        <sup>Rp. 2.500,- /Pcs</sup> 
-                        <span class="description clearfix">Gubergren amet dolor ea diam takimata consetetur facilisis blandit et aliquyam lorem ea duo labore diam sit et consetetur nulla</span>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- === product-item === -->
-
-        <div class="col-md-4 col-xs-6">
-            <article>
-                <div class="info">
-                    <span class="add-favorite added">
-                        <a href="javascript:void(0);" data-title="Add to favorites" data-title-added="Added to favorites list"><i class="icon icon-heart"></i></a>
-                    </span>
-                    <span>
-                        <a href="#product-3" class="mfp-open" data-title="Quick wiew"><i class="icon icon-eye"></i></a>
-                    </span>
-                </div>
-                <div class="btn btn-add">
-                    <i class="icon icon-cart"></i>
-                </div>
-                <div class="figure-grid"> 
-                    <div class="image">
-                        <a href="#product-3" class="mfp-open">
-                            <img src="<?= base_url()?>assets/images/product/Bata-Expose-Konkaaf.png" alt="" width="300px" />
-                        </a>
-                    </div>
-                    <div class="text">
-                        <h2 class="title h4"><a href="#">Bata Expose Konkaaf</a></h2>
-                        <h5 class="title h6">20 x 10 x 5 cm</h5> 
-                        <sup>Rp. 2.500,- /Pcs</sup> 
-                        <span class="description clearfix">Gubergren amet dolor ea diam takimata consetetur facilisis blandit et aliquyam lorem ea duo labore diam sit et consetetur nulla</span>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- === product-item === -->
-
-        <div class="col-md-4 col-xs-6">
-            <article>
-                <div class="info">
-                    <span class="add-favorite added">
-                        <a href="javascript:void(0);" data-title="Add to favorites" data-title-added="Added to favorites list"><i class="icon icon-heart"></i></a>
-                    </span>
-                    <span>
-                        <a href="#product-4" class="mfp-open" data-title="Quick wiew"><i class="icon icon-eye"></i></a>
-                    </span>
-                </div>
-                <div class="btn btn-add">
-                    <i class="icon icon-cart"></i>
-                </div>
-                <div class="figure-grid">
-                    <div class="image">
-                        <a href="#product-4" class="mfp-open">
-                            <img src="<?= base_url()?>assets/images/product/Bata-Tempel-GND.png" alt="" width="300px" /> 
-                        </a>
-                    </div>
-                    <div class="text">
-                        <h2 class="title h4"><a href="#">Bata Tempel GND Reguler</a></h2>
-                        <h5 class="title h6">22.5 x 5.5 x 2 cm</h5> 
-                        <sup>Rp. 130.000,- /m2</sup> 
-                        <span class="description clearfix">Gubergren amet dolor ea diam takimata consetetur facilisis blandit et aliquyam lorem ea duo labore diam sit et consetetur nulla</span>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- === product-item === -->
-
-        <div class="col-md-4 col-xs-6">
-            <article>
-                <div class="info">
-                    <span class="add-favorite added">
-                        <a href="javascript:void(0);" data-title="Add to favorites" data-title-added="Added to favorites list"><i class="icon icon-heart"></i></a>
-                    </span>
-                    <span>
-                        <a href="#product-5" class="mfp-open" data-title="Quick wiew"><i class="icon icon-eye"></i></a>
-                    </span>
-                </div>
-                <div class="btn btn-add">
-                    <i class="icon icon-cart"></i>
-                </div>
-                <div class="figure-grid"> 
-                    <div class="image">
-                        <a href="#product-5" class="mfp-open">
-                            <img src="<?= base_url()?>assets/images/product/Bata-Tempel-Trecut.png" alt="" width="300px" />  
-                        </a>
-                    </div>
-                    <div class="text">
-                        <h2 class="title h4"><a href="#">Bata Tempel Trecut</a></h2>
-                        <h5 class="title h6">23 x 5.5 x 2 cm</h5> 
-                        <sup>Rp. 135.000,- /m2</sup> 
-                        <span class="description clearfix">Gubergren amet dolor ea diam takimata consetetur facilisis blandit et aliquyam lorem ea duo labore diam sit et consetetur nulla</span>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- === product-item === -->
-
-        <div class="col-md-4 col-xs-6">
-            <article>
-                <div class="info">
-                    <span class="add-favorite added">
-                        <a href="javascript:void(0);" data-title="Add to favorites" data-title-added="Added to favorites list"><i class="icon icon-heart"></i></a>
-                    </span>
-                    <span>
-                        <a href="#product-6" class="mfp-open" data-title="Quick wiew"><i class="icon icon-eye"></i></a>
-                    </span>
-                </div>
-                <div class="btn btn-add">
-                    <i class="icon icon-cart"></i>
-                </div>
-                <div class="figure-grid">
-                    <div class="image">
-                        <a href="#product-6" class="mfp-open">
-                            <img src="<?= base_url()?>assets/images/product/Bata-Tempel-MOGEN-Grey-Bevel.png" alt="" width="300px" />  
-                        </a>
-                    </div>
-                    <div class="text">
-                        <h2 class="title h4"><a href="#">Bata Tempel Mogen</a></h2>
-                        <h5 class="title h6">23 x 7 x 1 cm</h5> 
-                        <sup>Rp. 165.000,- /m2</sup> 
-                        <span class="description clearfix">Gubergren amet dolor ea diam takimata consetetur facilisis blandit et aliquyam lorem ea duo labore diam sit et consetetur nulla</span>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-    </div> <!--/row-->
-    <!-- === button more === -->
-
-    <div class="wrapper-more">
-        <a href="products-grid.html" class="btn btn-main">Produk Selengkapnya</a>
-    </div>
-
-    <!-- ========================  Product info popup - quick view ======================== --> 
-
-    <div class="popup-main mfp-hide" id="product-1"> 
-        <!-- === product popup === -->
-
-        <div class="product">
-
-            <!-- === popup-title === -->
-
-            <div class="popup-title">
-                <div class="h1 title">Bata Expose Gat 10 <small>product category</small></div>
-            </div>
-
-            <!-- === product gallery === -->
-
-            <div class="owl-product-gallery">
-                <img src="<?= base_url()?>assets/images/product/Bata-Expose-Gat-10.png" alt="" width="640" />
-                <!-- <img src="assets/assets/images/product-2.png" alt="" width="640" />
-                <img src="assets/assets/images/product-3.png" alt="" width="640" />
-                <img src="assets/assets/images/product-4.png" alt="" width="640" /> -->
-            </div>
-
-            <!-- === product-popup-info === -->
-
-            <div class="popup-content">
-                <div class="product-info-wrapper">
-                    <div class="row">
-
-                        <!-- === left-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Maifacturer</strong>
-                                <span>Brand name</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Materials</strong>
-                                <span>Wood, Leather, Acrylic</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div> -->
-
-                        <!-- === right-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Available Colors</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-red"></span>
-                                    <span class="color-btn color-btn-blue checked"></span>
-                                    <span class="color-btn color-btn-green"></span>
-                                    <span class="color-btn color-btn-gray"></span>
-                                    <span class="color-btn color-btn-biege"></span>
-                                </div>
-                            </div>
-                            <div class="info-box">
-                                <strong>Choose size</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-biege">S</span>
-                                    <span class="color-btn color-btn-biege checked">M</span>
-                                    <span class="color-btn color-btn-biege">XL</span>
-                                    <span class="color-btn color-btn-biege">XXL</span>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="col-sm-12">
-                            <div class="info-box">
-                                <strong>Ukuran</strong>
-                                <span>21 x 10 x 5 cm</span>
-                            </div> 
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div>
-
-                    </div> <!--/row-->
-                </div> <!--/product-info-wrapper-->
-            </div> <!--/popup-content-->
-            <!-- === product-popup-footer === -->
-
-            <div class="popup-table">
-                <div class="popup-cell">
-                    <div class="price">
-                        <span class="h3">Rp. 3.000,- /pcs</span>
-                    </div>
-                </div>
-                <div class="popup-cell">
-                    <div class="popup-buttons">
-                        <a href="#"><span class="icon icon-eye"></span> <span class="hidden-xs">View more</span></a>
-                        <a href="javascript:void(0);"><span class="icon icon-cart"></span> <span class="hidden-xs">Buy</span></a>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!--/product-->
-    </div>  
-    <div class="popup-main mfp-hide" id="product-2">
-
-        <!-- === product popup === -->
-
-        <div class="product">
-
-            <!-- === popup-title === -->
-
-            <div class="popup-title">
-                <div class="h1 title">Bata Expose MRC Natural<small>product category</small></div>
-            </div>
-
-            <!-- === product gallery === -->
-
-            <div class="owl-product-gallery">
-                <img src="<?= base_url()?>assets/images/product/Bata-Expose-MRC-Natural.png" alt="" width="640" />
-                <!-- <img src="assets/assets/images/product-2.png" alt="" width="640" />
-                <img src="assets/assets/images/product-3.png" alt="" width="640" />
-                <img src="assets/assets/images/product-4.png" alt="" width="640" /> -->
-            </div>
-
-            <!-- === product-popup-info === -->
-
-            <div class="popup-content">
-                <div class="product-info-wrapper">
-                    <div class="row">
-
-                        <!-- === left-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Maifacturer</strong>
-                                <span>Brand name</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Materials</strong>
-                                <span>Wood, Leather, Acrylic</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div> -->
-
-                        <!-- === right-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Available Colors</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-red"></span>
-                                    <span class="color-btn color-btn-blue checked"></span>
-                                    <span class="color-btn color-btn-green"></span>
-                                    <span class="color-btn color-btn-gray"></span>
-                                    <span class="color-btn color-btn-biege"></span>
-                                </div>
-                            </div>
-                            <div class="info-box">
-                                <strong>Choose size</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-biege">S</span>
-                                    <span class="color-btn color-btn-biege checked">M</span>
-                                    <span class="color-btn color-btn-biege">XL</span>
-                                    <span class="color-btn color-btn-biege">XXL</span>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="col-sm-12">
-                            <div class="info-box">
-                                <strong>Ukuran</strong>
-                                <span>20 x 10 x 5 cm</span>
-                            </div> 
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div>
-
-                    </div> <!--/row-->
-                </div> <!--/product-info-wrapper-->
-            </div> <!--/popup-content-->
-            <!-- === product-popup-footer === -->
-
-            <div class="popup-table">
-                <div class="popup-cell">
-                    <div class="price">
-                        <span class="h3">Rp. 2.500,- /pcs</span>
-                    </div>
-                </div>
-                <div class="popup-cell">
-                    <div class="popup-buttons">
-                        <a href="#"><span class="icon icon-eye"></span> <span class="hidden-xs">View more</span></a>
-                        <a href="javascript:void(0);"><span class="icon icon-cart"></span> <span class="hidden-xs">Buy</span></a>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!--/product-->
-    </div> 
-    <div class="popup-main mfp-hide" id="product-3">
-
-        <!-- === product popup === -->
-
-        <div class="product">
-
-            <!-- === popup-title === -->
-
-            <div class="popup-title">
-                <div class="h1 title">Bata Expose Konkaaf<small>product category</small></div>
-            </div>
-
-            <!-- === product gallery === -->
-
-            <div class="owl-product-gallery">
-                <img src="<?= base_url()?>assets/images/product/Bata-Expose-Konkaaf.png" alt="" width="640" />
-                <!-- <img src="assets/assets/images/product-2.png" alt="" width="640" />
-                <img src="assets/assets/images/product-3.png" alt="" width="640" />
-                <img src="assets/assets/images/product-4.png" alt="" width="640" /> -->
-            </div>
-
-            <!-- === product-popup-info === -->
-
-            <div class="popup-content">
-                <div class="product-info-wrapper">
-                    <div class="row">
-
-                        <!-- === left-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Maifacturer</strong>
-                                <span>Brand name</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Materials</strong>
-                                <span>Wood, Leather, Acrylic</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div> -->
-
-                        <!-- === right-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Available Colors</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-red"></span>
-                                    <span class="color-btn color-btn-blue checked"></span>
-                                    <span class="color-btn color-btn-green"></span>
-                                    <span class="color-btn color-btn-gray"></span>
-                                    <span class="color-btn color-btn-biege"></span>
-                                </div>
-                            </div>
-                            <div class="info-box">
-                                <strong>Choose size</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-biege">S</span>
-                                    <span class="color-btn color-btn-biege checked">M</span>
-                                    <span class="color-btn color-btn-biege">XL</span>
-                                    <span class="color-btn color-btn-biege">XXL</span>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="col-sm-12">
-                            <div class="info-box">
-                                <strong>Ukuran</strong>
-                                <span>20 x 10 x 5 cm</span>
-                            </div> 
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div>
-
-                    </div> <!--/row-->
-                </div> <!--/product-info-wrapper-->
-            </div> <!--/popup-content-->
-            <!-- === product-popup-footer === -->
-
-            <div class="popup-table">
-                <div class="popup-cell">
-                    <div class="price">
-                        <span class="h3">Rp. 2.500,- /pcs</span>
-                    </div>
-                </div>
-                <div class="popup-cell">
-                    <div class="popup-buttons">
-                        <a href="#"><span class="icon icon-eye"></span> <span class="hidden-xs">View more</span></a>
-                        <a href="javascript:void(0);"><span class="icon icon-cart"></span> <span class="hidden-xs">Buy</span></a>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!--/product-->
-    </div> 
-    <div class="popup-main mfp-hide" id="product-4"> 
-        <!-- === product popup === -->
-
-        <div class="product">
-
-            <!-- === popup-title === -->
-
-            <div class="popup-title">
-                <div class="h1 title">Bata Tempel GND Reguler<small>product category</small></div>
-            </div>
-
-            <!-- === product gallery === -->
-
-            <div class="owl-product-gallery">
-                <img src="<?= base_url()?>assets/images/product/Bata-Tempel-GND.png" alt="" width="640" />
-                <!-- <img src="assets/assets/images/product-2.png" alt="" width="640" />
-                <img src="assets/assets/images/product-3.png" alt="" width="640" />
-                <img src="assets/assets/images/product-4.png" alt="" width="640" /> -->
-            </div>
-
-            <!-- === product-popup-info === -->
-
-            <div class="popup-content">
-                <div class="product-info-wrapper">
-                    <div class="row">
-
-                        <!-- === left-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Maifacturer</strong>
-                                <span>Brand name</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Materials</strong>
-                                <span>Wood, Leather, Acrylic</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div> -->
-
-                        <!-- === right-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Available Colors</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-red"></span>
-                                    <span class="color-btn color-btn-blue checked"></span>
-                                    <span class="color-btn color-btn-green"></span>
-                                    <span class="color-btn color-btn-gray"></span>
-                                    <span class="color-btn color-btn-biege"></span>
-                                </div>
-                            </div>
-                            <div class="info-box">
-                                <strong>Choose size</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-biege">S</span>
-                                    <span class="color-btn color-btn-biege checked">M</span>
-                                    <span class="color-btn color-btn-biege">XL</span>
-                                    <span class="color-btn color-btn-biege">XXL</span>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="col-sm-12">
-                            <div class="info-box">
-                                <strong>Ukuran</strong>
-                                <span>22.5 x 5.5 x 2 cm</span>
-                            </div> 
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div>
-
-                    </div> <!--/row-->
-                </div> <!--/product-info-wrapper-->
-            </div> <!--/popup-content-->
-            <!-- === product-popup-footer === -->
-
-            <div class="popup-table">
-                <div class="popup-cell">
-                    <div class="price">
-                        <span class="h3">Rp. 130.000,- /m2</span>
-                    </div>
-                </div>
-                <div class="popup-cell">
-                    <div class="popup-buttons">
-                        <a href="#"><span class="icon icon-eye"></span> <span class="hidden-xs">View more</span></a>
-                        <a href="javascript:void(0);"><span class="icon icon-cart"></span> <span class="hidden-xs">Buy</span></a>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!--/product-->
-    </div>  
-    <div class="popup-main mfp-hide" id="product-5">
-
-        <!-- === product popup === -->
-
-        <div class="product">
-
-            <!-- === popup-title === -->
-
-            <div class="popup-title">
-                <div class="h1 title">Bata Tempel Trecut<small>product category</small></div>
-            </div>
-
-            <!-- === product gallery === -->
-
-            <div class="owl-product-gallery">
-                <img src="<?= base_url()?>assets/images/product/Bata-Tempel-Trecut.png" alt="" width="640" />
-                <!-- <img src="assets/assets/images/product-2.png" alt="" width="640" />
-                <img src="assets/assets/images/product-3.png" alt="" width="640" />
-                <img src="assets/assets/images/product-4.png" alt="" width="640" /> -->
-            </div>
-
-            <!-- === product-popup-info === -->
-
-            <div class="popup-content">
-                <div class="product-info-wrapper">
-                    <div class="row">
-
-                        <!-- === left-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Maifacturer</strong>
-                                <span>Brand name</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Materials</strong>
-                                <span>Wood, Leather, Acrylic</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div> -->
-
-                        <!-- === right-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Available Colors</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-red"></span>
-                                    <span class="color-btn color-btn-blue checked"></span>
-                                    <span class="color-btn color-btn-green"></span>
-                                    <span class="color-btn color-btn-gray"></span>
-                                    <span class="color-btn color-btn-biege"></span>
-                                </div>
-                            </div>
-                            <div class="info-box">
-                                <strong>Choose size</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-biege">S</span>
-                                    <span class="color-btn color-btn-biege checked">M</span>
-                                    <span class="color-btn color-btn-biege">XL</span>
-                                    <span class="color-btn color-btn-biege">XXL</span>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="col-sm-12">
-                            <div class="info-box">
-                                <strong>Ukuran</strong>
-                                <span>23 x 5.5 x 2 cm</span>
-                            </div> 
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div>
-
-                    </div> <!--/row-->
-                </div> <!--/product-info-wrapper-->
-            </div> <!--/popup-content-->
-            <!-- === product-popup-footer === -->
-
-            <div class="popup-table">
-                <div class="popup-cell">
-                    <div class="price">
-                        <span class="h3">Rp. 135.000,- /m2</span>
-                    </div>
-                </div>
-                <div class="popup-cell">
-                    <div class="popup-buttons">
-                        <a href="#"><span class="icon icon-eye"></span> <span class="hidden-xs">View more</span></a>
-                        <a href="javascript:void(0);"><span class="icon icon-cart"></span> <span class="hidden-xs">Buy</span></a>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!--/product-->
-    </div> 
-    <div class="popup-main mfp-hide" id="product-6">
-
-        <!-- === product popup === -->
-
-        <div class="product">
-
-            <!-- === popup-title === -->
-
-            <div class="popup-title">
-                <div class="h1 title">Bata Tempel Mogen <small>product category</small></div>
-            </div>
-
-            <!-- === product gallery === -->
-
-            <div class="owl-product-gallery">
-                <img src="<?= base_url()?>assets/images/product/Bata-Tempel-MOGEN-Grey-Bevel.png" alt="" width="640" />
-                <!-- <img src="assets/assets/images/product-2.png" alt="" width="640" />
-                <img src="assets/assets/images/product-3.png" alt="" width="640" />
-                <img src="assets/assets/images/product-4.png" alt="" width="640" /> -->
-            </div>
-
-            <!-- === product-popup-info === -->
-
-            <div class="popup-content">
-                <div class="product-info-wrapper">
-                    <div class="row">
-
-                        <!-- === left-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Maifacturer</strong>
-                                <span>Brand name</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Materials</strong>
-                                <span>Wood, Leather, Acrylic</span>
-                            </div>
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div> -->
-
-                        <!-- === right-column === -->
-
-                        <!-- <div class="col-sm-6">
-                            <div class="info-box">
-                                <strong>Available Colors</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-red"></span>
-                                    <span class="color-btn color-btn-blue checked"></span>
-                                    <span class="color-btn color-btn-green"></span>
-                                    <span class="color-btn color-btn-gray"></span>
-                                    <span class="color-btn color-btn-biege"></span>
-                                </div>
-                            </div>
-                            <div class="info-box">
-                                <strong>Choose size</strong>
-                                <div class="product-colors clearfix">
-                                    <span class="color-btn color-btn-biege">S</span>
-                                    <span class="color-btn color-btn-biege checked">M</span>
-                                    <span class="color-btn color-btn-biege">XL</span>
-                                    <span class="color-btn color-btn-biege">XXL</span>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="col-sm-12">
-                            <div class="info-box">
-                                <strong>Ukuran</strong>
-                                <span>23 x 7 x 1 cm</span>
-                            </div> 
-                            <div class="info-box">
-                                <strong>Availability</strong>
-                                <span><i class="fa fa-check-square-o"></i> in stock</span>
-                            </div>
-                        </div>
-
-                    </div> <!--/row-->
-                </div> <!--/product-info-wrapper-->
-            </div> <!--/popup-content-->
-            <!-- === product-popup-footer === -->
-
-            <div class="popup-table">
-                <div class="popup-cell">
-                    <div class="price">
-                        <span class="h3">Rp. 165.000,- /m2</span>
-                    </div>
-                </div>
-                <div class="popup-cell">
-                    <div class="popup-buttons">
-                        <a href="#"><span class="icon icon-eye"></span> <span class="hidden-xs">View more</span></a>
-                        <a href="javascript:void(0);"><span class="icon icon-cart"></span> <span class="hidden-xs">Buy</span></a>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!--/product-->
-    </div> 
-    <!--popup-main-->
-
-
-
-</div> <!--/container-->
-</section>
-
-<!-- ========================  Stretcher widget ======================== -->
-
-<section class="stretcher-wrapper"  id="interior">
-
-<!-- === stretcher header === -->
-
-<header  >
-    <!--remove class 'hidden'' to show section header -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8 text-center">
-                <h1 class="h2 title">Popular categories</h1>
-                <div class="text">
-                    <p>
-                        Banyak media yang dapat diaplikasikan dengan produk kami
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- === stretcher === -->
-
-<ul class="stretcher">
-
-    <!-- === stretcher item === -->
-
-    <li class="stretcher-item" style="background-image:url(<?= base_url()?>assets/images/carousel/fasad.jpg);">
-        <!--logo-item-->
-        <div class="stretcher-logo">
-            <div class="text">
-                <!-- <span class="f-icon f-icon-bedroom"></span>
-                <span class="text-intro">Bedroom</span> -->
-            </div>
-        </div>
-        <!--main text-->
-        <figure>
-            <h4>Fasad Rumah</h4>
-            <figcaption>New furnishing ideas</figcaption>
-        </figure>
-        <!--anchor-->
-        <a href="#">Anchor link</a>
-    </li>
-
-    <!-- === stretcher item === -->
-
-    <li class="stretcher-item" style="background-image:url(<?= base_url()?>assets/images/carousel/pagar.jpg);">
-        <!--logo-item-->
-        <div class="stretcher-logo">
-            <div class="text">
-                <!-- <span class="f-icon f-icon-sofa"></span> -->
-                <!-- <span class="text-intro">Living room</span> -->
-            </div>
-        </div>
-        <!--main text-->
-        <figure>
-            <h4>Pagar Rumah</h4>
-            <figcaption>Discover the design table collection</figcaption>
-        </figure>
-        <!--anchor-->
-        <a href="#">Anchor link</a>
-    </li>
-
-    <!-- === stretcher item === -->
-
-    <li class="stretcher-item" style="background-image:url(<?= base_url()?>assets/images/carousel/dinding.jpg);">
-        <!--logo-item-->
-        <div class="stretcher-logo">
-            <div class="text">
-                <!-- <span class="f-icon f-icon-office"></span> -->
-                <!-- <span class="text-intro">Office</span> -->
-            </div>
-        </div>
-        <!--main text-->
-        <figure>
-            <h4>Dinding Rumah</h4>
-            <figcaption>Wardrobes vs Walk-In Closets</figcaption>
-        </figure>
-        <!--anchor-->
-        <a href="#">Anchor link</a>
-    </li>
-
-    <!-- === stretcher item === -->
-
-    <li class="stretcher-item" style="background-image:url(<?= base_url()?>assets/images/carousel/hiasan.jpg);">
-        <!--logo-item-->
-        <div class="stretcher-logo">
-            <div class="text">
-                <!-- <span class="f-icon f-icon-bathroom"></span> -->
-                <!-- <span class="text-intro">Bathroom</span> -->
-            </div>
-        </div>
-        <!--main text-->
-        <figure>
-            <h4>Secondary Skin</h4>
-            <figcaption>Creating Your Very Own Bathroom</figcaption>
-        </figure>
-        <!--anchor-->
-        <a href="#">Anchor link</a>
-    </li>
-
-    <!-- === stretcher item more=== -->
-
-    <li class="stretcher-item more">
-        <div class="more-icon">
-            <span data-title-show="Show more" data-title-hide="+"></span>
-        </div>
-        <a href="#"></a>
-    </li>
-
-</ul>
-</section>
-
-<!-- ========================  Blog Block ======================== -->
-
-<section class="blog blog-block" id="blog">
-
-<div class="container">
-
-    <!-- === blog header === -->
-
-    <header>
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8 text-center">
-                <h2 class="title">Aktivitas Terkini</h2>
-                <div class="text">
-                    <p>Blog Post</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="row">
-
-        <!-- === blog item === -->
-
-        <div class="col-sm-4">
-            <article>
-                <a href="article.html">
-                    <div class="image">
-                        <img src="<?= base_url()?>assets/images/project/project_1.png" alt="" />
-                    </div>
-                    <div class="entry entry-block">
-                        <div class="date">28 Mart 2017</div>
-                        <div class="title">
-                            <h2 class="h3">Creating the Perfect Gallery Wall </h2>
-                        </div>
-                        <div class="description">
-                            <p>
-                                You’ve finally reached this point in your life- you’ve bought your first home, moved
-                                into your very own apartment, moved out of the dorm room or you’re finally downsizing
-                                after all of your kids have left the nest.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="show-more">
-                        <span class="btn btn-main btn-block">Read more</span>
-                    </div>
-                </a>
-            </article>
-        </div>
-
-        <!-- === blog item === -->
-
-        <div class="col-sm-4">
-            <article>
-                <a href="article.html">
-                    <div class="image">
-                        <img src="<?= base_url()?>assets/images/project/project_2.png" alt="" />
-                    </div>
-                    <div class="entry entry-block">
-                        <div class="date">25 Mart 2017</div>
-                        <div class="title">
-                            <h2 class="h3">Making the Most Out of Your Kids Old Bedroom</h2>
-                        </div>
-                        <div class="description">
-                            <p>
-                                You’ve finally reached this point in your life- you’ve bought your first home, moved
-                                into your very own apartment, moved out of the dorm room or you’re finally downsizing
-                                after all of your kids have left the nest.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="show-more">
-                        <span class="btn btn-main btn-block">Read more</span>
-                    </div>
-                </a>
-            </article>
-        </div>
-
-        <!-- === blog item === -->
-
-        <div class="col-sm-4">
-            <article>
-                <a href="article.html">
-                    <div class="image">
-                        <img src="<?= base_url()?>assets/images/project/project_3.png" alt="" />
-                    </div>
-                    <div class="entry entry-block">
-                        <div class="date">28 Mart 2017</div>
-                        <div class="title">
-                            <h2 class="h3">Have a look at our new projects!</h2>
-                        </div>
-                        <div class="description">
-                            <p>
-                                You’ve finally reached this point in your life- you’ve bought your first home, moved
-                                into your very own apartment, moved out of the dorm room or you’re finally downsizing
-                                after all of your kids have left the nest.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="show-more">
-                        <span class="btn btn-main btn-block">Read more</span>
-                    </div>
-                </a>
-            </article>
-        </div>
-
-    </div> <!--/row-->
-    <!-- === button more === -->
-
-    <div class="wrapper-more">
-        <a href="ideas.html" class="btn btn-main">View all posts</a>
-    </div>
-
-</div> <!--/container-->
-</section>
-
-<!-- ========================  Banner ======================== -->
-
-<section class="banner" style="background-image:url(<?= base_url()?>assets/images/carousel/paralax.png)" id="contact">
-<div class="container">
-    <div class="row">
-        <div class="col-md-offset-2 col-md-8 text-center">
-            <h2 class="title">Our story</h2>
-            <p>
-                Bata Reguler Jakarta adalah perusahaan yang bergerak
-                di bidang penyediaan barang  
-            </p>
-            <p><a href="about.html" class="btn btn-clean">Read full story</a></p>
-        </div>
-    </div>
-</div>
-</section>
-
-<?= $this->endSection() ?>
-
+<?php $this->section('content'); ?>
  
+        <!-- SLIDER AREA START (slider-3) -->
+        <div class="ltn__slider-area ltn__slider-3  section-bg-2---">
+            <div class="ltn__slide-one-active slick-slide-arrow-1 slick-slide-dots-1">
+                <!-- ltn__slide-item -->
+                <div class="ltn__slide-item ltn__slide-item-2  ltn__slide-item-3-normal--- ltn__slide-item-3 bg-image bg-overlay-theme-black-60---" data-bg="<?= base_url() ?>assets/images/mgs-erp/slide/slide.png">
+                    <div class="ltn__slide-item-inner text-left">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6 align-self-center">
+                                    <div class="slide-item-info">
+                                        <div class="slide-item-info-inner ltn__slide-animation">
+                                            <h6 class="slide-sub-title ltn__secondary-color animated text-uppercase"><span><i class="fas fa-square-full"></i></span> Supply produk dan jasa instalasi</h6>
+                                            <h1 class="slide-title animated ">JASA PASANG</h1> 
+                                            <h3>BATA EXPOSE & BATA TEMPEL</h3> 
+                                            <h3>ROSTER ATAU LUBANG ANGIN</h3> 
+                                            <h3>PAVING BLOCK & GRASS BLOCK</h3>  
+                                            <h3>CCTV & INSTALASI JARINGAN</h3>
+                                            <div class="slide-brief animated">
+                                                <p>Kami Menawarkan Layanan yang terbaik dan profesional untuk memenuhi kebutuhan anda dan Jangan Biarkan Pemasangan Merupakan Masalah. Gunakan Jasa Pasang Kami!</p>
+                                            </div>
+                                            <div class="btn-wrapper animated">
+                                                <a href="<?= base_url()?>contact" class="theme-btn-1 btn btn-effect-1">Dapatkan Penawaran</a>
+                                                <a href="<?= base_url()?>contact" class="theme-btn-2 btn btn-effect-2">Selengkapnya...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 align-self-center "> 
+                                    <img class="image-slide" src="<?= base_url()?>assets/images/mgs-erp/slide/2.png" alt="Image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ltn__slide-item -->
+                <div class="ltn__slide-item ltn__slide-item-2  ltn__slide-item-3-normal--- ltn__slide-item-3 bg-image bg-overlay-theme-black-60---" data-bg="<?= base_url() ?>assets/images/mgs-erp/slide/slide.png">
+                    <div class="ltn__slide-item-inner  text-right text-end">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6 align-self-center "> 
+                                    <img class="image-slide" src="<?= base_url()?>assets/images/mgs-erp/slide/1.png" alt="Image">
+                                </div>
+                                <div class="col-lg-6 align-self-center">
+                                    <div class="slide-item-info">
+                                        <div class="slide-item-info-inner ltn__slide-animation">
+                                            <h6 class="slide-sub-title ltn__secondary-color animated text-uppercase"><span><i class="fas fa-square-full"></i></span> Supply produk dan jasa instalasi</h6>
+                                            <h1 class="slide-title animated ">PRODUSEN</h1>
+                                            <h3>ROSTER, BATA TEMPEL DAN BATA EXPOSE</h3>
+                                            <div class="slide-brief animated">
+                                                <p>Kami juga mempunyai pabrik roster dan bata, sehingga kami mampu menghadirkan solusi kustom yang presisi dan inovatif untuk memenuhi setiap kebutuhan proyek Anda dengan standar kualitas tertinggi.</p>
+                                            </div>
+                                            <div class="btn-wrapper animated">
+                                                <a href="<?= base_url()?>contact" class="theme-btn-1 btn btn-effect-1">Dapatkan Penawaran</a>
+                                                <a href="<?= base_url()?>contact" class="theme-btn-2 btn btn-effect-2">Selengkapnya...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <!-- ltn__slide-item -->
+                <div class="ltn__slide-item ltn__slide-item-2  ltn__slide-item-3-normal--- ltn__slide-item-3 bg-image bg-overlay-theme-black-60---" data-bg="<?= base_url() ?>assets/images/mgs-erp/slide/slide.png">
+                    <div class="ltn__slide-item-inner text-left">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6 align-self-center">
+                                    <div class="slide-item-info">
+                                        <div class="slide-item-info-inner ltn__slide-animation">
+                                            <h6 class="slide-sub-title ltn__secondary-color animated text-uppercase"><span><i class="fas fa-square-full"></i></span> Supply produk dan jasa instalasi</h6>
+                                            <h1 class="slide-title animated ">DIGITAL CREATIVE</h1> 
+                                            <h3>GRAPHIC DESIGN, VIDEO EDITING & UI / UX DESIGN</h3> 
+                                            <h3>FRONT END & BACK END DEVELOPMENT</h3> 
+                                            <h3>ADS MANAGEMENT & SOCIAL MEDIA MANAGEMENT</h3> 
+                                            <div class="slide-brief animated">
+                                                <p>kami menghadirkan kombinasi yang harmonis antara keahlian teknologi terkini dan kreativitas mendalam, membantu klien menghasilkan konten visual yang memikat, pengalaman pengguna yang intuitif, serta strategi pemasaran digital yang efektif untuk meraih kesuksesan dalam era digital ini.</p>
+                                            </div>
+                                            <div class="btn-wrapper animated">
+                                                <a href="<?= base_url()?>contact" class="theme-btn-1 btn btn-effect-1">Dapatkan Penawaran</a>
+                                                <a href="<?= base_url()?>contact" class="theme-btn-2 btn btn-effect-2">Selengkapnya...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 align-self-center "> 
+                                    <img class="image-slide" src="<?= base_url()?>assets/images/mgs-erp/slide/3.png" alt="Image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                
+                 <!-- ltn__slide-item -->
+                 <div class="ltn__slide-item ltn__slide-item-2  ltn__slide-item-3-normal--- ltn__slide-item-3 bg-image bg-overlay-theme-black-60---" data-bg="<?= base_url() ?>assets/images/mgs-erp/slide/slide.png">
+                    <div class="ltn__slide-item-inner text-right text-end">
+                        <div class="container">
+                            <div class="row"> 
+                                <div class="col-lg-6 align-self-center "> 
+                                    <img class="image-slide" src="<?= base_url()?>assets/images/mgs-erp/slide/4.png" alt="Image">
+                                </div>
+                                <div class="col-lg-6 align-self-center">
+                                    <div class="slide-item-info">
+                                        <div class="slide-item-info-inner ltn__slide-animation">
+                                            <h6 class="slide-sub-title ltn__secondary-color animated text-uppercase"><span><i class="fas fa-square-full"></i></span> Supply produk dan jasa instalasi</h6>
+                                            <h1 class="slide-title animated ">MECHANICAL ELECTRICAL</h1> 
+                                            <div class="slide-brief animated">
+                                                <p>Jasa Mechanical Electrical kami tidak hanya menawarkan solusi teknis canggih, tetapi juga menjamin keandalan sistem yang mendukung kelancaran operasional bangunan Anda.</p>
+                                            </div>
+                                            <div class="btn-wrapper animated">
+                                                <a href="<?= base_url()?>contact" class="theme-btn-1 btn btn-effect-1">Dapatkan Penawaran</a>
+                                                <a href="<?= base_url()?>contact" class="theme-btn-2 btn btn-effect-2">Selengkapnya...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <!-- ltn__slide-item -->
+                <div class="ltn__slide-item ltn__slide-item-2  ltn__slide-item-3-normal--- ltn__slide-item-3 bg-image bg-overlay-theme-black-60---" data-bg="<?= base_url() ?>assets/images/mgs-erp/slide/slide.png">
+                    <div class="ltn__slide-item-inner  text-left">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6 align-self-center">
+                                    <div class="slide-item-info">
+                                        <div class="slide-item-info-inner ltn__slide-animation">
+                                            <h6 class="slide-sub-title ltn__secondary-color animated text-uppercase"><span><i class="fas fa-square-full"></i></span> Supply produk dan jasa instalasi</h6>
+                                            <h1 class="slide-title animated ">DESIGN INTERIOR & ARSITEKTUR</h1>
+                                            <div class="slide-brief animated">
+                                                <p>Jasa Mechanical Electrical kami tidak hanya menawarkan solusi teknis canggih, tetapi juga menjamin keandalan sistem yang mendukung kelancaran operasional bangunan Anda.</p>
+                                            </div>
+                                            <div class="btn-wrapper animated">
+                                                <a href="<?= base_url()?>contact" class="theme-btn-1 btn btn-effect-1">Dapatkan Penawaran</a>
+                                                <a href="<?= base_url()?>contact" class="theme-btn-2 btn btn-effect-2">Selengkapnya...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                
+                                <div class="col-lg-6 align-self-center "> 
+                                    <img class="image-slide" src="<?= base_url()?>assets/images/mgs-erp/slide/3.png" alt="Image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- SLIDER AREA END --> 
+ 
+        <!-- ABOUT US AREA START -->
+        <div class="ltn__about-us-area pt-120 pb-120">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 align-self-center">
+                        <div class="about-us-img-wrap about-img-left">
+                            <img src="<?= base_url() ?>assets/images/mgs-erp/pro-user.png" alt="About Us Image">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 align-self-center">
+                        <div class="about-us-info-wrap">
+                            <div class="section-title-area ltn__section-title-2">
+                                <h6 class="section-subtitle ltn__secondary-color"><span><i class="fas fa-square-full"></i></span> TENTANG KAMI</h6>
+                                <h1 class="section-title"> Menciptakan Hasil Yang Memuaskan</h1>
+                                <p>Keahlian profesional kami mewujud dalam setiap proyek. Percayakan pada kami untuk hasil berkualitas tinggi </p>
+                            </div>
+                            <p>Dengan memiliki tim yang profesional dan mampu beradaptasi terhadap lingkungan kerja, kami dapat memastikan tidak akan ada keraguan dalam hasil final project bersama tim kami.</p>
+                            <div class="about-author-info d-flex">
+                                <div class="author-name-designation  align-self-center mr-30">
+                                    <!-- <h4 class="mb-0">Jerry Henson</h4>
+                                    <small>/ Shop Director</small> -->
+                                    <div class="btn-wrapper">
+                                        <a class="btn theme-btn-2 btn-effect-1" href="#">Dapatkan Penawaran</a>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ABOUT US AREA END -->
+
+        <!-- FEATURE AREA START ( Feature - 6) -->
+        <div class="ltn__feature-area bg-image-top pt-120 pb-35---" data-bg="<?= base_url()?>assets/images/mgs-erp/background/32.jpg">
+            <div class="container">
+                <div class="row bg-white pt-75 plr--5">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="section-title-area ltn__section-title-2 text-center">
+                                    <h6 class="section-subtitle ltn__secondary-color"><span><i class="fas fa-square-full"></i></span> Proses kerja</h6>
+                                    <h1 class="section-title">Bagaimana Cara Kami Berkerja ?</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-4 col-sm-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-10 text-center">
+                                    <div class="ltn__feature-icon">
+                                        <span>01</span>
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h3><a href="service-details.html">Menganalisa Kebutuhan Anda</a></h3>
+                                        <p>Kami akan menganalisa dan mengidentifikasi kebutuhan yang sesuai agar mendapatkan hasil yang sesuai harapan anda</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-10 text-center">
+                                    <div class="ltn__feature-icon">
+                                        <span>02</span>
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h3><a href="service-details.html">Perancangan Solusi</a></h3>
+                                        <p>Rancang konsep solusi yang inovatif dan sesuai dengan kebutuhan pelanggan</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-10 text-center">
+                                    <div class="ltn__feature-icon">
+                                        <span>03</span>
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h3><a href="service-details.html">Implementasi dan Pengelolaan</a></h3>
+                                        <p>Menerapkan solusi sesuai dengan rencana dan memastikan berlangsungnya operasional yang efisien dan responsif</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FEATURE AREA END -->
+
+        <!-- Services AREA START -->
+        <div class="ltn__about-us-area section-bg-1 bg-image pt-120 pb-90" data-bg="<?= base_url()?>assets/images/mgs-erp/background/31.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 align-self-center">
+                        <div class="about-us-info-wrap mb-50">
+                            <div class="section-title-area ltn__section-title-2">
+                                <h6 class="section-subtitle ltn__secondary-color"><span><i class="fas fa-square-full"></i></span> Layanan Kami</h6>
+                                <h1 class="section-title">Apa saja layanan kami?</h1>
+                                <p>Mengikuti permintaan dan kebutuhan anda sehingga kami memiliki beberapa bagian divisi tenaga ahli yang profesional sehingga dapat memenuhi kebutuhan project anda</p>
+                            </div> 
+                        </div>
+                        <div class="about-author-info d-flex">
+                            <div class="author-name-designation  align-self-center mr-30">
+                                <!-- <h4 class="mb-0">Jerry Henson</h4>
+                                <small>/ Shop Director</small> -->
+                                <div class="btn-wrapper">
+                                    <a class="btn theme-btn-2 btn-effect-1" href="<?= base_url()?>layanan">Selengkapnya...</a>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="col-lg-6 align-self-center">
+                        <div class="row">
+                            <div class="col-sm-6">                            
+                                <div class="ltn__feature-item ltn__feature-item-6 box-shadow-1">
+                                    <div class="ltn__feature-icon">
+                                        <span><i class="fa-solid fa-helmet-safety"></i></span>
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h3><a href="<?= base_url()?>layanan/jasa-pasang">Jasa Pasang</a></h3>
+                                        <p>Kami menawarkan layanan pasang yang profesional dan handal untuk memenuhi kebutuhan Anda</p>
+                                        <a class="ltn__service-btn ltn__service-btn-2" href="<?= base_url()?>layanan/jasa-pasang">lihat selengkapnya... <i class="flaticon-right-arrow"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">                            
+                                <div class="ltn__feature-item ltn__feature-item-6 box-shadow-1">
+                                    <div class="ltn__feature-icon"> 
+                                        <span><i class="fa-solid fa-plug-circle-bolt"></i></span>
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h3><a href="<?= base_url()?>layanan/mechanical-electrical">Mechanical Electrical</a></h3>
+                                        <p>kami hadir sebagai solusi terpadu untuk memenuhi kebutuhan teknologi yang semakin kompleks. </p>
+                                        <a class="ltn__service-btn ltn__service-btn-2" href="<?= base_url()?>layanan/mechanical-electrical">lihat selengkapnya... <i class="flaticon-right-arrow"></i></a>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="col-sm-6">                            
+                                <div class="ltn__feature-item ltn__feature-item-6 box-shadow-1">
+                                    <div class="ltn__feature-icon">
+                                        <span><i class="fa-solid fa-house-circle-check"></i></span>
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h3><a href="<?= base_url()?>layanan/design-interior-arsitektur">Design Interior & Arsitektur </a></h3>
+                                        <p>sebagai solusi untuk mempercantik ruangan anda</p>
+                                        <a class="ltn__service-btn ltn__service-btn-2" href="<?= base_url()?>layanan/design-interior-arsitektur">lihat selengkapnya... <i class="flaticon-right-arrow"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">                            
+                                <div class="ltn__feature-item ltn__feature-item-6 box-shadow-1">
+                                    <div class="ltn__feature-icon">
+                                        <span><i class="fa-solid fa-microchip"></i></span>
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h3><a href="<?= base_url()?>layanan/digital-creative">Digital Creative</a></h3>
+                                        <p>sebagai solusi untuk branding development media anda</p>
+                                        <a class="ltn__service-btn ltn__service-btn-2" href="<?= base_url()?>layanan/digital-creative">lihat selengkapnya... <i class="flaticon-right-arrow"></i></a>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ABOUT US AREA END -->
+
+
+        <!-- IMAGE SLIDER AREA START (img-slider-3) ( Product Section) -->
+        <div class="ltn__img-slider-area pt-120 pb-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title-area ltn__section-title-2 text-center">
+                            <h6 class="section-subtitle ltn__secondary-color"><span><i class="fas fa-square-full"></i></span> Daftar Project</h6>
+                            <h1 class="section-title">Project Terbaru Kami</h1>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row ltn__image-slider-3-active slick-arrow-1 slick-arrow-1-inner---"> 
+                    <div class="col-lg-12">
+                        <div class="ltn__img-slide-item-3 ltn__img-slide-item-3-2">
+                            <a href="portfolio-details.html">
+                                <img src="<?= base_url() ?>assets/images/mgs-erp/project/project6.png" alt="Image">
+                            </a>
+                            <div class="ltn__img-slide-info">
+                                <div class="ltn__img-slide-info-brief">
+                                    <h6>JASA PASANG BATA EXPOSE & BATA TEMPEL</h6>
+                                    <h1><a href="portfolio-details.html">PEMASANGAN BATA EXPOSE BATA TEMPEL</a></h1>
+                                </div>
+                                <div class="btn-wrapper">
+                                    <a href="portfolio-details.html" class="btn-- theme-btn-1-- btn-effect-1--">View Properties<i class="flaticon-right-arrow"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="ltn__img-slide-item-3 ltn__img-slide-item-3-2">
+                            <a href="portfolio-details.html">
+                                <img src="<?= base_url() ?>assets/images/mgs-erp/project/project1.png" alt="Image">
+                            </a>
+                            <div class="ltn__img-slide-info">
+                                <div class="ltn__img-slide-info-brief">
+                                    <h6>JASA RENOVASI RUMAH</h6>
+                                    <h1><a href="portfolio-details.html">PROGRESS KONSTRUKSI BANGUNAN</a></h1>
+                                </div>
+                                <div class="btn-wrapper">
+                                    <a href="portfolio-details.html" class="btn-- theme-btn-1-- btn-effect-1--">View Properties<i class="flaticon-right-arrow"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="ltn__img-slide-item-3 ltn__img-slide-item-3-2">
+                            <a href="portfolio-details.html">
+                                <img src="<?= base_url() ?>assets/images/mgs-erp/project/project2.png" alt="Image">
+                            </a>
+                            <div class="ltn__img-slide-info">
+                                <div class="ltn__img-slide-info-brief">
+                                    <h6>JASA RENOVASI RUMAH</h6>
+                                    <h1><a href="portfolio-details.html">PROGRESS INSTALASI KACA</a></h1>
+                                </div>
+                                <div class="btn-wrapper">
+                                    <a href="portfolio-details.html" class="btn-- theme-btn-1-- btn-effect-1--">View Properties<i class="flaticon-right-arrow"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="ltn__img-slide-item-3 ltn__img-slide-item-3-2">
+                            <a href="portfolio-details.html">
+                                <img src="<?= base_url() ?>assets/images/mgs-erp/project/project3.png" alt="Image">
+                            </a>
+                            <div class="ltn__img-slide-info">
+                                <div class="ltn__img-slide-info-brief">
+                                    <h6>JASA INTERIOR & EXTERIOR</h6>
+                                    <h1><a href="portfolio-details.html">JASA INTERIOR & EXTERIOR</a></h1>
+                                </div>
+                                <div class="btn-wrapper">
+                                    <a href="portfolio-details.html" class="btn-- theme-btn-1-- btn-effect-1--">View Properties<i class="flaticon-right-arrow"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="ltn__img-slide-item-3 ltn__img-slide-item-3-2">
+                            <a href="portfolio-details.html">
+                                <img src="<?= base_url() ?>assets/images/mgs-erp/project/project4.png" alt="Image">
+                            </a>
+                            <div class="ltn__img-slide-info">
+                                <div class="ltn__img-slide-info-brief">
+                                    <h6>JASA INTERIOR & EXTERIOR</h6>
+                                    <h1><a href="portfolio-details.html">JASA INTERIOR & EXTERIOR</a></h1>
+                                </div>
+                                <div class="btn-wrapper">
+                                    <a href="portfolio-details.html" class="btn-- theme-btn-1-- btn-effect-1--">View Properties<i class="flaticon-right-arrow"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="ltn__img-slide-item-3 ltn__img-slide-item-3-2">
+                            <a href="portfolio-details.html">
+                                <img src="<?= base_url() ?>assets/images/mgs-erp/project/project5.png" alt="Image">
+                            </a>
+                            <div class="ltn__img-slide-info">
+                                <div class="ltn__img-slide-info-brief">
+                                    <h6>JASA PASANG BATA EXPOSE & BATA TEMPEL</h6>
+                                    <h1><a href="portfolio-details.html">PEMASANGAN BATA EXPOSE</a></h1>
+                                </div>
+                                <div class="btn-wrapper">
+                                    <a href="portfolio-details.html" class="btn-- theme-btn-1-- btn-effect-1--">View Properties<i class="flaticon-right-arrow"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- IMAGE SLIDER AREA END -->
+    
+        <!-- PROGRESS BAR AREA START -->
+        <div class="ltn__progress-bar-area pt-45 pb-10 d-none">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ltn__progress-bar-wrap">
+                            <div class="ltn__progress-bar-inner">
+                                <div class="row">
+                                    <div class="col-lg-3 col-sm-6">
+                                        <div class="ltn__progress-bar-item-2 text-center">
+                                            <div class="progress" data-value='78'>
+                                                <span class="progress-left">
+                                                    <span class="progress-bar border-primary"></span>
+                                                </span>
+                                                <span class="progress-right">
+                                                    <span class="progress-bar border-primary"></span>
+                                                </span>
+                                                <div class="progress-value">
+                                                    <div class="progress-count">78<sup class="small">%</sup></div>
+                                                </div>
+                                            </div>
+                                            <div class="ltn__progress-info">
+                                                <h3>Project Done</h3>
+                                                <p>Construction Simulator</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6">
+                                        <div class="ltn__progress-bar-item-2 text-center">
+                                            <div class="progress" data-value='62'>
+                                                <span class="progress-left">
+                                                    <span class="progress-bar border-danger"></span>
+                                                </span>
+                                                <span class="progress-right">
+                                                    <span class="progress-bar border-danger"></span>
+                                                </span>
+                                                <div class="progress-value">
+                                                    <div class="progress-count">62<sup class="small">%</sup></div>
+                                                </div>
+                                            </div>
+                                            <div class="ltn__progress-info">
+                                                <h3>Country Cover</h3>
+                                                <p>Construction Simulator</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6">
+                                        <div class="ltn__progress-bar-item-2 text-center">
+                                            <div class="progress" data-value='50'>
+                                                <span class="progress-left">
+                                                    <span class="progress-bar border-success"></span>
+                                                </span>
+                                                <span class="progress-right">
+                                                    <span class="progress-bar border-success"></span>
+                                                </span>
+                                                <div class="progress-value">
+                                                    <div class="progress-count">50<sup class="small">%</sup></div>
+                                                </div>
+                                            </div>
+                                            <div class="ltn__progress-info">
+                                                <h3>Completed Co.</h3>
+                                                <p>Construction Simulator</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6">
+                                        <div class="ltn__progress-bar-item-2 text-center">
+                                            <div class="progress" data-value='90'>
+                                                <span class="progress-left">
+                                                    <span class="progress-bar border-warning"></span>
+                                                </span>
+                                                <span class="progress-right">
+                                                    <span class="progress-bar border-warning"></span>
+                                                </span>
+                                                <div class="progress-value">
+                                                    <div class="progress-count">90<sup class="small">%</sup></div>
+                                                </div>
+                                            </div>
+                                            <div class="ltn__progress-info">
+                                                <h3>Happy Clients</h3>
+                                                <p>Construction Simulator</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PROGRESS BAR AREA END -->
+ 
+        <!-- TESTIMONIAL AREA START (testimonial-7)
+        <div class="ltn__testimonial-area section-bg-1--- bg-image-top pt-115 pb-70" data-bg="<?= base_url() ?>asset/images/20.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title-area ltn__section-title-2 text-center">
+                            <h6 class="section-subtitle ltn__secondary-color"><span><i class="fas fa-square-full"></i></span> Client,s Feedback</h6>
+                            <h1 class="section-title">Kata Mereka Tentang Kami</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="row ltn__testimonial-slider-5-active slick-arrow-1">
+                    <div class="col-lg-4">
+                        <div class="ltn__testimonial-item ltn__testimonial-item-7">
+                            <div class="ltn__testimoni-info">
+                                <p><i class="flaticon-left-quote-1"></i> 
+                                    Precious ipsum dolor sit amet
+                                    consectetur adipisicing elit, sed dos
+                                    mod tempor incididunt ut labore et
+                                    dolore magna aliqua. Ut enim ad min
+                                    veniam, quis nostrud Precious ips
+                                    um dolor sit amet, consecte</p>
+                                <div class="ltn__testimoni-info-inner">
+                                    <div class="ltn__testimoni-img">
+                                        <img src="<?= base_url() ?>asset/images/testimonial/1.jpg" alt="#">
+                                    </div>
+                                    <div class="ltn__testimoni-name-designation">
+                                        <h5>Jacob William</h5>
+                                        <label>Selling Agents</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ltn__testimonial-item ltn__testimonial-item-7">
+                            <div class="ltn__testimoni-info">
+                                <p><i class="flaticon-left-quote-1"></i> 
+                                    Precious ipsum dolor sit amet
+                                    consectetur adipisicing elit, sed dos
+                                    mod tempor incididunt ut labore et
+                                    dolore magna aliqua. Ut enim ad min
+                                    veniam, quis nostrud Precious ips
+                                    um dolor sit amet, consecte</p>
+                                <div class="ltn__testimoni-info-inner">
+                                    <div class="ltn__testimoni-img">
+                                        <img src="<?= base_url() ?>asset/images/testimonial/2.jpg" alt="#">
+                                    </div>
+                                    <div class="ltn__testimoni-name-designation">
+                                        <h5>Jacob William</h5>
+                                        <label>Selling Agents</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ltn__testimonial-item ltn__testimonial-item-7">
+                            <div class="ltn__testimoni-info">
+                                <p><i class="flaticon-left-quote-1"></i> 
+                                    Precious ipsum dolor sit amet
+                                    consectetur adipisicing elit, sed dos
+                                    mod tempor incididunt ut labore et
+                                    dolore magna aliqua. Ut enim ad min
+                                    veniam, quis nostrud Precious ips
+                                    um dolor sit amet, consecte</p>
+                                <div class="ltn__testimoni-info-inner">
+                                    <div class="ltn__testimoni-img">
+                                        <img src="<?= base_url() ?>asset/images/testimonial/3.jpg" alt="#">
+                                    </div>
+                                    <div class="ltn__testimoni-name-designation">
+                                        <h5>Jacob William</h5>
+                                        <label>Selling Agents</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ltn__testimonial-item ltn__testimonial-item-7">
+                            <div class="ltn__testimoni-info">
+                                <p><i class="flaticon-left-quote-1"></i> 
+                                    Precious ipsum dolor sit amet
+                                    consectetur adipisicing elit, sed dos
+                                    mod tempor incididunt ut labore et
+                                    dolore magna aliqua. Ut enim ad min
+                                    veniam, quis nostrud Precious ips
+                                    um dolor sit amet, consecte</p>
+                                <div class="ltn__testimoni-info-inner">
+                                    <div class="ltn__testimoni-img">
+                                        <img src="<?= base_url() ?>asset/images/testimonial/4.jpg" alt="#">
+                                    </div>
+                                    <div class="ltn__testimoni-name-designation">
+                                        <h5>Jacob William</h5>
+                                        <label>Selling Agents</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        TESTIMONIAL AREA END --> 
+
+<?php $this->endSection(); ?>

@@ -6,6 +6,7 @@ class Home extends BaseController
 {
     public function index(): string
     {
-        return view('welcome_message');
+        $data["view"] = $this->response->setBody(view('website/home.php'));
+        return view('website/home',$data);
     }
 }
