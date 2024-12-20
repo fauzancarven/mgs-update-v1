@@ -7,6 +7,8 @@ use App\Models\UserModel;
 use App\Models\CustomerModel;
 use App\Models\ProvinceModel;
 use App\Models\VendorModel;
+use App\Models\ProdukModel;
+
 class MessageController extends BaseController
 {
     public function index(): string
@@ -76,6 +78,19 @@ class MessageController extends BaseController
     {   
         return $this->response->setBody(view('admin/produk/add.php')); 
     }
+    public function produk_edit($id)
+    {   
+        $models = new ProdukModel();  
+        $data["_produk"] = $models
+            ->select("*,produk.id,produk.name,produk_category.id cat_id,produk_category.name cat_name,produk.code") 
+            ->join("produk_category","produk_category.id = produk.category")
+            ->getWhere(['produk.id' => $id], 1)->getRow(); 
+        $data["_produkdetail"] = $models->getproductdetail($data["_produk"]->id); 
+        $data["_produkimage"] = $models->getproductimage($data["_produk"]->id); 
+
+        return $this->response->setBody(view('admin/produk/edit.php',$data)); 
+    }
+
 
     public function vendor_add()
     {   

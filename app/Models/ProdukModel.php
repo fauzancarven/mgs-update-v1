@@ -5,6 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;  
 use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\Codeigniter4Adapter;
+use app\helper\rupiah;
 class ProdukModel extends Model
 { 
     protected $DBGroup = 'default';
@@ -61,33 +62,26 @@ class ProdukModel extends Model
         $dt->query($query); 
 
         $dt->add('vendor_detail', function($data){
-            $html = "Vendor";
-            $split_data = explode("|", $data["vendor"]);
-            foreach ($split_data as $value) {
-                $builder = $this->db->table("vendor");  
-                $builder->select('*'); 
-                $builder->where("id",$value); 
-                $builder->orderby('id', 'DESC');
-                $builder->limit(1);
-                $query = $builder->get()->getRow(); 
-                $html .= '<span class="badge bg-success">'.$query->code.'<span class="d-none d-md-inline-block">&nbsp;-&nbsp;'.$query->name.'</span></span>'; 
-            } 
-            $html = '<div class="d-flex gap-1">'.$html.'</div>';
-            $split_varian = json_decode($data["varian"], true); 
+            $html = ""; 
+            $datas = json_decode($data["vendor"]); 
+            foreach ($datas as $varian) {  
+                $html .= '<span class="badge badge-3">'.$varian->text.'</span>';  
+            }
+ 
+            $html = '<span class="fw-bold font-std">Vendor</span><div class="d-flex gap-1">'.$html.'</div>';
+            $split_varian = json_decode($data["varian"]); 
             $html_varian = "";
-            for ($i = 0; $i < count($split_varian); $i++) { 
-                foreach ($split_varian[$i] as $k => $v) {
-                    if ($k == 'value') {
-                        foreach ($v as $val) { 
-                            $html_varian .= '<span class="badge bg-success">'.$val['text'].'</span>'; 
-                        }
-                    } else { 
-                        $html_varian .= $v."</br>"; 
-                    }
-                } 
-                $html_varian = '<div class="d-flex gap-1">'.$html_varian.'</div>';
-            }  
-            return '<div class="d-flex flex-column gap-1">'.$html.$html_varian.'</div>';
+            $data = $split_varian;
+            $i = 0;
+            foreach ($data as $varian) { 
+                $html_varian = "";
+                foreach ($varian->value as $value) {
+                    $html_varian .= '<span class="badge badge-'.fmod($i, 5).'">'.$value->text.'</span>';  
+                }
+                $i++;
+                $html .= '<span class="fw-bold font-std mt-2">'.$varian->varian.'</span><div class="d-flex gap-1">'.$html_varian.'</div>';
+            } 
+            return '<div class="d-flex flex-column gap-1">'.$html.'</div>';
         });
 
         $dt->add('produk_detail', function($data){
@@ -102,7 +96,7 @@ class ProdukModel extends Model
         
         $dt->add('produk_name', function($data){
             $folder = 'assets/images/produk/'.$data["id"]."/";
-            $default = 'assets/images/produk/default.jpg';
+            $default = 'assets/images/produk/default.png';
 
             $files = scandir($folder);
             $gambar = null;
@@ -112,22 +106,17 @@ class ProdukModel extends Model
                     $gambar = $folder . $file;
                     break;
                 }
-            }
-
-            if ($gambar) {
-                echo "<img src='$gambar' alt='Gambar'>";
-            } else {
-                echo "<img src='$default' alt='Gambar Default'>";
-            }
-
-
+            } 
            return '<div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                    <img src="'.base_url("assets/images/produk/").'" alt="...">
-                </div>
-                <div class="flex-grow-1 ms-3">
-                    This is some content from a media component. You can replace this with any content and adjust it as needed.
-                </div>
+                    <div class="flex-shrink-0 ">
+                        ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='image-produk'>" : "<img class='image-produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").' 
+                    </div>
+                    <div class="flex-grow-1 ms-3 ">
+                        <div class="d-flex flex-column gap-1">
+                            <span class="text-head-1">'.$data["name"].'</span>
+                            <span class="text-detail-1 text-truncate">'.$data["code"].' - '.$data["category_name"].'</span> 
+                        </div>
+                    </div>
                 </div>';
             return json_encode($builder->get()->getResult()); 
 
@@ -151,6 +140,15 @@ class ProdukModel extends Model
                 <div class="d-md-flex d-none"> 
                 ';
         }); 
+        $dt->edit('price_range', function ($data) { 
+
+            if (strpos($data["price_range"], '-') !== false) {
+                list($min, $max) = explode(' - ', $data["price_range"]);
+                return "Rp. " . number_format($min, 0, ',', '.') . " - Rp. " . number_format($max, 0, ',', '.');
+            } else {
+                return "Rp. " . number_format($data["price_range"], 0, ',', '.');
+            } 
+        });
         return $dt->generate();
     }
     
@@ -220,6 +218,26 @@ class ProdukModel extends Model
         $biner = base64_decode($parts[1]);
         file_put_contents($lokasi ."/". $nama_file, $biner); 
     }
+    private function ambil_gambar_base64($path_gambar) {
+       // Cek apakah file gambar ada
+        if (!file_exists($path_gambar)) {
+            return false;
+        }
+
+        // Ambil jenis file gambar
+        $jenis_gambar = mime_content_type($path_gambar);
+
+        // Baca file gambar
+        $gambar = file_get_contents($path_gambar);
+
+        // Ubah gambar ke base64
+        $base64 = base64_encode($gambar);
+
+        // Tambahkan header jenis file gambar
+        $base64 = "data:$jenis_gambar;base64,$base64";
+
+        return $base64;
+    }
     public function add_produk($method){
         $code =  $this->get_next_code($method["data"]["category"]); 
         $method["data"]["code"] =  $code;
@@ -277,5 +295,100 @@ class ProdukModel extends Model
        
  
         echo json_encode(array("status"=>true)); 
+    }
+
+    public function edit_produk($method,$id){ 
+
+        // EDIT Header PRODUK  
+        $builder = $this->db->table($this->table); 
+        $builder->set('name', $method["data"]["name"]);
+        $builder->set('detail', $method["data"]["detail"]); 
+        $builder->set('vendor', $method["data"]["vendor"]); 
+        $builder->set('price_range', $method["data"]["price_range"]); 
+        $builder->set('varian', $method["data"]["varian"]); 
+        $builder->where('id', $id);
+        $builder->update(); 
+ 
+       // EDIT DETAIL PRODUK 
+
+        //delete data lama
+        $builder = $this->db->table("produk_detail");  
+        $builder->where('ref', $id);
+        $builder->delete(); 
+
+        //insert data baru
+        foreach($method["detail"] as $row){ 
+            $row["ref"] = $id;
+            $row["varian"] = json_encode($row["varian"]); 
+            unset($row["satuantext"]);    
+            $builder = $this->db->table("produk_detail");
+            $builder->insert($row); 
+        }
+
+       
+       // ADD IMAGE PRODUK  
+       
+        //Buat folder utama
+        $folder_utama = 'assets/images/produk'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$id)) {
+            mkdir($folder_utama."/".$id, 0777, true);  
+        }
+
+        //hapus semua file di folder id tersebut
+        if (is_dir($folder_utama."/".$id)) {
+            $files = scandir($folder_utama."/".$id);
+            foreach ($files as $file) {
+                if ($file != '.' && $file != '..') {
+                    unlink($folder_utama."/".$id . '/' . $file);
+                }
+            }  
+        }
+        if (isset($data['image'])) { 
+            $no = 1;
+            foreach($method["image"] as $row){ 
+                $this->simpan_gambar_base64($row, $folder_utama."/".$id, $no);
+                $no++;
+            }
+        }
+       
+ 
+        echo json_encode(array("status"=>true)); 
+    }
+    public function getproductdetail($id){
+        $builder = $this->db->table("produk_detail");
+        $builder->join("produk_satuan","produk_satuan.id =  produk_detail.satuan_id");
+        $builder->select('produk_detail.id,berat,satuan_id,name satuantext,pcsm2,hargabeli,hargajual,varian'); 
+        $builder->where('produk_detail.ref', $id);  
+        $result =  $builder->get()->getResult();
+        $array_php = array();
+        foreach($result as $row){ 
+            $array_php[] = array(
+                'id' =>  $row->id,
+                'berat' => $row->berat,
+                'satuan_id' => $row->satuan_id,
+                'satuantext' => $row->satuantext,
+                'pcsM2' => $row->pcsm2,
+                'hargabeli' => $row->hargabeli,
+                'hargajual' => $row->hargajual,
+                'varian' =>  json_decode($row->varian),
+            );
+        } 
+        return $array_php;
+    }
+    public function getproductimage($id){
+        $folder = 'assets/images/produk/'.$id."/";  
+        $files = scandir($folder);
+        $gambar = array(); 
+        foreach ($files as $file) {
+            if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                $gambar[] = $this->ambil_gambar_base64($folder . $file); 
+            }
+        } 
+        return $gambar;
     }
 }

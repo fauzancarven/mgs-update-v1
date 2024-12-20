@@ -56,7 +56,7 @@ class ProjectModel extends Model
         $builder->join('customer', 'customer.id = customerid', 'left'); 
         $builder->join('store', 'store.StoreId = project.storeid', 'left'); 
         $builder->select('
-            date,
+            date_time,
             project.category project_category, 
             project.id project_id,
             StoreLogo,
@@ -64,7 +64,10 @@ class ProjectModel extends Model
             customer.id customer_id, 
             customer.name customer_name, 
             customer.code customer_code, 
-            customer.address customer_address
+            customer.address customer_address, 
+            status, 
+            admin,
+            project.comment comment
         '); 
         $builder->like("project.category",$search);
         $builder->orLike("StoreCode",$search);
@@ -73,57 +76,107 @@ class ProjectModel extends Model
         $builder->orLike("customer.address",$search); 
         $query = $builder->getCompiledSelect();
 
-        $dt->query($query);
-
-        $dt->add('html', function($data){
-            $date = date_create($data["date"]); 
+        $dt->query($query); 
+        $dt->edit('date_time', function($data){
+            $date = date_create($data["date_time"]);
+            return '<div class="d-flex flex-column gap-1 align-items-center">
+                        <span class="text-head-2">'.date_format($date,"d M Y").'</span>
+                        <span class="text-detail-2 text-truncate">'.date_format($date,"H:i:s").'</span> 
+                    </div>';
+        }); 
+        $dt->edit('status', function($data){
+            return '<span class="badge badge-0 badge-rounded">'.$data["status"].'</span>';
+        }); 
+        $dt->edit('comment', function($data){
+            return '<span class="badge badge-0 badge-rounded">'.$data["status"].'</span>';
+        }); 
+        $dt->add('store', function($data){
             $category = "";
-            foreach (explode("|",$data["project_category"]) as $x) {
-                $category .= '<span class="badge bg-primary text-white me-1">'.$x.'</span>';
-            }
+            foreach (explode("|",$data["project_category"]) as $index=>$x) {
+                $category .= '<span class="badge badge-'.fmod($index, 5).'">'.$x.'</span>';
+            }  
+            return '<div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 ">
+                        <img src="'.$data["StoreLogo"].'" alt="Gambar" class="image-logo-project">
+                    </div>
+                    <div class="flex-grow-1 ms-1 ">
+                        <div class="d-flex flex-column gap-1">
+                            <span class="text-head-2">'.$data["StoreCode"].'</span>
+                            <span class="text-detail-2 text-truncate"> 
+                                <div class="d-flex gap-1">
+                                '.$category.'
+                                </div>
+                            </span> 
+                        </div>
+                    </div>
+                </div>';
+        }); 
+        $dt->add('customer', function($data){
+            return '
+                <div class="d-flex flex-column gap-1 ">
+                    <span class="text-head-2">'.$data["customer_name"].'</span>
+                    <span class="text-detail-2 text-truncate">'.$data["customer_address"].'</span> 
+                </div>';
+        });
+        
+        $dt->add('action', function($data){
+        	return '
+                <div class="d-md-flex d-none"> 
+                    <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$data["project_id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
+                    <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$data["project_id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                </div>
+                <div class="d-md-none d-flex btn-action"> 
+                    <div class="dropdown">
+                        <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="ti-more-alt icon-rotate-45"></i>
+                        </a>
+                        <ul class="dropdown-menu shadow">
+                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["project_id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["project_id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                        </ul>
+                    </div>
+                <div class="d-md-flex d-none"> 
+                ';
+        });  
+        $dt->add('html', function($data){ 
         	return '  
-            <div class="card card-project">
-                <div class="row mb-4">
-                    <div class="col-6"> 
-                        <div class="d-flex mb-2 align-items-center ">
-                            <img src="'.$data["StoreLogo"].'" height="25" class="pe-2"/>
-                            <span class="category-project me-2">'.$data["StoreCode"].'</span> 
-                            <span class="mx-2">'.date_format($date,"d M Y").'</span>  
-                            <span class="mx-2">'. $category .'</span>  
-                        </div>  
-                        <span class="header-project">'.$data["customer_name"].'</span>
-                        <div class="address-project">'.$data["customer_address"].'</div>
+            <div class="project-detail">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="d-flex flex-column project-menu">
+                            <div class="menu-item selected"><i class="fa-solid fa-list-check"></i>Survey</div>
+                            <div class="menu-item"><i class="fa-solid fa-list"></i>RAB</div>
+                            <div class="menu-item"><i class="fa-solid fa-hand-holding-droplet"></i>Penawaran</div>
+                            <div class="menu-item"><i class="fa-solid fa-cart-shopping"></i>Pembelian</div>
+                            <div class="menu-item"><i class="fa-solid fa-money-bill"></i>Invoice</div>
+                            <div class="menu-item"><i class="fa-solid fa-folder-open"></i>Dokumentasi</div>
+                            <div class="menu-item">
+                                <i class="fa-regular fa-comments position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                Diskusi
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6">
-
+                    <div class="col-9 border-left">
+                        <div class="tab-content d-none" id="loader-content">
+                            <div class="d-flex justify-content-center flex-column align-items-center">
+                                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                                <span>Belum ada data yang dibuat</span>
+                            </div> 
+                        </div>
+                        <div class="h-100 d-flex justify-content-center flex-column align-items-center" id="loader-content">
+                            <div class="loading text-center">
+                                <div class="loading-spinner"></div>
+                                <div class="d-flex justify-content-center flex-column align-items-center">
+                                    <span>Sedang memuat data</span> 
+                                </div>
+                            </div> 
+                        </div>
+                         
                     </div>
-                </div>  
-                <ul class="nav nav-tabs" name="nav-tab-project-table" data-id="'.$data["project_id"].'" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" data-tab="survey" data-bs-toggle="tab" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Survey</button>
-                    </li>
-                    <li class="nav-item d-none" role="presentation"> 
-                        <button class="nav-link" data-tab="bq" type="button" data-bs-toggle="tab" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Bill of Quantity (BQ)</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-tab="po" type="button" data-bs-toggle="tab" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Pembelian</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-tab="sph" type="button" data-bs-toggle="tab" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Penawaran (SPH)</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-tab="invoice" type="button" data-bs-toggle="tab" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Invoice</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-tab="file" type="button" data-bs-toggle="tab" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">File</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-tab="diskusi" type="button" data-bs-toggle="tab" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Diskusi</button>
-                    </li>
-                </ul>
-                <div class="tab-content"> 
-                    <div class="loading-spinner" id="tab-content-project-spinner-'.$data["project_id"].'"></div>
-                    <div id="tab-content-project-'.$data["project_id"].'"></div>
                 </div>
             </div>';
         }); 

@@ -66,7 +66,8 @@ $routes->post('/action/add-data-produk-varian-value', 'ActionController::produk_
 /** ACCOUNT PRODUK */
 $routes->post('/action/add-data-produk-category', 'ActionController::produk_category_add', ['filter' => 'login']);
 $routes->post('/action/add-data-item-unit', 'ActionController::item_unit_add', ['filter' => 'login']); 
-$routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filter' => 'login']); 
+$routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filter' => 'login']);   
+$routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/$1', ['filter' => 'login']);  
  
 
 
@@ -107,5 +108,6 @@ $routes->post('/message/add-vendor', 'MessageController::vendor_add', ['filter' 
 $routes->post('/message/edit-vendor/(:num)', 'MessageController::vendor_edit/$1', ['filter' => 'login']);  
 
 $routes->post('/message/add-produk', 'MessageController::produk_add', ['filter' => 'login']);  
+$routes->post('/message/edit-produk/(:num)', 'MessageController::produk_edit/$1', ['filter' => 'login']);  
 
 

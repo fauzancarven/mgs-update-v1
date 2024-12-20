@@ -121,6 +121,27 @@ class ActionController extends BaseController
         
     }  
 
+    public function vendor_add(){
+        $request = Services::request();
+        $models = new VendorModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert($postData); 
+
+            $models->selectMax('id');
+            $query = $models->get()->getRow();
+            echo json_encode(array("status"=>true,"data"=>$query));
+        }
+    }
+    public function vendor_delete(){   
+        $request = Services::request();
+        $models = new VendorModel(); 
+        if ($request->getMethod(true) === 'POST') {  
+            $postData = $request->getPost(); 
+            echo $models->delete_vendor($postData);
+        } 
+    }  
+    
     public function project_add(){
         $request = Services::request();
         $models = new ProjectModel(); 
@@ -208,25 +229,13 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true,"data"=>$query));
         }
     }
-    public function vendor_add(){
+    public function produk_edit($id){
         $request = Services::request();
-        $models = new VendorModel(); 
-        if ($request->getMethod(true) === 'POST') {   
-            $postData = $request->getPost(); 
-            $models->insert($postData); 
-
-            $models->selectMax('id');
-            $query = $models->get()->getRow();
-            echo json_encode(array("status"=>true,"data"=>$query));
-        }
-    }
-    public function vendor_delete(){   
-        $request = Services::request();
-        $models = new VendorModel(); 
+        $models = new ProdukModel(); 
         if ($request->getMethod(true) === 'POST') {  
             $postData = $request->getPost(); 
-            echo $models->delete_vendor($postData);
-        } 
-    }  
+            echo $models->edit_produk($postData,$id); 
+        }
+    }
     
 }
