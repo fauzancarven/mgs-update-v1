@@ -14,8 +14,12 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- Dumping database structure for mgs
+CREATE DATABASE IF NOT EXISTS `mgs` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `mgs`;
+
 -- Dumping structure for table mgs.auth_activation_attempts
-DROP TABLE IF EXISTS `auth_activation_attempts`;
 CREATE TABLE IF NOT EXISTS `auth_activation_attempts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ip_address` varchar(255) NOT NULL,
@@ -28,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `auth_activation_attempts` (
 -- Dumping data for table mgs.auth_activation_attempts: ~0 rows (approximately)
 
 -- Dumping structure for table mgs.auth_groups
-DROP TABLE IF EXISTS `auth_groups`;
 CREATE TABLE IF NOT EXISTS `auth_groups` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -39,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `auth_groups` (
 -- Dumping data for table mgs.auth_groups: ~0 rows (approximately)
 
 -- Dumping structure for table mgs.auth_groups_permissions
-DROP TABLE IF EXISTS `auth_groups_permissions`;
 CREATE TABLE IF NOT EXISTS `auth_groups_permissions` (
   `group_id` int(11) unsigned NOT NULL DEFAULT 0,
   `permission_id` int(11) unsigned NOT NULL DEFAULT 0,
@@ -52,7 +54,6 @@ CREATE TABLE IF NOT EXISTS `auth_groups_permissions` (
 -- Dumping data for table mgs.auth_groups_permissions: ~0 rows (approximately)
 
 -- Dumping structure for table mgs.auth_groups_users
-DROP TABLE IF EXISTS `auth_groups_users`;
 CREATE TABLE IF NOT EXISTS `auth_groups_users` (
   `group_id` int(11) unsigned NOT NULL DEFAULT 0,
   `user_id` int(11) unsigned NOT NULL DEFAULT 0,
@@ -65,7 +66,6 @@ CREATE TABLE IF NOT EXISTS `auth_groups_users` (
 -- Dumping data for table mgs.auth_groups_users: ~0 rows (approximately)
 
 -- Dumping structure for table mgs.auth_logins
-DROP TABLE IF EXISTS `auth_logins`;
 CREATE TABLE IF NOT EXISTS `auth_logins` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ip_address` varchar(255) DEFAULT NULL,
@@ -76,9 +76,9 @@ CREATE TABLE IF NOT EXISTS `auth_logins` (
   PRIMARY KEY (`id`),
   KEY `email` (`email`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.auth_logins: ~80 rows (approximately)
+-- Dumping data for table mgs.auth_logins: ~122 rows (approximately)
 INSERT INTO `auth_logins` (`id`, `ip_address`, `email`, `user_id`, `date`, `success`) VALUES
 	(1, '::1', 'fauzancaren', NULL, '2024-10-03 20:24:15', 0),
 	(2, '::1', 'fauzancaren', NULL, '2024-10-03 20:25:35', 0),
@@ -160,10 +160,71 @@ INSERT INTO `auth_logins` (`id`, `ip_address`, `email`, `user_id`, `date`, `succ
 	(78, '::1', 'fauzancaren@gmail.com', 5, '2024-11-30 16:19:42', 1),
 	(79, '::1', 'fauzancaren@gmail.com', NULL, '2024-12-01 03:56:53', 0),
 	(80, '::1', 'fauzancaren@gmail.com', 5, '2024-12-01 03:56:59', 1),
-	(81, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-01 13:50:51', 1);
+	(81, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-01 13:50:51', 1),
+	(82, '::1', 'fauzancaren@gmail.com', 5, '2024-12-04 06:05:52', 1),
+	(83, '192.168.100.74', 'fauzancaren', NULL, '2024-12-04 07:13:12', 0),
+	(84, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-04 07:13:24', 1),
+	(85, '::1', 'fauzancaren@gmail.com', 5, '2024-12-04 16:00:24', 1),
+	(86, '192.168.100.74', 'fauzancaren', NULL, '2024-12-04 16:54:45', 0),
+	(87, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-04 16:55:00', 1),
+	(88, '::1', 'fauzancaren@gmail.com', 5, '2024-12-05 04:57:29', 1),
+	(89, '::1', 'fauzancaren@gmail.com', 5, '2024-12-10 05:04:41', 1),
+	(90, '192.168.100.52', 'fauzancaren@gmail.com', NULL, '2024-12-10 08:47:49', 0),
+	(91, '192.168.100.52', 'fauzancaren@gmail.com', NULL, '2024-12-10 08:47:55', 0),
+	(92, '192.168.100.52', 'fauzancaren@gmail.com', 5, '2024-12-10 08:48:04', 1),
+	(93, '::1', 'fauzancaren@gmail.com', 5, '2024-12-10 14:42:28', 1),
+	(94, '192.168.100.52', 'fauzancaren@gmail.com', NULL, '2024-12-10 16:52:16', 0),
+	(95, '192.168.100.52', 'fauzancaren@gmail.com', 5, '2024-12-10 16:52:22', 1),
+	(96, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-10 17:23:36', 1),
+	(97, '::1', 'fauzancaren@gmail.com', 5, '2024-12-11 19:22:37', 1),
+	(98, '192.168.100.52', 'fauzancaren@gmail.com', NULL, '2024-12-11 19:23:12', 0),
+	(99, '192.168.100.52', 'fauzancaren@gmail.com', 5, '2024-12-11 19:23:17', 1),
+	(100, '::1', 'fauzancaren@gmail.com', 5, '2024-12-12 07:50:25', 1),
+	(101, '::1', 'fauzancaren@gmail.com', 5, '2024-12-12 15:09:56', 1),
+	(102, '::1', 'fauzancaren@gmail.com', 5, '2024-12-12 16:17:43', 1),
+	(103, '192.168.100.53', 'fauzancaren@gmail.com', NULL, '2024-12-12 16:40:22', 0),
+	(104, '192.168.100.53', 'fauzancaren@gmail.com', 5, '2024-12-12 16:40:37', 1),
+	(105, '::1', 'fauzancaren@gmail.com', 5, '2024-12-12 17:04:36', 1),
+	(106, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-12 21:48:43', 1),
+	(107, '::1', 'fauzancaren@gmail.com', 5, '2024-12-13 07:19:16', 1),
+	(108, '192.168.100.47', 'admin', NULL, '2024-12-13 08:55:38', 0),
+	(109, '192.168.100.47', 'admin', NULL, '2024-12-13 08:55:46', 0),
+	(110, '192.168.100.47', 'admin', NULL, '2024-12-13 08:55:59', 0),
+	(111, '192.168.100.47', 'fauzancaren@gmail.com', 5, '2024-12-13 08:56:16', 1),
+	(112, '192.168.100.53', 'fauzancaren@gmail.com', 5, '2024-12-13 13:15:27', 1),
+	(113, '::1', 'fauzancaren@gmail.com', 5, '2024-12-14 20:20:35', 1),
+	(114, '192.168.100.74', 'fauzancaren@gmail.com', NULL, '2024-12-14 20:32:05', 0),
+	(115, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-14 20:32:18', 1),
+	(116, '::1', 'fauzancaren@gmail.com', 5, '2024-12-15 11:58:14', 1),
+	(117, '::1', 'fauzancaren@gmail.com', 5, '2024-12-17 19:19:06', 1),
+	(118, '::1', 'fauzancaren@gmail.com', 5, '2024-12-18 10:34:55', 1),
+	(119, '::1', 'fauzancaren@gmail.com', 5, '2024-12-18 19:21:34', 1),
+	(120, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-18 22:37:13', 1),
+	(121, '::1', 'fauzancaren@gmail.com', 5, '2024-12-19 15:32:48', 1),
+	(122, '::1', 'fauzancaren@gmail.com', 5, '2024-12-20 01:52:10', 1),
+	(123, '::1', 'fauzancaren@gmail.com', 5, '2024-12-20 07:48:06', 1),
+	(124, '::1', 'fauzancaren@gmail.com', 5, '2024-12-20 11:19:29', 1),
+	(125, '::1', 'fauzancaren@gmail.com', 5, '2024-12-22 16:24:07', 1),
+	(126, '::1', 'fauzancaren@gmail.com', 5, '2024-12-22 21:44:02', 1),
+	(127, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-23 03:05:50', 1),
+	(128, '::1', 'fauzancaren@gmail.com', 5, '2024-12-23 10:50:26', 1),
+	(129, '::1', 'fauzancaren', NULL, '2024-12-23 10:58:15', 0),
+	(130, '::1', 'fauzancaren@gmail.com', 5, '2024-12-23 10:58:23', 1),
+	(131, '::1', 'fauzancaren@gmail.com', 5, '2024-12-23 10:59:56', 1),
+	(132, '::1', 'fauzancaren@gmail.com', 5, '2024-12-23 11:06:21', 1),
+	(133, '::1', 'fauzancaren@gmail.com', 5, '2024-12-23 11:06:44', 1),
+	(134, '::1', 'fauzancaren@gmail.com', 5, '2024-12-23 11:07:39', 1),
+	(135, '::1', 'fauzancaren@gmail.com', 5, '2024-12-24 03:22:52', 1),
+	(136, '::1', 'fauzancaren@gmail.com', 5, '2024-12-24 09:32:57', 1),
+	(137, '::1', 'fauzancaren@gmail.com', 5, '2024-12-24 09:32:57', 1),
+	(138, '::1', 'fauzancaren@gmail.com', 5, '2024-12-24 09:32:57', 1),
+	(139, '192.168.100.74', 'fauzancaren@gmail.com', 5, '2024-12-24 15:20:34', 1),
+	(140, '::1', 'fauzancaren@gmail.com', 5, '2024-12-24 22:30:49', 1),
+	(141, '::1', 'fauzancaren@gmail.com', 5, '2024-12-25 15:19:07', 1),
+	(142, '::1', 'fauzancaren@gmail.com', 5, '2024-12-25 20:18:15', 1),
+	(143, '::1', 'fauzancaren@gmail.com', 5, '2024-12-26 02:10:01', 1);
 
 -- Dumping structure for table mgs.auth_permissions
-DROP TABLE IF EXISTS `auth_permissions`;
 CREATE TABLE IF NOT EXISTS `auth_permissions` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -174,7 +235,6 @@ CREATE TABLE IF NOT EXISTS `auth_permissions` (
 -- Dumping data for table mgs.auth_permissions: ~0 rows (approximately)
 
 -- Dumping structure for table mgs.auth_reset_attempts
-DROP TABLE IF EXISTS `auth_reset_attempts`;
 CREATE TABLE IF NOT EXISTS `auth_reset_attempts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
@@ -188,7 +248,6 @@ CREATE TABLE IF NOT EXISTS `auth_reset_attempts` (
 -- Dumping data for table mgs.auth_reset_attempts: ~0 rows (approximately)
 
 -- Dumping structure for table mgs.auth_tokens
-DROP TABLE IF EXISTS `auth_tokens`;
 CREATE TABLE IF NOT EXISTS `auth_tokens` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `selector` varchar(255) NOT NULL,
@@ -199,12 +258,18 @@ CREATE TABLE IF NOT EXISTS `auth_tokens` (
   KEY `auth_tokens_user_id_foreign` (`user_id`),
   KEY `selector` (`selector`),
   CONSTRAINT `auth_tokens_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.auth_tokens: ~0 rows (approximately)
+-- Dumping data for table mgs.auth_tokens: ~6 rows (approximately)
+INSERT INTO `auth_tokens` (`id`, `selector`, `hashedValidator`, `user_id`, `expires`) VALUES
+	(1, '904c6c835b8e1c68b84e3d72', 'c615a5053cdd23700f67fdfc8b2e2077f09c522d2be663680be9b0cf749819dd', 5, '2025-01-22 10:58:23'),
+	(2, '3424d25ae5203a4c656de49b', '22cb2cc18c9e8864aec4f7a6049ca4ad28a990206e82cd3780fff553adef7d4a', 5, '2025-01-22 10:59:56'),
+	(3, 'c1ec5f2cafadc4580a493b64', 'cfe5877309c18822777c325d8574cac526a277698f21f760cc8ce4281bb291cd', 5, '2025-01-22 11:06:21'),
+	(4, 'bd49a38205a9a5e1771f2a64', '14336a1b71609d058b632a0d1b078ad19736709ca6582232d1e5771d3328dd54', 5, '2025-01-22 11:06:44'),
+	(5, 'd82f975ffc09485be5038c9e', '1c40434d2eb7487d7bf30e78bb0e20f44064077e6866ac1accc0b18bf84f877d', 5, '2025-01-23 09:32:58'),
+	(6, 'fe5e54c83083ff63e6143ebc', '21364a69684fb87f731b0eadb88efb5307fd39e0a98b4ddbb214c7d943daa7e5', 5, '2025-01-25 02:10:01');
 
 -- Dumping structure for table mgs.auth_users_permissions
-DROP TABLE IF EXISTS `auth_users_permissions`;
 CREATE TABLE IF NOT EXISTS `auth_users_permissions` (
   `user_id` int(11) unsigned NOT NULL DEFAULT 0,
   `permission_id` int(11) unsigned NOT NULL DEFAULT 0,
@@ -217,7 +282,6 @@ CREATE TABLE IF NOT EXISTS `auth_users_permissions` (
 -- Dumping data for table mgs.auth_users_permissions: ~0 rows (approximately)
 
 -- Dumping structure for table mgs.customer
-DROP TABLE IF EXISTS `customer`;
 CREATE TABLE IF NOT EXISTS `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(10) DEFAULT NULL,
@@ -229,22 +293,24 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `telp2` varchar(15) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `instagram` varchar(15) DEFAULT NULL,
-  `village` varchar(200) DEFAULT NULL,
+  `village` int(11) DEFAULT NULL,
   `address` varchar(200) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.customer: ~4 rows (approximately)
+-- Dumping data for table mgs.customer: ~7 rows (approximately)
 INSERT INTO `customer` (`id`, `code`, `category`, `company`, `name`, `comment`, `telp1`, `telp2`, `email`, `instagram`, `village`, `address`, `created_at`, `updated_at`) VALUES
-	(3, 'CS000001', 1, '', 'Bpk Andrian', '', '081310154883', '', '', '', '27836', 'Gg. H. Jaim RT 007/03 No. 43 Kel Sudimara Pinang Kec Pinang Kota Tangerang Banten 15145', '2024-11-27 20:01:55', '2024-11-27 20:01:55'),
-	(4, 'CS000002', 1, '', 'Bpk Andrian', '', '081310154883', '', '', '', '27836', 'Gg. H. Jaim RT 007/03 No. 43 Kel Sudimara Pinang Kec Pinang Kota Tangerang Banten 15145', '2024-11-27 20:14:56', '2024-11-27 20:14:56'),
-	(5, 'CS000002', 1, '', 'Bpk Andrian', '', '081310154883', '', '', '', '27836', 'Gg. H. Jaim RT 007/03 No. 43 Kel Sudimara Pinang Kec Pinang Kota Tangerang Banten 15145', '2024-11-27 20:15:04', '2024-11-27 20:15:04'),
-	(6, 'CS000003', 1, '', 'asd', 'asdasd', '081310154883', '', '', '', '51744', 'asdasdasdasd', '2024-11-27 20:18:13', '2024-11-27 20:18:13');
+	(3, 'CS000001', 1, '', 'Bpk Hendry. SOH', '', '0811178226', '', '', '', 10658, 'Apartemen Medison Park. 10-BU. Central Park .Jakarta Barat', '2024-11-27 20:01:55', '2024-11-27 20:01:55'),
+	(4, 'CS000002', 1, '', 'Bpk Andrian', '', '081310154883', '', '', '', 27836, '0', '2024-11-27 20:14:56', '2024-11-27 20:14:56'),
+	(5, 'CS000002', 1, '', 'Bpk Andrian', '', '081310154883', '', '', '', 27836, '0', '2024-11-27 20:15:04', '2024-11-27 20:15:04'),
+	(6, 'CS000007', 2, 'PT BAJA INDAH PERKASA', 'Bpk Heri', '', '0217695357', '0217502741', '', '', 68493, 'jL.MPR IX/10 kel.cipete kec.cilandak Jaksel', '2024-11-27 20:18:13', '2024-11-27 20:18:13'),
+	(10, 'CS000006', 1, '-', 'fauzan carven', '', '0895352992663', '', '', '', 27837, 'Jl. Ciputat Raya No.59, RT.5/RW.2, Pondok Pin', '2024-12-04 17:30:57', '2024-12-04 17:30:57'),
+	(11, 'CS000005', 1, '', 'asd', 'asdasd', '081310154883', '', '', '', 51744, '0', '2024-12-04 19:14:22', '2024-12-04 19:14:22'),
+	(12, 'CS000008', 2, 'PT IKAGRIYA DARMAPERSADA', 'Ibu Jihan', '', '0215384920', '081293891985', '', '', 68547, 'Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) ', '2024-12-22 22:57:49', '2024-12-22 22:57:49');
 
 -- Dumping structure for table mgs.customercategory
-DROP TABLE IF EXISTS `customercategory`;
 CREATE TABLE IF NOT EXISTS `customercategory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -258,7 +324,6 @@ INSERT INTO `customercategory` (`id`, `name`) VALUES
 	(1, 'Reguler');
 
 -- Dumping structure for table mgs.district
-DROP TABLE IF EXISTS `district`;
 CREATE TABLE IF NOT EXISTS `district` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '0',
@@ -7501,7 +7566,6 @@ INSERT INTO `district` (`id`, `name`, `regencyid`, `provinceid`) VALUES
 	(7230, 'Yuneri', 497, 27);
 
 -- Dumping structure for table mgs.migrations
-DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE IF NOT EXISTS `migrations` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `version` varchar(255) NOT NULL,
@@ -7518,83 +7582,238 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 	(1, '2017-11-20-223112', 'Myth\\Auth\\Database\\Migrations\\CreateAuthTables', 'default', 'Myth\\Auth', 1727982473, 1),
 	(2, '2024-10-03-191248', 'App\\Database\\Migrations\\Users', 'default', 'App', 1727982803, 2);
 
+-- Dumping structure for table mgs.penawaran
+CREATE TABLE IF NOT EXISTS `penawaran` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) DEFAULT NULL,
+  `ref` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `date_create` date DEFAULT NULL,
+  `time_create` time DEFAULT NULL,
+  `storeid` int(11) DEFAULT NULL,
+  `admin` int(11) DEFAULT NULL,
+  `customerid` int(11) DEFAULT NULL,
+  `address` varchar(200) DEFAULT NULL,
+  `templateid` int(11) DEFAULT NULL,
+  `subtotal` int(11) DEFAULT NULL,
+  `discitemtotal` int(11) DEFAULT NULL,
+  `disctotal` int(11) DEFAULT NULL,
+  `grandtotal` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.penawaran: ~4 rows (approximately)
+INSERT INTO `penawaran` (`id`, `code`, `ref`, `date`, `date_create`, `time_create`, `storeid`, `admin`, `customerid`, `address`, `templateid`, `subtotal`, `discitemtotal`, `disctotal`, `grandtotal`) VALUES
+	(1, 'SPH/003/12/2024', 1, '2024-12-26', '2024-12-26', '04:26:07', 5, 5, 6, 'jL.MPR IX/10 kel.cipete kec.cilandak Jaksel', 1, 1600000, 50000, 0, 1550000),
+	(8, 'SPH/007/12/2024', 1, '2024-12-26', '2024-12-26', '11:11:04', 1, 5, 3, 'Apartemen Medison Park. 10-BU. Central Park .Jakarta Barat', 1, 260000, 0, 0, 260000);
+
+-- Dumping structure for table mgs.penawaran_detail
+CREATE TABLE IF NOT EXISTS `penawaran_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ref` int(11) DEFAULT NULL,
+  `produkid` int(11) DEFAULT NULL,
+  `text` varchar(200) DEFAULT NULL,
+  `qty` double DEFAULT NULL,
+  `satuan_id` int(11) DEFAULT NULL,
+  `satuantext` varchar(50) DEFAULT NULL,
+  `harga` int(11) DEFAULT NULL,
+  `disc` int(11) DEFAULT NULL,
+  `total` int(11) DEFAULT NULL,
+  `group` varchar(50) DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `varian` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.penawaran_detail: ~6 rows (approximately)
+INSERT INTO `penawaran_detail` (`id`, `ref`, `produkid`, `text`, `qty`, `satuan_id`, `satuantext`, `harga`, `disc`, `total`, `group`, `type`, `varian`) VALUES
+	(2, 1, 58, 'Bata Expose  MRC KD', 10, 14, 'M<sup>2</sup>', 160000, 5000, 1550000, 'RST - Roster', 'product', '[{"varian":"vendor","value":"MGS"},{"varian":"Ukuran","value":"12 x 12 x 0.5 cm"}]'),
+	(4, 8, NULL, 'Barang', 0, 0, '', 0, 0, 0, '', 'category', '[]'),
+	(5, 8, 58, 'Bata Expose  MRC KD', 1, 14, 'M<sup>2</sup>', 160000, 0, 160000, 'RST - Roster', 'product', '[{"varian":"vendor","value":"MGS"},{"varian":"Ukuran","value":"12 x 12 x 0.5 cm"}]'),
+	(6, 8, NULL, 'Jasa', 0, 0, '', 0, 0, 0, '', 'category', '[]'),
+	(7, 8, 0, 'Jasa Pasang Custom', 1, 27, 'Unit', 100000, 0, 100000, '', 'product', '[]');
+
 -- Dumping structure for table mgs.produk
-DROP TABLE IF EXISTS `produk`;
 CREATE TABLE IF NOT EXISTS `produk` (
-  `id` int(11) DEFAULT NULL,
-  `kategori` int(11) DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` int(11) DEFAULT NULL,
   `code` varchar(50) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
-  `deskripsi` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `detail` varchar(200) DEFAULT NULL,
+  `vendor` text DEFAULT NULL,
+  `price_range` varchar(50) DEFAULT NULL,
+  `varian` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.produk: ~0 rows (approximately)
+-- Dumping data for table mgs.produk: ~6 rows (approximately)
+INSERT INTO `produk` (`id`, `category`, `code`, `name`, `detail`, `vendor`, `price_range`, `varian`) VALUES
+	(6, 1, 'RST00001', 'Bata Expose  MRC KD', '', '[{"id":"4","text":"MGS - Mahiera Global Solution"},{"id":"5","text":"PWTBB - Purwakarta Bambang"}]', '160000 - 170000', '[{"varian":"Ukuran","value":[{"id":"4","text":"12 x 12 x 0.5 cm"},{"id":"6","text":"15 x 15 x 12 cm"}]}]'),
+	(7, 4, 'JBT00001', 'JP Bata Expose', '', '[{"id":"4","text":"MGS - Mahiera Global Solution"},{"id":"5","text":"PWTBB - Purwakarta Bambang"}]', '10000 - 15000', '[]'),
+	(8, 4, 'JBT00002', 'JP Bata Expose', '', '[{"id":"4","text":"MGS - Mahiera Global Solution"},{"id":"5","text":"PWTBB - Purwakarta Bambang"}]', '10000 - 15000', '[]'),
+	(9, 5, 'JAC00001', 'Jasa Service Cuci AC', '', '[{"id":"4","text":"MGS - Mahiera Global Solution"}]', '75000', '[{"varian":"Type Jasa","value":[{"id":"10","text":"AC Split 1/2 PK"},{"id":"11","text":"AC Split 3/4 PK"}]}]'),
+	(10, 2, 'BTX00001', 'Bata Tempel Mogen', 'Bata Tempel Mogen Grey adalah pilihan ideal untuk proyek renovasi atau konstruksi baru. Dengan warna abu-abu yang timeless dan tekstur yang menarik, bata tempel ini akan menambahkan kesan elegan pada ', '[{"id":"4","text":"MGS - Mahiera Global Solution"},{"id":"5","text":"PWTBB - Purwakarta Bambang"}]', '10000', '[{"varian":"Warna","value":[{"id":"1","text":"Grey"}]},{"varian":"Ukuran","value":[{"id":"4","text":"12 x 12 x 0.5 cm"}]}]'),
+	(11, 1, 'RST00002', 'Bata Expose  MRC KD', '', '[{"id":"4","text":"MGS - Mahiera Global Solution"}]', '0', '[]'),
+	(12, 1, 'RST00003', 'Bata Expose  MRC KD', '', '[{"id":"4","text":"MGS - Mahiera Global Solution"},{"id":"5","text":"PWTBB - Purwakarta Bambang"}]', '10000 - 11000', '[]');
 
 -- Dumping structure for table mgs.produk_category
-DROP TABLE IF EXISTS `produk_category`;
 CREATE TABLE IF NOT EXISTS `produk_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.produk_category: ~8 rows (approximately)
-INSERT INTO `produk_category` (`id`, `name`) VALUES
-	(2, 'Bata Tempel dan Bata Expose'),
-	(5, 'Jasa AC'),
-	(6, 'Jasa ME'),
-	(4, 'Jasa Pasang Bata'),
-	(7, 'Jasa Sipil'),
-	(3, 'Paving Block dan Grass Block'),
-	(1, 'Roster'),
-	(8, 'Tool Support');
+-- Dumping data for table mgs.produk_category: ~9 rows (approximately)
+INSERT INTO `produk_category` (`id`, `code`, `name`) VALUES
+	(1, 'RST', 'Roster'),
+	(2, 'BTX', 'Bata Tempel dan Bata Expose'),
+	(3, 'PVG', 'Paving Block dan Grass Block'),
+	(4, 'JBT', 'Jasa Pasang Bata'),
+	(5, 'JAC', 'Jasa AC'),
+	(6, 'JME', 'Jasa ME'),
+	(7, 'JSP', 'Jasa Sipil'),
+	(8, 'TSP', 'Tool Support'),
+	(12, NULL, 'asdf');
 
--- Dumping structure for table mgs.produk_unit
-DROP TABLE IF EXISTS `produk_unit`;
-CREATE TABLE IF NOT EXISTS `produk_unit` (
+-- Dumping structure for table mgs.produk_detail
+CREATE TABLE IF NOT EXISTS `produk_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `berat` double DEFAULT NULL,
+  `satuan_id` int(11) DEFAULT NULL,
+  `pcsM2` varchar(50) DEFAULT NULL,
+  `hargabeli` int(11) DEFAULT NULL,
+  `hargajual` int(11) DEFAULT NULL,
+  `ref` int(11) DEFAULT NULL,
+  `varian` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.produk_detail: ~15 rows (approximately)
+INSERT INTO `produk_detail` (`id`, `berat`, `satuan_id`, `pcsM2`, `hargabeli`, `hargajual`, `ref`, `varian`) VALUES
+	(39, 0, 1, '-', 1000, 10000, 7, '{"vendor":"MGS"}'),
+	(40, 0, 1, '-', 2000, 15000, 7, '{"vendor":"PWTBB"}'),
+	(41, 0, 1, '-', 1000, 10000, 8, '{"vendor":"MGS"}'),
+	(42, 0, 1, '-', 2000, 15000, 8, '{"vendor":"PWTBB"}'),
+	(43, 0, 27, '-', 0, 75000, 9, '{"vendor":"MGS","type jasa":"AC Split 1\\/2 PK"}'),
+	(44, 0, 27, '-', 0, 75000, 9, '{"vendor":"MGS","type jasa":"AC Split 3\\/4 PK"}'),
+	(45, 0, 1, '-', 0, 10000, 10, '{"vendor":"MGS","warna":"Grey","ukuran":"12 x 12 x 0.5 cm"}'),
+	(46, 0, 1, '-', 0, 10000, 10, '{"vendor":"PWTBB","warna":"Grey","ukuran":"12 x 12 x 0.5 cm"}'),
+	(47, 0, 1, '-', 10000, 0, 11, '{"vendor":"MGS"}'),
+	(48, 0, 1, '-', 0, 10000, 12, '{"vendor":"MGS"}'),
+	(49, 0, 1, '-', 0, 11000, 12, '{"vendor":"PWTBB"}'),
+	(58, 50000, 14, '6 Ikat', 150000, 160000, 6, '{"vendor":"MGS","ukuran":"12 x 12 x 0.5 cm"}'),
+	(59, 5000, 14, '5 Ikat', 160000, 170000, 6, '{"vendor":"MGS","ukuran":"15 x 15 x 12 cm"}'),
+	(60, 4000, 14, '5 Ikat', 140000, 170000, 6, '{"vendor":"PWTBB","ukuran":"12 x 12 x 0.5 cm"}'),
+	(61, 2000, 14, '5 Ikat', 0, 170000, 6, '{"vendor":"PWTBB","ukuran":"15 x 15 x 12 cm"}');
+
+-- Dumping structure for table mgs.produk_satuan
+CREATE TABLE IF NOT EXISTS `produk_satuan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.produk_satuan: ~27 rows (approximately)
+INSERT INTO `produk_satuan` (`id`, `code`, `name`) VALUES
+	(1, 'Pcs', 'Pcs'),
+	(2, 'Btg', 'Batang'),
+	(3, 'Buah', 'Buah'),
+	(4, 'Colt', 'Colt'),
+	(5, 'Dus', 'Dus'),
+	(6, 'Gr', 'Gram'),
+	(7, 'Hr', 'Hari'),
+	(8, 'Kg', 'Kilogram'),
+	(9, 'Klg', 'Kaleng'),
+	(10, 'Km', 'Kilometer'),
+	(11, 'Kunj', 'Kunjungan'),
+	(12, 'Lbr', 'Lembar'),
+	(13, 'Ls', 'Ls'),
+	(14, 'M2', 'M<sup>2</sup>'),
+	(15, 'M3', 'M<sup>3</sup>'),
+	(16, 'M', 'Meter'),
+	(17, 'Pack', 'Pack'),
+	(18, 'Pkt', 'Paket'),
+	(20, '-', '-'),
+	(21, 'RIT', 'RIT'),
+	(22, 'Sak', 'Sak'),
+	(23, 'SET', 'SET'),
+	(24, 'Titik', 'Titik'),
+	(25, 'Trip', 'Trip'),
+	(26, 'Truck', 'Truck'),
+	(27, 'Unit', 'Unit'),
+	(28, 'Visit', 'Visit');
+
+-- Dumping structure for table mgs.produk_varian
+CREATE TABLE IF NOT EXISTS `produk_varian` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.produk_unit: ~4 rows (approximately)
-INSERT INTO `produk_unit` (`id`, `name`) VALUES
-	(3, 'Ls'),
-	(2, 'M<sup>2</sup>'),
-	(4, 'M<sup>3</sup>'),
-	(1, 'PCS');
+-- Dumping data for table mgs.produk_varian: ~4 rows (approximately)
+INSERT INTO `produk_varian` (`id`, `name`) VALUES
+	(3, 'Type AC'),
+	(4, 'Type Jasa'),
+	(2, 'Ukuran'),
+	(1, 'Warna');
+
+-- Dumping structure for table mgs.produk_varian_value
+CREATE TABLE IF NOT EXISTS `produk_varian_value` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `varian` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.produk_varian_value: ~8 rows (approximately)
+INSERT INTO `produk_varian_value` (`id`, `name`, `varian`) VALUES
+	(1, 'Grey', 'Warna'),
+	(2, 'Red', 'Warna'),
+	(4, '12 x 12 x 0.5 cm', 'Ukuran'),
+	(5, 'White', 'Warna'),
+	(6, '15 x 15 x 12 cm', 'Ukuran'),
+	(9, '12 x 12 x 10 cm', 'Ukuran'),
+	(10, 'AC Split 1/2 PK', 'Type Jasa'),
+	(11, 'AC Split 3/4 PK', 'Type Jasa');
 
 -- Dumping structure for table mgs.project
-DROP TABLE IF EXISTS `project`;
 CREATE TABLE IF NOT EXISTS `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `customerid` int(11) DEFAULT NULL,
-  `date` date DEFAULT NULL,
+  `date_time` datetime DEFAULT NULL,
   `storeid` int(11) DEFAULT NULL,
+  `userid` int(11) DEFAULT NULL,
   `category` varchar(50) DEFAULT NULL,
   `comment` varchar(50) DEFAULT NULL,
+  `admin` varchar(50) DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.project: ~2 rows (approximately)
-INSERT INTO `project` (`id`, `customerid`, `date`, `storeid`, `category`, `comment`, `created_at`) VALUES
-	(1, 3, '2024-11-28', 1, 'JASA PASANG|CCTV', '', '2024-11-28 15:26:30'),
-	(2, 6, '2024-11-28', 9, 'ROSTER|CCTV|JASA PASANG', '', '2024-11-28 17:26:32');
+-- Dumping data for table mgs.project: ~5 rows (approximately)
+INSERT INTO `project` (`id`, `customerid`, `date_time`, `storeid`, `userid`, `category`, `comment`, `admin`, `status`, `created_at`) VALUES
+	(1, 3, '2024-11-28 00:00:00', 1, NULL, 'JASA PASANG|CCTV', '', 'Syahrul Fauzan', 'NEW', '2024-11-28 15:26:30'),
+	(2, 6, '2024-11-28 00:00:00', 2, NULL, 'ROSTER|CCTV|JASA PASANG', '', 'Syahrul Fauzan', 'NEW', '2024-11-28 17:26:32'),
+	(3, 6, '2024-12-20 00:00:00', 1, NULL, 'BATA|ROSTER|ELEKTRIKAL|JASA PASANG|SIPIL', '', 'Syahrul Fauzan', 'NEW', '2024-12-20 05:06:23'),
+	(4, 6, NULL, 5, NULL, 'CCTV', '', NULL, NULL, '2024-12-23 06:32:02'),
+	(5, 6, '2024-12-23 06:34:43', 3, 5, 'ROSTER', '', 'ID00001 - syahrul fauzan', NULL, '2024-12-23 06:34:43');
 
--- Dumping structure for table mgs.projectcategory
-DROP TABLE IF EXISTS `projectcategory`;
-CREATE TABLE IF NOT EXISTS `projectcategory` (
+-- Dumping structure for table mgs.project_category
+CREATE TABLE IF NOT EXISTS `project_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.projectcategory: ~7 rows (approximately)
-INSERT INTO `projectcategory` (`id`, `name`) VALUES
+-- Dumping data for table mgs.project_category: ~7 rows (approximately)
+INSERT INTO `project_category` (`id`, `name`) VALUES
 	(5, 'AC'),
 	(1, 'BATA'),
 	(4, 'CCTV'),
@@ -7603,8 +7822,21 @@ INSERT INTO `projectcategory` (`id`, `name`) VALUES
 	(2, 'ROSTER'),
 	(7, 'SIPIL');
 
+-- Dumping structure for table mgs.project_penawaran
+CREATE TABLE IF NOT EXISTS `project_penawaran` (
+  `id` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `address` varchar(50) DEFAULT NULL,
+  `subtotal` int(11) DEFAULT NULL,
+  `disctotal` int(11) DEFAULT NULL,
+  `grandtotal` int(11) DEFAULT NULL,
+  `admin` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.project_penawaran: ~0 rows (approximately)
+
 -- Dumping structure for table mgs.province
-DROP TABLE IF EXISTS `province`;
 CREATE TABLE IF NOT EXISTS `province` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
@@ -7653,7 +7885,6 @@ INSERT INTO `province` (`id`, `name`) VALUES
 	(38, 'Sumatera Utara');
 
 -- Dumping structure for table mgs.regency
-DROP TABLE IF EXISTS `regency`;
 CREATE TABLE IF NOT EXISTS `regency` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '0',
@@ -8179,7 +8410,6 @@ INSERT INTO `regency` (`id`, `name`, `provinceid`) VALUES
 	(514, 'Kota Yogyakarta', 5);
 
 -- Dumping structure for table mgs.store
-DROP TABLE IF EXISTS `store`;
 CREATE TABLE IF NOT EXISTS `store` (
   `StoreId` int(11) NOT NULL AUTO_INCREMENT,
   `StoreCode` varchar(50) DEFAULT NULL,
@@ -8187,17 +8417,32 @@ CREATE TABLE IF NOT EXISTS `store` (
   `StoreLogo` text DEFAULT NULL,
   PRIMARY KEY (`StoreId`),
   UNIQUE KEY `StoreCode` (`StoreCode`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.store: ~4 rows (approximately)
+-- Dumping data for table mgs.store: ~7 rows (approximately)
 INSERT INTO `store` (`StoreId`, `StoreCode`, `StoreName`, `StoreLogo`) VALUES
 	(1, 'MGS', 'Mahiera Global Solution', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAACICAMAAADEZqXmAAAAM1BMVEVHcEwvj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj82XMBtwAAAAEHRSTlMAA6z5HUfghBHDlHvVXjPuFkJt9AAABCNJREFUaN7dm9mypCAMhmURQUTy/k87Lm03m8oSpqaGm3O6pPz6ZwkhSQ/DP9gIl70RchaU90YAQF8I2RFdIeSD2CDd5oRMAJ0hcmLQGUJcRBcICRA9IBECHUISCGxIEoELkWkEJoTcIfAgZLxFABgkHfM9AujfYJAODCtYb4ZauRGoDCkDBhu3zzpkkAYQV1PAEPvp5K6zg2HqDy1Oz1e8MqZtCKsRmYxt8ISpReQzwOriSSFcQRED2FxqV1YFhYxS40XWBcoZZT7RhShklEC+iFIGKJ699aCWkatEzlDPyJx4w1oYkLOE+QJNDJjeN6OGRgZ7NStStTLAjo8APqy2mQHL/eIiki6jhnbGw+LarzDWYjBA3/pRNu12VDDEmLFoGxmg5MN9EomRHq3ESLUwxPq2L9oZKc/LADKDjTkT3saIp10DOiO0WzcyLhetihEK0dCB4QuRywOD1DJ8IQZ66PCWlqSe+W/RYdXNHvHOjEWzBh1iXNKb/dtnWbZDLHxFkQ7BddJq/czIxM2Yul6UMLz1853131Ad2EYd3gqwa7Q5piF9TfIZ7vTNQ8RYRWKw6DMj0kGMuhpdA4bdOvweKzpGGzBPx+ZcSLK37c8Q67ieS3k93+4atlDHGdEaSMoSXR2C67SzyTN1PLiW6Q7uK/J13FpU8x2mo8WhihwdcjS/NsqQYZXbqD46EFWkw3dfmA5GIm3fpSrSEfgWYYeozeHZkaGjlHF04KKrjjxGmw71F3So/0lH33XFTobqv65K93mCYdjLHnSOqCx7NWoVfU1DKZ33RuftP+Uipyy7G9n2KNhxHCY/K+sNp6k7P6IOD/eM01V8PQeLGe7zj2PCl2aG5Hw/lviZL3aX2XI6WIS2MkYlxLI3sZhgOi6dupHhvnT73l5KRkfjV8dw53jrMKdCQD9rUskQbgfPTVxklODA0DHHu9x7azvDapu+SH0nrZ3B7N2FULetq7sbqxeYueYJmeF5lZdjhsyY/DyB7cAIwksfe4LLmMOEh0VnRFGyc0ZQGXG071hamIxUIFnjMpJR932zIzLSidzRIjLEeldqM2MxbvMTnBosxkxuq0gIEuM1vdbOEOPQm/GeLGpnZCS9Whk5yTs3PFXByEpCkrmFkZmx5bSekZ0U/sV7SxkqP7n9hRQyChB7prCGUVhm8oEUMUorWT5KChjldRlufUkWo6K+xK2TyWEIU1dXdNX7ZNw/aut9doge4rgoiXTMLcW256EV1l9NmPVXiTqy7Z1rVEeGUK/mMthkVPeaO2Bd6vpew7cIzTwwsOos+XIfLUQrSjUWIO+KgQ9ZRjzEtrVFCoGo4rjLxaUIChex1/nRcNV2+EEA8SIhVvep1HfSvbXHRcZGmVmnqXA9iaN2l3X+lclKheo2Tr8yMDn0Zvyj7Q/PNHUxXj3CPwAAAABJRU5ErkJggg=='),
-	(9, 'BRJ', 'Bata Reguler Jakarta', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAACICAMAAADEZqXmAAAAM1BMVEVHcEwvj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj82XMBtwAAAAEHRSTlMAA6z5HUfghBHDlHvVXjPuFkJt9AAABCNJREFUaN7dm9mypCAMhmURQUTy/k87Lm03m8oSpqaGm3O6pPz6ZwkhSQ/DP9gIl70RchaU90YAQF8I2RFdIeSD2CDd5oRMAJ0hcmLQGUJcRBcICRA9IBECHUISCGxIEoELkWkEJoTcIfAgZLxFABgkHfM9AujfYJAODCtYb4ZauRGoDCkDBhu3zzpkkAYQV1PAEPvp5K6zg2HqDy1Oz1e8MqZtCKsRmYxt8ISpReQzwOriSSFcQRED2FxqV1YFhYxS40XWBcoZZT7RhShklEC+iFIGKJ699aCWkatEzlDPyJx4w1oYkLOE+QJNDJjeN6OGRgZ7NStStTLAjo8APqy2mQHL/eIiki6jhnbGw+LarzDWYjBA3/pRNu12VDDEmLFoGxmg5MN9EomRHq3ESLUwxPq2L9oZKc/LADKDjTkT3saIp10DOiO0WzcyLhetihEK0dCB4QuRywOD1DJ8IQZ66PCWlqSe+W/RYdXNHvHOjEWzBh1iXNKb/dtnWbZDLHxFkQ7BddJq/czIxM2Yul6UMLz1853131Ad2EYd3gqwa7Q5piF9TfIZ7vTNQ8RYRWKw6DMj0kGMuhpdA4bdOvweKzpGGzBPx+ZcSLK37c8Q67ieS3k93+4atlDHGdEaSMoSXR2C67SzyTN1PLiW6Q7uK/J13FpU8x2mo8WhihwdcjS/NsqQYZXbqD46EFWkw3dfmA5GIm3fpSrSEfgWYYeozeHZkaGjlHF04KKrjjxGmw71F3So/0lH33XFTobqv65K93mCYdjLHnSOqCx7NWoVfU1DKZ33RuftP+Uipyy7G9n2KNhxHCY/K+sNp6k7P6IOD/eM01V8PQeLGe7zj2PCl2aG5Hw/lviZL3aX2XI6WIS2MkYlxLI3sZhgOi6dupHhvnT73l5KRkfjV8dw53jrMKdCQD9rUskQbgfPTVxklODA0DHHu9x7azvDapu+SH0nrZ3B7N2FULetq7sbqxeYueYJmeF5lZdjhsyY/DyB7cAIwksfe4LLmMOEh0VnRFGyc0ZQGXG071hamIxUIFnjMpJR932zIzLSidzRIjLEeldqM2MxbvMTnBosxkxuq0gIEuM1vdbOEOPQm/GeLGpnZCS9Whk5yTs3PFXByEpCkrmFkZmx5bSekZ0U/sV7SxkqP7n9hRQyChB7prCGUVhm8oEUMUorWT5KChjldRlufUkWo6K+xK2TyWEIU1dXdNX7ZNw/aut9doge4rgoiXTMLcW256EV1l9NmPVXiTqy7Z1rVEeGUK/mMthkVPeaO2Bd6vpew7cIzTwwsOos+XIfLUQrSjUWIO+KgQ9ZRjzEtrVFCoGo4rjLxaUIChex1/nRcNV2+EEA8SIhVvep1HfSvbXHRcZGmVmnqXA9iaN2l3X+lclKheo2Tr8yMDn0Zvyj7Q/PNHUxXj3CPwAAAABJRU5ErkJggg=='),
-	(10, 'RRJ', 'Roster Reguler Jakarta', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAACICAMAAADEZqXmAAAAM1BMVEVHcEwvj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj82XMBtwAAAAEHRSTlMAA6z5HUfghBHDlHvVXjPuFkJt9AAABCNJREFUaN7dm9mypCAMhmURQUTy/k87Lm03m8oSpqaGm3O6pPz6ZwkhSQ/DP9gIl70RchaU90YAQF8I2RFdIeSD2CDd5oRMAJ0hcmLQGUJcRBcICRA9IBECHUISCGxIEoELkWkEJoTcIfAgZLxFABgkHfM9AujfYJAODCtYb4ZauRGoDCkDBhu3zzpkkAYQV1PAEPvp5K6zg2HqDy1Oz1e8MqZtCKsRmYxt8ISpReQzwOriSSFcQRED2FxqV1YFhYxS40XWBcoZZT7RhShklEC+iFIGKJ699aCWkatEzlDPyJx4w1oYkLOE+QJNDJjeN6OGRgZ7NStStTLAjo8APqy2mQHL/eIiki6jhnbGw+LarzDWYjBA3/pRNu12VDDEmLFoGxmg5MN9EomRHq3ESLUwxPq2L9oZKc/LADKDjTkT3saIp10DOiO0WzcyLhetihEK0dCB4QuRywOD1DJ8IQZ66PCWlqSe+W/RYdXNHvHOjEWzBh1iXNKb/dtnWbZDLHxFkQ7BddJq/czIxM2Yul6UMLz1853131Ad2EYd3gqwa7Q5piF9TfIZ7vTNQ8RYRWKw6DMj0kGMuhpdA4bdOvweKzpGGzBPx+ZcSLK37c8Q67ieS3k93+4atlDHGdEaSMoSXR2C67SzyTN1PLiW6Q7uK/J13FpU8x2mo8WhihwdcjS/NsqQYZXbqD46EFWkw3dfmA5GIm3fpSrSEfgWYYeozeHZkaGjlHF04KKrjjxGmw71F3So/0lH33XFTobqv65K93mCYdjLHnSOqCx7NWoVfU1DKZ33RuftP+Uipyy7G9n2KNhxHCY/K+sNp6k7P6IOD/eM01V8PQeLGe7zj2PCl2aG5Hw/lviZL3aX2XI6WIS2MkYlxLI3sZhgOi6dupHhvnT73l5KRkfjV8dw53jrMKdCQD9rUskQbgfPTVxklODA0DHHu9x7azvDapu+SH0nrZ3B7N2FULetq7sbqxeYueYJmeF5lZdjhsyY/DyB7cAIwksfe4LLmMOEh0VnRFGyc0ZQGXG071hamIxUIFnjMpJR932zIzLSidzRIjLEeldqM2MxbvMTnBosxkxuq0gIEuM1vdbOEOPQm/GeLGpnZCS9Whk5yTs3PFXByEpCkrmFkZmx5bSekZ0U/sV7SxkqP7n9hRQyChB7prCGUVhm8oEUMUorWT5KChjldRlufUkWo6K+xK2TyWEIU1dXdNX7ZNw/aut9doge4rgoiXTMLcW256EV1l9NmPVXiTqy7Z1rVEeGUK/mMthkVPeaO2Bd6vpew7cIzTwwsOos+XIfLUQrSjUWIO+KgQ9ZRjzEtrVFCoGo4rjLxaUIChex1/nRcNV2+EEA8SIhVvep1HfSvbXHRcZGmVmnqXA9iaN2l3X+lclKheo2Tr8yMDn0Zvyj7Q/PNHUxXj3CPwAAAABJRU5ErkJggg=='),
-	(11, 'MGS ME', 'MGS Mekanik Elektrik', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAACICAMAAADEZqXmAAAAM1BMVEVHcEwvj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj82XMBtwAAAAEHRSTlMAA6z5HUfghBHDlHvVXjPuFkJt9AAABCNJREFUaN7dm9mypCAMhmURQUTy/k87Lm03m8oSpqaGm3O6pPz6ZwkhSQ/DP9gIl70RchaU90YAQF8I2RFdIeSD2CDd5oRMAJ0hcmLQGUJcRBcICRA9IBECHUISCGxIEoELkWkEJoTcIfAgZLxFABgkHfM9AujfYJAODCtYb4ZauRGoDCkDBhu3zzpkkAYQV1PAEPvp5K6zg2HqDy1Oz1e8MqZtCKsRmYxt8ISpReQzwOriSSFcQRED2FxqV1YFhYxS40XWBcoZZT7RhShklEC+iFIGKJ699aCWkatEzlDPyJx4w1oYkLOE+QJNDJjeN6OGRgZ7NStStTLAjo8APqy2mQHL/eIiki6jhnbGw+LarzDWYjBA3/pRNu12VDDEmLFoGxmg5MN9EomRHq3ESLUwxPq2L9oZKc/LADKDjTkT3saIp10DOiO0WzcyLhetihEK0dCB4QuRywOD1DJ8IQZ66PCWlqSe+W/RYdXNHvHOjEWzBh1iXNKb/dtnWbZDLHxFkQ7BddJq/czIxM2Yul6UMLz1853131Ad2EYd3gqwa7Q5piF9TfIZ7vTNQ8RYRWKw6DMj0kGMuhpdA4bdOvweKzpGGzBPx+ZcSLK37c8Q67ieS3k93+4atlDHGdEaSMoSXR2C67SzyTN1PLiW6Q7uK/J13FpU8x2mo8WhihwdcjS/NsqQYZXbqD46EFWkw3dfmA5GIm3fpSrSEfgWYYeozeHZkaGjlHF04KKrjjxGmw71F3So/0lH33XFTobqv65K93mCYdjLHnSOqCx7NWoVfU1DKZ33RuftP+Uipyy7G9n2KNhxHCY/K+sNp6k7P6IOD/eM01V8PQeLGe7zj2PCl2aG5Hw/lviZL3aX2XI6WIS2MkYlxLI3sZhgOi6dupHhvnT73l5KRkfjV8dw53jrMKdCQD9rUskQbgfPTVxklODA0DHHu9x7azvDapu+SH0nrZ3B7N2FULetq7sbqxeYueYJmeF5lZdjhsyY/DyB7cAIwksfe4LLmMOEh0VnRFGyc0ZQGXG071hamIxUIFnjMpJR932zIzLSidzRIjLEeldqM2MxbvMTnBosxkxuq0gIEuM1vdbOEOPQm/GeLGpnZCS9Whk5yTs3PFXByEpCkrmFkZmx5bSekZ0U/sV7SxkqP7n9hRQyChB7prCGUVhm8oEUMUorWT5KChjldRlufUkWo6K+xK2TyWEIU1dXdNX7ZNw/aut9doge4rgoiXTMLcW256EV1l9NmPVXiTqy7Z1rVEeGUK/mMthkVPeaO2Bd6vpew7cIzTwwsOos+XIfLUQrSjUWIO+KgQ9ZRjzEtrVFCoGo4rjLxaUIChex1/nRcNV2+EEA8SIhVvep1HfSvbXHRcZGmVmnqXA9iaN2l3X+lclKheo2Tr8yMDn0Zvyj7Q/PNHUxXj3CPwAAAABJRU5ErkJggg==');
+	(2, 'BRJ', 'Bata Reguler Jakarta', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAACICAMAAADEZqXmAAAAM1BMVEVHcEwvj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj82XMBtwAAAAEHRSTlMAA6z5HUfghBHDlHvVXjPuFkJt9AAABCNJREFUaN7dm9mypCAMhmURQUTy/k87Lm03m8oSpqaGm3O6pPz6ZwkhSQ/DP9gIl70RchaU90YAQF8I2RFdIeSD2CDd5oRMAJ0hcmLQGUJcRBcICRA9IBECHUISCGxIEoELkWkEJoTcIfAgZLxFABgkHfM9AujfYJAODCtYb4ZauRGoDCkDBhu3zzpkkAYQV1PAEPvp5K6zg2HqDy1Oz1e8MqZtCKsRmYxt8ISpReQzwOriSSFcQRED2FxqV1YFhYxS40XWBcoZZT7RhShklEC+iFIGKJ699aCWkatEzlDPyJx4w1oYkLOE+QJNDJjeN6OGRgZ7NStStTLAjo8APqy2mQHL/eIiki6jhnbGw+LarzDWYjBA3/pRNu12VDDEmLFoGxmg5MN9EomRHq3ESLUwxPq2L9oZKc/LADKDjTkT3saIp10DOiO0WzcyLhetihEK0dCB4QuRywOD1DJ8IQZ66PCWlqSe+W/RYdXNHvHOjEWzBh1iXNKb/dtnWbZDLHxFkQ7BddJq/czIxM2Yul6UMLz1853131Ad2EYd3gqwa7Q5piF9TfIZ7vTNQ8RYRWKw6DMj0kGMuhpdA4bdOvweKzpGGzBPx+ZcSLK37c8Q67ieS3k93+4atlDHGdEaSMoSXR2C67SzyTN1PLiW6Q7uK/J13FpU8x2mo8WhihwdcjS/NsqQYZXbqD46EFWkw3dfmA5GIm3fpSrSEfgWYYeozeHZkaGjlHF04KKrjjxGmw71F3So/0lH33XFTobqv65K93mCYdjLHnSOqCx7NWoVfU1DKZ33RuftP+Uipyy7G9n2KNhxHCY/K+sNp6k7P6IOD/eM01V8PQeLGe7zj2PCl2aG5Hw/lviZL3aX2XI6WIS2MkYlxLI3sZhgOi6dupHhvnT73l5KRkfjV8dw53jrMKdCQD9rUskQbgfPTVxklODA0DHHu9x7azvDapu+SH0nrZ3B7N2FULetq7sbqxeYueYJmeF5lZdjhsyY/DyB7cAIwksfe4LLmMOEh0VnRFGyc0ZQGXG071hamIxUIFnjMpJR932zIzLSidzRIjLEeldqM2MxbvMTnBosxkxuq0gIEuM1vdbOEOPQm/GeLGpnZCS9Whk5yTs3PFXByEpCkrmFkZmx5bSekZ0U/sV7SxkqP7n9hRQyChB7prCGUVhm8oEUMUorWT5KChjldRlufUkWo6K+xK2TyWEIU1dXdNX7ZNw/aut9doge4rgoiXTMLcW256EV1l9NmPVXiTqy7Z1rVEeGUK/mMthkVPeaO2Bd6vpew7cIzTwwsOos+XIfLUQrSjUWIO+KgQ9ZRjzEtrVFCoGo4rjLxaUIChex1/nRcNV2+EEA8SIhVvep1HfSvbXHRcZGmVmnqXA9iaN2l3X+lclKheo2Tr8yMDn0Zvyj7Q/PNHUxXj3CPwAAAABJRU5ErkJggg=='),
+	(3, 'RRJ', 'Roster Reguler Jakarta', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAACICAMAAADEZqXmAAAAM1BMVEVHcEwvj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj82XMBtwAAAAEHRSTlMAA6z5HUfghBHDlHvVXjPuFkJt9AAABCNJREFUaN7dm9mypCAMhmURQUTy/k87Lm03m8oSpqaGm3O6pPz6ZwkhSQ/DP9gIl70RchaU90YAQF8I2RFdIeSD2CDd5oRMAJ0hcmLQGUJcRBcICRA9IBECHUISCGxIEoELkWkEJoTcIfAgZLxFABgkHfM9AujfYJAODCtYb4ZauRGoDCkDBhu3zzpkkAYQV1PAEPvp5K6zg2HqDy1Oz1e8MqZtCKsRmYxt8ISpReQzwOriSSFcQRED2FxqV1YFhYxS40XWBcoZZT7RhShklEC+iFIGKJ699aCWkatEzlDPyJx4w1oYkLOE+QJNDJjeN6OGRgZ7NStStTLAjo8APqy2mQHL/eIiki6jhnbGw+LarzDWYjBA3/pRNu12VDDEmLFoGxmg5MN9EomRHq3ESLUwxPq2L9oZKc/LADKDjTkT3saIp10DOiO0WzcyLhetihEK0dCB4QuRywOD1DJ8IQZ66PCWlqSe+W/RYdXNHvHOjEWzBh1iXNKb/dtnWbZDLHxFkQ7BddJq/czIxM2Yul6UMLz1853131Ad2EYd3gqwa7Q5piF9TfIZ7vTNQ8RYRWKw6DMj0kGMuhpdA4bdOvweKzpGGzBPx+ZcSLK37c8Q67ieS3k93+4atlDHGdEaSMoSXR2C67SzyTN1PLiW6Q7uK/J13FpU8x2mo8WhihwdcjS/NsqQYZXbqD46EFWkw3dfmA5GIm3fpSrSEfgWYYeozeHZkaGjlHF04KKrjjxGmw71F3So/0lH33XFTobqv65K93mCYdjLHnSOqCx7NWoVfU1DKZ33RuftP+Uipyy7G9n2KNhxHCY/K+sNp6k7P6IOD/eM01V8PQeLGe7zj2PCl2aG5Hw/lviZL3aX2XI6WIS2MkYlxLI3sZhgOi6dupHhvnT73l5KRkfjV8dw53jrMKdCQD9rUskQbgfPTVxklODA0DHHu9x7azvDapu+SH0nrZ3B7N2FULetq7sbqxeYueYJmeF5lZdjhsyY/DyB7cAIwksfe4LLmMOEh0VnRFGyc0ZQGXG071hamIxUIFnjMpJR932zIzLSidzRIjLEeldqM2MxbvMTnBosxkxuq0gIEuM1vdbOEOPQm/GeLGpnZCS9Whk5yTs3PFXByEpCkrmFkZmx5bSekZ0U/sV7SxkqP7n9hRQyChB7prCGUVhm8oEUMUorWT5KChjldRlufUkWo6K+xK2TyWEIU1dXdNX7ZNw/aut9doge4rgoiXTMLcW256EV1l9NmPVXiTqy7Z1rVEeGUK/mMthkVPeaO2Bd6vpew7cIzTwwsOos+XIfLUQrSjUWIO+KgQ9ZRjzEtrVFCoGo4rjLxaUIChex1/nRcNV2+EEA8SIhVvep1HfSvbXHRcZGmVmnqXA9iaN2l3X+lclKheo2Tr8yMDn0Zvyj7Q/PNHUxXj3CPwAAAABJRU5ErkJggg=='),
+	(4, 'PRJ', 'Paving Reguler Jakarta', NULL),
+	(5, 'MGS ME', 'MGS Mekanik Elektrik', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGMAAACICAMAAADEZqXmAAAAM1BMVEVHcEwvj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj80vj82XMBtwAAAAEHRSTlMAA6z5HUfghBHDlHvVXjPuFkJt9AAABCNJREFUaN7dm9mypCAMhmURQUTy/k87Lm03m8oSpqaGm3O6pPz6ZwkhSQ/DP9gIl70RchaU90YAQF8I2RFdIeSD2CDd5oRMAJ0hcmLQGUJcRBcICRA9IBECHUISCGxIEoELkWkEJoTcIfAgZLxFABgkHfM9AujfYJAODCtYb4ZauRGoDCkDBhu3zzpkkAYQV1PAEPvp5K6zg2HqDy1Oz1e8MqZtCKsRmYxt8ISpReQzwOriSSFcQRED2FxqV1YFhYxS40XWBcoZZT7RhShklEC+iFIGKJ699aCWkatEzlDPyJx4w1oYkLOE+QJNDJjeN6OGRgZ7NStStTLAjo8APqy2mQHL/eIiki6jhnbGw+LarzDWYjBA3/pRNu12VDDEmLFoGxmg5MN9EomRHq3ESLUwxPq2L9oZKc/LADKDjTkT3saIp10DOiO0WzcyLhetihEK0dCB4QuRywOD1DJ8IQZ66PCWlqSe+W/RYdXNHvHOjEWzBh1iXNKb/dtnWbZDLHxFkQ7BddJq/czIxM2Yul6UMLz1853131Ad2EYd3gqwa7Q5piF9TfIZ7vTNQ8RYRWKw6DMj0kGMuhpdA4bdOvweKzpGGzBPx+ZcSLK37c8Q67ieS3k93+4atlDHGdEaSMoSXR2C67SzyTN1PLiW6Q7uK/J13FpU8x2mo8WhihwdcjS/NsqQYZXbqD46EFWkw3dfmA5GIm3fpSrSEfgWYYeozeHZkaGjlHF04KKrjjxGmw71F3So/0lH33XFTobqv65K93mCYdjLHnSOqCx7NWoVfU1DKZ33RuftP+Uipyy7G9n2KNhxHCY/K+sNp6k7P6IOD/eM01V8PQeLGe7zj2PCl2aG5Hw/lviZL3aX2XI6WIS2MkYlxLI3sZhgOi6dupHhvnT73l5KRkfjV8dw53jrMKdCQD9rUskQbgfPTVxklODA0DHHu9x7azvDapu+SH0nrZ3B7N2FULetq7sbqxeYueYJmeF5lZdjhsyY/DyB7cAIwksfe4LLmMOEh0VnRFGyc0ZQGXG071hamIxUIFnjMpJR932zIzLSidzRIjLEeldqM2MxbvMTnBosxkxuq0gIEuM1vdbOEOPQm/GeLGpnZCS9Whk5yTs3PFXByEpCkrmFkZmx5bSekZ0U/sV7SxkqP7n9hRQyChB7prCGUVhm8oEUMUorWT5KChjldRlufUkWo6K+xK2TyWEIU1dXdNX7ZNw/aut9doge4rgoiXTMLcW256EV1l9NmPVXiTqy7Z1rVEeGUK/mMthkVPeaO2Bd6vpew7cIzTwwsOos+XIfLUQrSjUWIO+KgQ9ZRjzEtrVFCoGo4rjLxaUIChex1/nRcNV2+EEA8SIhVvep1HfSvbXHRcZGmVmnqXA9iaN2l3X+lclKheo2Tr8yMDn0Zvyj7Q/PNHUxXj3CPwAAAABJRU5ErkJggg=='),
+	(6, 'MGS JP', 'MGS Jasa Pasang', NULL),
+	(7, 'MGS KS', 'Mgs Konstruksi', NULL);
+
+-- Dumping structure for table mgs.template_footer
+CREATE TABLE IF NOT EXISTS `template_footer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `detail` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.template_footer: ~2 rows (approximately)
+INSERT INTO `template_footer` (`id`, `name`, `detail`) VALUES
+	(1, 'MGS_PENAWARAN', '{"ops":[{"insert":"Pembayaran Melalui Bank Transfer Pada No. "},{"attributes":{"bold":true},"insert":"Rekening BCA, MAHIERA GLOBAL SOLUTION 2370448356"},{"attributes":{"list":"ordered"},"insert":"\\n"},{"insert":"Transaksi yang sudah dilakukan baik "},{"attributes":{"bold":true},"insert":"DP atau PelunasanTidak Dapat Dikembalikan"},{"attributes":{"list":"ordered"},"insert":"\\n"},{"insert":"Barang yang sudah dibeli tidak dapat "},{"attributes":{"bold":true},"insert":"ditukar/dikembalikan"},{"attributes":{"list":"ordered"},"insert":"\\n"}]}'),
+	(2, 'BRJ_PENAWARAN', '{"ops":[{"insert":"Pembayaran Melalui Bank Transfer Pada No. "},{"attributes":{"bold":true},"insert":"Rekening BCA, BATA REGULER JAKARTA 2370448356"},{"attributes":{"list":"ordered"},"insert":"\\n"},{"insert":"Transaksi yang sudah dilakukan baik "},{"attributes":{"bold":true},"insert":"DP atau PelunasanTidak Dapat Dikembalikan"},{"attributes":{"list":"ordered"},"insert":"\\n"},{"insert":"Barang yang sudah dibeli tidak dapat "},{"attributes":{"bold":true},"insert":"ditukar/dikembalikan"},{"attributes":{"list":"ordered"},"insert":"\\n"}]}');
 
 -- Dumping structure for table mgs.users
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(10) NOT NULL DEFAULT '0',
@@ -8221,17 +8466,48 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `code` (`code`) USING BTREE,
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table mgs.users: ~4 rows (approximately)
+-- Dumping data for table mgs.users: ~7 rows (approximately)
 INSERT INTO `users` (`id`, `code`, `email`, `username`, `password_hash`, `reset_hash`, `reset_at`, `reset_expires`, `activate_hash`, `image`, `level`, `status`, `status_message`, `active`, `force_pass_reset`, `created_at`, `updated_at`, `deleted_at`) VALUES
 	(4, 'ID00000', 'admin@mahiera.com', 'admin', '$2y$10$yTursHBXypla.XGkzlHGTe8E2wWDxNMEITYCrI907xw7DbJ4tCqLa', NULL, NULL, NULL, NULL, 'default.png', 0, NULL, NULL, 1, 0, '2024-11-25 13:51:53', '2024-11-25 13:51:53', NULL),
 	(5, 'ID00001', 'fauzancaren@gmail.com', 'syahrul fauzan', '$2y$10$vabalVp80A889HAg./2xZOrjPA2DVvzbRc4LbxDzKK2O5GmEp6Bcq', NULL, NULL, NULL, NULL, 'default.png', 0, NULL, NULL, 1, 0, NULL, '2024-11-26 22:03:50', NULL),
 	(15, 'ID00002', 'erwinbrachmana@gmail.com', 'erwin brachmana', '$2y$10$yTursHBXypla.XGkzlHGTe8E2wWDxNMEITYCrI907xw7DbJ4tCqLa', NULL, NULL, NULL, NULL, 'default.png', 0, NULL, NULL, 1, 0, '2024-11-26 18:06:50', '2024-11-26 18:06:50', NULL),
-	(22, 'ID00003', 'ryan@mahiera.com', 'ryan febriansyah', '$2y$10$mRUVlvYkubaprrrMqqMUde9AffK1f8szwTaeO5Q6thyNkZzcF3gEK', NULL, NULL, NULL, NULL, 'default.png', 1, NULL, NULL, 1, 0, '2024-11-26 18:35:01', '2024-11-26 18:35:01', NULL);
+	(22, 'ID00003', 'ryan@mahiera.com', 'ryan febriansya', '$2y$10$mRUVlvYkubaprrrMqqMUde9AffK1f8szwTaeO5Q6thyNkZzcF3gEK', NULL, NULL, NULL, NULL, 'default.png', 0, NULL, NULL, 1, 0, '2024-11-26 18:35:01', '2024-12-04 18:23:15', NULL),
+	(24, 'ID00004', 'Test@gmail.com', 'Tesy', '$2y$10$II3mxTwnk.0HORph82ZDX.HPGQjnl9UsdNVKR5LcXQuy0gMuNeVIm', NULL, NULL, NULL, NULL, 'default.png', 0, NULL, NULL, 1, 0, '2024-12-04 17:35:36', '2024-12-04 18:22:50', NULL),
+	(25, 'ID00005', 'miko@gmail.com', 'miko', '$2y$10$RAxa/r0rOHSBTR3tjZPmGu8ol9EZIJySdEovBU3CndHBrE7tRryz6', NULL, NULL, NULL, NULL, 'default.png', 0, NULL, NULL, 1, 0, '2024-12-04 17:35:52', '2024-12-04 17:35:52', NULL),
+	(26, 'ID00006', 'miko@gmail.coms', 'mikoa', '$2y$10$rQKIksNVeJkRLplaqmcDkOYGeP8RElA5TG0B.TBQtsaIEYutrR34W', NULL, NULL, NULL, NULL, 'default.png', 0, NULL, NULL, 1, 0, '2024-12-04 18:59:05', '2024-12-04 18:59:05', NULL);
+
+-- Dumping structure for table mgs.vendor
+CREATE TABLE IF NOT EXISTS `vendor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `telp1` varchar(20) DEFAULT NULL,
+  `telp2` varchar(20) DEFAULT NULL,
+  `address` varchar(200) DEFAULT NULL,
+  `category` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.vendor: ~3 rows (approximately)
+INSERT INTO `vendor` (`id`, `code`, `name`, `telp1`, `telp2`, `address`, `category`) VALUES
+	(4, 'MGS', 'Mahiera Global Solution', '0895352992663', '', 'Jl. Ala Ala', 'AC|CCTV'),
+	(5, 'PWTBB', 'Purwakarta Bambang', '0895352992663', '', '', 'bata'),
+	(6, 'MGL', 'Bambang Magelang', '0895352992663', '', '', 'bata');
+
+-- Dumping structure for table mgs.vendor_category
+CREATE TABLE IF NOT EXISTS `vendor_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table mgs.vendor_category: ~0 rows (approximately)
 
 -- Dumping structure for table mgs.village
-DROP TABLE IF EXISTS `village`;
 CREATE TABLE IF NOT EXISTS `village` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '0',
