@@ -8,6 +8,8 @@ use App\Models\CustomerModel;
 use App\Models\ProvinceModel;
 use App\Models\VendorModel;
 use App\Models\ProdukModel;
+use App\Models\ProjectModel;
+use Myth\Auth\Entities\User; 
 
 class MessageController extends BaseController
 {
@@ -90,6 +92,10 @@ class MessageController extends BaseController
 
         return $this->response->setBody(view('admin/produk/edit.php',$data)); 
     }
+    public function produk_select()
+    {   
+        return $this->response->setBody(view('admin/produk/select.php')); 
+    }
 
 
     public function vendor_add()
@@ -104,4 +110,26 @@ class MessageController extends BaseController
         $data["_vendor"] = $account;    
         return $this->response->setBody(view('admin/vendor/edit.php',$data)); 
     }
+
+
+    
+    public function project_add()
+    {   
+        return $this->response->setBody(view('admin/project/add_project.php')); 
+    }
+
+    public function project_sph_add($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+
+        $project = $models->getWhere(['id' => $id], 1)->getRow(); 
+        $data["project"] = $project;
+        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/add_project_sph.php',$data)); 
+    }
+    
 }

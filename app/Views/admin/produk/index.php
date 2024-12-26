@@ -323,7 +323,7 @@
         isProcessingEdit = true; 
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
+       
         $.ajax({ 
             method: "POST",
             url: "<?= base_url() ?>message/edit-produk/" + id, 
@@ -335,7 +335,7 @@
 
                 $("#modal-edit-produk").on("hidden.bs.modal",function(){
                     table.ajax.reload(null, false).responsive.recalc().columns.adjust();
-                })   
+                });   
             },
             error: function(xhr, textStatus, errorThrown){
                 isProcessingEdit = false;

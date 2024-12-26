@@ -54,6 +54,9 @@ $routes->post('/action/delete-data-customer', 'ActionController::customer_delete
 $routes->post('/action/get-data-project-tab', 'ActionController::project_tab', ['filter' => 'login']); 
 $routes->post('/action/get-data-project/(:any)', 'ActionController::project/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-project', 'ActionController::project_add', ['filter' => 'login']); 
+$routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
+$routes->post('/action/delete-data-project-sph/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']); 
+
 
 /** ACCOUNT PRODUK */
 $routes->post('/action/add-data-vendor', 'ActionController::vendor_add', ['filter' => 'login']);
@@ -66,6 +69,7 @@ $routes->post('/action/add-data-produk-varian-value', 'ActionController::produk_
 /** ACCOUNT PRODUK */
 $routes->post('/action/add-data-produk-category', 'ActionController::produk_category_add', ['filter' => 'login']);
 $routes->post('/action/add-data-item-unit', 'ActionController::item_unit_add', ['filter' => 'login']); 
+$routes->post('/action/get-data-item-unit/(:num)', 'ActionController::item_unit_get/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/$1', ['filter' => 'login']);  
  
@@ -74,14 +78,14 @@ $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/
 
 /**
  * SELECT2 AJAX
- */ 
+ */  
 $routes->post('/select2/get-data-customer', 'SelectController::customer', ['filter' => 'login']);
 $routes->post('/select2/get-data-customer-category', 'SelectController::customer_category', ['filter' => 'login']);
 $routes->post('/select2/get-data-store', 'SelectController::store', ['filter' => 'login']);
 $routes->post('/select2/get-data-city', 'SelectController::city', ['filter' => 'login']);
 $routes->post('/select2/get-data-city-search', 'SelectController::city_search', ['filter' => 'login']);  
 $routes->post('/select2/get-data-category-project', 'SelectController::project_category', ['filter' => 'login']);  
-$routes->post('/select2/get-data-item-unit', 'SelectController::item_unit', ['filter' => 'login']);  
+$routes->post('/select2/get-data-item-unit', 'SelectController::item_unit', ['filter' => 'login']);    
 $routes->post('/select2/get-data-item', 'SelectController::item', ['filter' => 'login']);    
 $routes->post('/select2/get-data-produk-kategori', 'SelectController::produk_category', ['filter' => 'login']);   
 $routes->post('/select2/get-data-produk-vendor', 'SelectController::produk_vendor', ['filter' => 'login']);
@@ -89,6 +93,8 @@ $routes->post('/select2/get-data-produk-varian', 'SelectController::produk_varia
 $routes->post('/select2/get-data-produk-varian-value', 'SelectController::produk_varian_value', ['filter' => 'login']); 
 $routes->post('/select2/get-data-produk-satuan', 'SelectController::produk_satuan', ['filter' => 'login']); 
 $routes->post('/select2/get-data-vendor-kategori', 'SelectController::vendor_category', ['filter' => 'login']); 
+$routes->post('/select2/get-data-users', 'SelectController::users', ['filter' => 'login']);
+$routes->post('/select2/get-data-template-footer', 'SelectController::template_footer', ['filter' => 'login']);
 
 /**
  *  MODAL AJAX
@@ -109,5 +115,17 @@ $routes->post('/message/edit-vendor/(:num)', 'MessageController::vendor_edit/$1'
 
 $routes->post('/message/add-produk', 'MessageController::produk_add', ['filter' => 'login']);  
 $routes->post('/message/edit-produk/(:num)', 'MessageController::produk_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/select-produk', 'MessageController::produk_select', ['filter' => 'login']);  
 
 
+$routes->post('/message/add-project', 'MessageController::project_add', ['filter' => 'login']);  
+$routes->post('/message/add-project-sph/(:num)', 'MessageController::project_sph_add/$1', ['filter' => 'login']);  
+
+
+
+/**
+ *  MODAL print
+ */ 
+$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']); 
+$routes->post('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']); 
+$routes->get('/printhtml/project/sph/(:num)', 'PrintController::project_sph_html/$1', ['filter' => 'login']); 

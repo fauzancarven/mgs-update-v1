@@ -72,7 +72,7 @@
         });
     })
     $("#vendorcategory").select2({
-        dropdownParent: $('#modal-edit-vendor'),
+        dropdownParent: $('#modal-edit-vendor .modal-content'),
         tags: true,
         tokenSeparators: [',', ' '],
         placeholder: "Pilih Kategori",

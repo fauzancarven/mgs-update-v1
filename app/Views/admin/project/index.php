@@ -336,13 +336,157 @@
            
             table.row(this).child(data.html,'child p-0').show(); 
             $('div.project-detail', table.row(this).child()).slideDown();  
+
+            loader_data_project(data.project_id,'survey')
         }
         $(".menu-item").click(function(){
             $(this).parent().find(".selected").removeClass("selected")
-            $(this).addClass("selected")
+            $(this).addClass("selected") 
+
+            loader_data_project($(this).data("id"),$(this).data("menu"))
         });
+
     }); 
 
+    loader_data_project = function(project_id,type){ 
+        
+        $(".tab-content[data-id='"+ project_id+"']").hide() 
+        $(".loading-content[data-id='"+ project_id+"']").show() 
+        $.ajax({ 
+            dataType: "json",
+            method: "POST",
+            url: "<?= base_url() ?>action/get-data-project-tab", 
+            data:{
+                "type":type,
+                "project_id":project_id, 
+            },
+            success: function(data) {       
+                if(data["status"]===true){ 
+                    $(".tab-content[data-id='"+ project_id+"']").html(data["html"])  
+                    $("#tab-content-project-" + project_id).html(data["html"])  
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        text: data, 
+                        confirmButtonColor: "#3085d6", 
+                    });
+                }
+                $(".tab-content[data-id='"+ project_id+"']").show() 
+                $(".loading-content[data-id='"+ project_id+"']").hide()
+               
+            },
+            error : function(xhr, textStatus, errorThrown){   
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    } 
+
+    add_click = function(){ 
+        $.ajax({ 
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project", 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-project").modal("show"); 
+            },
+            fail: function(xhr, textStatus, errorThrown){
+                alert('request failed');
+            }
+        });
+    }; 
+
+    isProcessingSph = [];
+    add_project_sph = function(id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingSph[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingSph[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-sph/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-sph").modal("show"); 
+
+                isProcessingSph[id] = false;
+                $(el).html(old_text);
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSph[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };
+
+    isProcessingSphPrint = [];
+    print_project_sph = function(ref,id,el){ 
+        if (isProcessingSphPrint[id]) {
+            return;
+        }  
+        isProcessingSphPrint[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        
+    };
+    edit_project_sph = function(ref,id,el){ 
+       
+    }; 
+    
+    isProcessingSphDelete = [];
+    delete_project_sph = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingSphDelete[id]) {
+            return;
+        }  
+        isProcessingSphDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus penawaran ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-project-sph/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        loader_data_project(ref,"penawaran"); 
+                    }, 
+                });
+            }
+            isProcessingSphDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
 </script>
 
 

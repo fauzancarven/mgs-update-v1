@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="<?= base_url(); ?>assets/css/vertical-layout-light/style.css">
   <!-- End plugin css for this page --> 
   <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png" />
+<!--   
+  <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/bootstrap-5.3.3/css/bootstrap.min.css">   -->
 </head>
 
 <body>
@@ -64,37 +66,36 @@
                   </div>
                 </div>
 
+                <?php if ($config->allowRemembering) : ?>  
+                <div class="form-group ms-3 position-relative">
+                  <input class="form-check-input" type="checkbox" name="remember" style="left: 20px;" id="flexCheckDefault" <?php if (old('remember')) : ?> checked <?php endif ?>>
+                  <label class="form-check-label text-muted ps-4"  for="flexCheckDefault" style="padding-left: 20px;">
+                    <?= lang('Auth.rememberMe') ?>
+                  </label>
+                </div> 
+                <?php endif; ?> 
+
 
                 <div class="mt-3">
                   <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"><?= lang('Auth.loginAction') ?></button>
                 </div>
 
-                <!-- <?php if ($config->allowRegistration) : ?>
+                 <!-- <?php if ($config->allowRegistration) : ?>
                   <div class="mt-3">
                     <a href="<?= url_to('register') ?>" type="submit" class="btn btn-block btn-light btn-lg font-weight-medium auth-form-btn"><?= lang('Auth.needAnAccount') ?></a>
                   </div>
-                <?php endif; ?> -->
-
+                <?php endif; ?>   -->
 
                 <div class="my-4 d-flex justify-content-between align-items-center">
 
               </form>
 
-              <!-- <?php if ($config->allowRemembering) : ?>
-                <div class="form-check">
-                  <label class="form-check-label text-muted">
-                    <input type="checkbox" name="remember" class="form-check-input" <?php if (old('remember')) : ?> checked <?php endif ?>>
-                    <?= lang('Auth.rememberMe') ?>
-                  </label>
-                </div>
-              <?php endif; ?> -->
-
-
-              <div class="d-flex justify-content-center w-100">
+              
+              <!-- <div class="d-flex justify-content-center w-100">
                 <?php if ($config->activeResetter) : ?>
                   <a href="<?= url_to('forgot') ?>" class="auth-link text-black text-center">Forgot Password ?</a>
                 <?php endif; ?>
-              </div>
+              </div> -->
 
               <!-- <a href="#" class="auth-link text-black">Forgot password?</a> -->
             </div>

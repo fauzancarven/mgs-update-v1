@@ -22,11 +22,13 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/daterangepicker.css"> 
     
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/croppie.css">  
-    <link href="<?= base_url("assets/fontawesome.6.7.1/css/fontawesome.css") ?>" rel="stylesheet" type="text/css"> 
-    <link href="<?= base_url("assets/fontawesome.6.7.1/css/solid.css") ?>" rel="stylesheet" type="text/css"> 
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/quill.snow.css"> 
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/quill.bubble.css">  
+    <link rel="stylesheet" type="text/css" href="<?= base_url("assets/fontawesome.6.7.1/css/fontawesome.css") ?>" > 
+    <link rel="stylesheet" type="text/css" href="<?= base_url("assets/fontawesome.6.7.1/css/solid.css") ?>" >  
     <!-- End plugin css for this page -->
     <!-- endinject -->
-  <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png" />
+    <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png" />
 
 
 </head>
@@ -129,6 +131,14 @@
         font-weight: bold;
         color: #305176;
         font-size: 0.8rem;
+    }
+    .no-urut{
+        min-width:2rem;
+    }
+    .text-head-3 {
+        font-weight: bold;
+        color: #305176;
+        font-size: 0.7rem;
     }
     .text-detail-1 { 
         color: #537cab;
@@ -271,6 +281,30 @@
         background-color: #6C9BCF;
         color: white;
     }
+    .btn-group>.btn-group:first-child>.btn {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+    }
+    .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+        font-size: 0.75rem;
+        color: white;
+        background-color:  #4292eb;
+        border-color: #4292eb;
+    }
+    .btn-outline-primary{
+        font-size: 0.75rem;
+        color: #4292eb;
+        border-color: #709ac9;
+    }
+    .btn-outline-primary:hover{
+        color: #4292eb;
+        border-color: #709ac9;
+    }
+    .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active, .show > .btn-outline-primary.dropdown-toggle { 
+        background-color: #6C9BCF;
+        border-color: #709ac9;
+    }
+
     .btn-primary{
         background-color: #4292eb;
         border-color: #709ac9;
@@ -550,8 +584,8 @@
         background: #f5f6f7;
         border: none;
         color: black;
-        padding: 0 1rem;
-        border-radius: 1rem !important; 
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem !important;
     }
     .btn-action.btn-primary i{  
         color: #1574db;
@@ -566,8 +600,8 @@
         background: #f5f6f7;
         border: none;
         color: black;
-        padding: 0 1rem;
-        border-radius: 1rem !important; 
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem !important;
     }
     .btn-action.btn-danger i{  
         color: red;
@@ -583,8 +617,8 @@
         background: #f5f6f7;
         border: none;
         color: black;
-        padding: 0 1rem;
-        border-radius: 1rem !important; 
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem !important;
     }
     .btn-action.btn-warning i{  
         color: orange;
@@ -742,6 +776,29 @@
     .fa-solid{
         transition: transform 0.5s ease 0s;
     } 
+
+    img.image-produk {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+    } 
+    .ql-editor ol {
+        padding-left: 0rem;
+    }
+
+    .list-project:hover {
+        background: #f0f6fd;
+        transition: all 0.3s;
+    }
+    .list-project {
+        background: #fbfbfb;
+        padding: 1rem 2rem;
+        margin: 0.5rem 1.5rem 0.5rem 0.5rem;
+        border-radius: 0.25rem;
+        box-shadow: -2px 2px 1px 0 #7f7f7f0d;
+        transition: all 0.3s;
+        border: 1px solid #e9e9e9;
+    }
 </style>
 
 
@@ -929,7 +986,10 @@
     <script src="<?= base_url(); ?>assets/js/select2.min.js"></script> 
     <!-- End custom js for this page-->
 
-    <script src="<?= base_url(); ?>assets/js/croppie.min.js">  </script>
+    <script src="<?= base_url(); ?>assets/js/croppie.min.js">  </script> 
+    <script src="<?= base_url(); ?>assets/js/quill.js">  </script> 
+    
+    
     <div class="container-scroller" style="background: #f5f7ff;"> 
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-lg-flex d-none flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">

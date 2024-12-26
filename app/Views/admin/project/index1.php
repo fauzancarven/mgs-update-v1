@@ -469,7 +469,7 @@
     $("#btn-project-add").click(function(){ 
     });
     $("#customer-project").select2({
-        dropdownParent: $('#modal-add-project'),
+        dropdownParent: $('#modal-add-project .modal-content'),
         placeholder: "Pilih Pelanggan",
         ajax: {
             url: "<?= base_url()?>select2/get-data-customer",
@@ -519,7 +519,7 @@
         }
     });
     $("#category-project").select2({
-        dropdownParent: $('#modal-add-project'),
+        dropdownParent: $('#modal-add-project .modal-content'),
         tags: true,
         tokenSeparators: [',', ' '],
         placeholder: "Pilih Kategori",
@@ -551,7 +551,7 @@
         }, 
     });
     $("#store-project").select2({
-        dropdownParent: $('#modal-add-project'),
+        dropdownParent: $('#modal-add-project .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-store",
@@ -872,7 +872,7 @@ Edisi terbatas dari Tokostore dengan model baru dan trendy untukmu. Didesain unt
     }
    
     $("#item-name").select2({
-        dropdownParent: $('#modal-add-item'), 
+        dropdownParent: $('#modal-add-item .modal-content'), 
         placeholder: "Pilih Nama Item",
         ajax: {
             url: "<?= base_url()?>select2/get-data-item",
@@ -909,7 +909,7 @@ Edisi terbatas dari Tokostore dengan model baru dan trendy untukmu. Didesain unt
         escapeMarkup: function(m) { return m; }
     });
     $("#item-satuan").select2({
-        dropdownParent: $('#modal-add-item'), 
+        dropdownParent: $('#modal-add-item .modal-content'), 
         placeholder: "Pilih Satuan",
         ajax: {
             url: "<?= base_url()?>select2/get-data-item-unit",
@@ -982,7 +982,7 @@ Edisi terbatas dari Tokostore dengan model baru dan trendy untukmu. Didesain unt
         
     }
     $("#produk-kategori").select2({
-        dropdownParent: $('#modal-add-produk'), 
+        dropdownParent: $('#modal-add-produk .modal-content'), 
         placeholder: "Pilih kategori produk",
         ajax: {
             url: "<?= base_url()?>select2/get-data-produk-kategori",
@@ -1167,7 +1167,7 @@ Edisi terbatas dari Tokostore dengan model baru dan trendy untukmu. Didesain unt
     });
     
     $("#SphStore").select2({
-        dropdownParent: $('#modal-add-sph'),
+        dropdownParent: $('#modal-add-sph .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-store",

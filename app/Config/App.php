@@ -199,4 +199,11 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
+
+    public $cookieDomain = '';
+    public $cookiePath = '/';
+    public $cookiePrefix = '';
+    public $cookieSecure = true;               // Only send over HTTPS?
+    public $cookieExpires = 2592000; // 30hari
+
 }

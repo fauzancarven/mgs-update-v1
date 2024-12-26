@@ -16,7 +16,7 @@ class ProjectModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['customerid','date','storeid','category','comment'];
+    protected $allowedFields = ['customerid','date_time','storeid','category','comment','userid','admin','status'];
 
     // Dates
     protected $useTimestamps = false;
@@ -144,13 +144,13 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-3">
                         <div class="d-flex flex-column project-menu">
-                            <div class="menu-item selected"><i class="fa-solid fa-list-check"></i>Survey</div>
-                            <div class="menu-item"><i class="fa-solid fa-list"></i>RAB</div>
-                            <div class="menu-item"><i class="fa-solid fa-hand-holding-droplet"></i>Penawaran</div>
-                            <div class="menu-item"><i class="fa-solid fa-cart-shopping"></i>Pembelian</div>
-                            <div class="menu-item"><i class="fa-solid fa-money-bill"></i>Invoice</div>
-                            <div class="menu-item"><i class="fa-solid fa-folder-open"></i>Dokumentasi</div>
-                            <div class="menu-item">
+                            <div class="menu-item selected" data-id="'.$data["project_id"].'" data-menu="survey"><i class="fa-solid fa-list-check"></i>Survey</div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="rab"><i class="fa-solid fa-list"></i>RAB</div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="penawaran"><i class="fa-solid fa-hand-holding-droplet"></i>Penawaran</div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="pembelian"><i class="fa-solid fa-cart-shopping"></i>Pembelian</div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="invoice"><i class="fa-solid fa-money-bill"></i>Invoice</div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="documentasi"><i class="fa-solid fa-folder-open"></i>Dokumentasi</div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="diskusi">
                                 <i class="fa-regular fa-comments position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -161,14 +161,15 @@ class ProjectModel extends Model
                         </div>
                     </div>
                     <div class="col-9 border-left">
-                        <div class="tab-content d-none" id="loader-content">
+                        <div class="tab-content" data-id="'.$data["project_id"].'" style="display:none">
                             <div class="d-flex justify-content-center flex-column align-items-center">
                                 <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span>Belum ada data yang dibuat</span>
+                                <button class="btn btn-sm btn-primary px-3 rounded mt-4" onclick="add_penawaran_click('.$data["project_id"].',this)"><i class="fa-solid fa-plus pe-2"></i>Buat Penawaran</button>
                             </div> 
                         </div>
-                        <div class="h-100 d-flex justify-content-center flex-column align-items-center" id="loader-content">
-                            <div class="loading text-center">
+                        <div class="d-flex justify-content-center flex-column align-items-center" style="display:none">
+                            <div class="loading text-center loading-content pt-4 mt-4" data-id="'.$data["project_id"].'">
                                 <div class="loading-spinner"></div>
                                 <div class="d-flex justify-content-center flex-column align-items-center">
                                     <span>Sedang memuat data</span> 
@@ -198,19 +199,38 @@ class ProjectModel extends Model
                 return $this->data_project_survey($data["project_id"]);
                 break; 
 
+            case "rab":
+                return $this->data_project_rab($data["project_id"]);
+                break; 
+
+            case "penawaran":
+                return $this->data_project_sph($data["project_id"]);
+                break; 
+
+            case "pembelian":
+                return $this->data_project_po($data["project_id"]);
+                break; 
+
             case "invoice":
                 return $this->data_project_invoice($data["project_id"]);
                 break; 
 
-            case "sph":
-                return $this->data_project_sph($data["project_id"]);
+            case "documentasi":
+                return $this->data_project_documentasi($data["project_id"]);
                 break; 
 
+            case "diskusi":
+                return $this->data_project_diskusi($data["project_id"]);
+                break; 
+                
+                
             default: 
                 $html = '
-                <div class="text-center mt-2">
-                    <span>No Data</span>
-                </div>
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <span>Belum ada data yang dibuat</span>
+               
+            </div> 
             ';
             return json_encode(
                 array(
@@ -221,11 +241,34 @@ class ProjectModel extends Model
         } 
       
     }
+
+ 
+    /**
+     * FUNCTION UNTUK MENU PROJECT
+     */ 
+
     private function data_project_survey($id){
         $html = '
-            <div class="text-center mt-2">
-                <button class="btn btn-sm btn-primary px-3" onclick="add_survey(\''.$id.'\')">Tambah data</button> 
-            </div>
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <span>Belum ada data yang dibuat</span>
+                <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_survey(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data survey</button>
+            </div> 
+        ';
+        return json_encode(
+            array(
+                "status"=>true,
+                "html"=>$html
+            )
+        );
+    }
+    private function data_project_rab($id){
+        $html = '
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <span>Belum ada data yang dibuat</span>
+                <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_rab(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data RAB</button>
+            </div> 
         ';
         return json_encode(
             array(
@@ -235,9 +278,147 @@ class ProjectModel extends Model
         );
     }
     private function data_project_sph($id){
+        $html = "";
+
+        $builder = $this->db->table("penawaran");
+        $builder->select('*');
+        $builder->where('ref',$id);
+        $builder->orderby('id', 'DESC'); 
+        $query = $builder->get()->getResult();  
+
+       
+        foreach($query as $row){
+
+            $builder = $this->db->table("penawaran_detail");
+            $builder->select('*'); 
+            $builder->where('ref',$row->id);
+            $builder->orderby('id', 'ASC'); 
+            $items = $builder->get()->getResult(); 
+            $html_items = "";
+            $no = 1;
+            $huruf  = "A";
+            foreach($items as $item){
+
+                $arr_varian = json_decode($item->varian);
+                $arr_badge = "";
+                $arr_no = 0;
+                foreach($arr_varian as $varian){
+                    $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                    $arr_no++;
+                }
+
+                $html_items .= '
+                <div class="row">
+                    <div class="col-12 col-md-4 my-1 varian">   
+                        <div class="d-flex ">
+                            <span class="no-urut text-head-3 '.($item->type == "product" ? "ps-2" : "").'">'.($item->type == "product" ? $no : $huruf).'.</span> 
+                            <div class="d-flex flex-column text-start">
+                                <span class="text-head-3">'.$item->text.'</span>
+                                <span class="text-detail-2 text-truncate">'.$item->group.'</span> 
+                                <div class="d-flex gap-1">
+                                    '.$arr_badge.'
+                                </div>
+                            </div> 
+                        </div>
+                    </div>';
+                if($item->type == "product"){
+                    $html_items .= '<div class="col-12 col-md-8 my-1 detail">
+                                        <div class="row"> 
+                                            <div class="col-6 col-md-2 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Qty:</span>
+                                                    <span class="text-head-2">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-12 col-md-3 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Harga:</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->harga, 0, ',', '.').'</span>
+                                                </div>
+                                            </div> 
+                                            <div class="col-6 col-md-3 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Disc:</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->disc, 0, ',', '.').'</span>
+                                                </div>
+                                            </div> 
+                                            <div class="col-6 col-md-3 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Total:</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->total, 0, ',', '.').'</span>
+                                                </div>
+                                            </div> 
+                                        </div>   
+                                    </div> 
+                                </div>';
+                    $no++;
+                }else{
+                    $html_items .= '<div class="col-12 col-md-8 my-1 detail"></div></div>';
+                    $huruf++;
+                    $no = 1;
+                }
+                     
+                
+            }
+            $html .= '
+            <div class="row list-project mb-4">
+                <div class="col-2">
+                    <div class="d-flex flex-column">
+                        <span class="text-detail-2">Tgl. : '.$row->date.'</span>
+                        <span class="text-head-2">'.$row->code.'</span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex flex-column">
+                        <span class="text-detail-2">Alamat:</span>
+                        <span class="text-head-2">'.$row->address.'</span>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <div class="d-flex flex-column">
+                        <span class="text-detail-2">Grand Total:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="d-flex float-end"> 
+                        <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</button> 
+                        <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
+                        <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                    </div>
+                </div>
+                <div class="col-12 detail-item mt-4 pt-4 border-top">
+                    '.$html_items.' 
+                </div>
+            </div> 
+        ';
+        }
+
+        if($html == ""){ 
+            $html = '
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                    <span>Belum ada data yang dibuat</span> 
+                </div> 
+            ';
+        }
+        $html .= '   <div class="d-flex justify-content-center flex-column align-items-center">
+                        <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_sph(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data penawaran</button>
+                    </div>';
+
+        return json_encode(
+            array(
+                "status"=>true,
+                "html"=>$html
+            )
+        );
+    }
+    private function data_project_po($id){
         $html = '
-            <div class="text-center mt-2">
-                <button class="btn btn-sm btn-primary px-3" onclick="add_sph(\''.$id.'\')">Tambah Penawaran</button>  
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <span>Belum ada data yang dibuat</span>
+                <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_po(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data pembelian</button>
             </div> 
         ';
         return json_encode(
@@ -249,9 +430,45 @@ class ProjectModel extends Model
     }
     private function data_project_invoice($id){
         $html = '
-            <div class="text-center mt-2">
-                <button class="btn btn-sm btn-primary px-3" onclick="add_invoice(\''.$id.'\')">Tambah Invoice</button> 
-                <button class="btn btn-sm btn-primary px-3" onclick="add_proforma(\''.$id.'\')">Tambah Proforma</button> 
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <span>Belum ada data yang dibuat</span> 
+                <div class="text-center mt-4">
+                    <button class="btn btn-sm btn-primary px-3" onclick="add_project_invoice(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data invoice</button> 
+                    <button class="btn btn-sm btn-primary px-3" onclick="add_project_proforma(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data proforma</button> 
+                </div> 
+            </div> 
+        '; 
+        return json_encode(
+            array(
+                "status"=>true,
+                "html"=>$html
+            )
+        );
+    }
+    private function data_project_documentasi($id){
+        $html = '
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <span>Belum ada data yang diupload</span> 
+                <div class="text-center mt-4">
+                    <button class="btn btn-sm btn-primary px-3" onclick="add_project_invoice(\''.$id.'\',this)"><i class="fa-solid fa-upload pe-2"></i>Upload Doument</button>  
+                </div> 
+            </div> 
+        '; 
+        return json_encode(
+            array(
+                "status"=>true,
+                "html"=>$html
+            )
+        );
+    }
+    private function data_project_diskusi($id){
+        $html = '
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <span>Belum ada percakapan yang dibuat</span>
+                <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_diskusi(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>mulai percakapan</button>
             </div> 
         ';
         return json_encode(
@@ -261,6 +478,83 @@ class ProjectModel extends Model
             )
         );
     }
+ 
+    /**
+     * FUNCTION UNTUK AUTOCODE
+     */ 
 
-    
+    private function get_next_code_penawaran($date){
+        //sample SPH/001/01/2024
+        $builder = $this->db->table("penawaran");  
+        $builder->select("ifnull(max(SUBSTRING(code,5,3)),0) + 1 as nextcode");
+        $builder->where("date_create",$date);
+        $arr_date = explode("-", $date);
+        $data = $builder->get()->getRow(); 
+        switch (strlen($data->nextcode)) {
+            case 1:
+                $nextid = "SPH/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 2:
+                $nextid = "SPH/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 3:
+                $nextid = "SPH/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+            default:
+                $nextid = "SPH/000/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+        } 
+    }
+     
+    /**
+     * FUNCTION UNTUK DATATABLE
+     */ 
+
+    public function insert_data_penawaran($data){ 
+        $header = $data["header"]; 
+
+        $builder = $this->db->table("penawaran");
+        $builder->insert(array(
+            "code"=>$this->get_next_code_penawaran($header["date_create"]),
+            "date"=>$header["date"],
+            "date_create"=>$header["date_create"],
+            "time_create"=>$header["time_create"],
+            "storeid"=>$header["storeid"],
+            "ref"=>$header["ref"],
+            "admin"=>$header["admin"],
+            "customerid"=>$header["customerid"],
+            "address"=>$header["Address"],
+            "templateid"=>$header["templateid"],
+            "subtotal"=>$header["subtotal"],
+            "discitemtotal"=>$header["discitemtotal"],
+            "disctotal"=>$header["disctotal"],
+            "grandtotal"=>$header["grandtotal"],
+        ));
+
+        $builder = $this->db->table("penawaran");
+        $builder->select('*');
+        $builder->orderby('id', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();  
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["ref"] = $query->id;
+            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $builder = $this->db->table("penawaran_detail");
+            $builder->insert($row); 
+        }
+
+    }
+    public function delete_data_penawaran($id){
+        $builder = $this->db->table("penawaran");
+        $builder->where('id',$id);
+        $builder->delete(); 
+
+       
+        $builder = $this->db->table("penawaran_detail");
+        $builder->where('ref',$id);
+        $builder->delete(); 
+
+        return JSON_ENCODE(array("status"=>true));
+    }
 }

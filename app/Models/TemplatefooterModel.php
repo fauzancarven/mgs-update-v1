@@ -3,10 +3,10 @@
 namespace App\Models; 
 
 use CodeIgniter\Model; 
-class ProjectcategoryModel extends Model
+class TemplatefooterModel extends Model
 { 
     protected $DBGroup = 'default';
-    protected $table = 'project_category';
+    protected $table = 'template_footer';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $insertID = 0;

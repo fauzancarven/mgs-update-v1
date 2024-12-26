@@ -142,15 +142,6 @@ class ActionController extends BaseController
         } 
     }  
     
-    public function project_add(){
-        $request = Services::request();
-        $models = new ProjectModel(); 
-        if ($request->getMethod(true) === 'POST') {   
-            $postData = $request->getPost(); 
-            $models->insert($postData); 
-            echo json_encode(array("status"=>true));
-        }
-    }
 
     public function project_tab(){ 
         $request = Services::request();
@@ -169,6 +160,33 @@ class ActionController extends BaseController
         } 
     }
     
+    public function project_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    
+    public function penawaran_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_penawaran($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function penawaran_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_penawaran($id);  
+        }
+    }
     public function produk_category_add(){
         $request = Services::request();
         $models = new ProdukcategoryModel(); 
@@ -227,6 +245,16 @@ class ActionController extends BaseController
             $models->selectMax('id');
             $query = $models->get()->getRow();
             echo json_encode(array("status"=>true,"data"=>$query));
+        }
+    }
+    public function item_unit_get($id){ 
+        $request = Services::request();
+        $models = new ProdukModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost("varian"); 
+ 
+            $data = $models->getDetailProduk($postData,$id);  
+            echo json_encode(array("status"=>true,"data"=>$data));
         }
     }
     public function produk_edit($id){

@@ -5,14 +5,16 @@ use App\Models\CustomerModel;
 use App\Models\CustomercategoryModel;
 use App\Models\ProvinceModel;
 use App\Models\StoreModel;
+use App\Models\UserModel;
 use App\Models\ProjectcategoryModel;
-use App\Models\ProdukunitModel;
+use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProduksatuanModel;
 use App\Models\VendorcategoryModel;
 use App\Models\VendorModel;
+use App\Models\TemplatefooterModel;
 
 use Config\Services; 
 
@@ -142,6 +144,40 @@ class SelectController extends BaseController
         }
         
     } 
+    public function users()
+    {   
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array(); 
+
+            if(!isset($postData['searchTerm'])){
+                 // Fetch record
+                $models = new UserModel();
+                $customerList = $models->select('*')
+                    ->orderBy('id')
+                    ->find();
+            }else{
+                $searchTerm = $postData['searchTerm']; 
+                // Fetch record
+                $models = new UserModel();
+                $customerList = $models->select('*')
+                    ->like('username',$searchTerm)
+                    ->orderBy('id')
+                    ->find();
+            }  
+            $data = array();
+            foreach($customerList as $row){
+                $data[] = array(
+                    "id" => $row['id'],
+                    "text" => $row['code']. " - " . $row['username'],
+                );
+            } 
+            $response['data'] = $data; 
+            return $this->response->setJSON($response);
+        }
+        
+    } 
     public function project_category()
     {   
         $request = Services::request();
@@ -254,20 +290,21 @@ class SelectController extends BaseController
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $response = array(); 
-
+            $models = new ProdukModel();
             if(!isset($postData['searchTerm'])){
                  // Fetch record
-                $models = new ProdukunitModel();
-                $customerList = $models->select('*')
-                    ->orderBy('id')
+                
+                $customerList = $models->select('*,produk.id,produk.name,produk_category.id cat_id,produk_category.name cat_name,produk_category.code cat_code,vendor,varian')
+                    ->join("produk_category","produk_category.id = produk.category") 
+                    ->orderBy('produk.id')
                     ->find();
             }else{
                 $searchTerm = $postData['searchTerm']; 
-                // Fetch record
-                $models = new ProdukunitModel();
-                $customerList = $models->select('*')
-                    ->like('name',$searchTerm)
-                    ->orderBy('id')
+                // Fetch record 
+                $customerList = $models->select('*,produk.id,produk.name,produk_category.id cat_id,produk_category.name cat_name,produk_category.code cat_code,vendor,varian')
+                    ->join("produk_category","produk_category.id = produk.category")
+                    ->like('produk.name',$searchTerm)
+                    ->orderBy('produk.id')
                     ->find();
             }  
             $data = array();
@@ -275,7 +312,10 @@ class SelectController extends BaseController
                 $data[] = array(
                     "id" => $row['id'],
                     "text" => $row['name'], 
-
+                    "category" => $row['cat_code']." - ".$row['cat_name'],  
+                    "vendor" => $row['vendor'], 
+                    "varian" => $row['varian'], 
+                    "html" => $models->getHtml($row)  
                 );
             } 
             $response['data'] = $data; 
@@ -470,6 +510,39 @@ class SelectController extends BaseController
                 // Fetch record
                 $models = new ProduksatuanModel();
                 $customerList = $models->select('*')
+                    ->like('code',$searchTerm)
+                    ->orderBy('id')
+                    ->find();
+            }  
+            $data = array();
+            foreach($customerList as $row){
+                $data[] = array(
+                    "id" => $row['id'],
+                    "text" => $row['code'], 
+
+                );
+            } 
+            $response['data'] = $data; 
+            return $this->response->setJSON($response); 
+        }
+    }
+    public function template_footer(){
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array(); 
+
+            if(!isset($postData['searchTerm'])){
+                 // Fetch record
+                $models = new TemplatefooterModel();
+                $customerList = $models->select('*')
+                    ->orderBy('id')
+                    ->find();
+            }else{
+                $searchTerm = $postData['searchTerm']; 
+                // Fetch record
+                $models = new TemplatefooterModel();
+                $customerList = $models->select('*')
                     ->like('name',$searchTerm)
                     ->orderBy('id')
                     ->find();
@@ -479,6 +552,7 @@ class SelectController extends BaseController
                 $data[] = array(
                     "id" => $row['id'],
                     "text" => $row['name'], 
+                    "detail" => $row['detail'], 
 
                 );
             } 
@@ -486,6 +560,5 @@ class SelectController extends BaseController
             return $this->response->setJSON($response); 
         }
     }
-
 
 }

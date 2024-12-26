@@ -1,0 +1,28 @@
+{
+    "roboto": {
+        "100": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_100_2ffe2bcaddb89a1eb40f0df5a1911da2",
+        "100_italic": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_100_italic_5354b729427e0f1518acdc39200f24e6",
+        "300": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_300_35a8141962cb73ae7251d8c769063c4a",
+        "300_italic": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_300_italic_700dcc270a42e0b40a996781b5930a8f",
+        "normal": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_normal_feac763b664cef4f6f370eedad7edc4d",
+        "italic": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_italic_feac763b664cef4f6f370eedad7edc4d",
+        "500": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_500_d22f595e369a2ff7e21e63bf690706c6",
+        "500_italic": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_500_italic_4a05e906daaff248b537b01e1c66af89",
+        "bold": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_bold_6c5966eb7fe80572e4a82a84b1b1870e",
+        "bold_italic": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_bold_italic_47378605f925f3fd114df6dcec4c7003",
+        "900": "assets\/fontawesome.6.7.1\/webfonts\/\/roboto_900_1af2e7c18f6959efa77048e4738a0a40",
+        "900_italic": "roboto_900_italic_ecd5487650b5313295e8815149bdf1ab"
+    },
+    "font awesome 6 free": {
+        "900": "font_awesome_6_free_900_e84ff9d9508d466fb20d40aa15aae9d9"
+    },
+    "fontawesomeregular": {
+        "normal": "fontawesomeregular_normal_f9f82a8d67ce68a54aadcd220317113f"
+    },
+    "fontawesomebrands": {
+        "normal": "fontawesomebrands_normal_511be80956dd12396274257652f25b3b"
+    },
+    "fontawesomesolid": {
+        "bold": "fontawesomesolid_bold_edf46fab0f27ea184250069f85b7eb1b"
+    }
+}

@@ -134,7 +134,7 @@
 
     $("#MsCustomerCategory").select2({
         placeholder: "Pilih kategori", 
-        dropdownParent: $('#modal-add-customer'),
+        dropdownParent: $('#modal-add-customer .modal-content'),
         ajax: {
             url: "<?= base_url()?>select2/get-data-customer-category",
             dataType: 'json',
