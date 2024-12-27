@@ -107,7 +107,7 @@ class ProdukModel extends Model
                     break;
                 }
             } 
-           return '<div class="d-flex align-items-center">
+            return '<div class="d-flex align-items-center">
                     <div class="flex-shrink-0 ">
                         ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='image-produk'>" : "<img class='image-produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").' 
                     </div>

@@ -279,6 +279,7 @@
                 $(this).find("i").addClass("fa-rotate-180");
             }
         });
+        
     }); 
 
     add_click = function(el){ 
@@ -391,7 +392,6 @@
             $(el).html(old_text); 
         });
     }
-
 
 </script>
 <?php $this->endSection(); ?>

@@ -188,13 +188,16 @@
     }
     .project-menu {
         padding: 0.5rem; 
+        padding-right: 1rem; 
     }
     .project-menu .menu-item {
+        position: relative;
         margin: 0.25rem;
         padding: 0.5rem 0.5rem;
     }
     .project-menu .menu-item i {
         min-width: 2rem;
+        text-align: center;
     }
     .project-menu .menu-item:hover {
         background: #f5f5f5;
@@ -206,6 +209,7 @@
     }
     .project-detail .tab-content {
         border:none;
+        padding:1rem;
     }
     #leads {
         bottom: 70px;
@@ -792,12 +796,46 @@
     }
     .list-project {
         background: #fbfbfb;
-        padding: 1rem 2rem;
-        margin: 0.5rem 1.5rem 0.5rem 0.5rem;
+        padding: 1rem;
+        margin: 0.5rem;
         border-radius: 0.25rem;
         box-shadow: -2px 2px 1px 0 #7f7f7f0d;
         transition: all 0.3s;
         border: 1px solid #e9e9e9;
+    }
+    .side-menu {
+        position: relative;
+    }
+    .btn-side-menu {
+        border: 1px solid #d9dadb;
+        color: #002247;
+        background: white;
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        top: 8px;
+        right: -15px;
+        padding: 0.5rem;
+    } 
+    .btn-side-menu:hover {
+        background: #f0f6fd;
+    }
+    .side-menu.hide .menu-text {
+        display: none;
+        transition: all 3s;
+    }
+    .side-menu.hide .menu-item:hover .menu-text {
+        display: inline-block;
+        position: absolute;
+        background: #f5f5f5;
+        padding: 0.5rem;
+        padding-right: 1rem;
+        border-bottom-right-radius: 1rem;
+        border-top-right-radius: 1rem;
+        top: 0;
+        height: 100%;
+        z-index: 1;
     }
 </style>
 

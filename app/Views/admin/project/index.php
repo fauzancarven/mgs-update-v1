@@ -337,7 +337,17 @@
             table.row(this).child(data.html,'child p-0').show(); 
             $('div.project-detail', table.row(this).child()).slideDown();  
 
-            loader_data_project(data.project_id,'survey')
+            loader_data_project(data.project_id,'survey');
+            $( ".btn-side-menu[data-id='" + data.project_id+ "']" ).click(function(){; 
+                var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
+                if($(parent).hasClass("hide")){
+                    $(parent).removeClass("hide");
+                    $(this).find("i").removeClass("fa-rotate-180");
+                }else{ 
+                    $(parent).addClass("hide");
+                    $(this).find("i").addClass("fa-rotate-180");
+                } 
+            })
         }
         $(".menu-item").click(function(){
             $(this).parent().find(".selected").removeClass("selected")
@@ -345,7 +355,8 @@
 
             loader_data_project($(this).data("id"),$(this).data("menu"))
         });
-
+      
+         
     }); 
 
     loader_data_project = function(project_id,type){ 
@@ -435,15 +446,9 @@
 
     isProcessingSphPrint = [];
     print_project_sph = function(ref,id,el){ 
-        if (isProcessingSphPrint[id]) {
-            return;
-        }  
-        isProcessingSphPrint[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        
+        window.open('<?= base_url("print/project/sph/") ?>' + ref, '_blank');
     };
+
     edit_project_sph = function(ref,id,el){ 
        
     }; 

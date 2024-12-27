@@ -95,7 +95,7 @@ class ProjectModel extends Model
             foreach (explode("|",$data["project_category"]) as $index=>$x) {
                 $category .= '<span class="badge badge-'.fmod($index, 5).'">'.$x.'</span>';
             }  
-            return '<div class="d-flex align-items-center">
+            return '<div class="d-flex align-items-center" style="width:10rem">
                     <div class="flex-shrink-0 ">
                         <img src="'.$data["StoreLogo"].'" alt="Gambar" class="image-logo-project">
                     </div>
@@ -103,7 +103,7 @@ class ProjectModel extends Model
                         <div class="d-flex flex-column gap-1">
                             <span class="text-head-2">'.$data["StoreCode"].'</span>
                             <span class="text-detail-2 text-truncate"> 
-                                <div class="d-flex gap-1">
+                                <div class="d-flex flex-wrap gap-1">
                                 '.$category.'
                                 </div>
                             </span> 
@@ -113,7 +113,7 @@ class ProjectModel extends Model
         }); 
         $dt->add('customer', function($data){
             return '
-                <div class="d-flex flex-column gap-1 ">
+                <div class="d-flex flex-column gap-1" style="width:15rem">
                     <span class="text-head-2">'.$data["customer_name"].'</span>
                     <span class="text-detail-2 text-truncate">'.$data["customer_address"].'</span> 
                 </div>';
@@ -141,26 +141,69 @@ class ProjectModel extends Model
         $dt->add('html', function($data){ 
         	return '  
             <div class="project-detail">
-                <div class="row">
-                    <div class="col-3">
+                <div class="d-flex">
+                    <div class="side-menu" data-id="'.$data["project_id"].'">
                         <div class="d-flex flex-column project-menu">
-                            <div class="menu-item selected" data-id="'.$data["project_id"].'" data-menu="survey"><i class="fa-solid fa-list-check"></i>Survey</div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="rab"><i class="fa-solid fa-list"></i>RAB</div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="penawaran"><i class="fa-solid fa-hand-holding-droplet"></i>Penawaran</div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="pembelian"><i class="fa-solid fa-cart-shopping"></i>Pembelian</div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="invoice"><i class="fa-solid fa-money-bill"></i>Invoice</div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="documentasi"><i class="fa-solid fa-folder-open"></i>Dokumentasi</div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="diskusi">
-                                <i class="fa-regular fa-comments position-relative">
-                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle"> 
+                            <div class="menu-item selected" data-id="'.$data["project_id"].'" data-menu="survey">
+                                <i class="fa-solid fa-list-check position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                Diskusi
+                                <span class="menu-text">Survey</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="rab">
+                                <i class="fa-solid fa-list position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">RAB</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="penawaran">
+                                <i class="fa-solid fa-hand-holding-droplet position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Penawaran</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="pembelian">
+                                <i class="fa-solid fa-cart-shopping position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Pembeliani</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="invoice">
+                                <i class="fa-solid fa-money-bill position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Invoicei</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="documentasi">
+                                <i class="fa-solid fa-folder-open position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Dokumentasi</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="diskusi">
+                                <i class="fa-regular fa-comments position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Diskusi</span>
                             </div>
                         </div>
+                        <button class="btn-side-menu" data-id="'.$data["project_id"].'"><i class="fa-solid fa-angle-left"></i></button>
                     </div>
-                    <div class="col-9 border-left">
+                    <div class="flex-fill border-left">
                         <div class="tab-content" data-id="'.$data["project_id"].'" style="display:none">
                             <div class="d-flex justify-content-center flex-column align-items-center">
                                 <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
@@ -315,7 +358,7 @@ class ProjectModel extends Model
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3">'.$item->text.'</span>
                                 <span class="text-detail-2 text-truncate">'.$item->group.'</span> 
-                                <div class="d-flex gap-1">
+                                <div class="d-flex flex-wrap gap-1">
                                     '.$arr_badge.'
                                 </div>
                             </div> 
@@ -362,29 +405,31 @@ class ProjectModel extends Model
             }
             $html .= '
             <div class="row list-project mb-4">
-                <div class="col-2">
-                    <div class="d-flex flex-column">
-                        <span class="text-detail-2">Tgl. : '.$row->date.'</span>
-                        <span class="text-head-2">'.$row->code.'</span>
+                <div class="col-12 d-flex gap-4">
+                    <div class="d-block">
+                        <div class="d-flex flex-column">
+                            <span class="text-detail-2">Tgl. : '.$row->date.'</span>
+                            <span class="text-head-2">'.$row->code.'</span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="d-flex flex-column">
-                        <span class="text-detail-2">Alamat:</span>
-                        <span class="text-head-2">'.$row->address.'</span>
+                    <div class="flex-fill">
+                        <div class="d-flex flex-column">
+                            <span class="text-detail-2">Alamat:</span>
+                            <span class="text-head-2">'.$row->address.'</span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-1">
-                    <div class="d-flex flex-column">
-                        <span class="text-detail-2">Grand Total:</span>
-                        <span class="text-head-2">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
+                    <div class="d-block">
+                        <div class="d-flex flex-column">
+                            <span class="text-detail-2">Grand Total:</span>
+                            <span class="text-head-2">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3">
-                    <div class="d-flex float-end"> 
-                        <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</button> 
-                        <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
-                        <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                    <div class="d-block">
+                        <div class="d-flex float-end"> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
+                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 detail-item mt-4 pt-4 border-top">
