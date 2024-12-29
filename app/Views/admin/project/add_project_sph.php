@@ -1013,18 +1013,124 @@
     $("#savequillas").hide();
     $("#editquill").hide();
     $("#savequill").click(function(){ 
-        $("#savequill").hide();
-        $("#savequillas").hide();
-        $("#editquill").show();
-        quill.enable(false);
-        quill.root.style.background = '#F7F7F7'; // warna disable
+        if($("#SphFormatFooter").select2("data")[0]["id"] == $("#SphFormatFooter").select2("data")[0]["text"]){
+            $.ajax({ 
+                dataType: "json",
+                method: "POST",
+                url: "<?= base_url() ?>action/add-data-template-footer", 
+                data:{
+                    "name":$("#SphFormatFooter").select2("data")[0]["text"] ,
+                    "detail": quill.getSemanticHTML(), 
+                    "delta": quill.getContents(), 
+                },
+                success: function(data) {    
+                    console.log(data); 
+                    if(data["status"]===true){     
+                        $("#savequill").hide();
+                        $("#savequillas").hide();
+                        $("#editquill").show();
+                        quill.enable(false);
+                        quill.root.style.background = '#F7F7F7'; // warna disable    
+                    }
+                },
+                error : function(xhr, textStatus, errorThrown){   
+                    Swal.fire({
+                        icon: 'error',
+                        text: xhr["responseJSON"]['message'], 
+                        confirmButtonColor: "#3085d6", 
+                    });
+                }
+            }); 
+        }else{
+            $.ajax({ 
+                dataType: "json",
+                method: "POST",
+                url: "<?= base_url() ?>action/edit-data-template-footer/" + $("#SphFormatFooter").select2("data")[0]["id"] , 
+                data:{
+                    "name": $("#SphFormatFooter").select2("data")[0]["text"] ,
+                    "detail": quill.getSemanticHTML(), 
+                    "delta": quill.getContents(), 
+                },
+                success: function(data) {    
+                    console.log(data); 
+                    if(data["status"]===true){     
+                        $("#savequill").hide();
+                        $("#savequillas").hide();
+                        $("#editquill").show();
+                        quill.enable(false);
+                        quill.root.style.background = '#F7F7F7'; // warna disable    
+                    }
+                },
+                error : function(xhr, textStatus, errorThrown){   
+                    Swal.fire({
+                        icon: 'error',
+                        text: xhr["responseJSON"]['message'], 
+                        confirmButtonColor: "#3085d6", 
+                    });
+                }
+            }); 
+        }
     })
     $("#savequillas").click(function(){  
-        $("#savequill").hide();
-        $("#savequillas").hide();
-        $("#editquill").show();
-        quill.enable(false);
-        quill.root.style.background = '#F7F7F7'; // warna disable
+        $("#modal-add-sph").modal("hide"); 
+        Swal.fire({
+            title: 'Simpan Template',
+            input: 'text',
+            buttonsStyling: false,
+            showCancelButton: true,
+            showCancelButton: true,
+            customClass: {
+                confirmButton: 'btn btn-primary mx-1',
+                cancelButton: 'btn btn-secondary mx-1',
+                loader: 'custom-loader',
+                input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
+            },
+            backdrop: true,
+            confirmButtonText: "Simpan",
+            loaderHtml: '<div class="spinner-border text-primary"></div>',
+            preConfirm: async (name) => {
+                try {  
+                    $.ajax({ 
+                        dataType: "json",
+                        method: "POST",
+                        url: "<?= base_url() ?>action/add-data-template-footer", 
+                        data:{
+                            "name": name ,
+                            "detail": quill.getSemanticHTML(), 
+                            "delta": quill.getContents(), 
+                        },
+                        success: function(data) {    
+                            console.log(data); 
+                            if(data["status"]===true){    
+                                $('#SphFormatFooter').append(new Option(data["data"]["name"] ,data["data"]["id"], true, true)).trigger('change');
+                                $("#savequill").hide();
+                                $("#savequillas").hide();
+                                $("#editquill").show();
+                                quill.enable(false);
+                                quill.root.style.background = '#F7F7F7'; // warna disable    
+                            }
+                        },
+                        error : function(xhr, textStatus, errorThrown){   
+                            Swal.fire({
+                                icon: 'error',
+                                text: xhr["responseJSON"]['message'], 
+                                confirmButtonColor: "#3085d6", 
+                            });
+                        }
+                    }); 
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {    
+            $("#savequill").hide();
+            $("#savequillas").hide();
+            $("#editquill").show();
+            quill.enable(false);
+            quill.root.style.background = '#F7F7F7'; // warna disable
+            $("#modal-add-sph").modal("show");
+        }); 
     })
     $("#editquill").click(function(){
 
@@ -1086,7 +1192,7 @@
         templateSelection: function(params) {
             return params.text;
         }, 
-        escapeMarkup: function(m) { return m; }
+        //escapeMarkup: function(m) { return m; }
     }).on("select2:select", function(e) {  
         var data = e.params.data;    
         console.log(data);
@@ -1100,13 +1206,15 @@
             quill.root.style.background = '#FFFFFF'; // warna enable
         } else {
             console.log('select baru ditambahkan:', e.params.data.text); 
-
-            quill.setContents(JSON.parse(data.detail)); 
+            quill.setContents(JSON.parse(data.delta));  
+            
             $("#savequill").hide();
             $("#savequillas").hide();
             $("#editquill").show();
         }
-    });   
+    }).on("change", function(e) {   
+        console.log("change");
+    });
     $("#btn-add-penawaran").click(function(){
         if($("#SphFormatFooter").val() == null){
             Swal.fire({

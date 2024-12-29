@@ -174,7 +174,7 @@ class ProjectModel extends Model
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <span class="menu-text">Pembeliani</span>
+                                <span class="menu-text">Pembelian</span>
                             </div>
                             <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="invoice">
                                 <i class="fa-solid fa-money-bill position-relative">
@@ -182,7 +182,7 @@ class ProjectModel extends Model
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <span class="menu-text">Invoicei</span>
+                                <span class="menu-text">Invoice</span>
                             </div>
                             <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="documentasi">
                                 <i class="fa-solid fa-folder-open position-relative">
@@ -354,7 +354,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex ">
-                            <span class="no-urut text-head-3 '.($item->type == "product" ? "ps-2" : "").'">'.($item->type == "product" ? $no : $huruf).'.</span> 
+                            <span class="no-urut text-head-3">'.($item->type == "product" ? $no : $huruf).'.</span> 
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3">'.$item->text.'</span>
                                 <span class="text-detail-2 text-truncate">'.$item->group.'</span> 
@@ -404,8 +404,8 @@ class ProjectModel extends Model
                 
             }
             $html .= '
-            <div class="row list-project mb-4">
-                <div class="col-12 d-flex gap-4">
+            <div class="list-project mb-4 p-2">
+                <div class="d-flex flex-wrap gap-2 px-2">
                     <div class="d-block">
                         <div class="d-flex flex-column">
                             <span class="text-detail-2">Tgl. : '.$row->date.'</span>
@@ -432,7 +432,7 @@ class ProjectModel extends Model
                         </div>
                     </div>
                 </div>
-                <div class="col-12 detail-item mt-4 pt-4 border-top">
+                <div class="detail-item mt-2 p-2 border-top">
                     '.$html_items.' 
                 </div>
             </div> 
@@ -552,7 +552,7 @@ class ProjectModel extends Model
     }
      
     /**
-     * FUNCTION UNTUK DATATABLE
+     * FUNCTION UNTUK SPH / PENAWARAN
      */ 
 
     public function insert_data_penawaran($data){ 
@@ -590,6 +590,34 @@ class ProjectModel extends Model
         }
 
     }
+    public function update_data_penawaran($data,$id){ 
+        $header = $data["header"]; 
+
+        $builder = $this->db->table("penawaran"); 
+        $builder->set('date', $header["date"]); 
+        $builder->set('storeid', $header["storeid"]);  
+        $builder->set('admin', $header["admin"]); 
+        $builder->set('customerid', $header["customerid"]); 
+        $builder->set('address', $header["address"]); 
+        $builder->set('templateid', $header["templateid"]); 
+        $builder->set('subtotal', $header["subtotal"]); 
+        $builder->set('discitemtotal', $header["discitemtotal"]); 
+        $builder->set('disctotal', $header["disctotal"]); 
+        $builder->set('grandtotal', $header["grandtotal"]);  
+        $builder->where('id', $id); 
+        $builder->update(); 
+
+        $builder = $this->db->table("penawaran_detail");
+        $builder->where('ref',$id);
+        $builder->delete(); 
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["ref"] = $id;
+            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $builder = $this->db->table("penawaran_detail");
+            $builder->insert($row); 
+        } 
+    }
     public function delete_data_penawaran($id){
         $builder = $this->db->table("penawaran");
         $builder->where('id',$id);
@@ -601,5 +629,51 @@ class ProjectModel extends Model
         $builder->delete(); 
 
         return JSON_ENCODE(array("status"=>true));
+    }
+
+    public function getdataSPH($id){
+        $builder = $this->db->table("penawaran");
+        $builder->select("*,penawaran.address,penawaran.code,penawaran.id,customer.name");
+        $builder->join("customer","customerid = customer.id");
+        $builder->join("template_footer","templateid = template_footer.id");
+        $builder->where('penawaran.id',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
+    }
+    public function getdataDetailSPH($id){
+        $builder = $this->db->table("penawaran_detail");
+        $builder->where('ref',$id); 
+        return $builder->get()->getResult();  
+    }
+
+    public function insert_data_template_footer($data){  
+
+        $builder = $this->db->table("template_footer");
+        $builder->insert(array(
+            "name"=> $data["name"],
+            "detail"=> $data["detail"],
+            "delta"=> JSON_ENCODE($data["delta"]), 
+        ));  
+
+         // GET ID PRODUK 
+        $builder = $this->db->table("template_footer");
+        $builder->select('*'); 
+        $builder->orderby('id', 'DESC');
+        $builder->limit(1);
+        return $builder->get()->getRow();
+    }
+    public function update_data_template_footer($data,$id){   
+        $builder = $this->db->table("template_footer");
+        $builder->set('name', $data["name"]);
+        $builder->set('detail', $data["detail"]); 
+        $builder->set('delta', JSON_ENCODE($data["delta"]));
+        $builder->where('id', $id); 
+        $builder->update(); 
+    }
+    public function get_data_template_footer($id){
+        $builder = $this->db->table("template_footer");
+        $builder->where('id',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
     }
 }

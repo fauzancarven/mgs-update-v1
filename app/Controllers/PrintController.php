@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Models\ProjectModel;
 
 define("DOMPDF_ENABLE_REMOTE", false);
 class PrintController extends BaseController
@@ -42,14 +43,19 @@ class PrintController extends BaseController
         $options->set('paper', 'A4');
         $options->set('orientation', 'potrait');
 
+        $models = new ProjectModel(); 
+        $data["project"] = $models->getdataSPH($id); 
+        $data["detail"] = $models->getdataDetailSPH($id); 
+        
         $dompdf = new Dompdf($options);  
-        $dompdf->getOptions()->setChroot('C:\\xampp8.2\\htdocs\\mahiera\\assets');  
-        // $gambar = file_get_contents('assets/images/logo/brand/brj.png');
-        // $data["image"] = "data:image/png;base64," . base64_encode($gambar);
-        $html = view('admin/project/print'); 
+        $dompdf->getOptions()->setChroot('C:\\xampp8.2\\htdocs\\mahiera\\assets');   
+
+        $html = view('admin/project/print_a4',$data); 
         $dompdf->loadHtml($html);
         $dompdf->render();
-        $dompdf->stream('resume.pdf', [ 'Attachment' => false ]);
+        $dompdf->stream( 'SPH_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
+
+
 	}
     public function project_sph_html($id)
 	{

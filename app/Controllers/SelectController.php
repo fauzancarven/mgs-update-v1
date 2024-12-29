@@ -553,6 +553,7 @@ class SelectController extends BaseController
                     "id" => $row['id'],
                     "text" => $row['name'], 
                     "detail" => $row['detail'], 
+                    "delta" => $row['delta'], 
 
                 );
             } 

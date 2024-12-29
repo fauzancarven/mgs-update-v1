@@ -240,6 +240,7 @@ class ProdukModel extends Model
         $nama_file = $nama . $extension;
         $biner = base64_decode($parts[1]);
         file_put_contents($lokasi ."/". $nama_file, $biner); 
+        return $lokasi ."/". $nama_file;
     }
     private function ambil_gambar_base64($path_gambar) {
        // Cek apakah file gambar ada
@@ -262,31 +263,31 @@ class ProdukModel extends Model
         return $base64;
     }
     public function add_produk($method){
-        $code =  $this->get_next_code($method["data"]["category"]); 
-        $method["data"]["code"] =  $code;
+    //     $code =  $this->get_next_code($method["data"]["category"]); 
+    //     $method["data"]["code"] =  $code;
 
-        // ADD Header PRODUK 
-        $builder = $this->db->table($this->table);
-        $builder->insert($method["data"]); 
+    //     // ADD Header PRODUK 
+    //     $builder = $this->db->table($this->table);
+    //     $builder->insert($method["data"]); 
 
-        // GET ID PRODUK 
-        $builder = $this->db->table($this->table);
-        $builder->select('*'); 
-        $builder->orderby('id', 'DESC');
-        $builder->limit(1);
-        $query = $builder->get()->getRow();
+    //     // GET ID PRODUK 
+    //     $builder = $this->db->table($this->table);
+    //     $builder->select('*'); 
+    //     $builder->orderby('id', 'DESC');
+    //     $builder->limit(1);
+    //     $query = $builder->get()->getRow();
         
-       // ADD DETAIL PRODUK 
-        foreach($method["detail"] as $row){ 
-            $row["ref"] = $query->id;
-            $row["varian"] = json_encode($row["varian"]); 
-            unset($row["satuantext"]);    
-            $builder = $this->db->table("produk_detail");
-            $builder->insert($row); 
-        }
-
-       
-       // ADD IMAGE PRODUK  
+    //    // ADD DETAIL PRODUK 
+    //     foreach($method["detail"] as $row){ 
+    //         $row["ref"] = $query->id;
+    //         $row["varian"] = json_encode($row["varian"]); 
+    //         unset($row["satuantext"]);    
+    //         $builder = $this->db->table("produk_detail");
+    //         $builder->insert($row); 
+    //     }
+        //$id = $query->id;
+       $id = "20";
+    //    // ADD IMAGE PRODUK  
        
         //Buat folder utama
         $folder_utama = 'assets/images/produk'; 
@@ -295,23 +296,26 @@ class ProdukModel extends Model
         } 
 
         //Buat folder berdasarkan id
-        if (!file_exists($folder_utama."/".$query->id)) {
-            mkdir($folder_utama."/".$query->id, 0777, true);  
+        if (!file_exists($folder_utama."/".$id)) {
+            mkdir($folder_utama."/".$id, 0777, true);  
         }
 
         //hapus semua file di folder id tersebut
-        if (is_dir($folder_utama."/".$query->id)) {
-            $files = scandir($folder_utama."/".$query->id);
+        if (is_dir($folder_utama."/".$id)) {
+            $files = scandir($folder_utama."/".$id);
             foreach ($files as $file) {
                 if ($file != '.' && $file != '..') {
-                    unlink($folder_utama."/".$query->id . '/' . $file);
+                    unlink($folder_utama."/".$id . '/' . $file);
                 }
             }  
         }
-        if (isset($data['image'])) { 
+        
+        
+        if (isset($method['image'])) { 
             $no = 1;
+           
             foreach($method["image"] as $row){ 
-                $this->simpan_gambar_base64($row, $folder_utama."/".$query->id, $no);
+                $data_image = $this->simpan_gambar_base64($row, $folder_utama."/".$id, $no); 
                 $no++;
             }
         }
@@ -371,7 +375,7 @@ class ProdukModel extends Model
                 }
             }  
         }
-        if (isset($data['image'])) { 
+        if (isset($method['image'])) { 
             $no = 1;
             foreach($method["image"] as $row){ 
                 $this->simpan_gambar_base64($row, $folder_utama."/".$id, $no);

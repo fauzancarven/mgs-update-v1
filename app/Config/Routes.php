@@ -55,7 +55,10 @@ $routes->post('/action/get-data-project-tab', 'ActionController::project_tab', [
 $routes->post('/action/get-data-project/(:any)', 'ActionController::project/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-project', 'ActionController::project_add', ['filter' => 'login']); 
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
+$routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project-sph/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/add-data-template-footer', 'ActionController::template_footer_add', ['filter' => 'login']); 
+$routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']); 
 
 
 /** ACCOUNT PRODUK */
@@ -72,7 +75,7 @@ $routes->post('/action/add-data-item-unit', 'ActionController::item_unit_add', [
 $routes->post('/action/get-data-item-unit/(:num)', 'ActionController::item_unit_get/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/$1', ['filter' => 'login']);  
- 
+
 
 
 
@@ -120,6 +123,7 @@ $routes->post('/message/select-produk', 'MessageController::produk_select', ['fi
 
 $routes->post('/message/add-project', 'MessageController::project_add', ['filter' => 'login']);  
 $routes->post('/message/add-project-sph/(:num)', 'MessageController::project_sph_add/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);  
 
 
 

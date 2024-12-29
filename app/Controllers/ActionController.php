@@ -179,6 +179,15 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+    public function penawaran_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_penawaran($postData,$id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
     public function penawaran_delete($id){
         $request = Services::request();
         $models = new ProjectModel(); 
@@ -187,6 +196,27 @@ class ActionController extends BaseController
             echo $models->delete_data_penawaran($id);  
         }
     }
+
+
+    public function template_footer_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $data = $models->insert_data_template_footer($postData); 
+            echo json_encode(array("status"=>true,"data"=>$data));
+        }
+    }
+    public function template_footer_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $data =  $models->update_data_template_footer($postData,$id); 
+            echo json_encode(array("status"=>true,"data"=>$data));
+        }
+    }
+    
     public function produk_category_add(){
         $request = Services::request();
         $models = new ProdukcategoryModel(); 

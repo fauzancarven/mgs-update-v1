@@ -46,8 +46,7 @@
                     <th class="py-lg-4 py-3 px-lg-2 px-0 text-center">Create Date</th>  
                     <th class="py-lg-4 py-3 px-lg-2 px-0">Customer</th>     
                     <th class="py-lg-4 py-3 px-lg-2 px-0">Admin</th>  
-                    <th class="py-lg-4 py-3 px-lg-2 px-0">Last Activity</th>  
-                    <th class="py-lg-4 py-3 px-lg-2 px-0">Note</th>  
+                    <th class="py-lg-4 py-3 px-lg-2 px-0">Last Activity</th>   
                     <th data-priority="2" class="py-lg-4 py-3 px-lg-2 px-0 text-end"><i class="ti-settings"></i></th>
                 </tr>
             </thead > 
@@ -294,8 +293,7 @@
                 { data: "date_time",orderable: false  , className:"text-center"}, 
                 { data: "customer" ,orderable: false },  
                 { data: "admin" ,orderable: false}, 
-                { data: "status" ,orderable: false}, 
-                { data: "comment" ,orderable: false}, 
+                { data: "status" ,orderable: false},  
                 { data: "action" ,orderable: false , className:"action-td"}, 
             ],
             "rowCallback": function(row, data) {
@@ -446,11 +444,42 @@
 
     isProcessingSphPrint = [];
     print_project_sph = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/sph/") ?>' + ref, '_blank');
+        window.open('<?= base_url("print/project/sph/") ?>' + id, '_blank');
     };
 
+    
+    isProcessingSphEdit = [];
     edit_project_sph = function(ref,id,el){ 
-       
+          // INSERT LOADER BUTTON
+          if (isProcessingSphEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingSphEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-sph/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-sph").modal("show"); 
+
+                isProcessingSphEdit[id] = false;
+                $(el).html(old_text);
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSphEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
     }; 
     
     isProcessingSphDelete = [];

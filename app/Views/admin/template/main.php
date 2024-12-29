@@ -837,6 +837,9 @@
         height: 100%;
         z-index: 1;
     }
+    .ql-editor{
+        padding: 0.5rem !important;
+    }
 </style>
 
 
