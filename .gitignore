@@ -1,5 +1,6 @@
+.env
+.htaccess
 vendor/*
 writable/*
 tests/*
 assets/images/*
-.env
