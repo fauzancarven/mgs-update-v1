@@ -48,7 +48,7 @@ class PrintController extends BaseController
         $data["detail"] = $models->getdataDetailSPH($id); 
         
         $dompdf = new Dompdf($options);  
-        $dompdf->getOptions()->setChroot('C:\\xampp8.2\\htdocs\\mahiera\\assets');   
+        $dompdf->getOptions()->setChroot('assets');   
 
         $html = view('admin/project/print_a4',$data); 
         $dompdf->loadHtml($html);
