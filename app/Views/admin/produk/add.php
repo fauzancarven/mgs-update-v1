@@ -1138,8 +1138,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             },
             success: function(data) {   
                 console.log(data) 
-                isProcessingSave = false;
-                return;
+                isProcessingSave = false; 
                 $("#btn-add-produk").html(old_text);
                 if(data["status"]===true){
                     Swal.fire({
