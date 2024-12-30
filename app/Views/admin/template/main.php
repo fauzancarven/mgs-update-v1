@@ -152,6 +152,17 @@
         width: auto;
         line-height: 1.5;
     }
+    .text-detail-3 { 
+        color: #537cab;
+        font-size: 0.7rem;
+        width: auto; 
+    }
+    .divider {
+        border: 1px solid #4292eb;
+        height: 9px;
+        margin-left: 2px;
+        margin-right: 2px;
+    }
     .badge{ 
         font-size: 0.6rem;
         padding: 0.25rem 0.5rem;
@@ -211,6 +222,29 @@
         border:none;
         padding:1rem;
     }
+
+    .project-menu.mobile {
+        padding: 0;
+        width: 100%;
+    }
+    .project-menu.mobile .menu-text {
+        display: none;
+    }
+    .project-menu.mobile .menu-item { 
+        padding: 0.25rem 0;
+    }
+    .card.mobile{
+        border:1px solid #f1f1f1;
+    }
+    .menu-item {
+        color: #305176;
+    }
+    
+    .tab-content.mobile  {
+        border:none !important;
+        width:100% !important;
+        padding: 0.25rem
+    }
     #leads {
         bottom: 70px;
         z-index: 9999999999;
@@ -258,6 +292,27 @@
         .content-wrapper {
             padding: 0.5rem;
         } 
+        
+        /* border untuk table utama */
+        .table-hover-custom tbody tr td{
+            padding: 0.25rem;
+        }
+        .action-td{
+            width: 10px;
+        }
+        .image-logo-project{
+            width:15px !important;
+            height:15px !important;
+        }
+        .badge {
+            font-size: 0.5rem; 
+            border-radius: 0.25rem;
+            padding: 0.1rem 0.2rem;
+        }
+        
+        .table-hover-custom tbody tr:hover td{
+            background-color:transparent !important;
+        }
     }
 
     .input-form{
@@ -845,7 +900,12 @@
     .ql-editor{
         padding: 0.5rem !important;
     }
-
+    .main-modal {
+        .modal-body {
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+    }
 </style>
 
 

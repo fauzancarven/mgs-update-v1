@@ -52,6 +52,7 @@
     </div>
 </div> 
 
+<div id="modal-optional"></div>
 <script>
      $('#date-project').daterangepicker({
         "singleDatePicker": true,
@@ -305,4 +306,37 @@
             }
         });
     });
+    var isProcessingCustomerAdd;
+    var isProcessingSave;
+    function customer_add(){
+        if (isProcessingCustomerAdd) { 
+            return;
+        }  
+        isProcessingCustomerAdd = true;  
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-customer", 
+            success: function(data) {  
+
+                $("#modal-add-project").modal("hide"); 
+                $("#modal-optional").html(data);
+                $("#modal-add-customer").modal("show");  
+
+                $("#modal-add-customer").on("hidden.bs.modal",function(){ 
+                    $("#modal-add-project").modal("show");  
+                })   
+                isProcessingCustomerAdd = false;   
+ 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingCustomerAdd = false; 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
 </script>

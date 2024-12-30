@@ -18,13 +18,13 @@
 <div class="card radius-15 overflow-hidden mb-3 border-0 shadow-sm">
     <div class="card-header border-bottom-0 px-4 pt-4 bg-white mb-lg-0 mb-2">
         <div class="d-flex align-items-center row">
-            <div class="mb-0 col-lg-2 col-6 pb-lg-2 pb-4 order-lg-1">
+            <div class="mb-0 col-lg-2 col-8 pb-lg-2 pb-4 order-lg-1">
                 <h4 class="mb-0">LIST PROJECT</h4> 
             </div> 
-            <div class="justify-content-end d-flex col-lg-2 col-6 pb-lg-2 pb-4  order-lg-3">
-                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="ti-plus pe-2"></i>Tambah <span class="d-none d-md-inline-block">Project<span></button>
+            <div class="justify-content-end d-flex col-lg-2 col-4 pb-lg-2 pb-4  order-lg-3">
+                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Project<span></button>
             </div>
-            <div class="d-lg-flex search-bar col-lg-8 col-12 order-lg-2 pb-lg-2 pb-4">
+            <div class="d-lg-flex search-bar col-lg-8 col-12 order-lg-2 pb-lg-2 pb-0">
                 <div class="form-inline  navbar-search w-100">
                     <div class="input-group input-group-sm w-100 ">
                         <input type="text" class="form-control rounded-left small bg-light " placeholder="Cari Data ..." aria-label="Search" aria-describedby="basic-addon2" name="search_user"  id="input-search-data">
@@ -38,7 +38,7 @@
             </div>
         </div>
     </div> 
-    <div class="card-body py-4 " id="element-to-print"> 
+    <div class="card-body py-2 py-md-4" id="element-to-print"> 
         <table class="table table-borderless mb-0 table-hover-custom" id="table-project">
             <thead class=" ">
                 <tr class="">
@@ -49,7 +49,7 @@
                     <th class="py-lg-4 py-3 px-lg-2 px-0">Last Activity</th>   
                     <th data-priority="2" class="py-lg-4 py-3 px-lg-2 px-0 text-end"><i class="ti-settings"></i></th>
                 </tr>
-            </thead > 
+            </thead> 
             <tbody class="">
                 <!-- <tr class="dt-hasChild">
                     <td>
@@ -247,22 +247,46 @@
             "processing": true,
             "serverSide": true, 
             "ajax": {
-                "url": "<?= base_url()?>datatables/get-data-produk",
+                "url": "<?= base_url()?>datatables/get-data-project",
                 "type": "POST", 
                 "data": function(data){
                     data["search"]["value"] = $("#input-search-data").val()
                 }
             }, 
             "columns": [
-                { data: "produk_name",orderable: false,},  
-                { data: "vendor_detail" ,orderable: false,visible: false, },  
-                { data: "price_range" ,orderable: false , className:"text-center",visible: false,}, 
-                { data: "action" ,orderable: false , className:"action-td"}, 
+                { data: "head_mobile",orderable: false ,  "title": ""},  
+                { data: "date_time",orderable: false  , className:"text-center",'visible' : false }, 
+                { data: "customer" ,orderable: false,'visible' : false  },  
+                { data: "admin" ,orderable: false ,'visible' : false }, 
+                { data: "status" ,orderable: false,'visible' : false },  
+                { data: "action" ,orderable: false , className:"action-td",'visible' : false }, 
             ],
             "rowCallback": function(row, data) {
                 $(row).attr('data-id', data.id);
             } 
         }); 
+
+        $('#table-project').find("thead").hide();
+        $('#table-project').on( 'draw.dt', function (e) { 
+            $(".project-menu").each(function(idx){  
+                var id = $("#table-project").DataTable().data()[idx]["project_id"];
+                $(".menu-item[data-id='" + id +"']").click(function(){
+                    if($(this).hasClass("selected")){
+                        $(this).removeClass("selected");
+                        $(".tab-content[data-id='"+ id+"']").hide() 
+                    }else{ 
+                        $(this).parent().find(".selected").removeClass("selected")
+                        $(this).addClass("selected") 
+
+                        loader_data_project(id,$(this).data("menu"))
+                    }
+                }); 
+            }); 
+        });
+
+        
+
+
     }else{
         table = $('#table-project').DataTable({
             "responsive": {
@@ -300,6 +324,49 @@
                 $(row).attr('data-id', data.id);
             } 
         }); 
+
+        
+        // Tampilkan detail ketika baris diklik
+        $('#table-project tbody button').on('click', function(event) {
+            event.stopPropagation();
+        }); 
+        table.on('click', 'tr', function(event) {
+            var target = $(event.target);  
+            if (
+                target.closest('button').length ||  
+                target.parents().hasClass("project-detail") ||  
+                target.parent().hasClass("project-detail") ||  
+                target.hasClass("project-detail") ||    
+                target.closest('th').length
+            ) {
+                return;
+            }
+
+            if (table.row(this).child.isShown()) { 
+                $('div.project-detail', table.row(this).child()).slideUp( function () {
+                    table.row(this).child.hide(); 
+                } );
+            } else {
+                var data = table.row(this).data(); 
+            
+                table.row(this).child(data.html,'child p-0').show(); 
+                $('div.project-detail', table.row(this).child()).slideDown();  
+
+                loader_data_project(data.project_id,'survey');
+                $( ".btn-side-menu[data-id='" + data.project_id+ "']" ).click(function(){; 
+                    var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
+                    if($(parent).hasClass("hide")){
+                        $(parent).removeClass("hide");
+                        $(this).find("i").removeClass("fa-rotate-180");
+                    }else{ 
+                        $(parent).addClass("hide");
+                        $(this).find("i").addClass("fa-rotate-180");
+                    } 
+                })
+            }
+        
+            
+        }); 
     }
 
     $("#input-search-data").keyup(function(){
@@ -309,53 +376,6 @@
         table.ajax.reload(null, false).responsive.recalc().columns.adjust();
     })
 
-      // Tampilkan detail ketika baris diklik
-    $('#table-produk tbody button').on('click', function(event) {
-        event.stopPropagation();
-    }); 
-    table.on('click', 'tr', function(event) {
-        var target = $(event.target);  
-        if (
-            target.closest('button').length ||  
-            target.parents().hasClass("project-detail") ||  
-            target.parent().hasClass("project-detail") ||  
-            target.hasClass("project-detail") ||    
-            target.closest('th').length
-        ) {
-            return;
-        }
-
-        if (table.row(this).child.isShown()) { 
-            $('div.project-detail', table.row(this).child()).slideUp( function () {
-                table.row(this).child.hide(); 
-            } );
-        } else {
-            var data = table.row(this).data(); 
-           
-            table.row(this).child(data.html,'child p-0').show(); 
-            $('div.project-detail', table.row(this).child()).slideDown();  
-
-            loader_data_project(data.project_id,'survey');
-            $( ".btn-side-menu[data-id='" + data.project_id+ "']" ).click(function(){; 
-                var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
-                if($(parent).hasClass("hide")){
-                    $(parent).removeClass("hide");
-                    $(this).find("i").removeClass("fa-rotate-180");
-                }else{ 
-                    $(parent).addClass("hide");
-                    $(this).find("i").addClass("fa-rotate-180");
-                } 
-            })
-        }
-        $(".menu-item").click(function(){
-            $(this).parent().find(".selected").removeClass("selected")
-            $(this).addClass("selected") 
-
-            loader_data_project($(this).data("id"),$(this).data("menu"))
-        });
-      
-         
-    }); 
 
     loader_data_project = function(project_id,type){ 
         
@@ -407,7 +427,6 @@
             }
         });
     }; 
-
 
 
     /* 

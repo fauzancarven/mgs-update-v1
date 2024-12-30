@@ -1,5 +1,5 @@
 <!-- CUSTOMER -->
-<div class="modal fade" id="modal-add-customer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-customer-label" aria-hidden="true" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-customer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-customer-label">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -134,6 +134,8 @@
 
     $("#MsCustomerCategory").select2({
         placeholder: "Pilih kategori", 
+        dropdownAutoWidth: true,
+        container: $('#modal-add-customer'),
         dropdownParent: $('#modal-add-customer .modal-content'),
         ajax: {
             url: "<?= base_url()?>select2/get-data-customer-category",
@@ -181,7 +183,12 @@
             }
         });
     }  
-
+    $(document).on("select2:opening", (e) => {
+        $('.modal-body').css('overflow', 'visible');
+    });
+    $(document).on("select2:open", (e) => {
+        $('.modal-body').css('overflow', 'auto');
+    });
     
     // SELECT CUSTOM VILLAGE
     var timeoutopenvillage;

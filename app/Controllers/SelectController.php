@@ -37,8 +37,8 @@ class SelectController extends BaseController
                  // Fetch record
                 $models = new CustomerModel();
                 $customerList = $models->select("*")
-                    ->orderBy('name')
-                    ->findAll(5);
+                    ->orderBy('code',"DESC")
+                    ->findAll();
             }else{
                 $searchTerm = $postData['searchTerm'];
     
@@ -46,8 +46,8 @@ class SelectController extends BaseController
                 $models = new CustomerModel();
                 $customerList = $models->select("*")
                     ->like('name',$searchTerm)
-                    ->orderBy('name')
-                    ->findAll(5);
+                    ->orderBy('code',"DESC")
+                    ->findAll();
             } 
       
             $data = array(); 

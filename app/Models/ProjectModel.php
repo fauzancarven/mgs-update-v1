@@ -60,14 +60,15 @@ class ProjectModel extends Model
             project.category project_category, 
             project.id project_id,
             StoreLogo,
-            StoreCode,
+            StoreCode, 
             customer.id customer_id, 
             customer.name customer_name, 
             customer.code customer_code, 
+            customer.company customer_company, 
             customer.address customer_address, 
             status, 
             admin,
-            project.comment comment
+            project.comment comment, 
         '); 
         $builder->like("project.category",$search);
         $builder->orLike("StoreCode",$search);
@@ -135,9 +136,129 @@ class ProjectModel extends Model
                             <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["project_id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                         </ul>
                     </div>
-                <div class="d-md-flex d-none"> 
+                </div> 
                 ';
         });  
+        $dt->add('head_mobile', function($data){
+            $category = "";
+            foreach (explode("|",$data["project_category"]) as $index=>$x) {
+                $category .= '<span class="badge badge-'.fmod($index, 5).'">'.$x.'</span>';
+            }  
+            $date = date_create($data["date_time"]);
+      
+            $html = '
+                <div class="card shadow-sm my-2 mobile p-0">
+                    <div class="card-body p-2">
+                        <div class="d-flex align-items-center w-100" style="width:10rem">
+                            <div class="flex-shrink-0 ">
+                                <img src="'.$data["StoreLogo"].'" alt="Gambar" class="image-logo-project">
+                            </div>
+                            <div class="flex-grow-1 ms-1 "> 
+                                <span class="text-detail-3">'.$data["StoreCode"].'</span>  
+                                <div class="divider d-inline-block"></div>
+                                <span class="text-detail-3">'.date_format($date,"d M Y").'</span>
+                                <div class="divider d-inline-block d-none"></div>
+                                <div class="text-success d-none">
+                                    <i class="fa-solid fa-circle" style="font-size:0.5rem"></i>
+                                    <span class="text-detail-3 ">New</span>
+                                </div>
+                                <div class="divider d-inline-block"></div>
+                                <span class="text-detail-3">'.$data["admin"].'</span>   
+                            </div>
+                            <div class="ms-auto"> 
+                                <div class="dropdown">
+                                    <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ti-more-alt icon-rotate-45"></i>
+                                    </a>
+                                    <ul class="dropdown-menu shadow">
+                                        <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["project_id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["project_id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 gap-1 py-1">'.$category.'</div>
+                        <div class="text-head-2 py-1">'.$data["customer_name"].($data["customer_company"] == "" ? : " (".$data["customer_company"].")").'</div> 
+                    </div>
+                    <div class="card-footer p-0 bg-white">
+                        <div class="d-flex project-menu mobile justify-content-around">
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="survey">
+                                <i class="fa-solid fa-list-check position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Survey</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="rab">
+                                <i class="fa-solid fa-list position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">RAB</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="penawaran">
+                                <i class="fa-solid fa-hand-holding-droplet position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Penawaran</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="pembelian">
+                                <i class="fa-solid fa-cart-shopping position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Pembelian</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="invoice">
+                                <i class="fa-solid fa-money-bill position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Invoice</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="documentasi">
+                                <i class="fa-solid fa-folder-open position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Dokumentasi</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="diskusi">
+                                <i class="fa-regular fa-comments position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Diskusi</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center flex-column align-items-center" style="display:none">
+                            <div class="tab-content mobile  w-100" data-id="'.$data["project_id"].'" style="display:none">
+                                <div class="d-flex justify-content-center flex-column align-items-center">
+                                    <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                                    <span>Belum ada data yang dibuat</span>
+                                    <button class="btn btn-sm btn-primary px-3 rounded mt-4" onclick="add_penawaran_click('.$data["project_id"].',this)"><i class="fa-solid fa-plus pe-2"></i>Buat Penawaran</button>
+                                </div> 
+                            </div>
+                            <div class="loading text-center loading-content p-4" data-id="'.$data["project_id"].'"  style="display:none">
+                                <div class="loading-spinner"></div>
+                                <div class="d-flex justify-content-center flex-column align-items-center">
+                                    <span>Sedang memuat data</span> 
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                ';
+            return $html;
+        });
         $dt->add('html', function($data){ 
         	return '  
             <div class="project-detail">
@@ -206,7 +327,7 @@ class ProjectModel extends Model
                     <div class="flex-fill border-left">
                         <div class="tab-content" data-id="'.$data["project_id"].'" style="display:none">
                             <div class="d-flex justify-content-center flex-column align-items-center">
-                                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                                <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span>Belum ada data yang dibuat</span>
                                 <button class="btn btn-sm btn-primary px-3 rounded mt-4" onclick="add_penawaran_click('.$data["project_id"].',this)"><i class="fa-solid fa-plus pe-2"></i>Buat Penawaran</button>
                             </div> 
@@ -293,7 +414,7 @@ class ProjectModel extends Model
     private function data_project_survey($id){
         $html = '
             <div class="d-flex justify-content-center flex-column align-items-center">
-                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span>Belum ada data yang dibuat</span>
                 <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_survey(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data survey</button>
             </div> 
@@ -308,7 +429,7 @@ class ProjectModel extends Model
     private function data_project_rab($id){
         $html = '
             <div class="d-flex justify-content-center flex-column align-items-center">
-                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span>Belum ada data yang dibuat</span>
                 <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_rab(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data RAB</button>
             </div> 
@@ -444,13 +565,13 @@ class ProjectModel extends Model
         if($html == ""){ 
             $html = '
                 <div class="d-flex justify-content-center flex-column align-items-center">
-                    <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                    <img src="'.base_url().'assets/images/empty.png" alt="" style="width:150px;height:150px;">
                     <span>Belum ada data yang dibuat</span> 
                 </div> 
             ';
         }
         $html .= '   <div class="d-flex justify-content-center flex-column align-items-center">
-                        <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_sph(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data penawaran</button>
+                        <button class="btn btn-sm btn-primary px-3 m-2" onclick="add_project_sph(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data penawaran</button>
                     </div>';
 
         return json_encode(
@@ -463,7 +584,7 @@ class ProjectModel extends Model
     private function data_project_po($id){
         $html = '
             <div class="d-flex justify-content-center flex-column align-items-center">
-                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span>Belum ada data yang dibuat</span>
                 <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_po(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data pembelian</button>
             </div> 
@@ -478,7 +599,7 @@ class ProjectModel extends Model
     private function data_project_invoice($id){
         $html = '
             <div class="d-flex justify-content-center flex-column align-items-center">
-                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span>Belum ada data yang dibuat</span> 
                 <div class="text-center mt-4">
                     <button class="btn btn-sm btn-primary px-3" onclick="add_project_invoice(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data invoice</button> 
@@ -496,7 +617,7 @@ class ProjectModel extends Model
     private function data_project_documentasi($id){
         $html = '
             <div class="d-flex justify-content-center flex-column align-items-center">
-                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span>Belum ada data yang diupload</span> 
                 <div class="text-center mt-4">
                     <button class="btn btn-sm btn-primary px-3" onclick="add_project_invoice(\''.$id.'\',this)"><i class="fa-solid fa-upload pe-2"></i>Upload Doument</button>  
@@ -513,7 +634,7 @@ class ProjectModel extends Model
     private function data_project_diskusi($id){
         $html = '
             <div class="d-flex justify-content-center flex-column align-items-center">
-                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span>Belum ada percakapan yang dibuat</span>
                 <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_diskusi(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>mulai percakapan</button>
             </div> 
