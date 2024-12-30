@@ -408,6 +408,11 @@
         });
     }; 
 
+
+
+    /* 
+        PROJECT SPH / PENAWARAN
+    */
     isProcessingSph = [];
     add_project_sph = function(id,el){ 
          // INSERT LOADER BUTTON
@@ -447,7 +452,6 @@
         window.open('<?= base_url("print/project/sph/") ?>' + id, '_blank');
     };
 
-    
     isProcessingSphEdit = [];
     edit_project_sph = function(ref,id,el){ 
           // INSERT LOADER BUTTON
@@ -521,6 +525,47 @@
             $(el).html(old_text); 
         });
     };
+
+    
+    /* 
+        PROJECT PEMBELIAN
+    */
+    isProcessingPo= [];
+    add_project_po = function(id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingPo[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingPo[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-po/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-po").modal("show"); 
+
+                isProcessingPo[id] = false;
+                $(el).html(old_text);
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingPo[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };
+
+
+
 </script>
 
 

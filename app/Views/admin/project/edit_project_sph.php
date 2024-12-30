@@ -727,6 +727,18 @@
         }
         load_produk() 
     }
+
+    
+    function grand_total_harga(){
+        var total = data_detail_item.reduce((acc, current) => acc + current.hargajual * current.qty, 0);
+        var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
+        var grandtotal =  total - discitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
+
+        $("#SphSubTotal").val(total.toLocaleString('en-US')) 
+        $("#SphDiscItemTotal").val(discitem.toLocaleString('en-US')) 
+        $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
+    }
+    
     load_produk = function(){
         var html = '';
         if(data_detail_item.length == 0){
@@ -988,15 +1000,6 @@
             grand_total_harga();
         }
     });
-    grand_total_harga = function(){
-        var total = data_detail_item.reduce((acc, current) => acc + current.hargajual * current.qty, 0);
-        var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
-
-        $("#SphSubTotal").val(total.toLocaleString('en-US')) 
-        $("#SphDiscItemTotal").val(discitem.toLocaleString('en-US')) 
-        $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
-    }
  
 
 

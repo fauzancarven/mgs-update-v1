@@ -124,6 +124,7 @@ $routes->post('/message/select-produk', 'MessageController::produk_select', ['fi
 $routes->post('/message/add-project', 'MessageController::project_add', ['filter' => 'login']);  
 $routes->post('/message/add-project-sph/(:num)', 'MessageController::project_sph_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/add-project-po/(:num)', 'MessageController::project_po_add/$1', ['filter' => 'login']);  
 
 
 

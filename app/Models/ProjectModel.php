@@ -405,30 +405,32 @@ class ProjectModel extends Model
             }
             $html .= '
             <div class="list-project mb-4 p-2">
-                <div class="d-flex flex-wrap gap-2 px-2">
+                <div class="d-flex flex-wrap gap-2 gap-md-4 px-2">
                     <div class="d-block">
                         <div class="d-flex flex-column">
                             <span class="text-detail-2">Tgl. : '.$row->date.'</span>
                             <span class="text-head-2">'.$row->code.'</span>
                         </div>
                     </div>
-                    <div class="flex-fill">
+                    <div class="d-block">
                         <div class="d-flex flex-column">
                             <span class="text-detail-2">Alamat:</span>
                             <span class="text-head-2">'.$row->address.'</span>
                         </div>
                     </div>
-                    <div class="d-block">
+                    <div class="flex-fill">
                         <div class="d-flex flex-column">
                             <span class="text-detail-2">Grand Total:</span>
                             <span class="text-head-2">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
                         </div>
                     </div>
                     <div class="d-block">
-                        <div class="d-flex float-end"> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
-                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                        <div class="d-flex float-end">
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-shopping"></i><span class="ps-2">Pembelian</span></button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-money-bill"></i><span class="ps-2">Invoice</span></button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print"></i><span class="ps-2">Print</span></button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil"></i><span class="ps-2">Edit</span></button>
+                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close"></i><span class="ps-2">Delete</span></button> 
                         </div>
                     </div>
                 </div>

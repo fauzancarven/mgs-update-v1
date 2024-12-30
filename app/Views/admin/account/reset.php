@@ -7,11 +7,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-3" style="font-size:12px">   
-                <input class="form-control form-control-sm d-none" id="resetAccountId" name="resetAccountId"   value="" type="text">
+                <input class="form-control form-control-sm d-none" id="resetAccountId" name="resetAccountId"   value="<?= $_account->id ?>" type="text">
                 <div class="row mb-1 align-items-center">
                     <label for="resetAccountPassword" class="col-sm-3 col-form-label">Password<sup class="error">&nbsp;*</sup></label>
                     <div class="col-sm-9">
-                        <div class="input-group"> 
+                        <div class="input-group">
                             <input class="form-control form-control-sm" id="resetAccountPassword" name="resetAccountPassword" placeholder="Password" value="" type="password">
                             <span class="input-group-text"> 
                                 <i class="ti-eye" id="resettogglePassword" style="cursor: pointer"></i>

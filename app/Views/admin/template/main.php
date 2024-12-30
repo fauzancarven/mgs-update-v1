@@ -583,7 +583,12 @@
     .sidebar-icon-only .sidebar .nav .nav-item .nav-link i.fa-solid:before { 
         display: none; 
     }
-     
+    .btn-action span{
+        display:none;
+    }
+    .btn-action:hover span{
+        display:inline-block;
+    }
     .btn-action.btn-primary{ 
         background: #f5f6f7;
         border: none;
@@ -840,6 +845,7 @@
     .ql-editor{
         padding: 0.5rem !important;
     }
+
 </style>
 
 
