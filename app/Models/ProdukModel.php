@@ -263,31 +263,31 @@ class ProdukModel extends Model
         return $base64;
     }
     public function add_produk($method){
-    //     $code =  $this->get_next_code($method["data"]["category"]); 
-    //     $method["data"]["code"] =  $code;
+        $code =  $this->get_next_code($method["data"]["category"]); 
+        $method["data"]["code"] =  $code;
 
-    //     // ADD Header PRODUK 
-    //     $builder = $this->db->table($this->table);
-    //     $builder->insert($method["data"]); 
+        // ADD Header PRODUK 
+        $builder = $this->db->table($this->table);
+        $builder->insert($method["data"]); 
 
-    //     // GET ID PRODUK 
-    //     $builder = $this->db->table($this->table);
-    //     $builder->select('*'); 
-    //     $builder->orderby('id', 'DESC');
-    //     $builder->limit(1);
-    //     $query = $builder->get()->getRow();
+        // GET ID PRODUK 
+        $builder = $this->db->table($this->table);
+        $builder->select('*'); 
+        $builder->orderby('id', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();
         
-    //    // ADD DETAIL PRODUK 
-    //     foreach($method["detail"] as $row){ 
-    //         $row["ref"] = $query->id;
-    //         $row["varian"] = json_encode($row["varian"]); 
-    //         unset($row["satuantext"]);    
-    //         $builder = $this->db->table("produk_detail");
-    //         $builder->insert($row); 
-    //     }
-        //$id = $query->id;
-       $id = "20";
-    //    // ADD IMAGE PRODUK  
+       // ADD DETAIL PRODUK 
+        foreach($method["detail"] as $row){ 
+            $row["ref"] = $query->id;
+            $row["varian"] = json_encode($row["varian"]); 
+            unset($row["satuantext"]);    
+            $builder = $this->db->table("produk_detail");
+            $builder->insert($row); 
+        }
+        $id = $query->id;
+        //$id = "20";
+       // ADD IMAGE PRODUK  
        
         //Buat folder utama
         $folder_utama = 'assets/images/produk'; 
