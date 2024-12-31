@@ -1,3 +1,4 @@
+.gitignore
 .env
 .htaccess
 vendor/*
@@ -6,3 +7,4 @@ tests/*
 assets/images/produk/*
 assets/images/profile/*
 deploy.php
+composer.lock
