@@ -2,7 +2,6 @@
 .htaccess
 vendor/*
 writable/*
-tests/*
-assets/images/*
-
-assets/images/produk/
+tests/* 
+assets/images/produk/*
+assets/images/profile/*
