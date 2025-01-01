@@ -639,10 +639,18 @@
         display: none; 
     }
     .btn-action span{
-        display:none;
+        width: 0;
+        overflow: hidden;
+        transition: width 0.3s,opacity 0.5s;
+        display: inline-block;
+        height: 15px; 
     }
-    .btn-action:hover span{
-        display:inline-block;
+    .btn-action:hover span{ 
+        animation: expand 0.3s forwards;
+    }
+    @keyframes expand {
+        0% { width: 0; opacity: 0; }
+        100% { width: 70px;opacity: 1; }
     }
     .btn-action.btn-primary{ 
         background: #f5f6f7;

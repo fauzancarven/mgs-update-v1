@@ -331,7 +331,7 @@
             event.stopPropagation();
         }); 
         table.on('click', 'tr', function(event) {
-            var target = $(event.target);  
+            var target = $(event.target);   
             if (
                 target.closest('button').length ||  
                 target.parents().hasClass("project-detail") ||  
@@ -348,12 +348,13 @@
                 } );
             } else {
                 var data = table.row(this).data(); 
-            
+             
                 table.row(this).child(data.html,'child p-0').show(); 
                 $('div.project-detail', table.row(this).child()).slideDown();  
 
                 loader_data_project(data.project_id,'survey');
-                $( ".btn-side-menu[data-id='" + data.project_id+ "']" ).click(function(){; 
+
+                $( ".btn-side-menu[data-id='" + data.project_id+ "']" ).click(function(){
                     var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
                     if($(parent).hasClass("hide")){
                         $(parent).removeClass("hide");
@@ -362,10 +363,15 @@
                         $(parent).addClass("hide");
                         $(this).find("i").addClass("fa-rotate-180");
                     } 
-                })
-            }
-        
-            
+                }); 
+                $( ".menu-item[data-id='" + data.project_id+ "']" ).click(function(){
+                    $(this).parent().find(".selected").removeClass("selected")
+                    $(this).addClass("selected") 
+
+                    loader_data_project(data.project_id,$(this).data("menu")) 
+                });   
+                
+            } 
         }); 
     }
 

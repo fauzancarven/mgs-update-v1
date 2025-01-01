@@ -156,7 +156,7 @@ class ProjectModel extends Model
                             <div class="flex-grow-1 ms-1 "> 
                                 <span class="text-detail-3">'.$data["StoreCode"].'</span>  
                                 <div class="divider d-inline-block"></div>
-                                <span class="text-detail-3">'.date_format($date,"d M Y").'</span>
+                                <span class="text-detail-3">'.date_format(date_create($data["date_time"]),"d M Y").'</span>
                                 <div class="divider d-inline-block d-none"></div>
                                 <div class="text-success d-none">
                                     <i class="fa-solid fa-circle" style="font-size:0.5rem"></i>
@@ -526,35 +526,59 @@ class ProjectModel extends Model
             }
             $html .= '
             <div class="list-project mb-4 p-2">
-                <div class="d-flex flex-wrap gap-2 gap-md-4 px-2">
-                    <div class="d-block">
-                        <div class="d-flex flex-column">
-                            <span class="text-detail-2">Tgl. : '.$row->date.'</span>
+                <div class="row gx-4 gy-2">
+                    <div class="col-3">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">No. Penawaran :</span>
                             <span class="text-head-2">'.$row->code.'</span>
+                        </div>  
+                    </div>
+                    <div class="col-3"> 
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Tanggal:</span>
+                            <span class="text-head-2">'.date_format(date_create($row->date),"d M Y").'</span>
+                        </div>  
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex float-end">
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-shopping mx-1"></i><span >Pembelian</span></button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-money-bill mx-1"></i><span >Invoice</span></button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print mx-1"></i><span >Print</span></button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil mx-1"></i><span >Edit</span></button>
+                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close mx-1"></i><span >Delete</span></button> 
                         </div>
                     </div>
-                    <div class="d-block">
-                        <div class="d-flex flex-column">
-                            <span class="text-detail-2">Alamat:</span>
-                            <span class="text-head-2">'.$row->address.'</span>
-                        </div>
+                    <div class="col-3">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Sub Total:</span>
+                            <span class="text-head-2">Rp. '.number_format($row->subtotal, 0, ',', '.').'</span>
+                        </div> 
                     </div>
-                    <div class="flex-fill">
-                        <div class="d-flex flex-column">
+                    <div class="col-3">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Disc Item:</span>
+                            <span class="text-head-2">Rp. '.number_format($row->discitemtotal, 0, ',', '.').'</span>
+                        </div>  
+                    </div>
+                    <div class="col-3">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Disc Total:</span>
+                            <span class="text-head-2">Rp. '.number_format($row->disctotal, 0, ',', '.').'</span>
+                        </div> 
+                    </div>
+                    <div class="col-3">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Grand Total:</span>
                             <span class="text-head-2">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
-                        </div>
+                        </div>  
                     </div>
-                    <div class="d-block">
-                        <div class="d-flex float-end">
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-shopping"></i><span class="ps-2">Pembelian</span></button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-money-bill"></i><span class="ps-2">Invoice</span></button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print"></i><span class="ps-2">Print</span></button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil"></i><span class="ps-2">Edit</span></button>
-                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close"></i><span class="ps-2">Delete</span></button> 
-                        </div>
+                    <div class="col-12 pb-2">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Alamat:</span>
+                            <span class="text-head-2 text-truncate">'.$row->address.'</span>
+                        </div>  
                     </div>
-                </div>
+                </div> 
                 <div class="detail-item mt-2 p-2 border-top">
                     '.$html_items.' 
                 </div>
