@@ -475,10 +475,10 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex ">
-                            <span class="no-urut text-head-3">'.($item->type == "product" ? $no : $huruf).'.</span> 
+                            <span class="no-urut text-head-3"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->type == "product" ? $no : $huruf).'.</span> 
                             <div class="d-flex flex-column text-start">
-                                <span class="text-head-3">'.$item->text.'</span>
-                                <span class="text-detail-2 text-truncate">'.$item->group.'</span> 
+                                <span class="text-head-3 text-uppercase"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->text.'</span>
+                                <span class="text-detail-2 text-truncate"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->group.'</span> 
                                 <div class="d-flex flex-wrap gap-1">
                                     '.$arr_badge.'
                                 </div>
@@ -488,25 +488,25 @@ class ProjectModel extends Model
                 if($item->type == "product"){
                     $html_items .= '<div class="col-12 col-md-8 my-1 detail">
                                         <div class="row"> 
-                                            <div class="col-6 col-md-2 px-1">   
+                                            <div class="offset-2 offset-md-0 col-5 col-md-2 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Qty:</span>
                                                     <span class="text-head-2">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</span>
                                                 </div>
                                             </div>  
-                                            <div class="col-12 col-md-3 px-1">   
+                                            <div class="col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Harga:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->harga, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
-                                            <div class="col-6 col-md-3 px-1">   
+                                            <div class="offset-2 offset-md-0 col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Disc:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->disc, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
-                                            <div class="col-6 col-md-3 px-1">   
+                                            <div class="col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Total:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->total, 0, ',', '.').'</span>
@@ -527,55 +527,80 @@ class ProjectModel extends Model
             $html .= '
             <div class="list-project mb-4 p-2">
                 <div class="row gx-4 gy-2">
-                    <div class="col-3">
+                    <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">No. Penawaran :</span>
                             <span class="text-head-2">'.$row->code.'</span>
                         </div>  
                     </div>
-                    <div class="col-3"> 
+                    <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Tanggal:</span>
                             <span class="text-head-2">'.date_format(date_create($row->date),"d M Y").'</span>
                         </div>  
                     </div>
-                    <div class="col-6">
-                        <div class="d-flex float-end">
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-shopping mx-1"></i><span >Pembelian</span></button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-money-bill mx-1"></i><span >Invoice</span></button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print mx-1"></i><span >Print</span></button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil mx-1"></i><span >Edit</span></button>
-                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close mx-1"></i><span >Delete</span></button> 
-                        </div>
+                    <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
+                        <div class="float-end d-md-flex d-none">
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-cart-shopping mx-1"></i><span >Pembelian</span>
+                            </button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-money-bill mx-1"></i><span >Invoice</span>
+                            </button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                            </button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
+                            </button>
+                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
+                            </button> 
+                        </div> 
+                        <div class="d-md-none d-flex btn-action justify-content-between"> 
+                            <div>PENAWARAN (SPH)</div>
+                            <div class="dropdown">
+                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="ti-more-alt icon-rotate-45"></i>
+                                </a>
+                                <ul class="dropdown-menu shadow">
+                                    <li><a class="dropdown-item m-0 px-2" onclick="po_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Teruskan Vendor</a></li>
+                                    <li><a class="dropdown-item m-0 px-2" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-money-bill pe-2"></i>Teruskan Invoice</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                </ul>
+                            </div>
+                        </div> 
                     </div>
-                    <div class="col-3">
+                    <div class="col-12 col-md-3 col-xl-2 order-3">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Sub Total:</span>
                             <span class="text-head-2">Rp. '.number_format($row->subtotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
-                    <div class="col-3">
+                    <div class="col-12 col-md-3 col-xl-2 order-4">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Item:</span>
                             <span class="text-head-2">Rp. '.number_format($row->discitemtotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
-                    <div class="col-3">
+                    <div class="col-12 col-md-3 col-xl-2 order-5">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Total:</span>
                             <span class="text-head-2">Rp. '.number_format($row->disctotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
-                    <div class="col-3">
+                    <div class="col-12 col-md-3 col-xl-2 order-6">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Grand Total:</span>
                             <span class="text-head-2">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
-                    <div class="col-12 pb-2">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Alamat:</span>
-                            <span class="text-head-2 text-truncate">'.$row->address.'</span>
+                    <div class="col-12 col-xl-4 order-7  pb-2">
+                        <div class="d-flex flex-column justify-content-between">
+                            <span class="text-detail-2 pb-2 pb-md-0">Alamat:</span>
+                            <span class="text-head-2 text-wrap">'.$row->address.'</span>
                         </div>  
                     </div>
                 </div> 

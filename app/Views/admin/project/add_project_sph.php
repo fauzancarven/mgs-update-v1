@@ -21,24 +21,24 @@
                             </div>
                         </div> 
                         <div class="row align-items-center mt-2">
-                            <label class="col-sm-2 col-form-label">Nama</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->code ?> - <?= $customer->name ?> <?= $customer->company == "" ? "" : " ( " . $customer->company . " ) "; ?></label> 
+                            <label class="col-2 col-form-label">Nama</label>
+                            <label class="col-10  text-end fw-bold"><?= $customer->name ?> <?= $customer->company == "" ? "" : " ( " . $customer->company . " ) "; ?></label> 
                         </div> 
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Telp</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->telp1 ?> / <?= $customer->telp2 == "" ? "" : $customer->telp2 ?></label> 
+                            <label class="col-2 col-form-label">Telp</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->telp1 ?> / <?= $customer->telp2 == "" ? "" : $customer->telp2 ?></label> 
                         </div> 
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Email</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->email ?></label> 
+                            <label class="col-2 col-form-label">Email</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->email ?></label> 
                         </div>  
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Instagram</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->instagram ?></label> 
+                            <label class="col-2 col-form-label">Instagram</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->instagram ?></label> 
                         </div>  
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Alamat</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->address ?></label> 
+                            <label class="col-2 col-form-label">Alamat</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->address ?></label> 
                         </div> 
                     </div>  
                     <div class="col-lg-6 col-12 my-1 mb-2">   
@@ -88,7 +88,7 @@
                 </div>     
                 <div class="card " style="min-height:50px;">
                     <div class="card-body p-2 bg-light"> 
-                        <div class="row align-items-center px-3 d-none d-md-inline-block">
+                        <div class="row align-items-center d-none d-md-flex px-3">
                             <div class="col-12 col-md-4 my-1">    
                                 <div class="row">  
                                     <div class="col-12"> 
@@ -120,7 +120,7 @@
                                 </div>
                             </div> 
                         </div> 
-                        <div id="tb_varian" class="text-center px-0 px-md-3">
+                        <div id="tb_varian" class="text-center">
                             <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
                                 <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span class="text-head-1">Item belum ditambahkan</span>
@@ -748,13 +748,13 @@
         for(var i = 0; data_detail_item.length > i;i++){
             if(data_detail_item[i]["type"] == "category"){ 
                 html += `
-                    <div class="row">
+                    <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
                         <div class="col-12 col-md-4"> 
                             <div class="row align-items-center"> 
                                 <div class="col-7 col-md-12 my-1 group text-start"> 
                                     <span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${data_detail_item[i]["text"]}</span>  
                                 </div>   
-                                <div class="col-5 d-md-none d-block col-0 px-1"> 
+                                <div class="col-5 d-md-none d-block col-0 px-0"> 
                                     <div class="btn-group d-inline-block float-end" role="group"> 
                                         <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
                                         <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
@@ -766,7 +766,7 @@
                         </div>
                         <div class="col-8 d-md-block d-none">   
                             <div class="row align-items-center">
-                                <div class="col-2 px-1"> 
+                                <div class="col-2 px-0"> 
                                     <div class="btn-group d-inline-block float-end" role="group"> 
                                         <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
                                         <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
@@ -790,7 +790,7 @@
                     }
                     varian +=  '</div>';
                 }
-                html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-2 pt-2" : ""} mx-1">
+                html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
                                 <div class="col-12 col-md-4 my-1 varian px-0">   
                                     <div class="d-flex">
                                         <span class="no-urut text-head-3">${last_group_no}.</span> 
@@ -825,21 +825,21 @@
                                         </div>  
                                         <div class="col-12 col-md-8">  
                                             <div class="row">  
-                                                <div class="col-6 px-1">  
+                                                <div class="col-6 col-md-4 px-1">  
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
                                                     <div class="input-group"> 
                                                         <span class="input-group-text font-std px-1">Rp.</span> 
                                                         <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-harga-${i}" data-id="${i}" ${data_detail_item[i]["id"] != "0" ? "disabled" : ""}>
                                                     </div>    
                                                 </div> 
-                                                <div class="col-6 px-1">  
+                                                <div class="col-6 col-md-4  px-1">  
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
                                                     <div class="input-group">  
                                                         <span class="input-group-text font-std px-1">Rp.</span> 
                                                         <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" id="input-disc-${i}" data-id="${i}">
                                                     </div>   
                                                 </div> 
-                                                <div class="col-12 px-1">  
+                                                <div class="col-12 col-md-4  px-1">  
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Total</span>
                                                     <div class="input-group"> 
                                                         <span class="input-group-text font-std px-1">Rp.</span>

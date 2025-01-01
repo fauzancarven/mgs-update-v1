@@ -21,11 +21,11 @@
                 </div>
                 <div class="mb-1">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12 col-md-6">
                             <label for="store-project" class="col-form-label">Toko:</label>
                             <select class="form-select form-select-sm" style="width:100%" id="store-project"></select> 
                         </div>
-                        <div class="col-6">
+                        <div class="col-12 col-md-6">
                             <label for="category-project" class="col-form-label">admin:</label>
                             <select class="form-select form-select-sm" style="width:100%" id="admin-project"></select>
                         </div>
