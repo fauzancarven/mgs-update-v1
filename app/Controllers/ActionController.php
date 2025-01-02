@@ -196,6 +196,15 @@ class ActionController extends BaseController
             echo $models->delete_data_penawaran($id);  
         }
     }
+    public function invoice_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_invoice($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
 
 
     public function template_footer_add(){

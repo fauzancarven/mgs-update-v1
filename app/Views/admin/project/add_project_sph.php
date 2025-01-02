@@ -101,10 +101,10 @@
                                     <div class="col-2"> 
                                         <span class="label-head-dialog"><i class="ti-settings"></i></span>   
                                     </div> 
-                                    <div class="col-2"> 
+                                    <div class="col-3"> 
                                         <span class="label-head-dialog">Qty | Satuan</span>   
                                     </div> 
-                                    <div class="col-8">  
+                                    <div class="col-7">  
                                         <div class="row"> 
                                             <div class="col-4"> 
                                                 <span class="label-head-dialog">Harga</span>   
@@ -764,8 +764,8 @@
                                 </div>   
                             </div>
                         </div>
-                        <div class="col-8 d-md-block d-none">   
-                            <div class="row align-items-center">
+                        <div class="col-8 my-1 d-md-block d-none">   
+                            <div class="row px-2 align-items-center">
                                 <div class="col-2 px-0"> 
                                     <div class="btn-group d-inline-block float-end" role="group"> 
                                         <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
@@ -808,7 +808,7 @@
                                 </div>
                                 <div class="col-12 col-md-8 my-1 detail">
                                     <div class="row px-2"> 
-                                        <div class="col-2 px-1 d-none d-md-block ">  
+                                        <div class="col-2 px-0 d-none d-md-block ">  
                                             <div class="btn-group float-end d-inline-block" role="group">  
                                                 ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
                                                 <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
@@ -816,14 +816,14 @@
                                                 <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
                                             </div>
                                         </div>  
-                                        <div class="col-12 col-md-2 px-1 ">  
+                                        <div class="col-12 col-md-3 px-1 ">  
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                             <div class="input-group"> 
                                                 <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
                                                 <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "-" ? "disabled" : ""}></select>
                                             </div>  
                                         </div>  
-                                        <div class="col-12 col-md-8">  
+                                        <div class="col-12 col-md-7">  
                                             <div class="row">  
                                                 <div class="col-6 col-md-4 px-1">  
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
@@ -1039,7 +1039,7 @@
                     "delta": quill.getContents(), 
                 },
                 success: function(data) {    
-                    console.log(data); 
+                    //console.log(data); 
                     if(data["status"]===true){     
                         $("#savequill").hide();
                         $("#savequillas").hide();
@@ -1067,7 +1067,7 @@
                     "delta": quill.getContents(), 
                 },
                 success: function(data) {    
-                    console.log(data); 
+                    //console.log(data); 
                     if(data["status"]===true){     
                         $("#savequill").hide();
                         $("#savequillas").hide();
@@ -1115,7 +1115,7 @@
                             "delta": quill.getContents(), 
                         },
                         success: function(data) {    
-                            console.log(data); 
+                            //console.log(data); 
                             if(data["status"]===true){    
                                 $('#SphFormatFooter').append(new Option(data["data"]["name"] ,data["data"]["id"], true, true)).trigger('change');
                                 $("#savequill").hide();
@@ -1210,7 +1210,7 @@
         //escapeMarkup: function(m) { return m; }
     }).on("select2:select", function(e) {  
         var data = e.params.data;    
-        console.log(data);
+        //console.log(data);
         if (e.params.data.tags) {
             console.log('Tag baru ditambahkan:', e.params.data.text);
             quill.setContents(); 
@@ -1321,7 +1321,7 @@
                 "detail":detail, 
             },
             success: function(data) {    
-                console.log(data); 
+                //console.log(data); 
                 if(data["status"]===true){
                     Swal.fire({
                         icon: 'success',

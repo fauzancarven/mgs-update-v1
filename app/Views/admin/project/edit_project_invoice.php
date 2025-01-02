@@ -1,9 +1,9 @@
  
-<div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-edit-invoice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-invoice-label" style="overflow-y:auto;">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-sph-label">Edit Penawaran</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-edit-invoice-label">Edit Invoice</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"> 
@@ -426,7 +426,7 @@
     });
     
     $("#SphStore").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-edit-invoice .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-store",
@@ -458,7 +458,7 @@
     $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
 
     $("#SphAdmin").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-edit-invoice .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
             url: "<?= base_url()?>select2/get-data-users",
@@ -501,7 +501,7 @@
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-        $("#modal-add-sph").modal("hide"); 
+        $("#modal-edit-invoice").modal("hide"); 
         Swal.fire({
             title: 'Tambah Kategori',
             input: 'text',
@@ -537,7 +537,7 @@
         }).then((result) => {  
             isProcessingSphAddCategory = false;
             $(el).html(old_text); 
-            $("#modal-add-sph").modal("show");
+            $("#modal-edit-invoice").modal("show");
         }); 
     }
  
@@ -566,7 +566,7 @@
                 
                 $("#modal-optional").html(data);
                 
-                $("#modal-add-sph").modal("hide");  
+                $("#modal-edit-invoice").modal("hide");  
 
                 $("#modal-select-item").modal("show"); 
 
@@ -575,7 +575,7 @@
                     if (document.activeElement) {
                         document.activeElement.blur();
                     }
-                    $("#modal-add-sph").modal("show");  
+                    $("#modal-edit-invoice").modal("show");  
                     
                 });
 
@@ -643,8 +643,8 @@
     
     edit_varian_click = function(index){ 
         if(data_detail_item[index]["type"] == "category"){  
-            $("#modal-add-sph").modal("hide");
-            $("#modal-add-sph").blur();
+            $("#modal-edit-invoice").modal("hide");
+            $("#modal-edit-invoice").blur();
             Swal.fire({
                 title: 'Rename Kategori',
                 input: 'text',
@@ -671,11 +671,11 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-sph").modal("show");
+                $("#modal-edit-invoice").modal("show");
             });  
         }else{
-            $("#modal-add-sph").modal("hide");
-            $("#modal-add-sph").blur();
+            $("#modal-edit-invoice").modal("hide");
+            $("#modal-edit-invoice").blur();
             Swal.fire({
                 title: 'Rename Produk',
                 input: 'text',
@@ -702,7 +702,7 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-sph").modal("show");
+                $("#modal-edit-invoice").modal("show");
             });  
         }
     }
@@ -890,7 +890,7 @@
  
                 //event satuan
                 $(`#select-satuan-${i}`).select2({
-                    dropdownParent: $('#modal-add-sph .modal-content'), 
+                    dropdownParent: $('#modal-edit-invoice .modal-content'), 
                     placeholder: "pilih",
                     width: 'auto',
                     adaptContainerWidth: true,
@@ -1089,7 +1089,7 @@
         }
     })
     $("#savequillas").click(function(){  
-        $("#modal-add-sph").modal("hide"); 
+        $("#modal-edit-invoice").modal("hide"); 
         Swal.fire({
             title: 'Simpan Template',
             input: 'text',
@@ -1146,7 +1146,7 @@
             $("#editquill").show();
             quill.enable(false);
             quill.root.style.background = '#F7F7F7'; // warna disable
-            $("#modal-add-sph").modal("show");
+            $("#modal-edit-invoice").modal("show");
         }); 
     })
     $("#editquill").click(function(){
@@ -1159,7 +1159,7 @@
 
     }) 
     $("#SphFormatFooter").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-edit-invoice .modal-content'),
         placeholder: "Pilih Template",
         tags:true,
         ajax: {
@@ -1334,7 +1334,7 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-sph").modal("hide");  
+                        $("#modal-edit-invoice").modal("hide");  
                         loader_data_project(<?= $project->ref ?>,"penawaran") 
                     });
                   

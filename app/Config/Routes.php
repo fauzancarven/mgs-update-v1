@@ -57,6 +57,9 @@ $routes->post('/action/add-data-project', 'ActionController::project_add', ['fil
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project-sph/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/add-data-invoice', 'ActionController::invoice_add', ['filter' => 'login']); 
+
+
 $routes->post('/action/add-data-template-footer', 'ActionController::template_footer_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);   
 
@@ -124,8 +127,9 @@ $routes->post('/message/select-produk', 'MessageController::produk_select', ['fi
 $routes->post('/message/add-project', 'MessageController::project_add', ['filter' => 'login']);  
 $routes->post('/message/add-project-sph/(:num)', 'MessageController::project_sph_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);  
-$routes->post('/message/add-project-po/(:num)', 'MessageController::project_po_add/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-invoice/(:num)', 'MessageController::project_invoice_add/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-project-invoice/(:num)', 'MessageController::project_invoice_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/add-project-po/(:num)', 'MessageController::project_po_add/$1', ['filter' => 'login']);  
 
 
 

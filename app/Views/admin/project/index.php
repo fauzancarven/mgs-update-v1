@@ -457,7 +457,7 @@
                 $("#modal-add-sph").modal("show"); 
 
                 isProcessingSph[id] = false;
-                $(el).html(old_text);
+                $(el).html(old_text); 
             },
             error: function(xhr, textStatus, errorThrown){ 
                 isProcessingSph[id] = false;
@@ -496,7 +496,7 @@
                 $("#modal-add-sph").modal("show"); 
 
                 isProcessingSphEdit[id] = false;
-                $(el).html(old_text);
+                $(el).html(old_text); 
             },
             error: function(xhr, textStatus, errorThrown){ 
                 isProcessingSphEdit[id] = false;
@@ -611,7 +611,7 @@
                 $("#modal-add-invoice").modal("show"); 
 
                 isProcessingPo[id] = false;
-                $(el).html(old_text);
+                $(el).html(old_text); 
             },
             error: function(xhr, textStatus, errorThrown){ 
                 isProcessingPo[id] = false;
@@ -625,6 +625,86 @@
             }
         });
     }
+
+    isProcessingInvoicePrint = [];
+    print_project_invoice = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/invoice/") ?>' + id, '_blank');
+    };
+
+    isProcessingInvoiceEdit = [];
+    edit_project_invoice = function(ref,id,el){ 
+          // INSERT LOADER BUTTON
+          if (isProcessingInvoiceEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingInvoiceEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-invoice/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-invoice").modal("show"); 
+
+                isProcessingInvoiceEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingInvoiceEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }; 
+    
+    isProcessingInvoiceDelete = [];
+    delete_project_invoice = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingInvoiceDelete[id]) {
+            return;
+        }  
+        isProcessingInvoiceDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus Invoice ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-project-invoice/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        loader_data_project(ref,"invoice"); 
+                    }, 
+                });
+            }
+            isProcessingInvoiceDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
+
 
 </script>
 

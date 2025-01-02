@@ -1,14 +1,14 @@
  
-<div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-po" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-po-label" style="overflow-y:auto;">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-sph-label">Edit Penawaran</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-po-label">Tambah PO Vendor</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"> 
                 <div class="row"> 
-                    <div class="col-lg-6 col-12 my-1">
+                    <div class="col-lg-6 col-12 my-1 mb-2">
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
                                 <span class="label-dialog">Customer</span>
@@ -21,27 +21,27 @@
                             </div>
                         </div> 
                         <div class="row align-items-center mt-2">
-                            <label class="col-sm-2 col-form-label">Nama</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->code ?> - <?= $customer->name ?> <?= $customer->company == "" ? "" : " ( " . $customer->company . " ) "; ?></label> 
+                            <label class="col-2 col-form-label">Nama</label>
+                            <label class="col-10  text-end fw-bold"><?= $customer->name ?> <?= $customer->company == "" ? "" : " ( " . $customer->company . " ) "; ?></label> 
                         </div> 
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Telp</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->telp1 ?> / <?= $customer->telp2 == "" ? "" : $customer->telp2 ?></label> 
+                            <label class="col-2 col-form-label">Telp</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->telp1 ?> / <?= $customer->telp2 == "" ? "" : $customer->telp2 ?></label> 
                         </div> 
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Email</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->email ?></label> 
+                            <label class="col-2 col-form-label">Email</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->email ?></label> 
                         </div>  
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Instagram</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->instagram ?></label> 
+                            <label class="col-2 col-form-label">Instagram</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->instagram ?></label> 
                         </div>  
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Alamat</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->address ?></label> 
+                            <label class="col-2 col-form-label">Alamat</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->address ?></label> 
                         </div> 
                     </div>  
-                    <div class="col-lg-6 col-12 my-1">   
+                    <div class="col-lg-6 col-12 my-1 mb-2">   
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
                                 <span class="label-dialog">Document</span>
@@ -50,7 +50,7 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->code ?>" disabled>
+                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
@@ -74,7 +74,7 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphAddress" class="col-sm-2 col-form-label">Alamat Project</label>
                             <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $project->address ?></textarea>
+                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->address ?></textarea>
                             </div>
                         </div> 
                     </div>   
@@ -88,7 +88,7 @@
                 </div>     
                 <div class="card " style="min-height:50px;">
                     <div class="card-body p-2 bg-light"> 
-                        <div class="row align-items-center  d-none d-md-flex px-3">
+                        <div class="row align-items-center d-none d-md-flex px-3">
                             <div class="col-12 col-md-4 my-1">    
                                 <div class="row">  
                                     <div class="col-12"> 
@@ -96,15 +96,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-8 my-1">
+                            <div class="col-12 col-md-8 my-1 ">
                                 <div class="row"> 
                                     <div class="col-2"> 
                                         <span class="label-head-dialog"><i class="ti-settings"></i></span>   
                                     </div> 
-                                    <div class="col-3"> 
+                                    <div class="col-2"> 
                                         <span class="label-head-dialog">Qty | Satuan</span>   
                                     </div> 
-                                    <div class="col-7">  
+                                    <div class="col-8">  
                                         <div class="row"> 
                                             <div class="col-4"> 
                                                 <span class="label-head-dialog">Harga</span>   
@@ -407,7 +407,7 @@
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="btn-edit-penawaran">Simpan</button>
+                <button type="button" class="btn btn-primary" id="btn-add-penawaran">Simpan</button>
             </div>
         </div>
     </div>
@@ -415,18 +415,17 @@
 
 <div id="modal-optional"></div>
 <script>    
-
     $('#SphDate').daterangepicker({
         "singleDatePicker": true,
-        "startDate": moment('<?= $project->date ?>'),
-        "endDate":  moment('<?= $project->date ?>'),
+        "startDate": moment(),
+        "endDate":  moment(),
         locale: {
             format: 'DD MMMM YYYY'
         }
     });
     
     $("#SphStore").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-add-po .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-store",
@@ -458,7 +457,7 @@
     $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
 
     $("#SphAdmin").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-add-po .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
             url: "<?= base_url()?>select2/get-data-users",
@@ -488,20 +487,21 @@
         }, 
     });
     $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
-        
-    var data_detail_item = JSON.parse('<?= JSON_ENCODE($detail,true) ?>');   
+      
+
+    var data_detail_item = [];   
     
     var isProcessingSphAddCategory = false;
     add_detail_category = function(el){
         if (isProcessingSphAddCategory) {
-            //console.log("project sph cancel load");
+            console.log("project sph cancel load");
             return;
         }  
         isProcessingSphAddCategory = true; 
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-        $("#modal-add-sph").modal("hide"); 
+        $("#modal-add-po").modal("hide"); 
         Swal.fire({
             title: 'Tambah Kategori',
             input: 'text',
@@ -537,7 +537,7 @@
         }).then((result) => {  
             isProcessingSphAddCategory = false;
             $(el).html(old_text); 
-            $("#modal-add-sph").modal("show");
+            $("#modal-add-po").modal("show");
         }); 
     }
  
@@ -550,7 +550,7 @@
 
     $("#btn-add-product").click(function(){
         if (isProcessingSphAddproduk) {
-            //console.log("project sph cancel load");
+            console.log("project sph cancel load");
             return;
         }  
         isProcessingSphAddproduk = true; 
@@ -566,7 +566,7 @@
                 
                 $("#modal-optional").html(data);
                 
-                $("#modal-add-sph").modal("hide");  
+                $("#modal-add-po").modal("hide");  
 
                 $("#modal-select-item").modal("show"); 
 
@@ -575,7 +575,7 @@
                     if (document.activeElement) {
                         document.activeElement.blur();
                     }
-                    $("#modal-add-sph").modal("show");  
+                    $("#modal-add-po").modal("show");  
                     
                 });
 
@@ -643,8 +643,8 @@
     
     edit_varian_click = function(index){ 
         if(data_detail_item[index]["type"] == "category"){  
-            $("#modal-add-sph").modal("hide");
-            $("#modal-add-sph").blur();
+            $("#modal-add-po").modal("hide");
+            $("#modal-add-po").blur();
             Swal.fire({
                 title: 'Rename Kategori',
                 input: 'text',
@@ -671,11 +671,11 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-sph").modal("show");
+                $("#modal-add-po").modal("show");
             });  
         }else{
-            $("#modal-add-sph").modal("hide");
-            $("#modal-add-sph").blur();
+            $("#modal-add-po").modal("hide");
+            $("#modal-add-po").blur();
             Swal.fire({
                 title: 'Rename Produk',
                 input: 'text',
@@ -702,7 +702,7 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-sph").modal("show");
+                $("#modal-add-po").modal("show");
             });  
         }
     }
@@ -726,8 +726,6 @@
         }
         load_produk() 
     }
-
-    
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.hargajual * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
@@ -737,7 +735,6 @@
         $("#SphDiscItemTotal").val(discitem.toLocaleString('en-US')) 
         $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     }
-    
     load_produk = function(){
         var html = '';
         if(data_detail_item.length == 0){
@@ -767,8 +764,8 @@
                                 </div>   
                             </div>
                         </div>
-                        <div class="col-8 my-1 d-md-block d-none">   
-                            <div class="row px-2 align-items-center">
+                        <div class="col-8 d-md-block d-none">   
+                            <div class="row align-items-center">
                                 <div class="col-2 px-0"> 
                                     <div class="btn-group d-inline-block float-end" role="group"> 
                                         <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
@@ -793,7 +790,7 @@
                     }
                     varian +=  '</div>';
                 }
-                html += `   <div class="row align-items-center  ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
+                html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
                                 <div class="col-12 col-md-4 my-1 varian px-0">   
                                     <div class="d-flex">
                                         <span class="no-urut text-head-3">${last_group_no}.</span> 
@@ -811,7 +808,7 @@
                                 </div>
                                 <div class="col-12 col-md-8 my-1 detail">
                                     <div class="row px-2"> 
-                                        <div class="col-2 px-0 d-none d-md-block ">  
+                                        <div class="col-2 px-1 d-none d-md-block ">  
                                             <div class="btn-group float-end d-inline-block" role="group">  
                                                 ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
                                                 <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
@@ -852,7 +849,7 @@
                                             </div>   
                                         </div>   
                                     </div>    
-                                </div>     
+                                </div>    
                             </div> `;
 
                 
@@ -890,7 +887,7 @@
  
                 //event satuan
                 $(`#select-satuan-${i}`).select2({
-                    dropdownParent: $('#modal-add-sph .modal-content'), 
+                    dropdownParent: $('#modal-add-po .modal-content'), 
                     placeholder: "pilih",
                     width: 'auto',
                     adaptContainerWidth: true,
@@ -1013,6 +1010,7 @@
             grand_total_harga();
         }
     });
+    
  
 
 
@@ -1025,10 +1023,10 @@
     }); 
     quill.enable(false);
     quill.root.style.background = '#F7F7F7'; // warna disable
-    quill.setContents(JSON.parse(<?= JSON_ENCODE($template->delta)?>));  
 
     $("#savequill").hide();
     $("#savequillas").hide();
+    $("#editquill").hide();
     $("#savequill").click(function(){ 
         if($("#SphFormatFooter").select2("data")[0]["id"] == $("#SphFormatFooter").select2("data")[0]["text"]){
             $.ajax({ 
@@ -1089,7 +1087,7 @@
         }
     })
     $("#savequillas").click(function(){  
-        $("#modal-add-sph").modal("hide"); 
+        $("#modal-add-po").modal("hide"); 
         Swal.fire({
             title: 'Simpan Template',
             input: 'text',
@@ -1146,7 +1144,7 @@
             $("#editquill").show();
             quill.enable(false);
             quill.root.style.background = '#F7F7F7'; // warna disable
-            $("#modal-add-sph").modal("show");
+            $("#modal-add-po").modal("show");
         }); 
     })
     $("#editquill").click(function(){
@@ -1159,7 +1157,7 @@
 
     }) 
     $("#SphFormatFooter").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-add-po .modal-content'),
         placeholder: "Pilih Template",
         tags:true,
         ajax: {
@@ -1214,7 +1212,7 @@
         var data = e.params.data;    
         //console.log(data);
         if (e.params.data.tags) {
-            //console.log('Tag baru ditambahkan:', e.params.data.text);
+            console.log('Tag baru ditambahkan:', e.params.data.text);
             quill.setContents(); 
             $("#savequill").show();
             $("#savequillas").hide();
@@ -1222,7 +1220,7 @@
             quill.enable(true);
             quill.root.style.background = '#FFFFFF'; // warna enable
         } else {
-            //console.log('select baru ditambahkan:', e.params.data.text); 
+            console.log('select baru ditambahkan:', e.params.data.text); 
             quill.setContents(JSON.parse(data.delta));  
             
             $("#savequill").hide();
@@ -1230,13 +1228,9 @@
             $("#editquill").show();
         }
     }).on("change", function(e) {   
-        //console.log("change");
+        console.log("change");
     });
-
-    $('#SphFormatFooter').append(new Option("<?=$template->name ?>" , "<?=$template->id?>", true, true)).trigger('change'); 
-    $("#editquill").show();
-
-    $("#btn-edit-penawaran").click(function(){
+    $("#btn-add-penawaran").click(function(){
         if($("#SphFormatFooter").val() == null){
             Swal.fire({
                 icon: 'error',
@@ -1259,7 +1253,7 @@
             }) ;
             return; 
         }
-        if(data_detail_item.some((item) => item.satuan_id === "0" ) == true){
+        if(data_detail_item.some((item) => item.satuan_id === "0") == true){
             Swal.fire({
                 icon: 'error',
                 text: 'Data produk ada yang belum lengkap ...!!!', 
@@ -1278,7 +1272,7 @@
             ref: <?= $project->id ?>, 
             admin: $("#SphAdmin").val(), 
             customerid: <?=$customer->id?>, 
-            address: $("#SphAddress").val(), 
+            Address: $("#SphAddress").val(), 
             templateid: $("#SphFormatFooter").val(), 
             subtotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
             discitemtotal: $("#SphDiscItemTotal").val().replace(/[^0-9]/g, ''), 
@@ -1321,7 +1315,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/edit-data-penawaran/<?= $project->id ?>", 
+            url: "<?= base_url() ?>action/add-data-penawaran", 
             data:{
                 "header":header,
                 "detail":detail, 
@@ -1334,8 +1328,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-sph").modal("hide");  
-                        loader_data_project(<?= $project->ref ?>,"penawaran") 
+                        $("#modal-add-po").modal("hide");  
+                        loader_data_project(<?= $project->id ?>,"penawaran") 
                     });
                   
                 }else{
@@ -1355,5 +1349,4 @@
             }
         });
     });
-
 </script>

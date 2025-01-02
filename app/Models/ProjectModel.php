@@ -565,10 +565,10 @@ class ProjectModel extends Model
                     <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
                         <div class="float-end d-md-flex d-none">
                             <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-cart-shopping mx-1"></i><span >Pembelian</span>
+                                <i class="fa-solid fa-share-from-square mx-1"></i></i><span >Buat PO</span>
                             </button> 
                             <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-money-bill mx-1"></i><span >Invoice</span>
+                                <i class="fa-solid fa-share-from-square mx-1"></i><span >Buat Invoice</span>
                             </button> 
                             <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)">
                                 <i class="fa-solid fa-print mx-1"></i><span >Print</span>
@@ -671,6 +671,170 @@ class ProjectModel extends Model
     private function data_project_invoice($id){
         $html = ''; 
 
+        $builder = $this->db->table("invoice");
+        $builder->select('*');
+        $builder->where('ref',$id);
+        $builder->orderby('id', 'DESC'); 
+        $query = $builder->get()->getResult();  
+        foreach($query as $row){
+
+            $builder = $this->db->table("invoice_detail");
+            $builder->select('*'); 
+            $builder->where('ref',$row->id);
+            $builder->orderby('id', 'ASC'); 
+            $items = $builder->get()->getResult(); 
+            $html_items = "";
+            $no = 1;
+            $huruf  = "A";
+            foreach($items as $item){
+
+                $arr_varian = json_decode($item->varian);
+                $arr_badge = "";
+                $arr_no = 0;
+                foreach($arr_varian as $varian){
+                    $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                    $arr_no++;
+                }
+
+                $html_items .= '
+                <div class="row">
+                    <div class="col-12 col-md-4 my-1 varian">   
+                        <div class="d-flex ">
+                            <span class="no-urut text-head-3"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->type == "product" ? $no : $huruf).'.</span> 
+                            <div class="d-flex flex-column text-start">
+                                <span class="text-head-3 text-uppercase"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->text.'</span>
+                                <span class="text-detail-2 text-truncate"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->group.'</span> 
+                                <div class="d-flex flex-wrap gap-1">
+                                    '.$arr_badge.'
+                                </div>
+                            </div> 
+                        </div>
+                    </div>';
+                if($item->type == "product"){
+                    $html_items .= '<div class="col-12 col-md-8 my-1 detail">
+                                        <div class="row"> 
+                                            <div class="offset-2 offset-md-0 col-5 col-md-2 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Qty:</span>
+                                                    <span class="text-head-2">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-5 col-md-3 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Harga:</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->harga, 0, ',', '.').'</span>
+                                                </div>
+                                            </div> 
+                                            <div class="offset-2 offset-md-0 col-5 col-md-3 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Disc:</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->disc, 0, ',', '.').'</span>
+                                                </div>
+                                            </div> 
+                                            <div class="col-5 col-md-3 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Total:</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->total, 0, ',', '.').'</span>
+                                                </div>
+                                            </div> 
+                                        </div>   
+                                    </div> 
+                                </div>';
+                    $no++;
+                }else{
+                    $html_items .= '<div class="col-12 col-md-8 my-1 detail"></div></div>';
+                    $huruf++;
+                    $no = 1;
+                }
+                     
+                
+            }
+            $html .= '
+            <div class="list-project mb-4 p-2">
+                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ">
+                    <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">No. Invoice :</span>
+                            <span class="text-head-3">'.$row->code.'</span>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Tanggal:</span>
+                            <span class="text-head-3">'.date_format(date_create($row->date),"d M Y").'</span>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
+                        <div class="float-end d-md-flex d-none">
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-share-from-square"></i><span >Performa</span>
+                            </button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)">
+                            <i class="fa-solid fa-share-from-square"></i><span >Payment</span>
+                            </button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_invoice('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                            </button> 
+                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_invoice('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
+                            </button>
+                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_invoice('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
+                            </button> 
+                        </div> 
+                        <div class="d-md-none d-flex btn-action justify-content-between"> 
+                            <div>PENAWARAN (SPH)</div>
+                            <div class="dropdown">
+                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="ti-more-alt icon-rotate-45"></i>
+                                </a>
+                                <ul class="dropdown-menu shadow">
+                                    <li><a class="dropdown-item m-0 px-2" onclick="po_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-dollar pe-2"></i>Performa</a></li>
+                                    <li><a class="dropdown-item m-0 px-2" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                </ul>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-12 col-md-3 col-xl-2 order-3">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Sub Total:</span>
+                            <span class="text-head-3">Rp. '.number_format($row->subtotal, 0, ',', '.').'</span>
+                        </div> 
+                    </div>
+                    <div class="col-12 col-md-3 col-xl-2 order-4">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Disc Item:</span>
+                            <span class="text-head-3">Rp. '.number_format($row->discitemtotal, 0, ',', '.').'</span>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-md-3 col-xl-2 order-5">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Disc Total:</span>
+                            <span class="text-head-3">Rp. '.number_format($row->disctotal, 0, ',', '.').'</span>
+                        </div> 
+                    </div>
+                    <div class="col-12 col-md-3 col-xl-2 order-6">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2">Grand Total:</span>
+                            <span class="text-head-3">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-xl-4 order-7  pb-2">
+                        <div class="d-flex flex-column justify-content-between">
+                            <span class="text-detail-2 pb-2 pb-md-0">Alamat:</span>
+                            <span class="text-head-3 text-wrap">'.$row->address.'</span>
+                        </div>  
+                    </div>
+                </div> 
+                <div class="detail-item mt-2 p-2 border-top">
+                    '.$html_items.' 
+                </div>
+            </div> 
+        ';
+        }
         if($html == ""){ 
             $html = '
                 <div class="d-flex justify-content-center flex-column align-items-center">
@@ -745,6 +909,28 @@ class ProjectModel extends Model
                 return $nextid;  
             default:
                 $nextid = "SPH/000/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+        } 
+    }
+    private function get_next_code_invoice($date){
+        //sample SPH/001/01/2024
+        $builder = $this->db->table("invoice");  
+        $builder->select("ifnull(max(SUBSTRING(code,5,3)),0) + 1 as nextcode");
+        $builder->where("date_create",$date);
+        $arr_date = explode("-", $date);
+        $data = $builder->get()->getRow(); 
+        switch (strlen($data->nextcode)) {
+            case 1:
+                $nextid = "INV/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 2:
+                $nextid = "INV/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 3:
+                $nextid = "INV/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+            default:
+                $nextid = "INV/000/".$arr_date[1]."/".$arr_date[0];
                 return $nextid;  
         } 
     }
@@ -840,6 +1026,59 @@ class ProjectModel extends Model
     }
     public function getdataDetailSPH($id){
         $builder = $this->db->table("penawaran_detail");
+        $builder->where('ref',$id); 
+        return $builder->get()->getResult();  
+    }
+
+    
+    public function insert_data_invoice($data){ 
+        $header = $data["header"]; 
+
+        $builder = $this->db->table("invoice");
+        $builder->insert(array(
+            "code"=>$this->get_next_code_invoice($header["date_create"]),
+            "date"=>$header["date"],
+            "date_create"=>$header["date_create"],
+            "time_create"=>$header["time_create"],
+            "storeid"=>$header["storeid"],
+            "ref"=>$header["ref"],
+            "ref1"=>$header["ref1"],
+            "admin"=>$header["admin"],
+            "customerid"=>$header["customerid"],
+            "address"=>$header["Address"],
+            "templateid"=>$header["templateid"],
+            "subtotal"=>$header["subtotal"],
+            "discitemtotal"=>$header["discitemtotal"],
+            "disctotal"=>$header["disctotal"],
+            "grandtotal"=>$header["grandtotal"],
+        ));
+
+        $builder = $this->db->table("invoice");
+        $builder->select('*');
+        $builder->orderby('id', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();  
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["ref"] = $query->id;
+            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $builder = $this->db->table("invoice_detail");
+            $builder->insert($row); 
+        }
+
+    }
+
+    public function getdataInvoice($id){
+        $builder = $this->db->table("invoice");
+        $builder->select("*,invoice.address,invoice.code,invoice.id,customer.name");
+        $builder->join("customer","customerid = customer.id");
+        $builder->join("template_footer","templateid = template_footer.id");
+        $builder->where('invoice.id',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
+    }
+    public function getdataDetailInvoice($id){
+        $builder = $this->db->table("invoice_detail");
         $builder->where('ref',$id); 
         return $builder->get()->getResult();  
     }

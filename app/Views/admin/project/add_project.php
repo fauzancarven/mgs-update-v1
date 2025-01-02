@@ -278,7 +278,7 @@
                 "comment":$("#comment-project").val() 
             },
             success: function(data) {    
-                console.log(data); 
+                //console.log(data); 
                 if(data["status"]===true){
                     Swal.fire({
                         icon: 'success',

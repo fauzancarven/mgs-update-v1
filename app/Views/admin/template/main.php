@@ -638,7 +638,7 @@
     .sidebar-icon-only .sidebar .nav .nav-item .nav-link i.fa-solid:before { 
         display: none; 
     }
-    .btn-action span{
+    /* .btn-action span{
         width: 0;
         overflow: hidden;
         transition: width 0.3s,opacity 0.5s;
@@ -651,7 +651,7 @@
     @keyframes expand {
         0% { width: 0; opacity: 0; }
         100% { width: 70px;opacity: 1; }
-    }
+    } */
     .btn-action.btn-primary{ 
         background: #f5f6f7;
         border: none;
