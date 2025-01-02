@@ -177,5 +177,18 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/add_project_po.php',$data)); 
     }
+    public function project_invoice_add($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+
+        $project = $models->getWhere(['id' => $id], 1)->getRow(); 
+        $data["project"] = $project;
+        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/add_project_invoice.php',$data)); 
+    }
     
 }

@@ -589,7 +589,42 @@
         });
     };
 
+    /* 
+        PROJECT INVOICE
+    */
+    isProcessingInvoice= [];
+    add_project_invoice = function(id,el){
+          // INSERT LOADER BUTTON
+          if (isProcessingPo[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingPo[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-invoice/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-invoice").modal("show"); 
+
+                isProcessingPo[id] = false;
+                $(el).html(old_text);
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingPo[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
 
 </script>
 

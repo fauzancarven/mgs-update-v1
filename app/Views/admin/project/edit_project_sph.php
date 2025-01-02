@@ -88,7 +88,7 @@
                 </div>     
                 <div class="card " style="min-height:50px;">
                     <div class="card-body p-2 bg-light"> 
-                        <div class="row align-items-center px-3">
+                        <div class="row align-items-center  d-none d-md-flex px-3">
                             <div class="col-12 col-md-4 my-1">    
                                 <div class="row">  
                                     <div class="col-12"> 
@@ -120,7 +120,7 @@
                                 </div>
                             </div> 
                         </div> 
-                        <div id="tb_varian" class="text-center px-3">
+                        <div id="tb_varian" class="text-center">
                             <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
                                 <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span class="text-head-1">Item belum ditambahkan</span>
@@ -317,7 +317,7 @@
                 </div> 
 
                 <div class="row">  
-                    <div class="col-8 px-1">   
+                    <div class="col-12 col-md-8 px-1 order-2 order-md-1">   
                         <div class="row mx-2 my-3 align-items-center">
                             <div class="label-border-right position-relative" >
                                 <span class="label-dialog">Term and Condition </span> 
@@ -357,7 +357,7 @@
                             </div>  
                         </div>  
                     </div>  
-                    <div class="col-4 px-3"> 
+                    <div class="col-12 col-md-4 px-3 order-1 order-md-2"> 
                         <div class="row align-items-center py-1 mt-3">
                             <div class="col-4">
                                 <span class="label-head-dialog">Sub Total</span>   
@@ -488,14 +488,13 @@
         }, 
     });
     $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
-       
-    console.log('<?= JSON_ENCODE($detail) ?>');
+        
     var data_detail_item = JSON.parse('<?= JSON_ENCODE($detail,true) ?>');   
     
     var isProcessingSphAddCategory = false;
     add_detail_category = function(el){
         if (isProcessingSphAddCategory) {
-            console.log("project sph cancel load");
+            //console.log("project sph cancel load");
             return;
         }  
         isProcessingSphAddCategory = true; 
@@ -551,7 +550,7 @@
 
     $("#btn-add-product").click(function(){
         if (isProcessingSphAddproduk) {
-            console.log("project sph cancel load");
+            //console.log("project sph cancel load");
             return;
         }  
         isProcessingSphAddproduk = true; 
@@ -752,15 +751,23 @@
         for(var i = 0; data_detail_item.length > i;i++){
             if(data_detail_item[i]["type"] == "category"){ 
                 html += `
-                    <div class="row">
-                        <div class="col-4"> 
+                    <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
+                        <div class="col-12 col-md-4"> 
                             <div class="row align-items-center"> 
-                                <div class="col-12 my-1 group text-start"> 
+                                <div class="col-7 col-md-12 my-1 group text-start"> 
                                     <span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${data_detail_item[i]["text"]}</span>  
-                                </div>     
+                                </div>   
+                                <div class="col-5 d-md-none d-block col-0 px-0"> 
+                                    <div class="btn-group d-inline-block float-end" role="group"> 
+                                        <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
+                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
+                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
+                                    </div>
+                                </div>   
                             </div>
                         </div>
-                        <div class="col-8">   
+                        <div class="col-8 d-md-block d-none">   
                             <div class="row align-items-center">
                                 <div class="col-2 px-1"> 
                                     <div class="btn-group d-inline-block float-end" role="group"> 
@@ -786,51 +793,57 @@
                     }
                     varian +=  '</div>';
                 }
-                html += `   <div class="row align-items-center">
-                                <div class="col-12 col-md-4 my-1 varian">   
+                html += `   <div class="row align-items-center  ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
+                                <div class="col-12 col-md-4 my-1 varian px-0">   
                                     <div class="d-flex">
                                         <span class="no-urut text-head-3">${last_group_no}.</span> 
-                                        <div class="d-flex flex-column text-start">
+                                        <div class="d-flex flex-column text-start flex-fill">
                                             <span class="text-head-3">${data_detail_item[i]["text"]}</span>
                                             ${varian} 
                                         </div>  
+                                        <div class="btn-group d-inline-block d-md-none float-end" role="group">  
+                                            ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
+                                            <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
+                                            <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
+                                            <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-2 px-1">  
-                                            <div class="btn-group d-inline-block float-end" role="group">  
+                                    <div class="row px-2"> 
+                                        <div class="col-2 px-1 d-none d-md-block ">  
+                                            <div class="btn-group float-end d-inline-block" role="group">  
                                                 ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
                                                 <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
                                                 <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
                                                 <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
                                             </div>
                                         </div>  
-                                        <div class="col-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
+                                        <div class="col-12 col-md-2 px-1 ">  
+                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                             <div class="input-group"> 
                                                 <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
                                                 <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "-" ? "disabled" : ""}></select>
                                             </div>  
                                         </div>  
-                                        <div class="col-8">  
+                                        <div class="col-12 col-md-8">  
                                             <div class="row">  
-                                                <div class="col-4 px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
+                                                <div class="col-6 col-md-4 px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
                                                     <div class="input-group"> 
                                                         <span class="input-group-text font-std px-1">Rp.</span> 
                                                         <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-harga-${i}" data-id="${i}" ${data_detail_item[i]["id"] != "0" ? "disabled" : ""}>
                                                     </div>    
                                                 </div> 
-                                                <div class="col-4 px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
+                                                <div class="col-6 col-md-4  px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
                                                     <div class="input-group">  
                                                         <span class="input-group-text font-std px-1">Rp.</span> 
                                                         <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" id="input-disc-${i}" data-id="${i}">
                                                     </div>   
                                                 </div> 
-                                                <div class="col-4 px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
+                                                <div class="col-12 col-md-4  px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Total</span>
                                                     <div class="input-group"> 
                                                         <span class="input-group-text font-std px-1">Rp.</span>
                                                         <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="input-total-${i}" data-id="${i}" disabled>
@@ -839,7 +852,7 @@
                                             </div>   
                                         </div>   
                                     </div>    
-                                </div>    
+                                </div>     
                             </div> `;
 
                 
@@ -1028,7 +1041,7 @@
                     "delta": quill.getContents(), 
                 },
                 success: function(data) {    
-                    console.log(data); 
+                    //console.log(data); 
                     if(data["status"]===true){     
                         $("#savequill").hide();
                         $("#savequillas").hide();
@@ -1056,7 +1069,7 @@
                     "delta": quill.getContents(), 
                 },
                 success: function(data) {    
-                    console.log(data); 
+                    //console.log(data); 
                     if(data["status"]===true){     
                         $("#savequill").hide();
                         $("#savequillas").hide();
@@ -1104,7 +1117,7 @@
                             "delta": quill.getContents(), 
                         },
                         success: function(data) {    
-                            console.log(data); 
+                            //console.log(data); 
                             if(data["status"]===true){    
                                 $('#SphFormatFooter').append(new Option(data["data"]["name"] ,data["data"]["id"], true, true)).trigger('change');
                                 $("#savequill").hide();
@@ -1199,9 +1212,9 @@
         //escapeMarkup: function(m) { return m; }
     }).on("select2:select", function(e) {  
         var data = e.params.data;    
-        console.log(data);
+        //console.log(data);
         if (e.params.data.tags) {
-            console.log('Tag baru ditambahkan:', e.params.data.text);
+            //console.log('Tag baru ditambahkan:', e.params.data.text);
             quill.setContents(); 
             $("#savequill").show();
             $("#savequillas").hide();
@@ -1209,7 +1222,7 @@
             quill.enable(true);
             quill.root.style.background = '#FFFFFF'; // warna enable
         } else {
-            console.log('select baru ditambahkan:', e.params.data.text); 
+            //console.log('select baru ditambahkan:', e.params.data.text); 
             quill.setContents(JSON.parse(data.delta));  
             
             $("#savequill").hide();
@@ -1217,7 +1230,7 @@
             $("#editquill").show();
         }
     }).on("change", function(e) {   
-        console.log("change");
+        //console.log("change");
     });
 
     $('#SphFormatFooter').append(new Option("<?=$template->name ?>" , "<?=$template->id?>", true, true)).trigger('change'); 
@@ -1314,7 +1327,7 @@
                 "detail":detail, 
             },
             success: function(data) {    
-                console.log(data); 
+                //console.log(data); 
                 if(data["status"]===true){
                     Swal.fire({
                         icon: 'success',

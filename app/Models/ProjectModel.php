@@ -51,33 +51,56 @@ class ProjectModel extends Model
 		$db  = \Config\Database::connect();
 
         $dt = new Datatables(new Codeigniter4Adapter);
+        $querysql = 'Select date_time,
+        project.category project_category, 
+        project.id project_id,
+        StoreLogo,
+        StoreCode, 
+        customer.id customer_id, 
+        customer.name customer_name, 
+        customer.code customer_code, 
+        customer.company customer_company, 
+        customer.address customer_address, 
+        status, 
+        admin,
+        project.comment comment from project 
+        left join customer on customer.id = customerid 
+        left join store on store.StoreId = project.storeid
+        where project.category like "%'.$search.'%" or
+        StoreCode like "%'.$search.'%" or
+        customer.name like "%'.$search.'%" or
+        customer.code like "%'.$search.'%" or
+        customer.address like "%'.$search.'%"
+        order by project.id desc
+        ';
+        // $builder = $this->db->table($this->table); 
+        // $builder->join('customer', 'customer.id = customerid', 'left'); 
+        // $builder->join('store', 'store.StoreId = project.storeid', 'left'); 
+        // $builder->select('
+        //     date_time,
+        //     project.category project_category, 
+        //     project.id project_id,
+        //     StoreLogo,
+        //     StoreCode, 
+        //     customer.id customer_id, 
+        //     customer.name customer_name, 
+        //     customer.code customer_code, 
+        //     customer.company customer_company, 
+        //     customer.address customer_address, 
+        //     status, 
+        //     admin,
+        //     project.comment comment, 
+        // '); 
+        // $builder->like("project.category",$search);
+        // $builder->orLike("StoreCode",$search);
+        // $builder->orLike("customer.name",$search);
+        // $builder->orLike("customer.code",$search);
+        // $builder->orLike("customer.address",$search); 
+        // $builder->orderBy("project.id","DESC"); 
+        // $query = $builder->getCompiledSelect();
 
-        $builder = $this->db->table($this->table); 
-        $builder->join('customer', 'customer.id = customerid', 'left'); 
-        $builder->join('store', 'store.StoreId = project.storeid', 'left'); 
-        $builder->select('
-            date_time,
-            project.category project_category, 
-            project.id project_id,
-            StoreLogo,
-            StoreCode, 
-            customer.id customer_id, 
-            customer.name customer_name, 
-            customer.code customer_code, 
-            customer.company customer_company, 
-            customer.address customer_address, 
-            status, 
-            admin,
-            project.comment comment, 
-        '); 
-        $builder->like("project.category",$search);
-        $builder->orLike("StoreCode",$search);
-        $builder->orLike("customer.name",$search);
-        $builder->orLike("customer.code",$search);
-        $builder->orLike("customer.address",$search); 
-        $query = $builder->getCompiledSelect();
+        $dt->query($querysql); 
 
-        $dt->query($query); 
         $dt->edit('date_time', function($data){
             $date = date_create($data["date_time"]);
             return '<div class="d-flex flex-column gap-1 align-items-center">
@@ -526,17 +549,17 @@ class ProjectModel extends Model
             }
             $html .= '
             <div class="list-project mb-4 p-2">
-                <div class="row gx-4 gy-2">
+                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ">
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">No. Penawaran :</span>
-                            <span class="text-head-2">'.$row->code.'</span>
+                            <span class="text-head-3">'.$row->code.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Tanggal:</span>
-                            <span class="text-head-2">'.date_format(date_create($row->date),"d M Y").'</span>
+                            <span class="text-head-3">'.date_format(date_create($row->date),"d M Y").'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
@@ -576,31 +599,31 @@ class ProjectModel extends Model
                     <div class="col-12 col-md-3 col-xl-2 order-3">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Sub Total:</span>
-                            <span class="text-head-2">Rp. '.number_format($row->subtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->subtotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-4">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Item:</span>
-                            <span class="text-head-2">Rp. '.number_format($row->discitemtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->discitemtotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-5">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Total:</span>
-                            <span class="text-head-2">Rp. '.number_format($row->disctotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->disctotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-6">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Grand Total:</span>
-                            <span class="text-head-2">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-xl-4 order-7  pb-2">
                         <div class="d-flex flex-column justify-content-between">
                             <span class="text-detail-2 pb-2 pb-md-0">Alamat:</span>
-                            <span class="text-head-2 text-wrap">'.$row->address.'</span>
+                            <span class="text-head-3 text-wrap">'.$row->address.'</span>
                         </div>  
                     </div>
                 </div> 
@@ -646,16 +669,19 @@ class ProjectModel extends Model
         );
     }
     private function data_project_invoice($id){
-        $html = '
-            <div class="d-flex justify-content-center flex-column align-items-center">
-                <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
-                <span>Belum ada data yang dibuat</span> 
-                <div class="text-center mt-4">
-                    <button class="btn btn-sm btn-primary px-3" onclick="add_project_invoice(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data invoice</button> 
-                    <button class="btn btn-sm btn-primary px-3" onclick="add_project_proforma(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data proforma</button> 
+        $html = ''; 
+
+        if($html == ""){ 
+            $html = '
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <img src="'.base_url().'assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                    <span>Belum ada data yang dibuat</span> 
                 </div> 
-            </div> 
-        '; 
+            ';
+        }
+        $html .= '   <div class="d-flex justify-content-center flex-column align-items-center">
+                        <button class="btn btn-sm btn-primary px-3 m-2" onclick="add_project_invoice(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data Invoice</button>
+                    </div>';
         return json_encode(
             array(
                 "status"=>true,
