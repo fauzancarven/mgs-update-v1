@@ -205,7 +205,58 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
-
+    public function invoice_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_invoice($postData,$id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function invoice_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_invoice($id);  
+        }
+    }
+    public function payment_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_payment($id);  
+        }
+    }
+    public function payment_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_payment($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function payment_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_payment($postData,$id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function proforma_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_proforma($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
 
     public function template_footer_add(){
         $request = Services::request();

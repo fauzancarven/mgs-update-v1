@@ -56,9 +56,15 @@ $routes->post('/action/get-data-project/(:any)', 'ActionController::project/$1',
 $routes->post('/action/add-data-project', 'ActionController::project_add', ['filter' => 'login']); 
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 
-$routes->post('/action/delete-data-project-sph/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/delete-data-penawaran/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-invoice', 'ActionController::invoice_add', ['filter' => 'login']); 
-
+$routes->post('/action/edit-data-invoice/(:num)', 'ActionController::invoice_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/delete-data-invoice/(:num)', 'ActionController::invoice_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/add-data-payment', 'ActionController::payment_add', ['filter' => 'login']);   
+$routes->post('/action/edit-data-payment/(:num)', 'ActionController::payment_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/delete-data-project-payment/(:num)', 'ActionController::payment_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/add-data-proforma', 'ActionController::proforma_add', ['filter' => 'login']);    
+$routes->post('/action/edit-data-proforma/(:num)', 'ActionController::proforma_edit/$1', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-template-footer', 'ActionController::template_footer_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);   
@@ -80,10 +86,8 @@ $routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filte
 $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/$1', ['filter' => 'login']);  
 
 
-
-
 /**
- * SELECT2 AJAX
+ * SELECT2
  */  
 $routes->post('/select2/get-data-customer', 'SelectController::customer', ['filter' => 'login']);
 $routes->post('/select2/get-data-customer-category', 'SelectController::customer_category', ['filter' => 'login']);
@@ -103,7 +107,7 @@ $routes->post('/select2/get-data-users', 'SelectController::users', ['filter' =>
 $routes->post('/select2/get-data-template-footer', 'SelectController::template_footer', ['filter' => 'login']);
 
 /**
- *  MODAL AJAX
+ *  MODAL MESSAGE
  */ 
 $routes->post('/message/add-store', 'MessageController::store_add', ['filter' => 'login']);  
 $routes->post('/message/edit-store/(:num)', 'MessageController::store_edit/$1', ['filter' => 'login']);  
@@ -130,7 +134,12 @@ $routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sp
 $routes->post('/message/add-project-invoice/(:num)', 'MessageController::project_invoice_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-invoice/(:num)', 'MessageController::project_invoice_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-po/(:num)', 'MessageController::project_po_add/$1', ['filter' => 'login']);  
+$routes->post('/message/add-project-payment/(:num)', 'MessageController::project_payment_add/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-project-payment/(:num)', 'MessageController::project_payment_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/add-project-proforma/(:num)', 'MessageController::project_proforma_add/$1', ['filter' => 'login']); 
+$routes->post('/message/edit-project-proforma/(:num)', 'MessageController::project_proforma_edit/$1', ['filter' => 'login']);  
 
+$routes->post('/message/delivery-project-invoice/(:num)', 'MessageController::project_delivery_add/$1', ['filter' => 'login']);  
 
 
 /**
@@ -138,4 +147,15 @@ $routes->post('/message/add-project-po/(:num)', 'MessageController::project_po_a
  */ 
 $routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']); 
 $routes->post('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']); 
+$routes->get('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1', ['filter' => 'login']); 
+$routes->post('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1', ['filter' => 'login']); 
+$routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1', ['filter' => 'login']); 
+$routes->post('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1', ['filter' => 'login']); 
+
+$routes->get('/print/project/proformaA5/(:num)', 'PrintController::project_proforma_a5/$1', ['filter' => 'login']);
+$routes->post('/print/project/proformaA5/(:num)', 'PrintController::project_proforma_a5/$1', ['filter' => 'login']);
+$routes->get('/print/project/paymentA5/(:num)', 'PrintController::project_payment_a5/$1', ['filter' => 'login']);
+$routes->post('/print/project/paymentA5/(:num)', 'PrintController::project_payment_a5/$1', ['filter' => 'login']);
+
+
 $routes->get('/printhtml/project/sph/(:num)', 'PrintController::project_sph_html/$1', ['filter' => 'login']); 

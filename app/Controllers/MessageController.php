@@ -222,5 +222,73 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/edit_project_invoice.php',$data)); 
     }
-    
+    public function project_payment_add($id)
+    {     
+        $models = new ProjectModel();  
+        $project = $models->getdataInvoice($id);  
+        $data["project"] = $project; 
+        $data["payment"] =$models->getdataPaymentByRef($project->id);  
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/add_project_payment.php',$data)); 
+    }
+    public function project_payment_edit($id)
+    {     
+        $models = new ProjectModel();      
+        $data["payment"] = $models->getdataPayment($id);  
+        $data["project"] = $models->getdataInvoice($data["payment"]->ref);  
+        $data["image"] = $models->getdataImagePayment($data["payment"]->ref,$id);   
+        $data["payments"] = $models->getdataPaymentByRef($data["payment"]->ref);   
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/edit_project_payment.php',$data)); 
+    }
+    public function project_proforma_add($id)
+    {     
+        $models = new ProjectModel();  
+        $project = $models->getdataInvoice($id);  
+        $data["project"] = $project; 
+        $data["payment"] =$models->getdataPaymentByRef($project->id);  
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/add_project_proforma.php',$data)); 
+    }
+    public function project_proforma_edit($id)
+    {     
+        $models = new ProjectModel();      
+        $data["payment"] = $models->getdataProforma($id);  
+        $data["project"] = $models->getdataInvoice($data["payment"]->ref);      
+        $data["payments"] = $models->getdataProformaByRef($data["payment"]->ref);   
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/edit_project_proforma.php',$data)); 
+    }
+    public function project_delivery_add($id)
+    {      
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+
+        $project = $models->getdataInvoice($id); 
+        $arr_detail = $models->getdataDetailInvoice($id);
+        $detail = array();
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->produkid, 
+                        "satuan_id"=> ($row->satuan_id == 0 ? "" : $row->satuan_id),
+                        "satuantext"=>$row->satuantext,  
+                        "hargajual"=>$row->harga,
+                        "varian"=> JSON_DECODE($row->varian,true),
+                        "total"=> $row->total,
+                        "disc"=> $row->disc,
+                        "qty"=> $row->qty,
+                        "text"=> $row->text,
+                        "group"=> $row->group,
+                        "type"=> $row->type
+                    );
+        };
+        $data["project"] = $project; 
+        $data["detail"] =  $detail;
+        $data["template"] =$models->get_data_template_footer($project->templateid); 
+        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/add_project_delivery',$data)); 
+    }
 }

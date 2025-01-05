@@ -6,5 +6,6 @@ writable/*
 tests/* 
 assets/images/produk/*
 assets/images/profile/*
+assets/images/payment/*
 deploy.php
 composer.lock

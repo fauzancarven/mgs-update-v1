@@ -235,8 +235,23 @@
     }
     li {
         padding: 0 5px;
+    } 
+    .footer table, .footer th, .footer td { 
+        border-collapse: collapse;
+        text-align:center;
+        margin-left:auto;
+        margin-right:auto; 
+        height:10px !important;
+        align-items: start;
+        justify-content: baseline;
+        font-size:18px;
+        color: #8eb2df;
     }
-   
+    .divider{ 
+        border:1px solid #88c3f4;
+        height:20px;
+        margin:10px
+    }
 </style>
 <body>  
     <div class="header">
@@ -280,6 +295,17 @@
         <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>  
     </div>   
     <div class="footer"> 
+        <table>
+            <tr>
+                <td>BATA EXPOSE</td>
+                <td><div class="divider"></div></td>
+                <td>BATA TEMPEL</td> 
+                <td><div class="divider"></div></td> 
+                <td>ROSTER DINDING</td>  
+                <td><div class="divider"></div></td>
+                <td>PAVING BLOCK</td>   
+            </tr>
+        </table>
         <div class="line"> 
             <div class="line1"></div> 
         </div>

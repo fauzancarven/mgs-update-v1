@@ -438,7 +438,7 @@
     /* 
         PROJECT SPH / PENAWARAN
     */
-    isProcessingSph = [];
+    var isProcessingSph = [];
     add_project_sph = function(id,el){ 
          // INSERT LOADER BUTTON
         if (isProcessingSph[id]) {
@@ -472,12 +472,12 @@
         });
     };
 
-    isProcessingSphPrint = [];
+    var isProcessingSphPrint = [];
     print_project_sph = function(ref,id,el){ 
         window.open('<?= base_url("print/project/sph/") ?>' + id, '_blank');
     };
 
-    isProcessingSphEdit = [];
+    var isProcessingSphEdit = [];
     edit_project_sph = function(ref,id,el){ 
           // INSERT LOADER BUTTON
           if (isProcessingSphEdit[id]) {
@@ -511,7 +511,7 @@
         });
     }; 
     
-    isProcessingSphDelete = [];
+    var isProcessingSphDelete = [];
     delete_project_sph = function(ref,id,el){ 
          // INSERT LOADER BUTTON
         if (isProcessingSphDelete[id]) {
@@ -534,7 +534,7 @@
                 $.ajax({
                     dataType: "json",
                     method: "POST",
-                    url: "<?= base_url() ?>action/delete-data-project-sph/" + id, 
+                    url: "<?= base_url() ?>action/delete-data-penawaran/" + id, 
                     success: function(data) { 
                         Swal.fire({
                             title: "Deleted!",
@@ -555,7 +555,7 @@
     /* 
         PROJECT PEMBELIAN
     */
-    isProcessingPo= [];
+    var  isProcessingPo = [];
     add_project_po = function(id,el){ 
          // INSERT LOADER BUTTON
         if (isProcessingPo[id]) {
@@ -592,10 +592,10 @@
     /* 
         PROJECT INVOICE
     */
-    isProcessingInvoice= [];
+    var isProcessingInvoice= [];
     add_project_invoice = function(id,el){
-          // INSERT LOADER BUTTON
-          if (isProcessingPo[id]) {
+        // INSERT LOADER BUTTON
+        if (isProcessingPo[id]) {
             console.log("project sph cancel load");
             return;
         }  
@@ -626,12 +626,41 @@
         });
     }
 
-    isProcessingInvoicePrint = [];
-    print_project_invoice = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/invoice/") ?>' + id, '_blank');
-    };
+    var isProcessingDelivery = [];
+    delivery_project_invoice  = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingDelivery[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingDelivery[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-    isProcessingInvoiceEdit = [];
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/delivery-project-invoice/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-delivery").modal("show"); 
+
+                isProcessingDelivery[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDelivery[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    var isProcessingInvoiceEdit = [];
     edit_project_invoice = function(ref,id,el){ 
           // INSERT LOADER BUTTON
           if (isProcessingInvoiceEdit[id]) {
@@ -665,7 +694,7 @@
         });
     }; 
     
-    isProcessingInvoiceDelete = [];
+    var isProcessingInvoiceDelete = [];
     delete_project_invoice = function(ref,id,el){ 
          // INSERT LOADER BUTTON
         if (isProcessingInvoiceDelete[id]) {
@@ -703,8 +732,261 @@
             isProcessingInvoiceDelete[id] = false;
             $(el).html(old_text); 
         });
+    }; 
+    print_project_invoice_a4 = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/invoiceA4/") ?>' + id, '_blank');
+    }; 
+    print_project_invoice_a5 = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/invoiceA5/") ?>' + id, '_blank');
+    };
+ 
+    var isProcessingInvoicePayment = [];
+    payment_project_invoice = function(ref,id,el){
+        // INSERT LOADER BUTTON
+        if (isProcessingInvoicePayment[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingInvoicePayment[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-payment/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-payment").modal("show"); 
+
+                isProcessingInvoicePayment[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingInvoicePayment[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+    
+    var isProcessingPaymentEdit = [];
+    edit_project_payment  = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+         if (isProcessingPaymentEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingPaymentEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-payment/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-payment").modal("show"); 
+
+                isProcessingPaymentEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingPaymentEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };
+    
+
+    var isProcessingPaymentDelete = [];
+    delete_project_payment  = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingInvoiceDelete[id]) {
+            return;
+        }  
+        isProcessingInvoiceDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus Payment ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-project-payment/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        loader_data_project(ref,"invoice"); 
+                    }, 
+                });
+            }
+            isProcessingInvoiceDelete[id] = false;
+            $(el).html(old_text); 
+        });
     };
 
+    print_project_payment = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/paymentA5/") ?>' + id, '_blank');
+    }
+    
+    var isProcessingInvoiceProforma = [];
+    proforma_project_invoice  = function(ref,id,el){
+        // INSERT LOADER BUTTON
+        if (isProcessingInvoiceProforma[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingInvoiceProforma[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-proforma/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-proforma").modal("show"); 
+
+                isProcessingInvoiceProforma[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingInvoiceProforma[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    } 
+
+    var isProcessingProformaEdit = [];
+    edit_project_proforma  = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+         if (isProcessingProformaEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingProformaEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-proforma/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-proforma").modal("show"); 
+
+                isProcessingProformaEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingProformaEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };
+    print_project_proforma = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/proformaA5/") ?>' + id, '_blank');
+    }
+    
+    send_project_payment  = function(ref,id,el){
+        // INSERT LOADER BUTTON
+        if (isProcessingInvoicePayment[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingInvoicePayment[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-payment/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-payment").modal("show"); 
+
+                isProcessingInvoicePayment[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingInvoicePayment[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    show_project_payment = function(ref,id,el){ 
+        $.ajax({
+            type: "GET",
+            url: "<?= base_url("assets/images/payment/") ?>" + ref + "/" + id + ".png",
+            success: function() {
+                Swal.fire({ 
+                    html: "<img src='<?= base_url("assets/images/payment/") ?>" + ref + "/" + id + ".png' style='width:500px;'>", 
+                    confirmButtonColor: "#3085d6", 
+                }); 
+                return;
+            },
+            error: function() { 
+                $.ajax({
+                    type: "GET",
+                    url: "<?= base_url("assets/images/payment/") ?>" + ref + "/" + id + ".jpg",
+                    success: function() {
+                        Swal.fire({ 
+                            html: "<img src='<?= base_url("assets/images/payment/") ?>" + ref + "/" + id + ".jpg' style='width:500px;'>", 
+                            confirmButtonColor: "#3085d6", 
+                        }); 
+                    },
+                    error: function() { 
+
+                    }
+                });
+            }
+        });
+       
+       
+    }
 
 </script>
 

@@ -429,6 +429,37 @@ class ProjectModel extends Model
       
     }
 
+    
+    public function insert_data_template_footer($data){  
+
+        $builder = $this->db->table("template_footer");
+        $builder->insert(array(
+            "name"=> $data["name"],
+            "detail"=> $data["detail"],
+            "delta"=> JSON_ENCODE($data["delta"]), 
+        ));  
+
+         // GET ID PRODUK 
+        $builder = $this->db->table("template_footer");
+        $builder->select('*'); 
+        $builder->orderby('id', 'DESC');
+        $builder->limit(1);
+        return $builder->get()->getRow();
+    }
+    public function update_data_template_footer($data,$id){   
+        $builder = $this->db->table("template_footer");
+        $builder->set('name', $data["name"]);
+        $builder->set('detail', $data["detail"]); 
+        $builder->set('delta', JSON_ENCODE($data["delta"]));
+        $builder->where('id', $id); 
+        $builder->update(); 
+    }
+    public function get_data_template_footer($id){
+        $builder = $this->db->table("template_footer");
+        $builder->where('id',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
+    }
  
     /**
      * FUNCTION UNTUK MENU PROJECT
@@ -563,20 +594,20 @@ class ProjectModel extends Model
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
-                        <div class="float-end d-md-flex d-none">
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)">
+                        <div class="float-end d-md-flex d-none gap-1">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)">
                                 <i class="fa-solid fa-share-from-square mx-1"></i></i><span >Buat PO</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)">
                                 <i class="fa-solid fa-share-from-square mx-1"></i><span >Buat Invoice</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)">
                                 <i class="fa-solid fa-print mx-1"></i><span >Print</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)">
                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                             </button>
-                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)">
                                 <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
                             </button> 
                         </div> 
@@ -765,35 +796,46 @@ class ProjectModel extends Model
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
-                        <div class="float-end d-md-flex d-none">
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-share-from-square"></i><span >Performa</span>
+                        <div class="float-end d-md-flex d-none gap-1">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="proforma_project_invoice('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-share mx-1"></i><span >Proforma</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)">
-                            <i class="fa-solid fa-share-from-square"></i><span >Payment</span>
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="payment_project_invoice('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-share mx-1"></i><span >Payment</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="print_project_invoice('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="delivery_project_invoice('.$row->ref.','.$row->id.',this)">
+                                <i class="fa-solid fa-truck mx-1"></i><span >Surat Jalan</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action m-1 rounded border" onclick="edit_project_invoice('.$row->ref.','.$row->id.',this)">
+                            <div class="dropdown">
+                                <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                                </a> 
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" onclick="print_project_invoice_a4('.$row->ref.','.$row->id.',this)">Print A4</a></li>
+                                    <li><a class="dropdown-item" onclick="print_project_invoice_a5('.$row->ref.','.$row->id.',this)">Print A5</a></li> 
+                                </ul>
+                            </div>
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_invoice('.$row->ref.','.$row->id.',this)">
                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                             </button>
-                            <button class="btn btn-sm btn-danger btn-action m-1 rounded border" onclick="delete_project_invoice('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_invoice('.$row->ref.','.$row->id.',this)">
                                 <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
                             </button> 
                         </div> 
                         <div class="d-md-none d-flex btn-action justify-content-between"> 
-                            <div>PENAWARAN (SPH)</div>
+                            <div>INVOICE (SALES ORDER)</div>
                             <div class="dropdown">
                                 <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti-more-alt icon-rotate-45"></i>
                                 </a>
                                 <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item m-0 px-2" onclick="po_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-dollar pe-2"></i>Performa</a></li>
-                                    <li><a class="dropdown-item m-0 px-2" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-share pe-2"></i>Proforma</a></li>
+                                    <li><a class="dropdown-item m-0 px-2" onclick="payment_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-share pe-2"></i>Payment</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delivery_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-truck pe-2"></i>Surat Jalan</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                                 </ul>
                             </div>
                         </div> 
@@ -833,7 +875,102 @@ class ProjectModel extends Model
                     '.$html_items.' 
                 </div>
             </div> 
-        ';
+            ';
+
+            $builder = $this->db->table("payment");
+            $builder->select('*'); 
+            $builder->where('ref',$row->id);
+            $builder->orderby('id', 'ASC'); 
+            $payment = $builder->get()->getResult(); 
+
+            foreach($payment as $row){
+               
+                if($row->status == "0"){
+                    $status = '<span class="text-head-3 text-warning">
+                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+                        <i class="fa-solid fa-certificate fa-stack-2x"></i> 
+                        <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
+                    </span>Pending</span>';
+                }else{
+                    $status = ' <span class="text-head-3 text-success">
+                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+                        <i class="fa-solid fa-certificate fa-stack-2x"></i>
+                        <i class="fa-solid fa-check fa-stack-1x fa-inverse"></i>
+                    </span>Verified</span>';
+                }
+                $html .= '  <div class="list-payment mb-4 p-2">
+                                <div class="line-1"></div>
+                                <div class="line-o"></div>
+                                <div class="row">
+                                    <div class="col-9 col-md-1 align-items-center order-0">  
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-head-1 pt-auto">'.($row->doc == "1" ? "PAYMENT" : "PROFORMA" ).'</span>
+                                        </div>   
+                                    </div>
+                                    <div class="col-12 col-md-1 order-2 order-sm-1"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Status:</span>'.$status.'
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-3 order-sm-2"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Tanggal:</span>
+                                            <span class="text-head-3">'.date_format(date_create($row->date),"d M Y").'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-4 order-sm-3"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Type:</span>
+                                            <span class="text-head-3">'.$row->type.'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-5 order-sm-4">
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Method:</span>
+                                            <span class="text-head-3">'.$row->method.'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-6 order-sm-5">
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Total:</span>
+                                            <span class="text-head-3">Rp. '.number_format($row->total).'</span>
+                                        </div>   
+                                    </div>
+                                    <div class="col-3 col-md-6 text-end order-1 order-sm-5"> 
+                                        <div class="d-none d-md-inline-block"> 
+                                            <button class="btn btn-sm btn-primary btn-action rounded border '.($row->doc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row->doc == "1" ? "payment" : "proforma" ).'('.$row->ref.','.$row->id.',this)">
+                                                <i class="fa-solid fa-eye mx-1"></i><span >Show</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row->doc == "1" ? "payment" : "proforma" ).'('.$row->ref.','.$row->id.',this)">
+                                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row->doc == "1" ? "payment" : "proforma" ).'('.$row->ref.','.$row->id.',this)">
+                                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$row->ref.','.$row->id.',this)">
+                                                <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
+                                            </button> 
+                                        </div>
+                                        <div class="d-inline-block d-md-none">
+                                            <div class="dropdown">
+                                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="ti-more-alt icon-rotate-45"></i>
+                                                </a>
+                                                <ul class="dropdown-menu shadow">
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="payment_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            ';
+            }
         }
         if($html == ""){ 
             $html = '
@@ -889,7 +1026,33 @@ class ProjectModel extends Model
     /**
      * FUNCTION UNTUK AUTOCODE
      */ 
-
+    private function simpan_gambar_base64($base64, $lokasi,$nama) {
+        $parts = explode(',', $base64);
+        $header = $parts[0];
+        $extension = '';
+        
+        switch ($header) {
+            case 'data:image/jpeg;base64':
+                $extension = '.jpg';
+                break;
+            case 'data:image/png;base64':
+                $extension = '.png';
+                break;
+            case 'data:image/gif;base64':
+                $extension = '.gif';
+                break;
+            case 'data:image/bmp;base64':
+                $extension = '.bmp';
+                break;
+            default:
+                return 'Jenis file tidak didukung';
+        }
+        
+        $nama_file = $nama . $extension;
+        $biner = base64_decode($parts[1]);
+        file_put_contents($lokasi ."/". $nama_file, $biner); 
+        return $lokasi ."/". $nama_file;
+    }
     private function get_next_code_penawaran($date){
         //sample SPH/001/01/2024
         $builder = $this->db->table("penawaran");  
@@ -1013,8 +1176,7 @@ class ProjectModel extends Model
         $builder->delete(); 
 
         return JSON_ENCODE(array("status"=>true));
-    }
-
+    } 
     public function getdataSPH($id){
         $builder = $this->db->table("penawaran");
         $builder->select("*,penawaran.address,penawaran.code,penawaran.id,customer.name");
@@ -1029,6 +1191,10 @@ class ProjectModel extends Model
         $builder->where('ref',$id); 
         return $builder->get()->getResult();  
     }
+
+    /**
+     * FUNCTION UNTUK INVOICE / FAKTUR
+     */ 
 
     
     public function insert_data_invoice($data){ 
@@ -1066,8 +1232,48 @@ class ProjectModel extends Model
             $builder->insert($row); 
         }
 
-    }
+    } 
+    public function update_data_invoice($data,$id){ 
+        $header = $data["header"]; 
 
+        $builder = $this->db->table("invoice"); 
+        $builder->set('date', $header["date"]); 
+        $builder->set('storeid', $header["storeid"]);  
+        $builder->set('admin', $header["admin"]); 
+        $builder->set('customerid', $header["customerid"]); 
+        $builder->set('address', $header["address"]); 
+        $builder->set('templateid', $header["templateid"]); 
+        $builder->set('subtotal', $header["subtotal"]); 
+        $builder->set('discitemtotal', $header["discitemtotal"]); 
+        $builder->set('disctotal', $header["disctotal"]); 
+        $builder->set('grandtotal', $header["grandtotal"]);  
+        $builder->where('id', $id); 
+        $builder->update(); 
+
+        $builder = $this->db->table("invoice_detail");
+        $builder->where('ref',$id);
+        $builder->delete(); 
+
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["ref"] = $id;
+            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $builder = $this->db->table("invoice_detail");
+            $builder->insert($row); 
+        } 
+    }
+    public function delete_data_invoice($id){
+        $builder = $this->db->table("invoice");
+        $builder->where('id',$id);
+        $builder->delete(); 
+
+       
+        $builder = $this->db->table("invoice_detail");
+        $builder->where('ref',$id);
+        $builder->delete(); 
+
+        return JSON_ENCODE(array("status"=>true));
+    }
     public function getdataInvoice($id){
         $builder = $this->db->table("invoice");
         $builder->select("*,invoice.address,invoice.code,invoice.id,customer.name");
@@ -1083,34 +1289,163 @@ class ProjectModel extends Model
         return $builder->get()->getResult();  
     }
 
-    public function insert_data_template_footer($data){  
 
-        $builder = $this->db->table("template_footer");
+    /**
+     * FUNCTION UNTUK PAYMENT
+     */ 
+
+     
+    public function insert_data_payment($data){
+        $builder = $this->db->table("payment");
         $builder->insert(array(
-            "name"=> $data["name"],
-            "detail"=> $data["detail"],
-            "delta"=> JSON_ENCODE($data["delta"]), 
-        ));  
+            "ref"=>$data["ref"],
+            "datecreate"=>$data["datecreate"],
+            "type"=>$data["type"],
+            "method"=>$data["method"],
+            "total"=>$data["total"],
+            "note"=>$data["note"],
+            "date"=>$data["date"],  
+            "doc"=>1,  
+        ));
 
-         // GET ID PRODUK 
-        $builder = $this->db->table("template_footer");
-        $builder->select('*'); 
+        $builder = $this->db->table("payment");
+        $builder->select('*');
         $builder->orderby('id', 'DESC');
         $builder->limit(1);
-        return $builder->get()->getRow();
+        $query = $builder->get()->getRow();  
+
+        //Buat folder utama
+        $folder_utama = 'assets/images/payment'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$data["ref"])) {
+            mkdir($folder_utama."/".$data["ref"], 0777, true);  
+        }
+
+        if (isset($data['image'])) {  
+            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama."/".$data["ref"], $query->id);  
+        }
+
     }
-    public function update_data_template_footer($data,$id){   
-        $builder = $this->db->table("template_footer");
-        $builder->set('name', $data["name"]);
-        $builder->set('detail', $data["detail"]); 
-        $builder->set('delta', JSON_ENCODE($data["delta"]));
+    public function update_data_payment($data,$id){
+        $builder = $this->db->table("payment");
+        $builder->set('ref', $data["ref"]); 
+        $builder->set('type', $data["type"]); 
+        $builder->set('method', $data["method"]); 
+        $builder->set('total', $data["total"]); 
+        $builder->set('note', $data["note"]); 
+        $builder->set('date', $data["date"]);     
         $builder->where('id', $id); 
         $builder->update(); 
+ 
+
+        //Buat folder utama
+        $folder_utama = 'assets/images/payment'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+
+
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$data["ref"])) {
+            mkdir($folder_utama."/".$data["ref"], 0777, true);  
+        }
+
+        //Remove image yang lama
+        $filename = $folder_utama."/".$data["ref"].'/'.$id.'.*';
+        $files = glob($filename); 
+        foreach ($files as $file) {
+            unlink($file);
+        }
+
+        if (isset($data['image'])) {  
+            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama."/".$data["ref"], $id);  
+        }
+
     }
-    public function get_data_template_footer($id){
-        $builder = $this->db->table("template_footer");
+    public function delete_data_payment($id){
+        $builder = $this->db->table("payment");
         $builder->where('id',$id);
-        $builder->limit(1);
+        $builder->delete();   
+        return JSON_ENCODE(array("status"=>true));
+    }
+    public function getdataPaymentByRef($id){
+        $builder = $this->db->table("payment"); 
+        $builder->where('ref',$id); 
+        $builder->where('doc',1); 
+        return $builder->get()->getResult();  
+    }
+    public function getdataPayment($id){
+        $builder = $this->db->table("payment"); 
+        $builder->where('id',$id); 
+        $builder->where('doc',1); 
         return $builder->get()->getRow();  
     }
+    public function getdataImagePayment($ref,$id){
+        // Cek apakah file gambar ada
+        $path_gambar = 'assets/images/payment/'.$ref.'/'.$id.'.*'; 
+
+        $files = glob($path_gambar);
+        foreach ($files as $file) {
+            if (!file_exists($file)) {
+                return "";
+            }
+    
+            // Ambil jenis file gambar
+            $jenis_gambar = mime_content_type($file);
+    
+            // Baca file gambar
+            $gambar = file_get_contents($file);
+    
+            // Ubah gambar ke base64
+            $base64 = base64_encode($gambar);
+    
+            // Tambahkan header jenis file gambar
+            $base64 = "data:$jenis_gambar;base64,$base64";
+    
+            return $base64;
+        }
+       
+    }
+
+     
+    /**
+     * FUNCTION UNTUK PROFORMA
+     */ 
+
+    public function insert_data_proforma($data){
+        $builder = $this->db->table("payment");
+        $builder->insert(array(
+            "ref"=>$data["ref"],
+            "datecreate"=>$data["datecreate"],
+            "type"=>$data["type"],
+            "method"=>$data["method"],
+            "total"=>$data["total"],
+            "note"=>$data["note"],
+            "date"=>$data["date"],  
+            "doc"=>2,  
+        ));
+
+        $builder = $this->db->table("payment");
+        $builder->select('*');
+        $builder->orderby('id', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();    
+    }
+    public function getdataProformaByRef($id){
+        $builder = $this->db->table("payment"); 
+        $builder->where('ref',$id); 
+        $builder->where('doc',2); 
+        return $builder->get()->getResult();  
+    }
+    public function getdataProforma($id){
+        $builder = $this->db->table("payment"); 
+        $builder->where('id',$id); 
+        $builder->where('doc',2); 
+        return $builder->get()->getRow();  
+    }
+
 }

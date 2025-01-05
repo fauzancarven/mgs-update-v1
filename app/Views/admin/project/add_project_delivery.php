@@ -1,9 +1,9 @@
  
-<div class="modal fade" id="modal-edit-invoice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-invoice-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-invoice-label" style="overflow-y:auto;">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-edit-invoice-label">Edit Invoice</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-edit-invoice-label">Add Delivery</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"> 

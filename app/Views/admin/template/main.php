@@ -29,7 +29,8 @@
     <!-- End plugin css for this page -->
     <!-- endinject -->
     <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png" />
-
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
 </head>
 <!-- sidebar-icon-only hide this-->
@@ -287,7 +288,28 @@
     /* .content-wrapper {
         background: #f6f6f9; 
     } */
-    
+        
+    #dropzone {
+        min-height: 5rem;
+        border: 1px dashed #ccc;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    #dropzone.dragover {
+        border-color: #002247c4; 
+    }
+
+    .dz-message {
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #file-list {
+        margin-top: 20px;
+    }
+
     @media (max-width: 767px) {
         .content-wrapper {
             padding: 0.5rem;
@@ -638,6 +660,11 @@
     .sidebar-icon-only .sidebar .nav .nav-item .nav-link i.fa-solid:before { 
         display: none; 
     }
+    .upload-file {
+        border: 1px dashed #ced4da;
+        height: 5rem;
+        border-radius: 0.5rem;
+    }
     /* .btn-action span{
         width: 0;
         overflow: hidden;
@@ -870,6 +897,8 @@
         box-shadow: -2px 2px 1px 0 #7f7f7f0d;
         transition: all 0.3s;
         border: 1px solid #e9e9e9;
+        position: relative;
+        z-index: 1;
     }
     .side-menu {
         position: relative;
@@ -907,11 +936,46 @@
     }
     .ql-editor{
         padding: 0.5rem !important;
+    } 
+    .list-payment {
+        position: relative;
+        background: #fbfbfb;
+        padding: 1rem;
+        margin: 0.5rem;
+        margin-left: 2rem;
+        border-radius: 0.25rem;
+        box-shadow: -2px 2px 1px 0 #7f7f7f0d;
+        transition: all 0.3s;
+        border: 1px solid #e9e9e9;
     }
-    .main-modal {
-        .modal-body {
-            overflow-y: auto;
-            max-height: 80vh;
+    .list-payment .line-1{
+        content: "";
+        background: #bbbbbb8f;
+        height: 4rem;
+        width: 5px;
+        position: absolute;
+        top: 1rem;
+        left: -15px;
+        z-index: 0;
+        transform: translateY(-100%);
+    }
+    .list-payment .line-o{
+        content: "";
+        background: #4292eb;
+        height: 1rem;
+        width: 1rem;
+        position: absolute; 
+        top: 1rem;
+        left: -21px;
+        border-radius: 0.5rem;
+        z-index: 1;
+        box-shadow: 0 0 4px 0px #95c2f4;
+    }
+
+    @media (max-width: 400px) {
+        
+        .list-payment .line-1{ 
+            height: 12rem;  
         }
     }
 </style>

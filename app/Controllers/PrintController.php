@@ -10,59 +10,128 @@ class PrintController extends BaseController
 {
 	public function project_sph($id)
 	{
-		// $mpdf = new \Mpdf\Mpdf([
-        //     'allowRemote' => true, 
-        //     'allowHTTPS' => true,
-        //     'margin_left' => 5,
-        //     'margin_right' => 5,
-        //     'margin_top' => 5,
-        //     'margin_bottom' => 5,
-        //     'margin_header' => 2,
-        //     'margin_footer' => 2
-        // ]);  
+                $options = new Options(); 
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('enable_remote', true);
+                $options->set('paper', 'A4');
+                $options->set('orientation', 'potrait');
 
-        // $gambar = file_get_contents('assets/images/logo/logo-brj.png');
-        // $data["image"] = "data:image/png;base64," . base64_encode($gambar);
+                $models = new ProjectModel(); 
+                $data["project"] = $models->getdataSPH($id); 
+                $data["detail"] = $models->getdataDetailSPH($id); 
+                
+                $dompdf = new Dompdf($options);  
+                $dompdf->getOptions()->setChroot('assets');   
 
-		// $html = view('admin/project/print',$data);
-        // // $mpdf->SetHTMLHeader('
-        // // <div style="text-align: right; font-weight: bold;">
-        // //     My document
-
-        // // </div>');
-		// $mpdf->WriteHTML($html);
-		// $this->response->setHeader('Content-Type', 'application/pdf');
-		// $mpdf->Output('print.pdf','I'); // opens in browser
-		// //$mpdf->Output('arjun.pdf','D'); // it downloads the file into the user system, with give name 
-
-
-
-        $options = new Options(); 
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('enable_remote', true);
-        $options->set('paper', 'A4');
-        $options->set('orientation', 'potrait');
-
-        $models = new ProjectModel(); 
-        $data["project"] = $models->getdataSPH($id); 
-        $data["detail"] = $models->getdataDetailSPH($id); 
-        
-        $dompdf = new Dompdf($options);  
-        $dompdf->getOptions()->setChroot('assets');   
-
-        $html = view('admin/project/print_a4',$data); 
-        $dompdf->loadHtml($html);
-        $dompdf->render();
-        $dompdf->stream( 'SPH_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
-
-
+                $html = view('admin/project/print_sph_a4',$data); 
+                $dompdf->loadHtml($html);
+                $dompdf->render();
+                $dompdf->stream( 'SPH_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
 	}
-    public function project_sph_html($id)
+	public function project_invoice_a4($id)
 	{
-		 
-        $gambar = file_get_contents('assets/images/logo/brand/brj.png');
-        $data["image"] = "data:image/png;base64," . base64_encode($gambar);
+                $options = new Options(); 
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('enable_remote', true);
+                $options->set('paper', 'A4');
+                $options->set('orientation', 'potrait');
 
-        return view('admin/project/print',$data); 
+                $models = new ProjectModel(); 
+                $data["project"] = $models->getdataInvoice($id); 
+                $data["detail"] = $models->getdataDetailInvoice($id); 
+                
+                $dompdf = new Dompdf($options);  
+                $dompdf->getOptions()->setChroot('assets');   
+
+                $html = view('admin/project/print_invoice_a4',$data); 
+                $dompdf->loadHtml($html);
+                $dompdf->render();
+                $dompdf->stream( 'INV_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
 	}
+	public function project_invoice_a5($id)
+	{
+                $options = new Options(); 
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('enable_remote', true);
+                
+                $options->set('paper', 'a5');
+                $options->set('orientation', 'potrait');
+
+                $models = new ProjectModel(); 
+                $data["project"] = $models->getdataInvoice($id); 
+                $data["detail"] = $models->getdataDetailInvoice($id); 
+                
+                $dompdf = new Dompdf($options);  
+                
+                //$dompdf->set_paper(array(0,0,419.53, 595.28), 'landscape');
+                $dompdf->set_paper(array(0,0,420, 620), 'landscape');
+                $dompdf->getOptions()->setChroot('assets');   
+
+                $html = view('admin/project/print_invoice_a5',$data); 
+                $dompdf->loadHtml($html);
+                $dompdf->render();
+                $dompdf->stream( 'INV_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
+	}
+        public function project_proforma_a5($id)
+	{
+                $options = new Options(); 
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('enable_remote', true);
+                
+                $options->set('paper', 'a5');
+                $options->set('orientation', 'potrait');
+
+                $models = new ProjectModel();   
+                $data["payment"] = $models->getdataProforma($id); 
+                $data["payments"] = $models->getdataProformaByRef($data["payment"]->ref); 
+                $data["project"] = $models->getdataInvoice($data["payment"]->ref); 
+                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->ref); 
+                
+                $dompdf = new Dompdf($options);  
+                
+                //$dompdf->set_paper(array(0,0,419.53, 595.28), 'landscape');
+                $dompdf->set_paper(array(0,0,420, 620), 'landscape');
+                $dompdf->getOptions()->setChroot('assets');   
+
+                $html = view('admin/project/print_proforma_a5',$data); 
+                $dompdf->loadHtml($html);
+                $dompdf->render();
+                $dompdf->stream( 'PRO_INV_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
+	}
+
+        public function project_payment_a5($id)
+	{
+                $options = new Options(); 
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('enable_remote', true);
+                
+                $options->set('paper', 'a5');
+                $options->set('orientation', 'potrait');
+
+                $models = new ProjectModel();   
+                $data["payment"] = $models->getdataPayment($id); 
+                $data["payments"] = $models->getdataPaymentByRef($data["payment"]->ref); 
+                $data["project"] = $models->getdataInvoice($data["payment"]->ref); 
+                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->ref); 
+                
+                $dompdf = new Dompdf($options);  
+                
+                //$dompdf->set_paper(array(0,0,419.53, 595.28), 'landscape');
+                $dompdf->set_paper(array(0,0,420, 620), 'landscape');
+                $dompdf->getOptions()->setChroot('assets');   
+
+                $html = view('admin/project/print_payment_a5',$data); 
+                $dompdf->loadHtml($html);
+                $dompdf->render();
+                $dompdf->stream( 'PAY_INV_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
+	}
+        public function project_sph_html($id)
+        {
+                        
+                $gambar = file_get_contents('assets/images/logo/brand/brj.png');
+                $data["image"] = "data:image/png;base64," . base64_encode($gambar);
+
+                return view('admin/project/print',$data); 
+        }
+        
 }
