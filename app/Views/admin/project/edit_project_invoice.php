@@ -635,7 +635,7 @@
                 arr1.sort((a, b) => a.varian.localeCompare(b.varian));
                 arr2.sort((a, b) => a.varian.localeCompare(b.varian));
             }
-            if(JSON.stringify(arr1) === JSON.stringify(arr2) && data_detail_item[i]["id"] === data.id ){
+            if(JSON.stringify(arr1) === JSON.stringify(arr2) && data_detail_item[i]["produkid"] === data.produkid ){
                 Swal.fire({
                     icon: 'error',
                     text: "Item sudah ada !!!", 
@@ -1302,7 +1302,7 @@
         for(var i = 0;data_detail_item.length > i;i++){  
             if(data_detail_item[i]["type"] == "product"){ 
                 detail.push({
-                    produkid: data_detail_item[i]["id"], 
+                    produkid: data_detail_item[i]["produkid"], 
                     text: data_detail_item[i]["text"],
                     type: data_detail_item[i]["type"], 
                     satuan_id: data_detail_item[i]["satuan_id"], 
@@ -1316,7 +1316,7 @@
                 });
             }else{
                 detail.push({
-                    produkid: data_detail_item[i]["id"], 
+                    produkid: data_detail_item[i]["produkid"], 
                     text: data_detail_item[i]["text"],
                     type: data_detail_item[i]["type"], 
                     satuan_id: "", 

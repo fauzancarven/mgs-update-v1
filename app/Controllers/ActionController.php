@@ -257,7 +257,51 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+    public function proforma_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_proforma($postData,$id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
 
+    public function delivery_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_delivery($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function delivery_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_delivery($postData,$id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function delivery_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_delivery($id);  
+        }
+    }
+    public function pembelian_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_pembelian($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
     public function template_footer_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Edit Payment</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Edit Proforma</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3"> 
@@ -132,7 +132,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-proforma").modal("hide");  
-                        loader_data_project(<?= $project->id ?>,"invoice") 
+                        loader_data_project(<?= $project->ref ?>,"invoice") 
                     });
                   
                 }else{

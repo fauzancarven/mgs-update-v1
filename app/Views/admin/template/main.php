@@ -884,11 +884,11 @@
     .ql-editor ol {
         padding-left: 0rem;
     }
-
+/* 
     .list-project:hover {
         background: #f0f6fd;
         transition: all 0.3s;
-    }
+    } */
     .list-project {
         background: #fbfbfb;
         padding: 1rem;
@@ -932,7 +932,7 @@
         border-top-right-radius: 1rem;
         top: 0;
         height: 100%;
-        z-index: 1;
+        z-index: 2;
     }
     .ql-editor{
         padding: 0.5rem !important;
@@ -971,10 +971,50 @@
         z-index: 1;
         box-shadow: 0 0 4px 0px #95c2f4;
     }
-
+    .list-delivery {
+        position: relative;
+        background: #fbfbfb;
+        padding: 1rem;
+        margin: 0.5rem;
+        margin-left: 2rem;
+        border-radius: 0.25rem;
+        box-shadow: -2px 2px 1px 0 #7f7f7f0d;
+        transition: all 0.3s;
+        border: 1px solid #e9e9e9;
+    }
+    .list-delivery .line-1{
+        content: "";
+        background: #bbbbbb8f;
+        height: 4rem;
+        width: 5px;
+        position: absolute;
+        top: 1rem;
+        left: -15px;
+        z-index: 0;
+        transform: translateY(-100%);
+    }
+    .list-delivery .line-o{
+        content: "";
+        background: #4292eb;
+        height: 1rem;
+        width: 1rem;
+        position: absolute; 
+        top: 1rem;
+        left: -21px;
+        border-radius: 0.5rem;
+        z-index: 1;
+        box-shadow: 0 0 4px 0px #95c2f4;
+    }
+    .tab-content{
+        background: #F5F7FF; 
+        height: 100%;
+    }
     @media (max-width: 400px) {
         
         .list-payment .line-1{ 
+            height: 12rem;  
+        }
+        .list-delivery .line-1{ 
             height: 12rem;  
         }
     }

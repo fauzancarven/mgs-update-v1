@@ -353,7 +353,7 @@ class ProdukModel extends Model
         }
 
        
-       // ADD IMAGE PRODUK  
+        // ADD IMAGE PRODUK  
        
         //Buat folder utama
         $folder_utama = 'assets/images/produk'; 
@@ -418,27 +418,30 @@ class ProdukModel extends Model
         } 
         return $gambar;
     }
-    public function getDetailProduk($data,$id){
-        $query = "select produk_detail.id,berat,satuan_id,name satuantext,pcsm2,hargabeli,hargajual,varian from produk_detail left join produk_satuan on produk_satuan.id =  produk_detail.satuan_id where produk_detail.ref = 1";
+    public function getDetailProduk($data,$id){ 
         $builder = $this->db->table("produk_detail");
-        $builder->select('produk_detail.id,berat,satuan_id,name satuantext,pcsm2,hargabeli,hargajual,varian'); 
+        $builder->select('produk_detail.id,berat,satuan_id,name satuantext,pcsm2,hargabeli,hargajual,varian,ref'); 
         $builder->join("produk_satuan","produk_satuan.id =  produk_detail.satuan_id");
         $builder->where('produk_detail.ref', $id);  
         foreach ($data as $item) { 
             $whereClause = "JSON_EXTRACT(varian, '$.".strtolower($item["varian"])."') = '".$item["value"]."'"; 
-            $query .= " And ". $whereClause;
             $builder->where($whereClause);    
         } 
-        $result = $builder->get()->getRow();   
-        return array(
-            'id' =>  $result->id,
-            'berat' => $result->berat,
-            'satuan_id' => $result->satuan_id,
-            'satuantext' => $result->satuantext,
-            'pcsM2' => $result->pcsm2,
-            'hargabeli' => $result->hargabeli,
-            'hargajual' => $result->hargajual,
-            'varian' =>  json_decode($result->varian),
-        ); ;
+        $result = $builder->get()->getRow();  
+        if($result){ 
+            return array(
+                'id' =>  $result->id,
+                'produkid' =>  $result->ref,
+                'berat' => $result->berat,
+                'satuan_id' => $result->satuan_id,
+                'satuantext' => $result->satuantext,
+                'pcsM2' => $result->pcsm2,
+                'hargabeli' => $result->hargabeli,
+                'hargajual' => $result->hargajual,
+                'varian' =>  json_decode($result->varian),
+            ); 
+        }else{
+            return null;
+        }
     }
 }

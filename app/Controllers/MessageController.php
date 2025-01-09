@@ -73,9 +73,7 @@ class MessageController extends BaseController
         $data["_province"] = $village;  
 
         return $this->response->setBody(view('admin/customer/edit.php',$data)); 
-    }
-
-    
+    } 
     public function produk_add()
     {   
         return $this->response->setBody(view('admin/produk/add.php')); 
@@ -169,11 +167,13 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsvendor = new VendorModel();
 
         $project = $models->getWhere(['id' => $id], 1)->getRow(); 
         $data["project"] = $project;
         $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
         $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/add_project_po.php',$data)); 
     }
@@ -280,7 +280,11 @@ class MessageController extends BaseController
                         "qty"=> $row->qty,
                         "text"=> $row->text,
                         "group"=> $row->group,
-                        "type"=> $row->type
+                        "type"=> $row->type,
+                        "invoice"=> $row->qty,
+                        "dikirim"=> $models->getdataDetailDeliveryByInvoice($id,$row->produkid,$row->varian,$row->text),
+                        "pengiriman"=> 0,
+                        "spare"=> 0
                     );
         };
         $data["project"] = $project; 
@@ -290,5 +294,41 @@ class MessageController extends BaseController
         $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/add_project_delivery',$data)); 
+    } 
+    public function project_delivery_edit($id)
+    {      
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+
+        $delivery = $models->getdataDelivery($id); 
+        $arr_detail = $models->getdataDetailDelivery($id);
+        $arr_detail_invoice = $models->getdataDetailInvoice($delivery->ref);
+
+        $invoice = $models->getdataInvoice($delivery->ref);
+        $detail = array();
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->produkid, 
+                        "satuan_id"=> ($row->satuan_id == 0 ? "" : $row->satuan_id),
+                        "satuantext"=>$row->satuantext, 
+                        "varian"=> JSON_DECODE($row->varian,true), 
+                        "text"=> $row->text,
+                        "group"=> $row->group,
+                        "type"=> $row->type,
+                        "invoice"=> $models->getdataInvoiceByDelivery($delivery->ref,$row->produkid,$row->varian,$row->text),
+                        "dikirim"=> $models->getdataDetailDeliveryByInvoice($delivery->ref,$row->produkid,$row->varian,$row->text) - $row->pengiriman,
+                        "pengiriman"=> $row->pengiriman,
+                        "spare"=> $row->spare
+                    );
+        };
+        $data["delivery"] = $delivery; 
+        $data["detail"] =  $detail;
+        $data["invoice"] =  $invoice;
+        $data["template"] =$models->get_data_template_footer($delivery->templateid); 
+        $data["customer"] =  $modelscustomer->getWhere(['id' => $delivery->customerid], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $delivery->storeid], 1)->getRow(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/edit_project_delivery',$data)); 
     }
 }

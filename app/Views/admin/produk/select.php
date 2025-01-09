@@ -222,6 +222,7 @@
         }else{
             data_select_produk = {
                 "id": "0",
+                "produkid": "0",
                 "berat": "0",
                 "satuan_id": "0",
                 "satuantext": "",

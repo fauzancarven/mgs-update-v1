@@ -988,6 +988,73 @@
        
     }
 
+    print_project_delivery  = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/deliveryA5/") ?>' + id, '_blank');
+    }
+    var isProcessingDeliveryEdit = [];
+    edit_project_delivery = function(ref,id,el){
+        // INSERT LOADER BUTTON
+        if (isProcessingDeliveryEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingDeliveryEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-delivery/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-delivery").modal("show"); 
+
+                isProcessingDeliveryEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDeliveryEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+    delete_project_delivery = function(ref,id,el){  
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus pengiriman ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-delivery/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        loader_data_project(ref,"invoice"); 
+                    }, 
+                });
+            }
+            isProcessingInvoiceDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
+
 </script>
 
 

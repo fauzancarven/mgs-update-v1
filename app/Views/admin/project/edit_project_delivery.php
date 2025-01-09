@@ -1,9 +1,9 @@
  
-<div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-edit-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-delivery-label" style="overflow-y:auto;">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-sph-label">Edit Penawaran</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-edit-delivery-label">Edit Delivery</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"> 
@@ -11,48 +11,21 @@
                     <div class="col-lg-6 col-12 my-1">
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
-                                <span class="label-dialog">Customer</span>
-                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="add-varian" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem;">
-                                    <i class="fas fa-pencil"></i>
-                                    <span class="fw-bold">
-                                        &nbsp;Edit
-                                    </span>
-                                </button> 
+                                <span class="label-dialog">Document</span> 
                             </div>
-                        </div> 
-                        <div class="row align-items-center mt-2">
-                            <label class="col-sm-2 col-form-label">Nama</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->code ?> - <?= $customer->name ?> <?= $customer->company == "" ? "" : " ( " . $customer->company . " ) "; ?></label> 
-                        </div> 
-                        <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Telp</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->telp1 ?> / <?= $customer->telp2 == "" ? "" : $customer->telp2 ?></label> 
-                        </div> 
-                        <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Email</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->email ?></label> 
                         </div>  
-                        <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Instagram</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->instagram ?></label> 
-                        </div>  
-                        <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Alamat</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->address ?></label> 
-                        </div> 
-                    </div>  
-                    <div class="col-lg-6 col-12 my-1">   
-                        <div class="row mx-2 align-items-center">
-                            <div class="label-border-right">
-                                <span class="label-dialog">Document</span>
-                            </div>
-                        </div> 
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->code ?>" disabled>
+                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $delivery->code ?>" disabled>
                             </div>
                         </div> 
+                        <div class="row mb-1 align-items-center mt-2">
+                            <label for="SphCode" class="col-sm-2 col-form-label">Ref<sup class="error">&nbsp;*</sup></label>
+                            <div class="col-sm-10">
+                                <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= $delivery->ref ?>" disabled>
+                            </div>
+                        </div>  
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
                             <div class="col-sm-10">
@@ -62,7 +35,7 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphStore" class="col-sm-2 col-form-label">Toko</label>
                             <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphStore" name="SphStore" placeholder="Pilih Toko" style="width:100%"></select>  
+                                <select class="form-select form-select-sm" id="SphStore" name="SphStore" placeholder="Pilih Toko" style="width:100%" disabled></select>  
                             </div>
                         </div>  
                         <div class="row mb-1 align-items-center mt-2">
@@ -71,10 +44,50 @@
                                 <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
                             </div>
                         </div> 
+                    </div>  
+                    <div class="col-lg-6 col-12 my-1">   
+                        <div class="row mx-2 align-items-center">
+                            <div class="label-border-right">
+                                <span class="label-dialog">Pengiriman</span>
+                            </div>
+                        </div>  
+                        <div class="row mb-1 align-items-center mt-2">
+                            <label for="armada" class="col-sm-2 col-form-label">Armada</label>
+                            <div class="col-sm-10">
+                                <input class="form-control form-control-sm input-form" id="armada" value="<?= $delivery->armada ?>">
+                            </div>
+                        </div> 
+                        <div class="row mb-1 align-items-center mt-2">
+                            <label for="ritase" class="col-sm-2 col-form-label">Ritase</label>
+                            <div class="col-sm-10">
+                                <input class="form-control form-control-sm input-form" id="ritase" value="<?= $delivery->ritase ?>">
+                            </div>
+                        </div> 
+                        <div class="row mb-1 align-items-center mt-2">
+                            <label for="biayapengiriman" class="col-sm-2 col-form-label">Biaya Pengiriman</label>
+                            <div class="col-sm-10"> 
+                                <div class="input-group"> 
+                                    <span class="input-group-text font-std">Rp.</span>
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="biayapengiriman" value="<?= $delivery->deliverytotal ?>">
+                                </div>      
+                            </div>
+                        </div> 
+                        <div class="row mb-1 align-items-center mt-2">
+                            <label for="namereceive" class="col-sm-2 col-form-label">Penerima</label>
+                            <div class="col-sm-10">
+                                <input class="form-control form-control-sm input-form" id="namereceive" value="<?= $delivery->namereceive ?>">
+                            </div>
+                        </div> 
+                        <div class="row mb-1 align-items-center mt-2">
+                            <label for="telpreceive" class="col-sm-2 col-form-label">No Telp</label>
+                            <div class="col-sm-10">
+                                <input class="form-control form-control-sm input-form" id="telpreceive" value="<?= $delivery->telpreceive ?>">
+                            </div>
+                        </div> 
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphAddress" class="col-sm-2 col-form-label">Alamat Project</label>
                             <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $project->address ?></textarea>
+                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $delivery->address ?></textarea>
                             </div>
                         </div> 
                     </div>   
@@ -101,213 +114,28 @@
                                     <div class="col-2"> 
                                         <span class="label-head-dialog"><i class="ti-settings"></i></span>   
                                     </div> 
-                                    <div class="col-3"> 
-                                        <span class="label-head-dialog">Qty | Satuan</span>   
-                                    </div> 
-                                    <div class="col-7">  
-                                        <div class="row"> 
-                                            <div class="col-4"> 
-                                                <span class="label-head-dialog">Harga</span>   
-                                            </div> 
-                                            <div class="col-4"> 
-                                                <span class="label-head-dialog">Diskon Item</span>   
-                                            </div> 
-                                            <div class="col-4"> 
-                                                <span class="label-head-dialog">Total</span>   
-                                            </div> 
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <span class="label-head-dialog">Invoice</span> 
+                                            </div>
+                                            <div class="col-3">
+                                                <span class="label-head-dialog">Sudah Dikirim</span> 
+                                            </div>
+                                            <div class="col-3">
+                                                <span class="label-head-dialog">Pengiriman</span>  
+                                            </div>
+                                            <div class="col-3">
+                                                <span class="label-head-dialog">Spare</span>  
+                                            </div>
                                         </div> 
-                                    </div>
+                                    </div>  
                                 </div>
                             </div> 
                         </div> 
-                        <div id="tb_varian" class="text-center">
-                            <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
-                                <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
-                                <span class="text-head-1">Item belum ditambahkan</span>
-                            </div> 
-                            <div class="row align-items-center">
-                                <div class="col-12 col-md-12 my-1 group text-start"> 
-                                    <span class="text-head-3">A. Barang</span>
-                                </div>   
-                                <div class="col-12 col-md-4 my-1 varian">   
-                                    <div class="d-flex">
-                                        <span class="no-urut text-head-3">1.</span> 
-                                        <div class="d-flex flex-column text-start">
-                                            <span class="text-head-3">Bata Expose MRC KD</span>
-                                            <span class="text-detail-2 text-truncate">RST00001 - Roster</span> 
-                                            <div class="d-flex gap-1">
-                                                <span class="badge badge-0 rounded">vendor : MGS</span>
-                                                <span class="badge badge-1 rounded">ukuran : 12 x 12 x 0.5 cm</span>
-                                            </div>
-                                        </div> 
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" value="" data-id="">
-                                                <span class="input-group-text font-std">Pcs</span>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="" value="">
-                                            </div>    
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
-                                            <div class="input-group">  
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="" value="">
-                                            </div>   
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="" value="">
-                                            </div>     
-                                        </div> 
-                                    </div>    
-                                </div> 
-                                <div class="col-12 col-md-4 my-1 varian">   
-                                    <div class="d-flex"> 
-                                        <span class="no-urut text-head-3">2.</span> 
-                                        <div class="d-flex flex-column text-start">
-                                            <span class="text-head-3">Bata Expose MRC KD</span>
-                                            <span class="text-detail-2 text-truncate">RST00001 - Roster</span> 
-                                            <div class="d-flex gap-1">
-                                                <span class="badge badge-1 rounded">vendor : MGS</span>
-                                                <span class="badge badge-2 rounded">ukuran : 12 x 12 x 0.5 cm</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" value="" data-id="">
-                                                <span class="input-group-text font-std">Pcs</span>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="" value="">
-                                            </div>    
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
-                                            <div class="input-group">  
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="" value="">
-                                            </div>   
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="" value="">
-                                            </div>     
-                                        </div> 
-                                    </div>    
-                                </div> 
-                                <div class="col-12 col-md-12 my-1 group text-start"> 
-                                    <span class="text-head-3">B. Jasa</span>
-                                </div>  
-                                <div class="col-12 col-md-4 my-1 varian">    
-                                    <div class="d-flex "> 
-                                        <span class="no-urut text-head-3">1.</span>
-                                        <div class="flex-grow-1 text-start">
-                                            <span class="text-head-3">Instalasi Kabel CCTV Kabel RG 59 Belden (Coax+Power) incl. Conduit dan connector BNC</span> 
-                                        </div>  
-                                    </div> 
-                                </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" value="" data-id="">
-                                                <span class="input-group-text font-std">Pcs</span>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="" value="">
-                                            </div>    
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
-                                            <div class="input-group">  
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="" value="">
-                                            </div>   
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="" value="">
-                                            </div>     
-                                        </div> 
-                                    </div>    
-                                </div> 
-                                <div class="col-12 col-md-12 my-1 group text-start"> 
-                                    <span class="text-head-3">C. Lain - Lain</span>
-                                </div>  
-                                <div class="col-12 col-md-4 my-1 varian">    
-                                    <div class="d-flex "> 
-                                        <span class="no-urut text-head-3">1.</span>
-                                        <div class="flex-grow-1 text-start">
-                                            <span class="text-head-3">Perapihan Bekas Jalur Pipa</span> 
-                                        </div>  
-                                    </div> 
-                                </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" value="" data-id="">
-                                                <span class="input-group-text font-std">Pcs</span>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="" value="">
-                                            </div>    
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
-                                            <div class="input-group">  
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="" value="">
-                                            </div>   
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="" value="">
-                                            </div>     
-                                        </div> 
-                                    </div>    
-                                </div> 
-                            </div> 
+                        <div id="tb_varian" class="text-center"> 
                         </div> 
-                        <div class="d-flex justify-content-center flex-column align-items-center"> 
+                        <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
                             <div class="d-flex px-3 mt-4 gap-1">
                                 <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Item</button>
                                 <button class="btn btn-sm btn-primary my-2" onclick="add_detail_category(this)"><i class="fa-solid fa-plus pe-2"></i>Tambah Kategori</button> 
@@ -317,7 +145,7 @@
                 </div> 
 
                 <div class="row">  
-                    <div class="col-12 col-md-8 px-1 order-2 order-md-1">   
+                    <div class="col-12">   
                         <div class="row mx-2 my-3 align-items-center">
                             <div class="label-border-right position-relative" >
                                 <span class="label-dialog">Term and Condition </span> 
@@ -356,58 +184,12 @@
                                 </div>  
                             </div>  
                         </div>  
-                    </div>  
-                    <div class="col-12 col-md-4 px-3 order-1 order-md-2"> 
-                        <div class="row align-items-center py-1 mt-3">
-                            <div class="col-4">
-                                <span class="label-head-dialog">Sub Total</span>   
-                            </div>
-                            <div class="col-8"> 
-                                <div class="input-group"> 
-                                    <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="SphSubTotal">
-                                </div>     
-                            </div>
-                        </div> 
-                        <div class="row align-items-center py-1">
-                            <div class="col-4">
-                                <span class="label-head-dialog">Disc Item Total</span>   
-                            </div>
-                            <div class="col-8"> 
-                                <div class="input-group"> 
-                                    <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled id="SphDiscItemTotal" value="0">
-                                </div>     
-                            </div>
-                        </div> 
-                        <div class="row align-items-center py-1">
-                            <div class="col-4">
-                                <span class="label-head-dialog">Disc Total</span>   
-                            </div>
-                            <div class="col-8"> 
-                                <div class="input-group"> 
-                                    <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SphDiscTotal" value="0">
-                                </div>     
-                            </div>
-                        </div> 
-                        <div class="row align-items-center py-1">
-                            <div class="col-4">
-                                <span class="label-head-dialog">Grand Total</span>   
-                            </div>
-                            <div class="col-8"> 
-                                <div class="input-group"> 
-                                    <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="SphGrandTotal" >
-                                </div>     
-                            </div>
-                        </div> 
-                    </div>  
+                    </div>   
                 </div>  
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="btn-edit-penawaran">Simpan</button>
+                <button type="button" class="btn btn-primary" id="btn-add-delivery">Simpan</button>
             </div>
         </div>
     </div>
@@ -418,15 +200,15 @@
 
     $('#SphDate').daterangepicker({
         "singleDatePicker": true,
-        "startDate": moment('<?= $project->date ?>'),
-        "endDate":  moment('<?= $project->date ?>'),
+        "startDate": moment('<?= $delivery->date ?>'),
+        "endDate":  moment('<?= $delivery->date ?>'),
         locale: {
             format: 'DD MMMM YYYY'
         }
     });
     
     $("#SphStore").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-edit-delivery .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-store",
@@ -458,7 +240,7 @@
     $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
 
     $("#SphAdmin").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-edit-delivery .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
             url: "<?= base_url()?>select2/get-data-users",
@@ -501,7 +283,7 @@
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-        $("#modal-add-sph").modal("hide"); 
+        $("#modal-edit-delivery").modal("hide"); 
         Swal.fire({
             title: 'Tambah Kategori',
             input: 'text',
@@ -537,7 +319,7 @@
         }).then((result) => {  
             isProcessingSphAddCategory = false;
             $(el).html(old_text); 
-            $("#modal-add-sph").modal("show");
+            $("#modal-edit-delivery").modal("show");
         }); 
     }
  
@@ -566,7 +348,7 @@
                 
                 $("#modal-optional").html(data);
                 
-                $("#modal-add-sph").modal("hide");  
+                $("#modal-edit-delivery").modal("hide");  
 
                 $("#modal-select-item").modal("show"); 
 
@@ -575,7 +357,7 @@
                     if (document.activeElement) {
                         document.activeElement.blur();
                     }
-                    $("#modal-add-sph").modal("show");  
+                    $("#modal-edit-delivery").modal("show");  
                     
                 });
 
@@ -643,8 +425,8 @@
     
     edit_varian_click = function(index){ 
         if(data_detail_item[index]["type"] == "category"){  
-            $("#modal-add-sph").modal("hide");
-            $("#modal-add-sph").blur();
+            $("#modal-edit-delivery").modal("hide");
+            $("#modal-edit-delivery").blur();
             Swal.fire({
                 title: 'Rename Kategori',
                 input: 'text',
@@ -671,11 +453,11 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-sph").modal("show");
+                $("#modal-edit-delivery").modal("show");
             });  
         }else{
-            $("#modal-add-sph").modal("hide");
-            $("#modal-add-sph").blur();
+            $("#modal-edit-delivery").modal("hide");
+            $("#modal-edit-delivery").blur();
             Swal.fire({
                 title: 'Rename Produk',
                 input: 'text',
@@ -702,7 +484,7 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-sph").modal("show");
+                $("#modal-edit-delivery").modal("show");
             });  
         }
     }
@@ -819,34 +601,34 @@
                                                 <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
                                             </div>
                                         </div>  
-                                        <div class="col-12 col-md-3 px-1 ">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
-                                                <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "-" ? "disabled" : ""}></select>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-7">  
+                                        <div class="col-12 col-md-10 px-1">   
                                             <div class="row">  
-                                                <div class="col-6 col-md-4 px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
+                                                <div class="col-6 col-md-3 px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Invoice</span>
                                                     <div class="input-group"> 
-                                                        <span class="input-group-text font-std px-1">Rp.</span> 
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-harga-${i}" data-id="${i}" ${data_detail_item[i]["id"] != "0" ? "disabled" : ""}>
+                                                        <input type="text" class="form-control form-control-sm input-form berat" id="input-invoice-${i}" data-id="${i}" disabled>
+                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuantext"]}</span>  
+                                                    </div>  
+                                                </div> 
+                                                <div class="col-6 col-md-3 px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Sudah Dikirim</span>
+                                                    <div class="input-group"> 
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-dikirim-${i}" data-id="${i}" disabled>
+                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuantext"]}</span> 
                                                     </div>    
                                                 </div> 
-                                                <div class="col-6 col-md-4  px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
+                                                <div class="col-6 col-md-3  px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Pengiriman</span>
                                                     <div class="input-group">  
-                                                        <span class="input-group-text font-std px-1">Rp.</span> 
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" id="input-disc-${i}" data-id="${i}">
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" id="input-pengiriman-${i}" data-id="${i}">
+                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuantext"]}</span> 
                                                     </div>   
                                                 </div> 
-                                                <div class="col-12 col-md-4  px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Total</span>
+                                                <div class="col-6 col-md-3  px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Spare</span>
                                                     <div class="input-group"> 
-                                                        <span class="input-group-text font-std px-1">Rp.</span>
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="input-total-${i}" data-id="${i}" disabled>
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="input-spare-${i}" data-id="${i}">
+                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuantext"]}</span>
                                                     </div>     
                                                 </div> 
                                             </div>   
@@ -860,162 +642,75 @@
             }
         }
         $("#tb_varian").html(html); 
-        var inputqty = [];
-        var inputharga = [];
-        var inputdisc = [];
-        var inputtotal = [];
+        var inputinvoice = [];
+        var inputdikirim = [];
+        var inputpengiriman = [];
+        var inputspare = [];
         for(var i = 0; data_detail_item.length > i;i++){
             if(data_detail_item[i]["type"] == "product"){
-
-                function total_harga(id){
-                    var total = (inputharga[id].getRawValue() - inputdisc[id].getRawValue() ) * inputqty[id].getRawValue();
-                    data_detail_item[id]["total"] = total;
-                    inputtotal[id].setRawValue(total);
-                    grand_total_harga();
-                } 
-
                 //event qty
-                inputqty[i] = new Cleave(`#input-qty-${i}`, {
+                inputinvoice[i] = new Cleave(`#input-invoice-${i}`, {
                         numeral: true,
                         delimeter: ",",
                         numeralDecimalScale:2,
                         numeralThousandGroupStyle:"thousand"
                 }); 
-                inputqty[i].setRawValue(data_detail_item[i]["qty"]);
-                $(`#input-qty-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["qty"] = inputqty[$(this).data("id")].getRawValue();
-                    if($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0) 
-                    total_harga($(this).data("id"));
+                inputinvoice[i].setRawValue(data_detail_item[i]["invoice"]);
+                $(`#input-invoice-${i}`).on("keyup",function(){ 
+                    data_detail_item[$(this).data("id")]["invoice"] = inputinvoice[$(this).data("id")].getRawValue();
+                    if($(`#input-invoice-${i}`).val() == "") $(`#input-invoice-${i}`).val(0) 
                 });  
- 
-                //event satuan
-                $(`#select-satuan-${i}`).select2({
-                    dropdownParent: $('#modal-add-sph .modal-content'), 
-                    placeholder: "pilih",
-                    width: 'auto',
-                    adaptContainerWidth: true,
-                    ajax: {
-                        url: "<?= base_url()?>select2/get-data-produk-satuan",
-                        dataType: 'json',
-                        type:"POST",
-                        delay: 250,
-                        data: function (params) {
-                            // CSRF Hash
-                            var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
-                            var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
-                            return {
-                                searchTerm: params.term, // search term
-                                [csrfName]: csrfHash // CSRF Token
-                            };
-                        },
-                        processResults: function (response) {
-                
-                            // Update CSRF Token
-                            $('.txt_csrfname').val(response.token); 
-
-                            return {
-                                results: response.data
-                            };
-                        },
-                        cache: true
-                    }, 
-                    language: {
-                        noResults: function () {
-                            return $("<button class=\"btn btn-sm btn-primary\" onclick=\"select_satuan_add()\">Tambah <b>" + $(`#select-satuan-${i}`).data('select2').dropdown.$search[0].value + "</b></button>");
-                        }
-                    },
-                    formatResult: select2OptionFormat,
-                    formatSelection: select2OptionFormat,
-                    escapeMarkup: function(m) { return m; }
-                }).on("select2:select", function(e) {
-                    var data = e.params.data;  
-                    data_detail_item[$(this).data("id")]["satuan_id"] = data.id
-                    data_detail_item[$(this).data("id")]["satuantext"]= data.text
-                });
-                if(data_detail_item[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(data_detail_item[i]["satuantext"] , data_detail_item[i]["satuan_id"], true, true)).trigger('change');  
-                if(data_detail_item[i]["id"] === "0")  $(`#select-satuan-${i}`).prop("disabled",false)
+  
                 //event harga
-                inputharga[i] = new Cleave(`#input-harga-${i}`, {
+                inputdikirim[i] = new Cleave(`#input-dikirim-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
+                    numeralDecimalScale:2,
                     numeralThousandGroupStyle:"thousand"
                 }); 
-                inputharga[i].setRawValue(data_detail_item[i]["hargajual"]);
-                $(`#input-harga-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["hargajual"] = inputharga[$(this).data("id")].getRawValue();
-                    if($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0) 
-                    total_harga($(this).data("id"));
+                inputdikirim[i].setRawValue(data_detail_item[i]["dikirim"]);
+                $(`#input-dikirim-${i}`).on("keyup",function(){ 
+                    data_detail_item[$(this).data("id")]["dikirim"] = inputdikirim[$(this).data("id")].getRawValue();
+                    if($(`#input-dikirim-${i}`).val() == "") $(`#input-dikirim-${i}`).val(0) 
                 });   
-                //event disc
-                inputdisc[i] = new Cleave(`#input-disc-${i}`, {
+
+                //event harga
+                inputpengiriman[i] = new Cleave(`#input-pengiriman-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
+                    numeralDecimalScale:2,
                     numeralThousandGroupStyle:"thousand"
                 }); 
-                inputdisc[i].setRawValue(data_detail_item[i]["disc"]);
-                $(`#input-disc-${i}`).on("keyup",function(){ 
-                    var nilaiSaatIni = parseInt(inputdisc[$(this).data("id")].getRawValue());
-                    var maksvalue = parseInt(inputharga[$(this).data("id")].getRawValue());
-                    if (nilaiSaatIni > maksvalue) { 
-                        inputdisc[$(this).data("id")].setRawValue(maksvalue);
-                    } 
-                    data_detail_item[$(this).data("id")]["disc"] = inputdisc[$(this).data("id")].getRawValue(); 
-
-                    if($(`#input-disc-${i}`).val() == "") $(`#input-disc-${i}`).val(0) 
-                    total_harga($(this).data("id")); 
-                });  
-
-                //event total
-                inputtotal[i] = new Cleave(`#input-total-${i}`, {
+                inputpengiriman[i].setRawValue(data_detail_item[i]["pengiriman"]);
+                $(`#input-pengiriman-${i}`).on("keyup",function(){ 
+                    data_detail_item[$(this).data("id")]["pengiriman"] = inputpengiriman[$(this).data("id")].getRawValue();
+                    if($(`#input-pengiriman-${i}`).val() == "") $(`#input-pengiriman-${i}`).val(0) 
+                });   
+ 
+                //event harga
+                inputspare[i] = new Cleave(`#input-spare-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
+                    numeralDecimalScale:2,
                     numeralThousandGroupStyle:"thousand"
                 }); 
-                inputtotal[i].setRawValue(data_detail_item[i]["total"]); 
-                
-                total_harga(i);
+                inputspare[i].setRawValue(data_detail_item[i]["spare"]);
+                $(`#input-spare-${i}`).on("keyup",function(){ 
+                    data_detail_item[$(this).data("id")]["spare"] = inputspare[$(this).data("id")].getRawValue();
+                    if($(`#input-spare-${i}`).val() == "") $(`#input-spare-${i}`).val(0) 
+                });   
             }
         }
     }
     load_produk();
 
-    var sph_sub_total = new Cleave(`#SphSubTotal`, {
+    var inputbiayapengiriman = new Cleave(`#biayapengiriman`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
-    }); 
-    var sph_disc_item_total = new Cleave(`#SphDiscItemTotal`, {
-            numeral: true,
-            delimeter: ",",
-            numeralDecimalScale:0,
-            numeralThousandGroupStyle:"thousand"
-    }); 
-    var sph_disc_total = new Cleave(`#SphDiscTotal`, {
-            numeral: true,
-            delimeter: ",",
-            numeralDecimalScale:0,
-            numeralThousandGroupStyle:"thousand"
-    }); 
-    var sph_grand_total = new Cleave(`#SphGrandTotal`, {
-            numeral: true,
-            delimeter: ",",
-            numeralDecimalScale:0,
-            numeralThousandGroupStyle:"thousand"
-    }); 
-    $("#SphDiscTotal").on("keyup",function(){ 
-        grand_total_harga();
-        if(parseInt($("#SphGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
-            $("#SphDiscTotal").val(0)
-            grand_total_harga();
-        }
-    });
- 
-
-
+    });  
+  
     var quill = new Quill('#message',  {
         debug: 'false',
         modules: {
@@ -1089,7 +784,7 @@
         }
     })
     $("#savequillas").click(function(){  
-        $("#modal-add-sph").modal("hide"); 
+        $("#modal-edit-delivery").modal("hide"); 
         Swal.fire({
             title: 'Simpan Template',
             input: 'text',
@@ -1146,7 +841,7 @@
             $("#editquill").show();
             quill.enable(false);
             quill.root.style.background = '#F7F7F7'; // warna disable
-            $("#modal-add-sph").modal("show");
+            $("#modal-edit-delivery").modal("show");
         }); 
     })
     $("#editquill").click(function(){
@@ -1159,7 +854,7 @@
 
     }) 
     $("#SphFormatFooter").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-edit-delivery .modal-content'),
         placeholder: "Pilih Template",
         tags:true,
         ajax: {
@@ -1236,7 +931,7 @@
     $('#SphFormatFooter').append(new Option("<?=$template->name ?>" , "<?=$template->id?>", true, true)).trigger('change'); 
     $("#editquill").show();
 
-    $("#btn-edit-penawaran").click(function(){
+    $("#btn-add-delivery").click(function(){
         if($("#SphFormatFooter").val() == null){
             Swal.fire({
                 icon: 'error',
@@ -1270,20 +965,38 @@
             return; 
         }
 
+        if(data_detail_item.map((obj) => obj.pengiriman).reduce((a, b) => a + b, 0) == 0){
+            Swal.fire({
+                icon: 'error',
+                text: 'Qty pengiriman belum lengkap ...!!!', 
+                confirmButtonColor: "#3085d6", 
+            }).then(function(){ 
+                swal.close(); 
+            }) ;
+            return; 
+        }
+
+        if($("#armada").val() == ""){
+            Swal.fire({
+                icon: 'error',
+                text: 'Armada belum dimasukan...!!!', 
+                confirmButtonColor: "#3085d6", 
+            }).then(function(){ 
+                swal.close();
+                setTimeout(() => $("#armada").focus(), 300); 
+            }) ;
+            return; 
+        }    
         var header = {  
-            date: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"), 
-            date_create: moment().format("YYYY-MM-DD"), 
-            time_create: moment().format("HH:m:s"), 
-            storeid: $("#SphStore").val(), 
-            ref: <?= $project->id ?>, 
-            admin: $("#SphAdmin").val(), 
-            customerid: <?=$customer->id?>, 
+            date: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
+            admin: $("#SphAdmin").val(),  
             address: $("#SphAddress").val(), 
+            armada: $("#armada").val(), 
+            telpreceive: $("#telpreceive").val(), 
+            namereceive: $("#namereceive").val(), 
+            ritase: $("#ritase").val(), 
             templateid: $("#SphFormatFooter").val(), 
-            subtotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
-            discitemtotal: $("#SphDiscItemTotal").val().replace(/[^0-9]/g, ''), 
-            disctotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
-            grandtotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
+            deliverytotal: $("#biayapengiriman").val().replace(/[^0-9]/g, ''),  
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){  
@@ -1294,34 +1007,18 @@
                     type: data_detail_item[i]["type"], 
                     satuan_id: data_detail_item[i]["satuan_id"], 
                     satuantext: data_detail_item[i]["satuantext"],
-                    qty: data_detail_item[i]["qty"], 
-                    harga: data_detail_item[i]["hargajual"], 
-                    disc: data_detail_item[i]["disc"], 
-                    total: data_detail_item[i]["total"], 
                     group: data_detail_item[i]["group"], 
                     varian: data_detail_item[i]["varian"], 
-                });
-            }else{
-                detail.push({
-                    produkid: data_detail_item[i]["produkid"], 
-                    text: data_detail_item[i]["text"],
-                    type: data_detail_item[i]["type"], 
-                    satuan_id: "", 
-                    satuantext: "", 
-                    qty: 0,
-                    harga: 0, 
-                    disc: 0, 
-                    total: 0, 
-                    group: "", 
-                    varian: [], 
-                });
+                    pengiriman: data_detail_item[i]["pengiriman"], 
+                    spare: data_detail_item[i]["spare"],  
+                }); 
             }
         }
  
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/edit-data-penawaran/<?= $project->id ?>", 
+            url: "<?= base_url() ?>action/edit-data-delivery/<?= $delivery->id?>", 
             data:{
                 "header":header,
                 "detail":detail, 
@@ -1334,8 +1031,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-sph").modal("hide");  
-                        loader_data_project(<?= $project->ref ?>,"penawaran") 
+                        $("#modal-edit-delivery").modal("hide");  
+                        loader_data_project(<?= $invoice->ref ?>,"invoice") 
                     });
                   
                 }else{

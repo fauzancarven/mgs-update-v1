@@ -6,6 +6,7 @@ use App\Models\CustomercategoryModel;
 use App\Models\ProvinceModel;
 use App\Models\StoreModel;
 use App\Models\UserModel;
+use App\Models\ProjectModel;
 use App\Models\ProjectcategoryModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
@@ -64,7 +65,7 @@ class SelectController extends BaseController
                 $data[] = array(
                     "id" => $customer['id'],
                     "text" => $customer['code'] . " - " . $customer['name'],
-                    "html" => $htmlItem, 
+                    "html" => $htmlItem,  
                 );
             }
       
@@ -555,6 +556,93 @@ class SelectController extends BaseController
                     "detail" => $row['detail'], 
                     "delta" => $row['delta'], 
 
+                );
+            } 
+            $response['data'] = $data; 
+            return $this->response->setJSON($response); 
+        }
+    }
+
+    public function ref_project_vendor($id){
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array(); 
+
+            $modelsvendor = new VendorModel();
+            $modelsitem = new ProdukModel();
+            if(!isset($postData['searchTerm'])){
+                 // Fetch record
+                $models = new ProjectModel();
+                $Project = $models->getSelectRefVendor($id);
+            }else{
+                $searchTerm = $postData['searchTerm']; 
+                // Fetch record
+                $models = new ProjectModel();
+                $Project = $models->getSelectRefVendor($id,$searchTerm);
+            }  
+            $data = array();
+            $data[] = array(
+                "id" => 0,
+                "text" => "-", 
+                "html" => '<span style="font-size:0.75rem" class="fw-bold">Tidak ada yang dipilih</span>', 
+                "vendor" => $modelsvendor->get()->getResult(),   
+                "detail_item" => [],      
+                "type" => "",  
+            );
+            foreach($Project as $row){
+                $customername = $row['code'] . " - " . ($row['company']== "" ? $row['name'] : $row['name'] . ' (' . $row['company'] . ')');
+                $customertelp = (($row['telp2'] == "" || $row['telp2'] == "-") ? $row['telp1'] : $row['telp1'] . " / " . $row['telp2']);
+                $htmlItem = '
+                               <div class="d-flex flex-column" >
+                                  <span style="font-size:0.75rem" class="fw-bold">' . $row['type'] . ' - ' . $row['coderef'] . '</span>
+                                  <span style="font-size:0.6rem">' . $customername . '</span>
+                                  <span style="font-size:0.6rem">' . $customertelp . '</span>
+                                  <span style="font-size:0.6rem">' .  $row['address'] . '</span> 
+                               </div>';
+                $detail_item =  ($row['type'] == "INV" ? $models->getdataDetailInvoice($row['refid']) : $models->getdataDetailSPH($row['refid'])); 
+                $vendor_array = array();
+                $detail = array();
+                foreach($detail_item as $row_item){ 
+                    $varian = json_decode($row_item->varian, true); 
+                    if (!empty($varian)) {
+                        foreach ($varian as $v) { 
+                            if ($v['varian'] == 'vendor'){
+                                $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("code",$v['value'])->get()->getRow()));
+                                if ( !in_array($data_arr, $vendor_array)) {
+                                    $vendor_array[] = $data_arr;
+                                }
+                            }
+                        }
+                    }
+                    
+                    $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->varian,true),$row_item->produkid); 
+                    if($data_total){ 
+                        $harga = $data_total["hargabeli"];
+                    }else{
+                        $harga = 0;
+                    }
+                    $detail[] = array(
+                        "produkid" => $row_item->produkid, 
+                        "satuan_id"=> ($row_item->satuan_id == 0 ? "" : $row_item->satuan_id),
+                        "satuantext"=>$row_item->satuantext, 
+                        "varian"=> JSON_DECODE($row_item->varian,true), 
+                        "text"=> $row_item->text,
+                        "group"=> $row_item->group,
+                        "type"=> $row_item->type,
+                        "ref"=>  $row_item->qty,
+                        "qty"=>  $row_item->qty,
+                        "harga"=>  $harga,
+                        "total"=>  $row_item->qty * $harga,
+                    );
+                } 
+                $data[] = array(
+                    "id" => $row['refid'],
+                    "text" => $row['coderef'], 
+                    "html" => $htmlItem,    
+                    "type" => $row['type'],    
+                    "vendor" => $vendor_array,   
+                    "detail_item" => $detail,   
                 );
             } 
             $response['data'] = $data; 
