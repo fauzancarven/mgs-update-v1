@@ -132,26 +132,26 @@ class UserModel extends Model
 
     private function get_next_code(): string{
         $builder = $this->db->table($this->table);  
-        $builder->select("max(SUBSTRING(CODE,3)) + 1 as nextcode"); 
+        $builder->select("max(SUBSTRING(CODE,4)) + 1 as nextcode"); 
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
             case 1:
-                $nextid = "ID0000" . $data->nextcode;
+                $nextid = "MGS0000" . $data->nextcode;
                 return $nextid; 
             case 2:
-                $nextid = "ID000" . $data->nextcode;
+                $nextid = "MGS000" . $data->nextcode;
                 return $nextid; 
             case 3:
-                $nextid = "ID00" . $data->nextcode;
+                $nextid = "MGS00" . $data->nextcode;
                 return $nextid; 
             case 4:
-                $nextid = "ID0" . $data->nextcode;
+                $nextid = "MGS0" . $data->nextcode;
                 return $nextid;
             case 5:
-                $nextid = "ID" . $data->nextcode;
+                $nextid = "MGSD" . $data->nextcode;
                 return $nextid; 
             default:
-                $nextid = "ID00000";
+                $nextid = "MGS00000";
                 return $nextid; 
         } 
     }
