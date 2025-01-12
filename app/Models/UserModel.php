@@ -157,6 +157,17 @@ class UserModel extends Model
     }
 
     public function add_account($data){   
+
+        $folder_utama = 'assets/images/profile'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/user")) {
+            mkdir($folder_utama."/user", 0777, true);  
+        }
+
         $nextid = $this->get_next_code(); 
         $datas =  $data['image']; 
         $image_array_1 = explode(";", $datas);

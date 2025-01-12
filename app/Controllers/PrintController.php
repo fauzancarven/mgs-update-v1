@@ -154,6 +154,30 @@ class PrintController extends BaseController
 	}
 
 
+	public function project_po_a5($id)
+	{
+                $options = new Options(); 
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('enable_remote', true);
+                
+                $options->set('paper', 'a5');
+                $options->set('orientation', 'potrait');
+
+                $models = new ProjectModel();  
+                $data["project"] = $models->getdataPO($id); 
+                $data["detail"] = $models->getdataDetailPO($id); 
+                
+                $dompdf = new Dompdf($options);  
+                
+                //$dompdf->set_paper(array(0,0,419.53, 595.28), 'landscape');
+                $dompdf->set_paper(array(0,0,420, 620), 'landscape');
+                $dompdf->getOptions()->setChroot('assets');   
+
+                $html = view('admin/project/print_po_a5',$data); 
+                $dompdf->loadHtml($html);
+                $dompdf->render();
+                $dompdf->stream( 'PO_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
+	}
         public function project_sph_html($id)
         {
                         

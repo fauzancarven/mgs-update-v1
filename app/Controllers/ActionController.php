@@ -302,6 +302,24 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+    public function pembelian_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_pembelian($postData,$id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function pembelian_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_pembelian($id);  
+        }
+    }
+    
     public function template_footer_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

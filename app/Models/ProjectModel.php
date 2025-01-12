@@ -1951,7 +1951,7 @@ class ProjectModel extends Model
     }
 
     /**
-     * FUNCTION UNTUK DELIVERY
+     * FUNCTION UNTUK PEMBELIAN
      */ 
     public function insert_data_pembelian($data){ 
         $header = $data["header"]; 
@@ -1989,4 +1989,55 @@ class ProjectModel extends Model
         }
 
     } 
+    public function update_data_pembelian($data,$id){ 
+        $header = $data["header"];  
+        $builder = $this->db->table("pembelian"); 
+        $builder->set('date', $header["date"]);   
+        $builder->set('templateid', $header["templateid"]); 
+        $builder->set('subtotal', $header["subtotal"]); 
+        $builder->set('pphtotal', $header["pphtotal"]); 
+        $builder->set('disctotal', $header["disctotal"]); 
+        $builder->set('grandtotal', $header["grandtotal"]);   
+        $builder->where('id', $id); 
+        $builder->update(); 
+
+        $builder = $this->db->table("pembelian_detail");
+        $builder->where('ref',$id);
+        $builder->delete(); 
+
+       // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["ref"] = $id;
+            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $builder = $this->db->table("pembelian_detail");
+            $builder->insert($row); 
+        }
+    }
+    public function delete_data_pembelian($id){
+        $builder = $this->db->table("pembelian");
+        $builder->where('id',$id);
+        $builder->delete(); 
+
+       
+        $builder = $this->db->table("pembelian_detail");
+        $builder->where('ref',$id);
+        $builder->delete(); 
+
+        return JSON_ENCODE(array("status"=>true));
+    }
+    public function getdataPO($id){
+        $builder = $this->db->table("pembelian"); 
+        $builder->select("*");
+        $builder->join("customer","customerid = customer.id");
+        $builder->join("vendor","vendor = vendor.id");
+        $builder->join("template_footer","templateid = template_footer.id");
+        $builder->where('pembelian.id',$id);  
+        return $builder->get()->getRow();  
+    }
+    public function getdataDetailPO($id){
+        $builder = $this->db->table("pembelian_detail"); 
+        $builder->where('ref',$id);  
+        return $builder->get()->getResult();  
+    }
+    
 }

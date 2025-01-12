@@ -589,6 +589,74 @@
         });
     };
 
+    var isProcessingPOEdit = [];
+    edit_project_po = function(ref,id,el){ 
+          // INSERT LOADER BUTTON
+          if (isProcessingPOEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingPOEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-po/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-po").modal("show"); 
+
+                isProcessingPOEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingPOEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }; 
+    delete_project_po = function(ref,id,el){
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus Pembelian ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-po/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        loader_data_project(ref,"pembelian"); 
+                    }, 
+                });
+            } 
+        });
+    }
+
+    print_project_po_a4 = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/poA4/") ?>' + id, '_blank');
+    };
+    print_project_po_a5 = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/poA5/") ?>' + id, '_blank');
+    };
     /* 
         PROJECT INVOICE
     */
@@ -1054,6 +1122,7 @@
             $(el).html(old_text); 
         });
     };
+
 
 </script>
 

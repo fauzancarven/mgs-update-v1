@@ -177,6 +177,41 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/add_project_po.php',$data)); 
     }
+    public function project_po_edit($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+        $modelsvendor = new VendorModel();
+
+        $project = $models->getdataPO($id); 
+        $arr_detail = $models->getdataDetailPO($id);
+        $detail = array();
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->produkid, 
+                        "produkid" => $row->produkid, 
+                        "satuan_id"=> ($row->satuan_id == 0 ? "" : $row->satuan_id),
+                        "satuantext"=>$row->satuantext,  
+                        "varian"=> JSON_DECODE($row->varian,true),
+                        "group"=> $row->group,
+                        "text"=> $row->text,
+                        "harga"=>$row->harga,
+                        "total"=> $row->total, 
+                        "ref"=> $row->qty, 
+                        "qty"=> $row->qty
+                    );
+        }; 
+        $data["project"] = $project; 
+        $data["detail"] =  $detail;
+        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
+        $data["template"] =$models->get_data_template_footer($project->templateid); 
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["vendor"] = $modelsvendor->get()->getResult();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/edit_project_po',$data)); 
+    }
+
     public function project_invoice_add($id)
     {     
         $models = new ProjectModel();

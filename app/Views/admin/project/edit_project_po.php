@@ -1,9 +1,9 @@
  
-<div class="modal fade" id="modal-add-po" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-po-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-edit-po" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-po-label" style="overflow-y:auto;">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-po-label">Tambah PO Vendor</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-edit-po-label">Edit PO Vendor</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"> 
@@ -50,7 +50,7 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
+                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->code ?>" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
@@ -229,7 +229,7 @@
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="btn-add-penawaran">Simpan</button>
+                <button type="button" class="btn btn-primary" id="btn-edit-po">Simpan</button>
             </div>
         </div>
     </div>
@@ -239,15 +239,15 @@
 <script>    
     $('#SphDate').daterangepicker({
         "singleDatePicker": true,
-        "startDate": moment(),
-        "endDate":  moment(), 
-        dropdownParent: $('#modal-add-po .modal-content'), 
+        "startDate": moment('<?= $project->date ?>'),
+        "endDate":  moment('<?= $project->date ?>'), 
+        dropdownParent: $('#modal-edit-po .modal-content'), 
         locale: {
             format: 'DD MMMM YYYY'
         }
     });
     $("#sphref").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-ref-vendor/<?= $project->id?>",
@@ -290,11 +290,10 @@
             }
             return data['text'];
         }
-    });
-        
+    }); 
     function template_select_vendor(data){  
         $("#SphVendor").select2({
-            dropdownParent: $('#modal-add-po .modal-content'),
+            dropdownParent: $('#modal-edit-po .modal-content'),
             placeholder: "Pilih Toko",
             data: data,  
             escapeMarkup: function(m) {
@@ -338,10 +337,15 @@
         } 
         load_produk();
     })
-    template_select_vendor(<?= json_encode($vendor)?>);
-    
+    var vendor_data = <?= json_encode($vendor)?>;
+    var vendor_select = vendor_data.filter((item) => item.id == <?=$project->vendor?>);
+    template_select_vendor(vendor_select); 
+    var project_data = JSON.parse('<?=$project->ref1?>');  
+    $('#sphref').append(new Option(project_data["code"] , "1", true, true)).trigger('change');   
+    $('#sphref').attr("disabled",true);
+
     $("#SphStore").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-store",
@@ -371,9 +375,10 @@
         }, 
     });
     $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
+    $('#SphStore').attr("disabled",true);
 
     $("#SphAdmin").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
             url: "<?= base_url()?>select2/get-data-users",
@@ -403,9 +408,9 @@
         }, 
     });
     $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
-      
+    $('#SphAdmin').attr("disabled",true);
 
-    var data_detail_item = [];   
+    var data_detail_item = <?= json_encode($detail)?>;   
     
     var isProcessingSphAddCategory = false;
     add_detail_category = function(el){
@@ -417,7 +422,7 @@
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-        $("#modal-add-po").modal("hide"); 
+        $("#modal-edit-po").modal("hide"); 
         Swal.fire({
             title: 'Tambah Kategori',
             input: 'text',
@@ -453,7 +458,7 @@
         }).then((result) => {  
             isProcessingSphAddCategory = false;
             $(el).html(old_text); 
-            $("#modal-add-po").modal("show");
+            $("#modal-edit-po").modal("show");
         }); 
     }
  
@@ -482,7 +487,7 @@
                 
                 $("#modal-optional").html(data);
                 
-                $("#modal-add-po").modal("hide");  
+                $("#modal-edit-po").modal("hide");  
 
                 $("#modal-select-item").modal("show"); 
 
@@ -491,7 +496,7 @@
                     if (document.activeElement) {
                         document.activeElement.blur();
                     }
-                    $("#modal-add-po").modal("show");  
+                    $("#modal-edit-po").modal("show");  
                     
                 });
 
@@ -559,8 +564,8 @@
     
     edit_varian_click = function(index){ 
         if(data_detail_item[index]["type"] == "category"){  
-            $("#modal-add-po").modal("hide");
-            $("#modal-add-po").blur();
+            $("#modal-edit-po").modal("hide");
+            $("#modal-edit-po").blur();
             Swal.fire({
                 title: 'Rename Kategori',
                 input: 'text',
@@ -587,11 +592,11 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-po").modal("show");
+                $("#modal-edit-po").modal("show");
             });  
         }else{
-            $("#modal-add-po").modal("hide");
-            $("#modal-add-po").blur();
+            $("#modal-edit-po").modal("hide");
+            $("#modal-edit-po").blur();
             Swal.fire({
                 title: 'Rename Produk',
                 input: 'text',
@@ -618,7 +623,7 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-po").modal("show");
+                $("#modal-edit-po").modal("show");
             });  
         }
     }
@@ -796,7 +801,7 @@
             }); 
             inputharga[i].setRawValue(data_detail_item[i]["harga"]);
             $(`#input-harga-${i}`).on("keyup",function(){ 
-                data_detail_item[$(this).data("id")]["harga"] = inputharga[$(this).data("id")].getRawValue();
+                data_detail_item[$(this).data("id")]["harga"] = inputqty[$(this).data("id")].getRawValue();
                 if($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0);
                 total_harga($(this).data("id"));
             });   
@@ -810,7 +815,7 @@
             }); 
             inputtotal[i].setRawValue(data_detail_item[i]["total"]);
             $(`#input-total-${i}`).on("keyup",function(){ 
-                data_detail_item[$(this).data("id")]["total"] = inputtotal[$(this).data("id")].getRawValue();
+                data_detail_item[$(this).data("id")]["total"] = inputqty[$(this).data("id")].getRawValue();
                 if($(`#input-total-${i}`).val() == "") $(`#input-total-${i}`).val(0)  
             });   
             total_harga(i);
@@ -881,6 +886,7 @@
     }); 
     quill.enable(false);
     quill.root.style.background = '#F7F7F7'; // warna disable
+    quill.setContents(JSON.parse(<?= JSON_ENCODE($template->delta)?>));  
 
     $("#savequill").hide();
     $("#savequillas").hide();
@@ -945,7 +951,7 @@
         }
     })
     $("#savequillas").click(function(){  
-        $("#modal-add-po").modal("hide"); 
+        $("#modal-edit-po").modal("hide"); 
         Swal.fire({
             title: 'Simpan Template',
             input: 'text',
@@ -1002,7 +1008,7 @@
             $("#editquill").show();
             quill.enable(false);
             quill.root.style.background = '#F7F7F7'; // warna disable
-            $("#modal-add-po").modal("show");
+            $("#modal-edit-po").modal("show");
         }); 
     })
     $("#editquill").click(function(){
@@ -1014,8 +1020,9 @@
         quill.root.style.background = '#FFFFFF'; // warna enable
 
     }) 
+
     $("#SphFormatFooter").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Template",
         tags:true,
         ajax: {
@@ -1088,7 +1095,11 @@
     }).on("change", function(e) {   
         console.log("change");
     });
-    $("#btn-add-penawaran").click(function(){
+    
+    $('#SphFormatFooter').append(new Option("<?=$template->name ?>" , "<?=$template->id?>", true, true)).trigger('change'); 
+    $("#editquill").show();
+
+    $("#btn-edit-po").click(function(){
         if($("#SphFormatFooter").val() == null){
             Swal.fire({
                 icon: 'error',
@@ -1123,18 +1134,7 @@
         }
 
         var header = {  
-            date: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"), 
-            date_create: moment().format("YYYY-MM-DD"), 
-            time_create: moment().format("HH:m:s"), 
-            storeid: $("#SphStore").val(), 
-            ref: <?= $project->id ?>, 
-            ref1: {
-                type: $("#sphref").select2("data")[0]["type"],
-                code: $("#sphref").select2("data")[0]["text"],
-            }, 
-            admin: $("#SphAdmin").val(), 
-            customerid: <?=$customer->id?>, 
-            vendor: $("#SphVendor").val(), 
+            date: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
             templateid: $("#SphFormatFooter").val(), 
             subtotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
             disctotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
@@ -1159,7 +1159,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/add-data-po", 
+            url: "<?= base_url() ?>action/edit-data-po/<?=$project->id?>", 
             data:{
                 "header":header,
                 "detail":detail, 
@@ -1172,8 +1172,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-po").modal("hide");  
-                        loader_data_project(<?= $project->id ?>,"pembelian") 
+                        $("#modal-edit-po").modal("hide");  
+                        loader_data_project(<?= $project->ref ?>,"pembelian") 
                     });
                   
                 }else{
