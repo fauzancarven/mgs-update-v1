@@ -22,7 +22,8 @@ class MessageController extends BaseController
     }
     public function store_edit($id)
     { 
-        $data[] = "";
+        $models = new StoreModel();
+        $data["store"] = $models->getWhere(['StoreId' => $id])->getRow();
         return $this->response->setBody(view('admin/store/edit.php',$data)); 
     }
     public function account_add()

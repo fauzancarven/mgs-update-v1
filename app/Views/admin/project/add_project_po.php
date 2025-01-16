@@ -170,8 +170,7 @@
                                             <span class="ql-formats">
                                                 <button type="button" class="ql-list" aria-pressed="false" value="ordered" aria-label="list: ordered"><i class="fa-solid fa-list-ol"></i></button>
                                                 <button type="button" class="ql-list" aria-pressed="false" value="bullet" aria-label="list: bullet"><i class="fa-solid fa-list-ul"></i></button>
-                                            </span>
-                                           
+                                            </span> 
                                         </div>  
                                         <div id="message" class="border"></div> 
                                     </div>

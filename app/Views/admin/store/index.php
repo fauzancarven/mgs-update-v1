@@ -42,9 +42,10 @@
         <table class="table table-borderless table-hover mb-0" id="table-toko">
             <thead>
                 <tr class="">
-                    <th data-priority="1" class="py-lg-4 py-3">Kode</th> 
-                    <th data-priority="3" class="py-lg-4 py-3">Nama</th>  
-                    <th data-priority="2" class="py-lg-4 py-3 text-end"><i class="ti-settings"></i></th>
+                    <th data-priority="1" class="py-lg-4 py-3">Logo</th> 
+                    <th data-priority="2" class="py-lg-4 py-3">Kode</th> 
+                    <th data-priority="4" class="py-lg-4 py-3">Nama</th>  
+                    <th data-priority="3" class="py-lg-4 py-3 text-end"><i class="ti-settings"></i></th>
                 </tr>
             </thead > 
             <tbody class="">  
@@ -80,6 +81,7 @@
             }
         }, 
         "columns": [
+            { data: "logo"},
             { data: "StoreCode"},
             { data: "StoreName" }, 
             { data: "action" ,orderable: false , className:"action-td"}, 
@@ -109,18 +111,7 @@
             method: "POST",
             url: "<?= base_url() ?>message/edit-store/"+ id, 
             success: function(html) {  
-                $("#modal-message").html(html);
-
-                var data = table.rows().data();
-                var datas;
-                data.each(function (value, index) { 
-                    if(id==value["StoreId"]) datas= value
-                });
-                console.log(datas)
-                $("#EditStoreCode").val(datas["StoreCode"]);
-                $("#EditStoreName").val(datas["StoreName"]);
-                $("#EditStoreId").val(datas["StoreId"]);
-
+                $("#modal-message").html(html);  
                 $("#modal-edit-store").modal("show");  
             },
             fail: function(xhr, textStatus, errorThrown){

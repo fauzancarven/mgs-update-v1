@@ -434,29 +434,31 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("template_footer");
         $builder->insert(array(
-            "name"=> $data["name"],
-            "detail"=> $data["detail"],
-            "delta"=> JSON_ENCODE($data["delta"]), 
+            "TemplateFooterName"=> $data["TemplateFooterName"],
+            "TemplateFooterDetail"=> $data["TemplateFooterDetail"],
+            "TemplateFooterDelta"=> JSON_ENCODE($data["TemplateFooterDelta"]), 
+            "TemplateFooterCategory"=> $data["TemplateFooterCategory"],
         ));  
 
          // GET ID PRODUK 
         $builder = $this->db->table("template_footer");
         $builder->select('*'); 
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('TemplateFooterId', 'DESC');
         $builder->limit(1);
         return $builder->get()->getRow();
     }
     public function update_data_template_footer($data,$id){   
         $builder = $this->db->table("template_footer");
-        $builder->set('name', $data["name"]);
-        $builder->set('detail', $data["detail"]); 
-        $builder->set('delta', JSON_ENCODE($data["delta"]));
-        $builder->where('id', $id); 
+        $builder->set('TemplateFooterName', $data["TemplateFooterName"]);
+        $builder->set('TemplateFooterDetail', $data["TemplateFooterDetail"]); 
+        $builder->set('TemplateFooterCategory', $data["TemplateFooterCategory"]); 
+        $builder->set('TemplateFooterDelta', JSON_ENCODE($data["TemplateFooterDelta"]));
+        $builder->where('TemplateFooterId', $id); 
         $builder->update(); 
     }
     public function get_data_template_footer($id){
         $builder = $this->db->table("template_footer");
-        $builder->where('id',$id);
+        $builder->where('TemplateFooterId',$id);
         $builder->limit(1);
         return $builder->get()->getRow();  
     }

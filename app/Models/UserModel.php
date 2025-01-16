@@ -12,7 +12,7 @@ use Myth\Auth\Password;
 class UserModel extends Model
 {
     protected $table = 'users';
-    protected $allowedFields = ['username', 'email', 'password', 'image',"level"];
+    protected $allowedFields = ['UserCode','UserName', 'UserEmail', 'password_hash', 'image',"level"];
     protected $useTimeStamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';

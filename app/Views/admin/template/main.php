@@ -1009,6 +1009,9 @@
         background: #F5F7FF; 
         height: 100%;
     }
+    .ql-editor p,.ql-editor span,.ql-editor li{
+       font-size: 0.7rem !important ;
+    }
     @media (max-width: 400px) {
         
         .list-payment .line-1{ 

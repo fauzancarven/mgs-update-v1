@@ -110,7 +110,7 @@ $routes->post('/select2/get-data-produk-varian-value', 'SelectController::produk
 $routes->post('/select2/get-data-produk-satuan', 'SelectController::produk_satuan', ['filter' => 'login']); 
 $routes->post('/select2/get-data-vendor-kategori', 'SelectController::vendor_category', ['filter' => 'login']); 
 $routes->post('/select2/get-data-users', 'SelectController::users', ['filter' => 'login']);
-$routes->post('/select2/get-data-template-footer', 'SelectController::template_footer', ['filter' => 'login']); 
+$routes->post('/select2/get-data-template-footer/(:any)', 'SelectController::template_footer/$1', ['filter' => 'login']); 
 $routes->post('/select2/get-data-ref-vendor/(:num)', 'SelectController::ref_project_vendor/$1', ['filter' => 'login']);
 
 /**

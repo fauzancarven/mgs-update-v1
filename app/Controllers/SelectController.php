@@ -527,35 +527,27 @@ class SelectController extends BaseController
             return $this->response->setJSON($response); 
         }
     }
-    public function template_footer(){
+    public function template_footer($type){
         $request = Services::request();
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $response = array(); 
 
-            if(!isset($postData['searchTerm'])){
-                 // Fetch record
-                $models = new TemplatefooterModel();
-                $customerList = $models->select('*')
-                    ->orderBy('id')
-                    ->find();
-            }else{
-                $searchTerm = $postData['searchTerm']; 
-                // Fetch record
-                $models = new TemplatefooterModel();
-                $customerList = $models->select('*')
-                    ->like('name',$searchTerm)
-                    ->orderBy('id')
-                    ->find();
-            }  
+
+            $models = new TemplatefooterModel();
+            $models->select('*');  
+            if(isset($postData['searchTerm'])) $models->like('TemplateFooterName',$postData['searchTerm']);  
+            $models->like('TemplateFooterCategory',$type);
+            $models->orderBy('TemplateFooterId');
+            $customerList = $models->find(); 
             $data = array();
+
             foreach($customerList as $row){
                 $data[] = array(
-                    "id" => $row['id'],
-                    "text" => $row['name'], 
-                    "detail" => $row['detail'], 
-                    "delta" => $row['delta'], 
-
+                    "id" => $row['TemplateFooterId'],
+                    "text" => $row['TemplateFooterName'], 
+                    "detail" => $row['TemplateFooterDetail'], 
+                    "delta" => $row['TemplateFooterDelta'],  
                 );
             } 
             $response['data'] = $data; 
