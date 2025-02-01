@@ -847,7 +847,7 @@
                 }); 
                 inputinvoice[i].setRawValue(data_detail_item[i]["qty_ref"]);
                 $(`#input-invoice-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["invoice"] = inputinvoice[$(this).data("id")].getRawValue();
+                    data_detail_item[$(this).data("id")]["qty_ref"] = inputinvoice[$(this).data("id")].getRawValue();
                     if($(`#input-invoice-${i}`).val() == "") $(`#input-invoice-${i}`).val(0) 
                 });  
   
@@ -860,7 +860,7 @@
                 }); 
                 inputdikirim[i].setRawValue(data_detail_item[i]["qty_success"]);
                 $(`#input-dikirim-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["dikirim"] = inputdikirim[$(this).data("id")].getRawValue();
+                    data_detail_item[$(this).data("id")]["qty_success"] = inputdikirim[$(this).data("id")].getRawValue();
                     if($(`#input-dikirim-${i}`).val() == "") $(`#input-dikirim-${i}`).val(0) 
                 });   
 
@@ -873,7 +873,7 @@
                 }); 
                 inputpengiriman[i].setRawValue(data_detail_item[i]["qty"]);
                 $(`#input-pengiriman-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["pengiriman"] = inputpengiriman[$(this).data("id")].getRawValue();
+                    data_detail_item[$(this).data("id")]["qty"] = inputpengiriman[$(this).data("id")].getRawValue();
                     if($(`#input-pengiriman-${i}`).val() == "") $(`#input-pengiriman-${i}`).val(0) 
                 });   
  
@@ -886,7 +886,7 @@
                 }); 
                 inputspare[i].setRawValue(data_detail_item[i]["qty_spare"]);
                 $(`#input-spare-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["spare"] = inputspare[$(this).data("id")].getRawValue();
+                    data_detail_item[$(this).data("id")]["qty_spare"] = inputspare[$(this).data("id")].getRawValue();
                     if($(`#input-spare-${i}`).val() == "") $(`#input-spare-${i}`).val(0) 
                 });   
             }
