@@ -146,9 +146,11 @@ class PrintController extends BaseController
                 $options->set('orientation', 'potrait');
 
                 $models = new ProjectModel();   
+                $modelheader = new HeaderModel();  
                 $data["delivery"] = $models->getdataDelivery($id);   
-                $data["project"] = $models->getdataInvoice($data["delivery"]->ref); 
-                $data["detail"] = $models->getdataDetailDelivery($data["delivery"]->id); 
+                $data["detail"] = $models->getdataDetailDelivery($id); 
+                $data["project"] = $models->getdataInvoice($data["delivery"]->DeliveryRef); 
+                $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  
                 
                 $dompdf = new Dompdf($options);  
                 
@@ -156,10 +158,10 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/print_delivery_a5',$data); 
+                $html = view('admin/project/delivery/print_delivery_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
-                $dompdf->stream( 'DEL_INV_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
+                $dompdf->stream( 'DEL_INV_'.$data["project"]->CustomerName.'_'.$data["project"]->InvDate.'.pdf', [ 'Attachment' => false ]);
 	}
 
 

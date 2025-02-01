@@ -316,31 +316,31 @@ class MessageController extends BaseController
         $arr_detail = $models->getdataDetailInvoice($id);
         $detail = array();
         foreach($arr_detail as $row){
-            $detail[] = array(
-                        "id" => $row->produkid, 
-                        "satuan_id"=> ($row->satuan_id == 0 ? "" : $row->satuan_id),
-                        "satuantext"=>$row->satuantext,  
-                        "hargajual"=>$row->harga,
-                        "varian"=> JSON_DECODE($row->varian,true),
-                        "total"=> $row->total,
-                        "disc"=> $row->disc,
-                        "qty"=> $row->qty,
-                        "text"=> $row->text,
-                        "group"=> $row->group,
-                        "type"=> $row->type,
-                        "invoice"=> $row->qty,
-                        "dikirim"=> $models->getdataDetailDeliveryByInvoice($id,$row->produkid,$row->varian,$row->text),
-                        "pengiriman"=> 0,
-                        "spare"=> 0
+            $detail[] = array( 
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                        "satuan_text"=>$row->InvDetailSatuanText,  
+                        "price"=>$row->InvDetailPrice,
+                        "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                        "total"=> $row->InvDetailTotal,
+                        "disc"=> $row->InvDetailDisc,
+                        "qty"=> $row->InvDetailQty,
+                        "qty_spare"=> 0,
+                        "qty_ref"=> $row->InvDetailQty,
+                        "qty_success"=>$models->getdataDetailDeliveryByInvoice($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText), 
+                        "text"=> $row->InvDetailText,
+                        "group"=> $row->InvDetailGroup,
+                        "type"=> $row->InvDetailType 
                     );
         };
         $data["project"] = $project; 
         $data["detail"] =  $detail;
-        $data["template"] =$models->get_data_template_footer($project->templateid); 
-        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["template"] =$models->get_data_template_footer($project->TemplateId); 
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/add_project_delivery',$data)); 
+        return $this->response->setBody(view('admin/project/delivery/add_project_delivery',$data)); 
     } 
     public function project_delivery_edit($id)
     {      

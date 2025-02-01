@@ -1111,21 +1111,21 @@ class ProjectModel extends Model
 
             $builder = $this->db->table("delivery");
             $builder->select('*'); 
-            $builder->where('ref',$row->InvId);
-            $builder->orderby('id', 'ASC'); 
+            $builder->where('DeliveryRef',$row->InvId);
+            $builder->orderby('DeliveryId', 'ASC'); 
             $delivery = $builder->get()->getResult(); 
             foreach($delivery as $row_delivery){ 
                 $builder = $this->db->table("delivery_detail");
                 $builder->select('*'); 
-                $builder->where('ref',$row_delivery->id);
-                $builder->orderby('id', 'ASC'); 
+                $builder->where('DeliveryDetailRef',$row_delivery->DeliveryId);
+                $builder->orderby('DeliveryDetailId', 'ASC'); 
                 $items = $builder->get()->getResult(); 
                 $html_items = "";
                 $no = 1;
                 $huruf  = "A";
                 foreach($items as $item){
 
-                    $arr_varian = json_decode($item->varian);
+                    $arr_varian = json_decode($item->DeliveryDetailVarian);
                     $arr_badge = "";
                     $arr_no = 0;
                     foreach($arr_varian as $varian){
@@ -1137,10 +1137,10 @@ class ProjectModel extends Model
                     <div class="row">
                         <div class="col-12 col-md-8 my-1 varian">   
                             <div class="d-flex ">
-                                <span class="no-urut text-head-3"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->type == "product" ? $no : $huruf).'.</span> 
+                                <span class="no-urut text-head-3"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->DeliveryDetailType == "product" ? $no : $huruf).'.</span> 
                                 <div class="d-flex flex-column text-start">
-                                    <span class="text-head-3 text-uppercase"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->text.'</span>
-                                    <span class="text-detail-2 text-truncate"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->group.'</span> 
+                                    <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
+                                    <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
                                     <div class="d-flex flex-wrap gap-1">
                                         '.$arr_badge.'
                                     </div>
@@ -1152,13 +1152,13 @@ class ProjectModel extends Model
                                             <div class="offset-2 offset-md-0 col-5 col-md-6 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Qty:</span>
-                                                    <span class="text-head-2">'.number_format($item->pengiriman, 2, ',', '.').' '.$item->satuantext.'</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
                                                 </div>
                                             </div>  
                                             <div class="col-5 col-md-6 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Spare:</span>
-                                                    <span class="text-head-2">'.number_format($item->spare, 2, ',', '.').' '.$item->satuantext.'</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
                                                 </div>
                                             </div>  
                                         </div>   
@@ -1168,7 +1168,7 @@ class ProjectModel extends Model
                         
                     
                 }
-                if($row_delivery->status == "0"){
+                if($row_delivery->DeliveryStatus == "0"){
                     $status = '<span class="text-head-3 text-primary">
                     <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
                         <i class="fa-solid fa-certificate fa-stack-2x"></i> 
@@ -1198,41 +1198,45 @@ class ProjectModel extends Model
                                     <div class="col-12 col-md-1 order-3 order-sm-2"> 
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
                                             <span class="text-detail-2">Tanggal:</span>
-                                            <span class="text-head-3">'.date_format(date_create($row_delivery->date),"d M Y").'</span>
+                                            <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
                                         </div>  
                                     </div>
                                     <div class="col-12 col-md-1 order-4 order-sm-3"> 
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Ritase:</span>'.$row_delivery->ritase.'
+                                            <span class="text-detail-2">Ritase:</span>'.$row_delivery->DeliveryRitase.'
                                         </div>  
                                     </div>
                                     <div class="col-12 col-md-1 order-5 order-sm-4"> 
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
                                             <span class="text-detail-2">Armada:</span>
-                                            <span class="text-head-3">'.$row_delivery->armada.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryArmada.'</span>
                                         </div>  
                                     </div>
                                     <div class="col-12 col-md-1 order-6 order-sm-5">
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Penerima:</span>
-                                            <span class="text-head-3">'.$row_delivery->namereceive.'</span>
+                                            <span class="text-detail-2">Pengirim:</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryFromName.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryFromTelp.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryFromAddress.'</span>
                                         </div>  
                                     </div>
                                     <div class="col-12 col-md-1 order-7 order-sm-5">
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Telp:</span>
-                                            <span class="text-head-3">'.$row_delivery->telpreceive.'</span>
+                                            <span class="text-detail-2">Penerima:</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryToName.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryToTelp.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryToAddress.'</span>
                                         </div>   
                                     </div>
                                     <div class="col-3 col-md-5 text-end order-1 order-sm-5"> 
                                         <div class="d-none d-md-inline-block">  
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery('.$row->ref.','.$row_delivery->id.',this)">
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
                                                 <i class="fa-solid fa-print mx-1"></i><span >Print</span>
                                             </button>
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery('.$row->ref.','.$row_delivery->id.',this)">
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
                                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                                             </button>
-                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery('.$row->ref.','.$row_delivery->id.',this)">
+                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
                                                 <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
                                             </button> 
                                         </div>
@@ -1242,15 +1246,17 @@ class ProjectModel extends Model
                                                     <i class="ti-more-alt icon-rotate-45"></i>
                                                 </a>
                                                 <ul class="dropdown-menu shadow">  
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery('.$row->ref.','.$row_delivery->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery('.$row->ref.','.$row_delivery->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery('.$row->ref.','.$row_delivery->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
+                                </div> 
+                                <div class="detail-item mt-2 p-2 border-top">
+                                    '.$html_items.' 
                                 </div>
-                                '.$html_items.'
                             </div>
                             ';
             }
@@ -1429,8 +1435,8 @@ class ProjectModel extends Model
     private function get_next_code_delivery($date){
         //sample SPH/001/01/2024
         $builder = $this->db->table("delivery");  
-        $builder->select("ifnull(max(SUBSTRING(code,5,3)),0) + 1 as nextcode");
-        $builder->where("date_create",$date);
+        $builder->select("ifnull(max(SUBSTRING(DeliveryCode,5,3)),0) + 1 as nextcode");
+        $builder->where("DeliveryDate2",$date);
         $arr_date = explode("-", $date);
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
@@ -1910,32 +1916,35 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("delivery");
         $builder->insert(array(
-            "code"=>$this->get_next_code_delivery($header["date_create"]),
-            "date"=>$header["date"],
-            "date_create"=>$header["date_create"],
-            "time_create"=>$header["time_create"],
-            "storeid"=>$header["storeid"],
-            "ref"=>$header["ref"], 
-            "admin"=>$header["admin"],
-            "customerid"=>$header["customerid"],
-            "address"=>$header["address"],
-            "templateid"=>$header["templateid"],
-            "namereceive"=>$header["namereceive"],
-            "telpreceive"=>$header["telpreceive"],
-            "ritase"=>$header["ritase"],
-            "deliverytotal"=>$header["deliverytotal"],
-            "armada"=>$header["armada"],
+            "DeliveryCode"=>$this->get_next_code_delivery($header["DeliveryDate"]),
+            "DeliveryDate"=>$header["DeliveryDate"], 
+            "DeliveryDate2"=>$header["DeliveryDate"],  
+            "DeliveryRef"=>$header["DeliveryRef"], 
+            "DeliveryAdmin"=>$header["DeliveryAdmin"],
+            "DeliveryArmada"=>$header["DeliveryArmada"],
+            "DeliveryRitase"=>$header["DeliveryRitase"],
+            "DeliveryTotal"=>$header["DeliveryTotal"],
+            "DeliveryToName"=>$header["DeliveryToName"],
+            "DeliveryToTelp"=>$header["DeliveryToTelp"],
+            "DeliveryToAddress"=>$header["DeliveryToAddress"],
+            "DeliveryFromName"=>$header["DeliveryFromName"],
+            "DeliveryFromTelp"=>$header["DeliveryFromTelp"],
+            "DeliveryFromAddress"=>$header["DeliveryFromAddress"],
+            "TemplateId"=>$header["TemplateId"],
+            "DeliveryStatus"=>0,
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
 
         $builder = $this->db->table("delivery");
         $builder->select('*');
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('DeliveryId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();  
         // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
-            $row["ref"] = $query->id;
-            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $row["DeliveryDetailRef"] = $query->DeliveryId;
+            $row["DeliveryDetailVarian"] = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
             $builder = $this->db->table("delivery_detail");
             $builder->insert($row); 
         }
@@ -1983,12 +1992,13 @@ class ProjectModel extends Model
     }
     public function getdataDelivery($id){
         $builder = $this->db->table("delivery"); 
-        $builder->where('id',$id);  
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
+        $builder->where('DeliveryId',$id);  
         return $builder->get()->getRow();  
     }
     public function getdataDetailDelivery($id){
         $builder = $this->db->table("delivery_detail"); 
-        $builder->where('ref',$id);  
+        $builder->where('DeliveryDetailRef',$id);  
         return $builder->get()->getResult();  
     }
     public function getdataInvoiceByDelivery($ref,$produkid,$varian,$text){
@@ -2004,16 +2014,16 @@ class ProjectModel extends Model
         $arr_detail_invoice = $this->getdataDetailInvoice($ref);
         $qtysum = 0;
         foreach($arr_detail_invoice as $row){
-            if($row->produkid == $produkid && $row->varian == $varian && $row->text == $text){
+            if($row->ProdukId == $produkid && $row->InvDetailVarian == $varian && $row->InvDetailText == $text){
                 $builder = $this->db->table("delivery_detail"); 
-                $builder->join("delivery","delivery.id = delivery_detail.ref");
-                $builder->where('delivery.ref',$ref);  
-                $builder->where('produkid',$produkid); 
-                $builder->where('varian',$varian,true);
-                $builder->where('text',$text);
+                $builder->join("delivery","DeliveryId = DeliveryDetailRef");
+                $builder->where('DeliveryDetailRef',$ref);  
+                $builder->where('ProdukId',$produkid); 
+                $builder->where('DeliveryDetailVarian',$varian,true);
+                $builder->where('DeliveryDetailText',$text);
                 $result_all = $builder->get()->getResult();  
                 foreach($result_all as $rows){
-                    $qtysum += $rows->pengiriman;
+                    $qtysum += $rows->DeliveryDetailQty;
                 }
                  
             } 

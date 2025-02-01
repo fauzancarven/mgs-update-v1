@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'DEL_INV_'.$project->name.'_'.$project->date ?></title>
+    <title><?= 'DEL_INV_'.$project->CustomerName.'_'.$project->InvDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
 </head>
@@ -271,65 +271,28 @@
         margin:0px;
     }
     li {
-        padding: 0px;
+        width: inherit;
+        padding: 0px;  
+        font-size:9px;
+        text-overflow:ellipsis;
     } 
   
 </style>
-<body>  
-    <div class="header">
-        <div class="logo">  
-            <img src="assets/images/logo/logo-brj-blue.png" alt=""> 
-            <span>BATA REGULER JAKARTA</span>
-        </div>
-        <div class="deskripsi">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/maps.svg" alt="">
-                            </div>
-                            
-                        </td>
-                        <td>
-                            <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
-                        </td>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/email.svg" alt="">
-                            </div>
-                            
-                        </td>
-                        <td>
-                            <span>bataregulerjakarta@gmail.com</span>
-                        </td>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/phone.svg" alt=""> 
-                            </div>
-                            
-                        </td>
-                        <td>0852-1795-2625<br>0812-1260-9992
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>   
-        <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>  
-    </div>   
+<body>   
+    <?= $header_footer ?>
     <div class="body">
         <h4 class="judul text-center">SURAT JALAN</h4>
         <table style="width: 100%;align-items: start;justify-content: baseline;">
             <tbody>
                 <tr>
                     <td style="width: 80%;"> 
-                        <div class="width-label label-color d-inline-block">Penerima</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->namereceive ?></div><br>
-                        <div class="width-label label-color d-inline-block">Telp</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->telpreceive ?></div><br>
-                        <div class="width-label label-color d-inline-block">address</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->address ?></div><br> 
+                        <div class="width-label label-color d-inline-block">Penerima</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->DeliveryToName ?></div><br>
+                        <div class="width-label label-color d-inline-block">Telp</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->DeliveryToTelp ?></div><br>
+                        <div class="width-label label-color d-inline-block">address</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->DeliveryToAddress ?></div><br> 
                     </td> 
                     <td style="align-items: start;justify-content: center"> 
-                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->code ?></div><br>
-                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($delivery->date),"d F Y") ?></div><br> 
+                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->DeliveryCode ?></div><br>
+                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($delivery->DeliveryDate),"d F Y") ?></div><br> 
                     </td>
                 </tr>
             </tbody>
@@ -350,7 +313,7 @@
                     $html_items = ""; 
                     foreach($detail as $item){
 
-                        $arr_varian = json_decode($item->varian);
+                        $arr_varian = json_decode($item->DeliveryDetailVarian);
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
                             if($varian->varian == "vendor") continue; 
@@ -360,9 +323,9 @@
                         $html_items .= '
                         <tr> 
                             <td class="td-center">'.$no.'</td>
-                            <td class="ps-1">'.$item->text.$arr_badge.'</td>
-                            <td class="td-center">'.number_format($item->pengiriman, 2, ',', '.').' '.$item->satuantext.'</td> 
-                            <td class="td-center">'.number_format($item->spare, 2, ',', '.').' '.$item->satuantext.'</td> 
+                            <td class="ps-1">'.$item->DeliveryDetailText.$arr_badge.'</td>
+                            <td class="td-center">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
+                            <td class="td-center">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
                         </tr>';
                         $no++;  
                     }
@@ -379,25 +342,21 @@
     <div class="footer"> 
         <table style="width: 100%;align-items: start;justify-content: baseline;line-height: 1.2;padding-left:20px;padding-right:30px">
             <tr>
-                <td style="vertical-align: top;">
-                    Term and Condition :
+                <td style="width:65%;max-width:65%;vertical-align: top">
+                    Term and Condition :  
+                    <?= $delivery->TemplateFooterDetail ?>
                 </td>
-                <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
+                <td style="width:15%;text-align:center;vertical-align: bottom;">
                     <div style="border-top:1px solid black;margin-right:10px;">Quality Control</div>
                 </td>
-                <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
+                <td style="width:15%;text-align:center;vertical-align: bottom;">
                     <div style="border-top:1px solid black;margin-left:10px;">Pengirim</div>
                 </td>
-                <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
+                <td style="width:15%;text-align:center;vertical-align: bottom;">
                     <div style="border-top:1px solid black;margin-left:10px;">Penerima</div>
                 </td>
-            </tr>
-            <tr>
-                <td style="vertical-align: top;">
-                    <?= $project->detail ?>
-                </td>
-            </tr>
-        </table>
+            </tr>  
+        </table> 
     </div> 
 </body>
 
