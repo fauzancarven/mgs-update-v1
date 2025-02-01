@@ -74,7 +74,7 @@
     $("#vendorcategory").select2({
         dropdownParent: $('#modal-edit-vendor .modal-content'),
         tags: true,
-        tokenSeparators: [',', ' '],
+        tokenSeparators: [','],
         placeholder: "Pilih Kategori",
         ajax: {
             url: "<?= base_url()?>select2/get-data-vendor-kategori",
