@@ -5,6 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model; 
 use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\Codeigniter4Adapter;
+use CodeIgniter\Database\RawSql;
 
 class CustomerModel extends Model
 { 
@@ -12,35 +13,35 @@ class CustomerModel extends Model
     protected $table = 'customer';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $insertID = 0;
-    protected $returnType = 'array';
-    protected $useSoftDeletes = false;
-    protected $protectFields = true;
-    protected $allowedFields = ['code','category','company','name','comment','telp1', 'email','address','telp2','instagram','village'];
+    // protected $insertID = 0;
+    // protected $returnType = 'array';
+    // protected $useSoftDeletes = false;
+    // protected $protectFields = true;
+    // //protected $allowedFields = ['CustomerCode','category','company','name','comment','telp1', 'email','address','telp2','instagram','village'];
 
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat = 'datetime';
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
+    // // Dates
+    // protected $useTimestamps = false;
+    // protected $dateFormat = 'datetime';
+    // protected $createdField = 'created_at';
+    // protected $updatedField = 'updated_at';
+    // protected $deletedField = 'deleted_at';
 
-    // Validation
-    protected $validationRules = [];
-    protected $validationMessages = [];
-    protected $skipValidation = false;
-    protected $cleanValidationRules = true;
+    // // Validation
+    // protected $validationRules = [];
+    // protected $validationMessages = [];
+    // protected $skipValidation = false;
+    // protected $cleanValidationRules = true;
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert = [];
-    protected $afterInsert = [];
-    protected $beforeUpdate = [];
-    protected $afterUpdate = [];
-    protected $beforeFind = [];
-    protected $afterFind = [];
-    protected $beforeDelete = [];
-    protected $afterDelete = [];
+    // // Callbacks
+    // protected $allowCallbacks = true;
+    // protected $beforeInsert = [];
+    // protected $afterInsert = [];
+    // protected $beforeUpdate = [];
+    // protected $afterUpdate = [];
+    // protected $beforeFind = [];
+    // protected $afterFind = [];
+    // protected $beforeDelete = [];
+    // protected $afterDelete = [];
 
     public function blog_json()
     {
@@ -49,8 +50,19 @@ class CustomerModel extends Model
         $dt = new Datatables(new Codeigniter4Adapter);
 
         $builder = $this->db->table($this->table); 
-        $builder->join("customercategory","customercategory.id=customer.category");
-        $builder->select('customercategory.name kategori,customer.id cust_id,code,category,company,customer.name cust_name,email,Telp1,Telp2,instagram,village,address');
+        $builder->join("customercategory","customercategory.CustomerCategoryId=customer.CustomerCategoryId");
+        $builder->select('customercategory.CustomerCategoryName kategori,
+        CustomerId cust_id,
+        CustomerCode,
+        customer.CustomerCategoryId,
+        CustomerCompany,
+        CustomerName cust_name,
+        CustomerEmail,
+        CustomerTelp1,
+        CustomerTelp2,
+        CustomerInstagram,
+        CustomerVillageId,
+        CustomerAddress');
         $query = $builder->getCompiledSelect(); 
 
         $dt->query($query);
@@ -79,7 +91,7 @@ class CustomerModel extends Model
 
     public function get_next_code(){
         $builder = $this->db->table($this->table);  
-        $builder->select("ifnull(max(SUBSTRING(code,3)),0) + 1 as nextcode");
+        $builder->select("ifnull(max(SUBSTRING(CustomerCode,3)),0) + 1 as nextcode");
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
             case 1:
@@ -109,22 +121,22 @@ class CustomerModel extends Model
     public function add_customer($data){ 
         $builder = $this->db->table($this->table);
         $builder->insert(array(
-            "code"=>$this->get_next_code(),
-            "category"=>$data["category"],
-            "company"=>$data["company"],
-            "name"=>$data["name"],
-            "comment"=>$data["comment"],
-            "telp1"=>$data["telp1"],
-            "telp2"=>$data["telp2"],
-            "email"=>$data["email"],
-            "instagram"=>$data["instagram"],
-            "village"=>$data["village"],
-            "address"=>$data["address"],
+            "CustomerCode"=>$this->get_next_code(),
+            "CustomerCategoryId"=>$data["category"],
+            "CustomerCompany"=>$data["company"],
+            "CustomerName"=>$data["name"],
+            "CustomerComment"=>$data["comment"],
+            "CustomerTelp1"=>$data["telp1"],
+            "CustomerTelp2"=>$data["telp2"],
+            "CustomerEmail"=>$data["email"],
+            "CustomerInstagram"=>$data["instagram"],
+            "CustomerVillageId"=>$data["village"],
+            "CustomerAddress"=>$data["address"],
         )); 
         
         $builder = $this->db->table($this->table);
         $builder->select('*');
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('CustomerId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();
         echo json_encode(array("status"=>true,"data"=>$query)); 
@@ -133,24 +145,26 @@ class CustomerModel extends Model
     public function edit_customer($data,$id){ 
         $builder = $this->db->table($this->table);
         $builder->set(array( 
-            "category"=>$data["category"],
-            "company"=>$data["company"],
-            "name"=>$data["name"],
-            "comment"=>$data["comment"],
-            "telp1"=>$data["telp1"],
-            "telp2"=>$data["telp2"],
-            "email"=>$data["email"],
-            "instagram"=>$data["instagram"],
-            "village"=>$data["village"],
-            "address"=>$data["address"],
+            "CustomerCategoryId"=>$data["category"],
+            "CustomerCompany"=>$data["company"],
+            "CustomerName"=>$data["name"],
+            "CustomerComment"=>$data["comment"],
+            "CustomerTelp1"=>$data["telp1"],
+            "CustomerTelp2"=>$data["telp2"],
+            "CustomerEmail"=>$data["email"],
+            "CustomerInstagram"=>$data["instagram"],
+            "CustomerVillageId"=>$data["village"],
+            "CustomerAddress"=>$data["address"], 
+            "updated_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+            "updated_user"=>user()->id, 
         )); 
-        $builder->where('id', $id);
+        $builder->where('CustomerId', $id);
         $builder->update();
          
         $builder = $this->db->table($this->table);
         $builder->select('*');
-        $builder->where('id', $id);
-        $builder->orderby('id', 'DESC');
+        $builder->where('CustomerId', $id);
+        $builder->orderby('CustomerId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();
         echo json_encode(array("status"=>true,"data"=>$query)); 
@@ -158,7 +172,7 @@ class CustomerModel extends Model
     
     public function delete_customer($data){
         $builder = $this->db->table($this->table);  
-        $builder->where('id', $data["id"]);
+        $builder->where('CustomerId', $data["id"]);
         $builder->delete(); 
         echo JSON_ENCODE(array("status"=>true));
     }

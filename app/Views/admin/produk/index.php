@@ -87,7 +87,7 @@
             "columns": [
                 { data: "produk_name",orderable: false,},  
                 { data: "vendor_detail" ,orderable: false,visible: false, },  
-                { data: "price_range" ,orderable: false , className:"text-center",visible: false,}, 
+                { data: "ProdukPrice" ,orderable: false , className:"text-center",visible: false,}, 
                 { data: "action" ,orderable: false , className:"action-td"}, 
             ],
             "rowCallback": function(row, data) {
@@ -122,7 +122,7 @@
             "columns": [
                 { data: "produk_name"},  
                 { data: "vendor_detail" ,orderable: false },  
-                { data: "price_range" ,orderable: false , className:"text-center"}, 
+                { data: "ProdukPrice" ,orderable: false , className:"text-center"}, 
                 { data: "action" ,orderable: false , className:"action-td"}, 
             ],
             "rowCallback": function(row, data) {
@@ -190,7 +190,7 @@
                             </div> 
                         </div> `; 
             $.each(JSON.parse(data.produk_detail), function(index, value) { 
-                const data = JSON.parse(value.varian) 
+                const data = JSON.parse(value.ProdukDetailVarian) 
                 let varian = "";
                 var i = 0;
                 Object.keys(data).forEach(function (key) {
@@ -217,7 +217,7 @@
                                             <div class="mb-3">
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Berat</span>
                                                 <div class="input-group mb-3"> 
-                                                    <input type="text" class="form-control form-control-sm input-form berat" value="${value["berat"]}" data-id="${index}" disabled>
+                                                    <input type="text" class="form-control form-control-sm input-form berat" value="${value["ProdukDetailBerat"]}" data-id="${index}" disabled>
                                                     <span class="input-group-text font-std">(g)</span>
                                                 </div> 
                                             </div>
@@ -227,7 +227,7 @@
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Satuan</span>
                                                 <div class="input-group"> 
                                                     <select class="form-select form-select-sm satuan_id" data-id="${index}" style="width:100%" disabled>
-                                                        <option selected>${value["name"]}</option>
+                                                        <option selected>${value["ProdukSatuanName"]}</option>
                                                     </select>   
                                                 </div>     
                                             </div>  
@@ -236,7 +236,7 @@
                                             <div class="mb-3">
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Isi M/<sup>2</sup></span>
                                                 <div class="input-group"> 
-                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="${index}" value="${value["pcsm2"]}" disabled>
+                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="${index}" value="${value["ProdukDetailPcsM2"]}" disabled>
                                                 </div>   
                                             </div>  
                                         </div> 
@@ -245,7 +245,7 @@
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga Beli</span>
                                                 <div class="input-group">  
                                                     <span class="input-group-text font-std">Rp.</span> 
-                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="${index}" value="${value["hargabeli"]}" disabled>
+                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="${index}" value="${value["ProdukDetailHargaBeli"]}" disabled>
                                                 </div>   
                                             </div>  
                                         </div> 
@@ -254,7 +254,7 @@
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga Jual</span>
                                                 <div class="input-group"> 
                                                     <span class="input-group-text font-std">Rp.</span>
-                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="${index}" value="${value["hargajual"]}" disabled>
+                                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="${index}" value="${value["ProdukDetailHargaJual"]}" disabled>
                                                 </div>   
                                             </div>      
                                         </div> 
@@ -373,10 +373,7 @@
                 $.ajax({
                     dataType: "json",
                     method: "POST",
-                    url: "<?= base_url() ?>action/delete-data-produk",
-                    data: {
-                        "id": id,  
-                    }, 
+                    url: "<?= base_url() ?>action/delete-data-produk/" + id, 
                     success: function(data) { 
                         Swal.fire({
                             title: "Deleted!",

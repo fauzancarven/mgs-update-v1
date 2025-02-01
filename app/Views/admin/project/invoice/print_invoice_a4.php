@@ -3,12 +3,14 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'SPH_'.$project->name.'_'.$project->date ?></title>
+    <title><?= 'INV_'.$project->CustomerName.'_'.$project->InvDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
 </head>
 <style>  
-    body {
+   body { 
+        margin-top: 2.5cm;
+        margin-bottom: 2.5cm;
         padding: 5px;
         padding-left: 0px;
         padding-right: 0px;
@@ -19,9 +21,7 @@
         margin: 5px;
         margin-left: 0px;
         margin-right: 0px;
-    }
-    .header{ 
-        position: relative;
+        padding-bottom: 200px;
     }
     .footer {
         width: 100%;
@@ -60,7 +60,16 @@
         border-top-left-radius: 100%;
         background-color: #0d8af1;
     }
-     
+    
+    .fixed{
+        position: fixed;
+        top: 0;
+        height:50px;
+        width: 100%;
+    }
+    .header{ 
+        position: relative;
+    }
     .logo{
         position: absolute;
         height: 80px;
@@ -77,6 +86,13 @@
         top: 5px;
         object-fit: contain;
     }
+    .logo img.mgs{ 
+        height: 65px;
+        width: 100px;
+        left: 30px;
+        top: 5px;
+        object-fit: contain;
+    }
     .deskripsi{
         position: absolute;
         left: 0;
@@ -90,7 +106,7 @@
     .deskripsi table{
         z-index:2; 
         width: 100%;
-        padding-top: 10px;
+        padding-top: 3px;
         padding-left: 220px;
         padding-right: 20px;
         font-family: "Poppins", serif;
@@ -146,7 +162,7 @@
         padding-left: 4px; 
     } 
     .body{
-        margin-top: 60px;
+        margin-top: 0px;
         padding:30px;
         font-family: "Roboto", serif;
         color: #000;
@@ -247,96 +263,46 @@
         font-size:18px;
         color: #8eb2df;
     }
+    .footer.mgs table , .footer.mgs th, .footer.mgs td {
+        font-size:12px; 
+        font-family: "Poppins", serif;
+        font-weight: 600;
+        color: #5c5c5c;
+        text-align: start; 
+        align-items: start;
+        justify-content: baseline;
+        line-height:1;
+    }
     .divider{ 
-        border:1px solid #88c3f4;
-        height:20px;
-        margin:10px
+        border-left:1px solid #88c3f4; 
+        height:30px; 
+        margin-left:7px; 
+        margin-right:7px; 
     }
 </style>
 <body>  
-    <div class="header">
-        <div class="logo">  
-            <img src="assets/images/logo/brand/brj.png" alt=""> 
-        </div>
-        <div class="deskripsi">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/maps.svg" alt="">
-                            </div>
-                            
-                        </td>
-                        <td>
-                            <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
-                        </td>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/email.svg" alt="">
-                            </div>
-                            
-                        </td>
-                        <td>
-                            <span>bataregulerjakarta@gmail.com</span>
-                        </td>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/phone.svg" alt=""> 
-                            </div>
-                            
-                        </td>
-                        <td>0852-1795-2625<br>0812-1260-9992
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>   
-        <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>  
-    </div>   
-    <div class="footer"> 
-        <table>
-            <tr>
-                <td>BATA EXPOSE</td>
-                <td><div class="divider"></div></td>
-                <td>BATA TEMPEL</td> 
-                <td><div class="divider"></div></td> 
-                <td>ROSTER DINDING</td>  
-                <td><div class="divider"></div></td>
-                <td>PAVING BLOCK</td>   
-            </tr>
-        </table>
-        <div class="line"> 
-            <div class="line1"></div> 
-        </div>
-        <div class="line-1"> 
-            <div class="line1"></div> 
-        </div>
-        <div class="line-2"> 
-            <div class="line1"></div> 
-        </div>
-    </div>
+    <?= $header_footer ?>
     <div class="body">
-        <h2 class="text-center">SURAT PENAWARAN HARGA (QUOTATION)</h2>
+        <h2 class="text-center">INVOICE (SALES ORDER)</h2>
         <table style="width: 100%;align-items: start;justify-content: baseline;">
             <tbody>
                 <tr>
                     <td style="width: 40%;"> 
                         <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $project->name.($project->company == "" ? : " (".$project->company.")") ?></span><br> 
-                        <span class="text-bold"><?= $project->telp1.($project->telp2 == "" ? : "/".$project->telp2) ?></span><br>
-                        <span class="text-bold"><?= $project->address ?></span><br>
+                        <span class="text-bold"><?= $project->CustomerName.($project->CustomerCompany == "" ? : " (".$project->CustomerCompany.")") ?></span><br> 
+                        <span class="text-bold"><?= $project->CustomerTelp1.($project->CustomerTelp2 == "" ? : "/".$project->CustomerTelp2) ?></span><br>
+                        <span class="text-bold"><?= $project->InvAddress ?></span><br>
                     </td>
                     <td style="width: 30%;"> 
                     </td>
                     <td style="align-items: start;justify-content: center;margin-left:auto"> 
-                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $project->code ?></div><br>
-                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($project->date),"d F Y") ?></div><br> 
+                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $project->InvCode ?></div><br>
+                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($project->InvDate),"d F Y") ?></div><br> 
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div style="padding:20px">
+        <div style="padding:20px;display:none;">
             Dengan Hormat. <br>
             <span style="padding-left:40px">Berikut kami turunkan lampiran penawaran barang dengan detail spesifikasi sebagai berikut :</span>
         </div>
@@ -348,7 +314,7 @@
                     <th>Uraian</th>
                     <th>Qty</th>
                     <th>Harga</th>
-                    <?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "<th>Disc</th>" : "" ?>
+                    <?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "<th>Disc</th>" : "" ?>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -357,87 +323,59 @@
                     $no = 1;
                     $huruf  = "A";
                     $html_items = "";
-                    $discShow = array_filter($detail, fn($item) => $item->disc > 0);
+                    $discShow = array_filter($detail, fn($item) => $item->InvDetailDisc > 0);
                     foreach($detail as $item){
 
-                        $arr_varian = json_decode($item->varian);
+                        $arr_varian = json_decode($item->InvDetailVarian);
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
                            if($varian->varian == "vendor") continue;
 
                             $arr_badge .= '<br><span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>'; 
                         }
-                        if($item->type == "product"){
+                        if($item->InvDetailType == "product"){
                             $html_items .= '
                             <tr> 
                                 <td class="td-center">'.$no.'</td>
-                                <td class="ps-2">'.$item->text.$arr_badge.'</td>
-                                <td class="td-center">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</td>
-                                <td class="td-center">Rp. '.number_format($item->harga, 0, ',', '.').'</td>
-                                '.($discShow ? "<td class='td-center'>Rp. ".number_format($item->disc, 0, ',', '.')."</td>" : "").'
-                                <td class="td-center">Rp. '.number_format($item->total, 0, ',', '.').'</td>
+                                <td class="ps-2">'.$item->InvDetailText.$arr_badge.'</td>
+                                <td class="td-center">'.number_format($item->InvDetailQty, 2, ',', '.').' '.$item->InvDetailSatuanText.'</td>
+                                <td class="td-center">Rp. '.number_format($item->InvDetailPrice, 0, ',', '.').'</td>
+                                '.($discShow ? "<td class='td-center'>Rp. ".number_format($item->InvDetailDisc, 0, ',', '.')."</td>" : "").'
+                                <td class="td-center">Rp. '.number_format($item->InvDetailTotal, 0, ',', '.').'</td>
                             </tr>';
                             $no++;
                         }else{
                             
                           
                             $html_items .= '    <tr>
-                                                    <td class="td-group" colspan="'. ($discShow ? 6 : 5).'">'.$huruf.'. BARANG</td>
+                                                    <td class="td-group" colspan="'. ($discShow ? 6 : 5).'">'.$huruf.'. '.$item->InvDetailText.'</td>
                                                 </tr>';
                             $huruf++;
                             $no = 1;
                         }
                     }
                     echo $html_items;
-                ?>
-
-                <!-- <tr>
-                    <td class="td-group" colspan="6">A. BARANG</td>
-                </tr>
-                <tr> 
-                    <td class="td-center">1</td>
-                    <td class="ps-2">Bata Belanda<br>Ukuran. 12 x 12 x 12cm</td>
-                    <td class="td-center">10 Pcs</td>
-                    <td class="td-center">Rp. 10.000</td>
-                    <td class="td-center">Rp. 0</td>
-                    <td class="td-center">Rp. 100.000</td>
-                </tr>
-                <tr> 
-                    <td class="td-center">2</td>
-                    <td class="ps-2">Bata Belanda<br>Ukuran. 12 x 12 x 12cm</td>
-                    <td class="td-center">10 Pcs</td>
-                    <td class="td-center">Rp. 10.000</td>
-                    <td class="td-center">Rp. 0</td>
-                    <td class="td-center">Rp. 100.000</td>
-                </tr>
-                <tr> 
-                    <td class="td-center">3</td>
-                    <td class="ps-2">Bata Belanda<br>Ukuran. 12 x 12 x 12cm</td>
-                    <td class="td-center">10 Pcs</td>
-                    <td class="td-center">Rp. 10.000</td>
-                    <td class="td-center">Rp. 0</td>
-                    <td class="td-center">Rp. 100.000</td>
-                </tr> -->
+                ?> 
             </tbody>
             <tfoot>
                 <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "5" : "4" ?>">Sub Total</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($project->subtotal, 0, ',', '.') ?></td>
+                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "5" : "4" ?>">Sub Total</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($project->InvSubTotal, 0, ',', '.') ?></td>
                 </tr>
-                <tr style="<?= $project->discitemtotal > 0 ? "" : "display:none;" ?>">
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "5" : "4" ?>">Disc Item</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($project->discitemtotal, 0, ',', '.') ?></td>
+                <tr style="<?= $project->InvDiscItemTotal > 0 ? "" : "display:none;" ?>">
+                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "5" : "4" ?>">Disc Item</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($project->InvDiscItemTotal, 0, ',', '.') ?></td>
                 </tr> 
-                <tr style="<?= $project->disctotal > 0 ? "" : "display:none;" ?>">
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "5" : "4" ?>">Disc</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($project->disctotal, 0, ',', '.') ?></td>
+                <tr style="<?= $project->InvDiscTotal > 0 ? "" : "display:none;" ?>">
+                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "5" : "4" ?>">Disc</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($project->InvDiscTotal, 0, ',', '.') ?></td>
                 </tr>
                 <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "5" : "4" ?>">Grand Total</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($project->grandtotal, 0, ',', '.') ?></td>
+                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "5" : "4" ?>">Grand Total</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($project->InvGrandTotal, 0, ',', '.') ?></td>
                 </tr>
                 <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "6" : "5" ?>">DISIAPKAN OLEH : ADMIN<br>
+                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "6" : "5" ?>">DISIAPKAN OLEH : ADMIN<br>
                         DIRECT CONTACT : 0852-1795-2625<br>
                         BATA REGULER JAKARTA</td> 
                 </tr>
@@ -445,7 +383,7 @@
         </table>
         <div style="padding-left:20px">
             Term and Condition :   
-            <?= $project->detail ?> 
+            <?= $project->TemplateFooterDetail ?> 
         </div>
     </div> 
 </body>

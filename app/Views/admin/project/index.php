@@ -257,7 +257,7 @@
                 { data: "head_mobile",orderable: false ,  "title": ""},  
                 { data: "date_time",orderable: false  , className:"text-center",'visible' : false }, 
                 { data: "customer" ,orderable: false,'visible' : false  },  
-                { data: "admin" ,orderable: false ,'visible' : false }, 
+                { data: "ProjectAdmin" ,orderable: false ,'visible' : false }, 
                 { data: "status" ,orderable: false,'visible' : false },  
                 { data: "action" ,orderable: false , className:"action-td",'visible' : false }, 
             ],
@@ -269,7 +269,7 @@
         $('#table-project').find("thead").hide();
         $('#table-project').on( 'draw.dt', function (e) { 
             $(".project-menu").each(function(idx){  
-                var id = $("#table-project").DataTable().data()[idx]["project_id"];
+                var id = $("#table-project").DataTable().data()[idx]["ProjectId"];
                 $(".menu-item[data-id='" + id +"']").click(function(){
                     if($(this).hasClass("selected")){
                         $(this).removeClass("selected");
@@ -316,7 +316,7 @@
                 { data: "store",orderable: false },  
                 { data: "date_time",orderable: false  , className:"text-center"}, 
                 { data: "customer" ,orderable: false },  
-                { data: "admin" ,orderable: false}, 
+                { data: "ProjectAdmin" ,orderable: false}, 
                 { data: "status" ,orderable: false},  
                 { data: "action" ,orderable: false , className:"action-td"}, 
             ],
@@ -352,9 +352,9 @@
                 table.row(this).child(data.html,'child p-0').show(); 
                 $('div.project-detail', table.row(this).child()).slideDown();  
 
-                loader_data_project(data.project_id,'survey');
+                loader_data_project(data.ProjectId,'survey');
 
-                $( ".btn-side-menu[data-id='" + data.project_id+ "']" ).click(function(){
+                $( ".btn-side-menu[data-id='" + data.ProjectId+ "']" ).click(function(){
                     var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
                     if($(parent).hasClass("hide")){
                         $(parent).removeClass("hide");
@@ -364,11 +364,11 @@
                         $(this).find("i").addClass("fa-rotate-180");
                     } 
                 }); 
-                $( ".menu-item[data-id='" + data.project_id+ "']" ).click(function(){
+                $( ".menu-item[data-id='" + data.ProjectId+ "']" ).click(function(){
                     $(this).parent().find(".selected").removeClass("selected")
                     $(this).addClass("selected") 
 
-                    loader_data_project(data.project_id,$(this).data("menu")) 
+                    loader_data_project(data.ProjectId,$(this).data("menu")) 
                 });   
                 
             } 
@@ -383,22 +383,22 @@
     })
 
 
-    loader_data_project = function(project_id,type){ 
+    loader_data_project = function(ProjectId,type){ 
         
-        $(".tab-content[data-id='"+ project_id+"']").hide() 
-        $(".loading-content[data-id='"+ project_id+"']").show() 
+        $(".tab-content[data-id='"+ ProjectId+"']").hide() 
+        $(".loading-content[data-id='"+ ProjectId+"']").show() 
         $.ajax({ 
             dataType: "json",
             method: "POST",
             url: "<?= base_url() ?>action/get-data-project-tab", 
             data:{
                 "type":type,
-                "project_id":project_id, 
+                "ProjectId":ProjectId, 
             },
             success: function(data) {       
                 if(data["status"]===true){ 
-                    $(".tab-content[data-id='"+ project_id+"']").html(data["html"])  
-                    $("#tab-content-project-" + project_id).html(data["html"])  
+                    $(".tab-content[data-id='"+ ProjectId+"']").html(data["html"])  
+                    $("#tab-content-project-" + ProjectId).html(data["html"])  
                 }else{
                     Swal.fire({
                         icon: 'error',
@@ -406,8 +406,8 @@
                         confirmButtonColor: "#3085d6", 
                     });
                 }
-                $(".tab-content[data-id='"+ project_id+"']").show() 
-                $(".loading-content[data-id='"+ project_id+"']").hide()
+                $(".tab-content[data-id='"+ ProjectId+"']").show() 
+                $(".loading-content[data-id='"+ ProjectId+"']").hide()
                
             },
             error : function(xhr, textStatus, errorThrown){   
@@ -433,8 +433,58 @@
             }
         });
     }; 
+    edit_click = function(id,el){ 
+        $.ajax({ 
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project/" +id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-project").modal("show"); 
+            },
+            fail: function(xhr, textStatus, errorThrown){
+                alert('request failed');
+            }
+        });
+    }; 
+    var isProcessingDelete;
+    delete_click = function(id,el){
+        // INSERT LOADER BUTTON
+        if (isProcessingDelete) {
+            return;
+        }  
+        isProcessingDelete = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus project ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-project/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        table.ajax.reload(null, false).responsive.recalc().columns.adjust();
+                    }, 
+                });
+            }
+            isProcessingDelete = false;
+            $(el).html(old_text);
+        });
+    }  
     /* 
         PROJECT SPH / PENAWARAN
     */

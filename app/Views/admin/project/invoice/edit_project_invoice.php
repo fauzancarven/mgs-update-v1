@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body"> 
                 <div class="row"> 
-                    <div class="col-lg-6 col-12 my-1">
+                    <div class="col-lg-6 col-12 my-1 mb-2">
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
                                 <span class="label-dialog">Customer</span>
@@ -21,24 +21,24 @@
                             </div>
                         </div> 
                         <div class="row align-items-center mt-2">
-                            <label class="col-sm-2 col-form-label">Nama</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->code ?> - <?= $customer->name ?> <?= $customer->company == "" ? "" : " ( " . $customer->company . " ) "; ?></label> 
+                            <label class="col-2 col-form-label">Nama</label>
+                            <label class="col-10  text-end fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
                         </div> 
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Telp</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->telp1 ?> / <?= $customer->telp2 == "" ? "" : $customer->telp2 ?></label> 
+                            <label class="col-2 col-form-label">Telp</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerTelp1 ?> / <?= $customer->CustomerTelp2 == "" ? "" : $customer->CustomerTelp2 ?></label> 
                         </div> 
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Email</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->email ?></label> 
+                            <label class="col-2 col-form-label">Email</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerEmail ?></label> 
                         </div>  
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Instagram</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->instagram ?></label> 
+                            <label class="col-2 col-form-label">Instagram</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerInstagram ?></label> 
                         </div>  
                         <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Alamat</label>
-                            <label class="col-sm-10 fw-bold"><?= $customer->address ?></label> 
+                            <label class="col-2 col-form-label">Alamat</label>
+                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerAddress ?></label> 
                         </div> 
                     </div>  
                     <div class="col-lg-6 col-12 my-1">   
@@ -50,32 +50,21 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->code ?>" disabled>
+                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->InvCode ?>" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphRef1" class="col-sm-2 col-form-label">Ref</label>
-                            <div class="col-sm-10">
-                                <div class="input-group input-group-sm">  
-                                    <select class="form-select form-select-sm" id="SphRef1" name="SphRef1"  style="width:90%" disabled>
-                                        <option value="0" selected>No Data Selected</option>
-                                    </select> 
-                                    <button class="btn btn-primary btn-sm" type="button" style="width:10%" onclick="search_ref_penawaran(<?= $project->id ?>)" disabled> 
-                                        <i class="fa-solid fa-search"></i> 
-                                    </button>
-                                </div> 
+                            <div class="col-sm-10"> 
+                                <select class="form-select form-select-sm" id="SphRef1" name="SphRef1"  style="width:100%" >
+                                    <option value="0" selected>No Data Selected</option>
+                                </select>  
                             </div> 
-                        </div>   
+                        </div>  
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
                             <div class="col-sm-10">
                                 <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphStore" class="col-sm-2 col-form-label">Toko</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphStore" name="SphStore" placeholder="Pilih Toko" style="width:100%"></select>  
                             </div>
                         </div>  
                         <div class="row mb-1 align-items-center mt-2">
@@ -87,7 +76,7 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphAddress" class="col-sm-2 col-form-label">Alamat Project</label>
                             <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $project->address ?></textarea>
+                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $project->InvAddress ?></textarea>
                             </div>
                         </div> 
                     </div>   
@@ -336,37 +325,23 @@
                                 <span class="label-dialog">Term and Condition </span> 
                             </div>
                         </div>   
-                        <div class="card " style="min-height:50px;">
+                        <div class="card template-footer" style="min-height:50px;">
                             <div class="card-body mx-2 p-2 bg-light">
-                                <div class="row mb-1 align-items-center mt-2">
-                                    <label for="SphAdmin" class="col-sm-2 col-form-label">Template</label>
-                                    <div class="col-sm-5">
-                                        <select class="form-select form-select-sm" id="SphFormatFooter" name="SphFormatFooter" placeholder="Pilih Format" style="width:100%"></select>  
+                                <div class="row mb-1 align-items-center mt-2"> 
+                                    <div class="col-7">
+                                        <select class="form-select form-select-sm" name="Select" placeholder="Pilih Format" style="width:100%"></select>  
                                     </div>
                                     <div class="col-5">
-                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="simpan" aria-label="name: simpan" id="savequillas"><i class="fa-solid fa-save pe-2"></i>Save As</a>
-                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="simpan" aria-label="name: simpan" id="savequill"><i class="fa-solid fa-save pe-2"></i>Save</a>
-                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit" id="editquill"><i class="fa-solid fa-pencil pe-2"></i>Edit</a>
+                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="simpanAs" aria-label="name: simpan As"><i class="fa-solid fa-save pe-2"></i>Save AS</a>
+                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="simpan" aria-label="name: simpan"><i class="fa-solid fa-save pe-2"></i>Save</a>
+                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-pencil pe-2"></i>Edit</a>
                                     </div>
                                 </div>    
-                                <div class="row mb-1 align-items-center mt-2">
-                                    <label for="message" class="col-sm-2 col-form-label">Term Of Condition</label>
-                                    <div class="col-sm-10">
-                                        <div id="toolbar" role="toolbar" class="position-relative">
-                                            <span class="ql-formats">
-                                                <button type="button" class="ql-bold" aria-pressed="false" aria-label="bold"><i class="fa-solid fa-bold"></i></button>
-                                                <button type="button" class="ql-italic" aria-pressed="false" aria-label="italic"><i class="fa-solid fa-italic"></i></button>
-                                                <button type="button" class="ql-underline" aria-pressed="false" aria-label="underline"><i class="fa-solid fa-underline"></i></button>
-                                            </span>
-                                            <span class="ql-formats">
-                                                <button type="button" class="ql-list" aria-pressed="false" value="ordered" aria-label="list: ordered"><i class="fa-solid fa-list-ol"></i></button>
-                                                <button type="button" class="ql-list" aria-pressed="false" value="bullet" aria-label="list: bullet"><i class="fa-solid fa-list-ul"></i></button>
-                                            </span>
-                                           
-                                        </div>  
-                                        <div id="message" class="border"></div> 
+                                <div class="row mb-1 align-items-center mt-2"> 
+                                    <div class="col-12"> 
+                                        <div name="EditFooterMessage" class="border"></div> 
                                     </div>
-                                </div>  
+                                </div>    
                             </div>  
                         </div>  
                     </div>  
@@ -431,45 +406,13 @@
 
     $('#SphDate').daterangepicker({
         "singleDatePicker": true,
-        "startDate": moment('<?= $project->date ?>'),
-        "endDate":  moment('<?= $project->date ?>'),
+        "startDate": moment('<?= $project->InvDate ?>'),
+        "endDate":  moment('<?= $project->InvDate ?>'),
         locale: {
             format: 'DD MMMM YYYY'
         }
     });
-    
-    $("#SphStore").select2({
-        dropdownParent: $('#modal-edit-invoice .modal-content'),
-        placeholder: "Pilih Toko",
-        ajax: {
-            url: "<?= base_url()?>select2/get-data-store",
-            dataType: 'json',
-            type:"POST",
-            delay: 250,
-            data: function (params) {
-                // CSRF Hash
-                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
-                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
-
-                return {
-                    searchTerm: params.term, // search term
-                    [csrfName]: csrfHash // CSRF Token
-                };
-            },
-            processResults: function (response) {
-    
-                // Update CSRF Token
-                $('.txt_csrfname').val(response.token); 
-
-                return {
-                    results: response.data
-                };
-            },
-            cache: true
-        }, 
-    });
-    $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
-
+     
     $("#SphAdmin").select2({
         dropdownParent: $('#modal-edit-invoice .modal-content'),
         placeholder: "Pilih Admin",
@@ -536,7 +479,7 @@
                         type: "category",
                         text: name,
                         qty: 0,
-                        hargajual: 0,
+                        price: 0,
                         disc: 0,
                         total: 0, 
                         varian: [], 
@@ -742,7 +685,7 @@
 
     
     function grand_total_harga(){
-        var total = data_detail_item.reduce((acc, current) => acc + current.hargajual * current.qty, 0);
+        var total = data_detail_item.reduce((acc, current) => acc + current.price * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
         var grandtotal =  total - discitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
 
@@ -943,9 +886,9 @@
                 }).on("select2:select", function(e) {
                     var data = e.params.data;  
                     data_detail_item[$(this).data("id")]["satuan_id"] = data.id
-                    data_detail_item[$(this).data("id")]["satuantext"]= data.text
+                    data_detail_item[$(this).data("id")]["satuan_text"]= data.text
                 });
-                if(data_detail_item[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(data_detail_item[i]["satuantext"] , data_detail_item[i]["satuan_id"], true, true)).trigger('change');  
+                if(data_detail_item[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(data_detail_item[i]["satuan_text"] , data_detail_item[i]["satuan_id"], true, true)).trigger('change');  
                 if(data_detail_item[i]["id"] === "0")  $(`#select-satuan-${i}`).prop("disabled",false)
                 //event harga
                 inputharga[i] = new Cleave(`#input-harga-${i}`, {
@@ -954,9 +897,9 @@
                     numeralDecimalScale:0,
                     numeralThousandGroupStyle:"thousand"
                 }); 
-                inputharga[i].setRawValue(data_detail_item[i]["hargajual"]);
+                inputharga[i].setRawValue(data_detail_item[i]["price"]);
                 $(`#input-harga-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["hargajual"] = inputharga[$(this).data("id")].getRawValue();
+                    data_detail_item[$(this).data("id")]["price"] = inputharga[$(this).data("id")].getRawValue();
                     if($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0) 
                     total_harga($(this).data("id"));
                 });   
@@ -1028,236 +971,258 @@
     });
  
 
-
-    var quill = new Quill('#message',  {
-        debug: 'false',
-        modules: {
-            toolbar: '#toolbar',
-        }, 
-        theme: "bubble"//'snow'
-    }); 
-    quill.enable(false);
-    quill.root.style.background = '#F7F7F7'; // warna disable
-    quill.setContents(JSON.parse(<?= JSON_ENCODE($template->delta)?>));  
-
-    $("#savequill").hide();
-    $("#savequillas").hide();
-    $("#savequill").click(function(){ 
-        if($("#SphFormatFooter").select2("data")[0]["id"] == $("#SphFormatFooter").select2("data")[0]["text"]){
-            $.ajax({ 
-                dataType: "json",
-                method: "POST",
-                url: "<?= base_url() ?>action/add-data-template-footer", 
-                data:{
-                    "name":$("#SphFormatFooter").select2("data")[0]["text"] ,
-                    "detail": quill.getSemanticHTML(), 
-                    "delta": quill.getContents(), 
-                },
-                success: function(data) {    
-                    //console.log(data); 
-                    if(data["status"]===true){     
-                        $("#savequill").hide();
-                        $("#savequillas").hide();
-                        $("#editquill").show();
-                        quill.enable(false);
-                        quill.root.style.background = '#F7F7F7'; // warna disable    
-                    }
-                },
-                error : function(xhr, textStatus, errorThrown){   
-                    Swal.fire({
-                        icon: 'error',
-                        text: xhr["responseJSON"]['message'], 
-                        confirmButtonColor: "#3085d6", 
-                    });
-                }
-            }); 
-        }else{
-            $.ajax({ 
-                dataType: "json",
-                method: "POST",
-                url: "<?= base_url() ?>action/edit-data-template-footer/" + $("#SphFormatFooter").select2("data")[0]["id"] , 
-                data:{
-                    "name": $("#SphFormatFooter").select2("data")[0]["text"] ,
-                    "detail": quill.getSemanticHTML(), 
-                    "delta": quill.getContents(), 
-                },
-                success: function(data) {    
-                    //console.log(data); 
-                    if(data["status"]===true){     
-                        $("#savequill").hide();
-                        $("#savequillas").hide();
-                        $("#editquill").show();
-                        quill.enable(false);
-                        quill.root.style.background = '#F7F7F7'; // warna disable    
-                    }
-                },
-                error : function(xhr, textStatus, errorThrown){   
-                    Swal.fire({
-                        icon: 'error',
-                        text: xhr["responseJSON"]['message'], 
-                        confirmButtonColor: "#3085d6", 
-                    });
-                }
-            }); 
-        }
-    })
-    $("#savequillas").click(function(){  
-        $("#modal-edit-invoice").modal("hide"); 
-        Swal.fire({
-            title: 'Simpan Template',
-            input: 'text',
-            buttonsStyling: false,
-            showCancelButton: true,
-            showCancelButton: true,
-            customClass: {
-                confirmButton: 'btn btn-primary mx-1',
-                cancelButton: 'btn btn-secondary mx-1',
-                loader: 'custom-loader',
-                input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
-            },
-            backdrop: true,
-            confirmButtonText: "Simpan",
-            loaderHtml: '<div class="spinner-border text-primary"></div>',
-            preConfirm: async (name) => {
-                try {  
-                    $.ajax({ 
-                        dataType: "json",
-                        method: "POST",
-                        url: "<?= base_url() ?>action/add-data-template-footer", 
-                        data:{
-                            "name": name ,
-                            "detail": quill.getSemanticHTML(), 
-                            "delta": quill.getContents(), 
-                        },
-                        success: function(data) {    
-                            //console.log(data); 
-                            if(data["status"]===true){    
-                                $('#SphFormatFooter').append(new Option(data["data"]["name"] ,data["data"]["id"], true, true)).trigger('change');
-                                $("#savequill").hide();
-                                $("#savequillas").hide();
-                                $("#editquill").show();
-                                quill.enable(false);
-                                quill.root.style.background = '#F7F7F7'; // warna disable    
-                            }
-                        },
-                        error : function(xhr, textStatus, errorThrown){   
-                            Swal.fire({
-                                icon: 'error',
-                                text: xhr["responseJSON"]['message'], 
-                                confirmButtonColor: "#3085d6", 
-                            });
-                        }
-                    }); 
-                } catch (error) {
-                    Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
-                }
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {    
-            $("#savequill").hide();
-            $("#savequillas").hide();
-            $("#editquill").show();
-            quill.enable(false);
-            quill.root.style.background = '#F7F7F7'; // warna disable
-            $("#modal-edit-invoice").modal("show");
+    var quill = [];  
+    $(".template-footer").each(function(index, el){
+        var message = $(el).find("[name='EditFooterMessage']")[0];
+        var type = "invoice"; 
+        quill[type] = new Quill(message,  {
+            debug: 'false',
+            modules: {
+                toolbar: [['bold', 'italic', 'underline', 'strike'],[{ 'list': 'ordered'}]],
+            },  
+            theme: "bubble"//'snow'
         }); 
-    })
-    $("#editquill").click(function(){
+        quill[type].enable(false);
+        quill[type].root.style.background = '#F7F7F7'; // warna disable  
+        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($template->TemplateFooterDelta)?>));  
 
-        $("#editquill").hide();
-        $("#savequill").show();
-        $("#savequillas").show();
-        quill.enable(true);
-        quill.root.style.background = '#FFFFFF'; // warna enable
+        const btnsaveas = $(el).find("a[value='simpanAs']")[0];
+        const btnsave = $(el).find("a[value='simpan']")[0];
+        const btnedit = $(el).find("a[value='edit']")[0];
+        const selectoption = $(el).find("select")[0];
 
-    }) 
-    $("#SphFormatFooter").select2({
-        dropdownParent: $('#modal-edit-invoice .modal-content'),
-        placeholder: "Pilih Template",
-        tags:true,
-        ajax: {
-            url: "<?= base_url()?>select2/get-data-template-footer",
-            dataType: 'json',
-            type:"POST",
-            delay: 250,
-            data: function (params) {
-                // CSRF Hash
-                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
-                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+        $(btnsave).hide();
+        $(btnsaveas).hide();
+        $(btnedit).show();
+ 
+        $(selectoption).select2({
+            dropdownParent: $('#modal-edit-invoice .modal-content'),
+            placeholder: "Pilih Template",
+            tags:true,
+            ajax: {
+                url: "<?= base_url()?>select2/get-data-template-footer/" + type,
+                dataType: 'json',
+                type:"POST",
+                delay: 250,
+                data: function (params) {
+                    // CSRF Hash
+                    var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                    var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
+                    return {
+                        searchTerm: params.term, // search term
+                        [csrfName]: csrfHash // CSRF Token
+                    };
+                },
+                processResults: function (response) {
+        
+                    // Update CSRF Token
+                    $('.txt_csrfname').val(response.token); 
 
+                    return {
+                        results: response.data
+                    };
+                },
+                cache: true
+            }, 
+            createTag: function(params) {
                 return {
-                    searchTerm: params.term, // search term
-                    [csrfName]: csrfHash // CSRF Token
+                    id: params.term,
+                    text: params.term, 
+                    tags: true // menandai tag baru
                 };
             },
-            processResults: function (response) {
-    
-                // Update CSRF Token
-                $('.txt_csrfname').val(response.token); 
-
-                return {
-                    results: response.data
-                };
+            createTagText: function(params) {
+                return "Tambah '" + params.term + "'";
+            },  
+            templateResult: function(params) {
+                if (params.newTag) {
+                    return "Tambah '" + params.text + "'";
+                }
+                if (params.loading) return params.text; 
+                return params.text;
+                //return params.text;
             },
-            cache: true
-        }, 
-        createTag: function(params) {
-            return {
-                id: params.term,
-                text: params.term, 
-                tags: true // menandai tag baru
-            };
-        },
-        createTagText: function(params) {
-            return "Tambah '" + params.term + "'";
-        },  
-        templateResult: function(params) {
-            if (params.newTag) {
-                return "Tambah '" + params.text + "'";
+            templateSelection: function(params) {
+                return params.text;
+            }, 
+            //escapeMarkup: function(m) { return m; }
+        }).on("select2:select", function(e) {  
+            var data = e.params.data;    
+            //console.log(data);
+            if (e.params.data.tags) { 
+                quill[type].setContents(); 
+                
+                $(btnsave).show();
+                $(btnsaveas).show();
+                $(btnedit).hide();
+ 
+                quill[type].enable(true);
+                quill[type].root.style.background = '#FFFFFF'; // warna enable
+            } else { 
+                quill[type].setContents(JSON.parse(data.delta));  
+                
+                $(btnsave).hide();
+                $(btnsaveas).hide();
+                $(btnedit).show(); 
+
+                quill[type].enable(false);
+                quill[type].root.style.background = '#F7F7F7'; // warna enable
+            } 
+        }); 
+        $(selectoption).append(new Option("<?=$template->TemplateFooterName ?>" , "<?=$template->TemplateFooterId?>", true, true)).trigger('change'); 
+
+        $(btnsave).click(function(){ 
+            if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
+                $.ajax({ 
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/add-data-template-footer", 
+                    data:{
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
+                    },
+                    success: function(data) {    
+                        //console.log(data); 
+                        if(data["status"]===true){     
+                          
+                            $(btnsave).hide();
+                            $(btnsaveas).hide();
+                            $(btnedit).show(); 
+
+                            quill[type].enable(false);
+                            quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                        }
+                    },
+                    error : function(xhr, textStatus, errorThrown){   
+                        Swal.fire({
+                            icon: 'error',
+                            text: xhr["responseJSON"]['message'], 
+                            confirmButtonColor: "#3085d6", 
+                        });
+                    }
+                }); 
+            }else{
+                $.ajax({ 
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
+                    data:{
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
+                    },
+                    success: function(data) {    
+                        //console.log(data); 
+                        if(data["status"]===true){ 
+
+                            $(btnsave).hide();
+                            $(btnsaveas).hide();
+                            $(btnedit).show(); 
+
+                            quill[type].enable(false);
+                            quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                        }
+                    },
+                    error : function(xhr, textStatus, errorThrown){   
+                        Swal.fire({
+                            icon: 'error',
+                            text: xhr["responseJSON"]['message'], 
+                            confirmButtonColor: "#3085d6", 
+                        });
+                    }
+                }); 
             }
-            if (params.loading) return params.text; 
-            return params.text;
-            //return params.text;
-        },
-        templateSelection: function(params) {
-            return params.text;
-        }, 
-        //escapeMarkup: function(m) { return m; }
-    }).on("select2:select", function(e) {  
-        var data = e.params.data;    
-        //console.log(data);
-        if (e.params.data.tags) {
-            //console.log('Tag baru ditambahkan:', e.params.data.text);
-            quill.setContents(); 
-            $("#savequill").show();
-            $("#savequillas").hide();
-            $("#editquill").hide();
-            quill.enable(true);
-            quill.root.style.background = '#FFFFFF'; // warna enable
-        } else {
-            //console.log('select baru ditambahkan:', e.params.data.text); 
-            quill.setContents(JSON.parse(data.delta));  
-            
-            $("#savequill").hide();
-            $("#savequillas").hide();
-            $("#editquill").show();
-        }
-    }).on("change", function(e) {   
-        //console.log("change");
+        }) 
+        $(btnsaveas).click(function(){
+            $("#modal-edit-invoice").modal("hide"); 
+            Swal.fire({
+                title: 'Simpan Template',
+                input: 'text',
+                buttonsStyling: false,
+                showCancelButton: true,
+                showCancelButton: true,
+                customClass: {
+                    confirmButton: 'btn btn-primary mx-1',
+                    cancelButton: 'btn btn-secondary mx-1',
+                    loader: 'custom-loader',
+                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
+                },
+                backdrop: true,
+                confirmButtonText: "Simpan",
+                loaderHtml: '<div class="spinner-border text-primary"></div>',
+                preConfirm: async (name) => {
+                    try {  
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/add-data-template-footer", 
+                            data:{ 
+                                "TemplateFooterName": name ,
+                                "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                                "TemplateFooterDelta": quill[type].getContents(), 
+                                "TemplateFooterCategory": type, 
+                            },
+                            success: function(data) {    
+                                //console.log(data); 
+                                if(data["status"]===true){    
+                                    $(selectoption).append(new Option(data["data"]["TemplateFooterName"] ,data["data"]["TemplateFooterId"], true, true)).trigger('change'); 
+                                    
+                                    $(btnsave).hide();
+                                    $(btnsaveas).hide();
+                                    $(btnedit).show(); 
+
+                                    quill[type].enable(false);
+                                    quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                                }
+                            },
+                            error : function(xhr, textStatus, errorThrown){   
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: xhr["responseJSON"]['message'], 
+                                    confirmButtonColor: "#3085d6", 
+                                });
+                            }
+                        }); 
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {    
+                $(btnsave).hide();
+                $(btnsaveas).hide();
+                $(btnedit).show(); 
+
+                quill[type].enable(false);
+                quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                $("#modal-edit-invoice").modal("show");
+            }); 
+        })
+        $(btnedit).click(function(){
+
+            $(btnsave).show();
+            $(btnsaveas).show();
+            $(btnedit).hide();
+
+            quill[type].enable(true);
+            quill[type].root.style.background = '#FFFFFF'; // warna enable
+
+        }) 
     });
 
-    $('#SphFormatFooter').append(new Option("<?=$template->name ?>" , "<?=$template->id?>", true, true)).trigger('change'); 
-    $("#editquill").show();
-
+ 
     $("#btn-edit-penawaran").click(function(){
-        if($("#SphFormatFooter").val() == null){
+        if($($(".template-footer").find("select")[0]).val() == null){
             Swal.fire({
                 icon: 'error',
                 text: 'Template harus dipilih...!!!', 
                 confirmButtonColor: "#3085d6", 
             }).then(function(){ 
                 swal.close();
-                setTimeout(() => $("#SphFormatFooter").select2("open"), 300); 
+                setTimeout(() => $($(".template-footer").find("select")[0]).select2("open"), 300); 
             }) ;
             return; 
         }    
@@ -1284,49 +1249,45 @@
         }
 
         var header = {  
-            date: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"), 
-            date_create: moment().format("YYYY-MM-DD"), 
-            time_create: moment().format("HH:m:s"), 
-            storeid: $("#SphStore").val(), 
-            ref: <?= $project->id ?>, 
-            admin: $("#SphAdmin").val(), 
-            customerid: <?=$customer->id?>, 
-            address: $("#SphAddress").val(), 
-            templateid: $("#SphFormatFooter").val(), 
-            subtotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
-            discitemtotal: $("#SphDiscItemTotal").val().replace(/[^0-9]/g, ''), 
-            disctotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
-            grandtotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
+            InvDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
+            InvRef1: $("#SphRef1").val(), 
+            InvAdmin: $("#SphAdmin").val(),  
+            InvAddress: $("#SphAddress").val(), 
+            TemplateId: $($(".template-footer").find("select")[0]).val(), 
+            InvSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
+            InvDiscItemTotal: $("#SphDiscItemTotal").val().replace(/[^0-9]/g, ''), 
+            InvDiscTotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
+            InvGrandTotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){  
             if(data_detail_item[i]["type"] == "product"){ 
                 detail.push({
-                    produkid: data_detail_item[i]["produkid"], 
-                    text: data_detail_item[i]["text"],
-                    type: data_detail_item[i]["type"], 
-                    satuan_id: data_detail_item[i]["satuan_id"], 
-                    satuantext: data_detail_item[i]["satuantext"],
-                    qty: data_detail_item[i]["qty"], 
-                    harga: data_detail_item[i]["hargajual"], 
-                    disc: data_detail_item[i]["disc"], 
-                    total: data_detail_item[i]["total"], 
-                    group: data_detail_item[i]["group"], 
-                    varian: data_detail_item[i]["varian"], 
+                    ProdukId: data_detail_item[i]["produkid"], 
+                    InvDetailText: data_detail_item[i]["text"],
+                    InvDetailType: data_detail_item[i]["type"], 
+                    InvDetailSatuanId: data_detail_item[i]["satuan_id"], 
+                    InvDetailSatuanText: data_detail_item[i]["satuan_text"],
+                    InvDetailQty: data_detail_item[i]["qty"], 
+                    InvDetailPrice: data_detail_item[i]["price"], 
+                    InvDetailDisc: data_detail_item[i]["disc"], 
+                    InvDetailTotal: data_detail_item[i]["total"], 
+                    InvDetailGroup: data_detail_item[i]["group"], 
+                    InvDetailVarian: data_detail_item[i]["varian"], 
                 });
             }else{
                 detail.push({
-                    produkid: data_detail_item[i]["produkid"], 
-                    text: data_detail_item[i]["text"],
-                    type: data_detail_item[i]["type"], 
-                    satuan_id: "", 
-                    satuantext: "", 
-                    qty: 0,
-                    harga: 0, 
-                    disc: 0, 
-                    total: 0, 
-                    group: "", 
-                    varian: [], 
+                    ProdukId: data_detail_item[i]["produkid"], 
+                    InvDetailText: data_detail_item[i]["text"],
+                    InvDetailType: data_detail_item[i]["type"], 
+                    InvDetailSatuanId: "", 
+                    InvDetailSatuanText: "", 
+                    InvDetailQty: 0,
+                    InvDetailPrice: 0, 
+                    InvDetailDisc: 0, 
+                    InvDetailTotal: 0, 
+                    InvDetailGroup: "", 
+                    InvDetailVarian: [], 
                 });
             }
         }
@@ -1334,7 +1295,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/edit-data-invoice/<?= $project->id ?>", 
+            url: "<?= base_url() ?>action/edit-data-invoice/<?= $project->InvId ?>", 
             data:{
                 "header":header,
                 "detail":detail, 
@@ -1348,7 +1309,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-invoice").modal("hide");  
-                        loader_data_project(<?= $project->ref ?>,"invoice") 
+                        loader_data_project(<?= $project->InvRef ?>,"invoice") 
                     });
                   
                 }else{

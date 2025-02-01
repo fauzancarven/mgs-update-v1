@@ -15,7 +15,7 @@ class VendorcategoryModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['name'];
+    protected $allowedFields = ['VendorCategoryName'];
 
     // Dates
     protected $useTimestamps = false;

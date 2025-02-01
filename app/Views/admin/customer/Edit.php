@@ -19,7 +19,7 @@
                         <div class="row mb-1 align-items-center mt-0 mt-md-2 ">
                             <label for="MsCustomerCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="MsCustomerCode" name="MsCustomerCode" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->code ?>" disabled>
+                                <input id="MsCustomerCode" name="MsCustomerCode" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->CustomerCode ?>" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
@@ -31,19 +31,19 @@
                         <div class="row mb-1 align-items-center">
                             <label for="MsCustomerCompany" class="col-sm-2 col-form-label">Perusahaan</label>
                             <div class="col-sm-10">
-                                <input id="MsCustomerCompany" name="MsCustomerCompany" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->company ?>">
+                                <input id="MsCustomerCompany" name="MsCustomerCompany" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->CustomerCompany ?>">
                             </div>
                         </div>
                         <div class="row mb-1 align-items-center">
                             <label for="MsCustomerName" class="col-sm-2 col-form-label">Nama<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="MsCustomerName" name="MsCustomerName" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->name ?>">
+                                <input id="MsCustomerName" name="MsCustomerName" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->CustomerName ?>">
                             </div>
                         </div>
                         <div class="row mb-1 align-items-center">
                             <label for="MsCustomerRemarks" class="col-sm-2 col-form-label">Catatan</label>
                             <div class="col-sm-10">
-                                <input id="MsCustomerRemarks" name="MsCustomerRemarks" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->comment ?>">
+                                <input id="MsCustomerRemarks" name="MsCustomerRemarks" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->CustomerComment ?>">
                             </div>
                         </div>
                     </div> 
@@ -52,21 +52,21 @@
                         <div class="row mb-1 align-items-center mt-0 mt-md-2">
                             <label for="MsCustomerTelp1" class="col-sm-2 col-form-label">Telp.</label>
                             <div class="col-sm-10 d-flex justify-content-between align-items-center">
-                                <input id="MsCustomerTelp1" name="MsCustomerTelp1" type="text" class="form-control form-control-sm input-form input-phone" value="<?= $_customer->telp1 ?>">
+                                <input id="MsCustomerTelp1" name="MsCustomerTelp1" type="text" class="form-control form-control-sm input-form input-phone" value="<?= $_customer->CustomerTelp1 ?>">
                                 <span class="fw-bold px-2">/</span>
-                                <input id="MsCustomerTelp2" name="MsCustomerTelp2" type="text" class="form-control form-control-sm input-form input-phone" value="<?= $_customer->telp2 ?>">
+                                <input id="MsCustomerTelp2" name="MsCustomerTelp2" type="text" class="form-control form-control-sm input-form input-phone" value="<?= $_customer->CustomerTelp2 ?>">
                             </div> 
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="MsCustomerEmail" class="col-sm-2 col-form-label">Email</label>
                             <div class="col-sm-10">
-                                <input id="MsCustomerEmail" name="MsCustomerEmail" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->telp2 ?>">
+                                <input id="MsCustomerEmail" name="MsCustomerEmail" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->CustomerEmail ?>">
                             </div>
                         </div>
                         <div class="row mb-1 align-items-center">
                             <label for="MsCustomerInstagram" class="col-sm-2 col-form-label">Instagram</label>
                             <div class="col-sm-10">
-                                <input id="MsCustomerInstagram" name="MsCustomerInstagram" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->instagram ?>">
+                                <input id="MsCustomerInstagram" name="MsCustomerInstagram" type="text" class="form-control form-control-sm input-form" value="<?= $_customer->CustomerInstagram ?>">
                             </div>
                         </div>
                         <div class="row mb-1 align-items-center">
@@ -110,7 +110,7 @@
                         <div class="row mb-1 align-items-center">
                             <label for="MsCustomerAddress" class="col-sm-2 col-form-label">Alamat</label>
                             <div class="col-sm-10">
-                                <textarea id="MsCustomerAddress" name="MsCustomerAddress" type="text" class="form-control form-control-sm input-form" value="" placeholder="Nama jalan, gedung, no. rumah" ><?= $_customer->address ?></textarea>
+                                <textarea id="MsCustomerAddress" name="MsCustomerAddress" type="text" class="form-control form-control-sm input-form" value="" placeholder="Nama jalan, gedung, no. rumah" ><?= $_customer->CustomerAddress ?></textarea>
                             </div>
                         </div> 
                     </div> 
@@ -181,7 +181,7 @@
         });
     }   
 
-    var newOption = new Option("<?= $_customer->catname ?>" , "<?= $_customer->category ?>", true, true);
+    var newOption = new Option("<?= $_customer->CustomerCategoryName ?>" , "<?= $_customer->CustomerCategoryId ?>", true, true);
     $('#MsCustomerCategory').append(newOption).trigger('change'); 
     $('#MsCustomerCategory').select2("close");
 
@@ -422,7 +422,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/edit-data-customer/" + <?= $_customer->id ?>, 
+            url: "<?= base_url() ?>action/edit-data-customer/" + <?= $_customer->CustomerId ?>, 
             data:{
                 "code":$("#MsCustomerCode").val(),
                 "category":$("#MsCustomerCategory").val(),

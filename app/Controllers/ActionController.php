@@ -90,7 +90,7 @@ class ActionController extends BaseController
             $postData = $request->getPost(); 
             $models->insert($postData); 
 
-            $models->selectMax('id');
+            $models->selectMax('CustomerCategoryId');
             $query = $models->get()->getRow();
             echo json_encode(array("status"=>true,"data"=>$query));
         }
@@ -128,7 +128,19 @@ class ActionController extends BaseController
             $postData = $request->getPost(); 
             $models->insert($postData); 
 
-            $models->selectMax('id');
+            $models->selectMax('VendorId');
+            $query = $models->get()->getRow();
+            echo json_encode(array("status"=>true,"data"=>$query));
+        }
+    }
+    public function vendor_edit($id){
+        $request = Services::request();
+        $models = new VendorModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update($id, $postData); 
+
+            $models->where('VendorId',$id);
             $query = $models->get()->getRow();
             echo json_encode(array("status"=>true,"data"=>$query));
         }
@@ -165,11 +177,27 @@ class ActionController extends BaseController
         $models = new ProjectModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
-            $models->insert($postData); 
-            echo json_encode(array("status"=>true));
+            echo $models->insert_data_project($postData); 
         }
     }
     
+    public function project_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->update_data_project($postData,$id); 
+        }
+    }
+    public function project_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_project($id);  
+        }
+    }
+
     public function penawaran_add(){
         $request = Services::request();
         $models = new ProjectModel(); 
@@ -387,6 +415,16 @@ class ActionController extends BaseController
             echo $models->add_produk($postData); 
         }
     }
+    public function produk_delete($id){
+        $request = Services::request();
+        $models = new ProdukModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $models->delete_produk($id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+
+
     public function item_unit_add(){ 
         $request = Services::request();
         $models = new ProdukunitModel(); 

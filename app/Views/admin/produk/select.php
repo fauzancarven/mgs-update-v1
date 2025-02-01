@@ -52,6 +52,30 @@
 </div>  
 
 <script> 
+    // 'ProdukDetailId' =>  $result->ProdukDetailId,
+    // 'ProdukDetailBerat' => $result->ProdukDetailBerat,
+    // 'ProdukDetailSatuanId' => $result->ProdukDetailSatuanId,
+    // 'ProdukDetailSatuanText' => $result->ProdukSatuanCode,
+    // 'ProdukDetailPcsM2' => $result->ProdukDetailPcsM2,
+    // 'ProdukDetailHargaBeli' => $result->ProdukDetailHargaBeli,
+    // 'ProdukDetailHargaJual' => $result->ProdukDetailHargaJual,
+    // 'ProdukDetailVarian' =>  json_decode($result->ProdukDetailVarian),
+    // 'ProdukDetailRef' =>  json_decode($result->ProdukDetailVarian),
+    // var ProdukMaster = { 
+    //     "id": "0",
+    //     "produkid": "0",
+    //     "berat": "0",
+    //     "satuan_id": "0",
+    //     "satuantext": "",
+    //     "pcsM2": "", 
+    //     "varian": [],
+    //     "text" : "",
+    //     "group" : "", 
+    //     "total": 0,
+    //     "disc": 0,
+    //     "qty": 0,
+    //     "price": 0,
+    // }
 
     var selectharga = new Cleave('#select-harga', {
         numeral: true,
@@ -201,41 +225,49 @@
                 data: {
                     "varian": data_select_varian
                 }, 
-                success: function(data) {   
-                    selectharga.setRawValue(data["data"]["hargajual"]);
+                success: function(data) { 
+                    console.log(data);  
+                    selectharga.setRawValue(data["data"]["ProdukDetailHargaJual"]);
+
+                    data_select_produk = {
+                        "id": data["data"]["ProdukDetailId"],
+                        "produkid": data["data"]["ProdukDetailRef"],
+                        "varian": data_select_varian,
+                        "text" :  $("#select-produk").select2("data")[0]["text"],
+                        "group" :  $("#select-produk").select2("data")[0]["category"], 
+                        "berat": data["data"]["ProdukDetailBerat"],
+                        "satuan_id": data["data"]["ProdukDetailSatuanId"],
+                        "satuan_text": data["data"]["ProdukDetailSatuanText"],
+                        "pcsM2": data["data"]["ProdukDetailPcsM2"], 
+                        "price": selectharga.getRawValue(),
+                        "disc": selectdisc.getRawValue(),
+                        "qty":  selectqty.getRawValue(),
+                        "total": selecttotal.getRawValue(),
+                    }  
+
                     $("#select-harga").prop("disabled",true); 
                     $("#select-satuan").prop("disabled",true); 
                     $("#select-qty").prop("disabled",false); 
                     $("#select-disc").prop("disabled",false); 
-                    $('#select-satuan').append(new Option(data["data"]["satuantext"] , data["data"]["satuan_id"], true, true)).trigger('change');  
-                    
-                    data_select_produk = data["data"];
-                    data_select_produk["varian"] = data_select_varian;
-                    data_select_produk["hargajual"] = selectharga.getRawValue();
-                    data_select_produk["total"] = selecttotal.getRawValue();
-                    data_select_produk["disc"] = selectdisc.getRawValue();
-                    data_select_produk["qty"] = selectqty.getRawValue();  
-                    data_select_produk["text"] = $("#select-produk").select2("data")[0]["text"];
-                    data_select_produk["group"] =  $("#select-produk").select2("data")[0]["category"];
-                }   
+                    $('#select-satuan').append(new Option(data["data"]["ProdukDetailSatuanText"] , data["data"]["ProdukDetailSatuanId"], true, true)).trigger('change');   
+                }
             });
-        }else{
+        }else{  
             data_select_produk = {
-                "id": "0",
-                "produkid": "0",
-                "berat": "0",
-                "satuan_id": "0",
-                "satuantext": "",
-                "pcsM2": "",
-                "hargabeli": "0",
-                "hargajual": "0",
+                "id": 0,
+                "produkid": 0,
                 "varian": data_select_varian,
-                "text" :  $("#select-produk").select2("data")[0]["text"],
-                "group" :  "", 
-                "total": selectharga.getRawValue(),
+                "text" : $("#select-produk").select2("data")[0]["text"],
+                "group" : "", 
+                "berat": 0,
+                "satuan_id": 0,
+                "satuan_text": "",
+                "pcsM2": "", 
+                "price": selectharga.getRawValue(),
                 "disc": selectdisc.getRawValue(),
-                "qty": selectqty.getRawValue(),
-            } 
+                "qty":  selectqty.getRawValue(),
+                "total": selecttotal.getRawValue(),
+            }  
             $("#select-harga").prop("disabled",false); 
             $("#select-qty").prop("disabled",false); 
             $("#select-satuan").prop("disabled",false); 
@@ -262,7 +294,7 @@
             total_harga();
         }); 
         $("#select-harga").on("keyup",function(){ 
-            data_select_produk["hargajual"] = selectharga.getRawValue();
+            data_select_produk["price"] = selectharga.getRawValue();
             total_harga();
         }); 
         total_harga();
@@ -306,7 +338,7 @@
     }).on("select2:select", function(e) {
         var data = e.params.data;  
         data_select_produk["satuan_id"] = data.id
-        data_select_produk["satuantext"]= data.text
+        data_select_produk["satuan_text"]= data.text
     });
  
     select_satuan_add = function(){

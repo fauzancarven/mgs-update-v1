@@ -53,21 +53,30 @@ $routes->post('/action/delete-data-customer', 'ActionController::customer_delete
 /** ACCOUNT PROJECT */
 $routes->post('/action/get-data-project-tab', 'ActionController::project_tab', ['filter' => 'login']); 
 $routes->post('/action/get-data-project/(:any)', 'ActionController::project/$1', ['filter' => 'login']); 
+
 $routes->post('/action/add-data-project', 'ActionController::project_add', ['filter' => 'login']); 
+$routes->post('/action/edit-data-project/(:any)', 'ActionController::project_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/delete-data-project/(:num)', 'ActionController::project_delete/$1', ['filter' => 'login']);
+
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 
-$routes->post('/action/delete-data-penawaran/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/delete-data-penawaran/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']);
+
 $routes->post('/action/add-data-invoice', 'ActionController::invoice_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-invoice/(:num)', 'ActionController::invoice_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-invoice/(:num)', 'ActionController::invoice_delete/$1', ['filter' => 'login']); 
+
 $routes->post('/action/add-data-payment', 'ActionController::payment_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-payment/(:num)', 'ActionController::payment_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project-payment/(:num)', 'ActionController::payment_delete/$1', ['filter' => 'login']); 
+
 $routes->post('/action/add-data-proforma', 'ActionController::proforma_add', ['filter' => 'login']);    
-$routes->post('/action/edit-data-proforma/(:num)', 'ActionController::proforma_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/edit-data-proforma/(:num)', 'ActionController::proforma_edit/$1', ['filter' => 'login']);
+
 $routes->post('/action/add-data-delivery', 'ActionController::delivery_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-delivery/(:num)', 'ActionController::delivery_edit/$1', ['filter' => 'login']);
 $routes->post('/action/delete-data-delivery/(:num)', 'ActionController::delivery_delete/$1', ['filter' => 'login']);
+
 $routes->post('/action/add-data-po', 'ActionController::pembelian_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-po/(:num)', 'ActionController::pembelian_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-po/(:num)', 'ActionController::pembelian_delete/$1', ['filter' => 'login']);
@@ -76,10 +85,12 @@ $routes->post('/action/add-data-template-footer', 'ActionController::template_fo
 $routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);   
 
 
-/** ACCOUNT PRODUK */
+/** ACCOUNT VENDOR */
 $routes->post('/action/add-data-vendor', 'ActionController::vendor_add', ['filter' => 'login']);
+$routes->post('/action/edit-data-vendor/(:num)', 'ActionController::vendor_edit/$1', ['filter' => 'login']);
 $routes->post('/action/delete-data-vendor', 'ActionController::vendor_delete', ['filter' => 'login']);
 
+/** ACCOUNT PRODUK VARIAN */
 $routes->post('/action/add-data-produk-varian', 'ActionController::produk_varian_add', ['filter' => 'login']); 
 $routes->post('/action/add-data-produk-varian-value', 'ActionController::produk_varian_value_add', ['filter' => 'login']);
 
@@ -90,6 +101,7 @@ $routes->post('/action/add-data-item-unit', 'ActionController::item_unit_add', [
 $routes->post('/action/get-data-item-unit/(:num)', 'ActionController::item_unit_get/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/$1', ['filter' => 'login']);  
+$routes->post('/action/delete-data-produk/(:num)', 'ActionController::produk_delete/$1', ['filter' => 'login']);
 
 
 /**
@@ -133,9 +145,10 @@ $routes->post('/message/edit-vendor/(:num)', 'MessageController::vendor_edit/$1'
 $routes->post('/message/add-produk', 'MessageController::produk_add', ['filter' => 'login']);  
 $routes->post('/message/edit-produk/(:num)', 'MessageController::produk_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/select-produk', 'MessageController::produk_select', ['filter' => 'login']);  
-
+ 
 
 $routes->post('/message/add-project', 'MessageController::project_add', ['filter' => 'login']);  
+$routes->post('/message/edit-project/(:num)', 'MessageController::project_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-sph/(:num)', 'MessageController::project_sph_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-invoice/(:num)', 'MessageController::project_invoice_add/$1', ['filter' => 'login']);  

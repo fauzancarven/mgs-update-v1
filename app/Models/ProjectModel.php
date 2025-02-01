@@ -5,6 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model; 
 use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\Codeigniter4Adapter;
+use CodeIgniter\Database\RawSql;
 
 class ProjectModel extends Model
 { 
@@ -16,7 +17,7 @@ class ProjectModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['customerid','date_time','storeid','category','comment','userid','admin','status'];
+    protected $allowedFields = ['ProjectName','CustomerId','ProjectDate','StoreId','ProjectCategory','ProjectComment','UserId','ProjectAdmin','ProjectStatus'];
 
     // Dates
     protected $useTimestamps = false;
@@ -48,75 +49,35 @@ class ProjectModel extends Model
      */ 
     public function blog_json($search)
     {
-		$db  = \Config\Database::connect();
+        $db  = \Config\Database::connect();
 
         $dt = new Datatables(new Codeigniter4Adapter);
-        $querysql = 'Select date_time,
-        project.category project_category, 
-        project.id project_id,
-        StoreLogo,
-        StoreCode, 
-        customer.id customer_id, 
-        customer.name customer_name, 
-        customer.code customer_code, 
-        customer.company customer_company, 
-        customer.address customer_address, 
-        status, 
-        admin,
-        project.comment comment from project 
-        left join customer on customer.id = customerid 
-        left join store on store.StoreId = project.storeid
-        where project.category like "%'.$search.'%" or
-        StoreCode like "%'.$search.'%" or
-        customer.name like "%'.$search.'%" or
-        customer.code like "%'.$search.'%" or
-        customer.address like "%'.$search.'%"
-        order by project.id desc
-        ';
-        // $builder = $this->db->table($this->table); 
-        // $builder->join('customer', 'customer.id = customerid', 'left'); 
-        // $builder->join('store', 'store.StoreId = project.storeid', 'left'); 
-        // $builder->select('
-        //     date_time,
-        //     project.category project_category, 
-        //     project.id project_id,
-        //     StoreLogo,
-        //     StoreCode, 
-        //     customer.id customer_id, 
-        //     customer.name customer_name, 
-        //     customer.code customer_code, 
-        //     customer.company customer_company, 
-        //     customer.address customer_address, 
-        //     status, 
-        //     admin,
-        //     project.comment comment, 
-        // '); 
-        // $builder->like("project.category",$search);
-        // $builder->orLike("StoreCode",$search);
-        // $builder->orLike("customer.name",$search);
-        // $builder->orLike("customer.code",$search);
-        // $builder->orLike("customer.address",$search); 
-        // $builder->orderBy("project.id","DESC"); 
-        // $query = $builder->getCompiledSelect();
 
-        $dt->query($querysql); 
+        $builder = $this->db->table($this->table);
+        $builder->join("customer","customer.CustomerId = project.CustomerId ");
+        $builder->join("store","store.StoreId = project.StoreId");
+        
+        $builder->select('ProjectId,ProjectDate,store.StoreId,ProjectAdmin,UserId,project.CustomerId,ProjectCategory,ProjectComment,ProjectStatus,StoreLogo,StoreCode,StoreName,CustomerName,CustomerCompany,CustomerAddress');
+        $query = $builder->getCompiledSelect();
 
-        $dt->edit('date_time', function($data){
-            $date = date_create($data["date_time"]);
+        $dt->query($query); 
+
+        $dt->add('date_time', function($data){
+            $date = date_create($data["ProjectDate"]);
             return '<div class="d-flex flex-column gap-1 align-items-center">
                         <span class="text-head-2">'.date_format($date,"d M Y").'</span>
                         <span class="text-detail-2 text-truncate">'.date_format($date,"H:i:s").'</span> 
                     </div>';
         }); 
-        $dt->edit('status', function($data){
-            return '<span class="badge badge-0 badge-rounded">'.$data["status"].'</span>';
+        $dt->add('status', function($data){
+            return '<span class="badge badge-0 badge-rounded">'.$data["ProjectStatus"].'</span>';
         }); 
-        $dt->edit('comment', function($data){
-            return '<span class="badge badge-0 badge-rounded">'.$data["status"].'</span>';
+        $dt->add('comment', function($data){
+            return '<span class="badge badge-0 badge-rounded">'.$data["ProjectComment"].'</span>';
         }); 
         $dt->add('store', function($data){
             $category = "";
-            foreach (explode("|",$data["project_category"]) as $index=>$x) {
+            foreach (explode("|",$data["ProjectCategory"]) as $index=>$x) {
                 $category .= '<span class="badge badge-'.fmod($index, 5).'">'.$x.'</span>';
             }  
             return '<div class="d-flex align-items-center" style="width:10rem">
@@ -138,16 +99,16 @@ class ProjectModel extends Model
         $dt->add('customer', function($data){
             return '
                 <div class="d-flex flex-column gap-1" style="width:15rem">
-                    <span class="text-head-2">'.$data["customer_name"].'</span>
-                    <span class="text-detail-2 text-truncate">'.$data["customer_address"].'</span> 
+                    <span class="text-head-2">'.$data["CustomerName"].'</span>
+                    <span class="text-detail-2 text-truncate">'.$data["CustomerAddress"].'</span> 
                 </div>';
         });
         
         $dt->add('action', function($data){
         	return '
                 <div class="d-md-flex d-none"> 
-                    <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$data["project_id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
-                    <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$data["project_id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                    <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$data["ProjectId"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
+                    <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$data["ProjectId"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
                 </div>
                 <div class="d-md-none d-flex btn-action"> 
                     <div class="dropdown">
@@ -155,8 +116,8 @@ class ProjectModel extends Model
                             <i class="ti-more-alt icon-rotate-45"></i>
                         </a>
                         <ul class="dropdown-menu shadow">
-                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["project_id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
-                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["project_id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["ProjectId"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["ProjectId"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                         </ul>
                     </div>
                 </div> 
@@ -164,10 +125,10 @@ class ProjectModel extends Model
         });  
         $dt->add('head_mobile', function($data){
             $category = "";
-            foreach (explode("|",$data["project_category"]) as $index=>$x) {
+            foreach (explode("|",$data["ProjectCategory"]) as $index=>$x) {
                 $category .= '<span class="badge badge-'.fmod($index, 5).'">'.$x.'</span>';
             }  
-            $date = date_create($data["date_time"]);
+            $date = date_create($data["ProjectDate"]);
       
             $html = '
                 <div class="card shadow-sm my-2 mobile p-0">
@@ -179,14 +140,14 @@ class ProjectModel extends Model
                             <div class="flex-grow-1 ms-1 "> 
                                 <span class="text-detail-3">'.$data["StoreCode"].'</span>  
                                 <div class="divider d-inline-block"></div>
-                                <span class="text-detail-3">'.date_format(date_create($data["date_time"]),"d M Y").'</span>
+                                <span class="text-detail-3">'.date_format(date_create($data["ProjectDate"]),"d M Y").'</span>
                                 <div class="divider d-inline-block d-none"></div>
                                 <div class="text-success d-none">
                                     <i class="fa-solid fa-circle" style="font-size:0.5rem"></i>
                                     <span class="text-detail-3 ">New</span>
                                 </div>
                                 <div class="divider d-inline-block"></div>
-                                <span class="text-detail-3">'.$data["admin"].'</span>   
+                                <span class="text-detail-3">'.$data["ProjectAdmin"].'</span>   
                             </div>
                             <div class="ms-auto"> 
                                 <div class="dropdown">
@@ -194,18 +155,18 @@ class ProjectModel extends Model
                                         <i class="ti-more-alt icon-rotate-45"></i>
                                     </a>
                                     <ul class="dropdown-menu shadow">
-                                        <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["project_id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
-                                        <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["project_id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                        <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["ProjectId"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["ProjectId"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div class="d-flex w-100 gap-1 py-1">'.$category.'</div>
-                        <div class="text-head-2 py-1">'.$data["customer_name"].($data["customer_company"] == "" ? : " (".$data["customer_company"].")").'</div> 
+                        <div class="text-head-2 py-1">'.$data["CustomerName"].($data["CustomerCompany"] == "" ? : " (".$data["CustomerCompany"].")").'</div> 
                     </div>
                     <div class="card-footer p-0 bg-white">
                         <div class="d-flex project-menu mobile justify-content-around">
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="survey">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="survey">
                                 <i class="fa-solid fa-list-check position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -213,7 +174,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Survey</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="rab">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="rab">
                                 <i class="fa-solid fa-list position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -221,7 +182,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">RAB</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="penawaran">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="penawaran">
                                 <i class="fa-solid fa-hand-holding-droplet position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -229,7 +190,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Penawaran</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="pembelian">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="pembelian">
                                 <i class="fa-solid fa-cart-shopping position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -237,7 +198,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Pembelian</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="invoice">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="invoice">
                                 <i class="fa-solid fa-money-bill position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -245,7 +206,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Invoice</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="documentasi">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="documentasi">
                                 <i class="fa-solid fa-folder-open position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -253,7 +214,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Dokumentasi</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="diskusi">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="diskusi">
                                 <i class="fa-regular fa-comments position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -263,14 +224,14 @@ class ProjectModel extends Model
                             </div>
                         </div>
                         <div class="d-flex justify-content-center flex-column align-items-center" style="display:none">
-                            <div class="tab-content mobile  w-100" data-id="'.$data["project_id"].'" style="display:none">
+                            <div class="tab-content mobile  w-100" data-id="'.$data["ProjectId"].'" style="display:none">
                                 <div class="d-flex justify-content-center flex-column align-items-center">
                                     <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                     <span>Belum ada data yang dibuat</span>
-                                    <button class="btn btn-sm btn-primary px-3 rounded mt-4" onclick="add_penawaran_click('.$data["project_id"].',this)"><i class="fa-solid fa-plus pe-2"></i>Buat Penawaran</button>
+                                    <button class="btn btn-sm btn-primary px-3 rounded mt-4" onclick="add_penawaran_click('.$data["ProjectId"].',this)"><i class="fa-solid fa-plus pe-2"></i>Buat Penawaran</button>
                                 </div> 
                             </div>
-                            <div class="loading text-center loading-content p-4" data-id="'.$data["project_id"].'"  style="display:none">
+                            <div class="loading text-center loading-content p-4" data-id="'.$data["ProjectId"].'"  style="display:none">
                                 <div class="loading-spinner"></div>
                                 <div class="d-flex justify-content-center flex-column align-items-center">
                                     <span>Sedang memuat data</span> 
@@ -286,9 +247,9 @@ class ProjectModel extends Model
         	return '  
             <div class="project-detail">
                 <div class="d-flex">
-                    <div class="side-menu" data-id="'.$data["project_id"].'">
+                    <div class="side-menu" data-id="'.$data["ProjectId"].'">
                         <div class="d-flex flex-column project-menu">
-                            <div class="menu-item selected" data-id="'.$data["project_id"].'" data-menu="survey">
+                            <div class="menu-item selected" data-id="'.$data["ProjectId"].'" data-menu="survey">
                                 <i class="fa-solid fa-list-check position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -296,7 +257,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Survey</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="rab">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="rab">
                                 <i class="fa-solid fa-list position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -304,7 +265,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">RAB</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="penawaran">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="penawaran">
                                 <i class="fa-solid fa-hand-holding-droplet position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -312,7 +273,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Penawaran</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="pembelian">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="pembelian">
                                 <i class="fa-solid fa-cart-shopping position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -320,7 +281,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Pembelian</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="invoice">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="invoice">
                                 <i class="fa-solid fa-money-bill position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -328,7 +289,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Invoice</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="documentasi">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="documentasi">
                                 <i class="fa-solid fa-folder-open position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -336,7 +297,7 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Dokumentasi</span>
                             </div>
-                            <div class="menu-item" data-id="'.$data["project_id"].'" data-menu="diskusi">
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="diskusi">
                                 <i class="fa-regular fa-comments position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -345,18 +306,18 @@ class ProjectModel extends Model
                                 <span class="menu-text">Diskusi</span>
                             </div>
                         </div>
-                        <button class="btn-side-menu" data-id="'.$data["project_id"].'"><i class="fa-solid fa-angle-left"></i></button>
+                        <button class="btn-side-menu" data-id="'.$data["ProjectId"].'"><i class="fa-solid fa-angle-left"></i></button>
                     </div>
                     <div class="flex-fill border-left">
-                        <div class="tab-content" data-id="'.$data["project_id"].'" style="display:none">
+                        <div class="tab-content" data-id="'.$data["ProjectId"].'" style="display:none">
                             <div class="d-flex justify-content-center flex-column align-items-center">
                                 <img src="'.base_url().'/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span>Belum ada data yang dibuat</span>
-                                <button class="btn btn-sm btn-primary px-3 rounded mt-4" onclick="add_penawaran_click('.$data["project_id"].',this)"><i class="fa-solid fa-plus pe-2"></i>Buat Penawaran</button>
+                                <button class="btn btn-sm btn-primary px-3 rounded mt-4" onclick="add_penawaran_click('.$data["ProjectId"].',this)"><i class="fa-solid fa-plus pe-2"></i>Buat Penawaran</button>
                             </div> 
                         </div>
                         <div class="d-flex justify-content-center flex-column align-items-center" style="display:none">
-                            <div class="loading text-center loading-content pt-4 mt-4" data-id="'.$data["project_id"].'">
+                            <div class="loading text-center loading-content pt-4 mt-4" data-id="'.$data["ProjectId"].'">
                                 <div class="loading-spinner"></div>
                                 <div class="d-flex justify-content-center flex-column align-items-center">
                                     <span>Sedang memuat data</span> 
@@ -383,31 +344,31 @@ class ProjectModel extends Model
     public function load_data_project_tab($data){
         switch ($data["type"]) {
             case "survey":
-                return $this->data_project_survey($data["project_id"]);
+                return $this->data_project_survey($data["ProjectId"]);
                 break; 
 
             case "rab":
-                return $this->data_project_rab($data["project_id"]);
+                return $this->data_project_rab($data["ProjectId"]);
                 break; 
 
             case "penawaran":
-                return $this->data_project_sph($data["project_id"]);
+                return $this->data_project_sph($data["ProjectId"]);
                 break; 
 
             case "pembelian":
-                return $this->data_project_po($data["project_id"]);
+                return $this->data_project_po($data["ProjectId"]);
                 break; 
 
             case "invoice":
-                return $this->data_project_invoice($data["project_id"]);
+                return $this->data_project_invoice($data["ProjectId"]);
                 break; 
 
             case "documentasi":
-                return $this->data_project_documentasi($data["project_id"]);
+                return $this->data_project_documentasi($data["ProjectId"]);
                 break; 
 
             case "diskusi":
-                return $this->data_project_diskusi($data["project_id"]);
+                return $this->data_project_diskusi($data["ProjectId"]);
                 break; 
                 
                 
@@ -502,24 +463,23 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("penawaran");
         $builder->select('*');
-        $builder->where('ref',$id);
-        $builder->orderby('id', 'DESC'); 
+        $builder->where('SphRef',$id);
+        $builder->orderby('SphId', 'DESC'); 
         $query = $builder->get()->getResult();  
 
-       
         foreach($query as $row){
 
             $builder = $this->db->table("penawaran_detail");
             $builder->select('*'); 
-            $builder->where('ref',$row->id);
-            $builder->orderby('id', 'ASC'); 
+            $builder->where('SphDetailRef',$row->SphId);
+            $builder->orderby('SphDetailId', 'ASC'); 
             $items = $builder->get()->getResult(); 
             $html_items = "";
             $no = 1;
             $huruf  = "A";
             foreach($items as $item){
 
-                $arr_varian = json_decode($item->varian);
+                $arr_varian = json_decode($item->SphDetailVarian);
                 $arr_badge = "";
                 $arr_no = 0;
                 foreach($arr_varian as $varian){
@@ -531,41 +491,41 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex ">
-                            <span class="no-urut text-head-3"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->type == "product" ? $no : $huruf).'.</span> 
+                            <span class="no-urut text-head-3"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->SphDetailType == "product" ? $no : $huruf).'.</span> 
                             <div class="d-flex flex-column text-start">
-                                <span class="text-head-3 text-uppercase"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->text.'</span>
-                                <span class="text-detail-2 text-truncate"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->group.'</span> 
+                                <span class="text-head-3 text-uppercase"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailText.'</span>
+                                <span class="text-detail-2 text-truncate"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailGroup.'</span> 
                                 <div class="d-flex flex-wrap gap-1">
                                     '.$arr_badge.'
                                 </div>
                             </div> 
                         </div>
                     </div>';
-                if($item->type == "product"){
+                if($item->SphDetailType == "product"){
                     $html_items .= '<div class="col-12 col-md-8 my-1 detail">
                                         <div class="row"> 
                                             <div class="offset-2 offset-md-0 col-5 col-md-2 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Qty:</span>
-                                                    <span class="text-head-2">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</span>
+                                                    <span class="text-head-2">'.number_format($item->SphDetailQty, 2, ',', '.').' '.$item->SphDetailSatuanText.'</span>
                                                 </div>
                                             </div>  
                                             <div class="col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Harga:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->harga, 0, ',', '.').'</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->SphDetailPrice, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
                                             <div class="offset-2 offset-md-0 col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Disc:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->disc, 0, ',', '.').'</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->SphDetailDisc, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
                                             <div class="col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Total:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->total, 0, ',', '.').'</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->SphDetailTotal, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
                                         </div>   
@@ -586,30 +546,30 @@ class ProjectModel extends Model
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">No. Penawaran :</span>
-                            <span class="text-head-3">'.$row->code.'</span>
+                            <span class="text-head-3">'.$row->SphCode.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Tanggal:</span>
-                            <span class="text-head-3">'.date_format(date_create($row->date),"d M Y").'</span>
+                            <span class="text-head-3">'.date_format(date_create($row->SphDate),"d M Y").'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
                         <div class="float-end d-md-flex d-none gap-1">
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="po_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="po_project_sph('.$row->SphRef.','.$row->SphId.',this)">
                                 <i class="fa-solid fa-share-from-square mx-1"></i></i><span >Buat PO</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="invoice_project_sph('.$row->SphRef.','.$row->SphId.',this)">
                                 <i class="fa-solid fa-share-from-square mx-1"></i><span >Buat Invoice</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_sph('.$row->SphRef.','.$row->SphId.',this)">
                                 <i class="fa-solid fa-print mx-1"></i><span >Print</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_sph('.$row->SphRef.','.$row->SphId.',this)">
                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                             </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_sph('.$row->SphRef.','.$row->SphId.',this)">
                                 <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
                             </button> 
                         </div> 
@@ -620,11 +580,11 @@ class ProjectModel extends Model
                                     <i class="ti-more-alt icon-rotate-45"></i>
                                 </a>
                                 <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item m-0 px-2" onclick="po_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Teruskan Vendor</a></li>
-                                    <li><a class="dropdown-item m-0 px-2" onclick="invoice_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-money-bill pe-2"></i>Teruskan Invoice</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sph('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2 d-none" onclick="po_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Teruskan Vendor</a></li>
+                                    <li><a class="dropdown-item m-0 px-2 d-none" onclick="invoice_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-money-bill pe-2"></i>Teruskan Invoice</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                                 </ul>
                             </div>
                         </div> 
@@ -632,31 +592,31 @@ class ProjectModel extends Model
                     <div class="col-12 col-md-3 col-xl-2 order-3">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Sub Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->subtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->SphSubTotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-4">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Item:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->discitemtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->SphDiscItemTotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-5">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->disctotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->SphDiscTotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-6">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Grand Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->SphGrandTotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-xl-4 order-7  pb-2">
                         <div class="d-flex flex-column justify-content-between">
                             <span class="text-detail-2 pb-2 pb-md-0">Alamat:</span>
-                            <span class="text-head-3 text-wrap">'.$row->address.'</span>
+                            <span class="text-head-3 text-wrap">'.$row->SphAddress.'</span>
                         </div>  
                     </div>
                 </div> 
@@ -878,22 +838,22 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("invoice");
         $builder->select('*');
-        $builder->where('ref',$id);
-        $builder->orderby('id', 'DESC'); 
+        $builder->where('InvRef',$id);
+        $builder->orderby('InvId', 'DESC'); 
         $query = $builder->get()->getResult();  
         foreach($query as $row){
 
             $builder = $this->db->table("invoice_detail");
             $builder->select('*'); 
-            $builder->where('ref',$row->id);
-            $builder->orderby('id', 'ASC'); 
+            $builder->where('InvDetailRef',$row->InvId);
+            $builder->orderby('InvDetailId', 'ASC'); 
             $items = $builder->get()->getResult(); 
             $html_items = "";
             $no = 1;
             $huruf  = "A";
             foreach($items as $item){
 
-                $arr_varian = json_decode($item->varian);
+                $arr_varian = json_decode($item->InvDetailVarian);
                 $arr_badge = "";
                 $arr_no = 0;
                 foreach($arr_varian as $varian){
@@ -905,41 +865,41 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex ">
-                            <span class="no-urut text-head-3"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->type == "product" ? $no : $huruf).'.</span> 
+                            <span class="no-urut text-head-3"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->InvDetailType == "product" ? $no : $huruf).'.</span> 
                             <div class="d-flex flex-column text-start">
-                                <span class="text-head-3 text-uppercase"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->text.'</span>
-                                <span class="text-detail-2 text-truncate"  '.($item->type == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->group.'</span> 
+                                <span class="text-head-3 text-uppercase"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailText.'</span>
+                                <span class="text-detail-2 text-truncate"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailGroup.'</span> 
                                 <div class="d-flex flex-wrap gap-1">
                                     '.$arr_badge.'
                                 </div>
                             </div> 
                         </div>
                     </div>';
-                if($item->type == "product"){
+                if($item->InvDetailType == "product"){
                     $html_items .= '<div class="col-12 col-md-8 my-1 detail">
                                         <div class="row"> 
                                             <div class="offset-2 offset-md-0 col-5 col-md-2 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Qty:</span>
-                                                    <span class="text-head-2">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</span>
+                                                    <span class="text-head-2">'.number_format($item->InvDetailQty, 2, ',', '.').' '.$item->InvDetailSatuanText.'</span>
                                                 </div>
                                             </div>  
                                             <div class="col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Harga:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->harga, 0, ',', '.').'</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->InvDetailPrice, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
                                             <div class="offset-2 offset-md-0 col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Disc:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->disc, 0, ',', '.').'</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->InvDetailDisc, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
                                             <div class="col-5 col-md-3 px-1">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Total:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->total, 0, ',', '.').'</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->InvDetailTotal, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
                                         </div>   
@@ -960,39 +920,41 @@ class ProjectModel extends Model
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">No. Invoice :</span>
-                            <span class="text-head-3">'.$row->code.'</span>
+                            <span class="text-head-3">'.$row->InvCode.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Tanggal:</span>
-                            <span class="text-head-3">'.date_format(date_create($row->date),"d M Y").'</span>
+                            <span class="text-head-3">'.date_format(date_create($row->InvDate),"d M Y").'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
-                        <div class="float-end d-md-flex d-none gap-1">
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="proforma_project_invoice('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-share mx-1"></i><span >Proforma</span>
-                            </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="payment_project_invoice('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-share mx-1"></i><span >Payment</span>
-                            </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="delivery_project_invoice('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-truck mx-1"></i><span >Surat Jalan</span>
-                            </button> 
+                        <div class="float-end d-md-flex d-none gap-1"> 
+                            <div class="dropdown">
+                                <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-share pe-2"></i><span>Next Prosess</span>
+                                </a> 
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" onclick="proforma_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-dollar-sign pe-2"></i>Proforma</a></li>
+                                    <li><a class="dropdown-item" onclick="payment_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-dollar-sign pe-2"></i>Payment</a></li> 
+                                    <li><hr class="dropdown-divider"></li> 
+                                    <li><a class="dropdown-item" onclick="delivery_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-truck pe-2"></i>Pengiriman</a></li> 
+                                </ul>
+                            </div>
                             <div class="dropdown">
                                 <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-solid fa-print mx-1"></i><span >Print</span>
                                 </a> 
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" onclick="print_project_invoice_a4('.$row->ref.','.$row->id.',this)">Print A4</a></li>
-                                    <li><a class="dropdown-item" onclick="print_project_invoice_a5('.$row->ref.','.$row->id.',this)">Print A5</a></li> 
+                                    <li><a class="dropdown-item" onclick="print_project_invoice_a4('.$row->InvRef.','.$row->InvId.',this)">Print A4</a></li>
+                                    <li><a class="dropdown-item" onclick="print_project_invoice_a5('.$row->InvRef.','.$row->InvId.',this)">Print A5</a></li> 
                                 </ul>
                             </div>
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_invoice('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_invoice('.$row->InvRef.','.$row->InvId.',this)">
                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                             </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_invoice('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_invoice('.$row->InvRef.','.$row->InvId.',this)">
                                 <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
                             </button> 
                         </div> 
@@ -1003,13 +965,13 @@ class ProjectModel extends Model
                                     <i class="ti-more-alt icon-rotate-45"></i>
                                 </a>
                                 <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-share pe-2"></i>Proforma</a></li>
-                                    <li><a class="dropdown-item m-0 px-2" onclick="payment_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-share pe-2"></i>Payment</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delivery_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-truck pe-2"></i>Surat Jalan</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-share pe-2"></i>Proforma</a></li>
+                                    <li><a class="dropdown-item m-0 px-2" onclick="payment_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-share pe-2"></i>Payment</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delivery_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-truck pe-2"></i>Surat Jalan</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                                 </ul>
                             </div>
                         </div> 
@@ -1017,31 +979,31 @@ class ProjectModel extends Model
                     <div class="col-12 col-md-3 col-xl-2 order-3">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Sub Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->subtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->InvSubTotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-4">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Item:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->discitemtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->InvDiscItemTotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-5">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->disctotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->InvDiscTotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-6">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Grand Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->InvGrandTotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-xl-4 order-7  pb-2">
                         <div class="d-flex flex-column justify-content-between">
                             <span class="text-detail-2 pb-2 pb-md-0">Alamat:</span>
-                            <span class="text-head-3 text-wrap">'.$row->address.'</span>
+                            <span class="text-head-3 text-wrap">'.$row->InvAddress.'</span>
                         </div>  
                     </div>
                 </div> 
@@ -1053,13 +1015,13 @@ class ProjectModel extends Model
 
             $builder = $this->db->table("payment");
             $builder->select('*'); 
-            $builder->where('ref',$row->id);
-            $builder->orderby('id', 'ASC'); 
+            $builder->where('PaymentRef',$row->InvId);
+            $builder->orderby('PaymentId', 'ASC'); 
             $payment = $builder->get()->getResult(); 
 
             foreach($payment as $row_payment){
                
-                if($row_payment->status == "0"){
+                if($row_payment->PaymentStatus == "0"){
                     $status = '<span class="text-head-3 text-warning">
                     <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
                         <i class="fa-solid fa-certificate fa-stack-2x"></i> 
@@ -1078,7 +1040,7 @@ class ProjectModel extends Model
                                 <div class="row">
                                     <div class="col-9 col-md-1 align-items-center order-0">  
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-head-1 pt-auto">'.($row_payment->doc == "1" ? "PAYMENT" : "PROFORMA" ).'</span>
+                                            <span class="text-head-1 pt-auto">'.($row_payment->PaymentDoc == "1" ? "PAYMENT" : "PROFORMA" ).'</span>
                                         </div>   
                                     </div>
                                     <div class="col-12 col-md-1 order-2 order-sm-1"> 
@@ -1089,39 +1051,39 @@ class ProjectModel extends Model
                                     <div class="col-12 col-md-1 order-3 order-sm-2"> 
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
                                             <span class="text-detail-2">Tanggal:</span>
-                                            <span class="text-head-3">'.date_format(date_create($row_payment->date),"d M Y").'</span>
+                                            <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
                                         </div>  
                                     </div>
                                     <div class="col-12 col-md-1 order-4 order-sm-3"> 
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
                                             <span class="text-detail-2">Type:</span>
-                                            <span class="text-head-3">'.$row_payment->type.'</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentType.'</span>
                                         </div>  
                                     </div>
                                     <div class="col-12 col-md-1 order-5 order-sm-4">
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
                                             <span class="text-detail-2">Method:</span>
-                                            <span class="text-head-3">'.$row_payment->method.'</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
                                         </div>  
                                     </div>
                                     <div class="col-12 col-md-1 order-6 order-sm-5">
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
                                             <span class="text-detail-2">Total:</span>
-                                            <span class="text-head-3">Rp. '.number_format($row_payment->total).'</span>
+                                            <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
                                         </div>   
                                     </div>
                                     <div class="col-3 col-md-6 text-end order-1 order-sm-5"> 
                                         <div class="d-none d-md-inline-block"> 
-                                            <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->doc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->doc == "1" ? "payment" : "proforma" ).'('.$row->ref.','.$row_payment->id.',this)">
+                                            <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row_payment->PaymentRef.','.$row_payment->PaymentId.',this)">
                                                 <i class="fa-solid fa-eye mx-1"></i><span >Show</span>
                                             </button>
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->doc == "1" ? "payment" : "proforma" ).'('.$row->ref.','.$row_payment->id.',this)">
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row->InvRef.','.$row_payment->PaymentId.',this)">
                                                 <i class="fa-solid fa-print mx-1"></i><span >Print</span>
                                             </button>
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->doc == "1" ? "payment" : "proforma" ).'('.$row->ref.','.$row_payment->id.',this)">
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row->InvRef.','.$row_payment->PaymentId.',this)">
                                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                                             </button>
-                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$row->ref.','.$row_payment->id.',this)">
+                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$row->InvRef.','.$row_payment->PaymentId.',this)">
                                                 <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
                                             </button> 
                                         </div>
@@ -1131,12 +1093,12 @@ class ProjectModel extends Model
                                                     <i class="ti-more-alt icon-rotate-45"></i>
                                                 </a>
                                                 <ul class="dropdown-menu shadow">
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$row->ref.','.$row_payment->id.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="payment_project_invoice('.$row->ref.','.$row_payment->id.',this)"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$row->ref.','.$row_payment->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$row->ref.','.$row_payment->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$row->ref.','.$row_payment->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$row->ref.','.$row_payment->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="payment_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                                                 </ul>
                                             </div>
                                         </div>
@@ -1149,7 +1111,7 @@ class ProjectModel extends Model
 
             $builder = $this->db->table("delivery");
             $builder->select('*'); 
-            $builder->where('ref',$row->id);
+            $builder->where('ref',$row->InvId);
             $builder->orderby('id', 'ASC'); 
             $delivery = $builder->get()->getResult(); 
             foreach($delivery as $row_delivery){ 
@@ -1377,8 +1339,8 @@ class ProjectModel extends Model
     private function get_next_code_penawaran($date){
         //sample SPH/001/01/2024
         $builder = $this->db->table("penawaran");  
-        $builder->select("ifnull(max(SUBSTRING(code,5,3)),0) + 1 as nextcode");
-        $builder->where("date_create",$date);
+        $builder->select("ifnull(max(SUBSTRING(SphCode,5,3)),0) + 1 as nextcode");
+        $builder->where("SphDate2",$date);
         $arr_date = explode("-", $date);
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
@@ -1397,10 +1359,10 @@ class ProjectModel extends Model
         } 
     }
     private function get_next_code_invoice($date){
-        //sample SPH/001/01/2024
+        //sample INV/001/01/2024
         $builder = $this->db->table("invoice");  
-        $builder->select("ifnull(max(SUBSTRING(code,5,3)),0) + 1 as nextcode");
-        $builder->where("date_create",$date);
+        $builder->select("ifnull(max(SUBSTRING(InvCode,5,3)),0) + 1 as nextcode");
+        $builder->where("InvDate2",$date);
         $arr_date = explode("-", $date);
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
@@ -1415,6 +1377,52 @@ class ProjectModel extends Model
                 return $nextid;  
             default:
                 $nextid = "INV/000/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+        } 
+    }
+    private function get_next_code_payment($date){
+        //sample INV/001/01/2024
+        $builder = $this->db->table("payment");  
+        $builder->select("ifnull(max(SUBSTRING(PaymentCode,5,3)),0) + 1 as nextcode");
+        $builder->where("PaymentDate2",$date);
+        $builder->where("PaymentDoc",1);
+        $arr_date = explode("-", $date);
+        $data = $builder->get()->getRow(); 
+        switch (strlen($data->nextcode)) {
+            case 1:
+                $nextid = "PAY/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 2:
+                $nextid = "PAY/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 3:
+                $nextid = "PAY/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+            default:
+                $nextid = "PAY/000/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+        } 
+    }
+    private function get_next_code_proforma($date){
+        //sample INV/001/01/2024
+        $builder = $this->db->table("payment");  
+        $builder->select("ifnull(max(SUBSTRING(PaymentCode,5,3)),0) + 1 as nextcode");
+        $builder->where("PaymentDate2",$date);
+        $builder->where("PaymentDoc",2);
+        $arr_date = explode("-", $date);
+        $data = $builder->get()->getRow(); 
+        switch (strlen($data->nextcode)) {
+            case 1:
+                $nextid = "PRO/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 2:
+                $nextid = "PRO/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 3:
+                $nextid = "PRO/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+            default:
+                $nextid = "PRO/000/".$arr_date[1]."/".$arr_date[0];
                 return $nextid;  
         } 
     }
@@ -1466,12 +1474,62 @@ class ProjectModel extends Model
 
     public function getSelectRefVendor($refid,$search = null){
         $builder = $this->db->query('SELECT * FROM 
-        (SELECT id refid,code as coderef,ref,DATE,customerid, "SPH" AS type FROM penawaran UNION SELECT id refid,code,ref,DATE,customerid, "INV" FROM invoice) AS ref_join
-        LEFT JOIN customer ON customer.id = ref_join.customerid
+        (SELECT SphId refid, SphCode as code,SphRef ref,SphDate date, CustomerId custid, "SPH" AS type FROM penawaran UNION SELECT InvId refid,InvCode,InvRef ref,InvDate date,CustomerId, "INV" FROM invoice) AS ref_join
+        LEFT JOIN customer ON CustomerId = ref_join.custid
         WHERE ref_join.ref = '.$refid.'
-        ORDER BY ref_join.DATE asc');
+        ORDER BY ref_join.date asc');
         return $builder->getResultArray();  
     }
+
+    /**
+     * FUNCTION UNTUK Project
+     */ 
+    public function insert_data_project($data){
+        $builder = $this->db->table($this->table); 
+        $builder->insert(array(
+            "CustomerId"=>$data["CustomerId"],
+            "ProjectDate"=>$data["ProjectDate"],
+            "StoreId"=>$data["StoreId"],
+            "ProjectCategory"=>$data["ProjectCategory"],
+            "ProjectComment"=>$data["ProjectComment"],
+            "ProjectName"=>$data["ProjectName"],
+            "UserId"=>$data["UserId"],
+            "ProjectAdmin"=>$data["ProjectAdmin"], 
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+        )); 
+        
+        $builder = $this->db->table($this->table);
+        $builder->select('*');
+        $builder->orderby('ProjectId', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();
+        echo json_encode(array("status"=>true,"data"=>$query)); 
+    }
+    public function update_data_project($data,$id){
+        $builder = $this->db->table($this->table);   
+        $builder->set('CustomerId', $data["CustomerId"]); 
+        $builder->set('ProjectDate', $data["ProjectDate"]);  
+        $builder->set('StoreId', $data["StoreId"]); 
+        $builder->set('ProjectCategory', $data["ProjectCategory"]); 
+        $builder->set('ProjectComment', $data["ProjectComment"]); 
+        $builder->set('UserId', $data["UserId"]); 
+        $builder->set('ProjectAdmin', $data["ProjectAdmin"]);  
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('ProjectId', $id); 
+        $builder->update();   
+
+        echo json_encode(array("status"=>true)); 
+    }
+    public function delete_data_project($id){
+        $builder = $this->db->table($this->table);
+        $builder->where('ProjectId',$id);
+        $builder->delete();  
+
+        return JSON_ENCODE(array("status"=>true));
+    } 
+
     /**
      * FUNCTION UNTUK SPH / PENAWARAN
      */ 
@@ -1481,31 +1539,31 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("penawaran");
         $builder->insert(array(
-            "code"=>$this->get_next_code_penawaran($header["date_create"]),
-            "date"=>$header["date"],
-            "date_create"=>$header["date_create"],
-            "time_create"=>$header["time_create"],
-            "storeid"=>$header["storeid"],
-            "ref"=>$header["ref"],
-            "admin"=>$header["admin"],
-            "customerid"=>$header["customerid"],
-            "address"=>$header["Address"],
-            "templateid"=>$header["templateid"],
-            "subtotal"=>$header["subtotal"],
-            "discitemtotal"=>$header["discitemtotal"],
-            "disctotal"=>$header["disctotal"],
-            "grandtotal"=>$header["grandtotal"],
+            "SphCode"=>$this->get_next_code_penawaran($header["SphDate"]),
+            "SphDate"=>$header["SphDate"],
+            "SphDate2"=>$header["SphDate"],  
+            "SphRef"=>$header["SphRef"],
+            "SphAdmin"=>$header["SphAdmin"],
+            "CustomerId"=>$header["CustomerId"],
+            "SphAddress"=>$header["SphAddress"],
+            "TemplateId"=>$header["TemplateId"],
+            "SphSubTotal"=>$header["SphSubTotal"],
+            "SphDiscItemTotal"=>$header["SphDiscItemTotal"],
+            "SphDiscTotal"=>$header["SphDiscTotal"],
+            "SphGrandTotal"=>$header["SphGrandTotal"],
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
 
         $builder = $this->db->table("penawaran");
         $builder->select('*');
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('SphId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();  
         // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
-            $row["ref"] = $query->id;
-            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $row["SphDetailRef"] = $query->SphId;
+            $row["SphDetailVarian"] = (isset($row["SphDetailVarian"]) ? json_encode($row["SphDetailVarian"]) : "[]");  
             $builder = $this->db->table("penawaran_detail");
             $builder->insert($row); 
         }
@@ -1515,54 +1573,54 @@ class ProjectModel extends Model
         $header = $data["header"]; 
 
         $builder = $this->db->table("penawaran"); 
-        $builder->set('date', $header["date"]); 
-        $builder->set('storeid', $header["storeid"]);  
-        $builder->set('admin', $header["admin"]); 
-        $builder->set('customerid', $header["customerid"]); 
-        $builder->set('address', $header["address"]); 
-        $builder->set('templateid', $header["templateid"]); 
-        $builder->set('subtotal', $header["subtotal"]); 
-        $builder->set('discitemtotal', $header["discitemtotal"]); 
-        $builder->set('disctotal', $header["disctotal"]); 
-        $builder->set('grandtotal', $header["grandtotal"]);  
-        $builder->where('id', $id); 
+        $builder->set('SphDate', $header["SphDate"]);   
+        $builder->set('SphAdmin', $header["SphAdmin"]);  
+        $builder->set('SphAddress', $header["SphAddress"]); 
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('SphSubTotal', $header["SphSubTotal"]); 
+        $builder->set('SphDiscItemTotal', $header["SphDiscItemTotal"]); 
+        $builder->set('SphDiscTotal', $header["SphDiscTotal"]); 
+        $builder->set('SphGrandTotal', $header["SphGrandTotal"]);  
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SphId', $id); 
         $builder->update(); 
 
         $builder = $this->db->table("penawaran_detail");
-        $builder->where('ref',$id);
+        $builder->where('SphDetailRef',$id);
         $builder->delete(); 
         // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
-            $row["ref"] = $id;
-            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $row["SphDetailRef"] = $id;
+            $row["SphDetailVarian"] = (isset($row["SphDetailVarian"]) ? json_encode($row["SphDetailVarian"]) : "[]");  
             $builder = $this->db->table("penawaran_detail");
             $builder->insert($row); 
         } 
     }
     public function delete_data_penawaran($id){
         $builder = $this->db->table("penawaran");
-        $builder->where('id',$id);
+        $builder->where('SphId',$id);
         $builder->delete(); 
 
        
         $builder = $this->db->table("penawaran_detail");
-        $builder->where('ref',$id);
+        $builder->where('SphDetailRef',$id);
         $builder->delete(); 
 
         return JSON_ENCODE(array("status"=>true));
     } 
     public function getdataSPH($id){
-        $builder = $this->db->table("penawaran");
-        $builder->select("*,penawaran.address,penawaran.code,penawaran.id,customer.name");
-        $builder->join("customer","customerid = customer.id");
-        $builder->join("template_footer","templateid = template_footer.id");
-        $builder->where('penawaran.id',$id);
+        $builder = $this->db->table("penawaran"); 
+        $builder->join("customer","penawaran.CustomerId = customer.CustomerId");
+        $builder->join("project","ProjectId = SphRef");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
+        $builder->where('SphId',$id);
         $builder->limit(1);
         return $builder->get()->getRow();  
     }
     public function getdataDetailSPH($id){
         $builder = $this->db->table("penawaran_detail");
-        $builder->where('ref',$id); 
+        $builder->where('SphDetailRef',$id); 
         return $builder->get()->getResult();  
     }
 
@@ -1576,32 +1634,32 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("invoice");
         $builder->insert(array(
-            "code"=>$this->get_next_code_invoice($header["date_create"]),
-            "date"=>$header["date"],
-            "date_create"=>$header["date_create"],
-            "time_create"=>$header["time_create"],
-            "storeid"=>$header["storeid"],
-            "ref"=>$header["ref"],
-            "ref1"=>$header["ref1"],
-            "admin"=>$header["admin"],
-            "customerid"=>$header["customerid"],
-            "address"=>$header["Address"],
-            "templateid"=>$header["templateid"],
-            "subtotal"=>$header["subtotal"],
-            "discitemtotal"=>$header["discitemtotal"],
-            "disctotal"=>$header["disctotal"],
-            "grandtotal"=>$header["grandtotal"],
+            "InvCode"=>$this->get_next_code_invoice($header["InvDate"]),
+            "InvDate"=>$header["InvDate"], 
+            "InvDate2"=>$header["InvDate"],  
+            "InvRef"=>$header["InvRef"],
+            "InvRef1"=>$header["InvRef1"],
+            "InvAdmin"=>$header["InvAdmin"],
+            "CustomerId"=>$header["CustomerId"],
+            "InvAddress"=>$header["InvAddress"],
+            "TemplateId"=>$header["TemplateId"],
+            "InvSubTotal"=>$header["InvSubTotal"],
+            "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
+            "InvDiscTotal"=>$header["InvDiscTotal"],
+            "InvGrandTotal"=>$header["InvGrandTotal"],
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
 
         $builder = $this->db->table("invoice");
         $builder->select('*');
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('InvId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();  
         // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
-            $row["ref"] = $query->id;
-            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $row["InvDetailRef"] = $query->InvId;
+            $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
             $builder = $this->db->table("invoice_detail");
             $builder->insert($row); 
         }
@@ -1611,27 +1669,27 @@ class ProjectModel extends Model
         $header = $data["header"]; 
 
         $builder = $this->db->table("invoice"); 
-        $builder->set('date', $header["date"]); 
-        $builder->set('storeid', $header["storeid"]);  
-        $builder->set('admin', $header["admin"]); 
-        $builder->set('customerid', $header["customerid"]); 
-        $builder->set('address', $header["address"]); 
-        $builder->set('templateid', $header["templateid"]); 
-        $builder->set('subtotal', $header["subtotal"]); 
-        $builder->set('discitemtotal', $header["discitemtotal"]); 
-        $builder->set('disctotal', $header["disctotal"]); 
-        $builder->set('grandtotal', $header["grandtotal"]);  
-        $builder->where('id', $id); 
+        $builder->set('InvDate', $header["InvDate"]);   
+        $builder->set('InvAdmin', $header["InvAdmin"]); 
+        $builder->set('InvAddress', $header["InvAddress"]); 
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('InvSubTotal', $header["InvSubTotal"]); 
+        $builder->set('InvDiscItemTotal', $header["InvDiscItemTotal"]); 
+        $builder->set('InvDiscTotal', $header["InvDiscTotal"]); 
+        $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId', $id); 
         $builder->update(); 
 
         $builder = $this->db->table("invoice_detail");
-        $builder->where('ref',$id);
+        $builder->where('InvDetailRef',$id);
         $builder->delete(); 
 
         // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
-            $row["ref"] = $id;
-            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $row["InvDetailRef"] = $id;
+            $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
             $builder = $this->db->table("invoice_detail");
             $builder->insert($row); 
         } 
@@ -1650,16 +1708,17 @@ class ProjectModel extends Model
     }
     public function getdataInvoice($id){
         $builder = $this->db->table("invoice");
-        $builder->select("*,invoice.address,invoice.code,invoice.id,customer.name");
-        $builder->join("customer","customerid = customer.id");
-        $builder->join("template_footer","templateid = template_footer.id");
-        $builder->where('invoice.id',$id);
+        $builder->select("*");
+        $builder->join("customer","invoice.CustomerId = customer.CustomerId");
+        $builder->join("project","ProjectId = InvRef");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
+        $builder->where('InvId',$id);
         $builder->limit(1);
         return $builder->get()->getRow();  
     }
     public function getdataDetailInvoice($id){
         $builder = $this->db->table("invoice_detail");
-        $builder->where('ref',$id); 
+        $builder->where('InvDetailRef',$id); 
         return $builder->get()->getResult();  
     }
 
@@ -1671,20 +1730,24 @@ class ProjectModel extends Model
      
     public function insert_data_payment($data){
         $builder = $this->db->table("payment");
-        $builder->insert(array(
-            "ref"=>$data["ref"],
-            "datecreate"=>$data["datecreate"],
-            "type"=>$data["type"],
-            "method"=>$data["method"],
-            "total"=>$data["total"],
-            "note"=>$data["note"],
-            "date"=>$data["date"],  
-            "doc"=>1,  
+        $builder->insert(array( 
+            "PaymentCode"=>$this->get_next_code_payment($data["PaymentDate"]),
+            "PaymentRef"=>$data["PaymentRef"],
+            "PaymentDate"=>$data["PaymentDate"],
+            "PaymentDate2"=>$data["PaymentDate"],
+            "PaymentType"=>$data["PaymentType"],
+            "PaymentMethod"=>$data["PaymentMethod"],
+            "PaymentTotal"=>$data["PaymentTotal"],
+            "PaymentNote"=>$data["PaymentNote"], 
+            "PaymentDoc"=>1,  
+            "TemplateId"=>$data["TemplateId"],  
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
 
         $builder = $this->db->table("payment");
         $builder->select('*');
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('PaymentId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();  
 
@@ -1695,24 +1758,25 @@ class ProjectModel extends Model
         } 
 
         //Buat folder berdasarkan id
-        if (!file_exists($folder_utama."/".$data["ref"])) {
-            mkdir($folder_utama."/".$data["ref"], 0777, true);  
+        if (!file_exists($folder_utama."/".$data["PaymentRef"])) {
+            mkdir($folder_utama."/".$data["PaymentRef"], 0777, true);  
         }
 
         if (isset($data['image'])) {  
-            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama."/".$data["ref"], $query->id);  
+            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama."/".$data["PaymentRef"], $query->PaymentId);  
         }
 
     }
     public function update_data_payment($data,$id){
-        $builder = $this->db->table("payment");
-        $builder->set('ref', $data["ref"]); 
-        $builder->set('type', $data["type"]); 
-        $builder->set('method', $data["method"]); 
-        $builder->set('total', $data["total"]); 
-        $builder->set('note', $data["note"]); 
-        $builder->set('date', $data["date"]);     
-        $builder->where('id', $id); 
+        $builder = $this->db->table("payment"); 
+        $builder->set('PaymentDate', $data["PaymentDate"]);
+        $builder->set('PaymentType', $data["PaymentType"]); 
+        $builder->set('PaymentMethod', $data["PaymentMethod"]); 
+        $builder->set('PaymentTotal', $data["PaymentTotal"]); 
+        $builder->set('PaymentNote', $data["PaymentNote"]);    
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
+        $builder->where('PaymentId', $id); 
         $builder->update(); 
  
 
@@ -1724,38 +1788,38 @@ class ProjectModel extends Model
 
 
         //Buat folder berdasarkan id
-        if (!file_exists($folder_utama."/".$data["ref"])) {
-            mkdir($folder_utama."/".$data["ref"], 0777, true);  
+        if (!file_exists($folder_utama."/".$data["PaymentRef"])) {
+            mkdir($folder_utama."/".$data["PaymentRef"], 0777, true);  
         }
 
         //Remove image yang lama
-        $filename = $folder_utama."/".$data["ref"].'/'.$id.'.*';
+        $filename = $folder_utama."/".$data["PaymentRef"].'/'.$id.'.*';
         $files = glob($filename); 
         foreach ($files as $file) {
             unlink($file);
         }
 
         if (isset($data['image'])) {  
-            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama."/".$data["ref"], $id);  
+            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama."/".$data["PaymentRef"], $id);  
         }
 
     }
     public function delete_data_payment($id){
         $builder = $this->db->table("payment");
-        $builder->where('id',$id);
+        $builder->where('PaymentId',$id);
         $builder->delete();   
         return JSON_ENCODE(array("status"=>true));
     }
     public function getdataPaymentByRef($id){
         $builder = $this->db->table("payment"); 
-        $builder->where('ref',$id); 
-        $builder->where('doc',1); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
     public function getdataPayment($id){
         $builder = $this->db->table("payment"); 
-        $builder->where('id',$id); 
-        $builder->where('doc',1); 
+        $builder->where('PaymentId',$id); 
+        $builder->where('PaymentDoc',1); 
         return $builder->get()->getRow();  
     }
     public function getdataImagePayment($ref,$id){
@@ -1793,43 +1857,48 @@ class ProjectModel extends Model
     public function insert_data_proforma($data){
         $builder = $this->db->table("payment");
         $builder->insert(array(
-            "ref"=>$data["ref"],
-            "datecreate"=>$data["datecreate"],
-            "type"=>$data["type"],
-            "method"=>$data["method"],
-            "total"=>$data["total"],
-            "note"=>$data["note"],
-            "date"=>$data["date"],  
-            "doc"=>2,  
+            "PaymentCode"=>$this->get_next_code_proforma($data["PaymentDate"]),
+            "PaymentRef"=>$data["PaymentRef"],
+            "PaymentDate"=>$data["PaymentDate"],
+            "PaymentDate2"=>$data["PaymentDate"],
+            "PaymentType"=>$data["PaymentType"],
+            "PaymentMethod"=>$data["PaymentMethod"],
+            "PaymentTotal"=>$data["PaymentTotal"],
+            "PaymentNote"=>$data["PaymentNote"], 
+            "PaymentDoc"=>2,  
+            "TemplateId"=>$data["TemplateId"],  
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
 
         $builder = $this->db->table("payment");
         $builder->select('*');
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('PaymentId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();    
     }
     public function update_data_proforma($data,$id){
         $builder = $this->db->table("payment"); 
-        $builder->set('type', $data["type"]); 
-        $builder->set('method', $data["method"]); 
-        $builder->set('total', $data["total"]); 
-        $builder->set('note', $data["note"]); 
-        $builder->set('date', $data["date"]);     
-        $builder->where('id', $id); 
-        $builder->update();  
-
+        $builder->set('PaymentDate', $data["PaymentDate"]);
+        $builder->set('PaymentType', $data["PaymentType"]); 
+        $builder->set('PaymentMethod', $data["PaymentMethod"]); 
+        $builder->set('PaymentTotal', $data["PaymentTotal"]); 
+        $builder->set('PaymentNote', $data["PaymentNote"]);    
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
+        $builder->where('PaymentId', $id); 
+        $builder->update();   
     }
     public function getdataProformaByRef($id){
         $builder = $this->db->table("payment"); 
-        $builder->where('ref',$id); 
-        $builder->where('doc',2); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentDoc',2); 
         return $builder->get()->getResult();  
     }
     public function getdataProforma($id){
         $builder = $this->db->table("payment"); 
-        $builder->where('id',$id); 
-        $builder->where('doc',2); 
+        $builder->where('PaymentId',$id); 
+        $builder->where('PaymentDoc',2); 
         return $builder->get()->getRow();  
     }
 

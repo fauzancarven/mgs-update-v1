@@ -22,25 +22,25 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="AccountCode" class="col-sm-3 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
-                                <input id="AccountCode" name="AccountCode" type="text" class="form-control form-control-sm" value="(auto)" disabled>
+                                <input id="AccountCode" name="AccountCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="AccountName" class="col-sm-3 col-form-label">Nama<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
-                                <input id="AccountName" name="AccountName" type="text" class="form-control form-control-sm" value="" require>
+                                <input id="AccountName" name="AccountName" type="text" class="form-control form-control-sm input-form" value="" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="AccountEmail" class="col-sm-3 col-form-label">Email<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
-                                <input id="AccountEmail" name="AccountEmail" type="text" class="form-control form-control-sm" value="" require>
+                                <input id="AccountEmail" name="AccountEmail" type="text" class="form-control form-control-sm input-form" value="" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="AccountLevel" class="col-sm-3 col-form-label">Level<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
-                                <select name="AccountLevel" id="AccountLevel" class="form-select form-select-sm">
+                                <select name="AccountLevel" id="AccountLevel" class="form-select form-select-sm" style="width:100%">
                                     <option value="0" selected>Administrator</option>
                                     <option value="1">Staff</option>
                                 </select> 
@@ -50,7 +50,7 @@
                             <label for="AccountPassword" class="col-sm-3 col-form-label">Password<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
                                 <div class="input-group"> 
-                                    <input class="form-control form-control-sm" id="AccountPassword" name="AccountPassword" placeholder="Password" value="" type="password">
+                                    <input class="form-control form-control-sm input-form" id="AccountPassword" name="AccountPassword" placeholder="Password" value="" type="password">
                                     <span class="input-group-text"> 
                                         <i class="ti-eye" id="togglePassword" style="cursor: pointer"></i>
                                     </span>
@@ -62,13 +62,40 @@
                             <label for="AccountRePassword" class="col-sm-3 col-form-label">Re-Password<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
                                 <div class="input-group"> 
-                                    <input class="form-control form-control-sm" id="AccountRePassword" name="AccountRePassword" placeholder="Password" value="" type="password">
+                                    <input class="form-control form-control-sm input-form" id="AccountRePassword" name="AccountRePassword" placeholder="Password" value="" type="password">
                                     <span class="input-group-text"> 
                                         <i class="ti-eye" id="toggleRePassword" style="cursor: pointer"></i>
                                     </span>
                                 </div> 
                             </div>
+                        </div> 
+                        <div class="row mx-1 my-3 mt-4 align-items-center">
+                            <div class="label-border-right position-relative" >
+                                <span class="label-dialog">Personal Info</span> 
+                            </div>
+                        </div>   
+                        <div class="row mb-1 align-items-center mt-0 mt-md-2">
+                            <label for="AccountBirthPlace" class="col-sm-3 col-form-label">Tempat, Tgl Lahir.</label>
+                            <div class="col-sm-9 d-flex justify-content-between align-items-center">
+                                <input id="AccountBirthPlace" name="AccountBirthPlace" type="text" class="form-control form-control-sm input-form input-phone" value="" placeholder="Jakarta">
+                                <span class="fw-bold px-2">,</span>
+                                <input id="AccountBirthDate" name="AccountBirthDate" type="text" class="form-control form-control-sm input-form input-phone" value="" placeholder="20/10/10">
+                            </div> 
                         </div>  
+                        <div class="row mb-1 align-items-center mt-0 mt-md-2">
+                            <label for="AccountTelp1" class="col-sm-3 col-form-label">Telp.</label>
+                            <div class="col-sm-9 d-flex justify-content-between align-items-center">
+                                <input id="AccountTelp1" name="AccountTelp1" type="text" class="form-control form-control-sm input-form input-phone" value="">
+                                <span class="fw-bold px-2">/</span>
+                                <input id="AccountTelp2" name="AccountTelp2" type="text" class="form-control form-control-sm input-form input-phone" value="">
+                            </div> 
+                        </div>  
+                        <div class="row mb-1 align-items-center">
+                            <label for="AccountAddress" class="col-sm-3 col-form-label">Alamat<sup class="error">&nbsp;*</sup></label>
+                            <div class="col-sm-9">
+                                <textarea id="AccountAddress" name="AccountAddress" type="text" class="form-control form-control-sm input-form"></textarea>
+                            </div>
+                        </div>   
                     </div>   
                 </div>
             </div>
@@ -94,7 +121,20 @@
 </div>
  
 <script>
-    
+    $('#AccountBirthDate').daterangepicker({
+        "singleDatePicker": true,
+        "startDate": moment(),
+        "endDate":  moment(), 
+        dropdownParent: $('#modal-add-account .modal-content'), 
+        locale: {
+            format: 'DD MMMM YYYY'
+        }
+    });
+    $("#AccountLevel").select2({
+        dropdownParent: $('#modal-add-account .modal-content'),
+        placeholder: "Pilih Level", 
+    });
+
     $("#togglePassword").click(function(){
         const type = $("#AccountPassword").attr("type") === "password" ? "text" : "password";
         $("#AccountPassword").attr("type", type);                             

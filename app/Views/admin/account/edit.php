@@ -19,44 +19,39 @@
                             </label>
                         </div>
                     </div>   
-                    <div class="col-md-8">
-                    <input id="EditAccountId" name="EditAccountId" type="text" class="form-control form-control-sm d-none" value="<?= $_account->id ?>">
+                    <div class="col-md-8"> 
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="EditAccountCode" class="col-sm-3 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
-                                <input id="EditAccountCode" name="EditAccountCode" type="text" class="form-control form-control-sm" value="<?= $_account->code ?>" disabled>
+                                <input id="EditAccountCode" name="EditAccountCode" type="text" class="form-control form-control-sm input-form" value="<?= $_account->code ?>" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="EditAccountName" class="col-sm-3 col-form-label">Nama<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
-                                <input id="EditAccountName" name="EditAccountName" type="text" class="form-control form-control-sm" value="<?= $_account->username ?>" require>
+                                <input id="EditAccountName" name="EditAccountName" type="text" class="form-control form-control-sm input-form" value="<?= $_account->username ?>" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="EditAccountEmail" class="col-sm-3 col-form-label">Email<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
-                                <input id="EditAccountEmail" name="EditAccountEmail" type="text" class="form-control form-control-sm" value="<?= $_account->email ?>" require>
+                                <input id="EditAccountEmail" name="EditAccountEmail" type="text" class="form-control form-control-sm input-form" value="<?= $_account->email ?>" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="EditAccountLevel" class="col-sm-3 col-form-label">Level<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
-                                <select name="EditAccountLevel" id="EditAccountLevel" class="form-select form-select-sm">
+                                <select name="EditAccountLevel" id="EditAccountLevel" class="form-select form-select-sm" style="width:100%">
                                     <option value="0" <?= ($_account->level == 0 ? "selected" : "")?>>Administrator</option>
                                     <option value="1" <?= ($_account->level == 1 ? "selected" : "")?>>Staff</option>
                                 </select> 
                             </div>
                         </div> 
-                        
-                        <div class="row mb-1 align-items-center">
-                            <span class="fst-italic text-danger">Note : <br>Jika tidak ingin mengganti password maka kolom password dan re-password tidak perlu diisi</span>
-                        </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="EditAccountPassword" class="col-sm-3 col-form-label">Password<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
                                 <div class="input-group"> 
-                                    <input class="form-control form-control-sm" id="EditAccountPassword" name="EditAccountPassword" placeholder="Password" value="" type="password">
+                                    <input class="form-control form-control-sm input-form" id="EditAccountPassword" name="EditAccountPassword" placeholder="Password" value="" type="password">
                                     <span class="input-group-text"> 
                                         <i class="ti-eye" id="EdittogglePassword" style="cursor: pointer"></i>
                                     </span>
@@ -67,11 +62,41 @@
                             <label for="EditAccountRePassword" class="col-sm-3 col-form-label">Re-Password<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-9">
                                 <div class="input-group"> 
-                                    <input class="form-control form-control-sm" id="EditAccountRePassword" name="EditAccountRePassword" placeholder="Password" value="" type="password">
+                                    <input class="form-control form-control-sm input-form" id="EditAccountRePassword" name="EditAccountRePassword" placeholder="Password" value="" type="password">
                                     <span class="input-group-text"> 
                                         <i class="ti-eye" id="EdittoggleRePassword" style="cursor: pointer"></i>
                                     </span>
                                 </div> 
+                            </div>
+                        </div>  
+                        <div class="row mb-1 align-items-center">
+                            <span class="col-sm-9 offset-sm-3 fst-italic text-danger">Note : <br>Jika tidak ingin mengganti password maka kolom password dan re-password tidak perlu diisi</span>
+                        </div>  
+                        <div class="row mx-1 my-3 mt-4 align-items-center">
+                            <div class="label-border-right position-relative" >
+                                <span class="label-dialog">Personal Info</span> 
+                            </div>
+                        </div>   
+                        <div class="row mb-1 align-items-center mt-0 mt-md-2">
+                            <label for="EditAccountBirthPlace" class="col-sm-3 col-form-label">Tempat, Tgl Lahir.</label>
+                            <div class="col-sm-9 d-flex justify-content-between align-items-center">
+                                <input id="EditAccountBirthPlace" name="EditAccountBirthPlace" type="text" class="form-control form-control-sm input-form input-phone" value="<?= $_account->UserBirthPlace ?>" placeholder="jakarta">
+                                <span class="fw-bold px-2">,</span>
+                                <input id="EditAccountBirthDate" name="EditAccountBirthDate" type="text" class="form-control form-control-sm input-form input-phone" value="<?= $_account->UserBirthDate ?>" placeholder="20/10/10">
+                            </div> 
+                        </div>  
+                        <div class="row mb-1 align-items-center mt-0 mt-md-2">
+                            <label for="EditAccountTelp1" class="col-sm-3 col-form-label">Telp.</label>
+                            <div class="col-sm-9 d-flex justify-content-between align-items-center">
+                                <input id="EditAccountTelp1" name="EditAccountTelp1" type="text" class="form-control form-control-sm input-form input-phone" value="<?= $_account->UserTelp1 ?>">
+                                <span class="fw-bold px-2">/</span>
+                                <input id="EditAccountTelp2" name="EditAccountTelp2" type="text" class="form-control form-control-sm input-form input-phone" value="<?= $_account->UserTelp2 ?>">
+                            </div> 
+                        </div>  
+                        <div class="row mb-1 align-items-center">
+                            <label for="EditAccountAddress" class="col-sm-3 col-form-label">Alamat<sup class="error">&nbsp;*</sup></label>
+                            <div class="col-sm-9">
+                                <textarea id="EditAccountAddress" name="EditAccountAddress" type="text" class="form-control form-control-sm input-form"> <?= $_account->UserAddress ?></textarea>
                             </div>
                         </div>  
                     </div>   
@@ -96,12 +121,21 @@
             </div>
         </div>
     </div>
-</div>
+</div> 
 <script>
-    console.log(<?= json_encode($_account) ?>);
-</script>
-<script>
-    
+    $('#EditAccountBirthDate').daterangepicker({
+        "singleDatePicker": true,
+        "startDate": moment('<?= $_account->UserBirthDate ?>'),
+        "endDate":  moment('<?= $_account->UserBirthDate ?>'), 
+        dropdownParent: $('#modal-edit-account .modal-content'), 
+        locale: {
+            format: 'DD MMMM YYYY'
+        }
+    });
+    $("#EditAccountLevel").select2({
+        dropdownParent: $('#modal-edit-account .modal-content'),
+        placeholder: "Pilih Level", 
+    });
     $("#EdittogglePassword").click(function(){
         const type = $("#EditAccountPassword").attr("type") === "password" ? "text" : "password";
         $("#EditAccountPassword").attr("type", type);                             
@@ -238,7 +272,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/edit-data-account/" + $("#EditAccountId").val(), 
+            url: "<?= base_url() ?>action/edit-data-account/" + <?= $_account->id?>, 
             data:{
                 "username":$("#EditAccountName").val(),
                 "email":$("#EditAccountEmail").val(),
@@ -246,6 +280,11 @@
                 "password":$("#EditAccountPassword").val(),
                 "image":$("#EditAccountImage").attr("src"),
                 "level":$("#EditAccountLevel").val(),
+                "UserBirthDate":$("#EditAccountBirthDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),
+                "UserBirthPlace":$("#EditAccountBirthPlace").val(),
+                "UserTelp1":$("#EditAccountTelp1").val(),
+                "UserTelp2":$("#EditAccountTelp2").val(),
+                "UserAddress":$("#EditAccountAddress").val(),
             },
             success: function(data) {     
                 isProcessingSave = false;

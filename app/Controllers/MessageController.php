@@ -64,12 +64,12 @@ class MessageController extends BaseController
     {   
         $models = new CustomerModel();
         $account = $models
-        ->select("*,customercategory.name catname,customer.name name,customer.id id")
-        ->join("customercategory","customercategory.id=category")
-        ->getWhere(['customer.id' => $id], 1)->getRow();  
+        ->select("*")
+        ->join("customercategory","customercategory.CustomerCategoryId=customer.CustomerCategoryId")
+        ->getWhere(['CustomerId' => $id], 1)->getRow();  
         
         $models = new ProvinceModel();  
-        $village = $models->get_village_by_id($account->village);  
+        $village = $models->get_village_by_id($account->CustomerVillageId);  
         $data["_customer"] = $account; 
         $data["_province"] = $village;  
 
@@ -82,12 +82,11 @@ class MessageController extends BaseController
     public function produk_edit($id)
     {   
         $models = new ProdukModel();  
-        $data["_produk"] = $models
-            ->select("*,produk.id,produk.name,produk_category.id cat_id,produk_category.name cat_name,produk.code") 
-            ->join("produk_category","produk_category.id = produk.category")
-            ->getWhere(['produk.id' => $id], 1)->getRow(); 
-        $data["_produkdetail"] = $models->getproductdetail($data["_produk"]->id); 
-        $data["_produkimage"] = $models->getproductimage($data["_produk"]->id); 
+        $data["_produk"] = $models 
+            ->join("produk_category","produk_category.ProdukCategoryId = produk.ProdukCategoryId")
+            ->getWhere(['ProdukId' => $id], 1)->getRow(); 
+        $data["_produkdetail"] = $models->getproductdetail($data["_produk"]->ProdukId); 
+        $data["_produkimage"] = $models->getproductimage($data["_produk"]->ProdukId); 
 
         return $this->response->setBody(view('admin/produk/edit.php',$data)); 
     }
@@ -103,18 +102,26 @@ class MessageController extends BaseController
     }
     public function vendor_edit($id)
     { 
-        $models = new VendorModel();
-        $account = $models->getWhere(['id' => $id], 1)->getRow(); 
-        
-        $data["_vendor"] = $account;    
+        $models = new VendorModel(); 
+        $data["_vendor"] = $models->getWhere(['VendorId' => $id], 1)->getRow();     
         return $this->response->setBody(view('admin/vendor/edit.php',$data)); 
     }
 
 
     
     public function project_add()
-    {   
-        return $this->response->setBody(view('admin/project/add_project.php')); 
+    {    
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/add_project.php',$data)); 
+    }
+    public function project_edit($id)
+    {    
+        $models = new ProjectModel();
+        $models->join("customer","customer.CustomerId=project.CustomerId");
+        $models->join("users","users.id=project.UserId");
+        $models->join("store","store.StoreId=project.StoreId");
+        $data["project"] = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+        return $this->response->setBody(view('admin/project/edit_project.php',$data)); 
     }
 
     public function project_sph_add($id)
@@ -123,12 +130,12 @@ class MessageController extends BaseController
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
 
-        $project = $models->getWhere(['id' => $id], 1)->getRow(); 
+        $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
         $data["project"] = $project;
-        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/add_project_sph.php',$data)); 
+        return $this->response->setBody(view('admin/project/sph/add_project_sph.php',$data)); 
     }
     public function project_sph_edit($id)
     {     
@@ -141,26 +148,26 @@ class MessageController extends BaseController
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(
-                        "id" => $row->produkid, 
-                        "satuan_id"=> ($row->satuan_id == 0 ? "" : $row->satuan_id),
-                        "satuantext"=>$row->satuantext,  
-                        "hargajual"=>$row->harga,
-                        "varian"=> JSON_DECODE($row->varian,true),
-                        "total"=> $row->total,
-                        "disc"=> $row->disc,
-                        "qty"=> $row->qty,
-                        "text"=> $row->text,
-                        "group"=> $row->group,
-                        "type"=> $row->type
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                        "satuan_text"=>$row->SphDetailSatuanText,  
+                        "price"=>$row->SphDetailPrice,
+                        "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                        "total"=> $row->SphDetailTotal,
+                        "disc"=> $row->SphDetailDisc,
+                        "qty"=> $row->SphDetailQty,
+                        "text"=> $row->SphDetailText,
+                        "group"=> $row->SphDetailGroup,
+                        "type"=> $row->SphDetailType
                     );
         };
         $data["project"] = $project; 
         $data["detail"] =  $detail;
-        $data["template"] =$models->get_data_template_footer($project->templateid); 
-        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["template"] =$models->get_data_template_footer($project->TemplateId); 
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/edit_project_sph.php',$data)); 
+        return $this->response->setBody(view('admin/project/sph/edit_project_sph.php',$data)); 
     }
     
     public function project_po_add($id)
@@ -170,13 +177,13 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel();
         $modelsvendor = new VendorModel();
 
-        $project = $models->getWhere(['id' => $id], 1)->getRow(); 
+        $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
         $data["project"] = $project;
-        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
         $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/add_project_po.php',$data)); 
+        return $this->response->setBody(view('admin/project/po/add_project_po.php',$data)); 
     }
     public function project_po_edit($id)
     {     
@@ -219,12 +226,12 @@ class MessageController extends BaseController
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
 
-        $project = $models->getWhere(['id' => $id], 1)->getRow(); 
+        $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
         $data["project"] = $project;
-        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/add_project_invoice.php',$data)); 
+        return $this->response->setBody(view('admin/project/invoice/add_project_invoice.php',$data)); 
     }
     public function project_invoice_edit($id)
     {     
@@ -237,63 +244,67 @@ class MessageController extends BaseController
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(
-                        "id" => $row->produkid, 
-                        "satuan_id"=> ($row->satuan_id == 0 ? "" : $row->satuan_id),
-                        "satuantext"=>$row->satuantext,  
-                        "hargajual"=>$row->harga,
-                        "varian"=> JSON_DECODE($row->varian,true),
-                        "total"=> $row->total,
-                        "disc"=> $row->disc,
-                        "qty"=> $row->qty,
-                        "text"=> $row->text,
-                        "group"=> $row->group,
-                        "type"=> $row->type
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                        "satuan_text"=>$row->InvDetailSatuanText,  
+                        "price"=>$row->InvDetailPrice,
+                        "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                        "total"=> $row->InvDetailTotal,
+                        "disc"=> $row->InvDetailDisc,
+                        "qty"=> $row->InvDetailQty,
+                        "text"=> $row->InvDetailText,
+                        "group"=> $row->InvDetailGroup,
+                        "type"=> $row->InvDetailType
                     );
         };
         $data["project"] = $project; 
         $data["detail"] =  $detail;
-        $data["template"] =$models->get_data_template_footer($project->templateid); 
-        $data["customer"] =  $modelscustomer->getWhere(['id' => $project->customerid], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->storeid], 1)->getRow();
+        $data["template"] = $models->get_data_template_footer($project->TemplateId); 
+        $data["customer"] =$modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/edit_project_invoice.php',$data)); 
+        return $this->response->setBody(view('admin/project/invoice/edit_project_invoice.php',$data)); 
     }
     public function project_payment_add($id)
     {     
         $models = new ProjectModel();  
         $project = $models->getdataInvoice($id);  
         $data["project"] = $project; 
-        $data["payment"] =$models->getdataPaymentByRef($project->id);  
+        $data["payment"] = $models->getdataPaymentByRef($id);  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/add_project_payment.php',$data)); 
+        return $this->response->setBody(view('admin/project/invoice/add_project_payment.php',$data)); 
     }
     public function project_payment_edit($id)
     {     
         $models = new ProjectModel();      
         $data["payment"] = $models->getdataPayment($id);  
-        $data["project"] = $models->getdataInvoice($data["payment"]->ref);  
-        $data["image"] = $models->getdataImagePayment($data["payment"]->ref,$id);   
-        $data["payments"] = $models->getdataPaymentByRef($data["payment"]->ref);   
+        $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef);  
+        
+        $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
+        $data["image"] = $models->getdataImagePayment($data["payment"]->PaymentRef,$id);   
+        $data["payments"] = $models->getdataPaymentByRef($data["payment"]->PaymentRef);   
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/edit_project_payment.php',$data)); 
+        return $this->response->setBody(view('admin/project/invoice/edit_project_payment.php',$data)); 
     }
     public function project_proforma_add($id)
     {     
         $models = new ProjectModel();  
         $project = $models->getdataInvoice($id);  
         $data["project"] = $project; 
-        $data["payment"] =$models->getdataPaymentByRef($project->id);  
+        $data["payment"] = $models->getdataProformaByRef($id);  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/add_project_proforma.php',$data)); 
+        return $this->response->setBody(view('admin/project/invoice/add_project_proforma.php',$data)); 
     }
     public function project_proforma_edit($id)
     {     
         $models = new ProjectModel();      
         $data["payment"] = $models->getdataProforma($id);  
-        $data["project"] = $models->getdataInvoice($data["payment"]->ref);      
-        $data["payments"] = $models->getdataProformaByRef($data["payment"]->ref);   
+        $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
+        $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef);      
+        $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef);   
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/edit_project_proforma.php',$data)); 
+        return $this->response->setBody(view('admin/project/invoice/edit_project_proforma.php',$data)); 
     }
     public function project_delivery_add($id)
     {      

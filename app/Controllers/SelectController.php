@@ -38,7 +38,7 @@ class SelectController extends BaseController
                  // Fetch record
                 $models = new CustomerModel();
                 $customerList = $models->select("*")
-                    ->orderBy('code',"DESC")
+                    ->orderBy('CustomerCode',"DESC")
                     ->findAll();
             }else{
                 $searchTerm = $postData['searchTerm'];
@@ -46,25 +46,25 @@ class SelectController extends BaseController
                 // Fetch record
                 $models = new CustomerModel();
                 $customerList = $models->select("*")
-                    ->like('name',$searchTerm)
-                    ->orderBy('code',"DESC")
+                    ->like('CustomerName',$searchTerm)
+                    ->orderBy('CustomerCode',"DESC")
                     ->findAll();
             } 
       
             $data = array(); 
             foreach($customerList as $customer){
-                $customername = $customer['code'] . " - " . ($customer['company']== "" ? $customer['name'] : $customer['name'] . ' (' . $customer['company'] . ')');
-                $customertelp = (($customer['telp2'] == "" || $customer['telp2'] == "-") ? $customer['telp1'] : $customer['telp1'] . " / " . $customer['telp2']);
+                $customername = $customer['CustomerCode'] . " - " . ($customer['CustomerCompany']== "" ? $customer['CustomerName'] : $customer['CustomerName'] . ' (' . $customer['CustomerCompany'] . ')');
+                $customertelp = (($customer['CustomerTelp2'] == "" || $customer['CustomerTelp2'] == "-") ? $customer['CustomerTelp1'] : $customer['CustomerTelp1'] . " / " . $customer['CustomerTelp2']);
                 $htmlItem = '
                                <div class="d-flex flex-column" >
                                   <span style="font-size:0.75rem" class="fw-bold">' . $customername . '</span>
                                   <span style="font-size:0.6rem">' . $customertelp . '</span>
-                                  <span style="font-size:0.6rem">' .  $customer['address'] . '</span>
-                                  <span style="font-size:0.6rem">Note : ' .  $customer['comment'] . '</span>
+                                  <span style="font-size:0.6rem">' .  $customer['CustomerAddress'] . '</span>
+                                  <span style="font-size:0.6rem">Note : ' .  $customer['CustomerComment'] . '</span>
                                </div>';
                 $data[] = array(
-                    "id" => $customer['id'],
-                    "text" => $customer['code'] . " - " . $customer['name'],
+                    "id" => $customer['CustomerId'],
+                    "text" => $customer['CustomerCode'] . " - " . $customer['CustomerName'],
                     "html" => $htmlItem,  
                 );
             }
@@ -82,27 +82,16 @@ class SelectController extends BaseController
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $response = array(); 
-
-            if(!isset($postData['searchTerm'])){
-                 // Fetch record
-                $models = new CustomercategoryModel();
-                $customerList = $models->select('id,name')
-                    ->orderBy('id')
-                    ->find();
-            }else{
-                $searchTerm = $postData['searchTerm']; 
-                // Fetch record
-                $models = new CustomercategoryModel();
-                $customerList = $models->select('id,name')
-                    ->like('name',$searchTerm)
-                    ->orderBy('id')
-                    ->find();
-            }  
+            $models = new CustomercategoryModel();
+            $models->select('*');
+            if(isset($postData['searchTerm'])) $models->like('CustomerCategoryName',$postData['searchTerm']);
+            $models->orderBy('CustomerCategoryId');
+            $customerList = $models->find();
             $data = array();
             foreach($customerList as $customer){
                 $data[] = array(
-                    "id" => $customer['id'],
-                    "text" => $customer['name'],
+                    "id" => $customer['CustomerCategoryId'],
+                    "text" => $customer['CustomerCategoryName'],
                 );
             } 
             $response['data'] = $data; 
@@ -110,7 +99,6 @@ class SelectController extends BaseController
         }
         
     } 
-
     public function store()
     {   
         $request = Services::request();
@@ -145,6 +133,33 @@ class SelectController extends BaseController
         }
         
     } 
+ 
+    public function vendor_category(){
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array(); 
+
+
+            $models = new VendorcategoryModel();
+            $models->select('*');
+            if(isset($postData['searchTerm'])) $models->like('VendorCategoryName',$postData['searchTerm']);
+            $models->orderBy('VendorCategoryId');
+            $customerList = $models->find();
+            $data = array(); 
+
+            foreach($customerList as $row){
+                $data[] = array(
+                    "id" => $row['id'],
+                    "text" => $row['name'], 
+
+                );
+            } 
+            $response['data'] = $data; 
+            return $this->response->setJSON($response); 
+        }
+    }
+
     public function users()
     {   
         $request = Services::request();
@@ -295,62 +310,26 @@ class SelectController extends BaseController
             if(!isset($postData['searchTerm'])){
                  // Fetch record
                 
-                $customerList = $models->select('*,produk.id,produk.name,produk_category.id cat_id,produk_category.name cat_name,produk_category.code cat_code,vendor,varian')
-                    ->join("produk_category","produk_category.id = produk.category") 
-                    ->orderBy('produk.id')
+                $customerList = $models->join("produk_category","produk_category.ProdukCategoryId = produk.ProdukCategoryId") 
+                    ->orderBy('produk.ProdukId')
                     ->find();
             }else{
                 $searchTerm = $postData['searchTerm']; 
                 // Fetch record 
-                $customerList = $models->select('*,produk.id,produk.name,produk_category.id cat_id,produk_category.name cat_name,produk_category.code cat_code,vendor,varian')
-                    ->join("produk_category","produk_category.id = produk.category")
-                    ->like('produk.name',$searchTerm)
-                    ->orderBy('produk.id')
+                $customerList = $models->join("produk_category","produk_category.ProdukCategoryId = produk.ProdukCategoryId")
+                    ->like('produk.ProdukName',$searchTerm)
+                    ->orderBy('produk.ProdukId')
                     ->find();
             }  
             $data = array();
             foreach($customerList as $row){
                 $data[] = array(
-                    "id" => $row['id'],
-                    "text" => $row['name'], 
-                    "category" => $row['cat_code']." - ".$row['cat_name'],  
-                    "vendor" => $row['vendor'], 
-                    "varian" => $row['varian'], 
+                    "id" => $row['ProdukId'],
+                    "text" => $row['ProdukName'], 
+                    "category" => $row['ProdukCategoryCode']." - ".$row['ProdukCategoryName'],  
+                    "vendor" => $row['ProdukVendor'], 
+                    "varian" => $row['ProdukVarian'], 
                     "html" => $models->getHtml($row)  
-                );
-            } 
-            $response['data'] = $data; 
-            return $this->response->setJSON($response); 
-        }
-    }
-
-    public function vendor_category(){
-        $request = Services::request();
-        if ($request->getMethod(true) === 'POST') {   
-            $postData = $request->getPost(); 
-            $response = array(); 
-
-            if(!isset($postData['searchTerm'])){
-                 // Fetch record
-                $models = new VendorcategoryModel();
-                $customerList = $models->select('*')
-                    ->orderBy('id')
-                    ->find();
-            }else{
-                $searchTerm = $postData['searchTerm']; 
-                // Fetch record
-                $models = new VendorcategoryModel();
-                $customerList = $models->select('*')
-                    ->like('name',$searchTerm)
-                    ->orderBy('id')
-                    ->find();
-            }  
-            $data = array();
-            foreach($customerList as $row){
-                $data[] = array(
-                    "id" => $row['id'],
-                    "text" => $row['name'], 
-
                 );
             } 
             $response['data'] = $data; 
@@ -364,26 +343,18 @@ class SelectController extends BaseController
             $postData = $request->getPost(); 
             $response = array(); 
 
-            if(!isset($postData['searchTerm'])){
-                 // Fetch record
-                $models = new ProdukcategoryModel();
-                $customerList = $models->select('*')
-                    ->orderBy('id')
-                    ->find();
-            }else{
-                $searchTerm = $postData['searchTerm']; 
-                // Fetch record
-                $models = new ProdukcategoryModel();
-                $customerList = $models->select('*')
-                    ->like('name',$searchTerm)
-                    ->orderBy('id')
-                    ->find();
-            }  
+            // Fetch record
+            $models = new ProdukcategoryModel();
+            $customerList = $models->select('*');
+            if(isset($postData['searchTerm'])) $models->like('ProdukCategoryName',$postData['searchTerm']);
+            $models->orderBy('ProdukCategoryId');
+            $customerList = $models->find(); 
+
             $data = array();
             foreach($customerList as $row){
                 $data[] = array(
-                    "id" => $row['id'],
-                    "text" => $row['name'], 
+                    "id" => $row['ProdukCategoryId'],
+                    "text" => $row['ProdukCategoryName'], 
 
                 );
             } 
@@ -401,25 +372,25 @@ class SelectController extends BaseController
                  // Fetch record
                 $models = new VendorModel();
                 $customerList = $models->select('*')
-                    ->orderBy('id')
+                    ->orderBy('VendorId')
                     ->find();
             }else{
                 $searchTerm = $postData['searchTerm']; 
                 // Fetch record
                 $models = new VendorModel();
                 $customerList = $models->select('*')
-                    ->like('code',$searchTerm)
-                    ->orLike('name',$searchTerm)
-                    ->orderBy('id')
+                    ->like('VendorCode',$searchTerm)
+                    ->orLike('VendorName',$searchTerm)
+                    ->orderBy('VendorId')
                     ->find();
             }  
             $data = array();
             foreach($customerList as $row){
                 $data[] = array(
-                    "id" => $row['id'],
-                    "code" => $row['code'], 
-                    "name" => $row['name'], 
-                    "text" =>  $row['code']." - ".$row['name'],  
+                    "id" => $row['VendorId'],
+                    "code" => $row['VendorCode'], 
+                    "name" => $row['VendorName'], 
+                    "text" =>  $row['VendorCode']." - ".$row['VendorName'],  
                 );
             } 
             $response['data'] = $data; 
@@ -504,22 +475,22 @@ class SelectController extends BaseController
                  // Fetch record
                 $models = new ProduksatuanModel();
                 $customerList = $models->select('*')
-                    ->orderBy('id')
+                    ->orderBy('ProdukSatuanId')
                     ->find();
             }else{
                 $searchTerm = $postData['searchTerm']; 
                 // Fetch record
                 $models = new ProduksatuanModel();
                 $customerList = $models->select('*')
-                    ->like('code',$searchTerm)
-                    ->orderBy('id')
+                    ->like('ProdukSatuanCode',$searchTerm)
+                    ->orderBy('ProdukSatuanId')
                     ->find();
             }  
             $data = array();
             foreach($customerList as $row){
                 $data[] = array(
-                    "id" => $row['id'],
-                    "text" => $row['code'], 
+                    "id" => $row['ProdukSatuanId'],
+                    "text" => $row['ProdukSatuanCode'], 
 
                 );
             } 
@@ -583,54 +554,58 @@ class SelectController extends BaseController
                 "type" => "",  
             );
             foreach($Project as $row){
-                $customername = $row['code'] . " - " . ($row['company']== "" ? $row['name'] : $row['name'] . ' (' . $row['company'] . ')');
-                $customertelp = (($row['telp2'] == "" || $row['telp2'] == "-") ? $row['telp1'] : $row['telp1'] . " / " . $row['telp2']);
+                $customername = $row['CustomerCode'] . " - " . ($row['CustomerCompany']== "" ? $row['CustomerName'] : $row['CustomerName'] . ' (' . $row['CustomerCompany'] . ')');
+                $customertelp = (($row['CustomerTelp2'] == "" || $row['CustomerTelp2'] == "-") ? $row['CustomerTelp1'] : $row['CustomerTelp1'] . " / " . $row['CustomerTelp2']);
                 $htmlItem = '
                                <div class="d-flex flex-column" >
-                                  <span style="font-size:0.75rem" class="fw-bold">' . $row['type'] . ' - ' . $row['coderef'] . '</span>
+                                  <span style="font-size:0.75rem" class="fw-bold">' . $row['type'] . ' - ' . $row['code'] . '</span>
                                   <span style="font-size:0.6rem">' . $customername . '</span>
                                   <span style="font-size:0.6rem">' . $customertelp . '</span>
-                                  <span style="font-size:0.6rem">' .  $row['address'] . '</span> 
+                                  <span style="font-size:0.6rem">' .  $row['CustomerAddress'] . '</span> 
                                </div>';
-                $detail_item =  ($row['type'] == "INV" ? $models->getdataDetailInvoice($row['refid']) : $models->getdataDetailSPH($row['refid'])); 
-                $vendor_array = array();
-                $detail = array();
-                foreach($detail_item as $row_item){ 
-                    $varian = json_decode($row_item->varian, true); 
-                    if (!empty($varian)) {
-                        foreach ($varian as $v) { 
-                            if ($v['varian'] == 'vendor'){
-                                $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("code",$v['value'])->get()->getRow()));
-                                if ( !in_array($data_arr, $vendor_array)) {
-                                    $vendor_array[] = $data_arr;
+                if($row['type'] == "INV"){
+                    $detail_item =   $models->getdataDetailInvoice($row['refid']); 
+                }else{      
+                    $detail_item =  $models->getdataDetailSPH($row['refid']); 
+                    $vendor_array = array();
+                    $detail = array();
+                    foreach($detail_item as $row_item){ 
+                        $varian =  json_decode($row_item->SphDetailVarian, true); 
+                        if (!empty($varian)) {
+                            foreach ($varian as $v) { 
+                                if ($v['varian'] == 'vendor'){
+                                    $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                                    if ( !in_array($data_arr, $vendor_array)) {
+                                        $vendor_array[] = $data_arr;
+                                    }
                                 }
                             }
                         }
-                    }
-                    
-                    $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->varian,true),$row_item->produkid); 
-                    if($data_total){ 
-                        $harga = $data_total["hargabeli"];
-                    }else{
-                        $harga = 0;
-                    }
-                    $detail[] = array(
-                        "produkid" => $row_item->produkid, 
-                        "satuan_id"=> ($row_item->satuan_id == 0 ? "" : $row_item->satuan_id),
-                        "satuantext"=>$row_item->satuantext, 
-                        "varian"=> JSON_DECODE($row_item->varian,true), 
-                        "text"=> $row_item->text,
-                        "group"=> $row_item->group,
-                        "type"=> $row_item->type,
-                        "ref"=>  $row_item->qty,
-                        "qty"=>  $row_item->qty,
-                        "harga"=>  $harga,
-                        "total"=>  $row_item->qty * $harga,
-                    );
-                } 
+                        
+                        $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->SphDetailVarian,true),$row_item->ProdukId); 
+                        if($data_total){ 
+                            $harga = $data_total["ProdukDetailHargaJual"];
+                        }else{
+                            $harga = 0;
+                        }
+                        $detail[] = array(
+                            "produkid" => $row_item->ProdukId, 
+                            "satuan_id"=> ($row_item->SphDetailSatuanId == 0 ? "" : $row_item->SphDetailSatuanId),
+                            "satuan_text"=>$row_item->SphDetailSatuanText, 
+                            "varian"=> JSON_DECODE($row_item->SphDetailVarian,true), 
+                            "text"=> $row_item->SphDetailText,
+                            "group"=> $row_item->SphDetailGroup,
+                            "type"=> $row_item->SphDetailType,
+                            "ref"=>  $row_item->SphDetailQty,
+                            "qty"=>  $row_item->SphDetailQty,
+                            "harga"=>  $harga,
+                            "total"=>  $row_item->SphDetailQty * $harga,
+                        );
+                    } 
+                }
                 $data[] = array(
                     "id" => $row['refid'],
-                    "text" => $row['coderef'], 
+                    "text" => $row['code'], 
                     "html" => $htmlItem,    
                     "type" => $row['type'],    
                     "vendor" => $vendor_array,   

@@ -173,7 +173,7 @@
             method: "POST",
             url: "<?= base_url("action/add-data-customer-category") ?>",
             data: {
-                "name": $("#MsCustomerCategory").data('select2').dropdown.$search[0].value 
+                "CustomerCategoryName": $("#MsCustomerCategory").data('select2').dropdown.$search[0].value 
             }, 
             success: function(data) { 
                 var newOption = new Option($("#MsCustomerCategory").data('select2').dropdown.$search[0].value , data["data"]["id"], true, true);

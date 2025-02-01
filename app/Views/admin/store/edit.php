@@ -246,8 +246,8 @@
         }); 
         quill[type].enable(false);
         quill[type].root.style.background = '#F7F7F7'; // warna disable 
-        const btnsave = $(el).find("a[value='simpanAs']")[0];
-        const btnsaveas = $(el).find("a[value='simpan']")[0];
+        const btnsaveas = $(el).find("a[value='simpanAs']")[0];
+        const btnsave = $(el).find("a[value='simpan']")[0];
         const btnedit = $(el).find("a[value='edit']")[0];
         const selectoption = $(el).find("select")[0];
 
@@ -256,7 +256,7 @@
         $(btnedit).hide();
  
         $(selectoption).select2({
-            dropdownParent: $('#modal-edit-store .modal-content'),
+            dropdownParent: $('#modal-add-store .modal-content'),
             placeholder: "Pilih Template",
             tags:true,
             ajax: {
@@ -299,13 +299,12 @@
                     return "Tambah '" + params.text + "'";
                 }
                 if (params.loading) return params.text; 
-                return params.text;
-                //return params.text;
+                return params.text; 
             },
             templateSelection: function(params) {
                 return params.text;
             }, 
-            //escapeMarkup: function(m) { return m; }
+            escapeMarkup: function(m) { return m; }
         }).on("select2:select", function(e) {  
             var data = e.params.data;    
             //console.log(data);
@@ -338,9 +337,10 @@
                     method: "POST",
                     url: "<?= base_url() ?>action/add-data-template-footer", 
                     data:{
-                        "name":$(selectoption).select2("data")[0]["text"] ,
-                        "detail": quill[type].getSemanticHTML(), 
-                        "delta": quill[type].getContents(), 
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
                     },
                     success: function(data) {    
                         //console.log(data); 
@@ -368,9 +368,10 @@
                     method: "POST",
                     url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
                     data:{
-                        "name": $("#SphFormatFooter").select2("data")[0]["text"] ,
-                        "detail": quill[type].getSemanticHTML(), 
-                        "delta": quill[type].getContents(), 
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
                     },
                     success: function(data) {    
                         //console.log(data); 
@@ -394,7 +395,71 @@
                 }); 
             }
         }) 
+
         $(btnsaveas).click(function(){
+            $("#modal-add-store").modal("hide"); 
+            Swal.fire({
+                title: 'Simpan Template',
+                input: 'text',
+                buttonsStyling: false,
+                showCancelButton: true,
+                showCancelButton: true,
+                customClass: {
+                    confirmButton: 'btn btn-primary mx-1',
+                    cancelButton: 'btn btn-secondary mx-1',
+                    loader: 'custom-loader',
+                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
+                },
+                backdrop: true,
+                confirmButtonText: "Simpan",
+                loaderHtml: '<div class="spinner-border text-primary"></div>',
+                preConfirm: async (name) => {
+                    try {  
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/add-data-template-footer", 
+                            data:{ 
+                                "TemplateFooterName": name ,
+                                "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                                "TemplateFooterDelta": quill[type].getContents(), 
+                                "TemplateFooterCategory": type, 
+                            },
+                            success: function(data) {    
+                                //console.log(data); 
+                                if(data["status"]===true){    
+                                    $(selectoption).append(new Option(data["data"]["TemplateFooterName"] ,data["data"]["TemplateFooterId"], true, true)).trigger('change'); 
+                                    
+                                    $(btnsave).hide();
+                                    $(btnsaveas).hide();
+                                    $(btnedit).show(); 
+
+                                    quill[type].enable(false);
+                                    quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                                }
+                            },
+                            error : function(xhr, textStatus, errorThrown){   
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: xhr["responseJSON"]['message'], 
+                                    confirmButtonColor: "#3085d6", 
+                                });
+                            }
+                        }); 
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {    
+                $(btnsave).hide();
+                $(btnsaveas).hide();
+                $(btnedit).show(); 
+
+                quill[type].enable(false);
+                quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                $("#modal-add-store").modal("show");
+            }); 
         })
         $(btnedit).click(function(){
 

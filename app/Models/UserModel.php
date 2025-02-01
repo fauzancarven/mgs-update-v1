@@ -148,7 +148,7 @@ class UserModel extends Model
                 $nextid = "MGS0" . $data->nextcode;
                 return $nextid;
             case 5:
-                $nextid = "MGSD" . $data->nextcode;
+                $nextid = "MGS" . $data->nextcode;
                 return $nextid; 
             default:
                 $nextid = "MGS00000";
@@ -216,7 +216,13 @@ class UserModel extends Model
             $changepassword = true;
         }
         $builder->set('level', $data['level']); 
+        $builder->set('UserAddress', $data['UserAddress']); 
+        $builder->set('UserBirthDate', $data['UserBirthDate']); 
+        $builder->set('UserBirthPlace', $data['UserBirthPlace']); 
+        $builder->set('UserTelp1', $data['UserTelp1']); 
+        $builder->set('UserTelp2', $data['UserTelp2']); 
         $builder->set('updated_at', new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->set('updated_user',user()->id);
         $builder->where('id', $id);
         $builder->update();
 

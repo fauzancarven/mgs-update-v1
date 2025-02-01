@@ -47,6 +47,7 @@
                     <th class="py-lg-4 py-3 px-lg-2 px-0">Telp 1</th>  
                     <th class="py-lg-4 py-3 px-lg-2 px-0">Telp 2</th>  
                     <th class="py-lg-4 py-3 px-lg-2 px-0">Alamat</th>  
+                    <th class="py-lg-4 py-3 px-lg-2 px-0">Category</th>  
                     <th data-priority="2" class="py-lg-4 py-3 px-lg-2 px-0 text-end"><i class="ti-settings"></i></th>
                 </tr>
             </thead > 
@@ -88,12 +89,13 @@
                 data["search"]["value"] = $("#input-search-data").val()
             }
         }, 
-        "columns": [
-            { data: "code"},
-            { data: "name" }, 
-            { data: "telp1" }, 
-            { data: "telp2" }, 
-            { data: "address" }, 
+        "columns": [ 
+            { data: "VendorCode"},
+            { data: "VendorName" }, 
+            { data: "VendorTelp1" }, 
+            { data: "VendorTelp2" }, 
+            { data: "VendorAddress" },
+            { data: "category" }, 
             { data: "action" ,orderable: false , className:"action-td"}, 
         ], 
     }); 

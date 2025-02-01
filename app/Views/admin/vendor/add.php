@@ -12,31 +12,31 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="vendorcode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="vendorcode" name="vendorcode" type="text" class="form-control form-control-sm" value="" require>
+                                <input id="vendorcode" name="vendorcode" type="text" class="form-control form-control-sm input-form" value="" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="vendorname" class="col-sm-2 col-form-label">Nama<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="vendorname" name="vendorname" type="text" class="form-control form-control-sm" value="" require>
+                                <input id="vendorname" name="vendorname" type="text" class="form-control form-control-sm input-form" value="" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="vendortelp1" class="col-sm-2 col-form-label">Telp 1<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="vendortelp1" name="vendortelp1" type="text" class="form-control form-control-sm input-phone" value="" require>
+                                <input id="vendortelp1" name="vendortelp1" type="text" class="form-control form-control-sm input-phone input-form" value="" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="vendortelp2" class="col-sm-2 col-form-label">Telp 2</label>
                             <div class="col-sm-10">
-                                <input id="vendortelp2" name="vendortelp2" type="text" class="form-control form-control-sm input-phone" value="" require>
+                                <input id="vendortelp2" name="vendortelp2" type="text" class="form-control form-control-sm input-phone input-form" value="" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="vendoraddress" class="col-sm-2 col-form-label">Address</label>
                             <div class="col-sm-10">
-                                <textarea id="vendoraddress" name="vendoraddress" type="text" class="form-control form-control-sm" value="" require></textarea>
+                                <textarea id="vendoraddress" name="vendoraddress" type="text" class="form-control form-control-sm input-form" value="" require></textarea>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
@@ -66,7 +66,7 @@
     $("#vendorcategory").select2({
         dropdownParent: $('#modal-add-vendor .modal-content'),
         tags: true,
-        tokenSeparators: [',', ' '],
+        tokenSeparators: [','],
         placeholder: "Pilih Kategori",
         ajax: {
             url: "<?= base_url()?>select2/get-data-vendor-kategori",
@@ -143,12 +143,12 @@
             method: "POST",
             url: "<?= base_url() ?>action/add-data-vendor", 
             data:{
-                "code":$("#vendorcode").val(),
-                "name":$("#vendorname").val(),
-                "telp1":$("#vendortelp1").val().replace(/ /g,""),
-                "telp2":$("#vendortelp2").val().replace(/ /g,""),
-                "address":$("#vendoraddress").val(),
-                "category":$("#vendorcategory").val().join("|"),
+                "VendorCode":$("#vendorcode").val(),
+                "VendorName":$("#vendorname").val(),
+                "VendorTelp1":$("#vendortelp1").val().replace(/ /g,""),
+                "VendorTelp2":$("#vendortelp2").val().replace(/ /g,""),
+                "VendorAddress":$("#vendoraddress").val(),
+                "VendorCategory":$("#vendorcategory").val().join("|"),
             },
             success: function(data) {   
                 isProcessingSave = false;

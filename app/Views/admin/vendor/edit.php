@@ -12,31 +12,31 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="vendorcode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="vendorcode" name="vendorcode" type="text" class="form-control form-control-sm" value="<?= $_vendor->code?>" require>
+                                <input id="vendorcode" name="vendorcode" type="text" class="form-control form-control-sm" value="<?= $_vendor->VendorCode?>" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="vendorname" class="col-sm-2 col-form-label">Nama<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="vendorname" name="vendorname" type="text" class="form-control form-control-sm" value="<?= $_vendor->name?>" require>
+                                <input id="vendorname" name="vendorname" type="text" class="form-control form-control-sm" value="<?= $_vendor->VendorName?>" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="vendortelp1" class="col-sm-2 col-form-label">Telp 1<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="vendortelp1" name="vendortelp1" type="text" class="form-control form-control-sm input-phone" value="<?= $_vendor->telp1?>" require>
+                                <input id="vendortelp1" name="vendortelp1" type="text" class="form-control form-control-sm input-phone" value="<?= $_vendor->VendorTelp1?>" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="vendortelp2" class="col-sm-2 col-form-label">Telp 2</label>
                             <div class="col-sm-10">
-                                <input id="vendortelp2" name="vendortelp2" type="text" class="form-control form-control-sm input-phone" value="<?= $_vendor->telp2?>" require>
+                                <input id="vendortelp2" name="vendortelp2" type="text" class="form-control form-control-sm input-phone" value="<?= $_vendor->VendorTelp2?>" require>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
                             <label for="vendoraddress" class="col-sm-2 col-form-label">Address</label>
                             <div class="col-sm-10">
-                                <textarea id="vendoraddress" name="vendoraddress" type="text" class="form-control form-control-sm" require><?= $_vendor->address?></textarea>
+                                <textarea id="vendoraddress" name="vendoraddress" type="text" class="form-control form-control-sm" require><?= $_vendor->VendorAddress?></textarea>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center">
@@ -44,7 +44,7 @@
                             <div class="col-sm-10">
                                 <select class="form-select form-select-sm" style="width:100%" id="vendorcategory" multiple="multiple">
                                 <?php
-                                $arr = explode('|', $_vendor->category);
+                                $arr = explode('|', $_vendor->VendorCategory);
                                 foreach($arr as $row){
                                     echo "<option selected>".$row."</option>";
                                 }
@@ -149,14 +149,14 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/add-data-vendor", 
+            url: "<?= base_url() ?>action/edit-data-vendor/<?= $_vendor->VendorId?>" , 
             data:{
-                "code":$("#vendorcode").val(),
-                "name":$("#vendorname").val(),
-                "telp1":$("#vendortelp1").val().replace(/ /g,""),
-                "telp2":$("#vendortelp2").val().replace(/ /g,""),
-                "address":$("#vendoraddress").val(),
-                "category":$("#vendorcategory").val().join("|"),
+                "VendorCode":$("#vendorcode").val(),
+                "VendorName":$("#vendorname").val(),
+                "VendorTelp1":$("#vendortelp1").val().replace(/ /g,""),
+                "VendorTelp2":$("#vendortelp2").val().replace(/ /g,""),
+                "VendorAddress":$("#vendoraddress").val(),
+                "VendorCategory":$("#vendorcategory").val().join("|"),
             },
             success: function(data) {   
                 isProcessingSave = false;
@@ -169,7 +169,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {
                         table.ajax.reload(null, false).responsive.recalc().columns.adjust();
-                        $("#modal-add-vendor").modal("hide");
+                        $("#modal-edit-vendor").modal("hide");
                     });
                   
                 }else{

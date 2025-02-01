@@ -1,8 +1,8 @@
-<div class="modal fade" id="modal-add-project" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
+<div class="modal fade" id="modal-edit-project" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-edit-project-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Tambah Project</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-edit-project-label">Edit Project</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3"> 
@@ -59,11 +59,13 @@
 <div id="modal-optional"></div>
 <script>
 
+    $("#name-project").val("<?= $project->ProjectName ?>");
+    $("#comment-project").val("<?= $project->ProjectComment ?>");
 
     $('#date-project').daterangepicker({
         "singleDatePicker": true,
-        "startDate": moment(),
-        "endDate":  moment(),
+        "startDate": moment('<?= $project->ProjectDate ?>'),
+        "endDate":  moment('<?= $project->ProjectDate ?>'),
         locale: {
             format: 'DD MMMM YYYY'
         }
@@ -71,7 +73,7 @@
     $("#btn-project-add").click(function(){ 
     });
     $("#customer-project").select2({
-        dropdownParent: $('#modal-add-project .modal-content'),
+        dropdownParent: $('#modal-edit-project .modal-content'),
         placeholder: "Pilih Pelanggan",
         ajax: {
             url: "<?= base_url()?>select2/get-data-customer",
@@ -120,8 +122,10 @@
             return data['text'];
         }
     });
+    $('#customer-project').append(new Option("<?=$project->CustomerCode. " - " . $project->CustomerName ?>" , "<?=$project->CustomerId?>", true, true)).trigger('change');   
+
     $("#admin-project").select2({
-        dropdownParent: $('#modal-add-project .modal-content'),
+        dropdownParent: $('#modal-edit-project .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
             url: "<?= base_url()?>select2/get-data-users",
@@ -150,9 +154,12 @@
             cache: true
         }, 
     });
-    $('#admin-project').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
+    $('#admin-project').append(new Option("<?=$project->code. " - " . $project->username ?>" , "<?=$project->id?>", true, true)).trigger('change');  
+    
+    
+
     $("#category-project").select2({
-        dropdownParent: $('#modal-add-project .modal-content'),
+        dropdownParent: $('#modal-edit-project .modal-content'),
         tags: true,
         tokenSeparators: [','],
         placeholder: "Pilih Kategori",
@@ -183,8 +190,15 @@
             cache: true
         }, 
     });
+    var category = ("<?=  $project->ProjectCategory ?>").split("|");
+    for (let i = 0; i < category.length; i++) { 
+        $('#category-project').append(new Option(category[i],category[i], true, true)).trigger('change');  
+    } 
+
+
+
     $("#store-project").select2({
-        dropdownParent: $('#modal-add-project .modal-content'),
+        dropdownParent: $('#modal-edit-project .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-store",
@@ -233,6 +247,8 @@
         //     return data['text'];
         // }
     });
+    $('#store-project').append(new Option("<?=$project->StoreCode. " - " . $project->StoreName ?>" , "<?=$project->StoreId?>", true, true)).trigger('change');  
+   
     $("#btn-add-project").click(function(){ 
         if($("#customer-project").val() == null){
             Swal.fire({
@@ -271,7 +287,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/add-data-project", 
+            url: "<?= base_url() ?>action/edit-data-project/<?= $project->ProjectId?>", 
             data:{
                 "ProjectName":$("#name-project").val(),
                 "CustomerId":$("#customer-project").val(),
@@ -290,7 +306,7 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-project").modal("hide");  
+                        $("#modal-edit-project").modal("hide");  
                         table.ajax.reload(null, false).responsive.recalc().columns.adjust();
                     });
                   
@@ -323,12 +339,12 @@
             url: "<?= base_url() ?>message/add-customer", 
             success: function(data) {  
 
-                $("#modal-add-project").modal("hide"); 
+                $("#modal-edit-project").modal("hide"); 
                 $("#modal-optional").html(data);
                 $("#modal-add-customer").modal("show");  
 
                 $("#modal-add-customer").on("hidden.bs.modal",function(){ 
-                    $("#modal-add-project").modal("show");  
+                    $("#modal-edit-project").modal("show");  
                 })   
                 isProcessingCustomerAdd = false;   
  

@@ -9,13 +9,13 @@ class VendorModel extends Model
 { 
     protected $DBGroup = 'default';
     protected $table = 'vendor';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'VendorId';
     protected $useAutoIncrement = true;
     protected $insertID = 0;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['code','name','telp1','telp2','address','category'];
+    protected $allowedFields = ['VendorCode','VendorName','VendorTelp1','VendorTelp2','VendorAddress','VendorCategory'];
 
     // Dates
     protected $useTimestamps = false;
@@ -53,16 +53,24 @@ class VendorModel extends Model
         $dt = new Datatables(new Codeigniter4Adapter);
 
         $builder = $this->db->table($this->table); 
-        $builder->select('id,code,name,telp1,telp2,address');
+        $builder->select('VendorId,VendorCode,VendorName,VendorTelp1,VendorTelp2,VendorAddress,VendorCategory');
         $query = $builder->getCompiledSelect(); 
 
         $dt->query($query);
 
+        $dt->add('category', function($data){
+          
+            $category = "";
+            foreach (explode("|",$data["VendorCategory"]) as $index=>$x) {
+                $category .= '<span class="badge badge-'.fmod($index, 5).'">'.$x.'</span>';
+            }  
+            return $category;
+        });
         $dt->add('action', function($data){
         	return '
                 <div class="d-md-flex d-none"> 
-                    <button class="btn btn-sm btn-action btn-primary rounded m-1" onclick="edit_click('.$data["id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
-                    <button class="btn btn-sm btn-action btn-danger rounded m-1" onclick="delete_click('.$data["id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                    <button class="btn btn-sm btn-action btn-primary rounded m-1" onclick="edit_click('.$data["VendorId"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
+                    <button class="btn btn-sm btn-action btn-danger rounded m-1" onclick="delete_click('.$data["VendorId"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
                 </div>
                 <div class="d-md-none d-flex btn-action"> 
                     <div class="dropdown">
@@ -70,8 +78,8 @@ class VendorModel extends Model
                             <i class="ti-more-alt icon-rotate-45"></i>
                         </a>
                         <ul class="dropdown-menu shadow">
-                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
-                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["VendorId"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["VendorId"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                         </ul>
                     </div>
                 <div class="d-md-flex d-none"> 

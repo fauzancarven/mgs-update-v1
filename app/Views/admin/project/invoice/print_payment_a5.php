@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'INV_'.$project->name.'_'.$project->date ?></title>
+    <title><?= 'PAY_INV_'.$project->CustomerName.'_'.$payment->PaymentDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
 </head>
@@ -26,7 +26,7 @@
     }
     .judul{
         position:absolute;
-        top:75px;
+        top:70px;
         right: 30px;
         z-index: 100;
         color:black !important;
@@ -54,6 +54,12 @@
         left: 50px;
         top: 10px;
         object-fit: contain;
+    }
+    .logo.mgs img{
+        top: 0px;
+        left: 30px;
+        height: 80px;
+        width: 140px;
     }
     .deskripsi{
         position: absolute;
@@ -276,61 +282,21 @@
   
 </style>
 <body>  
-    <div class="header">
-        <div class="logo">  
-            <img src="assets/images/logo/logo-brj-blue.png" alt=""> 
-            <span>BATA REGULER JAKARTA</span>
-        </div>
-        <div class="deskripsi">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/maps.svg" alt="">
-                            </div>
-                            
-                        </td>
-                        <td>
-                            <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
-                        </td>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/email.svg" alt="">
-                            </div>
-                            
-                        </td>
-                        <td>
-                            <span>bataregulerjakarta@gmail.com</span>
-                        </td>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/phone.svg" alt=""> 
-                            </div>
-                            
-                        </td>
-                        <td>0852-1795-2625<br>0812-1260-9992
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>   
-        <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>  
-    </div>   
+    <?= $header_footer ?>
     <div class="body">
-        <h4 class="judul text-center">INVOICE (SALES ORDER)</h4>
+        <h4 class="judul text-center">INVOICE PAYMENT</h4>
         <table style="width: 100%;align-items: start;justify-content: baseline;">
             <tbody>
                 <tr>
-                    <td style="width: 80%;"> 
+                    <td style="width: 75%;"> 
                         <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $project->name.($project->company == "" ? : " (".$project->company.")") ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
-                        <span class="text-bold"><?= $project->telp1.($project->telp2 == "" ? : " / ".$project->telp2) ?></span><br>
-                        <span class="text-bold"><?= $project->address ?></span><br>
+                        <span class="text-bold"><?= $project->CustomerName.($project->CustomerCompany == "" ? : " (".$project->CustomerCompany.")") ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
+                        <span class="text-bold"><?= $project->CustomerTelp1.($project->CustomerTelp2 == "" ? : " / ".$project->CustomerTelp2) ?></span><br>
+                        <span class="text-bold"><?= $project->InvAddress ?></span><br> 
                     </td> 
                     <td style="align-items: start;justify-content: center"> 
-                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $project->code ?></div><br>
-                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($project->date),"d F Y") ?></div><br> 
+                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $payment->PaymentCode ?></div><br>
+                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($payment->PaymentDate),"d F Y") ?></div><br> 
                     </td>
                 </tr>
             </tbody>
@@ -342,7 +308,7 @@
                     <th>Uraian</th>
                     <th>Qty</th>
                     <th>Harga</th>
-                    <?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "<th>Disc</th>" : "" ?>
+                    <?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "<th>Disc</th>" : "" ?>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -351,32 +317,32 @@
                     $no = 1;
                     $huruf  = "A";
                     $html_items = "";
-                    $discShow = array_filter($detail, fn($item) => $item->disc > 0);
+                    $discShow = array_filter($detail, fn($item) => $item->InvDetailDisc > 0);
                     foreach($detail as $item){
 
-                        $arr_varian = json_decode($item->varian);
+                        $arr_varian = json_decode($item->InvDetailVarian);
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
                             if($varian->varian == "vendor") continue; 
                            // $arr_badge .= ' | <span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>';  
                             $arr_badge .= ' | <span style="font-size:10px;">'.$varian->value.'</span>';  
                         } 
-                        if($item->type == "product"){
+                        if($item->InvDetailType == "product"){
                             $html_items .= '
                             <tr> 
                                 <td class="td-center">'.$no.'</td>
-                                <td class="ps-1">'.$item->text.$arr_badge.'</td>
-                                <td class="td-center">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</td>
+                                <td class="ps-1">'.$item->InvDetailText.$arr_badge.'</td>
+                                <td class="td-center">'.number_format($item->InvDetailQty, 2, ',', '.').' '.$item->InvDetailSatuanText.'</td>
                                 <td class="td-center">
                                     <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->harga, 0, ',', '.').'</div>
+                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->InvDetailPrice, 0, ',', '.').'</div>
                                 </td>
                                 '.($discShow ? "<td class='td-center'>
                                     <div style='width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;'>Rp.</div> 
-                                    <div style='width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;'>".number_format($item->disc, 0, ',', '.')."</div></td>" : "").'
+                                    <div style='width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;'>".number_format($item->InvDetailDisc, 0, ',', '.')."</div></td>" : "").'
                                 <td class="td-center">
                                     <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->total, 0, ',', '.').'</div>
+                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->InvDetailTotal, 0, ',', '.').'</div>
                                 </td>
                             </tr>';
                             $no++;
@@ -385,7 +351,7 @@
                           
                             $html_items .= '    <tr> 
                                                     <td class="td-center text-bold">'.$huruf.'</td>
-                                                    <td class="ps-1 text-bold">'.$item->text.'</td>
+                                                    <td class="ps-1 text-bold">'.$item->InvDetailText.'</td>
                                                     <td class="td-center"></td>
                                                     <td class="td-center"></td>
                                                     '.($discShow ? "<td class='td-center'></td>" : "").'
@@ -429,36 +395,69 @@
             <tfoot>
                 <tr>
                     <td colspan="2" style="border-top:1px solid;border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "3" : "2" ?>">Sub Total</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Sub Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->subtotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvSubTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>
-                <tr style="<?= $project->discitemtotal > 0 ? "" : "display:none;" ?>">
+                <tr style="<?= $project->InvDiscItemTotal > 0 ? "" : "display:none;" ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "3" : "2" ?>">Disc Item</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Disc Item</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->discitemtotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvDiscItemTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr> 
-                <tr style="<?= $project->disctotal > 0 ? "" : "display:none;" ?>">
+                <tr style="<?= $project->InvDiscTotal > 0 ? "" : "display:none;" ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "3" : "2" ?>">Disc Total</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Disc Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->disctotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvDiscTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>  
                 <tr>
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->disc > 0)) ? "3" : "2" ?>">Grand Total</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Grand Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->grandtotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvGrandTotal, 0, ',', '.') ?></div>
                     </th>
-                </tr>   
+                </tr> 
+               
+                <?php
+                    $total_pay = 0;
+                    foreach($payments as $row){
+                        if($row->PaymentId < $payment->PaymentId){
+                            echo '<tr>
+                            <td colspan="2" style="border-left:none;line-height:1;"></td>
+                            <th class="td-footer text-bold"  style="line-height:1;" colspan="'.((array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2").'">('.date_format(date_create($row->PaymentDate),"d M Y").") ".$row->PaymentType.'</th>
+                            <th class="td-center text-bold">
+                                <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
+                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($row->PaymentTotal, 0, ',', '.').'</div>
+                            </th>
+                            </tr>';
+                            $total_pay += $row->PaymentTotal;
+                        }
+                    }
+                ?> 
+                <tr>
+                    <td colspan="2" style="border-left:none;line-height:1;"></td>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>"><?= "(".date_format(date_create($payment->PaymentDate),"d M Y").") ".$payment->PaymentType ?></th>
+                    <th class="td-center text-bold">
+                        <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($payment->PaymentTotal, 0, ',', '.') ?></div>
+                    </th>
+                </tr>  
+                <tr>
+                    <td colspan="2" style="border-left:none;line-height:1;"></td>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Sisa</th>
+                    <th class="td-center text-bold">
+                        <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvGrandTotal - $payment->PaymentTotal - $total_pay, 0, ',', '.') ?></div>
+                    </th>
+                </tr>  
             </tfoot>
         </table> 
     </div> 
@@ -477,7 +476,7 @@
             </tr>
             <tr>
                 <td style="vertical-align: top;">
-                    <?= $project->detail ?>
+                    <?= $project->TemplateFooterDetail ?>
                 </td>
             </tr>
         </table>

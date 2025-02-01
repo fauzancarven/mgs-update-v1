@@ -6,17 +6,16 @@ use CodeIgniter\Model;
 use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\Codeigniter4Adapter;
 use app\helper\rupiah;
+use CodeIgniter\Database\RawSql;
 class ProdukModel extends Model
 { 
     protected $DBGroup = 'default';
-    protected $table = 'produk';
-    protected $primaryKey = 'id';
+    protected $table = 'produk'; 
     protected $useAutoIncrement = true;
     protected $insertID = 0;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $protectFields = true;
-    protected $allowedFields = ['category','code','name','detail','price_range','vendor','varian'];
+    protected $protectFields = true; 
 
     // Dates
     protected $useTimestamps = false;
@@ -54,22 +53,22 @@ class ProdukModel extends Model
         $dt = new Datatables(new Codeigniter4Adapter);
 
         $builder = $this->db->table($this->table); 
-        $builder->join("produk_category","produk_category.id=produk.category");
+        $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId");
         // $builder->select('customercategory.name kategori,customer.id cust_id,code,category,company,customer.name cust_name,email,Telp1,Telp2,instagram,village,address');
-        $builder->select('produk.id,produk_category.name as category_name,produk.code,produk.name,detail,price_range,vendor,varian');
+        $builder->select('ProdukId,ProdukCategoryName as category_name,ProdukCode,ProdukName,ProdukDetail,ProdukPrice,ProdukVendor,ProdukVarian');
         $query = $builder->getCompiledSelect(); 
 
         $dt->query($query); 
 
         $dt->add('vendor_detail', function($data){
             $html = ""; 
-            $datas = json_decode($data["vendor"]); 
+            $datas = json_decode($data["ProdukVendor"]); 
             foreach ($datas as $varian) {  
                 $html .= '<span class="badge badge-3">'.$varian->text.'</span>';  
             }
  
             $html = '<span class="fw-bold font-std">Vendor</span><div class="d-flex gap-1">'.$html.'</div>';
-            $split_varian = json_decode($data["varian"]); 
+            $split_varian = json_decode($data["ProdukVarian"]); 
             $html_varian = "";
             $data = $split_varian;
             $i = 0;
@@ -86,16 +85,16 @@ class ProdukModel extends Model
 
         $dt->add('produk_detail', function($data){
             $builder = $this->db->table("produk_detail");  
-            $builder->join("produk_satuan","produk_satuan.id =  produk_detail.satuan_id"); 
-            $builder->select('produk_detail.id,berat,name,pcsm2,hargabeli,hargajual,varian'); 
-            $builder->where("ref",$data["id"]); 
-            $builder->orderby('produk_detail.id', 'asc'); 
+            $builder->join("produk_satuan","produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId"); 
+            $builder->select('*'); 
+            $builder->where("ProdukDetailRef",$data["ProdukId"]); 
+            $builder->orderby('produk_detail.ProdukDetailId', 'asc'); 
             return json_encode($builder->get()->getResult()); 
 
         });
         
         $dt->add('produk_name', function($data){
-            $folder = 'assets/images/produk/'.$data["id"]."/";
+            $folder = 'assets/images/produk/'.$data["ProdukId"]."/";
             $default = 'assets/images/produk/default.png';
 
             $files = scandir($folder);
@@ -113,8 +112,8 @@ class ProdukModel extends Model
                     </div>
                     <div class="flex-grow-1 ms-3 ">
                         <div class="d-flex flex-column gap-1">
-                            <span class="text-head-1">'.$data["name"].'</span>
-                            <span class="text-detail-1 text-truncate">'.$data["code"].' - '.$data["category_name"].'</span> 
+                            <span class="text-head-1">'.$data["ProdukName"].'</span>
+                            <span class="text-detail-1 text-truncate">'.$data["ProdukCode"].' - '.$data["category_name"].'</span> 
                         </div>
                     </div>
                 </div>'; 
@@ -123,8 +122,8 @@ class ProdukModel extends Model
         $dt->add('action', function($data){
         	return '
                 <div class="d-md-flex d-none"> 
-                    <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$data["id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
-                    <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$data["id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                    <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$data["ProdukId"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
+                    <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$data["ProdukId"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
                 </div>
                 <div class="d-md-none d-flex btn-action"> 
                     <div class="dropdown">
@@ -132,26 +131,25 @@ class ProdukModel extends Model
                             <i class="ti-more-alt icon-rotate-45"></i>
                         </a>
                         <ul class="dropdown-menu shadow">
-                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
-                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["ProdukId"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["ProdukId"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                         </ul>
                     </div>
                 <div class="d-md-flex d-none"> 
                 ';
         }); 
-        $dt->edit('price_range', function ($data) { 
-
-            if (strpos($data["price_range"], '-') !== false) {
-                list($min, $max) = explode(' - ', $data["price_range"]);
+        $dt->edit('ProdukPrice', function ($data) {  
+            if (strpos($data["ProdukPrice"], '-') !== false) {
+                list($min, $max) = explode(' - ', $data["ProdukPrice"]);
                 return "Rp. " . number_format($min, 0, ',', '.') . " - Rp. " . number_format($max, 0, ',', '.');
             } else {
-                return "Rp. " . number_format($data["price_range"], 0, ',', '.');
+                return "Rp. " . number_format($data["ProdukPrice"], 0, ',', '.');
             } 
         });
         return $dt->generate();
     }
     public function getHtml($data) {
-        $folder = 'assets/images/produk/'.$data["id"]."/";
+        $folder = 'assets/images/produk/'.$data["ProdukId"]."/";
         $default = 'assets/images/produk/default.png';
 
         $files = scandir($folder);
@@ -169,8 +167,8 @@ class ProdukModel extends Model
                     </div>
                     <div class="flex-grow-1 ms-3 ">
                         <div class="d-flex flex-column">
-                            <span class="text-head-1">'.$data["name"].'</span>
-                            <span class="text-detail-1 text-truncate">'.$data["code"].' - '.$data["cat_name"].'</span> 
+                            <span class="text-head-1">'.$data["ProdukName"].'</span>
+                            <span class="text-detail-1 text-truncate">'.$data["ProdukCode"].' - '.$data["ProdukCategoryName"].'</span> 
                         </div>
                     </div>
                 </div>'; 
@@ -180,16 +178,16 @@ class ProdukModel extends Model
         //mengambil code kategory
         $builder = $this->db->table("produk_category");
         $builder->select('*');
-        $builder->where('id', $category_id);
-        $builder->orderby('id', 'DESC');
+        $builder->where('ProdukCategoryId', $category_id);
+        $builder->orderby('ProdukCategoryId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();
-        $category_code = $query->code;
+        $category_code = $query->ProdukCategoryCode;
 
 
         $builder = $this->db->table($this->table);  
-        $builder->select("ifnull(max(SUBSTRING(CODE,4)),0) + 1 as nextcode"); 
-        $builder->where('category',$category_id);
+        $builder->select("ifnull(max(SUBSTRING(ProdukCode,4)),0) + 1 as nextcode"); 
+        $builder->where('ProdukCategoryId',$category_id);
         $data = $builder->get()->getRow(); 
 
         
@@ -262,10 +260,12 @@ class ProdukModel extends Model
 
         return $base64;
     }
-    public function add_produk($method){
-        $code =  $this->get_next_code($method["data"]["category"]); 
-        $method["data"]["code"] =  $code;
 
+    public function add_produk($method){
+        $code =  $this->get_next_code($method["data"]["ProdukCategoryId"]); 
+        $method["data"]["ProdukCode"] =  $code;
+        $method["data"]["created_at"] =  new RawSql('CURRENT_TIMESTAMP()');
+        $method["data"]["created_user"] =  user()->id; 
         // ADD Header PRODUK 
         $builder = $this->db->table($this->table);
         $builder->insert($method["data"]); 
@@ -273,19 +273,19 @@ class ProdukModel extends Model
         // GET ID PRODUK 
         $builder = $this->db->table($this->table);
         $builder->select('*'); 
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('ProdukId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();
         
        // ADD DETAIL PRODUK 
         foreach($method["detail"] as $row){ 
-            $row["ref"] = $query->id;
-            $row["varian"] = json_encode($row["varian"]); 
-            unset($row["satuantext"]);    
+            $row["ProdukDetailRef"] = $query->ProdukId;
+            $row["ProdukDetailVarian"] = json_encode($row["ProdukDetailVarian"]); 
+            unset($row["ProdukDetailSatuanText"]);    
             $builder = $this->db->table("produk_detail");
             $builder->insert($row); 
         }
-        $id = $query->id;
+        $id = $query->ProdukId;
         //$id = "20";
        // ADD IMAGE PRODUK  
        
@@ -323,31 +323,30 @@ class ProdukModel extends Model
  
         echo json_encode(array("status"=>true)); 
     }
-
     public function edit_produk($method,$id){ 
 
         // EDIT Header PRODUK  
         $builder = $this->db->table($this->table); 
-        $builder->set('name', $method["data"]["name"]);
-        $builder->set('detail', $method["data"]["detail"]); 
-        $builder->set('vendor', $method["data"]["vendor"]); 
-        $builder->set('price_range', $method["data"]["price_range"]); 
-        $builder->set('varian', $method["data"]["varian"]); 
-        $builder->where('id', $id);
+        $builder->set('ProdukName', $method["data"]["ProdukName"]);
+        $builder->set('ProdukDetail', $method["data"]["ProdukDetail"]); 
+        $builder->set('ProdukVendor', $method["data"]["ProdukVendor"]); 
+        $builder->set('ProdukPrice', $method["data"]["ProdukPrice"]); 
+        $builder->set('ProdukVarian', $method["data"]["ProdukVarian"]); 
+        $builder->where('ProdukId', $id);
         $builder->update(); 
  
        // EDIT DETAIL PRODUK 
 
         //delete data lama
         $builder = $this->db->table("produk_detail");  
-        $builder->where('ref', $id);
+        $builder->where('ProdukDetailRef', $id);
         $builder->delete(); 
 
         //insert data baru
         foreach($method["detail"] as $row){ 
-            $row["ref"] = $id;
-            $row["varian"] = json_encode($row["varian"]); 
-            unset($row["satuantext"]);    
+            $row["ProdukDetailRef"] = $id;
+            $row["ProdukDetailVarian"] = json_encode($row["ProdukDetailVarian"]); 
+            unset($row["ProdukDetailSatuanText"]);    
             $builder = $this->db->table("produk_detail");
             $builder->insert($row); 
         }
@@ -386,23 +385,45 @@ class ProdukModel extends Model
  
         echo json_encode(array("status"=>true)); 
     }
+    public function delete_produk($id){
+        //delete data lama
+        $builder = $this->db->table("produk");  
+        $builder->where('ProdukId', $id);
+        $builder->delete(); 
+
+        $builder = $this->db->table("produk_detail");  
+        $builder->where('ProdukDetailRef', $id);
+        $builder->delete(); 
+
+        //hapus semua file di folder id tersebut
+        $folder_utama = 'assets/images/produk'; 
+        if (is_dir($folder_utama."/".$id)) {
+            $files = scandir($folder_utama."/".$id);
+            foreach ($files as $file) {
+                if ($file != '.' && $file != '..') {
+                    unlink($folder_utama."/".$id . '/' . $file);
+                }
+            }  
+        }
+    }
+
+
     public function getproductdetail($id){
         $builder = $this->db->table("produk_detail");
-        $builder->join("produk_satuan","produk_satuan.id =  produk_detail.satuan_id");
-        $builder->select('produk_detail.id,berat,satuan_id,name satuantext,pcsm2,hargabeli,hargajual,varian'); 
-        $builder->where('produk_detail.ref', $id);  
+        $builder->join("produk_satuan","produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId"); 
+        $builder->where('ProdukDetailRef', $id);  
         $result =  $builder->get()->getResult();
         $array_php = array();
         foreach($result as $row){ 
             $array_php[] = array(
-                'id' =>  $row->id,
-                'berat' => $row->berat,
-                'satuan_id' => $row->satuan_id,
-                'satuantext' => $row->satuantext,
-                'pcsM2' => $row->pcsm2,
-                'hargabeli' => $row->hargabeli,
-                'hargajual' => $row->hargajual,
-                'varian' =>  json_decode($row->varian),
+                'ProdukDetailId' =>  $row->ProdukDetailId,
+                'ProdukDetailBerat' => $row->ProdukDetailBerat,
+                'ProdukDetailSatuanId' => $row->ProdukDetailSatuanId,
+                'ProdukDetailSatuanText' => $row->ProdukSatuanCode,
+                'ProdukDetailPcsM2' => $row->ProdukDetailPcsM2,
+                'ProdukDetailHargaBeli' => $row->ProdukDetailHargaBeli,
+                'ProdukDetailHargaJual' => $row->ProdukDetailHargaJual,
+                'ProdukDetailVarian' =>  json_decode($row->ProdukDetailVarian),
             );
         } 
         return $array_php;
@@ -420,28 +441,28 @@ class ProdukModel extends Model
     }
     public function getDetailProduk($data,$id){ 
         $builder = $this->db->table("produk_detail");
-        $builder->select('produk_detail.id,berat,satuan_id,name satuantext,pcsm2,hargabeli,hargajual,varian,ref'); 
-        $builder->join("produk_satuan","produk_satuan.id =  produk_detail.satuan_id");
-        $builder->where('produk_detail.ref', $id);  
+        $builder->join("produk_satuan","produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId"); 
+        $builder->where('ProdukDetailRef', $id);  
         foreach ($data as $item) { 
-            $whereClause = "JSON_EXTRACT(varian, '$.".strtolower($item["varian"])."') = '".$item["value"]."'"; 
+            $whereClause = "JSON_EXTRACT(ProdukDetailVarian, '$.".strtolower($item["varian"])."') = '".$item["value"]."'"; 
             $builder->where($whereClause);    
         } 
         $result = $builder->get()->getRow();  
         if($result){ 
             return array(
-                'id' =>  $result->id,
-                'produkid' =>  $result->ref,
-                'berat' => $result->berat,
-                'satuan_id' => $result->satuan_id,
-                'satuantext' => $result->satuantext,
-                'pcsM2' => $result->pcsm2,
-                'hargabeli' => $result->hargabeli,
-                'hargajual' => $result->hargajual,
-                'varian' =>  json_decode($result->varian),
+                'ProdukDetailId' =>  $result->ProdukDetailId,
+                'ProdukDetailRef' =>  $result->ProdukDetailRef,
+                'ProdukDetailBerat' => $result->ProdukDetailBerat,
+                'ProdukDetailSatuanId' => $result->ProdukDetailSatuanId,
+                'ProdukDetailSatuanText' => $result->ProdukSatuanCode,
+                'ProdukDetailPcsM2' => $result->ProdukDetailPcsM2,
+                'ProdukDetailHargaBeli' => $result->ProdukDetailHargaBeli,
+                'ProdukDetailHargaJual' => $result->ProdukDetailHargaJual,
+                'ProdukDetailVarian' =>  json_decode($result->ProdukDetailVarian), 
             ); 
         }else{
             return null;
         }
     }
+
 }

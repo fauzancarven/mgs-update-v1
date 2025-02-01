@@ -93,13 +93,13 @@
             }
         },
         "columns": [ 
-            { data: "code"},
+            { data: "CustomerCode"},
             { data: "cust_name"},
-            { data: "company"},
+            { data: "CustomerCompany"},
             { data: "kategori" },
-            { data: "email" }, 
-            { data: "Telp1" },
-            { data: "address" }, 
+            { data: "CustomerEmail" }, 
+            { data: "CustomerTelp1" },
+            { data: "CustomerAddress" }, 
             { data: "action" ,orderable: false}, 
         ]
     }); 
