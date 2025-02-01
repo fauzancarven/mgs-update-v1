@@ -96,8 +96,11 @@ class ProdukModel extends Model
         $dt->add('produk_name', function($data){
             $folder = 'assets/images/produk/'.$data["ProdukId"]."/";
             $default = 'assets/images/produk/default.png';
-
-            $files = scandir($folder);
+            
+            if (!file_exists($folder)) {
+                mkdir($folder, 0777, true);  
+            } 
+            $files = array_diff(scandir($folder), array('.', '..'));  
             $gambar = null;
 
             foreach ($files as $file) {
@@ -152,7 +155,10 @@ class ProdukModel extends Model
         $folder = 'assets/images/produk/'.$data["ProdukId"]."/";
         $default = 'assets/images/produk/default.png';
 
-        $files = scandir($folder);
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);  
+        } 
+        $files = array_diff(scandir($folder), array('.', '..')); 
         $gambar = null;
 
         foreach ($files as $file) {
