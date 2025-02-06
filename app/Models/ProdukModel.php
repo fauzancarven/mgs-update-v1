@@ -446,13 +446,15 @@ class ProdukModel extends Model
         return $gambar;
     }
     public function getDetailProduk($data,$id){ 
+        $query = "select * from produk_detail left join produk_satuan on produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId where ProdukDetailRef = ".$id;
         $builder = $this->db->table("produk_detail");
         $builder->join("produk_satuan","produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId"); 
         $builder->where('ProdukDetailRef', $id);  
         foreach ($data as $item) { 
             $whereClause = "JSON_EXTRACT(ProdukDetailVarian, '$.".strtolower($item["varian"])."') = '".$item["value"]."'"; 
             $builder->where($whereClause);    
-        } 
+            $query .= ' and '.$whereClause;
+        }  
         $result = $builder->get()->getRow();  
         if($result){ 
             return array(

@@ -941,8 +941,7 @@
         position: relative;
         background: #fbfbfb;
         padding: 1rem;
-        margin: 0.5rem;
-        margin-left: 2rem;
+        margin: 0.5rem; 
         border-radius: 0.25rem;
         box-shadow: -2px 2px 1px 0 #7f7f7f0d;
         transition: all 0.3s;
@@ -975,8 +974,7 @@
         position: relative;
         background: #fbfbfb;
         padding: 1rem;
-        margin: 0.5rem;
-        margin-left: 2rem;
+        margin: 0.5rem; 
         border-radius: 0.25rem;
         box-shadow: -2px 2px 1px 0 #7f7f7f0d;
         transition: all 0.3s;
@@ -1020,6 +1018,9 @@
         .list-delivery .line-1{ 
             height: 12rem;  
         }
+    }
+    .accordion-button:focus{
+        box-shadow:none;
     }
 </style>
 

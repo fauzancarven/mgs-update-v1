@@ -163,8 +163,7 @@ class PrintController extends BaseController
                 $dompdf->render();
                 $dompdf->stream( 'DEL_INV_'.$data["project"]->CustomerName.'_'.$data["project"]->InvDate.'.pdf', [ 'Attachment' => false ]);
 	}
-
-
+ 
 	public function project_po_a5($id)
 	{
                 $options = new Options(); 
@@ -175,7 +174,7 @@ class PrintController extends BaseController
                 $options->set('orientation', 'potrait');
 
                 $models = new ProjectModel();  
-                $data["project"] = $models->getdataPO($id); 
+                $data["po"] = $models->getdataPO($id);  
                 $data["detail"] = $models->getdataDetailPO($id); 
                 
                 $dompdf = new Dompdf($options);  
@@ -184,10 +183,10 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/print_po_a5',$data); 
+                $html = view('admin/project/po/print_po_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
-                $dompdf->stream( 'PO_'.$data["project"]->name.'_'.$data["project"]->date.'.pdf', [ 'Attachment' => false ]);
+                $dompdf->stream( 'PO_'.$data["po"]->CustomerName.'_'.$data["po"]->PODate.'.pdf', [ 'Attachment' => false ]);
 	}
         public function project_sph_html($id)
         {

@@ -651,8 +651,9 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("pembelian");
         $builder->select('*'); 
-        $builder->where('ref',$id);
-        $builder->orderby('id', 'DESC'); 
+        $builder->join("vendor",'POVendor=VendorId'); 
+        $builder->where('PORef',$id);
+        $builder->orderby('POId', 'DESC'); 
         $query = $builder->get()->getResult();  
 
        
@@ -660,14 +661,14 @@ class ProjectModel extends Model
 
             $builder = $this->db->table("pembelian_detail");
             $builder->select('*'); 
-            $builder->where('ref',$row->id);
-            $builder->orderby('id', 'ASC'); 
+            $builder->where('PODetailRef',$row->POId);
+            $builder->orderby('PODetailId', 'ASC'); 
             $items = $builder->get()->getResult(); 
             $html_items = "";
             $no = 1; 
             foreach($items as $item){
 
-                $arr_varian = json_decode($item->varian);
+                $arr_varian = json_decode($item->PODetailVarian);
                 $arr_badge = "";
                 $arr_no = 0;
                 foreach($arr_varian as $varian){
@@ -681,8 +682,8 @@ class ProjectModel extends Model
                         <div class="d-flex ">
                             <span class="no-urut text-head-3">'.$no.'</span> 
                             <div class="d-flex flex-column text-start">
-                                <span class="text-head-3 text-uppercase">'.$item->text.'</span>
-                                <span class="text-detail-2 text-truncate">'.$item->group.'</span> 
+                                <span class="text-head-3 text-uppercase">'.$item->PODetailText.'</span>
+                                <span class="text-detail-2 text-truncate">'.$item->PODetailGroup.'</span> 
                                 <div class="d-flex flex-wrap gap-1">
                                     '.$arr_badge.'
                                 </div>
@@ -694,19 +695,19 @@ class ProjectModel extends Model
                                         <div class="col-6 col-md-3 px-1">   
                                             <div class="d-flex flex-column">
                                                 <span class="text-detail-2">Qty:</span>
-                                                <span class="text-head-2">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</span>
+                                                <span class="text-head-2">'.number_format($item->PODetailQty, 2, ',', '.').' '.$item->PODetailSatuanText.'</span>
                                             </div>
                                         </div>  
                                         <div class="col-6 col-md-4 px-1">   
                                             <div class="d-flex flex-column">
                                                 <span class="text-detail-2">Harga:</span>
-                                                <span class="text-head-2">Rp. '.number_format($item->harga, 0, ',', '.').'</span>
+                                                <span class="text-head-2">Rp. '.number_format($item->PODetailPrice, 0, ',', '.').'</span>
                                             </div>
                                         </div>  
                                         <div class="col-12 col-md-4 px-1">   
                                             <div class="d-flex flex-column">
                                                 <span class="text-detail-2">Total:</span>
-                                                <span class="text-head-2">Rp. '.number_format($item->total, 0, ',', '.').'</span>
+                                                <span class="text-head-2">Rp. '.number_format($item->PODetailTotal, 0, ',', '.').'</span>
                                             </div>
                                         </div> 
                                     </div>   
@@ -714,11 +715,8 @@ class ProjectModel extends Model
                             </div>';
                 $no++;  
             }
-
-            $builder = $this->db->table("vendor");
-            $builder->select('*'); 
-            $builder->where('id',$row->vendor); 
-            $vendor = $builder->get()->getRow();
+            $html_grpo = "";
+            $html_delivery = "";
 
             $html .= '
             <div class="list-project mb-4 p-2">
@@ -726,36 +724,30 @@ class ProjectModel extends Model
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">No. Pembelian :</span>
-                            <span class="text-head-3">'.$row->code.'</span>
+                            <span class="text-head-3">'.$row->POCode.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Tanggal:</span>
-                            <span class="text-head-3">'.date_format(date_create($row->date),"d M Y").'</span>
+                            <span class="text-head-3">'.date_format(date_create($row->PODate),"d M Y").'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
-                        <div class="float-end d-md-flex d-none gap-1"> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="grpo_project_po('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-share mx-1"></i><span >Buat GRPO</span>
-                            </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="delivery_project_po('.$row->ref.','.$row->id.',this)">
-                                <i class="fa-solid fa-truck mx-1"></i><span >Surat Jalan</span>
-                            </button> 
+                        <div class="float-end d-md-flex d-none gap-1">  
                             <div class="dropdown">
                                 <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-solid fa-print mx-1"></i><span >Print</span>
                                 </a> 
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" onclick="print_project_po_a4('.$row->ref.','.$row->id.',this)">Print A4</a></li>
-                                    <li><a class="dropdown-item" onclick="print_project_po_a5('.$row->ref.','.$row->id.',this)">Print A5</a></li> 
+                                    <li><a class="dropdown-item" onclick="print_project_po_a4('.$row->PORef.','.$row->POId.',this)">Print A4</a></li>
+                                    <li><a class="dropdown-item" onclick="print_project_po_a5('.$row->PORef.','.$row->POId.',this)">Print A5</a></li> 
                                 </ul>
                             </div>
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_po('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_po('.$row->PORef.','.$row->POId.',this)">
                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                             </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_po('.$row->ref.','.$row->id.',this)">
+                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_po('.$row->PORef.','.$row->POId.',this)">
                                 <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
                             </button> 
                         </div> 
@@ -765,13 +757,11 @@ class ProjectModel extends Model
                                 <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti-more-alt icon-rotate-45"></i>
                                 </a>
-                                <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item m-0 px-2" onclick="grpo_project_po('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Teruskan GRPO</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delivery_project_po('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Surat Jalan</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_po_a4('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_po_a5('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_po('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_po('.$row->ref.','.$row->id.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                <ul class="dropdown-menu shadow"> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_po_a4('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_po_a5('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_po('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_po('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                                 </ul>
                             </div>
                         </div> 
@@ -779,36 +769,70 @@ class ProjectModel extends Model
                     <div class="col-12 col-md-3 col-xl-2 order-3">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Sub Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->subtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->POSubTotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-5">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->disctotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->PODiscTotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-4">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">PPH Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->pphtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->POPPNTotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-md-3 col-xl-2 order-6">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Grand Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->grandtotal, 0, ',', '.').'</span>
+                            <span class="text-head-3">Rp. '.number_format($row->POGrandTotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-xl-4 order-7  pb-2">
                         <div class="d-flex flex-column justify-content-between">
                             <span class="text-detail-2 pb-2 pb-md-0">Vendor:</span>
-                            <span class="text-head-3 text-wrap">'.$vendor->code.' - '.$vendor->name.'</span>
+                            <span class="text-head-3 text-wrap">'.$row->VendorCode.' - '.$row->VendorName.'</span>
                         </div>  
                     </div>
                 </div> 
                 <div class="detail-item mt-2 p-2 border-top">
                     '.$html_items.' 
+                </div>
+                <div class="accordion" id="accordionFlushExamplePO'.$row->POId.'">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwoPO'.$row->POId.'" aria-expanded="false" aria-controls="flush-collapseTwoPO'.$row->POId.'"> 
+                                <i class="fa-solid fa-truck pe-2"></i><span class="text-head-2">Delivery</span>
+                            </button>
+                        </h2>
+                        <div id="flush-collapseTwoPO'.$row->POId.'" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExamplePO'.$row->POId.'">
+                            <div class="accordion-body  ">
+                                '.$html_delivery.'
+                                <div class="d-flex justify-content-center">
+                                    <a class="btn btn-sm btn-primary px-3 m-2" onclick="delivery_project_po('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data Delivery</a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            
+                            <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOnePO'.$row->POId.'" aria-expanded="false" aria-controls="flush-collapseOnePO'.$row->POId.'">
+                                <i class="fa-solid fa-share pe-2"></i><span class="text-head-2">Terima Dari PO</span>
+                            </button>
+                            
+                        </h2>
+                        <div id="flush-collapseOnePO'.$row->POId.'" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExamplePO'.$row->POId.'">
+                            <div class="accordion-body ">
+                                '.$html_grpo.'
+                                <div class="d-flex justify-content-center">
+                                    <a class="btn btn-sm btn-primary px-3 m-2" onclick="grpo_project_po('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data Terima Dari PO</a>  
+                                </div> 
+                            </div>
+                        </div>
+                    </div> 
                 </div>
             </div> 
         ';
@@ -914,6 +938,255 @@ class ProjectModel extends Model
                      
                 
             }
+
+            $builder = $this->db->table("payment");
+            $builder->select('*'); 
+            $builder->where('PaymentRef',$row->InvId);
+            $builder->orderby('PaymentId', 'ASC'); 
+            $payment = $builder->get()->getResult(); 
+            $html_payment = "";
+            $payment_total = 0;
+            $performa_total = 0;
+            foreach($payment as $row_payment){ 
+                if($row_payment->PaymentDoc == "1"){
+                    $payment_total += $row_payment->PaymentTotal;
+                }else{
+                    $performa_total += $row_payment->PaymentTotal;
+                } 
+                if($row_payment->PaymentStatus == "0"){
+                    $status = '<span class="text-head-3 text-warning">
+                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+                        <i class="fa-solid fa-certificate fa-stack-2x"></i> 
+                        <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
+                    </span>Pending</span>';
+                }else{
+                    $status = ' <span class="text-head-3 text-success">
+                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+                        <i class="fa-solid fa-certificate fa-stack-2x"></i>
+                        <i class="fa-solid fa-check fa-stack-1x fa-inverse"></i>
+                    </span>Verified</span>';
+                }
+                $html_payment .= '  <div class="list-payment mb-4 p-2">  
+                                <div class="row">
+                                    <div class="col-9 col-md-1 align-items-center order-0">  
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-head-1 pt-auto">'.($row_payment->PaymentDoc == "1" ? "PAYMENT" : "PROFORMA" ).'</span>
+                                        </div>   
+                                    </div>
+                                    <div class="col-12 col-md-1 order-2 order-sm-1"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Status:</span>'.$status.'
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-3 order-sm-2"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Tanggal:</span>
+                                            <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-4 order-sm-3"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Type:</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentType.'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-5 order-sm-4">
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Method:</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-6 order-sm-5">
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Total:</span>
+                                            <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
+                                        </div>   
+                                    </div>
+                                    <div class="col-3 col-md-6 text-end order-1 order-sm-5"> 
+                                        <div class="d-none d-md-inline-block"> 
+                                            <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row_payment->PaymentRef.','.$row_payment->PaymentId.',this)">
+                                                <i class="fa-solid fa-eye mx-1"></i><span >Show</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row->InvRef.','.$row_payment->PaymentId.',this)">
+                                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row->InvRef.','.$row_payment->PaymentId.',this)">
+                                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$row->InvRef.','.$row_payment->PaymentId.',this)">
+                                                <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
+                                            </button> 
+                                        </div>
+                                        <div class="d-inline-block d-md-none">
+                                            <div class="dropdown">
+                                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="ti-more-alt icon-rotate-45"></i>
+                                                </a>
+                                                <ul class="dropdown-menu shadow">
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="payment_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            ';
+            }
+
+            $builder = $this->db->table("delivery");
+            $builder->select('*'); 
+            $builder->where('DeliveryRef',$row->InvId);
+            $builder->orderby('DeliveryId', 'ASC'); 
+            $delivery = $builder->get()->getResult(); 
+            
+            $html_delivery = "";
+            $delivery_ritase = 0;
+            foreach($delivery as $row_delivery){ 
+                $delivery_ritase++;
+                $builder = $this->db->table("delivery_detail");
+                $builder->select('*'); 
+                $builder->where('DeliveryDetailRef',$row_delivery->DeliveryId);
+                $builder->orderby('DeliveryDetailId', 'ASC'); 
+                $items = $builder->get()->getResult(); 
+                $html_items = "";
+                $no = 1;
+                $huruf  = "A";
+                foreach($items as $item){
+
+                    $arr_varian = json_decode($item->DeliveryDetailVarian);
+                    $arr_badge = "";
+                    $arr_no = 0;
+                    foreach($arr_varian as $varian){
+                        $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                        $arr_no++;
+                    }
+
+                    $html_items .= '
+                    <div class="row">
+                        <div class="col-12 col-md-8 my-1 varian">   
+                            <div class="d-flex ">
+                                <span class="no-urut text-head-3"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->DeliveryDetailType == "product" ? $no : $huruf).'.</span> 
+                                <div class="d-flex flex-column text-start">
+                                    <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
+                                    <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
+                                    <div class="d-flex flex-wrap gap-1">
+                                        '.$arr_badge.'
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>'; 
+                    $html_items .= '<div class="col-12 col-md-4 my-1 detail">
+                                        <div class="row"> 
+                                            <div class="offset-2 offset-md-0 col-5 col-md-6 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Qty:</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-5 col-md-6 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Spare:</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                </div>
+                                            </div>  
+                                        </div>   
+                                    </div> 
+                                </div>';
+                    $no++; 
+                        
+                    
+                }
+                if($row_delivery->DeliveryStatus == "0"){
+                    $status = '<span class="text-head-3 text-primary">
+                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+                        <i class="fa-solid fa-certificate fa-stack-2x"></i> 
+                        <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
+                    </span>New</span>';
+                }else{
+                    $status = ' <span class="text-head-3 text-success">
+                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+                        <i class="fa-solid fa-certificate fa-stack-2x"></i>
+                        <i class="fa-solid fa-check fa-stack-1x fa-inverse"></i>
+                    </span>Verified</span>';
+                }
+                $html_delivery .= '  <div class="list-delivery mb-4 p-2">  
+                                <div class="row"> 
+                                    <div class="col-12 col-md-1 order-1 order-sm-0"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Ritase:</span><span class="text-head-1">'.$row_delivery->DeliveryRitase.'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-2 order-sm-1"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Status:</span>'.$status.'
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-3 order-sm-2"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Tanggal:</span>
+                                            <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-5 order-sm-4"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Armada:</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryArmada.'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-6 order-sm-5">
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Pengirim:</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryFromName.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryFromTelp.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryFromAddress.'</span>
+                                        </div>  
+                                    </div>
+                                    <div class="col-12 col-md-1 order-7 order-sm-5">
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2">Penerima:</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryToName.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryToTelp.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryToAddress.'</span>
+                                        </div>   
+                                    </div>
+                                    <div class="col-3 col-md-5 text-end order-1 order-sm-5"> 
+                                        <div class="d-none d-md-inline-block">  
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
+                                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
+                                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
+                                                <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
+                                            </button> 
+                                        </div>
+                                        <div class="d-inline-block d-md-none">
+                                            <div class="dropdown">
+                                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="ti-more-alt icon-rotate-45"></i>
+                                                </a>
+                                                <ul class="dropdown-menu shadow">  
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="detail-item mt-2 p-2 border-top">
+                                    '.$html_items.' 
+                                </div>
+                            </div>
+                            ';
+            }
+
             $html .= '
             <div class="list-project mb-4 p-2">
                 <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ">
@@ -1010,256 +1283,43 @@ class ProjectModel extends Model
                 <div class="detail-item mt-2 p-2 border-top">
                     '.$html_items.' 
                 </div>
+                <div class="accordion" id="accordionFlushExample'.$row->InvId.'">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            
+                            <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne'.$row->InvId.'" aria-expanded="false" aria-controls="flush-collapseOne'.$row->InvId.'">
+                                <i class="fa-solid fa-dollar-sign pe-2"></i><span class="text-head-2">Payment (Total = Rp. '.number_format($payment_total, 0, ',', '.').')</span>
+                            </button>
+                            
+                        </h2>
+                        <div id="flush-collapseOne'.$row->InvId.'" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample'.$row->InvId.'">
+                            <div class="accordion-body ">
+                                '.$html_payment.'
+                                <div class="d-flex justify-content-center">
+                                    <a class="btn btn-sm btn-primary px-3 m-2" onclick="proforma_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data Proforma</a> 
+                                    <a class="btn btn-sm btn-primary px-3 m-2" onclick="payment_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data Payment</a>
+                                </div> 
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo'.$row->InvId.'" aria-expanded="false" aria-controls="flush-collapseTwo'.$row->InvId.'"> 
+                                <i class="fa-solid fa-truck pe-2"></i><span class="text-head-2">Delivery (total Ritase = '.$delivery_ritase.')</span>
+                            </button>
+                        </h2>
+                        <div id="flush-collapseTwo'.$row->InvId.'" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample'.$row->InvId.'">
+                            <div class="accordion-body  ">
+                                '.$html_delivery.'
+                                <div class="d-flex justify-content-center">
+                                    <a class="btn btn-sm btn-primary px-3 m-2" onclick="delivery_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data Delivery</a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div> 
-            ';
-
-            $builder = $this->db->table("payment");
-            $builder->select('*'); 
-            $builder->where('PaymentRef',$row->InvId);
-            $builder->orderby('PaymentId', 'ASC'); 
-            $payment = $builder->get()->getResult(); 
-
-            foreach($payment as $row_payment){
-               
-                if($row_payment->PaymentStatus == "0"){
-                    $status = '<span class="text-head-3 text-warning">
-                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
-                        <i class="fa-solid fa-certificate fa-stack-2x"></i> 
-                        <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
-                    </span>Pending</span>';
-                }else{
-                    $status = ' <span class="text-head-3 text-success">
-                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
-                        <i class="fa-solid fa-certificate fa-stack-2x"></i>
-                        <i class="fa-solid fa-check fa-stack-1x fa-inverse"></i>
-                    </span>Verified</span>';
-                }
-                $html .= '  <div class="list-payment mb-4 p-2">
-                                <div class="line-1"></div>
-                                <div class="line-o"></div>
-                                <div class="row">
-                                    <div class="col-9 col-md-1 align-items-center order-0">  
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-head-1 pt-auto">'.($row_payment->PaymentDoc == "1" ? "PAYMENT" : "PROFORMA" ).'</span>
-                                        </div>   
-                                    </div>
-                                    <div class="col-12 col-md-1 order-2 order-sm-1"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Status:</span>'.$status.'
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-3 order-sm-2"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Tanggal:</span>
-                                            <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-4 order-sm-3"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Type:</span>
-                                            <span class="text-head-3">'.$row_payment->PaymentType.'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-5 order-sm-4">
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Method:</span>
-                                            <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-6 order-sm-5">
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Total:</span>
-                                            <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
-                                        </div>   
-                                    </div>
-                                    <div class="col-3 col-md-6 text-end order-1 order-sm-5"> 
-                                        <div class="d-none d-md-inline-block"> 
-                                            <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row_payment->PaymentRef.','.$row_payment->PaymentId.',this)">
-                                                <i class="fa-solid fa-eye mx-1"></i><span >Show</span>
-                                            </button>
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row->InvRef.','.$row_payment->PaymentId.',this)">
-                                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
-                                            </button>
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$row->InvRef.','.$row_payment->PaymentId.',this)">
-                                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$row->InvRef.','.$row_payment->PaymentId.',this)">
-                                                <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
-                                            </button> 
-                                        </div>
-                                        <div class="d-inline-block d-md-none">
-                                            <div class="dropdown">
-                                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="ti-more-alt icon-rotate-45"></i>
-                                                </a>
-                                                <ul class="dropdown-menu shadow">
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="payment_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$row->InvRef.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            ';
-            }
-
-
-            $builder = $this->db->table("delivery");
-            $builder->select('*'); 
-            $builder->where('DeliveryRef',$row->InvId);
-            $builder->orderby('DeliveryId', 'ASC'); 
-            $delivery = $builder->get()->getResult(); 
-            foreach($delivery as $row_delivery){ 
-                $builder = $this->db->table("delivery_detail");
-                $builder->select('*'); 
-                $builder->where('DeliveryDetailRef',$row_delivery->DeliveryId);
-                $builder->orderby('DeliveryDetailId', 'ASC'); 
-                $items = $builder->get()->getResult(); 
-                $html_items = "";
-                $no = 1;
-                $huruf  = "A";
-                foreach($items as $item){
-
-                    $arr_varian = json_decode($item->DeliveryDetailVarian);
-                    $arr_badge = "";
-                    $arr_no = 0;
-                    foreach($arr_varian as $varian){
-                        $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
-                        $arr_no++;
-                    }
-
-                    $html_items .= '
-                    <div class="row">
-                        <div class="col-12 col-md-8 my-1 varian">   
-                            <div class="d-flex ">
-                                <span class="no-urut text-head-3"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->DeliveryDetailType == "product" ? $no : $huruf).'.</span> 
-                                <div class="d-flex flex-column text-start">
-                                    <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
-                                    <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
-                                    <div class="d-flex flex-wrap gap-1">
-                                        '.$arr_badge.'
-                                    </div>
-                                </div> 
-                            </div>
-                        </div>'; 
-                    $html_items .= '<div class="col-12 col-md-4 my-1 detail">
-                                        <div class="row"> 
-                                            <div class="offset-2 offset-md-0 col-5 col-md-6 px-1">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Qty:</span>
-                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
-                                                </div>
-                                            </div>  
-                                            <div class="col-5 col-md-6 px-1">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Spare:</span>
-                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
-                                                </div>
-                                            </div>  
-                                        </div>   
-                                    </div> 
-                                </div>';
-                    $no++; 
-                        
-                    
-                }
-                if($row_delivery->DeliveryStatus == "0"){
-                    $status = '<span class="text-head-3 text-primary">
-                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
-                        <i class="fa-solid fa-certificate fa-stack-2x"></i> 
-                        <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
-                    </span>New</span>';
-                }else{
-                    $status = ' <span class="text-head-3 text-success">
-                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
-                        <i class="fa-solid fa-certificate fa-stack-2x"></i>
-                        <i class="fa-solid fa-check fa-stack-1x fa-inverse"></i>
-                    </span>Verified</span>';
-                }
-                $html .= '  <div class="list-delivery mb-4 p-2">
-                                <div class="line-1"></div>
-                                <div class="line-o"></div>
-                                <div class="row">
-                                    <div class="col-9 col-md-1 align-items-center order-0">  
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-head-1 pt-auto">DELIVERY</span>
-                                        </div>   
-                                    </div>
-                                    <div class="col-12 col-md-1 order-2 order-sm-1"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Status:</span>'.$status.'
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-3 order-sm-2"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Tanggal:</span>
-                                            <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-4 order-sm-3"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Ritase:</span>'.$row_delivery->DeliveryRitase.'
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-5 order-sm-4"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Armada:</span>
-                                            <span class="text-head-3">'.$row_delivery->DeliveryArmada.'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-6 order-sm-5">
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Pengirim:</span>
-                                            <span class="text-head-3">'.$row_delivery->DeliveryFromName.'</span>
-                                            <span class="text-head-3">'.$row_delivery->DeliveryFromTelp.'</span>
-                                            <span class="text-head-3">'.$row_delivery->DeliveryFromAddress.'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-7 order-sm-5">
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2">Penerima:</span>
-                                            <span class="text-head-3">'.$row_delivery->DeliveryToName.'</span>
-                                            <span class="text-head-3">'.$row_delivery->DeliveryToTelp.'</span>
-                                            <span class="text-head-3">'.$row_delivery->DeliveryToAddress.'</span>
-                                        </div>   
-                                    </div>
-                                    <div class="col-3 col-md-5 text-end order-1 order-sm-5"> 
-                                        <div class="d-none d-md-inline-block">  
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
-                                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
-                                            </button>
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
-                                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)">
-                                                <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
-                                            </button> 
-                                        </div>
-                                        <div class="d-inline-block d-md-none">
-                                            <div class="dropdown">
-                                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="ti-more-alt icon-rotate-45"></i>
-                                                </a>
-                                                <ul class="dropdown-menu shadow">  
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery('.$row->InvRef.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <div class="detail-item mt-2 p-2 border-top">
-                                    '.$html_items.' 
-                                </div>
-                            </div>
-                            ';
-            }
+            '; 
         }
         if($html == ""){ 
             $html = '
@@ -1457,11 +1517,11 @@ class ProjectModel extends Model
     private function get_next_code_pembelian($date){
         //sample SPH/001/01/2024
         $builder = $this->db->table("pembelian");  
-        $builder->select("ifnull(max(SUBSTRING(code,4,3)),0) + 1 as nextcode");
-        $builder->where("date_create",$date);
+        $builder->select("ifnull(max(SUBSTRING(POCode,4,3)),0) + 1 as nextcode");
+        $builder->where("PODate2",$date);
         $arr_date = explode("-", $date);
         $data = $builder->get()->getRow(); 
-        switch (strlen($data->nextcode)) {
+        switch (strlen($data->nextcode)){
             case 1:
                 $nextid = "PO/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
                 return $nextid; 
@@ -1954,26 +2014,31 @@ class ProjectModel extends Model
         $header = $data["header"]; 
 
         $builder = $this->db->table("delivery"); 
-        $builder->set('date', $header["date"]);  
-        $builder->set('admin', $header["admin"]);  
-        $builder->set('address', $header["address"]); 
-        $builder->set('templateid', $header["templateid"]); 
-        $builder->set('armada', $header["armada"]); 
-        $builder->set('telpreceive', $header["telpreceive"]); 
-        $builder->set('namereceive', $header["namereceive"]); 
-        $builder->set('deliverytotal', $header["deliverytotal"]);  
-        $builder->set('ritase', $header["ritase"]);  
-        $builder->where('id', $id); 
+        $builder->set('DeliveryDate', $header["DeliveryDate"]);  
+        $builder->set('DeliveryAdmin', $header["DeliveryAdmin"]);
+        $builder->set('DeliveryArmada', $header["DeliveryArmada"]);  
+        $builder->set('DeliveryRitase', $header["DeliveryRitase"]);  
+        $builder->set('DeliveryTotal', $header["DeliveryTotal"]);   
+        $builder->set('DeliveryToName', $header["DeliveryToName"]); 
+        $builder->set('DeliveryToTelp', $header["DeliveryToTelp"]); 
+        $builder->set('DeliveryToAddress', $header["DeliveryToAddress"]); 
+        $builder->set('DeliveryFromName', $header["DeliveryFromName"]); 
+        $builder->set('DeliveryFromTelp', $header["DeliveryFromTelp"]); 
+        $builder->set('DeliveryFromAddress', $header["DeliveryFromAddress"]); 
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
+        $builder->where('DeliveryId', $id); 
         $builder->update(); 
 
         $builder = $this->db->table("delivery_detail");
-        $builder->where('ref',$id);
+        $builder->where('DeliveryDetailRef',$id);
         $builder->delete(); 
 
         // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
-            $row["ref"] = $id;
-            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $row["DeliveryDetailRef"] = $id;
+            $row["DeliveryDetailVarian"] = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
             $builder = $this->db->table("delivery_detail");
             $builder->insert($row); 
         } 
@@ -2004,14 +2069,28 @@ class ProjectModel extends Model
     public function getdataInvoiceByDelivery($ref,$produkid,$varian,$text){
         $arr_detail_invoice = $this->getdataDetailInvoice($ref);
         foreach($arr_detail_invoice as $row){
-            if($row->produkid == $produkid && $row->varian == $varian && $row->text == $text){
-                return $row->qty;
+            if($row->ProdukId == $produkid && $row->InvDetailVarian == $varian && $row->InvDetailText == $text){
+                return $row->InvDetailQty;
             } 
         }
         return 0;
     }
+    public function getQtyDeliveryByRef($ref,$produkid,$varian,$text){
+        $builder = $this->db->table("delivery_detail"); 
+        $builder->join("delivery","DeliveryId = DeliveryDetailRef");
+        $builder->where('DeliveryRef',$ref);  
+        $arr_detail_delivery = $builder->get()->getResult(); 
+
+        $qtysum = 0;
+        foreach($arr_detail_delivery as $row){
+            if($row->ProdukId == $produkid && $row->DeliveryDetailVarian == $varian && $row->DeliveryDetailText == $text){ 
+                $qtysum += $row->DeliveryDetailQty;  
+            } 
+        }
+        return $qtysum;
+    }
     public function getdataDetailDeliveryByInvoice($ref,$produkid,$varian,$text){
-        $arr_detail_invoice = $this->getdataDetailInvoice($ref);
+        $arr_detail_invoice = $this->getdataDetailDelivery($ref);
         $qtysum = 0;
         foreach($arr_detail_invoice as $row){
             if($row->ProdukId == $produkid && $row->InvDetailVarian == $varian && $row->InvDetailText == $text){
@@ -2039,32 +2118,32 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("pembelian");
         $builder->insert(array(
-            "code"=>$this->get_next_code_pembelian($header["date_create"]),
-            "date"=>$header["date"],
-            "date_create"=>$header["date_create"],
-            "time_create"=>$header["time_create"],
-            "storeid"=>$header["storeid"],
-            "ref"=>$header["ref"],
-            "ref1"=> json_encode($header["ref1"]),
-            "admin"=>$header["admin"],
-            "customerid"=>$header["customerid"], 
-            "vendor"=>$header["vendor"], 
-            "templateid"=>$header["templateid"],
-            "subtotal"=>$header["subtotal"],
-            "pphtotal"=>$header["pphtotal"],
-            "disctotal"=>$header["disctotal"],
-            "grandtotal"=>$header["grandtotal"],
+            "POCode"=>$this->get_next_code_pembelian($header["PODate"]),
+            "PODate"=>$header["PODate"],  
+            "PODate2"=>$header["PODate"],  
+            "PORef"=>$header["PORef"],
+            "PORef2"=> json_encode($header["PORef2"]),
+            "POAdmin"=>$header["POAdmin"], 
+            "POVendor"=>$header["POVendor"], 
+            "TemplateId"=>$header["TemplateId"],
+            "CustomerId"=>$header["CustomerId"],
+            "POSubTotal"=>$header["POSubTotal"],
+            "POPPNTotal"=>$header["POPPNTotal"],
+            "PODiscTotal"=>$header["PODiscTotal"],
+            "POGrandTotal"=>$header["POGrandTotal"],
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
 
         $builder = $this->db->table("pembelian");
         $builder->select('*');
-        $builder->orderby('id', 'DESC');
+        $builder->orderby('POId', 'DESC');
         $builder->limit(1);
         $query = $builder->get()->getRow();  
         // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
-            $row["ref"] = $query->id;
-            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $row["PODetailRef"] = $query->POId;
+            $row["PODetailVarian"] = (isset($row["PODetailVarian"]) ? json_encode($row["PODetailVarian"]) : "[]");  
             $builder = $this->db->table("pembelian_detail");
             $builder->insert($row); 
         }
@@ -2108,16 +2187,16 @@ class ProjectModel extends Model
     }
     public function getdataPO($id){
         $builder = $this->db->table("pembelian"); 
-        $builder->select("*");
-        $builder->join("customer","customerid = customer.id");
-        $builder->join("vendor","vendor = vendor.id");
-        $builder->join("template_footer","templateid = template_footer.id");
-        $builder->where('pembelian.id',$id);  
+        $builder->select("*"); 
+        $builder->join("vendor","POVendor = VendorId");
+        $builder->join("customer","customer.CustomerId = pembelian.CustomerId");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
+        $builder->where('POId',$id);  
         return $builder->get()->getRow();  
     }
     public function getdataDetailPO($id){
         $builder = $this->db->table("pembelian_detail"); 
-        $builder->where('ref',$id);  
+        $builder->where('PODetailRef',$id);  
         return $builder->get()->getResult();  
     }
     

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'PO_'.$project->name.'_'.$project->date ?></title>
+    <title><?= 'PO_'.$po->CustomerName.'_'.$po->PODate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
 </head>
@@ -326,13 +326,13 @@
                 <tr>
                     <td style="width: 80%;"> 
                         <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $project->name.($project->company == "" ? : " (".$project->company.")") ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
-                        <span class="text-bold"><?= $project->telp1.($project->telp2 == "" ? : " / ".$project->telp2) ?></span><br>
-                        <span class="text-bold"><?= $project->address ?></span><br>
+                        <span class="text-bold"><?= $po->CustomerName.($po->CustomerCompany == "" ? : " (".$po->CustomerCompany.")") ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
+                        <span class="text-bold"><?= $po->CustomerTelp1.($po->CustomerTelp2 == "" ? : " / ".$po->CustomerTelp2) ?></span><br>
+                        <span class="text-bold"><?= $po->CustomerAddress ?></span><br>
                     </td> 
                     <td style="align-items: start;justify-content: center"> 
-                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $project->code ?></div><br>
-                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($project->date),"d F Y") ?></div><br> 
+                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $po->POCode ?></div><br>
+                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($po->PODate),"d F Y") ?></div><br> 
                     </td>
                 </tr>
             </tbody>
@@ -354,7 +354,7 @@
                     $html_items = ""; 
                     foreach($detail as $item){
 
-                        $arr_varian = json_decode($item->varian);
+                        $arr_varian = json_decode($item->PODetailVarian);
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
                             if($varian->varian == "vendor") continue; 
@@ -364,15 +364,15 @@
                         $html_items .= '
                         <tr> 
                             <td class="td-center">'.$no.'</td>
-                            <td class="ps-1">'.$item->text.$arr_badge.'</td>
-                            <td class="td-center">'.number_format($item->qty, 2, ',', '.').' '.$item->satuantext.'</td>
+                            <td class="ps-1">'.$item->PODetailText.$arr_badge.'</td>
+                            <td class="td-center">'.number_format($item->PODetailQty, 2, ',', '.').' '.$item->PODetailSatuanText.'</td>
                             <td class="td-center">
                                 <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->harga, 0, ',', '.').'</div>
+                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->PODetailPrice, 0, ',', '.').'</div>
                             </td>
                             <td class="td-center">
                                 <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->total, 0, ',', '.').'</div>
+                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->PODetailTotal, 0, ',', '.').'</div>
                             </td>
                         </tr>';
                         $no++;  
@@ -387,23 +387,23 @@
                     <th class="td-footer text-bold"  style="line-height:1;" colspan="2">Sub Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->subtotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($po->POSubTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>
-                <tr style="<?= $project->disctotal > 0 ? "" : "display:none;" ?>">
+                <tr style="<?= $po->PODiscTotal > 0 ? "" : "display:none;" ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
                     <th class="td-footer text-bold"  style="line-height:1;" colspan="2">Disc Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->disctotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($po->PODiscTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr> 
-                <tr style="<?= $project->pphtotal > 0 ? "" : "display:none;" ?>">
+                <tr style="<?= $po->POPPNTotal > 0 ? "" : "display:none;" ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
                     <th class="td-footer text-bold"  style="line-height:1;" colspan="2">Disc Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->pphtotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($po->POPPNTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>  
                 <tr>
@@ -411,7 +411,7 @@
                     <th class="td-footer text-bold"  style="line-height:1;" colspan="2">Grand Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->grandtotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($po->POGrandTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>   
             </tfoot>
@@ -427,12 +427,12 @@
                     <div style="border-top:1px solid black;margin-right:10px;">Admin</div>
                 </td>
                 <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
-                    <div style="border-top:1px solid black;margin-left:10px;">Pembeli</div>
+                    <div style="border-top:1px solid black;margin-left:10px;">Vendor</div>
                 </td>
             </tr>
             <tr>
                 <td style="vertical-align: top;">
-                    <?= $project->detail ?>
+                    <?= $po->TemplateFooterDetail ?>
                 </td>
             </tr>
         </table>

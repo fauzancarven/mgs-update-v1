@@ -565,6 +565,42 @@ class SelectController extends BaseController
                                </div>';
                 if($row['type'] == "INV"){
                     $detail_item =   $models->getdataDetailInvoice($row['refid']); 
+                    $vendor_array = array();
+                    $detail = array();
+                    foreach($detail_item as $row_item){ 
+                        $varian =  json_decode($row_item->InvDetailVarian, true); 
+                        if (!empty($varian)) {
+                            foreach ($varian as $v) { 
+                                if ($v['varian'] == 'vendor'){
+                                    $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                                    if ( !in_array($data_arr, $vendor_array)) {
+                                        $vendor_array[] = $data_arr;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->InvDetailVarian,true),$row_item->ProdukId); 
+                        if($data_total){ 
+                            $harga = $data_total["ProdukDetailHargaBeli"];
+                        }else{
+                            $harga = 0;
+                        }
+                        $detail[] = array(
+                            "produkid" => $row_item->ProdukId, 
+                            "satuan_id"=> ($row_item->InvDetailSatuanId == 0 ? "" : $row_item->InvDetailSatuanId),
+                            "satuan_text"=>$row_item->InvDetailSatuanText, 
+                            "varian"=> JSON_DECODE($row_item->InvDetailVarian,true), 
+                            "text"=> $row_item->InvDetailText,
+                            "group"=> $row_item->InvDetailGroup,
+                            "type"=> $row_item->InvDetailType,
+                            "ref"=>  $row_item->InvDetailQty,
+                            "qty"=>  $row_item->InvDetailQty,
+                            "harga"=>  $harga, 
+                            "data"=>  $data_total, 
+                            "total"=>  $row_item->InvDetailQty * $harga,
+                        );
+                    } 
                 }else{      
                     $detail_item =  $models->getdataDetailSPH($row['refid']); 
                     $vendor_array = array();
@@ -584,7 +620,7 @@ class SelectController extends BaseController
                         
                         $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->SphDetailVarian,true),$row_item->ProdukId); 
                         if($data_total){ 
-                            $harga = $data_total["ProdukDetailHargaJual"];
+                            $harga = $data_total["ProdukDetailHargaBeli"];
                         }else{
                             $harga = 0;
                         }

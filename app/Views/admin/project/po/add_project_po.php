@@ -66,12 +66,6 @@
                             <div class="col-sm-10">
                                 <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
                             </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphStore" class="col-sm-2 col-form-label">Toko</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphStore" name="SphStore" placeholder="Pilih Toko" style="width:100%"></select>  
-                            </div>
                         </div>  
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
@@ -278,28 +272,36 @@
         }
     });
         
-    function template_select_vendor(data){   
+    function template_select_vendor(data){     
+        data_vendor = [];
+        for(var i = 0;data.length > i;i++){
+            data_vendor.push({
+                "id" : data[i].VendorId,
+                "text" : data[i].VendorCode + " - " + data[i].VendorName,
+                "html" : data[i].VendorCode + " - " + data[i].VendorName,
+                "code" : data[i].VendorCode,
+                "name" : data[i].VendorName,  
+            }) 
+        }
         $("#SphVendor").select2({
             dropdownParent: $('#modal-add-po .modal-content'),
             placeholder: "Pilih Toko",
-            data: data,  
+            data: data_vendor,
             escapeMarkup: function(m) {
                 return m;
             },
             templateResult: function template(data) {
-                // if ($(data.html).length === 0) {
-                //     return data.code + " - " + data.name;
-                // }
-                // return $(data.html); 
-                return data.VendorCode + " - " + data.VendorName;
+                if ($(data.html).length === 0) {
+                    return data.text;
+                }
+                return $(data.html);
             },
             templateSelection: function templateSelect(data) {
-                // if ($(data.html).length === 0) {
-                //     return data.code + " - " + data.name;
-                // }
-                return data['text']; 
-                //return data.VendorCode + " - " + data.VendorName;
-            }
+                if ($(data.html).length === 0) {
+                    return data.text;
+                }
+                return data['text'];
+            }   
         });
     }
     $("#sphref").on("select2:select", function(e) {  
@@ -309,6 +311,7 @@
         template_select_vendor(data.vendor); 
         data_detail_item = [];
         (data.detail_item.length > 0 ? $("#btn-add-product").hide() :   $("#btn-add-product").show());
+        console.log(data.detail_item);
         for(var i = 0;data.detail_item.length >i;i++){
             if(data.detail_item[i].type == "product"){
                 data_detail_item.push({
@@ -316,7 +319,7 @@
                     "produkid" : data.detail_item[i].produkid,
                     "text" : data.detail_item[i].text,
                     "satuan_id" : data.detail_item[i].satuan_id,
-                    "satuantext" : data.detail_item[i].satuantext, 
+                    "satuan_text" : data.detail_item[i].satuan_text, 
                     "qty" : data.detail_item[i].qty,  
                     "group" : data.detail_item[i].group, 
                     "harga" : data.detail_item[i].harga, 
@@ -702,14 +705,14 @@
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                 <div class="input-group"> 
                                                     <input type="text" class="form-control form-control-sm input-form berat" id="input-ref-${i}" data-id="${i}" disabled> 
-                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuantext"]}</span>  
+                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span>  
                                                 </div>  
                                             </div>   
                                             <div class="col-6 col-md-3 px-1 ">  
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                 <div class="input-group"> 
                                                     <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}"> 
-                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuantext"]}</span>  
+                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span>  
                                                 </div>  
                                             </div> 
                                             <div class="col-6 col-md-3 px-1 ">  
@@ -872,8 +875,8 @@
         }); 
         quill[type].enable(false);
         quill[type].root.style.background = '#F7F7F7'; // warna disable 
-        const btnsave = $(el).find("a[value='simpanAs']")[0];
-        const btnsaveas = $(el).find("a[value='simpan']")[0];
+        const btnsaveas = $(el).find("a[value='simpanAs']")[0];
+        const btnsave = $(el).find("a[value='simpan']")[0];
         const btnedit = $(el).find("a[value='edit']")[0];
         const selectoption = $(el).find("select")[0];
 
@@ -956,7 +959,6 @@
             } 
         });
 
-        
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
                 $.ajax({ 
@@ -964,9 +966,10 @@
                     method: "POST",
                     url: "<?= base_url() ?>action/add-data-template-footer", 
                     data:{
-                        "name":$(selectoption).select2("data")[0]["text"] ,
-                        "detail": quill[type].getSemanticHTML(), 
-                        "delta": quill[type].getContents(), 
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
                     },
                     success: function(data) {    
                         //console.log(data); 
@@ -994,9 +997,10 @@
                     method: "POST",
                     url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
                     data:{
-                        "name": $("#SphFormatFooter").select2("data")[0]["text"] ,
-                        "detail": quill[type].getSemanticHTML(), 
-                        "delta": quill[type].getContents(), 
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
                     },
                     success: function(data) {    
                         //console.log(data); 
@@ -1021,6 +1025,69 @@
             }
         }) 
         $(btnsaveas).click(function(){
+            $("#modal-add-po").modal("hide"); 
+            Swal.fire({
+                title: 'Simpan Template',
+                input: 'text',
+                buttonsStyling: false,
+                showCancelButton: true,
+                showCancelButton: true,
+                customClass: {
+                    confirmButton: 'btn btn-primary mx-1',
+                    cancelButton: 'btn btn-secondary mx-1',
+                    loader: 'custom-loader',
+                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
+                },
+                backdrop: true,
+                confirmButtonText: "Simpan",
+                loaderHtml: '<div class="spinner-border text-primary"></div>',
+                preConfirm: async (name) => {
+                    try {  
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/add-data-template-footer", 
+                            data:{ 
+                                "TemplateFooterName": name ,
+                                "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                                "TemplateFooterDelta": quill[type].getContents(), 
+                                "TemplateFooterCategory": type, 
+                            },
+                            success: function(data) {    
+                                //console.log(data); 
+                                if(data["status"]===true){    
+                                    $(selectoption).append(new Option(data["data"]["TemplateFooterName"] ,data["data"]["TemplateFooterId"], true, true)).trigger('change'); 
+                                    
+                                    $(btnsave).hide();
+                                    $(btnsaveas).hide();
+                                    $(btnedit).show(); 
+
+                                    quill[type].enable(false);
+                                    quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                                }
+                            },
+                            error : function(xhr, textStatus, errorThrown){   
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: xhr["responseJSON"]['message'], 
+                                    confirmButtonColor: "#3085d6", 
+                                });
+                            }
+                        }); 
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {    
+                $(btnsave).hide();
+                $(btnsaveas).hide();
+                $(btnedit).show(); 
+
+                quill[type].enable(false);
+                quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                $("#modal-add-po").modal("show");
+            }); 
         })
         $(btnedit).click(function(){
 
@@ -1035,14 +1102,14 @@
     });
 
     $("#btn-add-penawaran").click(function(){
-        if($("#SphFormatFooter").val() == null){
+        if($($(".template-footer").find("select")[0]).val() == null){
             Swal.fire({
                 icon: 'error',
                 text: 'Template harus dipilih...!!!', 
                 confirmButtonColor: "#3085d6", 
             }).then(function(){ 
                 swal.close();
-                setTimeout(() => $("#SphFormatFooter").select2("open"), 300); 
+                setTimeout(() => $($(".template-footer").find("select")[0]).select2("open"), 300); 
             }) ;
             return; 
         }    
@@ -1069,36 +1136,33 @@
         }
 
         var header = {  
-            date: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"), 
-            date_create: moment().format("YYYY-MM-DD"), 
-            time_create: moment().format("HH:m:s"), 
-            storeid: $("#SphStore").val(), 
-            ref: <?= $project->ProjectId ?>, 
-            ref1: {
+            PODate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
+            PORef: <?= $project->ProjectId ?>, 
+            CustomerId: <?=$customer->CustomerId?>, 
+            PORef2: {
                 type: $("#sphref").select2("data")[0]["type"],
                 code: $("#sphref").select2("data")[0]["text"],
             }, 
-            admin: $("#SphAdmin").val(), 
-            customerid: <?=$customer->CustomerId?>, 
-            vendor: $("#SphVendor").val(), 
-            templateid: $("#SphFormatFooter").val(), 
-            subtotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
-            disctotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
-            pphtotal: $("#SphPPHTotal").val().replace(/[^0-9]/g, ''), 
-            grandtotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
+            POAdmin: $("#SphAdmin").val(),  
+            POVendor: $("#SphVendor").val(), 
+            TemplateId: $($(".template-footer").find("select")[0]).val(), 
+            POSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
+            POPPNTotal: $("#SphPPHTotal").val().replace(/[^0-9]/g, ''), 
+            PODiscTotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
+            POGrandTotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){   
             detail.push({
-                produkid: data_detail_item[i]["produkid"], 
-                text: data_detail_item[i]["text"],
-                satuan_id: data_detail_item[i]["satuan_id"], 
-                satuantext: data_detail_item[i]["satuantext"],
-                qty: data_detail_item[i]["qty"], 
-                harga: data_detail_item[i]["harga"],  
-                total: data_detail_item[i]["total"], 
-                group: data_detail_item[i]["group"], 
-                varian: data_detail_item[i]["varian"], 
+                ProdukId: data_detail_item[i]["produkid"], 
+                PODetailText: data_detail_item[i]["text"],
+                PODetailSatuanId: data_detail_item[i]["satuan_id"], 
+                PODetailSatuanText: data_detail_item[i]["satuan_text"],
+                PODetailQty: data_detail_item[i]["qty"], 
+                PODetailPrice: data_detail_item[i]["harga"],  
+                PODetailTotal: data_detail_item[i]["total"], 
+                PODetailGroup: data_detail_item[i]["group"], 
+                PODetailVarian: data_detail_item[i]["varian"], 
             }); 
         }
  

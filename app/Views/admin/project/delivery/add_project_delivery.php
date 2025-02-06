@@ -834,7 +834,7 @@
         $("#tb_varian").html(html); 
         var inputinvoice = [];
         var inputdikirim = [];
-        var inputpengiriman = [];
+        var inputpengiriman = []; 
         var inputspare = [];
         for(var i = 0; data_detail_item.length > i;i++){
             if(data_detail_item[i]["type"] == "product"){

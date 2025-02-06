@@ -22,23 +22,23 @@
                         </div> 
                         <div class="row align-items-center mt-2">
                             <label class="col-2 col-form-label">Nama</label>
-                            <label class="col-10  text-end fw-bold"><?= $customer->name ?> <?= $customer->company == "" ? "" : " ( " . $customer->company . " ) "; ?></label> 
+                            <label class="col-10  text-end fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
                         </div> 
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Telp</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->telp1 ?> / <?= $customer->telp2 == "" ? "" : $customer->telp2 ?></label> 
+                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerTelp1 ?> / <?= $customer->CustomerTelp2 == "" ? "" : $customer->CustomerTelp2 ?></label> 
                         </div> 
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Email</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->email ?></label> 
+                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerEmail ?></label> 
                         </div>  
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Instagram</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->instagram ?></label> 
+                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerInstagram ?></label> 
                         </div>  
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Alamat</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->address ?></label> 
+                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerAddress ?></label> 
                         </div> 
                     </div>  
                     <div class="col-lg-6 col-12 my-1 mb-2">   
@@ -50,7 +50,7 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->code ?>" disabled>
+                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->POCode ?>" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
@@ -65,12 +65,6 @@
                             <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
                             <div class="col-sm-10">
                                 <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphStore" class="col-sm-2 col-form-label">Toko</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphStore" name="SphStore" placeholder="Pilih Toko" style="width:100%"></select>  
                             </div>
                         </div>  
                         <div class="row mb-1 align-items-center mt-2">
@@ -145,36 +139,24 @@
                                 <span class="label-dialog">Term and Condition </span> 
                             </div>
                         </div>   
-                        <div class="card " style="min-height:50px;">
-                            <div class="card-body mx-2 p-2 bg-light">
-                                <div class="row mb-1 align-items-center mt-2">
-                                    <label for="SphAdmin" class="col-sm-2 col-form-label">Template</label>
-                                    <div class="col-sm-5">
-                                        <select class="form-select form-select-sm" id="SphFormatFooter" name="SphFormatFooter" placeholder="Pilih Format" style="width:100%"></select>  
-                                    </div>
-                                    <div class="col-5">
-                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="simpan" aria-label="name: simpan" id="savequillas"><i class="fa-solid fa-save pe-2"></i>Save As</a>
-                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="simpan" aria-label="name: simpan" id="savequill"><i class="fa-solid fa-save pe-2"></i>Save</a>
-                                        <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit" id="editquill"><i class="fa-solid fa-pencil pe-2"></i>Edit</a>
-                                    </div>
-                                </div>    
-                                <div class="row mb-1 align-items-center mt-2">
-                                    <label for="message" class="col-sm-2 col-form-label">Term Of Condition</label>
-                                    <div class="col-sm-10">
-                                        <div id="toolbar" role="toolbar" class="position-relative">
-                                            <span class="ql-formats">
-                                                <button type="button" class="ql-bold" aria-pressed="false" aria-label="bold"><i class="fa-solid fa-bold"></i></button>
-                                                <button type="button" class="ql-italic" aria-pressed="false" aria-label="italic"><i class="fa-solid fa-italic"></i></button>
-                                                <button type="button" class="ql-underline" aria-pressed="false" aria-label="underline"><i class="fa-solid fa-underline"></i></button>
-                                            </span>
-                                            <span class="ql-formats">
-                                                <button type="button" class="ql-list" aria-pressed="false" value="ordered" aria-label="list: ordered"><i class="fa-solid fa-list-ol"></i></button>
-                                                <button type="button" class="ql-list" aria-pressed="false" value="bullet" aria-label="list: bullet"><i class="fa-solid fa-list-ul"></i></button>
-                                            </span>
-                                           
-                                        </div>  
-                                        <div id="message" class="border"></div> 
-                                    </div>
+                        <div class="card " style="min-height:50px;"> 
+                            <div class="card template-footer" style="min-height:50px;">
+                                <div class="card-body mx-2 p-2 bg-light">
+                                    <div class="row mb-1 align-items-center mt-2"> 
+                                        <div class="col-7">
+                                            <select class="form-select form-select-sm" name="Select" placeholder="Pilih Format" style="width:100%"></select>  
+                                        </div>
+                                        <div class="col-5">
+                                            <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="simpanAs" aria-label="name: simpan As"><i class="fa-solid fa-save pe-2"></i>Save AS</a>
+                                            <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="simpan" aria-label="name: simpan"><i class="fa-solid fa-save pe-2"></i>Save</a>
+                                            <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-pencil pe-2"></i>Edit</a>
+                                        </div>
+                                    </div>    
+                                    <div class="row mb-1 align-items-center mt-2"> 
+                                        <div class="col-12"> 
+                                            <div name="EditFooterMessage" class="border"></div> 
+                                        </div>
+                                    </div>    
                                 </div>  
                             </div>  
                         </div>  
@@ -239,8 +221,8 @@
 <script>    
     $('#SphDate').daterangepicker({
         "singleDatePicker": true,
-        "startDate": moment('<?= $project->date ?>'),
-        "endDate":  moment('<?= $project->date ?>'), 
+        "startDate": moment('<?= $project->PODate ?>'),
+        "endDate":  moment('<?= $project->PODate ?>'), 
         dropdownParent: $('#modal-edit-po .modal-content'), 
         locale: {
             format: 'DD MMMM YYYY'
@@ -250,7 +232,7 @@
         dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
-            url: "<?= base_url()?>select2/get-data-ref-vendor/<?= $project->id?>",
+            url: "<?= base_url()?>select2/get-data-ref-vendor/<?= $project->POId?>",
             dataType: 'json',
             type:"POST",
             delay: 250,
@@ -292,25 +274,35 @@
         }
     }); 
     function template_select_vendor(data){  
+        data_vendor = [];
+        for(var i = 0;data.length > i;i++){
+            data_vendor.push({
+                "id" : data[i].VendorId,
+                "text" : data[i].VendorCode + " - " + data[i].VendorName,
+                "html" : data[i].VendorCode + " - " + data[i].VendorName,
+                "code" : data[i].VendorCode,
+                "name" : data[i].VendorName,  
+            }) 
+        }
         $("#SphVendor").select2({
             dropdownParent: $('#modal-edit-po .modal-content'),
             placeholder: "Pilih Toko",
-            data: data,  
+            data: data_vendor,
             escapeMarkup: function(m) {
                 return m;
             },
             templateResult: function template(data) {
                 if ($(data.html).length === 0) {
-                    return data.code + " - " + data.name;
+                    return data.text;
                 }
                 return $(data.html);
             },
             templateSelection: function templateSelect(data) {
                 if ($(data.html).length === 0) {
-                    return data.code + " - " + data.name;
+                    return data.text;
                 }
                 return data['text'];
-            }
+            }   
         });
     }
     $("#sphref").on("select2:select", function(e) {  
@@ -327,7 +319,7 @@
                     "produkid" : data.detail_item[i].produkid,
                     "text" : data.detail_item[i].text,
                     "satuan_id" : data.detail_item[i].satuan_id,
-                    "satuantext" : data.detail_item[i].satuantext, 
+                    "satuan_text" : data.detail_item[i].satuan_text, 
                     "qty" : data.detail_item[i].qty,  
                     "group" : data.detail_item[i].group, 
                     "harga" : data.detail_item[i].harga, 
@@ -338,9 +330,9 @@
         load_produk();
     })
     var vendor_data = <?= json_encode($vendor)?>;
-    var vendor_select = vendor_data.filter((item) => item.id == <?=$project->vendor?>);
+    var vendor_select = vendor_data.filter((item) => item.VendorId == <?=$project->POVendor?>);
     template_select_vendor(vendor_select); 
-    var project_data = JSON.parse('<?=$project->ref1?>');  
+    var project_data = JSON.parse('<?=$project->PORef2?>');  
     $('#sphref').append(new Option(project_data["code"] , "1", true, true)).trigger('change');   
     $('#sphref').attr("disabled",true);
 
@@ -373,9 +365,7 @@
             },
             cache: true
         }, 
-    });
-    $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
-    $('#SphStore').attr("disabled",true);
+    }); 
 
     $("#SphAdmin").select2({
         dropdownParent: $('#modal-edit-po .modal-content'),
@@ -719,14 +709,14 @@
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                 <div class="input-group"> 
                                                     <input type="text" class="form-control form-control-sm input-form berat" id="input-ref-${i}" data-id="${i}" disabled> 
-                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuantext"]}</span>  
+                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span>  
                                                 </div>  
                                             </div>   
                                             <div class="col-6 col-md-3 px-1 ">  
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                 <div class="input-group"> 
                                                     <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}"> 
-                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuantext"]}</span>  
+                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span>  
                                                 </div>  
                                             </div> 
                                             <div class="col-6 col-md-3 px-1 ">  
@@ -876,228 +866,244 @@
     }
     grand_total_harga();
 
-
-    var quill = new Quill('#message',  {
-        debug: 'false',
-        modules: {
-            toolbar: '#toolbar',
-        }, 
-        theme: "bubble"//'snow'
-    }); 
-    quill.enable(false);
-    quill.root.style.background = '#F7F7F7'; // warna disable
-    quill.setContents(JSON.parse(<?= JSON_ENCODE($template->delta)?>));  
-
-    $("#savequill").hide();
-    $("#savequillas").hide();
-    $("#editquill").hide();
-    $("#savequill").click(function(){ 
-        if($("#SphFormatFooter").select2("data")[0]["id"] == $("#SphFormatFooter").select2("data")[0]["text"]){
-            $.ajax({ 
-                dataType: "json",
-                method: "POST",
-                url: "<?= base_url() ?>action/add-data-template-footer", 
-                data:{
-                    "name":$("#SphFormatFooter").select2("data")[0]["text"] ,
-                    "detail": quill.getSemanticHTML(), 
-                    "delta": quill.getContents(), 
-                },
-                success: function(data) {    
-                    //console.log(data); 
-                    if(data["status"]===true){     
-                        $("#savequill").hide();
-                        $("#savequillas").hide();
-                        $("#editquill").show();
-                        quill.enable(false);
-                        quill.root.style.background = '#F7F7F7'; // warna disable    
-                    }
-                },
-                error : function(xhr, textStatus, errorThrown){   
-                    Swal.fire({
-                        icon: 'error',
-                        text: xhr["responseJSON"]['message'], 
-                        confirmButtonColor: "#3085d6", 
-                    });
-                }
-            }); 
-        }else{
-            $.ajax({ 
-                dataType: "json",
-                method: "POST",
-                url: "<?= base_url() ?>action/edit-data-template-footer/" + $("#SphFormatFooter").select2("data")[0]["id"] , 
-                data:{
-                    "name": $("#SphFormatFooter").select2("data")[0]["text"] ,
-                    "detail": quill.getSemanticHTML(), 
-                    "delta": quill.getContents(), 
-                },
-                success: function(data) {    
-                    //console.log(data); 
-                    if(data["status"]===true){     
-                        $("#savequill").hide();
-                        $("#savequillas").hide();
-                        $("#editquill").show();
-                        quill.enable(false);
-                        quill.root.style.background = '#F7F7F7'; // warna disable    
-                    }
-                },
-                error : function(xhr, textStatus, errorThrown){   
-                    Swal.fire({
-                        icon: 'error',
-                        text: xhr["responseJSON"]['message'], 
-                        confirmButtonColor: "#3085d6", 
-                    });
-                }
-            }); 
-        }
-    })
-    $("#savequillas").click(function(){  
-        $("#modal-edit-po").modal("hide"); 
-        Swal.fire({
-            title: 'Simpan Template',
-            input: 'text',
-            buttonsStyling: false,
-            showCancelButton: true,
-            showCancelButton: true,
-            customClass: {
-                confirmButton: 'btn btn-primary mx-1',
-                cancelButton: 'btn btn-secondary mx-1',
-                loader: 'custom-loader',
-                input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
-            },
-            backdrop: true,
-            confirmButtonText: "Simpan",
-            loaderHtml: '<div class="spinner-border text-primary"></div>',
-            preConfirm: async (name) => {
-                try {  
-                    $.ajax({ 
-                        dataType: "json",
-                        method: "POST",
-                        url: "<?= base_url() ?>action/add-data-template-footer", 
-                        data:{
-                            "name": name ,
-                            "detail": quill.getSemanticHTML(), 
-                            "delta": quill.getContents(), 
-                        },
-                        success: function(data) {    
-                            //console.log(data); 
-                            if(data["status"]===true){    
-                                $('#SphFormatFooter').append(new Option(data["data"]["name"] ,data["data"]["id"], true, true)).trigger('change');
-                                $("#savequill").hide();
-                                $("#savequillas").hide();
-                                $("#editquill").show();
-                                quill.enable(false);
-                                quill.root.style.background = '#F7F7F7'; // warna disable    
-                            }
-                        },
-                        error : function(xhr, textStatus, errorThrown){   
-                            Swal.fire({
-                                icon: 'error',
-                                text: xhr["responseJSON"]['message'], 
-                                confirmButtonColor: "#3085d6", 
-                            });
-                        }
-                    }); 
-                } catch (error) {
-                    Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
-                }
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {    
-            $("#savequill").hide();
-            $("#savequillas").hide();
-            $("#editquill").show();
-            quill.enable(false);
-            quill.root.style.background = '#F7F7F7'; // warna disable
-            $("#modal-edit-po").modal("show");
+    var quill = [];  
+    $(".template-footer").each(function(index, el){
+        var message = $(el).find("[name='EditFooterMessage']")[0];
+        var type = "pembelian"; 
+        quill[type] = new Quill(message,  {
+            debug: 'false',
+            modules: {
+                toolbar: [['bold', 'italic', 'underline', 'strike'],[{ 'list': 'ordered'}]],
+            },  
+            theme: "bubble"//'snow'
         }); 
-    })
-    $("#editquill").click(function(){
+        quill[type].enable(false);
+        quill[type].root.style.background = '#F7F7F7'; // warna disable 
+        const btnsaveas = $(el).find("a[value='simpanAs']")[0];
+        const btnsave = $(el).find("a[value='simpan']")[0];
+        const btnedit = $(el).find("a[value='edit']")[0];
+        const selectoption = $(el).find("select")[0];
 
-        $("#editquill").hide();
-        $("#savequill").show();
-        $("#savequillas").show();
-        quill.enable(true);
-        quill.root.style.background = '#FFFFFF'; // warna enable
+        $(btnsave).hide();
+        $(btnsaveas).hide();
+        $(btnedit).hide();
+ 
+        $(selectoption).select2({
+            dropdownParent: $('#modal-edit-po .modal-content'),
+            placeholder: "Pilih Template",
+            tags:true,
+            ajax: {
+                url: "<?= base_url()?>select2/get-data-template-footer/" + type,
+                dataType: 'json',
+                type:"POST",
+                delay: 250,
+                data: function (params) {
+                    // CSRF Hash
+                    var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                    var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
+                    return {
+                        searchTerm: params.term, // search term
+                        [csrfName]: csrfHash // CSRF Token
+                    };
+                },
+                processResults: function (response) {
+        
+                    // Update CSRF Token
+                    $('.txt_csrfname').val(response.token); 
 
-    }) 
-
-    $("#SphFormatFooter").select2({
-        dropdownParent: $('#modal-edit-po .modal-content'),
-        placeholder: "Pilih Template",
-        tags:true,
-        ajax: {
-            url: "<?= base_url()?>select2/get-data-template-footer",
-            dataType: 'json',
-            type:"POST",
-            delay: 250,
-            data: function (params) {
-                // CSRF Hash
-                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
-                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
-
+                    return {
+                        results: response.data
+                    };
+                },
+                cache: true
+            }, 
+            createTag: function(params) {
                 return {
-                    searchTerm: params.term, // search term
-                    [csrfName]: csrfHash // CSRF Token
+                    id: params.term,
+                    text: params.term, 
+                    tags: true // menandai tag baru
                 };
             },
-            processResults: function (response) {
-    
-                // Update CSRF Token
-                $('.txt_csrfname').val(response.token); 
-
-                return {
-                    results: response.data
-                };
+            createTagText: function(params) {
+                return "Tambah '" + params.term + "'";
+            },  
+            templateResult: function(params) {
+                if (params.newTag) {
+                    return "Tambah '" + params.text + "'";
+                }
+                if (params.loading) return params.text; 
+                return params.text;
+                //return params.text;
             },
-            cache: true
-        }, 
-        createTag: function(params) {
-            return {
-                id: params.term,
-                text: params.term, 
-                tags: true // menandai tag baru
-            };
-        },
-        createTagText: function(params) {
-            return "Tambah '" + params.term + "'";
-        },  
-        templateResult: function(params) {
-            if (params.newTag) {
-                return "Tambah '" + params.text + "'";
+            templateSelection: function(params) {
+                return params.text;
+            }, 
+            //escapeMarkup: function(m) { return m; }
+        }).on("select2:select", function(e) {  
+            var data = e.params.data;    
+            //console.log(data);
+            if (e.params.data.tags) { 
+                quill[type].setContents(); 
+                
+                $(btnsave).show();
+                $(btnsaveas).show();
+                $(btnedit).hide();
+ 
+                quill[type].enable(true);
+                quill[type].root.style.background = '#FFFFFF'; // warna enable
+            } else { 
+                quill[type].setContents(JSON.parse(data.delta));  
+                
+                $(btnsave).hide();
+                $(btnsaveas).hide();
+                $(btnedit).show(); 
+
+                quill[type].enable(false);
+                quill[type].root.style.background = '#F7F7F7'; // warna enable
+            } 
+        });
+
+        $(btnsave).click(function(){ 
+            if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
+                $.ajax({ 
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/add-data-template-footer", 
+                    data:{
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
+                    },
+                    success: function(data) {    
+                        //console.log(data); 
+                        if(data["status"]===true){     
+                          
+                            $(btnsave).hide();
+                            $(btnsaveas).hide();
+                            $(btnedit).show(); 
+
+                            quill[type].enable(false);
+                            quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                        }
+                    },
+                    error : function(xhr, textStatus, errorThrown){   
+                        Swal.fire({
+                            icon: 'error',
+                            text: xhr["responseJSON"]['message'], 
+                            confirmButtonColor: "#3085d6", 
+                        });
+                    }
+                }); 
+            }else{
+                $.ajax({ 
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
+                    data:{
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
+                    },
+                    success: function(data) {    
+                        //console.log(data); 
+                        if(data["status"]===true){ 
+
+                            $(btnsave).hide();
+                            $(btnsaveas).hide();
+                            $(btnedit).show(); 
+
+                            quill[type].enable(false);
+                            quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                        }
+                    },
+                    error : function(xhr, textStatus, errorThrown){   
+                        Swal.fire({
+                            icon: 'error',
+                            text: xhr["responseJSON"]['message'], 
+                            confirmButtonColor: "#3085d6", 
+                        });
+                    }
+                }); 
             }
-            if (params.loading) return params.text; 
-            return params.text;
-            //return params.text;
-        },
-        templateSelection: function(params) {
-            return params.text;
-        }, 
-        //escapeMarkup: function(m) { return m; }
-    }).on("select2:select", function(e) {  
-        var data = e.params.data;    
-        //console.log(data);
-        if (e.params.data.tags) {
-            console.log('Tag baru ditambahkan:', e.params.data.text);
-            quill.setContents(); 
-            $("#savequill").show();
-            $("#savequillas").hide();
-            $("#editquill").hide();
-            quill.enable(true);
-            quill.root.style.background = '#FFFFFF'; // warna enable
-        } else {
-            console.log('select baru ditambahkan:', e.params.data.text); 
-            quill.setContents(JSON.parse(data.delta));  
-            
-            $("#savequill").hide();
-            $("#savequillas").hide();
-            $("#editquill").show();
-        }
-    }).on("change", function(e) {   
-        console.log("change");
+        }) 
+        $(btnsaveas).click(function(){
+            $("#modal-edit-po").modal("hide"); 
+            Swal.fire({
+                title: 'Simpan Template',
+                input: 'text',
+                buttonsStyling: false,
+                showCancelButton: true,
+                showCancelButton: true,
+                customClass: {
+                    confirmButton: 'btn btn-primary mx-1',
+                    cancelButton: 'btn btn-secondary mx-1',
+                    loader: 'custom-loader',
+                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
+                },
+                backdrop: true,
+                confirmButtonText: "Simpan",
+                loaderHtml: '<div class="spinner-border text-primary"></div>',
+                preConfirm: async (name) => {
+                    try {  
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/add-data-template-footer", 
+                            data:{ 
+                                "TemplateFooterName": name ,
+                                "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                                "TemplateFooterDelta": quill[type].getContents(), 
+                                "TemplateFooterCategory": type, 
+                            },
+                            success: function(data) {    
+                                //console.log(data); 
+                                if(data["status"]===true){    
+                                    $(selectoption).append(new Option(data["data"]["TemplateFooterName"] ,data["data"]["TemplateFooterId"], true, true)).trigger('change'); 
+                                    
+                                    $(btnsave).hide();
+                                    $(btnsaveas).hide();
+                                    $(btnedit).show(); 
+
+                                    quill[type].enable(false);
+                                    quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                                }
+                            },
+                            error : function(xhr, textStatus, errorThrown){   
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: xhr["responseJSON"]['message'], 
+                                    confirmButtonColor: "#3085d6", 
+                                });
+                            }
+                        }); 
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {    
+                $(btnsave).hide();
+                $(btnsaveas).hide();
+                $(btnedit).show(); 
+
+                quill[type].enable(false);
+                quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                $("#modal-edit-po").modal("show");
+            }); 
+        })
+        $(btnedit).click(function(){
+
+            $(btnsave).show();
+            $(btnsaveas).show();
+            $(btnedit).hide();
+
+            quill[type].enable(true);
+            quill[type].root.style.background = '#FFFFFF'; // warna enable
+
+        }) 
     });
-    
-    $('#SphFormatFooter').append(new Option("<?=$template->name ?>" , "<?=$template->id?>", true, true)).trigger('change'); 
-    $("#editquill").show();
 
     $("#btn-edit-po").click(function(){
         if($("#SphFormatFooter").val() == null){
@@ -1147,7 +1153,7 @@
                 produkid: data_detail_item[i]["produkid"], 
                 text: data_detail_item[i]["text"],
                 satuan_id: data_detail_item[i]["satuan_id"], 
-                satuantext: data_detail_item[i]["satuantext"],
+                satuan_text: data_detail_item[i]["satuan_text"],
                 qty: data_detail_item[i]["qty"], 
                 harga: data_detail_item[i]["harga"],  
                 total: data_detail_item[i]["total"], 
@@ -1159,7 +1165,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/edit-data-po/<?=$project->id?>", 
+            url: "<?= base_url() ?>action/edit-data-po/<?=$project->POId?>", 
             data:{
                 "header":header,
                 "detail":detail, 
@@ -1173,7 +1179,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-po").modal("hide");  
-                        loader_data_project(<?= $project->ref ?>,"pembelian") 
+                        loader_data_project(<?= $project->PORef ?>,"pembelian") 
                     });
                   
                 }else{
