@@ -281,6 +281,14 @@ class ProjectModel extends Model
                                 </i>
                                 <span class="menu-text">Pembelian</span>
                             </div>
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="penerimaan">
+                                <i class="fa-solid fa-cart-shopping position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Penerimaan</span>
+                            </div>
                             <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="invoice">
                                 <i class="fa-solid fa-money-bill position-relative">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
@@ -288,6 +296,22 @@ class ProjectModel extends Model
                                     </span>
                                 </i>
                                 <span class="menu-text">Invoice</span>
+                            </div>
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="pengiriman">
+                                <i class="fa-solid fa-truck position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Pengiriman</span>
+                            </div> 
+                            <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="documentasi">
+                                <i class="fa-solid fa-dollar position-relative">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <span class="menu-text">Keuangan</span>
                             </div>
                             <div class="menu-item" data-id="'.$data["ProjectId"].'" data-menu="documentasi">
                                 <i class="fa-solid fa-folder-open position-relative">
