@@ -63,13 +63,13 @@
         width: 100px;
         height: 100px;
         border-radius: 0;
-        object-fit: contain;
+        object-fit: cover;
     } 
     .table td img.image-project , .jsgrid .jsgrid-table td img.image-project {
         width: 50px;
         height: 50px;
         border-radius: 0;
-        object-fit: contain;
+        object-fit: cover;
     }     
 
     /* border untuk table utama */
@@ -311,6 +311,7 @@
     }
 
     @media (max-width: 767px) {
+        
         .content-wrapper {
             padding: 0.5rem;
         } 
@@ -334,6 +335,10 @@
         
         .table-hover-custom tbody tr:hover td{
             background-color:transparent !important;
+        }
+        .table td img.image-produk , .jsgrid .jsgrid-table td img.image-produk {
+            width: 50px;
+            height: 50px;
         }
     }
 
