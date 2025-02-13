@@ -138,7 +138,7 @@
     }
     .text-head-3 {
         font-weight: bold;
-        color: #305176;
+        color: #003571;
         font-size: 0.7rem;
     }
     .text-detail-1 { 
@@ -898,7 +898,7 @@
         background: #fbfbfb;
         padding: 1rem;
         margin: 0.5rem;
-        border-radius: 0.25rem;
+        border-radius: 0.75rem;
         box-shadow: -2px 2px 1px 0 #7f7f7f0d;
         transition: all 0.3s;
         border: 1px solid #e9e9e9;

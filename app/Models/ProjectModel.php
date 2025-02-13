@@ -569,17 +569,23 @@ class ProjectModel extends Model
                 <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ">
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">No. Penawaran :</span>
+                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Penawaran</span>
                             <span class="text-head-3">'.$row->SphCode.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Tanggal:</span>
+                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
                             <span class="text-head-3">'.date_format(date_create($row->SphDate),"d M Y").'</span>
                         </div>  
                     </div>
-                    <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
+                    <div class="col-12 col-xl-4 order-3 order-sm-2 pb-2">
+                        <div class="d-flex flex-column justify-content-between">
+                            <span class="text-detail-2 pb-2 pb-md-0"><i class="fa-solid fa-location-dot pe-1"></i> Alamat</span>
+                            <span class="text-head-3 text-wrap">'.$row->SphAddress.'</span>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-3">
                         <div class="float-end d-md-flex d-none gap-1">
                             <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="po_project_sph('.$row->SphRef.','.$row->SphId.',this)">
                                 <i class="fa-solid fa-share-from-square mx-1"></i></i><span >Buat PO</span>
@@ -588,13 +594,13 @@ class ProjectModel extends Model
                                 <i class="fa-solid fa-share-from-square mx-1"></i><span >Buat Invoice</span>
                             </button> 
                             <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_sph('.$row->SphRef.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                                <i class="fa-solid fa-print mx-1"></i>
                             </button> 
                             <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_sph('.$row->SphRef.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
+                                <i class="fa-solid fa-pencil mx-1"></i>
                             </button>
                             <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_sph('.$row->SphRef.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
+                                <i class="fa-solid fa-close mx-1"></i>
                             </button> 
                         </div> 
                         <div class="d-md-none d-flex btn-action justify-content-between"> 
@@ -613,34 +619,28 @@ class ProjectModel extends Model
                             </div>
                         </div> 
                     </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-3">
+                    <div class="col-12 col-md-3 col-xl-2 order-4">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Sub Total:</span>
                             <span class="text-head-3">Rp. '.number_format($row->SphSubTotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-4">
+                    <div class="col-12 col-md-3 col-xl-2 order-5">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Item:</span>
                             <span class="text-head-3">Rp. '.number_format($row->SphDiscItemTotal, 0, ',', '.').'</span>
                         </div>  
                     </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-5">
+                    <div class="col-12 col-md-3 col-xl-2 order-6">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Disc Total:</span>
                             <span class="text-head-3">Rp. '.number_format($row->SphDiscTotal, 0, ',', '.').'</span>
                         </div> 
                     </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-6">
+                    <div class="col-12 col-md-3 col-xl-2 order-7">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2">Grand Total:</span>
                             <span class="text-head-3">Rp. '.number_format($row->SphGrandTotal, 0, ',', '.').'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-xl-4 order-7  pb-2">
-                        <div class="d-flex flex-column justify-content-between">
-                            <span class="text-detail-2 pb-2 pb-md-0">Alamat:</span>
-                            <span class="text-head-3 text-wrap">'.$row->SphAddress.'</span>
                         </div>  
                     </div>
                 </div> 
