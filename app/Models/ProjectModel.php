@@ -365,7 +365,7 @@ class ProjectModel extends Model
         $query = $builder->get()->getResult();  
         $html = "";
         foreach($query as $row){ 
-            $content =  json_decode($this->data_project_survey($row->ProjectId));
+            $content =  json_decode($this->data_project_sph($row->ProjectId));
             $category = "";
             foreach (explode("|",$row->ProjectCategory) as $index=>$x) {
                 $category .= '<span class="badge badge-'.fmod($index, 5).'">'.$x.'</span>';
@@ -403,57 +403,19 @@ class ProjectModel extends Model
                         </div>
                         <div class="project-action action-td">  
                             <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</button>
-                            <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button>
+                            <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</button>
                         </div>
                     </div>  
                     <div class="d-flex border-top content-data ">
                         <div class="side-menu" data-id="'.$row->ProjectId.'">
-                            <div class="d-flex flex-column project-menu">
-                                <div class="menu-item selected" data-id="'.$row->ProjectId.'" data-menu="survey">
-                                    <i class="fa-solid fa-list-check position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
-                                    </i>
-                                    <span class="menu-text">Survey</span>
-                                    <div class="menu-total d-none"><span>10</span></div>
-                                </div>
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="rab">
-                                    <i class="fa-solid fa-list position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
-                                    </i>
-                                    <span class="menu-text">RAB</span>
-                                    <div class="menu-total  d-none"><span>10</span></div>
-                                </div>
-                                <div class="divider-vertical m-1"></div>
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="penawaran">
+                            <div class="d-flex flex-column project-menu"> 
+                                <div class="menu-item selected" data-id="'.$row->ProjectId.'" data-menu="penawaran">
                                     <i class="fa-solid fa-hand-holding-droplet position-relative">
                                         <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
                                             <span class="visually-hidden">unread messages</span>
                                         </span>
                                     </i>
                                     <span class="menu-text">Penawaran</span>
-                                    <div class="menu-total d-none"></div>
-                                </div>
-                                <div class="divider-vertical m-1"></div>
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="pembelian">
-                                    <i class="fa-solid fa-cart-shopping position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
-                                    </i>
-                                    <span class="menu-text">Pembelian</span>
-                                    <div class="menu-total d-none"></div>
-                                </div>
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="penerimaan">
-                                    <i class="fa-solid fa-cart-shopping position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
-                                    </i>
-                                    <span class="menu-text">Penerimaan</span>
                                     <div class="menu-total d-none"></div>
                                 </div>
                                 <div class="divider-vertical m-1"></div>
@@ -476,6 +438,44 @@ class ProjectModel extends Model
                                     <span class="menu-text">Pengiriman</span>
                                     <div class="menu-total d-none"></div>
                                 </div>  
+                                <div class="divider-vertical m-1"></div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="pembelian">
+                                    <i class="fa-solid fa-cart-shopping position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Pembelian</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="penerimaan"> 
+                                    <i class="fa-solid fa-cart-flatbed position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Penerimaan</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                                <div class="divider-vertical m-1"></div>
+                                <div class="menu-item " data-id="'.$row->ProjectId.'" data-menu="survey">
+                                    <i class="fa-solid fa-list-check position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Survey</span>
+                                    <div class="menu-total d-none"><span>10</span></div>
+                                </div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="rab">
+                                    <i class="fa-solid fa-list position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">RAB</span>
+                                    <div class="menu-total  d-none"><span>10</span></div>
+                                </div>
                                 <div class="divider-vertical m-1"></div>
                                 <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="keuangan">
                                     <i class="fa-solid fa-dollar position-relative">
@@ -680,7 +680,24 @@ class ProjectModel extends Model
             $html_items = "";
             $no = 1;
             $huruf  = "A";
+
             foreach($items as $item){
+
+                $folder = 'assets/images/produk/'.$item->ProdukId."/";
+                $default = 'assets/images/produk/default.png';
+    
+                if (!file_exists($folder)) {
+                    mkdir($folder, 0777, true);  
+                } 
+                $files = array_diff(scandir($folder), array('.', '..')); 
+                $gambar = null;
+    
+                foreach ($files as $file) {
+                    if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                        $gambar = $folder . $file;
+                        break;
+                    }
+                }  
 
                 $arr_varian = json_decode($item->SphDetailVarian);
                 $arr_badge = "";
@@ -693,8 +710,8 @@ class ProjectModel extends Model
                 $html_items .= '
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
-                        <div class="d-flex ">
-                            <span class="no-urut text-head-3"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->SphDetailType == "product" ? $no : $huruf).'.</span> 
+                        <div class="d-flex gap-2"> 
+                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailGroup.'</span> 
@@ -745,7 +762,7 @@ class ProjectModel extends Model
             }
             $html .= '
             <div class="list-project mb-4 p-2">
-                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ">
+                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Penawaran</span>
@@ -773,13 +790,13 @@ class ProjectModel extends Model
                                 <i class="fa-solid fa-share-from-square mx-1"></i><span >Buat Invoice</span>
                             </button> 
                             <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_sph('.$row->SphRef.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-print mx-1"></i>
+                                <i class="fa-solid fa-print mx-1"></i><span >Cetak</span>
                             </button> 
                             <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_sph('.$row->SphRef.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-pencil mx-1"></i>
+                                <i class="fa-solid fa-pencil mx-1"></i><span >Ubah</span>
                             </button>
                             <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_sph('.$row->SphRef.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-close mx-1"></i>
+                                <i class="fa-solid fa-close mx-1"></i><span >Hapus</span>
                             </button> 
                         </div> 
                         <div class="d-md-none d-flex btn-action justify-content-between"> 
@@ -791,40 +808,29 @@ class ProjectModel extends Model
                                 <ul class="dropdown-menu shadow">
                                     <li><a class="dropdown-item m-0 px-2 d-none" onclick="po_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Teruskan Vendor</a></li>
                                     <li><a class="dropdown-item m-0 px-2 d-none" onclick="invoice_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-money-bill pe-2"></i>Teruskan Invoice</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-print pe-2"></i>Print</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sph('.$row->SphRef.','.$row->SphId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
                                 </ul>
                             </div>
                         </div> 
-                    </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-4">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Sub Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->SphSubTotal, 0, ',', '.').'</span>
-                        </div> 
-                    </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-5">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Disc Item:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->SphDiscItemTotal, 0, ',', '.').'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-6">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Disc Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->SphDiscTotal, 0, ',', '.').'</span>
-                        </div> 
-                    </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-7">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Grand Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->SphGrandTotal, 0, ',', '.').'</span>
-                        </div>  
-                    </div>
+                    </div> 
                 </div> 
-                <div class="detail-item mt-2 p-2 border-top">
+                <div class="detail-item p-2 border-top">
                     '.$html_items.' 
+                </div>
+                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center"> 
+                    <span class="text-detail-2">Sub Total:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->SphSubTotal, 0, ',', '.').'</span>  
+                    <div class="divider-horizontal"></div>
+                    <span class="text-detail-2">Disc Item:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->SphDiscItemTotal, 0, ',', '.').'</span>   
+                    <div class="divider-horizontal"></div>
+                    <span class="text-detail-2">Disc Total:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->SphDiscTotal, 0, ',', '.').'</span>   
+                    <div class="divider-horizontal"></div>
+                    <span class="text-detail-2">Grand Total:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->SphGrandTotal, 0, ',', '.').'</span> 
                 </div>
             </div> 
         ';
@@ -1075,10 +1081,25 @@ class ProjectModel extends Model
             $builder->where('InvDetailRef',$row->InvId);
             $builder->orderby('InvDetailId', 'ASC'); 
             $items = $builder->get()->getResult(); 
-            $html_items = "";
+            $html_items_invoice = "";
             $no = 1;
             $huruf  = "A";
             foreach($items as $item){
+                $folder = 'assets/images/produk/'.$item->ProdukId."/";
+                $default = 'assets/images/produk/default.png';
+    
+                if (!file_exists($folder)) {
+                    mkdir($folder, 0777, true);  
+                } 
+                $files = array_diff(scandir($folder), array('.', '..')); 
+                $gambar = null;
+    
+                foreach ($files as $file) {
+                    if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                        $gambar = $folder . $file;
+                        break;
+                    }
+                }  
 
                 $arr_varian = json_decode($item->InvDetailVarian);
                 $arr_badge = "";
@@ -1088,11 +1109,11 @@ class ProjectModel extends Model
                     $arr_no++;
                 }
 
-                $html_items .= '
+                $html_items_invoice .= '
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
-                        <div class="d-flex ">
-                            <span class="no-urut text-head-3"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.($item->InvDetailType == "product" ? $no : $huruf).'.</span> 
+                        <div class="d-flex gap-2">
+                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default'>").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailGroup.'</span> 
@@ -1103,7 +1124,7 @@ class ProjectModel extends Model
                         </div>
                     </div>';
                 if($item->InvDetailType == "product"){
-                    $html_items .= '<div class="col-12 col-md-8 my-1 detail">
+                    $html_items_invoice .= '<div class="col-12 col-md-8 my-1 detail">
                                         <div class="row"> 
                                             <div class="offset-2 offset-md-0 col-5 col-md-2 px-1">   
                                                 <div class="d-flex flex-column">
@@ -1134,7 +1155,7 @@ class ProjectModel extends Model
                                 </div>';
                     $no++;
                 }else{
-                    $html_items .= '<div class="col-12 col-md-8 my-1 detail"></div></div>';
+                    $html_items_invoice .= '<div class="col-12 col-md-8 my-1 detail"></div></div>';
                     $huruf++;
                     $no = 1;
                 }
@@ -1392,32 +1413,27 @@ class ProjectModel extends Model
 
             $html .= '
             <div class="list-project mb-4 p-2">
-                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ">
+                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">No. Invoice :</span>
+                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Invoice</span>
                             <span class="text-head-3">'.$row->InvCode.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Tanggal:</span>
+                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
                             <span class="text-head-3">'.date_format(date_create($row->InvDate),"d M Y").'</span>
                         </div>  
+                    </div> 
+                    <div class="col-12 col-xl-4 order-3 order-sm-2 pb-2">
+                        <div class="d-flex flex-column justify-content-between">
+                            <span class="text-detail-2 pb-2 pb-md-0"><i class="fa-solid fa-location-dot pe-1"></i> Alamat</span>
+                            <span class="text-head-3 text-wrap">'.$row->InvAddress.'</span>
+                        </div>  
                     </div>
-                    <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
-                        <div class="float-end d-md-flex d-none gap-1"> 
-                            <div class="dropdown">
-                                <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-share pe-2"></i><span>Next Prosess</span>
-                                </a> 
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" onclick="proforma_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-dollar-sign pe-2"></i>Proforma</a></li>
-                                    <li><a class="dropdown-item" onclick="payment_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-dollar-sign pe-2"></i>Payment</a></li> 
-                                    <li><hr class="dropdown-divider"></li> 
-                                    <li><a class="dropdown-item" onclick="delivery_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-truck pe-2"></i>Pengiriman</a></li> 
-                                </ul>
-                            </div>
+                    <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-3">
+                        <div class="float-end d-md-flex d-none gap-1">  
                             <div class="dropdown">
                                 <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-solid fa-print mx-1"></i><span >Print</span>
@@ -1451,40 +1467,23 @@ class ProjectModel extends Model
                                 </ul>
                             </div>
                         </div> 
-                    </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-3">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Sub Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->InvSubTotal, 0, ',', '.').'</span>
-                        </div> 
-                    </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-4">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Disc Item:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->InvDiscItemTotal, 0, ',', '.').'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-5">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Disc Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->InvDiscTotal, 0, ',', '.').'</span>
-                        </div> 
-                    </div>
-                    <div class="col-12 col-md-3 col-xl-2 order-6">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Grand Total:</span>
-                            <span class="text-head-3">Rp. '.number_format($row->InvGrandTotal, 0, ',', '.').'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-xl-4 order-7  pb-2">
-                        <div class="d-flex flex-column justify-content-between">
-                            <span class="text-detail-2 pb-2 pb-md-0">Alamat:</span>
-                            <span class="text-head-3 text-wrap">'.$row->InvAddress.'</span>
-                        </div>  
-                    </div>
+                    </div> 
                 </div> 
                 <div class="detail-item mt-2 p-2 border-top">
-                    '.$html_items.' 
+                    '.$html_items_invoice.' 
+                </div>
+                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center"> 
+                    <span class="text-detail-2">Sub Total:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->InvSubTotal, 0, ',', '.').'</span> 
+                    <div class="divider-horizontal"></div>
+                    <span class="text-detail-2">Disc Item:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->InvDiscItemTotal, 0, ',', '.').'</span>
+                    <div class="divider-horizontal"></div> 
+                    <span class="text-detail-2">Disc Total:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->InvDiscTotal, 0, ',', '.').'</span> 
+                    <div class="divider-horizontal"></div>
+                    <span class="text-detail-2">Grand Total:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->InvGrandTotal, 0, ',', '.').'</span> 
                 </div>
                 <div class="accordion" id="accordionFlushExample'.$row->InvId.'">
                     <div class="accordion-item">

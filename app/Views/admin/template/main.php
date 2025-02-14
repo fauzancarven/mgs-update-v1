@@ -164,6 +164,10 @@
         margin-left: 2px;
         margin-right: 2px;
     }
+    .dropdown .dropdown-toggle:after{
+        content: "\f0d7";
+        font-family: 'Font Awesome 6 Free';
+    }
     .badge{ 
         font-size: 0.6rem;
         padding: 0.25rem 0.5rem;
@@ -175,14 +179,14 @@
     }
     .badge-0 { 
         background: #bec9ffe6;
-        color: #7185ece6;
+        color: #001cace6;
     }
     .badge-1 {
         background: #ffc55b70;
-        color: #ffa500;
+        color: #966400;
     }
     .badge-2 { 
-        color: #198754;
+        color: #00371e;
         background: #00c5697a;
     }
     .badge-3 {  
@@ -391,12 +395,12 @@
     }
 
     .btn-primary{
-        background-color: #4292eb;
+        background-color: #002247;
         border-color: #709ac9;
     }
     .btn-primary:hover{
-        background-color: #6C9BCF;
-        border-color: #709ac9;
+        background-color: #00326a;
+        border-color: #103a68;
     }
     .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
         color: #1c87ff;     
@@ -827,11 +831,11 @@
         outline: 0 !important;
         box-shadow: none;
     } 
-    .input-group{
+    .search-data .input-group{
         position:relative;
         width: 15rem !important;
     }
-    .input-group i {
+    .search-data .input-group i {
         position: absolute;
         left: 0.75rem;
         top: 50%;
@@ -840,7 +844,7 @@
         font-size: 0.75rem;
         color: #6b6b6b;
     }
-    .input-group input{
+    .search-data .input-group input{
         padding-left: 2rem;
         border-radius:0.5rem !important;
     }
@@ -855,14 +859,16 @@
     }
     .card.project .content-data{ 
         opacity: 0; 
-        max-height: 0;
-        transition: max-height 0.15s ease-out,opacity 0.5s;
+        min-height: 0; 
+        height:0;
+        transition: min-height 0.15s ease-out,opacity 0.5s;
     }
     .card.project.show .content-data{
         display: flex !important ; 
         opacity: 1;  
-        max-height: 500px;
-        transition: max-height 0.25s ease-in, opacity 0.5s;
+        min-height: 400px;
+        height:auto;
+        transition: min-height 0.25s ease-in, opacity 0.5s;
     }
     .card.project .header .logo {
         width: 20px;
@@ -880,6 +886,7 @@
         position: relative;
         display: block;
         padding: 0 5px;
+        height: 1.5rem;
     }
     .divider-horizontal::after {
         content: "";
@@ -973,8 +980,8 @@
     .ql-editor ol {
         padding-left: 0rem;
     }
-/* 
-    .list-project:hover {
+
+    /* .list-project:hover {
         background: #f0f6fd;
         transition: all 0.3s;
     } */
@@ -988,6 +995,24 @@
         border: 1px solid #e9e9e9;
         position: relative;
         z-index: 1;
+    }
+    .list-project::before{
+        position: absolute;
+        width: 8px;
+        height: 30px;
+        content: "";
+        left: -3px;
+        top: 12px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        background: #007bff;
+        box-shadow: 3px 0px 2px 0 #5397e1;
+    }
+    .produk {
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
     }
     .side-menu {
         position: relative;

@@ -25,7 +25,7 @@
 </div>
 
 <!-- BAGIAN FILTER -->
-<div class="d-flex align-items-center justify-content-end mb-2 g-2 row"> 
+<div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data"> 
     <div class="input-group flex-fill">  
         <input class="form-control form-control-sm input-form" id="searchdataproject" placeholder="Search" value="" type="text">
         <i class="fa-solid fa-magnifying-glass"></i> 
