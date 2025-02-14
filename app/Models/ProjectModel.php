@@ -357,6 +357,185 @@ class ProjectModel extends Model
         return $dt->generate();
     }
 
+    public function load_table_project($filter = null){
+        $builder = $this->db->table($this->table);
+        $builder->join("customer","customer.CustomerId = project.CustomerId ");
+        $builder->join("store","store.StoreId = project.StoreId"); 
+        $builder->orderby('ProjectDate', 'DESC'); 
+        $query = $builder->get()->getResult();  
+        $html = "";
+        foreach($query as $row){ 
+            $content =  json_decode($this->data_project_survey($row->ProjectId));
+            $category = "";
+            foreach (explode("|",$row->ProjectCategory) as $index=>$x) {
+                $category .= '<span class="badge badge-'.fmod($index, 5).'">'.$x.'</span>';
+            }  
+            $date = date_create($row->ProjectDate);
+            $html .= '<div class="card project hide"> 
+                <div class="card-body p-0"> 
+                    <div class="d-flex header p-2 gap-1 justify-content-end">
+                        <div class="project-store">   
+                            <img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">
+                            <span class="text-head-2">'.$row->StoreCode.'</span>
+                        </div>
+                        <div class="divider-horizontals"></div>
+                        <div class="d-block">
+                            '.$category.'
+                        </div>
+                        <div class="divider-horizontals"></div>
+                        <div class="project-name">  
+                            <span class="text-head-2">'.$row->ProjectName.'</span>
+                        </div>
+                        <div class="divider-horizontals"></div> 
+                        <div class="project-customer">  
+                            <i class="fa-solid fa-users-rectangle"></i>
+                            <span class="text-head-3">'.$row->CustomerName.'</span>  
+                        </div>
+                        <div class="divider-horizontals"></div> 
+                        <div class="project-date">  
+                            <i class="fa-regular fa-calendar"></i>
+                            <span class="text-detail-2">'.date_format($date,"d M Y").', '.date_format($date,"H:i:s").'</span>  
+                        </div>
+                        <div class="divider-horizontals"></div> 
+                        <div class="project-admin flex-fill">  
+                            <i class="fa-regular fa-user"></i>
+                            <span class="text-detail-2">'.$row->ProjectAdmin.'</span>  
+                        </div>
+                        <div class="project-action action-td">  
+                            <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</button>
+                            <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button>
+                        </div>
+                    </div>  
+                    <div class="d-flex border-top content-data ">
+                        <div class="side-menu" data-id="'.$row->ProjectId.'">
+                            <div class="d-flex flex-column project-menu">
+                                <div class="menu-item selected" data-id="'.$row->ProjectId.'" data-menu="survey">
+                                    <i class="fa-solid fa-list-check position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Survey</span>
+                                    <div class="menu-total d-none"><span>10</span></div>
+                                </div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="rab">
+                                    <i class="fa-solid fa-list position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">RAB</span>
+                                    <div class="menu-total  d-none"><span>10</span></div>
+                                </div>
+                                <div class="divider-vertical m-1"></div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="penawaran">
+                                    <i class="fa-solid fa-hand-holding-droplet position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Penawaran</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                                <div class="divider-vertical m-1"></div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="pembelian">
+                                    <i class="fa-solid fa-cart-shopping position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Pembelian</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="penerimaan">
+                                    <i class="fa-solid fa-cart-shopping position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Penerimaan</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                                <div class="divider-vertical m-1"></div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="invoice">
+                                    <i class="fa-solid fa-money-bill position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Invoice</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                                <div class="divider-vertical m-1"></div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="pengiriman">
+                                    <i class="fa-solid fa-truck position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Pengiriman</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>  
+                                <div class="divider-vertical m-1"></div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="keuangan">
+                                    <i class="fa-solid fa-dollar position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Keuangan</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                                <div class="divider-vertical m-1"></div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="documentasi">
+                                    <i class="fa-solid fa-folder-open position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">File Manager</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="diskusi">
+                                    <i class="fa-regular fa-comments position-relative">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </i>
+                                    <span class="menu-text">Diskusi</span>
+                                    <div class="menu-total d-none"></div>
+                                </div>
+                            </div> 
+                            <button class="btn-side-menu" data-id="'.$row->ProjectId.'"><i class="fa-solid fa-angle-left" style="padding: 0;margin: 0;position: absolute;top: 7px;left: 10px;"></i></button>
+                        </div>
+                        <div class="flex-fill">
+                            <div class="tab-content" data-id="'.$row->ProjectId.'">
+                               '. $content->html .'
+                            </div>
+                            <div class="d-flex justify-content-center flex-column align-items-center d-none" style="display:none;background:#F5F7FF;height:100%">
+                                <div class="loading text-center loading-content pt-4 mt-4" data-id="'.$row->ProjectId.'" style="display: none;">
+                                    <div class="loading-spinner"></div>
+                                    <div class="d-flex justify-content-center flex-column align-items-center">
+                                        <span>Sedang memuat data</span> 
+                                    </div>
+                                </div> 
+                            </div>  
+                        </div>
+                    </div> 
+                </div>
+            </div>';
+        }
+        
+        return json_encode(
+            array(
+                "status"=>true,
+                "html"=>$html
+            )
+        );
+
+
+    }
+
     public function load_data_project($id){
         $builder = $this->db->table($this->table); 
         $builder->join('customer', 'customer.id = customerid', 'left'); 

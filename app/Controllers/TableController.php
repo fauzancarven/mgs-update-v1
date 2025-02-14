@@ -37,8 +37,8 @@ class TableController extends BaseController
     {   
         $request = Services::request();
         $datatable = new ProjectModel(); 
-        if ($request->getMethod(true) === 'POST') {  
-            echo $datatable->blog_json($request->getPost()["search"]["value"]); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_table_project($request->getPost());
         }    
         
     } 
