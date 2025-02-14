@@ -290,8 +290,8 @@
                 <tr>
                     <td style="width: 75%;"> 
                         <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $project->CustomerName.($project->CustomerCompany == "" ? : " (".$project->CustomerCompany.")") ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
-                        <span class="text-bold"><?= $project->CustomerTelp1.($project->CustomerTelp2 == "" ? : " / ".$project->CustomerTelp2) ?></span><br>
+                        <span class="text-bold"><?= $project->CustomerName.($project->CustomerCompany == "" ? "": " (".$project->CustomerCompany.")") ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
+                        <span class="text-bold"><?= $project->CustomerTelp1.($project->CustomerTelp2 == "" ? "": " / ".$project->CustomerTelp2) ?></span><br>
                         <span class="text-bold"><?= $project->InvAddress ?></span><br> 
                     </td> 
                     <td style="align-items: start;justify-content: center"> 

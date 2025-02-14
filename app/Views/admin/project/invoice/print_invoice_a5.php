@@ -435,11 +435,11 @@
                     Term and Condition :
                 </td>
                 <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
-                    <span style="text-transform:capitalize;font-weight:bold"><?= $project->username?></span>
-                    <div style="border-top:1px solid black;margin-right:10px;">Admin</div>
+                    <span style="text-transform:capitalize;font-weight:bold"><?= $project->username?></span><br>
+                    <div style="border-top:1px solid black;">Admin</div>
                 </td>
                 <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
-                    <div style="border-top:1px solid black;margin-left:10px;">Pembeli</div>
+                    <div style="border-top:1px solid black;">Pembeli</div>
                 </td>
             </tr>
             <tr>
