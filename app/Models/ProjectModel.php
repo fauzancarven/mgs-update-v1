@@ -1978,6 +1978,7 @@ class ProjectModel extends Model
         $builder = $this->db->table("invoice");
         $builder->select("*");
         $builder->join("customer","invoice.CustomerId = customer.CustomerId");
+        $builder->join("users","id = InvAdmin");
         $builder->join("project","ProjectId = InvRef");
         $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
         $builder->where('InvId',$id);
