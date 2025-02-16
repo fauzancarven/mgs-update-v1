@@ -21,8 +21,7 @@ class PrintController extends BaseController
                 $modelheader = new HeaderModel(); 
                 $data["sph"] = $models->getdataSPH($id); 
                 $data["detail"] = $models->getdataDetailSPH($id); 
-                // $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);  
-                $data["header_footer"] = "";
+                $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);   
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
 
