@@ -652,5 +652,83 @@ class SelectController extends BaseController
             return $this->response->setJSON($response); 
         }
     }
+    public function ref_project_invoice($id){
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array();  
 
+            $modelsitem = new ProdukModel(); 
+            $modelsvendor = new VendorModel();
+            if(!isset($postData['searchTerm'])){
+                $models = new ProjectModel();
+                $Project = $models->getSelectRefInvoice($id);
+
+            }else{
+                $searchTerm = $postData['searchTerm']; 
+                $models = new ProjectModel();
+                $Project = $models->getSelectRefInvoice($id,$searchTerm);
+            } 
+            $data = array();
+            $data[] = array(
+                "id" => 0,
+                "text" => "-", 
+                "html" => '<span style="font-size:0.75rem" class="fw-bold">Tidak ada yang dipilih</span>',  
+                "detail_item" => [],      
+                "penawaran" => [],  
+            );
+            foreach($Project as $row){
+                $customername = $row['CustomerCode'] . " - " . ($row['CustomerCompany']== "" ? $row['CustomerName'] : $row['CustomerName'] . ' (' . $row['CustomerCompany'] . ')');
+                $customertelp = (($row['CustomerTelp2'] == "" || $row['CustomerTelp2'] == "-") ? $row['CustomerTelp1'] : $row['CustomerTelp1'] . " / " . $row['CustomerTelp2']);
+                $htmlItem = '
+                <div class="d-flex flex-column" >
+                   <span style="font-size:0.75rem" class="fw-bold">' . $row['SphCode'] . '</span>
+                   <span style="font-size:0.6rem">' . $customername . '</span>
+                   <span style="font-size:0.6rem">' . $customertelp . '</span>
+                   <span style="font-size:0.6rem">' .  $row['CustomerAddress'] . '</span> 
+                </div>';
+                $detail_item =  $models->getdataDetailSPH($row['SphId']); 
+                $vendor_array = array();
+                $detail = array();
+                foreach($detail_item as $row_item){ 
+                    $varian =  json_decode($row_item->SphDetailVarian, true);  
+                    foreach ($varian as $v) {  
+                        $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                        if ( !in_array($data_arr, $vendor_array)) {
+                            $vendor_array[] = $data_arr;
+                        } 
+                    } 
+                    
+                    $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->SphDetailVarian,true),$row_item->ProdukId); 
+                    if($data_total){ 
+                        $harga = $data_total["ProdukDetailHargaBeli"];
+                    }else{
+                        $harga = 0;
+                    }
+                    $detail[] = array(
+                        "produkid" => $row_item->ProdukId, 
+                        "satuan_id"=> ($row_item->SphDetailSatuanId == 0 ? "" : $row_item->SphDetailSatuanId),
+                        "satuan_text"=>$row_item->SphDetailSatuanText, 
+                        "varian"=> JSON_DECODE($row_item->SphDetailVarian,true), 
+                        "text"=> $row_item->SphDetailText,
+                        "group"=> $row_item->SphDetailGroup,
+                        "type"=> $row_item->SphDetailType,
+                        "ref"=>  $row_item->SphDetailQty,
+                        "qty"=>  $row_item->SphDetailQty,
+                        "harga"=>  $harga,
+                        "total"=>  $row_item->SphDetailQty * $harga,
+                    );
+                } 
+                $data[] = array(
+                    "id" => $row['SphId'],
+                    "text" => $row['SphCode'], 
+                    "html" => $htmlItem,         
+                    "detail_item" => $detail,     
+                    "penawaran" => $row,  
+                );
+            }
+            $response['data'] = $data; 
+            return $this->response->setJSON($response); 
+        }
+    }
 }

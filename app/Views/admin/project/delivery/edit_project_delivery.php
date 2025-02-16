@@ -1247,7 +1247,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-delivery").modal("hide");  
-                        loader_data_project(<?= $invoice->InvRef ?>,"invoice") 
+                        
+                        $(".menu-item[data-menu='invoice'][data-id='<?= $invoice->InvRef ?>']").trigger("click");   
                     });
                   
                 }else{

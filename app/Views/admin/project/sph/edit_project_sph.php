@@ -1296,8 +1296,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-sph").modal("hide");  
-                        loader_data_project(<?= $project->SphRef ?>,"penawaran") 
+                        $("#modal-add-sph").modal("hide");   
+                        $(".menu-item[data-menu='penawaran'][data-id='<?= $project->SphRef ?>']").trigger("click");    
                     });
                   
                 }else{

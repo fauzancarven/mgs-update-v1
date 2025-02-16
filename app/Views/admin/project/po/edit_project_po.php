@@ -1179,7 +1179,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-po").modal("hide");  
-                        loader_data_project(<?= $project->PORef ?>,"pembelian") 
+                        $(".menu-item[data-menu='pembelian'][data-id='<?= $project->PORef ?>']").trigger("click");    
                     });
                   
                 }else{

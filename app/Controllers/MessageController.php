@@ -11,6 +11,7 @@ use App\Models\ProdukModel;
 use App\Models\ProjectModel;
 use Myth\Auth\Entities\User; 
 
+use Config\Services; 
 class MessageController extends BaseController
 {
     public function index(): string
@@ -193,7 +194,7 @@ class MessageController extends BaseController
         $modelsvendor = new VendorModel();
 
         $project = $models->getdataPO($id); 
-        $arr_detail = $models->getdataDetailPO($id);
+        $arr_detail = $models->getdataDetailSPH($id);
         $detail = array();
         $ref = JSON_DECODE($project->PORef2,true);
         if($ref["type"] == "SPH"){
@@ -230,14 +231,46 @@ class MessageController extends BaseController
     {     
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
-        $modelsstore = new StoreModel();
-
+        $modelsstore = new StoreModel(); 
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        if(!isset($postData['SphId']) ){
+            $data["ref_header"] = null;
+            $data["ref_detail"] = []; 
+        }else{
+            if($postData['SphId'] == 0) {  
+                $data["ref_header"] = null;
+                $data["ref_detail"] = []; 
+            }else{
+                $data["ref_header"] = $models->getdataSPH($postData['SphId']); 
+                $arr_detail = $models->getdataDetailSPH($postData['SphId']);
+                $detail = array();
+                foreach($arr_detail as $row){
+                    $detail[] = array(
+                                "id" => $row->ProdukId, 
+                                "produkid" => $row->ProdukId, 
+                                "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                                "satuan_text"=>$row->SphDetailSatuanText,  
+                                "price"=>$row->SphDetailPrice,
+                                "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                                "total"=> $row->SphDetailTotal,
+                                "disc"=> $row->SphDetailDisc,
+                                "qty"=> $row->SphDetailQty,
+                                "text"=> $row->SphDetailText,
+                                "group"=> $row->SphDetailGroup,
+                                "type"=> $row->SphDetailType
+                            );
+                };
+                $data["ref_detail"] = $detail;
+            }
+        }
         $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
         $data["project"] = $project;
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
         $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/invoice/add_project_invoice.php',$data)); 
+
     }
     public function project_invoice_edit($id)
     {     

@@ -1245,8 +1245,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-delivery").modal("hide");  
-                        loader_data_project(<?= $project->InvRef ?>,"invoice") 
+                        $("#modal-add-delivery").modal("hide");   
+                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->InvRef ?>']").trigger("click");  
                     });
                   
                 }else{

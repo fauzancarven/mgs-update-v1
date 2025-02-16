@@ -214,150 +214,7 @@
 <div style="margin-bottom: 100px;"></div> 
 <div id="modal-message"></div>
 <script>
-    var table;
-    // if (window.innerWidth <= 400) {
-    //     table = $('#table-project').DataTable({
-    //         "responsive": false,
-    //         "searching": false,
-    //         "lengthChange": false, 
-    //         "pageLength": parseInt(10),
-    //         "language": {
-    //             "emptyTable": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
-    //             "zeroRecords": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
-    //             "loadingRecords":  `<div class="loading-spinner"></div>`,
-    //             "processing":  `<div class="loading-spinner"></div>`,
-    //         },
-    //         "processing": true,
-    //         "serverSide": true, 
-    //         "ajax": {
-    //             "url": "<?= base_url()?>datatables/get-data-project",
-    //             "type": "POST", 
-    //             "data": function(data){
-    //                 data["search"]["value"] = $("#searchdataproject").val()
-    //             }
-    //         }, 
-    //         "columns": [
-    //             { data: "head_mobile",orderable: false ,  "title": ""},  
-    //             { data: "date_time",orderable: false  , className:"text-center",'visible' : false }, 
-    //             { data: "customer" ,orderable: false,'visible' : false  },  
-    //             { data: "ProjectAdmin" ,orderable: false ,'visible' : false }, 
-    //             { data: "status" ,orderable: false,'visible' : false },  
-    //             { data: "action" ,orderable: false , className:"action-td",'visible' : false }, 
-    //         ],
-    //         "rowCallback": function(row, data) {
-    //             $(row).attr('data-id', data.id);
-    //         } 
-    //     }); 
-
-    //     $('#table-project').find("thead").hide();
-    //     $('#table-project').on( 'draw.dt', function (e) { 
-    //         $(".project-menu").each(function(idx){  
-    //             var id = $("#table-project").DataTable().data()[idx]["ProjectId"];
-    //             $(".menu-item[data-id='" + id +"']").click(function(){
-    //                 if($(this).hasClass("selected")){
-    //                     $(this).removeClass("selected");
-    //                     $(".tab-content[data-id='"+ id+"']").hide() 
-    //                 }else{ 
-    //                     $(this).parent().find(".selected").removeClass("selected")
-    //                     $(this).addClass("selected") 
-
-    //                     loader_data_project(id,$(this).data("menu"))
-    //                 }
-    //             }); 
-    //         }); 
-    //     });
-
-        
-
-
-    // }else{
-    //     table = $('#table-project').DataTable({
-    //         "responsive": {
-    //             "details": {
-    //                 "type": 'column'
-    //             }
-    //         },
-    //         "searching": false,
-    //         "lengthChange": false, 
-    //         "pageLength": parseInt(10),
-    //         "language": {
-    //             "emptyTable": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
-    //             "zeroRecords": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
-    //             "loadingRecords":  `<div class="loading-spinner"></div>`,
-    //             "processing":  `<div class="loading-spinner"></div>`,
-    //         },
-    //         "processing": true,
-    //         "serverSide": true, 
-    //         "ajax": {
-    //             "url": "<?= base_url()?>datatables/get-data-project",
-    //             "type": "POST", 
-    //             "data": function(data){
-    //                 data["search"]["value"] = $("#searchdataproject").val()
-    //             }
-    //         }, 
-    //         "columns": [
-    //             { data: "store",orderable: false },  
-    //             { data: "date_time",orderable: false  , className:"text-center"}, 
-    //             { data: "customer" ,orderable: false },  
-    //             { data: "ProjectAdmin" ,orderable: false}, 
-    //             { data: "status" ,orderable: false},  
-    //             { data: "action" ,orderable: false , className:"action-td"}, 
-    //         ],
-    //         "rowCallback": function(row, data) {
-    //             $(row).attr('data-id', data.id);
-    //         } 
-    //     }); 
-
-        
-    //     // Tampilkan detail ketika baris diklik
-    //     $('#table-project tbody button').on('click', function(event) {
-    //         event.stopPropagation();
-    //     }); 
-    //     table.on('click', 'tr', function(event) {
-    //         var target = $(event.target);   
-    //         if (
-    //             target.closest('button').length ||  
-    //             target.parents().hasClass("project-detail") ||  
-    //             target.parent().hasClass("project-detail") ||  
-    //             target.hasClass("project-detail") ||    
-    //             target.closest('th').length
-    //         ) {
-    //             return;
-    //         }
-
-    //         if (table.row(this).child.isShown()) { 
-    //             $('div.project-detail', table.row(this).child()).slideUp( function () {
-    //                 table.row(this).child.hide(); 
-    //             } );
-    //         } else {
-    //             var data = table.row(this).data(); 
-             
-    //             table.row(this).child(data.html,'child p-0').show(); 
-    //             $('div.project-detail', table.row(this).child()).slideDown();  
-
-    //             loader_data_project(data.ProjectId,'survey');
-
-    //             $( ".btn-side-menu[data-id='" + data.ProjectId+ "']" ).click(function(){
-    //                 var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
-    //                 if($(parent).hasClass("hide")){
-    //                     $(parent).removeClass("hide");
-    //                     $(this).find("i").removeClass("fa-rotate-180");
-    //                 }else{ 
-    //                     $(parent).addClass("hide");
-    //                     $(this).find("i").addClass("fa-rotate-180");
-    //                 } 
-    //             }); 
-    //             $( ".menu-item[data-id='" + data.ProjectId+ "']" ).click(function(){
-    //                 $(this).parent().find(".selected").removeClass("selected")
-    //                 $(this).addClass("selected") 
-
-    //                 loader_data_project(data.ProjectId,$(this).data("menu")) 
-    //             });   
-                
-    //         } 
-    //     }); 
-    // }
-
+    var table; 
   
     $("#input-search-data").keyup(function(){
         table.ajax.reload(null, false).responsive.recalc().columns.adjust();
@@ -385,10 +242,10 @@
                 } 
                 $(".menu-item").click(function(){
                     $(this).data("id"); 
-                        $(this).parent().find(".selected").removeClass("selected")
-                        $(this).addClass("selected") 
+                    $(this).parent().find(".selected").removeClass("selected")
+                    $(this).addClass("selected") 
 
-                        loader_data_project($(this).data("id"),$(this).data("menu")) 
+                    loader_data_project($(this).data("id"),$(this).data("menu")) 
                 }); 
                 $(".btn-side-menu").click(function(){
                     var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
@@ -427,8 +284,7 @@
         });
     }
     loader_datatable();
-    loader_data_project = function(ProjectId,type){ 
-        
+    loader_data_project = function(ProjectId,type){  
         $(".tab-content[data-id='"+ ProjectId+"']").hide() 
         $(".loading-content[data-id='"+ ProjectId+"']").show()
         $(".loading-content[data-id='"+ ProjectId+"']").parent().removeClass("d-none");
@@ -758,7 +614,7 @@
         PROJECT INVOICE
     */
     var isProcessingInvoice= [];
-    add_project_invoice = function(id,el){
+    add_project_invoice = function(id,el,sphid = 0){
         // INSERT LOADER BUTTON
         if (isProcessingPo[id]) {
             console.log("project sph cancel load");
@@ -771,6 +627,9 @@
         $.ajax({  
             method: "POST",
             url: "<?= base_url() ?>message/add-project-invoice/" + id, 
+            data: {
+                "SphId" : sphid
+            },
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-invoice").modal("show"); 
@@ -882,7 +741,7 @@
                 $.ajax({
                     dataType: "json",
                     method: "POST",
-                    url: "<?= base_url() ?>action/delete-data-project-invoice/" + id, 
+                    url: "<?= base_url() ?>action/delete-data-invoice/" + id, 
                     success: function(data) { 
                         Swal.fire({
                             title: "Deleted!",

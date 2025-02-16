@@ -403,6 +403,7 @@
 
 <div id="modal-optional"></div>
 <script>    
+
     $('#SphDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
@@ -457,7 +458,12 @@
             return data['text'];
         }
     });
- 
+    var header_ref = '<?= is_null($ref_header) ? false : true ?>'; 
+    if(header_ref){ 
+        $('#SphRef1').append(new Option( '<?= is_null($ref_header) ? "" :  $ref_header->SphCode ?>' , '<?= is_null($ref_header) ? "" :  $ref_header->SphId ?>', true, true)).trigger('change');
+        $('#SphRef1').attr("disabled",true)
+    }
+
     $("#SphAdmin").select2({
         dropdownParent: $('#modal-add-invoice .modal-content'),
         placeholder: "Pilih Admin",
@@ -490,9 +496,10 @@
     });
     $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
       
+     
+    var detail_item_ref = '<?= json_encode($ref_detail) ?>';  
+    var data_detail_item = JSON.parse(detail_item_ref);
 
-    var data_detail_item = [];   
-    
     var isProcessingSphAddCategory = false;
     add_detail_category = function(el){
         if (isProcessingSphAddCategory) {
@@ -1350,8 +1357,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-invoice").modal("hide");  
-                        loader_data_project(<?= $project->ProjectId ?>,"invoice") 
+                        $("#modal-add-invoice").modal("hide");   
+                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
                     });
                   
                 }else{

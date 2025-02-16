@@ -169,11 +169,15 @@
         font-family: 'Font Awesome 6 Free';
         color: #3c5b7e;
     }
+    .modal-header {
+        padding: 0.5rem 1rem !important;
+    }
     .badge{ 
         font-size: 0.6rem;
         padding: 0.25rem 0.5rem;
         border-radius: 1rem;
     }
+    
     .badge-rounded{  
         padding: 0.25rem 0.5rem;
         border-radius: 0.25rem;
@@ -1173,6 +1177,45 @@
     }
     .accordion-button:focus{
         box-shadow:none;
+    }
+
+    /* Animasi modal */
+    .modal {
+    transition: opacity 0.3s ease-in-out;
+    }
+
+    .modal.show {
+    opacity: 1;
+    }
+
+    .modal.fade {
+    opacity: 0;
+    }
+
+    .modal.fade.show {
+    opacity: 1;
+    }
+
+    /* Animasi modal content */
+    .modal-content {
+    transition: transform 0.3s ease-in-out;
+    }
+
+    .modal-content.show {
+    transform: translate(0, 0);
+    }
+
+    .modal-content.fade {
+    transform: translate(0, -50px);
+    }
+
+    .modal-content.fade.show {
+    transform: translate(0, 0);
+    }
+    .list-project.show {
+        transform: scale(1.01);
+        box-shadow: 0px -1px 8px 0px #438ab3;
+        transition: transform 1s;
     }
 </style>
 

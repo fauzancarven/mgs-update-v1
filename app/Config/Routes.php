@@ -124,6 +124,7 @@ $routes->post('/select2/get-data-vendor-kategori', 'SelectController::vendor_cat
 $routes->post('/select2/get-data-users', 'SelectController::users', ['filter' => 'login']);
 $routes->post('/select2/get-data-template-footer/(:any)', 'SelectController::template_footer/$1', ['filter' => 'login']); 
 $routes->post('/select2/get-data-ref-vendor/(:num)', 'SelectController::ref_project_vendor/$1', ['filter' => 'login']);
+$routes->post('/select2/get-data-ref-invoice/(:num)', 'SelectController::ref_project_invoice/$1', ['filter' => 'login']);
 
 /**
  *  MODAL MESSAGE
