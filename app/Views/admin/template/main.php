@@ -167,6 +167,7 @@
     .dropdown .dropdown-toggle:after{
         content: "\f0d7";
         font-family: 'Font Awesome 6 Free';
+        color: #3c5b7e;
     }
     .badge{ 
         font-size: 0.6rem;
@@ -1089,7 +1090,7 @@
         position: relative;
         background: #fbfbfb;
         padding: 1rem;
-        margin: 0.5rem; 
+        margin: 0.25rem; 
         border-radius: 0.25rem;
         box-shadow: -2px 2px 1px 0 #7f7f7f0d;
         transition: all 0.3s;
