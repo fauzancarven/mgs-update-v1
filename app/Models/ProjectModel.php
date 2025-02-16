@@ -1310,6 +1310,35 @@ class ProjectModel extends Model
                         <span class="text-detail-2">Silahkan tambahkan data proforma atau payment</span>
                     </div>';
             }
+
+            $builder = $this->db->table("delivery");
+            $builder->select('*');  
+            $builder->join('invoice',"DeliveryRef=InvId"); 
+            $builder->where("InvRef",$id);
+            $builder->orderby('DeliveryId', 'ASC'); 
+            $delivery = $builder->countAllResults();
+            if($delivery == 0){
+                $alert = ' 
+                    <div class="alert alert-warning p-2 m-1" role="alert">
+                        <span class="text-head-2">
+                            <i class="fa-solid fa-triangle-exclamation me-2" style="font-size:0.75rem"></i>
+                            Belum ada data pengiriman yang dibuat dari invoice ini, 
+                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_invoice('.$row->InvRef.','.$row->InvId.',this)">Buat Data Pengiriman</a> 
+                        </span>
+                    </div>';
+            }else{
+                $alert = ' 
+                <div class="alert alert-primary p-2 m-1" role="alert">
+                    <span class="text-head-2">
+                        <i class="fa-solid fa-check me-2" style="font-size:0.75rem"></i>
+                        ada '.$delivery .' data pengiriman yang dibuat dari invoice ini, 
+                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick=\'$(".menu-item[data-menu=\"pengiriman\"][data-id=\"'.$id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
+                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_invoice('.$row->InvRef.','.$row->InvId.',this)">Tambah Data Pengiriman</a> 
+                    </span>
+                </div>';
+            }
+            
+
             $html .= '
             <div class="list-project mb-4 p-2" data-id="'.$row->InvId.'" data-project="'.$id.'">
                 <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">
@@ -1390,8 +1419,7 @@ class ProjectModel extends Model
                     <span class="text-detail-2">Sisa:</span>
                     <span class="text-head-2">Rp. '.number_format($row->InvGrandTotal - $payment_total, 0, ',', '.').'</span> 
                 </div>
-                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center pt-4 justify-content-between"> 
-                
+                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center pt-4 justify-content-between">  
                     <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span>
                     <div class="action">
                         <a class="btn btn-sm btn-primary btn-action rounded" onclick="proforma_project_invoice('.$row->InvRef.','.$row->InvId.',this)"><i class="fa-solid fa-circle-plus pe-2"></i>Buat Data Proforma</a> 
@@ -1399,6 +1427,12 @@ class ProjectModel extends Model
                     </div>
                 </div>
                 '.$html_payment.' 
+                 <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
+                    <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
+                </div>
+                <div class="border-top pt-2">
+                   '.  $alert .'
+                </div> 
             </div> 
             '; 
         }
@@ -1468,8 +1502,8 @@ class ProjectModel extends Model
                 $html_items .= '
                 <div class="row">
                     <div class="col-12 col-md-8 my-1 varian">   
-                        <div class="d-flex ">
-                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").'  
+                        <div class="d-flex gap-2">
+                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default'>").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
@@ -1490,7 +1524,7 @@ class ProjectModel extends Model
                                         <div class="col-5 col-md-6 px-1">   
                                             <div class="d-flex flex-column">
                                                 <span class="text-detail-2">Spare:</span>
-                                                <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                <span class="text-head-2">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
                                             </div>
                                         </div>  
                                     </div>   
