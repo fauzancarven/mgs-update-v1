@@ -1217,6 +1217,12 @@
         box-shadow: 0px -1px 8px 0px #438ab3;
         transition: transform 1s;
     }
+    .line-dot {
+        width: 3rem;
+        border: dashed 1px;
+        height: 1px;
+        position: relative;
+    }
 </style>
 
 

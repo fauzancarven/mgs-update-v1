@@ -76,6 +76,7 @@ $routes->post('/action/edit-data-proforma/(:num)', 'ActionController::proforma_e
 $routes->post('/action/add-data-delivery', 'ActionController::delivery_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-delivery/(:num)', 'ActionController::delivery_edit/$1', ['filter' => 'login']);
 $routes->post('/action/delete-data-delivery/(:num)', 'ActionController::delivery_delete/$1', ['filter' => 'login']);
+$routes->post('/action/add-proses-delivery/(:num)', 'ActionController::delivery_proses/$1', ['filter' => 'login']);
 
 $routes->post('/action/add-data-po', 'ActionController::pembelian_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-po/(:num)', 'ActionController::pembelian_edit/$1', ['filter' => 'login']); 
@@ -162,8 +163,9 @@ $routes->post('/message/add-project-proforma/(:num)', 'MessageController::projec
 $routes->post('/message/edit-project-proforma/(:num)', 'MessageController::project_proforma_edit/$1', ['filter' => 'login']);  
 
 $routes->post('/message/delivery-project-invoice/(:num)', 'MessageController::project_delivery_add/$1', ['filter' => 'login']);  
-$routes->post('/message/edit-project-delivery/(:num)', 'MessageController::project_delivery_edit/$1', ['filter' => 'login']);  
-
+$routes->post('/message/edit-project-delivery/(:num)', 'MessageController::project_delivery_edit/$1', ['filter' => 'login']);   
+$routes->post('/message/add-proses-delivery/(:num)', 'MessageController::project_delivery_proses/$1', ['filter' => 'login']);  
+$routes->post('/message/finish-project-delivery/(:num)', 'MessageController::project_delivery_finish/$1', ['filter' => 'login']); 
 
 /**
  *  MODAL print

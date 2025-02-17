@@ -418,4 +418,35 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
     }
+    public function project_delivery_proses($id)
+    {       
+        $models = new ProjectModel();
+        $data["delivery"] = $models->getdataDelivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/delivery/proses_delivery',$data)); 
+    } public function project_delivery_finish($id)
+    {       
+        $models = new ProjectModel();
+        $data["delivery"] = $models->getdataDelivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth 
+
+        $arr_detail = $models->getdataDetailDelivery($id);
+        foreach($arr_detail as $row){
+            $detail[] = array( 
+                "id" => $row->ProdukId, 
+                "produkid" => $row->ProdukId, 
+                "satuan_id"=> ($row->DeliveryDetailSatuanId == 0 ? "" : $row->DeliveryDetailSatuanId),
+                "satuan_text"=>$row->DeliveryDetailSatuanText,   
+                "varian"=> JSON_DECODE($row->DeliveryDetailVarian,true), 
+                "qty"=> $row->DeliveryDetailQty,
+                "qty_spare"=> $row->DeliveryDetailQtySpare, 
+                "qty_waste"=> 0, 
+                "text"=> $row->DeliveryDetailText,
+                "group"=> $row->DeliveryDetailGroup,
+                "type"=> $row->DeliveryDetailType 
+            );
+        }; 
+        $data["detail"] =  $detail; 
+        return $this->response->setBody(view('admin/project/delivery/finish_delivery',$data)); 
+    }
 }

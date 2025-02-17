@@ -717,7 +717,41 @@
             }
         });
     }; 
-    
+
+    var isProcessingDeliveryProses = [];
+    delivery_project_proses = function(ref,id,el){ 
+          // INSERT LOADER BUTTON
+        if (isProcessingDeliveryProses[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingDeliveryProses[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-proses-delivery/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-proses-delivery").modal("show"); 
+
+                isProcessingDeliveryProses[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDeliveryProses[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }; 
+
     var isProcessingInvoiceDelete = [];
     delete_project_invoice = function(ref,id,el){ 
          // INSERT LOADER BUTTON
@@ -1007,9 +1041,7 @@
                     }
                 });
             }
-        });
-       
-       
+        }); 
     }
 
     print_project_delivery  = function(ref,id,el){ 
@@ -1048,6 +1080,7 @@
             }
         });
     }
+
     delete_project_delivery = function(ref,id,el){  
         Swal.fire({
             title: "Are you sure?",
@@ -1079,7 +1112,68 @@
         });
     };
 
+    delivery_proses_show = function(id,el){ 
+        $.ajax({
+            type: "GET",
+            url: "<?= base_url("assets/images/delivery/") ?>" + id + "/proses.png",
+            success: function() {
+                Swal.fire({ 
+                    html: "<img src='<?= base_url("assets/images/delivery/") ?>" + id + "/proses.png' style='width:500px;'>", 
+                    confirmButtonColor: "#3085d6", 
+                }); 
+                return;
+            },
+            error: function() { 
+                $.ajax({
+                    type: "GET",
+                    url: "<?= base_url("assets/images/delivery/") ?>" + id + "/proses.jpg",
+                    success: function() {
+                        Swal.fire({ 
+                            html: "<img src='<?= base_url("assets/images/delivery/") ?>" + id + "/proses.jpg style='width:500px;'>", 
+                            confirmButtonColor: "#3085d6", 
+                        }); 
+                    },
+                    error: function() { 
 
+                    }
+                });
+            }
+        }); 
+    }
+
+    var isProcessingDeliveryEdit = [];
+    delivery_project_finish =  function(ref,id,el){  
+         // INSERT LOADER BUTTON
+        if (isProcessingDeliveryEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingDeliveryEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/finish-project-delivery/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-finish-delivery").modal("show"); 
+
+                isProcessingDeliveryEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDeliveryEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };
 </script>
 
 

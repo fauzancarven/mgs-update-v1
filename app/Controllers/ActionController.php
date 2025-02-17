@@ -321,6 +321,14 @@ class ActionController extends BaseController
             echo $models->delete_data_delivery($id);  
         }
     }
+    public function delivery_proses($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->proses_data_delivery($postData,$id);  
+        }
+    }
     public function pembelian_add(){
         $request = Services::request();
         $models = new ProjectModel(); 
