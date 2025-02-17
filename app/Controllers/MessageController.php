@@ -486,10 +486,15 @@ class MessageController extends BaseController
             );
         }; 
         $folder_utama = 'assets/images/delivery';  
-        $files = glob($folder_utama."/".$id. '/finish.*');
-        foreach ($files as $file) { 
-            $imgData = base64_encode(file_get_contents($file));  
-            $data["image"]  = 'data: '.mime_content_type($file).';base64,'.$imgData; 
+        $files = glob($folder_utama."/".$id. '/finish.*'); 
+        foreach ($files as $file) {   
+            if (!file_exists($file)) {
+                return false;
+            }  
+            $jenis_gambar = mime_content_type($file); 
+            $gambar = file_get_contents($file); 
+            $base64 = base64_encode($gambar); 
+            $data["image"]  = "data:$jenis_gambar;base64,$base64"; 
         }  
         $data["detail"] =  $detail; 
         return $this->response->setBody(view('admin/project/delivery/edit_finish_delivery',$data)); 

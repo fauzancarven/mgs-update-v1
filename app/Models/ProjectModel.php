@@ -1262,7 +1262,7 @@ class ProjectModel extends Model
 
                 $html_items .= '
                 <div class="row">
-                    <div class="col-12 col-md-8 my-1 varian">   
+                    <div class="col-12 col-md-5 my-1 varian">   
                         <div class="d-flex gap-2">
                             ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default'>").'  
                             <div class="d-flex flex-column text-start">
@@ -1274,18 +1274,36 @@ class ProjectModel extends Model
                             </div> 
                         </div>
                     </div>'; 
-                $html_items .= '<div class="col-12 col-md-4 my-1 detail">
+                $html_items .= '<div class="col-12 col-md-7 my-1 detail">
                                     <div class="row"> 
-                                        <div class="offset-2 offset-md-0 col-5 col-md-6 px-1">   
+                                        <div class="col-5 col-md-3 px-1">   
                                             <div class="d-flex flex-column">
-                                                <span class="text-detail-2">Qty:</span>
+                                                <span class="text-detail-2">Dikirim:</span>
                                                 <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
                                             </div>
                                         </div>  
-                                        <div class="col-5 col-md-6 px-1">   
+                                        <div class="col-5 col-md-2 px-1">   
                                             <div class="d-flex flex-column">
                                                 <span class="text-detail-2">Spare:</span>
                                                 <span class="text-head-2">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                            </div>
+                                        </div>  
+                                        <div class="col-4 col-md-3 px-1 border-left">   
+                                            <div class="d-flex flex-column">
+                                                <span class="text-detail-2">Diterima:</span>
+                                                <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceive, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                            </div>
+                                        </div>  
+                                        <div class="col-4 col-md-2 px-1">   
+                                            <div class="d-flex flex-column">
+                                                <span class="text-detail-2">Spare:</span>
+                                                <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceiveSpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                            </div>
+                                        </div>  
+                                        <div class="col-4 col-md-2 px-1">   
+                                            <div class="d-flex flex-column">
+                                                <span class="text-detail-2">Rusak:</span>
+                                                <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceiveWaste, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
                                             </div>
                                         </div>  
                                     </div>   
@@ -2499,6 +2517,44 @@ class ProjectModel extends Model
         $builder->set('DeliveryDateFinish', $data["header"]["DeliveryDateFinish"]); 
         $builder->set('DeliveryReceiveName', $data["header"]["DeliveryReceiveName"]); 
         $builder->set('DeliveryStatus', 2); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
+        $builder->where('DeliveryId',$id);
+        $builder->update();  
+
+        $folder_utama = 'assets/images/delivery'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$id)){
+            mkdir($folder_utama."/".$id, 0777, true);  
+        }
+        $files = glob($folder_utama."/".$id. '/finish.*');
+        foreach ($files as $file) {
+            unlink($file);
+        } 
+        if (isset($data["header"]['Image'])) {
+            $data_image = $this->simpan_gambar_base64($data["header"]['Image'], $folder_utama."/".$id, "finish");  
+        } 
+        foreach($data["detail"] as $row){  
+            $varian = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
+            $builder = $this->db->table("delivery_detail"); 
+            $builder->set('DeliveryDetailQtyReceive', $row["DeliveryDetailQtyReceive"]); 
+            $builder->set('DeliveryDetailQtyReceiveSpare', $row["DeliveryDetailQtyReceiveWaste"]); 
+            $builder->set('DeliveryDetailQtyReceiveWaste', $row["DeliveryDetailQtyReceiveWaste"]); 
+            $builder->where('ProdukId',$row["ProdukId"]);
+            $builder->where('DeliveryDetailVarian',$varian);
+            $builder->where('DeliveryDetailRef',$id);
+            $builder->update();  
+        } 
+
+        return JSON_ENCODE(array("status"=>true));
+    }
+    public function finish_data_delivery_edit($data,$id){
+        $builder = $this->db->table("delivery");
+        $builder->set('DeliveryDateFinish', $data["header"]["DeliveryDateFinish"]); 
+        $builder->set('DeliveryReceiveName', $data["header"]["DeliveryReceiveName"]);  
         $builder->set('updated_user',user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
         $builder->where('DeliveryId',$id);
