@@ -423,8 +423,22 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $data["delivery"] = $models->getdataDelivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/delivery/proses_delivery',$data)); 
-    } public function project_delivery_finish($id)
+        return $this->response->setBody(view('admin/project/delivery/add_proses_delivery',$data)); 
+    } 
+    public function project_delivery_proses_edit($id) {  
+        $models = new ProjectModel();
+        $data["delivery"] = $models->getdataDelivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth
+ 
+        $folder_utama = 'assets/images/delivery';  
+        $files = glob($folder_utama."/".$id. '/proses.*');
+        foreach ($files as $file) { 
+            $imgData = base64_encode(file_get_contents($file));  
+            $data["image"]  = 'data: '.mime_content_type($file).';base64,'.$imgData; 
+        }  
+        return $this->response->setBody(view('admin/project/delivery/edit_proses_delivery',$data)); 
+    } 
+    public function project_delivery_finish($id)
     {       
         $models = new ProjectModel();
         $data["delivery"] = $models->getdataDelivery($id); 
@@ -447,6 +461,37 @@ class MessageController extends BaseController
             );
         }; 
         $data["detail"] =  $detail; 
-        return $this->response->setBody(view('admin/project/delivery/finish_delivery',$data)); 
+        return $this->response->setBody(view('admin/project/delivery/add_finish_delivery',$data)); 
+    }
+    public function project_delivery_finish_edit($id)
+    {       
+        $models = new ProjectModel();
+        $data["delivery"] = $models->getdataDelivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth 
+
+        $arr_detail = $models->getdataDetailDelivery($id);
+        foreach($arr_detail as $row){
+            $detail[] = array( 
+                "id" => $row->ProdukId, 
+                "produkid" => $row->ProdukId, 
+                "satuan_id"=> ($row->DeliveryDetailSatuanId == 0 ? "" : $row->DeliveryDetailSatuanId),
+                "satuan_text"=>$row->DeliveryDetailSatuanText,   
+                "varian"=> JSON_DECODE($row->DeliveryDetailVarian,true), 
+                "qty"=> $row->DeliveryDetailQtyReceive,
+                "qty_spare"=> $row->DeliveryDetailQtyReceiveSpare, 
+                "qty_waste"=>  $row->DeliveryDetailQtyReceiveWaste, 
+                "text"=> $row->DeliveryDetailText,
+                "group"=> $row->DeliveryDetailGroup,
+                "type"=> $row->DeliveryDetailType 
+            );
+        }; 
+        $folder_utama = 'assets/images/delivery';  
+        $files = glob($folder_utama."/".$id. '/finish.*');
+        foreach ($files as $file) { 
+            $imgData = base64_encode(file_get_contents($file));  
+            $data["image"]  = 'data: '.mime_content_type($file).';base64,'.$imgData; 
+        }  
+        $data["detail"] =  $detail; 
+        return $this->response->setBody(view('admin/project/delivery/edit_finish_delivery',$data)); 
     }
 }

@@ -592,7 +592,6 @@ class ProjectModel extends Model
       
     }
 
-    
     public function insert_data_template_footer($data){  
 
         $builder = $this->db->table("template_footer");
@@ -1318,7 +1317,10 @@ class ProjectModel extends Model
                     <div class="p-1">
                         <span class="text-head-3 d-flex flex-column">
                             Barang sudah dikemas/packing dan sedang dalam perjalan ke tujuan,
-                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)">Lihat Bukti</a>
+                            <div class="d-flex gap-2">
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)">Lihat Bukti</a>
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_proses_edit('.$row_delivery->DeliveryId.',this)">Ubah Data</a>
+                            </div>
                         </span>
                     </div>
                 </div>
@@ -1329,6 +1331,44 @@ class ProjectModel extends Model
                         Belum ada proses penerimaan barang, 
                         <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_finish('.$id.','.$row_delivery->DeliveryId.',this)">Konfirmasi pengiriman barang dan upload bukti foto penerimaan barang</a> 
                     </span>
+                </div>';
+            }elseif($row_delivery->DeliveryStatus == 2){
+                $alert = ' 
+                <div class="d-flex gap-2 align-items-center p-2"> 
+                    <span class="text-head-1"> <i class="fa-solid fa-plane-departure pe-1"></i></span> 
+                    <div class="p-1">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                            <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateProses),"d M Y").'</span>
+                        </div> 
+                    </div>
+                    <div class="p-1">
+                        <span class="text-head-3 d-flex flex-column">
+                            Barang sudah dikemas/packing dan sedang dalam perjalan ke tujuan, 
+                            <div class="d-flex gap-2">
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)">Lihat Bukti</a> 
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_proses_edit('.$row_delivery->DeliveryId.',this)">Ubah Data</a>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 align-items-center p-2"> 
+                    <span class="text-head-1"> <i class="fa-solid fa-plane-arrival pe-1"></i></span> 
+                    <div class="p-1">
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span> 
+                            <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateFinish),"d M Y").'</span> 
+                        </div> 
+                    </div>
+                    <div class="p-1">
+                        <span class="text-head-3 d-flex flex-column">
+                            <span>Barang sudah sampai di tujuan dengan penerima <b>'.$row_delivery->DeliveryReceiveName.'</b></span> 
+                            <div class="d-flex gap-2">
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_finish_show('.$row_delivery->DeliveryId.',this)">Lihat Bukti</a>
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_finish_edit('.$row_delivery->DeliveryId.',this)">Ubah Data</a>
+                            </div> 
+                        </span>
+                    </div>
                 </div>';
             }
             $html_delivery .= '  
@@ -2429,10 +2469,75 @@ class ProjectModel extends Model
         }
         return JSON_ENCODE(array("status"=>true));
     }
+    public function edit_proses_data_delivery($data,$id){
+        $builder = $this->db->table("delivery");
+        $builder->set('DeliveryDateProses', $data["DeliveryDateProses"]);  
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
+        $builder->where('DeliveryId',$id);
+        $builder->update();  
+
+        $folder_utama = 'assets/images/delivery'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$id)){
+            mkdir($folder_utama."/".$id, 0777, true);  
+        }
+        $files = glob($folder_utama."/".$id. '/proses.*');
+        foreach ($files as $file) {
+            unlink($file);
+        } 
+        if (isset($data['image'])) {  
+            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama."/".$id, "proses");  
+        }
+        return JSON_ENCODE(array("status"=>true));
+    }
+    public function finish_data_delivery($data,$id){
+        $builder = $this->db->table("delivery");
+        $builder->set('DeliveryDateFinish', $data["header"]["DeliveryDateFinish"]); 
+        $builder->set('DeliveryReceiveName', $data["header"]["DeliveryReceiveName"]); 
+        $builder->set('DeliveryStatus', 2); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
+        $builder->where('DeliveryId',$id);
+        $builder->update();  
+
+        $folder_utama = 'assets/images/delivery'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$id)){
+            mkdir($folder_utama."/".$id, 0777, true);  
+        }
+        $files = glob($folder_utama."/".$id. '/finish.*');
+        foreach ($files as $file) {
+            unlink($file);
+        } 
+        if (isset($data["header"]['Image'])) {
+            $data_image = $this->simpan_gambar_base64($data["header"]['Image'], $folder_utama."/".$id, "finish");  
+        } 
+        foreach($data["detail"] as $row){  
+            $varian = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
+            $builder = $this->db->table("delivery_detail"); 
+            $builder->set('DeliveryDetailQtyReceive', $row["DeliveryDetailQtyReceive"]); 
+            $builder->set('DeliveryDetailQtyReceiveSpare', $row["DeliveryDetailQtyReceiveWaste"]); 
+            $builder->set('DeliveryDetailQtyReceiveWaste', $row["DeliveryDetailQtyReceiveWaste"]); 
+            $builder->where('ProdukId',$row["ProdukId"]);
+            $builder->where('DeliveryDetailVarian',$varian);
+            $builder->where('DeliveryDetailRef',$id);
+            $builder->update();  
+        } 
+
+        return JSON_ENCODE(array("status"=>true));
+    }
 
     public function getdataDelivery($id){
         $builder = $this->db->table("delivery"); 
-        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
+        $builder->join('invoice',"DeliveryRef=InvId"); 
+        $builder->join("template_footer","delivery.TemplateId = template_footer.TemplateFooterId");
         $builder->where('DeliveryId',$id);  
         return $builder->get()->getRow();  
     }
@@ -2450,7 +2555,7 @@ class ProjectModel extends Model
         }
         return 0;
     }
-    public function getQtyDeliveryByRef($ref,$produkid,$varian,$text){
+    public function getQtyDeliveryByRef($re,f$produkid,$varian,$text){
         $builder = $this->db->table("delivery_detail"); 
         $builder->join("delivery","DeliveryId = DeliveryDetailRef");
         $builder->where('DeliveryRef',$ref);  
