@@ -7,5 +7,6 @@ tests/*
 assets/images/produk/*
 assets/images/profile/*
 assets/images/payment/*
+assets/images/delivery/*
 deploy.php
 composer.lock
