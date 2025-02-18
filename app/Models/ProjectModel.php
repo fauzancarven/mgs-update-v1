@@ -1576,20 +1576,32 @@ class ProjectModel extends Model
 
             $html .= '
             <div class="list-project mb-4 p-2">
-                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ">
+                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">No. Pembelian :</span>
+                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pembelian</span>
                             <span class="text-head-3">'.$row->POCode.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2">Tanggal:</span>
+                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
                             <span class="text-head-3">'.date_format(date_create($row->PODate),"d M Y").'</span>
                         </div>  
                     </div>
-                    <div class="col-12 col-sm-7 col-xl-8 order-0 order-sm-2">
+                    <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-2"> 
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
+                            <span class="text-head-3">'.$row->PORef.'</span>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-3"> 
+                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                            <span class="text-detail-2"><i class="fa-solid fa-address-card pe-1"></i>Vendor</span>
+                            <span class="text-head-3 text-wrap">'.$row->VendorCode.' - '.$row->VendorName.'</span>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-sm-7 col-xl-6 order-0 order-sm-4">
                         <div class="float-end d-md-flex d-none gap-1">  
                             <div class="dropdown">
                                 <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

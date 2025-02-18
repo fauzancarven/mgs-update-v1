@@ -1053,7 +1053,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             $("#input-search-data-varian").keyup(function(){ 
                 for(var i = 0; i < arr_varian_detail.length;i++){ 
                     let hide = true;
-                    $.each(arr_varian_detail[i]["varian"], function(key, value) { 
+                    $.each(arr_varian_detail[i]["ProdukDetailVarian"], function(key, value) { 
                         if(value.toLowerCase().includes($("#input-search-data-varian").val().toLowerCase()) == true) hide = false; 
                     });   
                     (hide == true ? $('.varian-item[data-id="'+ i + '"]').hide() : $('.varian-item[data-id="'+ i + '"]').show());
