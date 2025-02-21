@@ -54,6 +54,12 @@
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
+                            <label for="SphRef1" class="col-sm-2 col-form-label">Ref</label>
+                            <div class="col-sm-10"> 
+                            <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= (isset($sample->SampleCode) ? $sample->SampleCode : "-" )?>" disabled>
+                            </div> 
+                        </div>  
+                        <div class="row mb-1 align-items-center mt-2">
                             <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
                             <div class="col-sm-10">
                                 <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
@@ -977,7 +983,7 @@
         }); 
         quill[type].enable(false);
         quill[type].root.style.background = '#F7F7F7'; // warna disable 
-        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($template->TemplateFooterDelta)?>));  
+        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($project->TemplateFooterDelta)?>));  
         const btnsaveas = $(el).find("a[value='simpanAs']")[0];
         const btnsave = $(el).find("a[value='simpan']")[0];
         const btnedit = $(el).find("a[value='edit']")[0];
@@ -1061,7 +1067,7 @@
                 quill[type].root.style.background = '#F7F7F7'; // warna enable
             } 
         });
-        $(selectoption).append(new Option("<?=$template->TemplateFooterName ?>" , "<?=$template->TemplateFooterId?>", true, true)).trigger('change'); 
+        $(selectoption).append(new Option("<?=$project->TemplateFooterName ?>" , "<?=$project->TemplateFooterId?>", true, true)).trigger('change'); 
           
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
@@ -1297,7 +1303,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-sph").modal("hide");   
-                        $(".menu-item[data-menu='penawaran'][data-id='<?= $project->SphRef ?>']").trigger("click");    
+                        $(".menu-item[data-menu='penawaran'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
                     });
                   
                 }else{

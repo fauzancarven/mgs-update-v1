@@ -72,9 +72,78 @@ class HeaderModel extends Model
                             <div class="line-2"> 
                                 <div class="line1"></div> 
                             </div>
-                        </div>';
+                        </div>'
+                ;
+                $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0852-1795-2625<br>BATA REGULER JAKARTA';
                 break;
-            
+            case 3:
+                $html = '<div class="fixed">
+                            <div class="header">
+                            <div class="logo">  
+                                <img src="assets/images/logo/brand/rrj.png" alt=""> 
+                            </div>
+                            <div class="deskripsi">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="icon">
+                                                    <img src="assets/images/icon/maps.svg" alt="">
+                                                </div>
+                                                
+                                            </td>
+                                            <td>
+                                                <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
+                                            </td>
+                                            <td>
+                                                <div class="icon">
+                                                    <img src="assets/images/icon/email.svg" alt="">
+                                                </div>
+                                                
+                                            </td>
+                                            <td>
+                                                <span>rosterregulerjakarta@gmail.com</span>
+                                            </td>
+                                            <td>
+                                                <div class="icon">
+                                                    <img src="assets/images/icon/phone.svg" alt=""> 
+                                                </div>
+                                                
+                                            </td>
+                                            <td>0852-1795-2625<br>0812-1260-9992
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>   
+                            <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>   
+                            </div>   
+                        </div>   
+                        <div class="footer"> 
+                            <table>
+                                <tr>
+                                    <td>BATA EXPOSE</td>
+                                    <td><div class="divider"></div></td>
+                                    <td>BATA TEMPEL</td> 
+                                    <td><div class="divider"></div></td> 
+                                    <td>ROSTER DINDING</td>  
+                                    <td><div class="divider"></div></td>
+                                    <td>PAVING BLOCK</td>   
+                                </tr>
+                            </table>
+                            <div class="line"> 
+                                <div class="line1"></div> 
+                            </div>
+                            <div class="line-1"> 
+                                <div class="line1"></div> 
+                            </div>
+                            <div class="line-2"> 
+                                <div class="line1"></div> 
+                            </div>
+                        </div>'
+                ;
+                $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0852-1795-2625<br>ROSTER REGULER JAKARTA';
+                break;
             default: 
                 $html = '<div class="fixed">
                         <div class="header"> 
@@ -111,7 +180,7 @@ class HeaderModel extends Model
                                     </tbody>
                                 </table>
                             </div>   
-                            <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>   
+                            <div class="slogan"><span class="text-slogan">GENERAL CONTRACTOR & SUPPLIER</span></div>   
                         </div>    
                     </div>  
                     <div class="footer mgs"> 
@@ -154,10 +223,16 @@ class HeaderModel extends Model
                         <div class="line-2"> 
                             <div class="line1"></div> 
                         </div>
-                    </div>';
+                    </div>'
+                ;
+                
+                $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0812-1260-9992<br>MAHIERA GLOBAL SOLUTION';
                 break;
         }
-        return $html;
+        return array(
+            "html"=> $html,
+            "detail"=> $detail,
+        );
     }
     function get_header_a5($id){
         switch ($id) { 

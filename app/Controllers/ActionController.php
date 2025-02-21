@@ -198,6 +198,25 @@ class ActionController extends BaseController
         }
     }
 
+    public function sample_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_sample($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function sample_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_sample($postData,$id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+
     public function penawaran_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

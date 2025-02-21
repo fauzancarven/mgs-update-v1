@@ -23,7 +23,7 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphRef" class="col-sm-2 col-form-label">No. Ref<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= $invoice->InvCode ?>" disabled>
+                                <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= ($delivery->InvId > 0 ? $delivery->InvCode : ($delivery->POId > 0 ? $delivery->POCode : ($delivery->SampleId > 0 ? $delivery->SampleCode : ''))) ?>"isabled>
                             </div>
                         </div>   
                         <div class="row mb-1 align-items-center mt-2">
@@ -427,7 +427,7 @@
             cache: true
         }, 
     });
-    $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
+    $('#SphStore').append(new Option("<?=$delivery->StoreCode. " - " . $delivery->StoreName ?>" , "<?=$delivery->StoreId?>", true, true)).trigger('change');  
 
     $("#SphAdmin").select2({
         dropdownParent: $('#modal-edit-delivery .modal-content'),
@@ -1246,9 +1246,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-edit-delivery").modal("hide");  
-                        
-                        $(".menu-item[data-menu='invoice'][data-id='<?= $invoice->InvRef ?>']").trigger("click");   
+                        $("#modal-edit-delivery").modal("hide");   
+                        $(".menu-item[data-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

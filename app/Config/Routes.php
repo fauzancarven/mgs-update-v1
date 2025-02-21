@@ -58,6 +58,9 @@ $routes->post('/action/add-data-project', 'ActionController::project_add', ['fil
 $routes->post('/action/edit-data-project/(:any)', 'ActionController::project_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project/(:num)', 'ActionController::project_delete/$1', ['filter' => 'login']);
 
+$routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filter' => 'login']); 
+$routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 
+
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-penawaran/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']);
@@ -154,21 +157,31 @@ $routes->post('/message/select-produk', 'MessageController::produk_select', ['fi
 
 $routes->post('/message/add-project', 'MessageController::project_add', ['filter' => 'login']);  
 $routes->post('/message/edit-project/(:num)', 'MessageController::project_edit/$1', ['filter' => 'login']);  
+
+$routes->post('/message/add-project-sample/(:num)', 'MessageController::project_sample_add/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-project-sample/(:num)', 'MessageController::project_sample_edit/$1', ['filter' => 'login']); 
+
 $routes->post('/message/add-project-sph/(:num)', 'MessageController::project_sph_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);  
+
 $routes->post('/message/add-project-invoice/(:num)', 'MessageController::project_invoice_add/$1', ['filter' => 'login']);  
-$routes->post('/message/edit-project-invoice/(:num)', 'MessageController::project_invoice_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-project-invoice/(:num)', 'MessageController::project_invoice_edit/$1', ['filter' => 'login']);
+
 $routes->post('/message/add-project-po/(:num)', 'MessageController::project_po_add/$1', ['filter' => 'login']);   
 $routes->post('/message/edit-project-po/(:num)', 'MessageController::project_po_edit/$1', ['filter' => 'login']);  
+
 $routes->post('/message/add-project-payment/(:num)', 'MessageController::project_payment_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-payment/(:num)', 'MessageController::project_payment_edit/$1', ['filter' => 'login']);  
+
 $routes->post('/message/add-project-proforma/(:num)', 'MessageController::project_proforma_add/$1', ['filter' => 'login']); 
 $routes->post('/message/edit-project-proforma/(:num)', 'MessageController::project_proforma_edit/$1', ['filter' => 'login']);  
 
-$routes->post('/message/delivery-project-invoice/(:num)', 'MessageController::project_delivery_add/$1', ['filter' => 'login']);  
+$routes->post('/message/add-project-delivery/(:num)', 'MessageController::project_delivery_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-delivery/(:num)', 'MessageController::project_delivery_edit/$1', ['filter' => 'login']);   
+
 $routes->post('/message/add-proses-delivery/(:num)', 'MessageController::project_delivery_proses/$1', ['filter' => 'login']);  
 $routes->post('/message/add-finish-delivery/(:num)', 'MessageController::project_delivery_finish/$1', ['filter' => 'login']);  
+
 $routes->post('/message/edit-proses-delivery/(:num)', 'MessageController::project_delivery_proses_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-finish-delivery/(:num)', 'MessageController::project_delivery_finish_edit/$1', ['filter' => 'login']);  
 
@@ -177,6 +190,7 @@ $routes->post('/message/edit-finish-delivery/(:num)', 'MessageController::projec
  *  MODAL print
  */ 
 $routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']);  
+$routes->post('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']);  
 $routes->get('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1', ['filter' => 'login']);  
 $routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1', ['filter' => 'login']);  
 $routes->get('/print/project/deliveryA5/(:num)', 'PrintController::project_delivery_a5/$1', ['filter' => 'login']);  

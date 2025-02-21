@@ -1,9 +1,9 @@
  
-<div class="modal fade" id="modal-add-invoice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-invoice-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-sample" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sample-label" style="overflow-y:auto;">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-invoice-label">Buat Invoice</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-sample-label">Tambah Sample Barang</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"> 
@@ -39,7 +39,7 @@
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Alamat</label>
                             <label class="col-10 text-end fw-bold"><?= $customer->CustomerAddress ?></label> 
-                        </div> 
+                        </div>  
                     </div>  
                     <div class="col-lg-6 col-12 my-1 mb-2">   
                         <div class="row mx-2 align-items-center">
@@ -48,35 +48,27 @@
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
+                            <label for="SampleCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
-                            </div>
-                        </div>   
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphRef1" class="col-sm-2 col-form-label">Ref</label>
-                            <div class="col-sm-10"> 
-                                <select class="form-select form-select-sm" id="SphRef1" name="SphRef1"  style="width:100%" >
-                                    <option value="0" selected>No Data Selected</option>
-                                </select>  
-                            </div> 
-                        </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
-                            <div class="col-sm-10">
-                                <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
-                            </div>
-                        </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                <input id="SampleCode" name="SampleCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphAddress" class="col-sm-2 col-form-label">Alamat Project</label>
+                            <label for="SampleDate" class="col-sm-2 col-form-label">Tanggal</label>
                             <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->CustomerAddress ?></textarea>
+                                <input id="SampleDate" name="SampleDate" type="text" class="form-control form-control-sm input-form" value="">
+                            </div>
+                        </div>  
+                        <div class="row mb-1 align-items-center mt-2">
+                            <label for="SampleAdmin" class="col-sm-2 col-form-label">Admin</label>
+                            <div class="col-sm-10">
+                                <select class="form-select form-select-sm" id="SampleAdmin" name="SampleAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                            </div>
+                        </div> 
+                        <div class="row mb-1 align-items-center mt-2">
+                            <label for="SampleAddress" class="col-sm-2 col-form-label">Alamat Project</label>
+                            <div class="col-sm-10">
+                                <textarea  class="form-control form-control-sm input-form" id="SampleAddress"><?= $customer->CustomerAddress ?></textarea>
                             </div>
                         </div> 
                     </div>   
@@ -311,8 +303,7 @@
                         </div> 
                         <div class="d-flex justify-content-center flex-column align-items-center"> 
                             <div class="d-flex px-3 mt-4 gap-1">
-                                <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Item</button>
-                                <button class="btn btn-sm btn-primary my-2" onclick="add_detail_category(this)"><i class="fa-solid fa-plus pe-2"></i>Tambah Kategori</button> 
+                                <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Item</button> 
                             </div>
                         </div>
                     </div>
@@ -344,7 +335,8 @@
                                 </div>    
                             </div>  
                         </div>  
-                    </div>  
+                    </div>    
+                    
                     <div class="col-12 col-md-4 px-3 order-1 order-md-2"> 
                         <div class="row align-items-center py-1 mt-3">
                             <div class="col-4">
@@ -353,7 +345,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="SphSubTotal">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="SampleSubTotal">
                                 </div>     
                             </div>
                         </div> 
@@ -364,7 +356,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled id="SphDiscItemTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled id="SampleDiscItemTotal" value="0">
                                 </div>     
                             </div>
                         </div> 
@@ -375,7 +367,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SphDiscTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SampleDiscTotal" value="0">
                                 </div>     
                             </div>
                         </div> 
@@ -386,7 +378,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="SphGrandTotal" >
+                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="SampleGrandTotal" >
                                 </div>     
                             </div>
                         </div> 
@@ -395,7 +387,7 @@
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="btn-add-invoice">Simpan</button>
+                <button type="button" class="btn btn-primary" id="btn-add-sample">Simpan</button>
             </div>
         </div>
     </div>
@@ -403,8 +395,7 @@
 
 <div id="modal-optional"></div>
 <script>    
-
-    $('#SphDate').daterangepicker({
+    $('#SampleDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
         "endDate":  moment(),
@@ -413,11 +404,11 @@
         }
     });
     
-    $("#SphRef1").select2({
-        dropdownParent: $('#modal-add-invoice .modal-content'),
-        placeholder: "Pilih Referensi dokumen",
+    $("#SampleStore").select2({
+        dropdownParent: $('#modal-add-sample .modal-content'),
+        placeholder: "Pilih Toko",
         ajax: {
-            url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
+            url: "<?= base_url()?>select2/get-data-store",
             dataType: 'json',
             type:"POST",
             delay: 250,
@@ -441,31 +432,12 @@
                 };
             },
             cache: true
-        },  
-        escapeMarkup: function(m) {
-            return m;
-        },
-        templateResult: function template(data) {
-            if ($(data.html).length === 0) {
-                return data.text;
-            }
-            return $(data.html);
-        },
-        templateSelection: function templateSelect(data) {
-            if ($(data.html).length === 0) {
-                return data.text;
-            }
-            return data['text'];
-        }
+        }, 
     });
-    var header_ref = '<?= is_null($ref_header) ? false : true ?>';  
-    if(header_ref["code"] != ""){ 
-        $('#SphRef1').append(new Option( '<?= is_null($ref_header) ? "" :  $ref_header["code"] ?>' , '<?= is_null($ref_header) ? "" :  $ref_header["id"] ?>', true, true)).trigger('change');
-        $('#SphRef1').attr("disabled",true)
-    }
+    $('#SampleStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
 
-    $("#SphAdmin").select2({
-        dropdownParent: $('#modal-add-invoice .modal-content'),
+    $("#SampleAdmin").select2({
+        dropdownParent: $('#modal-add-sample .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
             url: "<?= base_url()?>select2/get-data-users",
@@ -494,23 +466,22 @@
             cache: true
         }, 
     });
-    $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
+    $('#SampleAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
       
-     
-    var detail_item_ref = '<?= json_encode($ref_detail) ?>';  
-    var data_detail_item = JSON.parse(detail_item_ref);
 
-    var isProcessingSphAddCategory = false;
+    var data_detail_item = [];   
+    
+    var isProcessingSampleAddCategory = false;
     add_detail_category = function(el){
-        if (isProcessingSphAddCategory) {
-            console.log("project sph cancel load");
+        if (isProcessingSampleAddCategory) {
+            console.log("project Sample cancel load");
             return;
         }  
-        isProcessingSphAddCategory = true; 
+        isProcessingSampleAddCategory = true; 
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-        $("#modal-add-invoice").modal("hide"); 
+        $("#modal-add-sample").modal("hide"); 
         Swal.fire({
             title: 'Tambah Kategori',
             input: 'text',
@@ -532,7 +503,7 @@
                         type: "category",
                         text: name,
                         qty: 0,
-                        hargajual: 0,
+                        price: 0,
                         disc: 0,
                         total: 0, 
                         varian: [], 
@@ -544,9 +515,9 @@
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {  
-            isProcessingSphAddCategory = false;
+            isProcessingSampleAddCategory = false;
             $(el).html(old_text); 
-            $("#modal-add-invoice").modal("show");
+            $("#modal-add-sample").modal("show");
         }); 
     }
  
@@ -555,14 +526,14 @@
             document.activeElement.blur();
         }
     });
-    var isProcessingSphAddproduk = false;
+    var isProcessingSampleAddproduk = false;
 
     $("#btn-add-product").click(function(){
-        if (isProcessingSphAddproduk) {
-            console.log("project sph cancel load");
+        if (isProcessingSampleAddproduk) {
+            console.log("project Sample cancel load");
             return;
         }  
-        isProcessingSphAddproduk = true; 
+        isProcessingSampleAddproduk = true; 
         let old_text = $("#btn-add-product").html();
         $("#btn-add-product").html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
@@ -570,12 +541,12 @@
             method: "POST",
             url: "<?= base_url() ?>message/select-produk", 
             success: function(data) {  
-                isProcessingSphAddproduk = false; 
+                isProcessingSampleAddproduk = false; 
                 $("#btn-add-product").html(old_text);
                 
                 $("#modal-optional").html(data);
                 
-                $("#modal-add-invoice").modal("hide");  
+                $("#modal-add-sample").modal("hide");  
 
                 $("#modal-select-item").modal("show"); 
 
@@ -584,7 +555,7 @@
                     if (document.activeElement) {
                         document.activeElement.blur();
                     }
-                    $("#modal-add-invoice").modal("show");  
+                    $("#modal-add-sample").modal("show");  
                     
                 });
 
@@ -608,7 +579,7 @@
                 });
             },
             error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSphAddproduk = false;
+                isProcessingSampleAddproduk = false;
                 $("#btn-add-product").html(old_text); 
 
                 Swal.fire({
@@ -641,9 +612,9 @@
             }
         }  
 
+        data["disc"] = data["price"] ;
         data["type"] = "product";
-        data_detail_item.push(data)
-
+        data_detail_item.push(data) 
         load_produk();
 
         $('#modal-select-item').modal("hide");   
@@ -652,8 +623,8 @@
     
     edit_varian_click = function(index){ 
         if(data_detail_item[index]["type"] == "category"){  
-            $("#modal-add-invoice").modal("hide");
-            $("#modal-add-invoice").blur();
+            $("#modal-add-sample").modal("hide");
+            $("#modal-add-sample").blur();
             Swal.fire({
                 title: 'Rename Kategori',
                 input: 'text',
@@ -680,11 +651,11 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-invoice").modal("show");
+                $("#modal-add-sample").modal("show");
             });  
         }else{
-            $("#modal-add-invoice").modal("hide");
-            $("#modal-add-invoice").blur();
+            $("#modal-add-sample").modal("hide");
+            $("#modal-add-sample").blur();
             Swal.fire({
                 title: 'Rename Produk',
                 input: 'text',
@@ -711,7 +682,7 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {   
-                $("#modal-add-invoice").modal("show");
+                $("#modal-add-sample").modal("show");
             });  
         }
     }
@@ -738,11 +709,11 @@
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.price * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
+        var grandtotal =  total - discitem - $("#SampleDiscTotal").val().replace(/[^0-9-]/g, ''); 
 
-        $("#SphSubTotal").val(total.toLocaleString('en-US')) 
-        $("#SphDiscItemTotal").val(discitem.toLocaleString('en-US')) 
-        $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
+        $("#SampleSubTotal").val(total.toLocaleString('en-US')) 
+        $("#SampleDiscItemTotal").val(discitem.toLocaleString('en-US')) 
+        $("#SampleGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     }
     load_produk = function(){
         var html = '';
@@ -825,7 +796,7 @@
                                                 <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
                                             </div>
                                         </div>  
-                                        <div class="col-12 col-md-3 px-0 ">  
+                                        <div class="col-12 col-md-3 px-1 ">  
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                             <div class="input-group"> 
                                                 <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
@@ -896,7 +867,7 @@
  
                 //event satuan
                 $(`#select-satuan-${i}`).select2({
-                    dropdownParent: $('#modal-add-invoice .modal-content'), 
+                    dropdownParent: $('#modal-add-sample .modal-content'), 
                     placeholder: "pilih",
                     width: 'auto',
                     adaptContainerWidth: true,
@@ -986,46 +957,44 @@
             }
         }
     }
-    load_produk();
-
-    var sph_sub_total = new Cleave(`#SphSubTotal`, {
+    load_produk(); 
+    
+    var Sample_sub_total = new Cleave(`#SampleSubTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_disc_item_total = new Cleave(`#SphDiscItemTotal`, {
+    var Sample_disc_item_total = new Cleave(`#SampleDiscItemTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_disc_total = new Cleave(`#SphDiscTotal`, {
+    var Sample_disc_total = new Cleave(`#SampleDiscTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_grand_total = new Cleave(`#SphGrandTotal`, {
+    var Sample_grand_total = new Cleave(`#SampleGrandTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    $("#SphDiscTotal").on("keyup",function(){ 
+    $("#SampleDiscTotal").on("keyup",function(){ 
         grand_total_harga();
-        if(parseInt($("#SphGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
-            $("#SphDiscTotal").val(0)
+        if(parseInt($("#SampleGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
+            $("#SampleDiscTotal").val(0)
             grand_total_harga();
         }
     });
-    
- 
 
     var quill = [];  
     $(".template-footer").each(function(index, el){
         var message = $(el).find("[name='EditFooterMessage']")[0];
-        var type = "invoice"; 
+        var type = "sample"; 
         quill[type] = new Quill(message,  {
             debug: 'false',
             modules: {
@@ -1045,7 +1014,7 @@
         $(btnedit).hide();
  
         $(selectoption).select2({
-            dropdownParent: $('#modal-add-invoice .modal-content'),
+            dropdownParent: $('#modal-add-sample .modal-content'),
             placeholder: "Pilih Template",
             tags:true,
             ajax: {
@@ -1119,6 +1088,7 @@
             } 
         });
 
+          
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
                 $.ajax({ 
@@ -1185,7 +1155,7 @@
             }
         }) 
         $(btnsaveas).click(function(){
-            $("#modal-add-invoice").modal("hide"); 
+            $("#modal-add-sample").modal("hide"); 
             Swal.fire({
                 title: 'Simpan Template',
                 input: 'text',
@@ -1246,7 +1216,7 @@
 
                 quill[type].enable(false);
                 quill[type].root.style.background = '#F7F7F7'; // warna disable    
-                $("#modal-add-invoice").modal("show");
+                $("#modal-add-sample").modal("show");
             }); 
         })
         $(btnedit).click(function(){
@@ -1261,7 +1231,8 @@
         }) 
     });
 
-    $("#btn-add-invoice").click(function(){
+
+    $("#btn-add-sample").click(function(){
         if($($(".template-footer").find("select")[0]).val() == null){
             Swal.fire({
                 icon: 'error',
@@ -1296,48 +1267,46 @@
         }
 
         var header = {  
-            InvDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
-            ProjectId: <?= $project->ProjectId ?>, 
-            SampleId: '<?= $ref_header["SampleId"] ?>',
-            SphId: '<?= $ref_header["SphId"] ?>',
-            InvAdmin: $("#SphAdmin").val(), 
+            SampleDate: $("#SampleDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
+            SampleRef: <?= $project->ProjectId ?>, 
+            SampleAdmin: $("#SampleAdmin").val(), 
             CustomerId: <?=$customer->CustomerId?>, 
-            InvAddress: $("#SphAddress").val(), 
-            TemplateId: $($(".template-footer").find("select")[0]).val(), 
-            InvSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
-            InvDiscItemTotal: $("#SphDiscItemTotal").val().replace(/[^0-9]/g, ''), 
-            InvDiscTotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
-            InvGrandTotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
+            SampleAddress: $("#SampleAddress").val(), 
+            TemplateId: $($(".template-footer").find("select")[0]).val(),  
+            SampleSubTotal: $("#SampleSubTotal").val().replace(/[^0-9]/g, ''), 
+            SampleDiscItemTotal: $("#SampleDiscItemTotal").val().replace(/[^0-9]/g, ''), 
+            SampleDiscTotal: $("#SampleDiscTotal").val().replace(/[^0-9]/g, ''), 
+            SampleGrandTotal: $("#SampleGrandTotal").val().replace(/[^0-9]/g, '')
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){  
             if(data_detail_item[i]["type"] == "product"){ 
                 detail.push({
                     ProdukId: data_detail_item[i]["produkid"], 
-                    InvDetailText: data_detail_item[i]["text"],
-                    InvDetailType: data_detail_item[i]["type"], 
-                    InvDetailSatuanId: data_detail_item[i]["satuan_id"], 
-                    InvDetailSatuanText: data_detail_item[i]["satuan_text"],
-                    InvDetailQty: data_detail_item[i]["qty"], 
-                    InvDetailPrice: data_detail_item[i]["price"], 
-                    InvDetailDisc: data_detail_item[i]["disc"], 
-                    InvDetailTotal: data_detail_item[i]["total"], 
-                    InvDetailGroup: data_detail_item[i]["group"], 
-                    InvDetailVarian: data_detail_item[i]["varian"], 
+                    SampleDetailText: data_detail_item[i]["text"],
+                    SampleDetailType: data_detail_item[i]["type"], 
+                    SampleDetailSatuanId: data_detail_item[i]["satuan_id"], 
+                    SampleDetailSatuanText: data_detail_item[i]["satuan_text"],
+                    SampleDetailQty: data_detail_item[i]["qty"], 
+                    SampleDetailPrice: data_detail_item[i]["price"], 
+                    SampleDetailDisc: data_detail_item[i]["disc"], 
+                    SampleDetailTotal: data_detail_item[i]["total"], 
+                    SampleDetailGroup: data_detail_item[i]["group"], 
+                    SampleDetailVarian: data_detail_item[i]["varian"], 
                 });
             }else{
                 detail.push({
                     ProdukId: data_detail_item[i]["produkid"], 
-                    InvDetailText: data_detail_item[i]["text"],
-                    InvDetailType: data_detail_item[i]["type"], 
-                    InvDetailSatuanId: "", 
-                    InvDetailSatuanText: "", 
-                    InvDetailQty: 0,
-                    InvDetailPrice: 0, 
-                    InvDetailDisc: 0, 
-                    InvDetailTotal: 0, 
-                    InvDetailGroup: "", 
-                    InvDetailVarian: [], 
+                    SampleDetailText: data_detail_item[i]["text"],
+                    SampleDetailType: data_detail_item[i]["type"], 
+                    SampleDetailSatuanId: "", 
+                    SampleDetailSatuanText: "", 
+                    SampleDetailQty: 0,
+                    SampleDetailPrice: 0, 
+                    SampleDetailDisc: 0, 
+                    SampleDetailTotal: 0, 
+                    SampleDetailGroup: "", 
+                    SampleDetailVarian: [], 
                 });
             }
         }
@@ -1345,7 +1314,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/add-data-invoice", 
+            url: "<?= base_url() ?>action/add-data-sample", 
             data:{
                 "header":header,
                 "detail":detail, 
@@ -1358,8 +1327,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-invoice").modal("hide");   
-                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                        $("#modal-add-sample").modal("hide");  
+                        $(".menu-item[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

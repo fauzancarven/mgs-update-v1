@@ -124,7 +124,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-proses-delivery").modal("hide");  
-                        $(".menu-item[data-menu='pengiriman'][data-id='<?= $delivery->InvRef ?>']").trigger("click");  
+                        $(".menu-item[data-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");  
                     });
                   
                 }else{

@@ -9,17 +9,17 @@
                 <div class="mb-1">
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <label for="grandtotal-payment" class="col-form-label">Total Invoice:</label>
+                            <label for="grandtotal-payment" class="col-form-label">Total Pembelian:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
-                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="grandtotal-payment" value="<?= $project->InvGrandTotal ?>" disabled>
+                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="grandtotal-payment" value="<?= $project->GrandTotal ?>" disabled>
                             </div> 
                         </div>
                         <div class="col-12 col-md-6">
                             <label for="sisa-payment" class="col-form-label">Sisa Pembayaran:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
-                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="sisa-payment" value="<?= $project->InvGrandTotal - (array_sum(array_column($payment, 'PaymentTotal'))) ?>" disabled>
+                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="sisa-payment" value="<?= $project->GrandTotal - (array_sum(array_column($payment, 'PaymentTotal'))) ?>" disabled>
                             </div>  
                         </div>
                     </div>  
@@ -449,7 +449,8 @@
             method: "POST",
             url: "<?= base_url() ?>action/add-data-payment", 
             data:{ 
-                "PaymentRef": <?= $project->InvId ?>, 
+                "InvId": <?= $project->InvId ?>, 
+                "SampleId": <?= $project->SampleId ?>, 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
                 "PaymentMethod":$("#method-payment").val(), 
@@ -466,7 +467,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-payment").modal("hide");  
-                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->InvRef ?>']").trigger("click");  
+                        $(".menu-item[data-menu='<?= $project->menu ?>'][data-id='<?= $project->Project_id ?>']").trigger("click");  
                     });
                   
                 }else{

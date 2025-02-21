@@ -4,23 +4,48 @@ namespace App\Controllers;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\ProjectModel;
+use App\Models\ProdukModel;
 use App\Models\HeaderModel;
 
+use Config\Services; 
 define("DOMPDF_ENABLE_REMOTE", false);
 class PrintController extends BaseController
 {
 	public function project_sph($id)
 	{
+                $request = Services::request();
+                $postData = $request->getGet();
+
                 $options = new Options(); 
                 $options->set('isHtml5ParserEnabled', true);
                 $options->set('enable_remote', true);
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectModel(); 
+                $models = new ProjectModel();
+                $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
                 $data["sph"] = $models->getdataSPH($id); 
-                $data["detail"] = $models->getdataDetailSPH($id); 
+                $arr_detail = $models->getdataDetailSPH($id);
+                $detail = array();
+                foreach($arr_detail as $row){
+                        $detail[] = array(
+                                "image" => $produk->getproductimage($row->ProdukId), 
+                                "produkid" => $row->ProdukId, 
+                                "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                                "satuan_text"=>$row->SphDetailSatuanText,  
+                                "price"=>$row->SphDetailPrice,
+                                "varian"=>  $row->SphDetailVarian,
+                                "total"=> $row->SphDetailTotal,
+                                "disc"=> $row->SphDetailDisc,
+                                "qty"=> $row->SphDetailQty,
+                                "text"=> $row->SphDetailText,
+                                "group"=> $row->SphDetailGroup,
+                                "type"=> $row->SphDetailType
+                        );
+                };
+                $data["detail"] = $detail; 
+                $data["postdata"] = $postData; 
                 $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);   
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   

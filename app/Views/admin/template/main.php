@@ -1223,6 +1223,44 @@
         height: 1px;
         position: relative;
     }
+
+    .group-header:hover {
+        background: #c4ceff69;
+        border-radius: 0.5rem;
+    }
+    .group-header i {
+        transform: rotate(180deg);
+        font-size: 0.75rem;
+    }
+    .group-header.project-hide i {
+        transform: rotate(0);
+    }
+    /* .group-list {
+        transform: scaleY(0);
+        transform-origin: top;
+        opacity: 0;
+        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, height 1s;
+        height: 0;
+    }
+    .group-list.hide {
+        opacity: 1;
+        height: auto;
+        transform: scaleY(1);
+        transition: transform 0.5s ease-in-out;
+    }
+    .group-header.hide .text-head-2 {
+        color: #0000e6;
+    } */
+    a{
+        cursor: pointer;
+    }
+    .form-check-input{ 
+        border: 1px solid #babcbd;
+    }
+    .form-check-input:checked {
+        background-color: #001935;
+        border-color: #225fba;
+    }
 </style>
 
 
@@ -1412,6 +1450,7 @@
 
     <script src="<?= base_url(); ?>assets/js/croppie.min.js">  </script> 
     <script src="<?= base_url(); ?>assets/js/quill.js">  </script> 
+    <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 
     
     
     <div class="container-scroller" style="background: #f5f7ff;"> 

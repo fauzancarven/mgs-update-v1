@@ -54,6 +54,14 @@
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
+                            <label for="SphRef1" class="col-sm-2 col-form-label">Ref</label>
+                            <div class="col-sm-10"> 
+                                <select class="form-select form-select-sm" id="SphRef1" name="SphRef1"  style="width:100%" >
+                                    <option value="0" selected>No Data Selected</option>
+                                </select>  
+                            </div> 
+                        </div>  
+                        <div class="row mb-1 align-items-center mt-2">
                             <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
                             <div class="col-sm-10">
                                 <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
@@ -403,7 +411,57 @@
             format: 'DD MMMM YYYY'
         }
     });
+    $("#SphRef1").select2({
+        dropdownParent: $('#modal-add-sph .modal-content'),
+        placeholder: "Pilih Toko",
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
+            dataType: 'json',
+            type:"POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash // CSRF Token
+                };
+            },
+            processResults: function (response) {
     
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        },  
+        escapeMarkup: function(m) {
+            return m;
+        },
+        templateResult: function template(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return $(data.html);
+        },
+        templateSelection: function templateSelect(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return data['text'];
+        }
+    });
+    var header_ref = '<?= is_null($ref_header) ? false : true ?>'; 
+    if(header_ref){ 
+        $('#SphRef1').append(new Option( '<?= is_null($ref_header) ? "" :  $ref_header->SampleCode ?>' , '<?= is_null($ref_header) ? "" :  $ref_header->SampleId ?>', true, true)).trigger('change');
+        $('#SphRef1').attr("disabled",true)
+    }
+
     $("#SphStore").select2({
         dropdownParent: $('#modal-add-sph .modal-content'),
         placeholder: "Pilih Toko",
@@ -469,7 +527,8 @@
     $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
       
 
-    var data_detail_item = [];   
+    var detail_item_ref = '<?= json_encode($ref_detail) ?>';  
+    var data_detail_item = JSON.parse(detail_item_ref);
     
     var isProcessingSphAddCategory = false;
     add_detail_category = function(el){
@@ -1270,7 +1329,8 @@
 
         var header = {  
             SphDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
-            SphRef: <?= $project->ProjectId ?>, 
+            ProjectId: <?= $project->ProjectId ?>,  
+            SampleId: $("#SphRef1").val(), 
             SphAdmin: $("#SphAdmin").val(), 
             CustomerId: <?=$customer->CustomerId?>, 
             SphAddress: $("#SphAddress").val(), 

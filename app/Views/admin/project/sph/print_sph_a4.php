@@ -5,7 +5,8 @@
     <meta charset="utf-8"/>
     <title><?= 'SPH_'.$sph->CustomerName.'_'.$sph->SphDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
-    <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
+    <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css">  
+    <link rel="shortcut icon" href="assets/images/logo/logo.png" />
 </head>
 <style>  
     body { 
@@ -199,12 +200,12 @@
         width: 5%;
     }
 
-    table.item td:nth-child(2) {
-        width: 30%;
+    table.item td.image {
+        width: 20%;
     }
 
-    table.item td:nth-child(3) {
-        width: 15%;
+    table.item td.text {
+        width: 30%;
     }
 
     table.item td:nth-child(4) {
@@ -279,9 +280,12 @@
         margin-left:7px; 
         margin-right:7px; 
     }
+    tr.hide{
+        display:none !important;
+    }
 </style>
 <body>  
-    <?= $header_footer ?>
+    <?= $header_footer["html"] ?>
     <div class="body">
         <h2 class="text-center">SURAT PENAWARAN HARGA (QUOTATION)</h2>
         <table style="width: 100%;align-items: start;justify-content: baseline;">
@@ -304,17 +308,23 @@
         </table>
         <div style="padding:20px">
             Dengan Hormat. <br>
-            <span style="padding-left:40px">Berikut kami turunkan lampiran penawaran barang dengan detail spesifikasi sebagai berikut :</span>
+            <span style="padding-left:40px">Berikut kami turunkan lampiran penawaran dengan detail spesifikasi sebagai berikut :</span>
         </div>
                
+        <?php
+            $col = 4;
+            if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++;
+            if($postdata["image"]==1) $col++;
+        ?>
         <table class="item">
             <thead>
                 <tr> 
                     <th>No.</th>
+                    <?= ($postdata["image"] == 1) ? "<th>Image</th>" : "" ?>
                     <th>Uraian</th>
                     <th>Qty</th>
                     <th>Harga</th>
-                    <?= (array_filter($detail, fn($item) => $item->SphDetailDisc > 0)) ? "<th>Disc</th>" : "" ?>
+                    <?= (array_filter($detail, fn($item) => $item["disc"] > 0)) ? "<th>Disc</th>" : "" ?>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -323,89 +333,60 @@
                     $no = 1;
                     $huruf  = "A";
                     $html_items = "";
-                    $discShow = array_filter($detail, fn($item) => $item->SphDetailDisc > 0);
+                    $discShow = array_filter($detail, fn($item) => $item["disc"] > 0);
                     foreach($detail as $item){
 
-                        $arr_varian = json_decode($item->SphDetailVarian);
+                        $arr_varian = json_decode($item["varian"]);
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
                            if($varian->varian == "vendor") continue;
 
                             $arr_badge .= '<br><span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>'; 
                         }
-                        if($item->SphDetailType == "product"){
+                        if($item["type"] == "product"){
                             $html_items .= '
                             <tr> 
                                 <td class="td-center">'.$no.'</td>
-                                <td class="ps-2">'.$item->SphDetailText.$arr_badge.'</td>
-                                <td class="td-center">'.number_format($item->SphDetailQty, 2, ',', '.').' '.$item->SphDetailSatuanText.'</td>
-                                <td class="td-center">Rp. '.number_format($item->SphDetailPrice, 0, ',', '.').'</td>
-                                '.($discShow ? "<td class='td-center'>Rp. ".number_format($item->SphDetailDisc, 0, ',', '.')."</td>" : "").'
-                                <td class="td-center">Rp. '.number_format($item->SphDetailTotal, 0, ',', '.').'</td>
+                                 '.($postdata["image"] == 1 ? "<td class='td-center image'><img style='width:75px;height:75px;margin:3px;' src='".$item["image"]."'/></td>" : "").'
+                                <td class="ps-2 text">'.$item["text"].$arr_badge.'</td>
+                                <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
+                                <td class="td-center">Rp. '.number_format($item["price"], 0, ',', '.').'</td>
+                                '.($discShow ? "<td class='td-center'>Rp. ".number_format($item["disc"], 0, ',', '.')."</td>" : "").'
+                                <td class="td-center">Rp. '.number_format($item["total"], 0, ',', '.').'</td>
                             </tr>';
                             $no++;
                         }else{
                             
                           
                             $html_items .= '    <tr>
-                                                    <td class="td-group" colspan="'. ($discShow ? 6 : 5).'">'.$huruf.'. BARANG</td>
+                                                    <td class="td-group" colspan="'.   $col + 1 .'">'.$huruf.'. BARANG</td>
                                                 </tr>';
                             $huruf++;
                             $no = 1;
                         }
                     }
                     echo $html_items;
-                ?>
-
-                <!-- <tr>
-                    <td class="td-group" colspan="6">A. BARANG</td>
-                </tr>
-                <tr> 
-                    <td class="td-center">1</td>
-                    <td class="ps-2">Bata Belanda<br>Ukuran. 12 x 12 x 12cm</td>
-                    <td class="td-center">10 Pcs</td>
-                    <td class="td-center">Rp. 10.000</td>
-                    <td class="td-center">Rp. 0</td>
-                    <td class="td-center">Rp. 100.000</td>
-                </tr>
-                <tr> 
-                    <td class="td-center">2</td>
-                    <td class="ps-2">Bata Belanda<br>Ukuran. 12 x 12 x 12cm</td>
-                    <td class="td-center">10 Pcs</td>
-                    <td class="td-center">Rp. 10.000</td>
-                    <td class="td-center">Rp. 0</td>
-                    <td class="td-center">Rp. 100.000</td>
-                </tr>
-                <tr> 
-                    <td class="td-center">3</td>
-                    <td class="ps-2">Bata Belanda<br>Ukuran. 12 x 12 x 12cm</td>
-                    <td class="td-center">10 Pcs</td>
-                    <td class="td-center">Rp. 10.000</td>
-                    <td class="td-center">Rp. 0</td>
-                    <td class="td-center">Rp. 100.000</td>
-                </tr> -->
+                ?> 
             </tbody>
             <tfoot>
-                <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->SphDetailDisc > 0)) ? "5" : "4" ?>">Sub Total</td>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
+                    <td class="td-footer text-bold " colspan="<?= $col ?>">Sub Total</td>
                     <td class="td-center text-bold">Rp. <?= number_format($sph->SphSubTotal, 0, ',', '.') ?></td>
                 </tr>
-                <tr style="<?= $sph->SphDiscItemTotal > 0 ? "" : "display:none;" ?>">
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->SphDetailDisc > 0)) ? "5" : "4" ?>">Disc Item</td>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $sph->SphDiscItemTotal > 0 ? "" : "display:none;" ?>">
+                    <td class="td-footer text-bold" colspan="<?= $col ?>">Disc Item</td>
                     <td class="td-center text-bold">Rp. <?= number_format($sph->SphDiscItemTotal, 0, ',', '.') ?></td>
                 </tr> 
-                <tr style="<?= $sph->SphDiscTotal > 0 ? "" : "display:none;" ?>">
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->SphDetailDisc > 0)) ? "5" : "4" ?>">Disc</td>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $sph->SphDiscTotal > 0 ? "" : "display:none;" ?>">
+                    <td class="td-footer text-bold" colspan="<?= $col ?>">Disc</td>
                     <td class="td-center text-bold">Rp. <?= number_format($sph->SphDiscTotal, 0, ',', '.') ?></td>
                 </tr>
-                <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->SphDetailDisc > 0)) ? "5" : "4" ?>">Grand Total</td>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
+                    <td class="td-footer text-bold" colspan="<?= $col ?>">Grand Total</td>
                     <td class="td-center text-bold">Rp. <?= number_format($sph->SphGrandTotal, 0, ',', '.') ?></td>
                 </tr>
                 <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->SphDetailDisc > 0)) ? "6" : "5" ?>">DISIAPKAN OLEH : ADMIN<br>
-                        DIRECT CONTACT : 0852-1795-2625<br>
-                        BATA REGULER JAKARTA</td> 
+                    <td class="td-footer text-bold" colspan="<?= $col + 1 ?>"><?= $header_footer["detail"] ?></td> 
                 </tr>
             </tfoot>
         </table>

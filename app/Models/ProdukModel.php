@@ -434,7 +434,7 @@ class ProdukModel extends Model
         } 
         return $array_php;
     }
-    public function getproductimage($id){
+    public function getproductimageAll($id){
         $folder = 'assets/images/produk/'.$id."/";  
         $files = scandir($folder);
         $gambar = array(); 
@@ -444,6 +444,17 @@ class ProdukModel extends Model
             }
         } 
         return $gambar;
+    }
+    public function getproductimage($id){
+        $folder = 'assets/images/produk/'.$id."/";  
+        $files = scandir($folder);
+        $gambar = array(); 
+        foreach ($files as $file) {
+            if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                return $this->ambil_gambar_base64($folder . $file); 
+            }
+        } 
+        return $this->ambil_gambar_base64('assets/images/produk/default.png'); 
     }
     public function getDetailProduk($data,$id){ 
         $query = "select * from produk_detail left join produk_satuan on produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId where ProdukDetailRef = ".$id;

@@ -1,25 +1,25 @@
-<div class="modal fade" id="modal-edit-proforma" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
+<div class="modal fade" id="modal-add-payment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Edit Proforma</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Tambah Payment</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3"> 
                 <div class="mb-1">
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <label for="grandtotal-payment" class="col-form-label">Total Invoice:</label>
+                            <label for="grandtotal-payment" class="col-form-label">Total Pembelian:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
-                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="grandtotal-payment" value="<?= $project->InvGrandTotal ?>" disabled>
+                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="grandtotal-payment" value="<?= $project["GrandTotal"] ?>" disabled>
                             </div> 
                         </div>
                         <div class="col-12 col-md-6">
                             <label for="sisa-payment" class="col-form-label">Sisa Pembayaran:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
-                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="sisa-payment" value="<?= $project->InvGrandTotal - (array_sum(array_column($payments, 'PaymentTotal'))) + $payment->PaymentTotal ?>" disabled>
+                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="sisa-payment" value="<?= $project["GrandTotal"] - (array_sum(array_column($payment, 'PaymentTotal'))) ?>" disabled>
                             </div>  
                         </div>
                     </div>  
@@ -48,15 +48,23 @@
                             <label for="total-payment" class="col-form-label">Total Payment:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
-                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="total-payment" value="<?= $payment->PaymentTotal ?>">
+                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="total-payment" value="0">
                             </div>  
                         </div>
                     </div>  
                 </div> 
                 <div class="mb-1">
                     <label for="comment-payment" class="col-form-label">Catatan:</label>
-                    <input class="form-control form-control-sm input-form" style="width:100%" id="comment-payment" value="<?= $payment->PaymentNote ?>">
-                </div> 
+                    <input class="form-control form-control-sm input-form" style="width:100%" id="comment-payment">
+                </div>
+                <div class="mb-1">
+                    <label for="bukti-project" class="col-form-label">Upload Bukti:</label><button id="remove-image" class="btn btn-sm btn-danger btn-action m-1" onclick=""><i class="fa-solid fa-close pe-2"></i>Delete</button>
+                    <input class="form-control form-control-sm input-form d-none" type="file" accept="image/*" style="width:100%" id="bukti-payment">   
+                    <div class="text-center" id="dropzone">
+                        <div class="dz-message">Tarik dan lepas file gambar di sini atau klik untuk memilih</div>
+                        <img id="preview" width="200" height="200" />
+                    </div>
+                </div>
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
                         <span class="label-dialog">Term and Condition </span> 
@@ -94,7 +102,7 @@
 <script>
      $('#date-payment').daterangepicker({
         "singleDatePicker": true,
-        "startDate": moment("<?= $payment->PaymentDate ?>"),
+        "startDate": moment(),
         "endDate":  moment(),
         locale: {
             format: 'DD MMMM YYYY'
@@ -113,19 +121,70 @@
     }); 
      
     $("#type-payment").select2({
-        dropdownParent: $('#modal-edit-proforma .modal-content'),
+        dropdownParent: $('#modal-add-payment .modal-content'),
         tags:true,
     });
-    $("#type-payment").val("<?= $payment->PaymentType ?>").trigger("change");
     $("#method-payment").select2({
-        dropdownParent: $('#modal-edit-proforma .modal-content'),
+        dropdownParent: $('#modal-add-payment .modal-content'),
     });  
-    $("#method-payment").val("<?= $payment->PaymentMethod ?>").trigger("change");
- 
+
+    var file;
+
+    $('#dropzone').on('dragover', function(e) {
+    e.preventDefault();
+    $(this).addClass('dragover');
+    });
+
+    $('#dropzone').on('dragleave', function(e) {
+    $(this).removeClass('dragover');
+    });
+
+    $('#dropzone').on('drop', function(e) {
+    e.preventDefault();
+    $(this).removeClass('dragover');
+    file = e.originalEvent.dataTransfer.files[0];
+    if (file.type.match('image.*')) {
+        tampilkanPreview(file);
+    } else {
+        alert('Hanya file gambar yang diperbolehkan!');
+    }
+    });
+
+    $('#dropzone').on('click', function() {
+    $('#bukti-payment').trigger('click');
+    });
+
+    $('#bukti-payment').on('change', function() {
+    file = this.files[0];
+    if (file.type.match('image.*')) {
+        tampilkanPreview(file);
+    } else {
+        alert('Hanya file gambar yang diperbolehkan!');
+    }
+    });
+
+    $('#preview').hide();
+    function tampilkanPreview(file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $("#dropzone .dz-message").hide();
+            $('#preview').attr('src', e.target.result);
+            $('#preview').show();
+        };
+        reader.readAsDataURL(file);
+    }
+    $("#remove-image").click(function(){
+        $('#preview').attr('src',"");
+        $('#preview').hide();
+        $("#dropzone .dz-message").show();
+    });
+
+
+    
     var quill = [];  
     $(".template-footer").each(function(index, el){
         var message = $(el).find("[name='EditFooterMessage']")[0];
-        var type = "proforma"; 
+        var type = "payment"; 
         quill[type] = new Quill(message,  {
             debug: 'false',
             modules: {
@@ -135,8 +194,6 @@
         }); 
         quill[type].enable(false);
         quill[type].root.style.background = '#F7F7F7'; // warna disable 
-        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($template->TemplateFooterDelta)?>));  
-
         const btnsaveas = $(el).find("a[value='simpanAs']")[0];
         const btnsave = $(el).find("a[value='simpan']")[0];
         const btnedit = $(el).find("a[value='edit']")[0];
@@ -147,7 +204,7 @@
         $(btnedit).hide();
  
         $(selectoption).select2({
-            dropdownParent: $('#modal-add-proforma .modal-content'),
+            dropdownParent: $('#modal-add-payment .modal-content'),
             placeholder: "Pilih Template",
             tags:true,
             ajax: {
@@ -221,8 +278,6 @@
             } 
         });
 
-        $(selectoption).append(new Option("<?=$template->TemplateFooterName ?>" , "<?=$template->TemplateFooterId?>", true, true)).trigger('change'); 
-        
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
                 $.ajax({ 
@@ -289,7 +344,7 @@
             }
         }) 
         $(btnsaveas).click(function(){
-            $("#modal-add-proforma").modal("hide"); 
+            $("#modal-add-payment").modal("hide"); 
             Swal.fire({
                 title: 'Simpan Template',
                 input: 'text',
@@ -350,7 +405,7 @@
 
                 quill[type].enable(false);
                 quill[type].root.style.background = '#F7F7F7'; // warna disable    
-                $("#modal-add-proforma").modal("show");
+                $("#modal-add-payment").modal("show");
             }); 
         })
         $(btnedit).click(function(){
@@ -392,14 +447,18 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/edit-data-proforma/<?= $payment->PaymentId?>", 
-            data:{  
+            url: "<?= base_url() ?>action/add-data-payment", 
+            data:{ 
+                "InvId": '<?= $project["InvId"] ?>', 
+                "SampleId": '<?= $project["SampleId"] ?>', 
+                "ProjectId": '<?= $project["ProjectId"] ?>', 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
                 "PaymentMethod":$("#method-payment").val(), 
                 "PaymentTotal": $("#total-payment").val().replace(/[^0-9]/g, ''), 
                 "PaymentNote":$("#comment-payment").val(), 
-                "TemplateId": $($(".template-footer").find("select")[0]).val(),  
+                "TemplateId": $($(".template-footer").find("select")[0]).val(), 
+                "image": $("#preview").attr('src'), 
             },
             success: function(data) {   
                 if(data["status"]===true){
@@ -408,8 +467,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-edit-proforma").modal("hide");  
-                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        $("#modal-add-payment").modal("hide");  
+                        $(".menu-item[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");  
                     });
                   
                 }else{

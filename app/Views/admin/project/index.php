@@ -213,6 +213,57 @@
 </div>    
 <div style="margin-bottom: 100px;"></div> 
 <div id="modal-message"></div>
+<!-- Modal -->
+<div class="modal fade" id="modal-print-penawaran" tabindex="-1" data-id="0" aria-labelledby="modal-print-penawaranLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-print-penawaranLabel">Print Penawaran</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="SphPrintFormat" class="col-sm-4 col-form-label">Ukuran Kertas</label>
+                    <div class="col-sm-8">
+                        <select class="form-select form-select-sm" id="SphPrintFormat" name="SphPrintFormat" placeholder="Pilih Admin" style="width:100%">
+                            <option id="1" selected>A4</option>
+                        </select>  
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="SphPrintImage" class="col-sm-4 col-form-label">gunakan gambar item</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="SphPrintImage" id="SphPrintImage1" value="0">
+                            <label class="text-detail" for="SphPrintImage1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="SphPrintImage" id="SphPrintImage2" value="1" checked>
+                            <label class="text-detail" for="SphPrintImage2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="SphPrintTotal" class="col-sm-4 col-form-label">gunakan grand total</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="SphPrintTotal" id="SphPrintTotal1" value="0">
+                            <label class="text-detail" for="SphPrintTotal1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="SphPrintTotal" id="SphPrintTotal2" value="1" checked>
+                            <label class="text-detail" for="SphPrintTotal2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btn-print-sph">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var table; 
   
@@ -320,9 +371,8 @@
                 });
             }
         });
-    } 
+    }  
 
-    loader_data_project(11,'survey');
     add_click = function(){ 
         $.ajax({ 
             method: "POST",
@@ -389,10 +439,81 @@
         });
     }  
     /* 
+        PROJECT Sample
+    */
+    var isProcessingSample = [];
+    add_project_sample = function(id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingSample[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingSample[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-sample/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-sample").modal("show"); 
+
+                isProcessingSample[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSample[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };
+
+    var isProcessingSampleEdit = [];
+    edit_project_Sample  = function(ref,id,el){ 
+          // INSERT LOADER BUTTON
+          if (isProcessingSampleEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingSampleEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-sample/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-sample").modal("show"); 
+
+                isProcessingSampleEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSampleEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }; 
+
+    /* 
         PROJECT SPH / PENAWARAN
     */
     var isProcessingSph = [];
-    add_project_sph = function(id,el){ 
+    add_project_sph = function(id,el,sampleid = 0){ 
          // INSERT LOADER BUTTON
         if (isProcessingSph[id]) {
             console.log("project sph cancel load");
@@ -405,6 +526,9 @@
         $.ajax({  
             method: "POST",
             url: "<?= base_url() ?>message/add-project-sph/" + id, 
+            data: {
+                "SampleId" : sampleid
+            },
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-sph").modal("show"); 
@@ -426,14 +550,16 @@
     };
 
     var isProcessingSphPrint = [];
-    print_project_sph = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/sph/") ?>' + id, '_blank');
+    print_project_sph = function(ref,id,el,type = 1){  
+        $("#modal-print-penawaran").modal("show");
+        $("#modal-print-penawaran").data("id",id)
+       // window.open('<?= base_url("print/project/sph/") ?>' + id + "/" + type, '_blank');
     };
 
     var isProcessingSphEdit = [];
     edit_project_sph = function(ref,id,el){ 
           // INSERT LOADER BUTTON
-          if (isProcessingSphEdit[id]) {
+        if (isProcessingSphEdit[id]) {
             console.log("project sph cancel load");
             return;
         }  
@@ -504,6 +630,14 @@
         });
     };
 
+    $("#btn-print-sph").click(function(i){ 
+        $.redirect('<?= base_url("print/project/sph/") ?>' +  $("#modal-print-penawaran").data("id"),  {
+            kertas: $("#SphPrintFormat").val(),
+            image: $('input[name="SphPrintImage"]:checked').val(),
+            total: $('input[name="SphPrintTotal"]:checked').val(),
+        },
+        "GET",'_blank');
+    })
     
     /* 
         PROJECT PEMBELIAN
@@ -614,7 +748,7 @@
         PROJECT INVOICE
     */
     var isProcessingInvoice= [];
-    add_project_invoice = function(id,el,sphid = 0){
+    add_project_invoice = function(id,el,refid = 0,type = "penawaran"){
         // INSERT LOADER BUTTON
         if (isProcessingPo[id]) {
             console.log("project sph cancel load");
@@ -628,7 +762,8 @@
             method: "POST",
             url: "<?= base_url() ?>message/add-project-invoice/" + id, 
             data: {
-                "SphId" : sphid
+                "id" : refid,
+                "type" : type
             },
             success: function(data) {  
                 $("#modal-message").html(data);
@@ -649,41 +784,7 @@
             }
         });
     }
-
-    var isProcessingDelivery = [];
-    delivery_project_invoice  = function(ref,id,el){ 
-         // INSERT LOADER BUTTON
-        if (isProcessingDelivery[id]) {
-            console.log("project sph cancel load");
-            return;
-        }  
-        isProcessingDelivery[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        $.ajax({  
-            method: "POST",
-            url: "<?= base_url() ?>message/delivery-project-invoice/" + id, 
-            success: function(data) {  
-                $("#modal-message").html(data);
-                $("#modal-add-delivery").modal("show"); 
-
-                isProcessingDelivery[id] = false;
-                $(el).html(old_text); 
-            },
-            error: function(xhr, textStatus, errorThrown){ 
-                isProcessingDelivery[id] = false;
-                $(el).html(old_text); 
-
-                Swal.fire({
-                    icon: 'error',
-                    text: xhr["responseJSON"]['message'], 
-                    confirmButtonColor: "#3085d6", 
-                });
-            }
-        });
-    }
-
+ 
     var isProcessingInvoiceEdit = [];
     edit_project_invoice = function(ref,id,el){ 
           // INSERT LOADER BUTTON
@@ -766,7 +867,7 @@
     };
  
     var isProcessingInvoicePayment = [];
-    payment_project_invoice = function(ref,id,el){
+    add_project_payment = function(ref,id,el,type){
         // INSERT LOADER BUTTON
         if (isProcessingInvoicePayment[id]) {
             console.log("project sph cancel load");
@@ -779,6 +880,9 @@
         $.ajax({  
             method: "POST",
             url: "<?= base_url() ?>message/add-project-payment/" + id, 
+            data:{
+                type:type
+            },
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-payment").modal("show"); 
@@ -812,7 +916,7 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/edit-project-payment/" + id, 
+            url: "<?= base_url() ?>message/edit-project-payment/" + id,  
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-payment").modal("show"); 
@@ -835,7 +939,7 @@
     
 
     var isProcessingPaymentDelete = [];
-    delete_project_payment  = function(ref,id,el){ 
+    delete_project_payment  = function(ref,id,el,type){ 
          // INSERT LOADER BUTTON
         if (isProcessingInvoiceDelete[id]) {
             return;
@@ -865,7 +969,9 @@
                             icon: "success",
                             confirmButtonColor: "#3085d6",
                         });  
-                        loader_data_project(ref,"invoice"); 
+                        if(type == "sample"){
+                            $(".menu-item[data-menu='" + type + "'][data-id='" + ref + "']").trigger("click");   
+                        } 
                     }, 
                 });
             }
@@ -982,13 +1088,18 @@
         });
     }
 
-    show_project_payment = function(ref,id,el){ 
+    show_project_payment = function(ref,InvId,SampleId,id,el){ 
+        if(InvId == "0"){
+            var urlpayment = ref + "/sample/";
+        }else{
+            var urlpayment = ref + "/invoice/"; 
+        }
         $.ajax({
             type: "GET",
-            url: "<?= base_url("assets/images/payment/") ?>" + ref + "/" + id + ".png",
+            url: "<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + id + ".png",
             success: function() {
                 Swal.fire({ 
-                    html: "<img src='<?= base_url("assets/images/payment/") ?>" + ref + "/" + id + ".png' style='width:500px;'>", 
+                    html: "<img src='<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + id + ".png' style='width:500px;'>", 
                     confirmButtonColor: "#3085d6", 
                 }); 
                 return;
@@ -996,10 +1107,10 @@
             error: function() { 
                 $.ajax({
                     type: "GET",
-                    url: "<?= base_url("assets/images/payment/") ?>" + ref + "/" + id + ".jpg",
+                    url: "<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + id + ".jpg",
                     success: function() {
                         Swal.fire({ 
-                            html: "<img src='<?= base_url("assets/images/payment/") ?>" + ref + "/" + id + ".jpg' style='width:500px;'>", 
+                            html: "<img src='<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + id + ".jpg' style='width:500px;'>", 
                             confirmButtonColor: "#3085d6", 
                         }); 
                     },
@@ -1013,6 +1124,43 @@
 
     print_project_delivery  = function(ref,id,el){ 
         window.open('<?= base_url("print/project/deliveryA5/") ?>' + id, '_blank');
+    }
+
+    var isProcessingDelivery = [];
+    add_project_delivery  = function(ref,id,el,type){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingDelivery[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingDelivery[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-delivery/" + id, 
+            data:{
+                type:type
+            },
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-delivery").modal("show"); 
+
+                isProcessingDelivery[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDelivery[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
     }
 
     var isProcessingDeliveryEdit = [];
@@ -1266,6 +1414,8 @@
             }
         });
     }
+
+    
 </script>
 
 

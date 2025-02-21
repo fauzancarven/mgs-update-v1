@@ -390,7 +390,7 @@
             method: "POST",
             url: "<?= base_url() ?>action/add-data-proforma", 
             data:{ 
-                "PaymentRef": <?= $project->InvId ?>, 
+                "InvId": <?= $project->InvId ?>, 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
                 "PaymentMethod":$("#method-payment").val(), 
@@ -407,7 +407,7 @@
                     }).then((result) => {   
                         $("#modal-add-proforma").modal("hide");  
                         
-                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->InvRef ?>']").trigger("click");   
+                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

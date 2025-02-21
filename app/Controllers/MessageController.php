@@ -125,12 +125,90 @@ class MessageController extends BaseController
         return $this->response->setBody(view('admin/project/edit_project.php',$data)); 
     }
 
-    public function project_sph_add($id)
+    public function project_sample_add($id)
     {     
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
 
+        $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+        $data["project"] = $project;
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/sample/add_project_sample.php',$data)); 
+    }
+    public function project_sample_edit($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+
+        $project = $models->getdataSample($id); 
+        $arr_detail = $models->getdataDetailSample($id);
+        $detail = array();
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->SampleDetailSatuanId == 0 ? "" : $row->SampleDetailSatuanId),
+                        "satuan_text"=>$row->SampleDetailSatuanText,  
+                        "price"=>$row->SampleDetailPrice,
+                        "varian"=> JSON_DECODE($row->SampleDetailVarian,true),
+                        "total"=> $row->SampleDetailTotal,
+                        "disc"=> $row->SampleDetailDisc,
+                        "qty"=> $row->SampleDetailQty,
+                        "text"=> $row->SampleDetailText,
+                        "group"=> $row->SampleDetailGroup,
+                        "type"=> $row->SampleDetailType
+                    );
+        };
+        $data["project"] = $project; 
+        $data["detail"] =  $detail;
+        $data["template"] =$models->get_data_template_footer($project->TemplateId); 
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/sample/edit_project_sample.php',$data)); 
+    }
+
+    public function project_sph_add($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+        $request = Services::request();
+        $postData = $request->getPost(); 
+
+        if(!isset($postData['SampleId']) ){
+            $data["ref_header"] = null;
+            $data["ref_detail"] = []; 
+        }else{
+            if($postData['SampleId'] == 0) {  
+                $data["ref_header"] = null;
+                $data["ref_detail"] = []; 
+            }else{
+                $data["ref_header"] = $models->getdataSample($postData['SampleId']); 
+                $arr_detail = $models->getdataDetailSample($postData['SampleId']);
+                $detail = array();
+                foreach($arr_detail as $row){
+                    $detail[] = array(
+                                "id" => $row->ProdukId, 
+                                "produkid" => $row->ProdukId, 
+                                "satuan_id"=> ($row->SampleDetailSatuanId == 0 ? "" : $row->SampleDetailSatuanId),
+                                "satuan_text"=>$row->SampleDetailSatuanText,  
+                                "price"=>$row->SampleDetailPrice,
+                                "varian"=> JSON_DECODE($row->SampleDetailVarian,true),
+                                "total"=> $row->SampleDetailTotal,
+                                "disc"=> $row->SampleDetailDisc,
+                                "qty"=> $row->SampleDetailQty,
+                                "text"=> $row->SampleDetailText,
+                                "group"=> $row->SampleDetailGroup,
+                                "type"=> $row->SampleDetailType
+                            );
+                };
+                $data["ref_detail"] = $detail;
+            }
+        }
         $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
         $data["project"] = $project;
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
@@ -165,7 +243,7 @@ class MessageController extends BaseController
         };
         $data["project"] = $project; 
         $data["detail"] =  $detail;
-        $data["template"] =$models->get_data_template_footer($project->TemplateId); 
+        $data["sample"] = $models->getdataSample($project->SampleId); 
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/sph/edit_project_sph.php',$data)); 
@@ -234,34 +312,83 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel(); 
         $request = Services::request();
         $postData = $request->getPost(); 
-        if(!isset($postData['SphId']) ){
-            $data["ref_header"] = null;
+        if(!isset($postData['id']) ){
+             $data["ref_header"] = array(
+                "code"=> "",
+                "id"=> "",
+                "SphId"=> "",
+                "SampleId"=> "",
+            );
             $data["ref_detail"] = []; 
+            $data["ref_type"] = null;
         }else{
-            if($postData['SphId'] == 0) {  
-                $data["ref_header"] = null;
+            if($postData['id'] == 0) {  
+                $data["ref_header"] = array(
+                    "code"=> "",
+                    "id"=> "",
+                    "SphId"=> "",
+                    "SampleId"=> "",
+                );
                 $data["ref_detail"] = []; 
+                $data["ref_type"] = null;
             }else{
-                $data["ref_header"] = $models->getdataSPH($postData['SphId']); 
-                $arr_detail = $models->getdataDetailSPH($postData['SphId']);
-                $detail = array();
-                foreach($arr_detail as $row){
-                    $detail[] = array(
-                                "id" => $row->ProdukId, 
-                                "produkid" => $row->ProdukId, 
-                                "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
-                                "satuan_text"=>$row->SphDetailSatuanText,  
-                                "price"=>$row->SphDetailPrice,
-                                "varian"=> JSON_DECODE($row->SphDetailVarian,true),
-                                "total"=> $row->SphDetailTotal,
-                                "disc"=> $row->SphDetailDisc,
-                                "qty"=> $row->SphDetailQty,
-                                "text"=> $row->SphDetailText,
-                                "group"=> $row->SphDetailGroup,
-                                "type"=> $row->SphDetailType
-                            );
-                };
-                $data["ref_detail"] = $detail;
+                if($postData['type'] == "penawaran") {  
+                    $datasample = $models->getdataSPH($postData['id']); 
+                    $data["ref_header"] = array(
+                        "code"=> $datasample->SphCode,
+                        "id"=> $datasample->SphId,
+                        "SphId"=> $datasample->SphId,
+                        "SampleId"=> "",
+                    );
+                    $arr_detail = $models->getdataDetailSPH($postData['id']);
+                    $detail = array();
+                    foreach($arr_detail as $row){
+                        $detail[] = array(
+                                    "id" => $row->ProdukId, 
+                                    "produkid" => $row->ProdukId, 
+                                    "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                                    "satuan_text"=>$row->SphDetailSatuanText,  
+                                    "price"=>$row->SphDetailPrice,
+                                    "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                                    "total"=> $row->SphDetailTotal,
+                                    "disc"=> $row->SphDetailDisc,
+                                    "qty"=> $row->SphDetailQty,
+                                    "text"=> $row->SphDetailText,
+                                    "group"=> $row->SphDetailGroup,
+                                    "type"=> $row->SphDetailType
+                                );
+                    };
+                    $data["ref_detail"] = $detail;
+                    $data["ref_type"] = "penawaran";
+                }else{  
+                    $datasample = $models->getdataSample($postData['id']); 
+                    $data["ref_header"] = array(
+                        "code"=> $datasample->SampleCode,
+                        "id"=> $datasample->SampleId,
+                        "SphId"=> "",
+                        "SampleId"=> $datasample->SampleId,
+                    );
+                    $arr_detail = $models->getdataDetailSample($postData['id']);
+                    $detail = array();
+                    foreach($arr_detail as $row){
+                        $detail[] = array(
+                                    "id" => $row->ProdukId, 
+                                    "produkid" => $row->ProdukId, 
+                                    "satuan_id"=> ($row->SampleDetailSatuanId == 0 ? "" : $row->SampleDetailSatuanId),
+                                    "satuan_text"=>$row->SampleDetailSatuanText,  
+                                    "price"=>$row->SampleDetailPrice,
+                                    "varian"=> JSON_DECODE($row->SampleDetailVarian,true),
+                                    "total"=> $row->SampleDetailTotal,
+                                    "disc"=> $row->SampleDetailDisc,
+                                    "qty"=> $row->SampleDetailQty,
+                                    "text"=> $row->SampleDetailText,
+                                    "group"=> $row->SampleDetailGroup,
+                                    "type"=> $row->SampleDetailType
+                                );
+                    };
+                    $data["ref_detail"] = $detail;
+                    $data["ref_type"] = "sample";
+                }
             }
         }
         $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
@@ -298,6 +425,15 @@ class MessageController extends BaseController
                     );
         };
         $data["project"] = $project; 
+        if($project->SampleId > 0){
+            $sample = $models->getdataSample($project->SampleId); 
+            $data["ref"] = $sample->SampleCode;
+        }else if($project->SphId > 0){ 
+            $sph = $models->getdataSPH($project->SphId); 
+            $data["ref"] = $sph->SphCode; 
+        }else{ 
+            $data["ref"] = "-"; 
+        }
         $data["detail"] =  $detail;
         $data["template"] = $models->get_data_template_footer($project->TemplateId); 
         $data["customer"] =$modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
@@ -306,25 +442,70 @@ class MessageController extends BaseController
         return $this->response->setBody(view('admin/project/invoice/edit_project_invoice.php',$data)); 
     }
     public function project_payment_add($id)
-    {     
+    {      
         $models = new ProjectModel();  
-        $project = $models->getdataInvoice($id);  
+
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        if($postData['type'] == "sample"){
+            $datasample = $models->getdataSample($id); 
+            $project = array(
+                "ProjectId"=>$datasample->ProjectId,
+                "SampleId"=>$datasample->SampleId,
+                "InvId"=>"",
+                "GrandTotal"=>$datasample->SampleGrandTotal,
+                "menu"=>"sample",
+            );
+            $data["payment"] = $models->getdataPaymentBySample($id);  
+        }
+        if($postData['type'] == "invoice"){
+            $datainvoice = $models->getdataInvoice($id); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId,
+                "SampleId"=>"",
+                "InvId"=>$datainvoice->InvId,
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+                "menu"=>"invoice",
+            );
+            $data["payment"] = $models->getdataPaymentByInvoice($id);  
+        }
+         
         $data["project"] = $project; 
-        $data["payment"] = $models->getdataPaymentByRef($id);  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/add_project_payment.php',$data)); 
+        return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
     }
     public function project_payment_edit($id)
     {     
         $models = new ProjectModel();      
         $data["payment"] = $models->getdataPayment($id);  
-        $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef);  
+        if($data['payment']->SampleId > 0){
+            $datasample = $models->getdataSample($data['payment']->SampleId); 
+            $project = array(
+                "ProjectId"=>$datasample->ProjectId,
+                "SampleId"=>$datasample->SampleId,
+                "InvId"=>"",
+                "GrandTotal"=>$datasample->SampleGrandTotal,
+                "menu"=>"sample",
+            );
+            $data["payments"] = $models->getdataPaymentBySample($data['payment']->SampleId);  
+        }
+        if($data['payment']->InvId > 0){
+            $datainvoice = $models->getdataInvoice($data['payment']->InvId); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId,
+                "SampleId"=>"",
+                "InvId"=>$datainvoice->InvId,
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+                "menu"=>"invoice",
+            );
+            $data["payments"] = $models->getdataPaymentByInvoice($data['payment']->InvId);  
+        } 
         
+        $data["project"] = $project; 
         $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
-        $data["image"] = $models->getdataImagePayment($data["payment"]->PaymentRef,$id);   
-        $data["payments"] = $models->getdataPaymentByRef($data["payment"]->PaymentRef);   
+        $data["image"] = $models->getdataImagePayment($data["payment"]->ProjectId,$data["payment"]->InvId,$data["payment"]->SampleId,$id);    
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/edit_project_payment.php',$data)); 
+        return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
     }
     public function project_proforma_add($id)
     {     
@@ -340,8 +521,8 @@ class MessageController extends BaseController
         $models = new ProjectModel();      
         $data["payment"] = $models->getdataProforma($id);  
         $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
-        $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef);      
-        $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef);   
+        $data["project"] = $models->getdataInvoice($data["payment"]->InvId);      
+        $data["payments"] = $models->getdataProformaByRef($data["payment"]->InvId);   
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/invoice/edit_project_proforma.php',$data)); 
     }
@@ -350,34 +531,83 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
-
-        $project = $models->getdataInvoice($id); 
-        $arr_detail = $models->getdataDetailInvoice($id);
+        
+        $request = Services::request();
+        $postData = $request->getPost(); 
         $detail = array();
-        foreach($arr_detail as $row){
-            $detail[] = array( 
-                        "id" => $row->ProdukId, 
-                        "produkid" => $row->ProdukId, 
-                        "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
-                        "satuan_text"=>$row->InvDetailSatuanText,  
-                        "price"=>$row->InvDetailPrice,
-                        "varian"=> JSON_DECODE($row->InvDetailVarian,true),
-                        "total"=> $row->InvDetailTotal,
-                        "disc"=> $row->InvDetailDisc,
-                        "qty_ref"=> $row->InvDetailQty,
-                        "qty_success"=>$models->getQtyDeliveryByRef($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText), 
-                        "qty"=> $row->InvDetailQty - $models->getQtyDeliveryByRef($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText),
-                        "qty_spare"=> 0,
-                        "text"=> $row->InvDetailText,
-                        "group"=> $row->InvDetailGroup,
-                        "type"=> $row->InvDetailType 
-                    );
-        };
+        if($postData['type'] == "sample"){ 
+            $datasample = $models->getdataSample($id);  
+            $project = array(
+                "code"=>$datasample->SampleCode,
+                "project_id"=>$datasample->ProjectId,
+                "SampleId"=>$datasample->SampleId, 
+                "InvId"=>"", 
+                "menu"=>"sample",
+                "CustomerName"=>$datasample->CustomerName,
+                "CustomerTelp"=>$datasample->CustomerTelp1,
+                "CustomerAddress"=>$datasample->CustomerAddress,
+                "StoreId"=>$datasample->StoreId
+            );
+            $arr_detail = $models->getdataDetailSample($id);
+            foreach($arr_detail as $row){
+                $detail[] = array( 
+                            "id" => $row->ProdukId, 
+                            "produkid" => $row->ProdukId, 
+                            "satuan_id"=> ($row->SampleDetailSatuanId == 0 ? "" : $row->SampleDetailSatuanId),
+                            "satuan_text"=>$row->SampleDetailSatuanText,  
+                            "price"=>$row->SampleDetailPrice,
+                            "varian"=> JSON_DECODE($row->SampleDetailVarian,true),
+                            "total"=> $row->SampleDetailTotal,
+                            "disc"=> $row->SampleDetailDisc,
+                            "qty_ref"=> $row->SampleDetailQty,
+                            "qty_success"=>$models->getQtyDeliveryBySample($id,$row->ProdukId,$row->SampleDetailVarian,$row->SampleDetailText), 
+                            "qty"=> $row->SampleDetailQty - $models->getQtyDeliveryBySample($id,$row->ProdukId,$row->SampleDetailVarian,$row->SampleDetailText),
+                            "qty_spare"=> 0,
+                            "text"=> $row->SampleDetailText,
+                            "group"=> $row->SampleDetailGroup,
+                            "type"=> $row->SampleDetailType 
+                        );
+            };
+        }else{
+            $datainvoice = $models->getdataInvoice($id);  
+            $project = array(
+                "code"=>$datainvoice->InvCode,
+                "project_id"=>$datainvoice->ProjectId,
+                "SampleId"=>"",
+                "InvId"=>$datainvoice->InvId, 
+                "menu"=>"invoice",
+                "CustomerName"=>$datainvoice->CustomerName,
+                "CustomerTelp"=>$datainvoice->CustomerTelp1,
+                "CustomerAddress"=>$datainvoice->CustomerAddress,
+                "StoreId"=>$datainvoice->StoreId
+            );
+            $arr_detail = $models->getdataDetailInvoice($id);
+            foreach($arr_detail as $row){
+                $detail[] = array( 
+                            "id" => $row->ProdukId, 
+                            "produkid" => $row->ProdukId, 
+                            "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                            "satuan_text"=>$row->InvDetailSatuanText,  
+                            "price"=>$row->InvDetailPrice,
+                            "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                            "total"=> $row->InvDetailTotal,
+                            "disc"=> $row->InvDetailDisc,
+                            "qty_ref"=> $row->InvDetailQty,
+                            "qty_success"=>$models->getQtyDeliveryByRef($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText), 
+                            "qty"=> $row->InvDetailQty - $models->getQtyDeliveryByRef($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText),
+                            "qty_spare"=> 0,
+                            "text"=> $row->InvDetailText,
+                            "group"=> $row->InvDetailGroup,
+                            "type"=> $row->InvDetailType 
+                        );
+            };
+
+           
+        }  
+       
         $data["project"] = $project; 
-        $data["detail"] =  $detail;
-        $data["template"] =$models->get_data_template_footer($project->TemplateId); 
-        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
+        $data["detail"] =  $detail; 
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project["StoreId"]], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/add_project_delivery',$data)); 
     } 
@@ -388,12 +618,25 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel();
 
         $delivery = $models->getdataDelivery($id); 
-        $arr_detail = $models->getdataDetailDelivery($id);
-        $invoice = $models->getdataInvoice($delivery->DeliveryRef);
-        $arr_detail_invoice = $models->getdataDetailInvoice($delivery->DeliveryRef);
+        $arr_detail = $models->getdataDetailDelivery($id); 
+         
 
         $detail = array();
         foreach($arr_detail as $row){
+            if($delivery->InvId > 0){ 
+                $qty_ref = $models->getdataInvoiceByDelivery($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText);
+                $qty_success = $models->getQtyDeliveryByRef($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText) - $row->DeliveryDetailQty;
+            }else if($delivery->POId > 0){
+                $qty_ref = 0;
+                $qty_success = 0;
+            }else if($delivery->SampleId > 0){
+                $qty_ref = 0;
+                $qty_success = 0;
+            }else{
+                $qty_ref = 0;
+                $qty_success = 0;
+    
+            }
             $detail[] = array( 
                 "id" => $row->ProdukId, 
                 "produkid" => $row->ProdukId, 
@@ -402,19 +645,17 @@ class MessageController extends BaseController
                 "varian"=> JSON_DECODE($row->DeliveryDetailVarian,true), 
                 "qty"=> $row->DeliveryDetailQty,
                 "qty_spare"=> $row->DeliveryDetailQtySpare,
-                "qty_ref"=> $models->getdataInvoiceByDelivery($invoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText),
-                "qty_success"=> $models->getQtyDeliveryByRef($invoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText) - $row->DeliveryDetailQty, 
+                "qty_ref"=> $qty_ref,
+                "qty_success"=> $qty_success,
                 "text"=> $row->DeliveryDetailText,
                 "group"=> $row->DeliveryDetailGroup,
                 "type"=> $row->DeliveryDetailType 
             );
         };
+
         $data["delivery"] = $delivery; 
-        $data["detail"] =  $detail;
-        $data["invoice"] =  $invoice;
-        $data["template"] =$models->get_data_template_footer($delivery->TemplateId); 
-        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $invoice->CustomerId], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $invoice->StoreId], 1)->getRow(); 
+        $data["detail"] =  $detail; 
+        $data["template"] =$models->get_data_template_footer($delivery->TemplateId);   
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
     }
@@ -434,7 +675,7 @@ class MessageController extends BaseController
         $files = glob($folder_utama."/".$id. '/proses.*');
         foreach ($files as $file) { 
             $imgData = base64_encode(file_get_contents($file));  
-            $data["image"]  = 'data: '.mime_content_type($file).';base64,'.$imgData; 
+            $data["image"]  = 'data:'.mime_content_type($file).';base64,'.$imgData; 
         }  
         return $this->response->setBody(view('admin/project/delivery/edit_proses_delivery',$data)); 
     } 

@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-delivery-label">Add Delivery</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-delivery-label">Tambah pengiriman dari <?= $project["menu"] ?></h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"> 
@@ -23,7 +23,7 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="SphRef" class="col-sm-2 col-form-label">No. Ref<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= $project->InvCode ?>" disabled>
+                                <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= $project["code"] ?>" disabled>
                             </div>
                         </div>   
                         <div class="row mb-1 align-items-center mt-2">
@@ -94,19 +94,19 @@
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="ToName" class="col-sm-2 col-form-label">Penerima</label>
                             <div class="col-sm-10">
-                                <input class="form-control form-control-sm input-form" id="ToName" value="<?= $project->CustomerName ?>">
+                                <input class="form-control form-control-sm input-form" id="ToName" value="<?= $project["CustomerName"] ?>">
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="ToTelp" class="col-sm-2 col-form-label">No Telp</label>
                             <div class="col-sm-10">
-                                <input class="form-control form-control-sm input-form" id="ToTelp" value="<?= $project->CustomerTelp1 ?>">
+                                <input class="form-control form-control-sm input-form" id="ToTelp" value="<?= $project["CustomerTelp"] ?>">
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
                             <label for="ToAddress" class="col-sm-2 col-form-label">Alamat</label>
                             <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="ToAddress"><?= $project->CustomerAddress ?></textarea>
+                                <textarea  class="form-control form-control-sm input-form" id="ToAddress"><?= $project["CustomerAddress"] ?></textarea>
                             </div>
                         </div> 
                     </div>   
@@ -1199,7 +1199,9 @@
 
         var header = {  
             DeliveryDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
-            DeliveryRef: <?= $project->InvId ?>, 
+            InvId: '<?= $project["InvId"] ?>',  
+            SampleId: '<?= $project["SampleId"] ?>',
+            ProjectId: '<?= $project["project_id"] ?>',
             DeliveryAdmin: $("#SphAdmin").val(), 
             DeliveryArmada: $("#armada").val(), 
             DeliveryRitase: $("#ritase").val(), 
@@ -1246,7 +1248,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-delivery").modal("hide");   
-                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->InvRef ?>']").trigger("click");  
+                        $(".menu-item[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["project_id"] ?>']").trigger("click");  
                     });
                   
                 }else{

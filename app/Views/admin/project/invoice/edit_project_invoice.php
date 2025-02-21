@@ -48,35 +48,33 @@
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
+                            <label for="InvCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                             <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->InvCode ?>" disabled>
+                                <input id="InvCode" name="InvCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->InvCode ?>" disabled>
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphRef1" class="col-sm-2 col-form-label">Ref</label>
+                            <label for="InvRef1" class="col-sm-2 col-form-label">Ref</label>
                             <div class="col-sm-10"> 
-                                <select class="form-select form-select-sm" id="SphRef1" name="SphRef1"  style="width:100%" >
-                                    <option value="0" selected>No Data Selected</option>
-                                </select>  
+                                <input id="InvCode" name="InvCode" type="text" class="form-control form-control-sm input-form" value="<?= $ref ?>" disabled>
                             </div> 
                         </div>  
                         <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
+                            <label for="InvDate" class="col-sm-2 col-form-label">Tanggal</label>
                             <div class="col-sm-10">
-                                <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
+                                <input id="InvDate" name="InvDate" type="text" class="form-control form-control-sm input-form" value="">
                             </div>
                         </div>  
                         <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
+                            <label for="InvAdmin" class="col-sm-2 col-form-label">Admin</label>
                             <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                <select class="form-select form-select-sm" id="InvAdmin" name="InvAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
                             </div>
                         </div> 
                         <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphAddress" class="col-sm-2 col-form-label">Alamat Project</label>
+                            <label for="InvAddress" class="col-sm-2 col-form-label">Alamat Project</label>
                             <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $project->InvAddress ?></textarea>
+                                <textarea  class="form-control form-control-sm input-form" id="InvAddress"><?= $project->InvAddress ?></textarea>
                             </div>
                         </div> 
                     </div>   
@@ -353,7 +351,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="SphSubTotal">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="InvSubTotal">
                                 </div>     
                             </div>
                         </div> 
@@ -364,7 +362,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled id="SphDiscItemTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled id="InvDiscItemTotal" value="0">
                                 </div>     
                             </div>
                         </div> 
@@ -375,7 +373,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SphDiscTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="InvDiscTotal" value="0">
                                 </div>     
                             </div>
                         </div> 
@@ -386,7 +384,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="SphGrandTotal" >
+                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="InvGrandTotal" >
                                 </div>     
                             </div>
                         </div> 
@@ -404,7 +402,7 @@
 <div id="modal-optional"></div>
 <script>    
 
-    $('#SphDate').daterangepicker({
+    $('#InvDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment('<?= $project->InvDate ?>'),
         "endDate":  moment('<?= $project->InvDate ?>'),
@@ -413,7 +411,7 @@
         }
     });
      
-    $("#SphAdmin").select2({
+    $("#InvAdmin").select2({
         dropdownParent: $('#modal-edit-invoice .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
@@ -443,17 +441,17 @@
             cache: true
         }, 
     });
-    $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
+    $('#InvAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
         
     var data_detail_item = JSON.parse('<?= JSON_ENCODE($detail,true) ?>');   
     
-    var isProcessingSphAddCategory = false;
+    var isProcessingInvAddCategory = false;
     add_detail_category = function(el){
-        if (isProcessingSphAddCategory) {
-            //console.log("project sph cancel load");
+        if (isProcessingInvAddCategory) {
+            //console.log("project Inv cancel load");
             return;
         }  
-        isProcessingSphAddCategory = true; 
+        isProcessingInvAddCategory = true; 
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
@@ -491,7 +489,7 @@
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {  
-            isProcessingSphAddCategory = false;
+            isProcessingInvAddCategory = false;
             $(el).html(old_text); 
             $("#modal-edit-invoice").modal("show");
         }); 
@@ -502,14 +500,14 @@
             document.activeElement.blur();
         }
     });
-    var isProcessingSphAddproduk = false;
+    var isProcessingInvAddproduk = false;
 
     $("#btn-add-product").click(function(){
-        if (isProcessingSphAddproduk) {
-            //console.log("project sph cancel load");
+        if (isProcessingInvAddproduk) {
+            //console.log("project Inv cancel load");
             return;
         }  
-        isProcessingSphAddproduk = true; 
+        isProcessingInvAddproduk = true; 
         let old_text = $("#btn-add-product").html();
         $("#btn-add-product").html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
@@ -517,7 +515,7 @@
             method: "POST",
             url: "<?= base_url() ?>message/select-produk", 
             success: function(data) {  
-                isProcessingSphAddproduk = false; 
+                isProcessingInvAddproduk = false; 
                 $("#btn-add-product").html(old_text);
                 
                 $("#modal-optional").html(data);
@@ -555,7 +553,7 @@
                 });
             },
             error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSphAddproduk = false;
+                isProcessingInvAddproduk = false;
                 $("#btn-add-product").html(old_text); 
 
                 Swal.fire({
@@ -687,11 +685,11 @@
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.price * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
+        var grandtotal =  total - discitem - $("#InvDiscTotal").val().replace(/[^0-9-]/g, ''); 
 
-        $("#SphSubTotal").val(total.toLocaleString('en-US')) 
-        $("#SphDiscItemTotal").val(discitem.toLocaleString('en-US')) 
-        $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
+        $("#InvSubTotal").val(total.toLocaleString('en-US')) 
+        $("#InvDiscItemTotal").val(discitem.toLocaleString('en-US')) 
+        $("#InvGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     }
     
     load_produk = function(){
@@ -938,34 +936,34 @@
     }
     load_produk();
 
-    var sph_sub_total = new Cleave(`#SphSubTotal`, {
+    var Inv_sub_total = new Cleave(`#InvSubTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_disc_item_total = new Cleave(`#SphDiscItemTotal`, {
+    var Inv_disc_item_total = new Cleave(`#InvDiscItemTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_disc_total = new Cleave(`#SphDiscTotal`, {
+    var Inv_disc_total = new Cleave(`#InvDiscTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_grand_total = new Cleave(`#SphGrandTotal`, {
+    var Inv_grand_total = new Cleave(`#InvGrandTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    $("#SphDiscTotal").on("keyup",function(){ 
+    $("#InvDiscTotal").on("keyup",function(){ 
         grand_total_harga();
-        if(parseInt($("#SphGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
-            $("#SphDiscTotal").val(0)
+        if(parseInt($("#InvGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
+            $("#InvDiscTotal").val(0)
             grand_total_harga();
         }
     });
@@ -1249,15 +1247,14 @@
         }
 
         var header = {  
-            InvDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
-            InvRef1: $("#SphRef1").val(), 
-            InvAdmin: $("#SphAdmin").val(),  
-            InvAddress: $("#SphAddress").val(), 
+            InvDate: $("#InvDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
+            InvAdmin: $("#InvAdmin").val(),  
+            InvAddress: $("#InvAddress").val(), 
             TemplateId: $($(".template-footer").find("select")[0]).val(), 
-            InvSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
-            InvDiscItemTotal: $("#SphDiscItemTotal").val().replace(/[^0-9]/g, ''), 
-            InvDiscTotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
-            InvGrandTotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
+            InvSubTotal: $("#InvSubTotal").val().replace(/[^0-9]/g, ''), 
+            InvDiscItemTotal: $("#InvDiscItemTotal").val().replace(/[^0-9]/g, ''), 
+            InvDiscTotal: $("#InvDiscTotal").val().replace(/[^0-9]/g, ''), 
+            InvGrandTotal: $("#InvGrandTotal").val().replace(/[^0-9]/g, '')
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){  
@@ -1309,7 +1306,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-invoice").modal("hide");  
-                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->InvRef ?>']").trigger("click");    
+                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
                     });
                   
                 }else{
