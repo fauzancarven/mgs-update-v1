@@ -54,6 +54,12 @@
         left: 50px;
         top: 10px;
         object-fit: contain;
+    }  
+    .logo.mgs img{
+        top: 0px;
+        left: 30px;
+        height: 80px;
+        width: 140px;
     }
     .deskripsi{
         position: absolute;
