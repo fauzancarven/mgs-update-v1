@@ -759,7 +759,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex gap-2"> 
-                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").'  
+                            ' . ($item->SampleDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->SampleDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SampleDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->SampleDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SampleDetailGroup.'</span> 
@@ -1151,7 +1151,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex gap-2"> 
-                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").'  
+                            ' . ($item->SphDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailGroup.'</span> 
@@ -1340,7 +1340,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex gap-2">
-                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default'>").'  
+                            ' . ($item->InvDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailGroup.'</span> 
@@ -1701,7 +1701,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-5 my-1 varian">   
                         <div class="d-flex gap-2">
-                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default'>").'  
+                            ' . ($item->DeliveryDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
@@ -5298,7 +5298,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-6 my-1 varian">   
                         <div class="d-flex gap-2">
-                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default'>").'  
+                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase">'.$item->PODetailText.'</span>
                                 <span class="text-detail-2 text-truncate">'.$item->PODetailGroup.'</span> 
@@ -6516,6 +6516,7 @@ class ProjectModel extends Model
         $builder->join('sample',"sample.SampleId=delivery.SampleId","left");  
         $builder->join('pembelian',"pembelian.POId=delivery.POId","left");   
         $builder->join('project',"project.ProjectId=delivery.ProjectId","left");   
+        $builder->join('customer',"project.CustomerId=customer.CustomerId","left");   
         $builder->join('store',"store.StoreId=project.StoreId","left"); 
         $builder->join("template_footer","delivery.TemplateId = template_footer.TemplateFooterId");
         $builder->where('delivery.DeliveryId',$id);  

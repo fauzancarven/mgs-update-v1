@@ -291,7 +291,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-project").modal("hide");  
-                        table.ajax.reload(null, false).responsive.recalc().columns.adjust();
+                        loader_datatable();
                     });
                   
                 }else{

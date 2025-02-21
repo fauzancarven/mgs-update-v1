@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'DEL_INV_'.$project->CustomerName.'_'.$project->InvDate ?></title>
+    <title><?= 'DEL_INV_'.$delivery->CustomerName.'_'.$delivery->DeliveryDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
 </head>

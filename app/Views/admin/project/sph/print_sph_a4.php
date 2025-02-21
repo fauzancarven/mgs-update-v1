@@ -253,6 +253,10 @@
     li {
         padding: 0 5px;
     } 
+    ol > li > ul {
+        padding: 0;
+        margin: 0;
+    }
     .footer table, .footer th, .footer td { 
         border-collapse: collapse;
         text-align:center;
@@ -392,7 +396,8 @@
         </table>
         <div style="padding-left:20px">
             Term and Condition :   
-            <?= $sph->TemplateFooterDetail ?> 
+            <!-- <?= $sph->TemplateFooterDetail ?>  -->
+            <ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Pembayaran&nbsp;Melalui&nbsp;Bank&nbsp;Transfer&nbsp;Pada&nbsp;No.&nbsp;<strong>Rekening&nbsp;BCA,&nbsp;MAHIERA&nbsp;GLOBAL&nbsp;SOLUTION&nbsp;2370448356</strong></li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Transaksi&nbsp;yang&nbsp;sudah&nbsp;dilakukan&nbsp;baik&nbsp;<strong>DP&nbsp;atau&nbsp;PelunasanTidak&nbsp;Dapat&nbsp;Dikembalikan</strong></li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Barang&nbsp;yang&nbsp;sudah&nbsp;dibeli&nbsp;tidak&nbsp;dapat&nbsp;<strong>ditukar/dikembalikan</strong></li><li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>Jasa Barang</li><li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>Data Barang</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>test lah</li></ol>
         </div> 
     </div> 
 </body>
