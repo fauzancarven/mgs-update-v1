@@ -360,6 +360,26 @@ class ProjectModel extends Model
         $builder = $this->db->table($this->table);
         $builder->join("customer","customer.CustomerId = project.CustomerId ");
         $builder->join("store","store.StoreId = project.StoreId"); 
+        
+        if($filter["datestart"] !== "") $builder->where("ProjectDate >=",$filter["datestart"]);
+        if($filter["dateend"] !== "") $builder->where("ProjectDate <=",$filter["dateend"]);
+
+        if(isset($filter["filter"]["store"])){
+            $builder->whereIn("project.StoreId",$filter["filter"]["store"]);
+        } 
+        if(isset($filter["filter"]["kategori"])){
+            $builder->whereIn("ProjectCategory",array_map(function($nilai) {
+                return '%' . $nilai . '%';
+            }, $filter["filter"]["kategori"]));
+        }  
+        
+        $builder->groupStart(); 
+        if(isset($filter["search"])){
+            $builder->like("ProjectAdmin",$filter["search"]);
+            $builder->orLike("ProjectComment",$filter["search"]);
+        }
+
+        $builder->groupEnd(); 
         $builder->orderby('ProjectDate', 'DESC'); 
         $query = $builder->get()->getResult();  
         $html = "";
@@ -5805,7 +5825,19 @@ class ProjectModel extends Model
 
         return JSON_ENCODE(array("status"=>true));
     } 
-
+    public function insert_data_project_category($data){
+        $builder = $this->db->table("project_category"); 
+        $builder->insert(array(
+            "name"=>$data["name"], 
+        )); 
+        
+        $builder = $this->db->table("project_category");
+        $builder->select('*');
+        $builder->orderby('id', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();
+        echo json_encode(array("status"=>true,"data"=>$query)); 
+    }
     /**
      * FUNCTION UNTUK Sample
      */ 

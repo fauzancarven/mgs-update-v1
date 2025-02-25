@@ -189,6 +189,7 @@ class ActionController extends BaseController
             echo $models->update_data_project($postData,$id); 
         }
     }
+    
     public function project_delete($id){
         $request = Services::request();
         $models = new ProjectModel(); 
@@ -198,6 +199,14 @@ class ActionController extends BaseController
         }
     }
 
+    public function project_add_category(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->insert_data_project_category($postData); 
+        }
+    }
     public function sample_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

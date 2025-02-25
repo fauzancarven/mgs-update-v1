@@ -836,23 +836,6 @@
         outline: 0 !important;
         box-shadow: none;
     } 
-    .search-data .input-group{
-        position:relative;
-        width: 15rem !important;
-    }
-    .search-data .input-group i {
-        position: absolute;
-        left: 0.75rem;
-        top: 50%;
-        transform: translatey(-50%);
-        z-index: 100;
-        font-size: 0.75rem;
-        color: #6b6b6b;
-    }
-    .search-data .input-group input{
-        padding-left: 2rem;
-        border-radius:0.5rem !important;
-    }
    
     .card.project {
         border: 1px solid #e3e3e3;
@@ -1234,23 +1217,7 @@
     }
     .group-header.project-hide i {
         transform: rotate(0);
-    }
-    /* .group-list {
-        transform: scaleY(0);
-        transform-origin: top;
-        opacity: 0;
-        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, height 1s;
-        height: 0;
-    }
-    .group-list.hide {
-        opacity: 1;
-        height: auto;
-        transform: scaleY(1);
-        transition: transform 0.5s ease-in-out;
-    }
-    .group-header.hide .text-head-2 {
-        color: #0000e6;
-    } */
+    } 
     a{
         cursor: pointer;
     }
@@ -1260,6 +1227,63 @@
     .form-check-input:checked {
         background-color: #001935;
         border-color: #225fba;
+    }
+
+    .search-data > .input-group{
+        position:relative;
+        width: 15rem !important;
+    }
+    .search-data > .input-group > i {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translatey(-50%);
+        z-index: 100;
+        font-size: 0.75rem;
+        color: #6b6b6b;
+    }
+    .search-data > .input-group > input{
+        padding-left: 2rem;
+        border-radius:0.5rem !important;
+    }
+
+    .search-data .input-group.active input{
+        border: 1px solid #002247 !important;
+    }
+    .search-data > .input-group > i.fa-caret-down {
+        left: 92%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1rem;
+    }
+    .search-data > .input-group.active > i.fa-caret-down { 
+        transform: translate(-50%, -50%) rotate(180deg); 
+    }
+    .input-group .filter-data {
+        position: absolute;
+        z-index: 10;
+        top: 100%;
+        width: 100%;
+        padding: 5px 0; 
+        display: none;
+    }
+    .input-group .filter-data .list-group{
+        box-shadow: 0 0 5px 0 #00224745;
+    }
+    .input-group .filter-list {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 100%;
+        z-index: 1000;
+        margin: 5px 10px;
+        width: 15rem;
+        box-shadow: 0 0 5px 0 #00224745;
+        max-height:10rem;
+        overflow-y: auto;
+    } 
+    .input-group.active .filter-data {
+        display: block;
     }
 </style>
 

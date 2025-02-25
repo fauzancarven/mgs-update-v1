@@ -30,7 +30,7 @@
                             <select class="form-select form-select-sm" style="width:100%" id="store-project"></select> 
                         </div>
                         <div class="col-12 col-md-6">
-                            <label for="category-project" class="col-form-label">admin:</label>
+                            <label for="admin-project" class="col-form-label">admin:</label>
                             <select class="form-select form-select-sm" style="width:100%" id="admin-project"></select>
                         </div>
                     </div> 
@@ -153,7 +153,7 @@
     $('#admin-project').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
     $("#category-project").select2({
         dropdownParent: $('#modal-add-project .modal-content'),
-        tags: true,
+        tags: true, 
         tokenSeparators: [','],
         placeholder: "Pilih Kategori",
         ajax: {
@@ -181,8 +181,46 @@
                 };
             },
             cache: true
+        },  
+        createTag: function(params) {
+            return {
+                id: params.term,
+                text: params.term, 
+                tags: true // menandai tag baru
+            };
+        },
+        createTagText: function(params) {
+            return "Tambah '" + params.term + "'";
+        },  
+        templateResult: function(params) {
+            if (params.newTag) {
+                return "Tambah '" + params.text.toUpperCase() + "'";
+            }
+            if (params.loading) return params.text; 
+            return params.text.toUpperCase();
+            //return params.text;
+        },
+        templateSelection: function(params) {
+            return params.text.toUpperCase();
         }, 
-    });
+        //escapeMarkup: function(m) { return m; }
+    }).on("select2:select", function(e) {  
+        var data = e.params.data;    
+        if (e.params.data.tags) { 
+            console.log(e.params.data);
+            $.ajax({ 
+                dataType: "json",
+                method: "POST",
+                data: {
+                    name: e.params.data.text
+                },
+                url: "<?= base_url() ?>action/add-data-project-category",   
+                success: function(data) {    
+                    
+                }, 
+            }); 
+        }
+    }); 
     $("#store-project").select2({
         dropdownParent: $('#modal-add-project .modal-content'),
         placeholder: "Pilih Toko",

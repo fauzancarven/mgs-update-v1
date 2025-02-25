@@ -5,8 +5,10 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UserModel;
+use App\Models\ProjectModel;
+use App\Models\StoreModel;
 
-
+ 
 use \App\Models\AuthgroupModel;
 use CodeIgniter\Session\Session;
 use Myth\Auth\Config\Auth as AuthConfig;
@@ -118,11 +120,17 @@ class AdminController extends BaseController
     }
     public function project()
     {   
+        $models = new ProjectModel();
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
         $data = [
             'notif' => [],
             'session' => $this->session,
             'title' => 'Project',
-            'menu' => ""
+            'menu' => "",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => "",
+            'admin' => $modelsuser->get()->getResult()
         ]; 
         return view('admin/project/index', $data); 
     }

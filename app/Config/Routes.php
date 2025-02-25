@@ -57,6 +57,7 @@ $routes->post('/action/get-data-project/(:any)', 'ActionController::project/$1',
 $routes->post('/action/add-data-project', 'ActionController::project_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-project/(:any)', 'ActionController::project_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project/(:num)', 'ActionController::project_delete/$1', ['filter' => 'login']);
+$routes->post('/action/add-data-project-category', 'ActionController::project_add_category', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 

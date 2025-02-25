@@ -25,21 +25,111 @@
 </div>
 
 <!-- BAGIAN FILTER -->
-<div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data"> 
+<div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">  
+    <div class="input-group ">  
+        <input class="form-control form-control-sm input-form" id="searchdatafilter" placeholder="Pilih Filter" value="" type="text">
+        <i class="fa-solid fa-filter"></i>
+        <i class="fa-solid fa-caret-down"></i>
+        <div class="filter-data" for="searchdatafilter">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center utama">
+                    <span class="ms-2 me-auto">Toko</span> 
+                    <span class="badge text-bg-primary rounded-pill" id="badge-store"></span>
+                    <i class="fa-solid fa-angle-right"></i>
+                </li>
+                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center utama">
+                    <span class="ms-2 me-auto">Kategori</span>
+                    <span class="badge text-bg-primary rounded-pill"  id="badge-kategory"></span>
+                    <i class="fa-solid fa-angle-right"></i>
+                </li> 
+                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center utama">
+                    <span class="ms-2 me-auto">Admin</span>
+                    <span class="badge text-bg-primary rounded-pill"  id="badge-user"></span>
+                    <i class="fa-solid fa-angle-right"></i>
+                </li> 
+                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center utama">
+                    <span class="ms-2 me-auto">Status</span>
+                    <span class="badge text-bg-primary rounded-pill"  id="badge-status"></span>
+                    <i class="fa-solid fa-angle-right"></i>
+                </li> 
+            </ul>
+        </div>
+        <div class="filter-list" data-value="Toko">
+            <ul class="list-group">
+                <?php
+                    foreach($store as $rows){
+                        echo ' 
+                        <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->StoreCode.'">
+                            <div class="form-check w-100">
+                                <input class="form-check-input" type="checkbox" data-group="store" data-value="'.$rows->StoreId.'" value="'.$rows->StoreId.'" id="'.$rows->StoreCode.'">
+                                <label class="form-check-label ps-0 ms-0" for="'.$rows->StoreCode.'">
+                                    '.$rows->StoreCode.' 
+                                </label>
+                            </div> 
+                        </li>';
+                    }
+                ?> 
+            </ul>
+        </div>
+        <div class="filter-list" data-value="Kategori">
+            <ul class="list-group">
+                <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" data-group="kategori" data-value="0" value="" id="defaultCheck1">
+                        <label class="form-check-label ps-0 ms-0" for="defaultCheck1">
+                            check Kategori
+                        <i class="input-helper"></i></label>
+                    </div> 
+                </li> 
+            </ul>
+        </div>
+        <div class="filter-list" data-value="Admin">
+            <ul class="list-group">
+            <?php
+                    foreach($admin as $rows){
+                        echo ' 
+                        <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->username.'">
+                            <div class="form-check w-100">
+                                <input class="form-check-input" type="checkbox" data-group="user" data-value="'.$rows->id.'" id="'.$rows->username.'">
+                                <label class="form-check-label ps-0 ms-0" for="'.$rows->username.'">
+                                    '.$rows->username.' 
+                                </label>
+                            </div> 
+                        </li>';
+                    }
+                ?>  
+            </ul>
+        </div>
+        <div class="filter-list" data-value="Status">
+            <ul class="list-group">
+                <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                    <div class="form-check w-100">
+                        <input class="form-check-input" type="checkbox" data-group="status" data-value="sample" value="" id="statussample">
+                        <label class="form-check-label ps-0 ms-0" for="statussample">
+                            Sample
+                        <i class="input-helper"></i></label>
+                    </div> 
+                </li> 
+                <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                    <div class="form-check w-100">
+                        <input class="form-check-input" type="checkbox" data-group="status" data-value="penawaran" value="" id="statuspenawaran">
+                        <label class="form-check-label ps-0 ms-0" for="statuspenawaran">
+                            Penawaran
+                        <i class="input-helper"></i></label>
+                    </div> 
+                </li> 
+            </ul>
+        </div>
+    </div>
+    <div class="input-group ">  
+        <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="">
+        <i class="fa-solid fa-calendar-days"></i> 
+    </div> 
     <div class="input-group flex-fill">  
-        <input class="form-control form-control-sm input-form" id="searchdataproject" placeholder="Search" value="" type="text">
+        <input class="form-control form-control-sm input-form" id="searchdataproject" placeholder="Cari nama project, catatan, item barang ataupun nomer dokumen" value="" type="text">
         <i class="fa-solid fa-magnifying-glass"></i> 
     </div>  
-    <div class="input-group ">  
-        <input class="form-control form-control-sm input-form" id="searchdatafilter" placeholder="Filter Category" value="" type="text">
-        <i class="fa-solid fa-filter"></i>
-    </div>
-    <div class="input-group ">  
-        <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text">
-        <i class="fa-solid fa-calendar-days"></i> 
-    </div>
 </div>
-
 <div id="data-project">
     <!-- <div class="card project"> 
         <div class="card-body p-0"> 
@@ -267,19 +357,26 @@
 <script>
     var table; 
   
-    $("#input-search-data").keyup(function(){
-        table.ajax.reload(null, false).responsive.recalc().columns.adjust();
-    })
+    var filter_arr = {
+        "store":[],
+        "kategori":[],
+        "user":[],
+        "status":[],
+    };
     $("#btn-search-data").click(function(){
         table.ajax.reload(null, false).responsive.recalc().columns.adjust();
     })
 
-    loader_datatable = function(){
+    function loader_datatable(){
         $.ajax({ 
             dataType: "json",
             method: "POST",
             url: "<?= base_url()?>datatables/get-data-project", 
             data:{  
+                "search" : $("#searchdataproject").val(),
+                "filter" : filter_arr,
+                "datestart" : $("#searchdatadate").data("start"),
+                "dateend" : $("#searchdatadate").data("end"),
             },
             success: function(data) {       
                 if(data["status"]===true){ 
@@ -1416,6 +1513,99 @@
     }
 
     
+</script>
+
+<script>
+    // FILTER GROUP
+    $("#searchdatafilter").click(function(){
+        if($(this).parent().hasClass("active")){
+            $(this).parent().removeClass("active");
+        }else{ 
+            $(this).parent().addClass("active"); 
+            var ele = $(this);
+            $(document).on('click', function(event) { 
+                if (!$(event.target).closest(ele).length  && !$(event.target).closest(".filter-data").length  && !$(event.target).closest(".filter-list").length) {
+                    $(ele).parent().removeClass('active');
+                }
+            });
+        }
+    })
+    $(".filter-data .list-group-item").hover(function(){ 
+        $(".filter-list[data-value='" +  $(this).find("span").html() + "'").show();
+        $(".filter-list[data-value='" +  $(this).find("span").html() + "'").css("top",$(this).position()["top"] + 30)  
+    }, function () {  
+        if (!$(".filter-list[data-value='" +  $(this).find("span").html() + "'").is(':hover')) { 
+            
+            $(".filter-list[data-value='" +  $(this).find("span").html() + "'").hide();
+        }else{
+            var ele = $(this);
+            $(".filter-list[data-value='" +  $(this).find("span").html() + "'").hover(function() { 
+                $(this).show();
+            }, function() { 
+                if (!$(ele).is(':hover') && !$(this).is(':hover')) {
+                    $(this).hide();
+                }
+            }); 
+        }
+    }); 
+    function tambahArray(filter_arr, namaGrup, nilai) {
+        if (!filter_arr[namaGrup]) {
+            filter_arr[namaGrup] = [];
+        }
+        filter_arr[namaGrup].push(nilai);  
+    } 
+    function hapusArray(filter_arr, namaGrup, nilai) {
+        if (filter_arr[namaGrup]) {
+            var index = filter_arr[namaGrup].indexOf(nilai);
+            if (index !== -1) {
+            filter_arr[namaGrup].splice(index, 1);
+            }
+        } 
+    } 
+    function load_badge(){
+        (filter_arr["store"].length === 0 ?  $("#badge-store").html("") : $("#badge-store").html(filter_arr["store"].length));
+        (filter_arr["kategori"].length === 0 ?  $("#badge-kategori").html("") : $("#badge-kategori").html(filter_arr["kategori"].length));
+        (filter_arr["user"].length === 0 ? $("#badge-user").html("") : $("#badge-user").html(filter_arr["user"].length));
+        (filter_arr["status"].length === 0 ? $("#badge-status").html("") : $("#badge-status").html(filter_arr["status"].length));
+
+        var total = parseInt(filter_arr["store"].length) + parseInt(filter_arr["kategori"].length) + parseInt(filter_arr["user"].length) + parseInt(filter_arr["status"].length)
+        console.log(total);
+        (total === 0 ?  $("#searchdatafilter").val("") : $("#searchdatafilter").val(total + " dipilih"));
+        loader_datatable();
+    }
+    $('.form-check-input').on('change', function() {
+        if ($(this).is(':checked')) {
+            tambahArray(filter_arr,$(this).data("group"), $(this).data("value"));  
+        } else {
+            hapusArray(filter_arr,$(this).data("group"), $(this).data("value")); 
+        } 
+        load_badge();
+    });
+
+    // FILTER TANGGAL
+    $('#searchdatadate').daterangepicker({  
+        autoUpdateInput: false,
+        locale: {
+            format: 'DD MMMM YYYY',
+            cancelLabel: 'Reset'
+        }
+    });
+    $('#searchdatadate').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('DD MMM YYYY') + ' - ' + picker.endDate.format('DD MMM YYYY'));
+        $(this).data("start",picker.startDate.format('YYYY/MM/DD'))
+        $(this).data("end",picker.endDate.format('YYYY/MM/DD'))
+        loader_datatable();
+    }).on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+        $(this).data("start","")
+        $(this).data("end","")
+        loader_datatable();
+    });
+
+     // FILTER SEARCH
+    $("#searchdataproject").keyup(function(){
+        loader_datatable();
+    })
 </script>
 
 
