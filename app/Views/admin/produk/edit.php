@@ -136,7 +136,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
 <script>  
 
     /** BAGIAN IMAGE UPLOAD */
-    var image_list = JSON.parse(`<?= json_encode($_produkimage) ?>`);
+    var image_list = JSON.parse(`<?= json_encode($_produkimage) ?>`); 
     for(var i=0; image_list.length > i; i++){
         $("#list-produk").append(`<div class="image-default-obi border">
                 <img src="${image_list[i]}" draggable="true"> 

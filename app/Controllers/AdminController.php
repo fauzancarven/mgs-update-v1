@@ -8,7 +8,11 @@ use App\Models\UserModel;
 use App\Models\ProjectModel;
 use App\Models\StoreModel;
 use App\Models\ProjectcategoryModel;
- 
+use App\Models\ProdukvarianModel;
+use App\Models\ProdukvarianvalueModel;
+use App\Models\VendorModel; 
+use App\Models\ProdukcategoryModel;
+
 use \App\Models\AuthgroupModel;
 use CodeIgniter\Session\Session;
 use Myth\Auth\Config\Auth as AuthConfig;
@@ -109,11 +113,20 @@ class AdminController extends BaseController
     }
     public function produk()
     {   
+        $varian = new ProdukvarianModel();
+        $category = new ProdukcategoryModel();
+        $variandetail = new ProdukvarianvalueModel();
+        $vendor = new VendorModel();
         $data = [
             'notif' => [],
             'session' => $this->session,
             'title' => 'Produk',
-            'menu' => "Master"
+            'menu' => "Master",
+            'category' => $category->get()->getResult(),
+            'vendor' => $vendor->get()->getResult(),
+            'varian' => $varian->get()->getResult(),
+            'varian_detail' => $variandetail->get()->getResult(),
+            'varianlist' => ''
         ]; 
         return view('admin/produk/index', $data);
         

@@ -1280,9 +1280,12 @@
         margin: 5px 10px;
         width: 15rem;
         box-shadow: 0 0 5px 0 #00224745;
-        max-height:10rem;
-        overflow-y: auto;
     } 
+    .input-group .filter-list ul {
+        overflow-y:auto;
+        max-height:10rem;
+    }
+
     .input-group.active .filter-data {
         display: block;
     }

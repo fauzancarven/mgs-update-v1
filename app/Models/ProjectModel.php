@@ -550,6 +550,14 @@ class ProjectModel extends Model
             </div>';
         }
         
+        if($html == ""){ 
+            $html = '
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <img src="'.base_url().'assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                    <span class="text-head-2">Tidak ada data yang ditemukan</span> 
+                </div> 
+            ';
+        }
         return json_encode(
             array(
                 "status"=>true,

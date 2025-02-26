@@ -151,6 +151,177 @@ class ProdukModel extends Model
         });
         return $dt->generate();
     }
+    
+    public function load_table_produk($filter = null){
+        $builder = $this->db->table($this->table);
+        $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");   
+        // if(isset($filter["filter"])){
+        //     $builder->groupStart(); 
+        //     foreach($filter["filter"]["user"] as $row){
+        //         $builder->orLike("UserId",$row);
+        //     } 
+        //     $builder->groupEnd(); 
+        // }
+        // $builder->groupStart();  
+        if(isset($filter["search"])){
+            $builder->groupStart(); 
+            $builder->like("ProdukCode",$filter["search"]);
+            $builder->orLike("ProdukName",$filter["search"]);
+            $builder->orLike("ProdukCategoryName",$filter["search"]); 
+            $builder->groupEnd(); 
+        }
+        if(isset($filter["category"])){  
+            $builder->whereIn("ProdukCategoryCode",$filter["category"]);
+        } 
+        // $builder->groupEnd(); 
+
+        $builder->orderby('produk.ProdukCategoryId ASC, ProdukName ASC');   
+
+        $perPage = 10;
+        $page = $filter["paging"]; // atau dapatkan dari parameter GET 
+        $offset = ($page - 1) * $perPage; 
+        $builder->limit($perPage, $offset);
+        $query = $builder->get();   
+        $count = $query->getNumRows();
+        $html = "";
+
+        foreach($query->getResult() as $row){  
+            $html .= '<div class="row align-items-start justify-content-between py-2 my-2 border-bottom">';
+            // IMAGE AND NAME PRODUK
+            $folder = 'assets/images/produk/'.$row->ProdukId."/";
+            $default = 'assets/images/produk/default.png';
+            
+            if (!file_exists($folder)) {
+                mkdir($folder, 0777, true);  
+            } 
+            $files = array_diff(scandir($folder), array('.', '..'));  
+            $gambar = null;
+
+            foreach ($files as $file) {
+                if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                    $gambar = $folder . $file;
+                    break;
+                }
+            } 
+            $html .=   ' 
+            <div class="col-4 d-flex align-items-center">
+                    <div class="flex-shrink-0 ">
+                        ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='image-produk'>" : "<img class='image-produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").' 
+                    </div>
+                    <div class="flex-grow-1 ms-3 ">
+                        <div class="d-flex flex-column">
+                            <span class="text-head-1">'.$row->ProdukName.'</span>
+                            <span class="text-detail-1 text-truncate">'.$row->ProdukCode.' - '.$row->ProdukCategoryName.'</span> 
+                        </div>
+                    </div>
+            </div>'; 
+ 
+            
+            // VENDOR AND VARIAN PRODUK
+            $vendorhtml="";
+            $datavendor = json_decode($row->ProdukVendor); 
+            foreach ($datavendor as $varian) {  
+                $vendorhtml .= '<span class="badge badge-3">'.$varian->text.'</span>';  
+            } 
+            $vendorhtml = '<span class="fw-bold font-std">Vendor</span><div class="d-flex gap-1">'.$vendorhtml.'</div>';
+
+            $split_varian = json_decode($row->ProdukVarian); 
+            $html_varian = "";
+            $data = $split_varian;
+            $i = 0;
+            foreach ($data as $varian) { 
+                $html_varian = "";
+                foreach ($varian->value as $value) {
+                    $html_varian .= '<span class="badge badge-'.fmod($i, 5).'">'.$value->text.'</span>';  
+                }
+                $i++;
+                $vendorhtml .= '<span class="fw-bold font-std mt-2">'.$varian->varian.'</span><div class="d-flex gap-1">'.$html_varian.'</div>';
+            } 
+
+            $html .= '<div class="col-4 d-flex flex-column">'.$vendorhtml.'</div>';
+
+
+            // PRICE PRODUK
+            $html .= '<div class="col-2">';
+            if (strpos($row->ProdukPrice, '-') !== false) {
+                list($min, $max) = explode(' - ', $row->ProdukPrice);
+                $html .= "<span class='text-head-2'>Rp. " . number_format($min, 0, ',', '.') . " - Rp. " . number_format($max, 0, ',', '.')."</span>";
+            } else {
+                $html .=  "<span class='text-head-2'>Rp. " . number_format($row->ProdukPrice, 0, ',', '.')."</span>";
+            }  
+            $html .= '</div>';
+
+
+            //ACTION 
+            
+            $html .= '
+            <div class="col-2">
+                <div class="d-md-flex d-none"> 
+                    <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$row->ProdukId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
+                    <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProdukId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                </div>
+                <div class="d-md-none d-flex btn-action"> 
+                    <div class="dropdown">
+                        <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="ti-more-alt icon-rotate-45"></i>
+                        </a>
+                        <ul class="dropdown-menu shadow">
+                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$row->ProdukId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$row->ProdukId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                        </ul>
+                    </div>
+                </div>
+            </div>';
+
+            $html .=  '</div>';
+        }
+
+        if($html == ""){ 
+            $html = '
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <img src="'.base_url().'assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                    <span class="text-head-2">Tidak ada data yang ditemukan</span> 
+                </div> 
+            ';
+        }
+        $html = '
+            <div class="row pb-4">
+                <div class="col-4"><span class="text-head-1">Nama</span></div>
+                <div class="col-4"><span class="text-head-1">Varian</span></div>
+                <div class="col-2"><span class="text-head-1">Harga</span></div>
+                <div class="col-2"><span class="text-head-1">Action</span></div>
+            </div>
+        '.$html;
+
+
+
+
+        $builder = $this->db->table($this->table);
+        $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");  
+        if(isset($filter["search"])){
+            $builder->groupStart(); 
+            $builder->like("ProdukCode",$filter["search"]);
+            $builder->orLike("ProdukName",$filter["search"]);
+            $builder->orLike("ProdukCategoryName",$filter["search"]); 
+            $builder->groupEnd(); 
+        }  
+        if(isset($filter["category"])){  
+            $builder->whereIn("ProdukCategoryCode",$filter["category"]);
+        } 
+        $countTotal = $builder->get()->getNumRows();
+        return json_encode(
+            array(
+                "status"=>true,
+                "html"=>$html,
+                "total"=>$countTotal,
+                "totalresult"=>$count,
+                "paging"=>$offset,
+            )
+        );
+
+
+    }
+    
     public function getHtml($data) {
         $folder = 'assets/images/produk/'.$data["ProdukId"]."/";
         $default = 'assets/images/produk/default.png';

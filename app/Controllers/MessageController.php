@@ -87,7 +87,7 @@ class MessageController extends BaseController
             ->join("produk_category","produk_category.ProdukCategoryId = produk.ProdukCategoryId")
             ->getWhere(['ProdukId' => $id], 1)->getRow(); 
         $data["_produkdetail"] = $models->getproductdetail($data["_produk"]->ProdukId); 
-        $data["_produkimage"] = $models->getproductimage($data["_produk"]->ProdukId); 
+        $data["_produkimage"] = $models->getproductimageAll($data["_produk"]->ProdukId); 
 
         return $this->response->setBody(view('admin/produk/edit.php',$data)); 
     }

@@ -56,7 +56,7 @@ class TableController extends BaseController
         $request = Services::request();
         $datatable = new ProdukModel(); 
         if ($request->getMethod(true) === 'POST') {  
-            echo $datatable->blog_json($request->getPost()["search"]["value"]); 
+            echo $datatable->load_table_produk($request->getPost()); 
         }    
         
     } 

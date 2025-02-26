@@ -27,7 +27,7 @@
 <!-- BAGIAN FILTER -->
 <div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">  
     <div class="input-group ">  
-        <input class="form-control form-control-sm input-form" id="searchdatafilter" placeholder="Pilih Filter" value="" type="text">
+        <input class="form-control form-control-sm input-form" id="searchdatafilter" placeholder="Pilih Filter" value="" type="text" readonly style="background: white;">
         <i class="fa-solid fa-filter"></i>
         <i class="fa-solid fa-caret-down"></i>
         <div class="filter-data" for="searchdatafilter">
@@ -151,7 +151,7 @@
         </div>
     </div>
     <div class="input-group ">  
-        <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="">
+        <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="" readonly style="background: white;">
         <i class="fa-solid fa-calendar-days"></i> 
     </div> 
     <div class="input-group flex-fill">  
@@ -159,6 +159,7 @@
         <i class="fa-solid fa-magnifying-glass"></i> 
     </div>  
 </div>
+
 <div id="data-project">
     <!-- <div class="card project"> 
         <div class="card-body p-0"> 
@@ -395,9 +396,13 @@
     $("#btn-search-data").click(function(){
         table.ajax.reload(null, false).responsive.recalc().columns.adjust();
     })
-
+    var xhr_load_project;
     function loader_datatable(){
-        $.ajax({ 
+        if (xhr_load_project) {
+            xhr_load_project.abort();
+        }
+
+        xhr_load_project = $.ajax({ 
             dataType: "json",
             method: "POST",
             url: "<?= base_url()?>datatables/get-data-project", 
@@ -452,6 +457,10 @@
 
             },
             error : function(xhr, textStatus, errorThrown){   
+                if (textStatus === 'abort') {
+                    // request AJAX dibatalkan, tidak perlu menampilkan error
+                    return;
+                }
                 Swal.fire({
                     icon: 'error',
                     text: xhr["responseJSON"]['message'], 
@@ -1602,6 +1611,7 @@
         (total === 0 ?  $("#searchdatafilter").val("") : $("#searchdatafilter").val(String(total) + " dipilih"));
         loader_datatable();
     }
+
     $('.form-check-input').on('change', function() {
         if ($(this).is(':checked')) {
             tambahArray(filter_arr,$(this).data("group"), $(this).data("value"));  
