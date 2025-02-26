@@ -1068,6 +1068,7 @@
         left: 2rem;
         height: 100%;
         z-index: 2;
+        width: 8rem;
         box-shadow: 2px 3px 2px 0px #ededed;
     }
     .ql-editor{
@@ -1238,7 +1239,7 @@
         left: 0.75rem;
         top: 50%;
         transform: translatey(-50%);
-        z-index: 100;
+        z-index: 10;
         font-size: 0.75rem;
         color: #6b6b6b;
     }

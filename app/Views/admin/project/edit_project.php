@@ -188,8 +188,44 @@
                 };
             },
             cache: true
+        }, createTag: function(params) {
+            return {
+                id: params.term,
+                text: params.term, 
+                tags: true // menandai tag baru
+            };
+        },
+        createTagText: function(params) {
+            return "Tambah '" + params.term + "'";
+        },  
+        templateResult: function(params) {
+            if (params.newTag) {
+                return "Tambah '" + params.text.toUpperCase() + "'";
+            }
+            if (params.loading) return params.text; 
+            return params.text.toUpperCase();
+            //return params.text;
+        },
+        templateSelection: function(params) {
+            return params.text.toUpperCase();
         }, 
-    });
+    }).on("select2:select", function(e) {  
+        var data = e.params.data;    
+        if (e.params.data.tags) { 
+            console.log(e.params.data);
+            $.ajax({ 
+                dataType: "json",
+                method: "POST",
+                data: {
+                    name: e.params.data.text
+                },
+                url: "<?= base_url() ?>action/add-data-project-category",   
+                success: function(data) {    
+                    
+                }, 
+            }); 
+        }
+    }); 
     var category = ("<?=  $project->ProjectCategory ?>").split("|");
     for (let i = 0; i < category.length; i++) { 
         $('#category-project').append(new Option(category[i],category[i], true, true)).trigger('change');  

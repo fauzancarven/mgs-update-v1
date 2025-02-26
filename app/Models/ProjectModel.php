@@ -368,15 +368,23 @@ class ProjectModel extends Model
             $builder->whereIn("project.StoreId",$filter["filter"]["store"]);
         } 
         if(isset($filter["filter"]["kategori"])){
-            $builder->whereIn("ProjectCategory",array_map(function($nilai) {
-                return '%' . $nilai . '%';
-            }, $filter["filter"]["kategori"]));
-        }  
-        
+            foreach($filter["filter"]["kategori"] as $row){
+                $builder->orLike("ProjectCategory",'%'.$row.'%');
+            } 
+        }   
+        if(isset($filter["filter"]["user"])){
+            $builder->groupStart(); 
+            foreach($filter["filter"]["user"] as $row){
+                $builder->orLike("UserId",$row);
+            } 
+            $builder->groupEnd(); 
+        }
         $builder->groupStart(); 
         if(isset($filter["search"])){
             $builder->like("ProjectAdmin",$filter["search"]);
             $builder->orLike("ProjectComment",$filter["search"]);
+            $builder->orLike("ProjectName",$filter["search"]);
+            $builder->orLike("ProjectCategory",$filter["search"]);
         }
 
         $builder->groupEnd(); 
@@ -392,7 +400,7 @@ class ProjectModel extends Model
             $date = date_create($row->ProjectDate);
             $html .= '<div class="card project hide"> 
                 <div class="card-body p-0"> 
-                    <div class="d-flex header p-2 gap-1 justify-content-end">
+                    <div class="d-flex header p-2 gap-1 justify-content-end align-items-center">
                         <div class="project-store">   
                             <img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">
                             <span class="text-head-2">'.$row->StoreCode.'</span>

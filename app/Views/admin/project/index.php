@@ -39,7 +39,7 @@
                 </li>
                 <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center utama">
                     <span class="ms-2 me-auto">Kategori</span>
-                    <span class="badge text-bg-primary rounded-pill"  id="badge-kategory"></span>
+                    <span class="badge text-bg-primary rounded-pill"  id="badge-kategori"></span>
                     <i class="fa-solid fa-angle-right"></i>
                 </li> 
                 <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center utama">
@@ -71,16 +71,21 @@
                 ?> 
             </ul>
         </div>
-        <div class="filter-list" data-value="Kategori">
+        <div class="filter-list" data-value="Kategori"> 
             <ul class="list-group">
-                <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" data-group="kategori" data-value="0" value="" id="defaultCheck1">
-                        <label class="form-check-label ps-0 ms-0" for="defaultCheck1">
-                            check Kategori
-                        <i class="input-helper"></i></label>
-                    </div> 
-                </li> 
+                <?php
+                    foreach($kategori as $rows){
+                        echo ' 
+                        <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->id.$rows->name.'">
+                            <div class="form-check w-100">
+                                <input class="form-check-input" type="checkbox" data-group="kategori" data-value="'.$rows->name.'" id="'.$rows->id.$rows->name.'">
+                                <label class="form-check-label ps-0 ms-0" for="'.$rows->name.$rows->name.'">
+                                    '.$rows->name.' 
+                                </label>
+                            </div> 
+                        </li>';
+                    }
+                ?>   
             </ul>
         </div>
         <div class="filter-list" data-value="Admin">
@@ -104,17 +109,41 @@
             <ul class="list-group">
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
-                        <input class="form-check-input" type="checkbox" data-group="status" data-value="sample" value="" id="statussample">
+                        <input class="form-check-input" type="checkbox" data-group="status" data-value="sample" value="sample" id="statussample">
                         <label class="form-check-label ps-0 ms-0" for="statussample">
-                            Sample
+                            Sample Barang
                         <i class="input-helper"></i></label>
                     </div> 
                 </li> 
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
-                        <input class="form-check-input" type="checkbox" data-group="status" data-value="penawaran" value="" id="statuspenawaran">
+                        <input class="form-check-input" type="checkbox" data-group="status" data-value="penawaran" value="penawaran" id="statuspenawaran">
                         <label class="form-check-label ps-0 ms-0" for="statuspenawaran">
                             Penawaran
+                        <i class="input-helper"></i></label>
+                    </div> 
+                </li> 
+                <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                    <div class="form-check w-100">
+                        <input class="form-check-input" type="checkbox" data-group="status" data-value="invoice" value="invoice" id="statusinvoice">
+                        <label class="form-check-label ps-0 ms-0" for="statusinvoice">
+                            Invoice
+                        <i class="input-helper"></i></label>
+                    </div> 
+                </li> 
+                <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                    <div class="form-check w-100">
+                        <input class="form-check-input" type="checkbox" data-group="status" data-value="pengiriman" value="pengiriman" id="statuspengiriman">
+                        <label class="form-check-label ps-0 ms-0" for="statuspengiriman">
+                            Pengiriman
+                        <i class="input-helper"></i></label>
+                    </div> 
+                </li> 
+                <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                    <div class="form-check w-100">
+                        <input class="form-check-input" type="checkbox" data-group="status" data-value="pembelian" value="pembelian" id="statuspembelian">
+                        <label class="form-check-label ps-0 ms-0" for="statuspembelian">
+                            Pembelian
                         <i class="input-helper"></i></label>
                     </div> 
                 </li> 
@@ -1568,9 +1597,9 @@
         (filter_arr["user"].length === 0 ? $("#badge-user").html("") : $("#badge-user").html(filter_arr["user"].length));
         (filter_arr["status"].length === 0 ? $("#badge-status").html("") : $("#badge-status").html(filter_arr["status"].length));
 
-        var total = parseInt(filter_arr["store"].length) + parseInt(filter_arr["kategori"].length) + parseInt(filter_arr["user"].length) + parseInt(filter_arr["status"].length)
-        console.log(total);
-        (total === 0 ?  $("#searchdatafilter").val("") : $("#searchdatafilter").val(total + " dipilih"));
+        //var total = parseInt(filter_arr["store"].length) + parseInt(filter_arr["kategori"].length) + parseInt(filter_arr["user"].length) + parseInt(filter_arr["status"].length)
+        let total = parseInt(filter_arr["store"].length) + parseInt(filter_arr["kategori"].length) + parseInt(filter_arr["user"].length) + parseInt(filter_arr["status"].length);
+        (total === 0 ?  $("#searchdatafilter").val("") : $("#searchdatafilter").val(String(total) + " dipilih"));
         loader_datatable();
     }
     $('.form-check-input').on('change', function() {

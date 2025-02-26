@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UserModel;
 use App\Models\ProjectModel;
 use App\Models\StoreModel;
-
+use App\Models\ProjectcategoryModel;
  
 use \App\Models\AuthgroupModel;
 use CodeIgniter\Session\Session;
@@ -119,17 +119,17 @@ class AdminController extends BaseController
         
     }
     public function project()
-    {   
-        $models = new ProjectModel();
+    {    
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
         $data = [
             'notif' => [],
             'session' => $this->session,
             'title' => 'Project',
             'menu' => "",
             'store' => $modelsstore->get()->getResult(),
-            'kategori' => "",
+            'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
         return view('admin/project/index', $data); 
