@@ -389,9 +389,16 @@ class ProjectModel extends Model
 
         $builder->groupEnd(); 
         $builder->orderby('ProjectDate', 'DESC'); 
-        $query = $builder->get()->getResult();  
+
+        $perPage = 10;
+        $page = $filter["paging"]; // atau dapatkan dari parameter GET 
+        $offset = ($page - 1) * $perPage; 
+        $builder->limit($perPage, $offset);
+
+        $query = $builder->get();  
+        $count = $query->getNumRows();
         $html = "";
-        foreach($query as $row){ 
+        foreach($query->getResult() as $row){ 
             $content =  json_decode($this->data_project_sph($row->ProjectId));
             $category = "";
             foreach (explode("|",$row->ProjectCategory) as $index=>$x) {
@@ -549,7 +556,7 @@ class ProjectModel extends Model
                 </div>
             </div>';
         }
-        
+
         if($html == ""){ 
             $html = '
                 <div class="d-flex justify-content-center flex-column align-items-center">
@@ -558,10 +565,47 @@ class ProjectModel extends Model
                 </div> 
             ';
         }
+
+
+        $builder = $this->db->table($this->table);
+        $builder->join("customer","customer.CustomerId = project.CustomerId ");
+        $builder->join("store","store.StoreId = project.StoreId"); 
+        
+        if($filter["datestart"] !== "") $builder->where("ProjectDate >=",$filter["datestart"]);
+        if($filter["dateend"] !== "") $builder->where("ProjectDate <=",$filter["dateend"]);
+
+        if(isset($filter["filter"]["store"])){
+            $builder->whereIn("project.StoreId",$filter["filter"]["store"]);
+        } 
+        if(isset($filter["filter"]["kategori"])){
+            foreach($filter["filter"]["kategori"] as $row){
+                $builder->orLike("ProjectCategory",'%'.$row.'%');
+            } 
+        }   
+        if(isset($filter["filter"]["user"])){
+            $builder->groupStart(); 
+            foreach($filter["filter"]["user"] as $row){
+                $builder->orLike("UserId",$row);
+            } 
+            $builder->groupEnd(); 
+        }
+        $builder->groupStart(); 
+        if(isset($filter["search"])){
+            $builder->like("ProjectAdmin",$filter["search"]);
+            $builder->orLike("ProjectComment",$filter["search"]);
+            $builder->orLike("ProjectName",$filter["search"]);
+            $builder->orLike("ProjectCategory",$filter["search"]);
+        }
+
+        $builder->groupEnd(); 
+        $countTotal = $builder->get()->getNumRows();
         return json_encode(
             array(
                 "status"=>true,
-                "html"=>$html
+                "html"=>$html,
+                "total"=>$countTotal,
+                "totalresult"=>$count,
+                "paging"=>$offset, 
             )
         );
 

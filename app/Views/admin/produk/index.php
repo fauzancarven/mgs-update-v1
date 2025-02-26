@@ -278,7 +278,11 @@
 
 
                     // paging data
-                    $("#table-toko_info").html("Tampilkan " + (data["paging"] + 1) +" sampai " + (data["paging"] + data["totalresult"]) +" dari " + data["total"] + " data") ;
+                    if(data["total"] == 0){
+                         $("#table-toko_info").html("Tidak ada data yang ditampilkan")
+                    }else{
+                        $("#table-toko_info").html("Tampilkan " + (data["paging"] + 1) +" sampai " + (data["paging"] + data["totalresult"]) +" dari " + data["total"] + " data") ;
+                    }
                     var page = Math.ceil(data["total"] / 10);
                     if(page == 0){ 
                         paging = 1; 

@@ -175,8 +175,7 @@ class ProdukModel extends Model
         if(isset($filter["search"])){
             $builder->groupStart(); 
             $builder->like("ProdukCode",$filter["search"]);
-            $builder->orLike("ProdukName",$filter["search"]);
-            $builder->orLike("ProdukCategoryName",$filter["search"]); 
+            $builder->orLike("ProdukName",$filter["search"]);  
             $builder->groupEnd(); 
         }
         if(isset($filter["category"])){  
@@ -246,7 +245,7 @@ class ProdukModel extends Model
                     $html_varian .= '<span class="badge badge-'.fmod($i, 5).'">'.$value->text.'</span>';  
                 }
                 $i++;
-                $vendorhtml .= '<span class="fw-bold font-std mt-2">'.$varian->varian.'</span><div class="d-flex gap-1">'.$html_varian.'</div>';
+                $vendorhtml .= '<span class="fw-bold font-std mt-2">'.$varian->varian.'</span><div class="d-flex gap-1 flex-wrap">'.$html_varian.'</div>';
             } 
 
             $html .= '<div class="col-4 d-flex flex-column">'.$vendorhtml.'</div>';
@@ -303,10 +302,7 @@ class ProdukModel extends Model
                 <div class="col-2"><span class="text-head-1">Action</span></div>
             </div>
         '.$html;
-
-
-
-
+ 
         $builder = $this->db->table($this->table);
         $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");  
         if(isset($filter["filter"])){ 
@@ -327,8 +323,7 @@ class ProdukModel extends Model
         if(isset($filter["search"])){
             $builder->groupStart(); 
             $builder->like("ProdukCode",$filter["search"]);
-            $builder->orLike("ProdukName",$filter["search"]);
-            $builder->orLike("ProdukCategoryName",$filter["search"]); 
+            $builder->orLike("ProdukName",$filter["search"]); 
             $builder->groupEnd(); 
         }  
         if(isset($filter["category"])){  
