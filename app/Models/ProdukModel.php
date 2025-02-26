@@ -6,7 +6,8 @@ use CodeIgniter\Model;
 use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\Codeigniter4Adapter;
 use app\helper\rupiah;
-use CodeIgniter\Database\RawSql;
+use CodeIgniter\Database\RawSql; 
+
 class ProdukModel extends Model
 { 
     protected $DBGroup = 'default';
@@ -153,16 +154,24 @@ class ProdukModel extends Model
     }
     
     public function load_table_produk($filter = null){
+        $querytext = "";
         $builder = $this->db->table($this->table);
         $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");   
-        // if(isset($filter["filter"])){
-        //     $builder->groupStart(); 
-        //     foreach($filter["filter"]["user"] as $row){
-        //         $builder->orLike("UserId",$row);
-        //     } 
-        //     $builder->groupEnd(); 
-        // }
-        // $builder->groupStart();  
+        if(isset($filter["filter"])){ 
+            $builder->groupStart(); 
+            foreach($filter["filter"] as $key => $value){
+                if($key == "Vendor"){ 
+                    foreach($filter["filter"]["Vendor"] as $row){
+                        $builder->orLike("ProdukVendor",$row);  
+                    }
+                } else{
+                    foreach($filter["filter"][$key] as $row){
+                        $builder->orLike("ProdukVarian",$row);  
+                    } 
+                }
+            }  
+            $builder->groupEnd(); 
+        } 
         if(isset($filter["search"])){
             $builder->groupStart(); 
             $builder->like("ProdukCode",$filter["search"]);
@@ -173,6 +182,8 @@ class ProdukModel extends Model
         if(isset($filter["category"])){  
             $builder->whereIn("ProdukCategoryCode",$filter["category"]);
         } 
+
+
         // $builder->groupEnd(); 
 
         $builder->orderby('produk.ProdukCategoryId ASC, ProdukName ASC');   
@@ -181,7 +192,7 @@ class ProdukModel extends Model
         $page = $filter["paging"]; // atau dapatkan dari parameter GET 
         $offset = ($page - 1) * $perPage; 
         $builder->limit($perPage, $offset);
-        $query = $builder->get();   
+        $query = $builder->get();     
         $count = $query->getNumRows();
         $html = "";
 
@@ -298,6 +309,21 @@ class ProdukModel extends Model
 
         $builder = $this->db->table($this->table);
         $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");  
+        if(isset($filter["filter"])){ 
+            $builder->groupStart(); 
+            foreach($filter["filter"] as $key => $value){
+                if($key == "Vendor"){ 
+                    foreach($filter["filter"]["Vendor"] as $row){
+                        $builder->orLike("ProdukVendor",$row);  
+                    }
+                } else{
+                    foreach($filter["filter"][$key] as $row){
+                        $builder->orLike("ProdukVarian",$row);  
+                    } 
+                }
+            }  
+            $builder->groupEnd(); 
+        } 
         if(isset($filter["search"])){
             $builder->groupStart(); 
             $builder->like("ProdukCode",$filter["search"]);
@@ -316,12 +342,13 @@ class ProdukModel extends Model
                 "total"=>$countTotal,
                 "totalresult"=>$count,
                 "paging"=>$offset,
+                "query"=>$querytext,
             )
         );
 
 
     }
-    
+
     public function getHtml($data) {
         $folder = 'assets/images/produk/'.$data["ProdukId"]."/";
         $default = 'assets/images/produk/default.png';
