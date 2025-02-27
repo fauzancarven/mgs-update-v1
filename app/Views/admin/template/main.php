@@ -1299,8 +1299,10 @@
         border-radius: 0.5rem;
     }
     i.notif.active {
-        color: #002247 !important;
-        background: #c4ceff;
+        color: #002247 !important; 
+    }
+    i.header.notif.active { 
+        background:rgb(27, 28, 31);
         border-radius: 50%;
     }
     i.notif .icon-notif {

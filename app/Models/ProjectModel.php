@@ -386,7 +386,7 @@ class ProjectModel extends Model
             $builder->orLike("ProjectName",$filter["search"]);
             $builder->orLike("ProjectCategory",$filter["search"]);
         }
-        
+
         $builder->groupEnd(); 
         $builder->where("ProjectStatus !=",2);
         $builder->orderby('ProjectDate', 'DESC'); 
@@ -484,27 +484,27 @@ class ProjectModel extends Model
                             <span class="text-detail-2">'.$row->ProjectAdmin.'</span>  
                         </div>
                         <div class="d-flex icon-data p-2 text-head-1 gap-1">
-                            <i class="fa-solid fa-truck-ramp-box position-relative notif '.(count($alertsample) > 0 ? "active" : "").'" '.$alertsamplemessage.'>
+                            <i class="fa-solid fa-truck-ramp-box position-relative header notif '.(count($alertsample) > 0 ? "active" : "").'" '.$alertsamplemessage.'>
                                 <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </i>
-                            <i class="fa-solid fa-hand-holding-droplet position-relative notif '.(count($alertpenawaran) > 0 ? "active" : "").'" '.$alertpenawaranmessage.'>
+                            <i class="fa-solid fa-hand-holding-droplet position-relative header notif '.(count($alertpenawaran) > 0 ? "active" : "").'" '.$alertpenawaranmessage.'>
                                 <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </i>
-                            <i class="fa-solid fa-money-bill position-relative notif '.(count($alertinvoice) > 0 ? "active" : "").'" '.$alertinvoicemessage.'>
+                            <i class="fa-solid fa-money-bill position-relative header notif '.(count($alertinvoice) > 0 ? "active" : "").'" '.$alertinvoicemessage.'>
                                 <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </i>
-                            <i class="fa-solid fa-truck position-relative notif '.(count($alertdelivery) > 0 ? "active" : "").'" '.$alertdeliverymessage.'>
+                            <i class="fa-solid fa-truck position-relative header notif '.(count($alertdelivery) > 0 ? "active" : "").'" '.$alertdeliverymessage.'>
                                 <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </i>
-                            <i class="fa-solid fa-cart-shopping position-relative notif">
+                            <i class="fa-solid fa-cart-shopping position-relative header notif">
                                 <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
