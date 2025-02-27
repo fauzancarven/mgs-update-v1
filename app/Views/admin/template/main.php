@@ -1293,17 +1293,17 @@
     i.notif {
         padding: 0.25rem;
     }
-    i.notif:hover {
-        background: #d9e0ff;
-        color: #305176 !important;
-        border-radius: 0.5rem;
-    }
     i.notif.active {
         color: #002247 !important; 
     }
     i.header.notif.active { 
-        background:rgb(27, 28, 31);
+        background: #b2c5ff;
         border-radius: 50%;
+    }
+    i.notif:hover {
+        background: #d9e0ff;
+        color: #305176 !important;
+        border-radius: 0.5rem;
     }
     i.notif .icon-notif {
         display: none;
