@@ -225,6 +225,14 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+    public function sample_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_sample($id);  
+        }
+    }
 
     public function penawaran_add(){
         $request = Services::request();

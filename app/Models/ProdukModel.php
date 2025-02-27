@@ -336,8 +336,7 @@ class ProdukModel extends Model
                 "html"=>$html,
                 "total"=>$countTotal,
                 "totalresult"=>$count,
-                "paging"=>$offset,
-                "query"=>$querytext,
+                "paging"=>$offset, 
             )
         );
 

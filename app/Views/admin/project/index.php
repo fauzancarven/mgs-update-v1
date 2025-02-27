@@ -667,7 +667,7 @@
     };
 
     var isProcessingSampleEdit = [];
-    edit_project_Sample  = function(ref,id,el){ 
+    edit_project_sample  = function(ref,id,el){ 
           // INSERT LOADER BUTTON
           if (isProcessingSampleEdit[id]) {
             console.log("project sph cancel load");
@@ -699,6 +699,47 @@
             }
         });
     }; 
+
+    var isProcessingSampleDelete = [];
+    delete_project_sample = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingSampleDelete[id]) {
+            return;
+        }  
+        isProcessingSampleDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus sample ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-sample/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        loader_data_project(ref,"sample"); 
+                    }, 
+                });
+            }
+            isProcessingSampleDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
+
 
     /* 
         PROJECT SPH / PENAWARAN

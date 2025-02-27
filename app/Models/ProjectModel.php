@@ -388,6 +388,7 @@ class ProjectModel extends Model
         }
 
         $builder->groupEnd(); 
+        $builder->where("ProjectStatus !=",2);
         $builder->orderby('ProjectDate', 'DESC'); 
 
         $perPage = 10;
@@ -405,6 +406,53 @@ class ProjectModel extends Model
                 $category .= '<span class="badge badge-'.fmod($index, 5).' me-1">'.$x.'</span>';
             }  
             $date = date_create($row->ProjectDate);
+
+            //ALERT SAMPLE  
+            $alertsample = $this->data_project_sample_notif($row->ProjectId);
+            $emessage = "<b>Sample Barang</b><br>";
+            $alertsamplemessage = "";
+            $no = 1;
+            foreach($alertsample as $row_sample){
+                $emessage .= "<i class='fa-solid fa-circle fs-8'></i> ".$row_sample["message"]."<br>";
+                $no++;
+            } 
+            $alertsamplemessage = 'data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="'.$emessage.'"';
+
+            //ALERT PENAWRAN
+            $alertpenawaran = $this->data_project_sph_notif($row->ProjectId);
+            $emessage = "<b>Penawaran</b><br>";
+            $alertpenawaranmessage = "";
+            $no = 1;
+            foreach($alertpenawaran as $row_sample){
+                $emessage .= "<i class='fa-solid fa-circle fs-8'></i> ".$row_sample["message"]."<br>";
+                $no++;
+            } 
+            $alertpenawaranmessage = 'data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="'.$emessage.'"';
+
+
+            //ALERT INVOICE
+            $alertinvoice = $this->data_project_invoice_notif($row->ProjectId);
+            $emessage = "<b>invoice</b><br>";
+            $alertinvoicemessage = "";
+            $no = 1;
+            foreach($alertinvoice as $row_sample){
+                $emessage .= "<i class='fa-solid fa-circle fs-8'></i> ".$row_sample["message"]."<br>";
+                $no++;
+            } 
+            $alertinvoicemessage = 'data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="'.$emessage.'"';
+            
+            //ALERT DELIVERY
+            $alertdelivery = $this->data_project_delivery_notif($row->ProjectId);
+            $emessage = "<b>Pengiriman</b><br>";
+            $alertdeliverymessage = "";
+            $no = 1;
+            foreach($alertdelivery as $row_sample){
+                $emessage .= "<i class='fa-solid fa-circle fs-8'></i> ".$row_sample["message"]."<br>";
+                $no++;
+            } 
+            $alertdeliverymessage = 'data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="'.$emessage.'"';
+
+
             $html .= '<div class="card project hide"> 
                 <div class="card-body p-0"> 
                     <div class="d-flex header p-2 gap-1 justify-content-end align-items-center">
@@ -435,55 +483,73 @@ class ProjectModel extends Model
                             <i class="fa-regular fa-user"></i>
                             <span class="text-detail-2">'.$row->ProjectAdmin.'</span>  
                         </div>
+                        <div class="d-flex icon-data p-2 text-head-1 gap-1">
+                            <i class="fa-solid fa-truck-ramp-box position-relative notif '.(count($alertsample) > 0 ? "active" : "").'" '.$alertsamplemessage.'>
+                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </i>
+                            <i class="fa-solid fa-hand-holding-droplet position-relative notif '.(count($alertpenawaran) > 0 ? "active" : "").'" '.$alertpenawaranmessage.'>
+                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </i>
+                            <i class="fa-solid fa-money-bill position-relative notif '.(count($alertinvoice) > 0 ? "active" : "").'" '.$alertinvoicemessage.'>
+                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </i>
+                            <i class="fa-solid fa-truck position-relative notif '.(count($alertdelivery) > 0 ? "active" : "").'" '.$alertdeliverymessage.'>
+                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </i>
+                            <i class="fa-solid fa-cart-shopping position-relative notif">
+                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </i>
+                        </div> 
                         <div class="project-action action-td">  
                             <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</button>
                             <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</button>
                         </div>
                     </div>  
+                    
                     <div class="d-flex border-top content-data ">
                         <div class="side-menu" data-id="'.$row->ProjectId.'">
                             <div class="d-flex flex-column project-menu"> 
                                 <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="sample"> 
-                                    <i class="fa-solid fa-truck-ramp-box position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                    <i class="fa-solid fa-truck-ramp-box position-relative notif '.(count($alertsample) > 0 ? "active" : "").'">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle '.(count($alertsample) > 0 ? "" : "d-none").'"></span>
                                     </i>
                                     <span class="menu-text">Sample Barang</span>
-                                    <div class="menu-total d-none"></div>
-                                </div> 
+                                    '.(count($alertsample) > 0 ? "<div class=\"menu-total\">".count($alertsample)."</div>" : "<div class=\"menu-total d-none\"></div>").' 
+                                </div>
                                 <div class="menu-item selected" data-id="'.$row->ProjectId.'" data-menu="penawaran">
-                                    <i class="fa-solid fa-hand-holding-droplet position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                    <i class="fa-solid fa-hand-holding-droplet position-relative notif '.(count($alertpenawaran) > 0 ? "active" : "").'">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle '.(count($alertpenawaran) > 0 ? "" : "d-none").'"></span>
                                     </i>
                                     <span class="menu-text">Penawaran</span>
-                                    <div class="menu-total d-none"></div>
+                                    '.(count($alertpenawaran) > 0 ? "<div class=\"menu-total\">".count($alertpenawaran)."</div>" : "<div class=\"menu-total d-none\"></div>").' 
                                 </div> 
                                 <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="invoice">
-                                    <i class="fa-solid fa-money-bill position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                    <i class="fa-solid fa-money-bill position-relative notif '.(count($alertinvoice) > 0 ? "active" : "").'">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle '.(count($alertinvoice) > 0 ? "" : "d-none").'"></span>
                                     </i>
                                     <span class="menu-text">Invoice</span>
-                                    <div class="menu-total d-none"></div>
+                                   '.(count($alertinvoice) > 0 ? "<div class=\"menu-total\">".count($alertinvoice)."</div>" : "<div class=\"menu-total d-none\"></div>").' 
                                 </div> 
                                 <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="pengiriman">
-                                    <i class="fa-solid fa-truck position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                    <i class="fa-solid fa-truck position-relative notif '.(count($alertdelivery) > 0 ? "active" : "").'">
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle '.(count($alertdelivery) > 0 ? "" : "d-none").'"></span>
                                     </i>
                                     <span class="menu-text">Pengiriman</span>
-                                    <div class="menu-total d-none"></div>
+                                   '.(count($alertdelivery) > 0 ? "<div class=\"menu-total\">".count($alertdelivery)."</div>" : "<div class=\"menu-total d-none\"></div>").' 
                                 </div>   
                                 <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="pembelian">
                                     <i class="fa-solid fa-cart-shopping position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
                                     </i>
                                     <span class="menu-text">Pembelian</span>
                                     <div class="menu-total d-none"></div>
@@ -491,18 +557,14 @@ class ProjectModel extends Model
                                 <div class="divider-vertical m-1"></div>
                                 <div class="menu-item " data-id="'.$row->ProjectId.'" data-menu="survey">
                                     <i class="fa-solid fa-list-check position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
                                     </i>
                                     <span class="menu-text">Survey</span>
                                     <div class="menu-total d-none"><span>10</span></div>
                                 </div>
                                 <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="rab">
                                     <i class="fa-solid fa-list position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
                                     </i>
                                     <span class="menu-text">RAB</span>
                                     <div class="menu-total  d-none"><span>10</span></div>
@@ -510,9 +572,7 @@ class ProjectModel extends Model
                                 <div class="divider-vertical m-1"></div>
                                 <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="keuangan">
                                     <i class="fa-solid fa-dollar position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
                                     </i>
                                     <span class="menu-text">Keuangan</span>
                                     <div class="menu-total d-none"></div>
@@ -565,6 +625,13 @@ class ProjectModel extends Model
                 </div> 
             ';
         }
+        $html .= '
+        <script>
+            var tooltipTriggerList = document.querySelectorAll(\'[data-bs-toggle="tooltip"]\')
+            var tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+ 
+        </script>
+        ';
 
 
         $builder = $this->db->table($this->table);
@@ -595,9 +662,9 @@ class ProjectModel extends Model
             $builder->orLike("ProjectComment",$filter["search"]);
             $builder->orLike("ProjectName",$filter["search"]);
             $builder->orLike("ProjectCategory",$filter["search"]);
-        }
-
+        } 
         $builder->groupEnd(); 
+
         $countTotal = $builder->get()->getNumRows();
         return json_encode(
             array(
@@ -1068,19 +1135,19 @@ class ProjectModel extends Model
                     </div>
                     <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-3">
                         <div class="float-end d-md-flex d-none gap-1">
-                            <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="po_project_Sample('.$project_id.','.$row->SampleId.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="po_project_sample('.$project_id.','.$row->SampleId.',this)">
                                 <i class="fa-solid fa-share-from-square mx-1"></i></i><span >Buat PO</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="invoice_project_Sample('.$project_id.','.$row->SampleId.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="invoice_project_sample('.$project_id.','.$row->SampleId.',this)">
                                 <i class="fa-solid fa-share-from-square mx-1"></i><span >Buat Invoice</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_Sample('.$project_id.','.$row->SampleId.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_sample('.$project_id.','.$row->SampleId.',this)">
                                 <i class="fa-solid fa-print mx-1"></i><span >Cetak</span>
                             </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_Sample('.$project_id.','.$row->SampleId.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_sample('.$project_id.','.$row->SampleId.',this)">
                                 <i class="fa-solid fa-pencil mx-1"></i><span >Ubah</span>
                             </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_Sample('.$project_id.','.$row->SampleId.',this)">
+                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_sample('.$project_id.','.$row->SampleId.',this)">
                                 <i class="fa-solid fa-close mx-1"></i><span >Hapus</span>
                             </button> 
                         </div> 
@@ -1093,9 +1160,9 @@ class ProjectModel extends Model
                                 <ul class="dropdown-menu shadow">
                                     <li><a class="dropdown-item m-0 px-2 d-none" onclick="po_project_Sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Teruskan Vendor</a></li>
                                     <li><a class="dropdown-item m-0 px-2 d-none" onclick="invoice_project_Sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-money-bill pe-2"></i>Teruskan Invoice</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_Sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_Sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_Sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
                                 </ul>
                             </div>
                         </div> 
@@ -1147,9 +1214,60 @@ class ProjectModel extends Model
         return json_encode(
             array(
                 "status"=>true,
-                "html"=>$html
+                "html"=>$html 
             )
         );
+    }
+    private function data_project_sample_notif($project_id){
+        $alert = array();
+
+        $builder = $this->db->table("sample");
+        $builder->select('*');
+        $builder->where('ProjectId',$project_id);
+        $builder->where('SampleStatus !=',2);
+        $builder->orderby('SampleId', 'DESC'); 
+        $query = $builder->get()->getResult();  
+        foreach($query as $row){ 
+            if($row->SampleGrandTotal > 0){
+                $builder = $this->db->table("payment");
+                $builder->select('sum(PaymentTotal) as total');  
+                $builder->where('PaymentDoc',"1");
+                $builder->where('SampleId',$row->SampleId);
+                $builder->orderby('PaymentId', 'ASC'); 
+                $payment = $builder->get()->getRow()->total; 
+                if($payment < $row->SampleGrandTotal){
+                    $alert[] = array(
+                        "type"=>"Payment",
+                        "message"=>"pembayaran ". $row->SampleCode ." belum dibuat"
+                    );
+                } 
+            }
+            $builder = $this->db->table("delivery");
+            $builder->select('*');   
+            $builder->where("SampleId",$row->SampleId);
+            $builder->orderby('DeliveryId', 'ASC'); 
+            $delivery = $builder->countAllResults();
+            if($delivery == 0){
+                $alert[] = array(
+                    "type"=>"Pengiriman",
+                    "message"=>"Pengiriman ".$row->SampleCode." belum dibuat"
+                );
+            }else{
+                $builder = $this->db->table("delivery");
+                $builder->select('*');   
+                $builder->where("SampleId",$row->SampleId);
+                $builder->where("DeliveryStatus <",2);
+                $builder->orderby('DeliveryId', 'ASC'); 
+                $delivery = $builder->countAllResults();
+                if($delivery == 0){
+                    $alert[] = array(
+                        "type"=>"Delivery",
+                        "message"=>"Pengiriman ".$row->SampleCode." belum diselesaikan"
+                    );
+                }
+            }
+        }
+        return $alert;
     }
     private function data_project_sph($projectId){
         $html = ""; 
@@ -1371,6 +1489,25 @@ class ProjectModel extends Model
                 "html"=>$html
             )
         );
+    }
+    private function data_project_sph_notif($projectId){
+        $alert = array();
+
+        $builder = $this->db->table("penawaran");
+        $builder->select('*');
+        $builder->where('ProjectId',$projectId);
+        $builder->where('SphStatus !=',2);
+        $builder->orderby('SphId', 'DESC'); 
+        $query = $builder->get()->getResult();  
+        foreach($query as $row){
+            if($row->SphStatus == 0){
+                $alert[] = array(
+                    "type"=>"return",
+                    "message"=>"penawaran ".$row->SphCode." belum diselesaikan"
+                );
+            }
+        }
+        return $alert;
     }
     private function data_project_invoice($projectId){
         $html = ''; 
@@ -1732,6 +1869,58 @@ class ProjectModel extends Model
             )
         );
     }
+    private function data_project_invoice_notif($projectId){
+        $alert = array();
+
+        $builder = $this->db->table("invoice");
+        $builder->select('*');
+        $builder->where('ProjectId',$projectId);
+        $builder->where('InvStatus !=',3);
+        $builder->orderby('InvId', 'DESC'); 
+        $query = $builder->get()->getResult();  
+        foreach($query as $row){
+            if($row->InvGrandTotal > 0){
+                $builder = $this->db->table("payment");
+                $builder->select('sum(PaymentTotal) as total');  
+                $builder->where('PaymentDoc',"1");
+                $builder->where('InvId',$row->InvId);
+                $builder->orderby('PaymentId', 'ASC'); 
+                $payment = $builder->get()->getRow()->total; 
+                if($payment < $row->InvGrandTotal){
+                    $alert[] = array(
+                        "type"=>"Payment",
+                        "message"=>"pembayaran ". $row->InvCode ." belum dibuat"
+                    );
+                } 
+            }
+
+            $builder = $this->db->table("delivery");
+            $builder->select('*');   
+            $builder->where("InvId",$row->InvId);
+            $builder->orderby('DeliveryId', 'ASC'); 
+            $delivery = $builder->countAllResults();
+            if($delivery == 0){
+                $alert[] = array(
+                    "type"=>"Pengiriman",
+                    "message"=>"pengiriman ".$row->InvCode." belum dibuat"
+                );
+            }else{
+                $builder = $this->db->table("delivery");
+                $builder->select('*');   
+                $builder->where("InvId",$row->InvId);
+                $builder->where("DeliveryStatus <",2);
+                $builder->orderby('DeliveryId', 'ASC'); 
+                $delivery = $builder->countAllResults();
+                if($delivery == 0){
+                    $alert[] = array(
+                        "type"=>"Delivery",
+                        "message"=>"pengiriman ".$row->InvCode." belum diselesaikan"
+                    );
+                }
+            }
+        }
+        return $alert;
+    }
     private function data_project_delivery($projectId){ 
         $builder = $this->db->table("delivery");
         $builder->select('*');   
@@ -2058,3268 +2247,45 @@ class ProjectModel extends Model
                 <div class="group-list" data-code="'.$row["code"].'" style="display: none !important">'.$row["html"]."</div>"; 
         }
         $html_delivery = ' 
-                    <script>
-                        function hide_list(project){
-                            if( $(".group-header[data-code=\'" + project + "\'").hasClass("project-hide")){
-                                $(".group-header[data-code=\'" + project + "\'").removeClass("project-hide");
-                                $(".group-list[data-code=\'" + project + "\'").slideDown( "slow" );
-                            }else{
-                                $(".group-header[data-code=\'" + project + "\'").addClass("project-hide");
-                                $(".group-list[data-code=\'" + project + "\'").addClass("hide");
-                                $(".group-list[data-code=\'" + project + "\'").slideUp("slow",function(){
-                                    $(this).attr("style", "display: none !important");
-                                });
-                            }
-                        }
-                            
-                        function hide_project(ele){
-                            var el = $(ele).parent().parent();
-                            if( $(el).hasClass("project-hide")){
-                                $(el).removeClass("project-hide")
-                                $(el).find(".detail-project").slideDown( "slow" );
-                                $(ele).html(\'Sembunykan Detail<i class="fa-solid fa-chevron-up ps-2"></i>\');
-                            }else{
-                                $(el).addClass("project-hide") 
-                                $(el).find(".detail-project").slideUp("slow",function(){
-                                    $(this).attr("style", "display: none !important");
-                                });
-                                $(ele).html(\'Lihat Selengkapnya<i class="fa-solid fa-chevron-down ps-2"></i>\');
-                            } 
-                              
-                        }
-                    </script>
-                    <div class="d-flex justify-content-center flex-column align-items-center">
-                       <span class="text-detail-2">Pengiriman dibuat berdasarkan data invoice, sample ataupun pembelian.</span><span class="text-detail-2"> masuk ke menu invoice,sample ataupun pembelian dan klik tambah pengiriman dari list tersebut</span> 
-                    </div>
-                    <div class="group-delivery">
-                    '. $html_delivery.'
-                    </div>';
+            <script>
+                function hide_list(project){
+                    if( $(".group-header[data-code=\'" + project + "\'").hasClass("project-hide")){
+                        $(".group-header[data-code=\'" + project + "\'").removeClass("project-hide");
+                        $(".group-list[data-code=\'" + project + "\'").slideDown( "slow" );
+                    }else{
+                        $(".group-header[data-code=\'" + project + "\'").addClass("project-hide");
+                        $(".group-list[data-code=\'" + project + "\'").addClass("hide");
+                        $(".group-list[data-code=\'" + project + "\'").slideUp("slow",function(){
+                            $(this).attr("style", "display: none !important");
+                        });
+                    }
+                }
+                    
+                function hide_project(ele){
+                    var el = $(ele).parent().parent();
+                    if( $(el).hasClass("project-hide")){
+                        $(el).removeClass("project-hide")
+                        $(el).find(".detail-project").slideDown( "slow" );
+                        $(ele).html(\'Sembunykan Detail<i class="fa-solid fa-chevron-up ps-2"></i>\');
+                    }else{
+                        $(el).addClass("project-hide") 
+                        $(el).find(".detail-project").slideUp("slow",function(){
+                            $(this).attr("style", "display: none !important");
+                        });
+                        $(ele).html(\'Lihat Selengkapnya<i class="fa-solid fa-chevron-down ps-2"></i>\');
+                    } 
+                        
+                }
+            </script>
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <span class="text-detail-2">Pengiriman dibuat berdasarkan data invoice, sample ataupun pembelian.</span><span class="text-detail-2"> masuk ke menu invoice,sample ataupun pembelian dan klik tambah pengiriman dari list tersebut</span> 
+            </div>
+            <div class="group-delivery">
+            '. $html_delivery.'
+            </div>';
 
 
-        //$html_delivery .= var_dump($html_collapse);
-        // $html_delivery = '   
-        //             <script>
-        //                 function hide_list(project){
-        //                     if( $(".group-header[data-id=\'" + project + "\'").hasClass("hide")){
-        //                         $(".group-header[data-id=\'" + project + "\'").removeClass("hide");
-        //                         $(".group-list[data-id=\'" + project + "\'").removeClass("hide");
-        //                     }else{
-        //                         $(".group-header[data-id=\'" + project + "\'").addClass("hide");
-        //                         $(".group-list[data-id=\'" + project + "\'").addClass("hide");
-        //                     }
-        //                 }
-        //             </script>
-        //             <div class="d-flex justify-content-center flex-column align-items-center">
-        //                <span class="text-detail-2">Pengiriman dibuat berdasarkan data invoice, sample ataupun pembelian.</span><span class="text-detail-2"> masuk ke menu invoice,sample ataupun pembelian dan klik tambah pengiriman dari list tersebut</span> 
-        //             </div>
-        //             <div class="group-delivery">
-        //                 <div class="group-header d-flex justify-content-between mb-2 p-2 border-bottom" style="cursor:pointer" data-id="'.$projectId.'A" onclick="hide_list(\''.$projectId.'A\')">
-        //                     <span class="text-head-2">INVOICE (INV/004/02/2025)</span>
-        //                     <div>
-        //                         <i class="fa-solid fa-chevron-down"></i>
-        //                     </div>
-        //                 </div>
-        //                 <div class="group-list" data-id="'.$projectId.'A">
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                 </div> <div class="group-header d-flex justify-content-between mb-2 p-2 border-bottom" style="cursor:pointer" data-id="'.$projectId.'B" onclick="hide_list(\''.$projectId.'B\')">
-        //                     <span class="text-head-2">INVOICE (INV/004/02/2025)</span>
-        //                     <div>
-        //                         <i class="fa-solid fa-chevron-down"></i>
-        //                     </div>
-        //                 </div>
-        //                 <div class="group-list" data-id="'.$projectId.'B">
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                     <div class="list-project mb-4 p-2" data-id="'.$projectId.'">  
-        //                         <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
-        //                                     <span class="text-head-3">DEL/001/02/2025</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2"> 
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-        //                                     <span class="text-head-3">01 Feb 2025</span>
-        //                                 </div>  
-        //                             </div> 
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-        //                                     <span class="text-head-3">-</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-12 col-sm-2 col-xl-2">
-        //                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-        //                                     <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Biaya Pengiriman</span>
-        //                                     <span class="text-head-3">Rp. 0</span>
-        //                                 </div>  
-        //                             </div>
-        //                             <div class="col-3 col-md-4 text-end"> 
-        //                                 <div class="d-none d-md-inline-block">  
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-        //                                     </button>
-        //                                     <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_delivery(13,6,this)">
-        //                                         <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-        //                                     </button> 
-        //                                 </div>
-        //                                 <div class="d-inline-block d-md-none">
-        //                                     <div class="dropdown">
-        //                                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        //                                             <i class="ti-more-alt icon-rotate-45"></i>
-        //                                         </a>
-        //                                         <ul class="dropdown-menu shadow">  
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="print_project_delivery(13,6,this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="edit_project_delivery(13,6,this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-        //                                             <li><a class="dropdown-item m-0 px-2" onclick="delete_project_delivery(13,6,this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-        //                                         </ul>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </div>  
-        //                         <div class="d-flex border-top mt-2 p-2 gap-4 align-items-center">   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
-        //                                 <h4>1</h4>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
-        //                                 <span class="text-head-3">Engkel B 1019 VYS</span>
-        //                             </div>   
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i>Dari</span>
-        //                                 <span class="text-head-2">MGS</span>
-        //                                 <span class="text-head-3"></span>
-        //                                 <span class="text-detail-2"></span>
-        //                             </div>    
-        //                             <div class="d-flex text-primary align-items-center">
-        //                                 <i class="fa-solid fa-truck pe-1"></i>
-        //                                 <div class="line-dot"></div>
-        //                                 <i class="fa-solid fa-chevron-right"></i>
-        //                             </div>
-        //                             <div class="d-flex flex-row flex-md-column align-self-start">
-        //                                 <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
-        //                                 <span class="text-head-2">Ibu Jihan</span>
-        //                                 <span class="text-head-3">0215384920</span>
-        //                                 <span class="text-detail-2">Rumah Contoh Lousen, Bundaran 5, Citra Raya, Cikupa (Samping Mall Ciputra) </span>
-        //                             </div>   
-        //                         </div>
-        //                         <div class="detail-item mt-1 p-2 border-top"> 
-        //                             <div class="row">
-        //                                 <div class="col-12 col-md-5 my-1 varian">   
-        //                                     <div class="d-flex gap-2">
-        //                                         <img class="produk" src="https://192.168.100.47/mahiera/assets/images/produk/default.png" alt="Gambar Default">  
-        //                                         <div class="d-flex flex-column text-start">
-        //                                             <span class="text-head-3 text-uppercase">Roster Slash</span>
-        //                                             <span class="text-detail-2 text-truncate">RST - Roster</span> 
-        //                                             <div class="d-flex flex-wrap gap-1">
-        //                                                 <span class="badge badge-0 rounded">vendor : PSL</span><span class="badge badge-1 rounded">Warna : Grey</span><span class="badge badge-2 rounded">Ukuran : 20 x 20 x 10 cm</span>
-        //                                             </div>
-        //                                         </div> 
-        //                                     </div>
-        //                                 </div>
-        //                                 <div class="col-12 col-md-7 my-1 detail">
-        //                                     <div class="row"> 
-        //                                         <div class="col-5 col-md-3 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Dikirim:</span>
-        //                                                 <span class="text-head-2">1,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-5 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-3 px-1 border-left">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Diterima:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Spare:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                         <div class="col-4 col-md-2 px-1">   
-        //                                             <div class="d-flex flex-column">
-        //                                                 <span class="text-detail-2">Rusak:</span>
-        //                                                 <span class="text-head-2">0,00 Pcs</span>
-        //                                             </div>
-        //                                         </div>  
-        //                                     </div>   
-        //                                 </div> 
-        //                             </div> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
-        //                         </div> 
-        //                         <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
-        //                             <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-        //                         </div> 
-        //                         <div class="border-top pt-2"> 
-        //                             <div class="alert alert-warning p-2 m-1" role="alert">
-        //                                 <span class="text-head-2">
-        //                                     <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-        //                                     Belum ada proses pengiriman, 
-        //                                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="delivery_project_proses(13,6,this)">Konfirmasi proses pengemasan dan upload bukti foto pengemasan</a> 
-        //                                 </span>
-        //                             </div>
-        //                         </div> 
-        //                     </div>  
-        //                 </div>
-        //             </div> 
-        // ' ;
+         
 
         return json_encode(
             array(
@@ -5327,6 +2293,29 @@ class ProjectModel extends Model
                 "html"=>$html_delivery
             )
         );
+    } 
+    private function data_project_delivery_notif($projectId){ 
+        $alert = array();
+        $builder = $this->db->table("delivery");
+        $builder->select('*');   
+        $builder->where("ProjectId",$projectId);
+        $builder->orderby('DeliveryId', 'ASC'); 
+        $query = $builder->get()->getResult(); 
+        foreach($query as $row){
+            if($row->DeliveryStatus == 0){
+                $alert[] = array(
+                    "type"=>"Persiapan",
+                    "message"=>"pengriman ". $row->DeliveryCode ." belum diproses"
+                );
+            }else if($row->DeliveryStatus == 1){
+                $alert[] = array(
+                    "type"=>"diterima",
+                    "message"=>"pengriman ". $row->DeliveryCode ." belum sampai/diterima"
+                );
+            }
+        }
+
+        return $alert;
     }
     private function data_project_po($id){
         $html = "";
@@ -5667,10 +2656,11 @@ class ProjectModel extends Model
     }
     private function get_next_code_sample($date){
         //sample SPH/001/01/2024
+        $arr_date = explode("-", $date);
         $builder = $this->db->table("sample");  
         $builder->select("ifnull(max(SUBSTRING(SampleCode,5,3)),0) + 1 as nextcode");
-        $builder->where("SampleDate2",$date);
-        $arr_date = explode("-", $date);
+        $builder->where("month(SampleDate2)",$arr_date[1]);
+        $builder->where("year(SampleDate2)",$arr_date[0]);
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
             case 1:
@@ -5689,10 +2679,11 @@ class ProjectModel extends Model
     }
     private function get_next_code_penawaran($date){
         //sample SPH/001/01/2024
-        $builder = $this->db->table("penawaran");  
-        $builder->select("ifnull(max(SUBSTRING(SphCode,5,3)),0) + 1 as nextcode");
-        $builder->where("SphDate2",$date);
         $arr_date = explode("-", $date);
+        $builder = $this->db->table("penawaran");  
+        $builder->select("ifnull(max(SUBSTRING(SphCode,5,3)),0) + 1 as nextcode"); 
+        $builder->where("month(SphDate2)",$arr_date[1]);
+        $builder->where("year(SphDate2)",$arr_date[0]);
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
             case 1:
@@ -5711,10 +2702,11 @@ class ProjectModel extends Model
     }
     private function get_next_code_invoice($date){
         //sample INV/001/01/2024
-        $builder = $this->db->table("invoice");  
-        $builder->select("ifnull(max(SUBSTRING(InvCode,5,3)),0) + 1 as nextcode");
-        $builder->where("InvDate2",$date);
         $arr_date = explode("-", $date);
+        $builder = $this->db->table("invoice");  
+        $builder->select("ifnull(max(SUBSTRING(InvCode,5,3)),0) + 1 as nextcode"); 
+        $builder->where("month(InvDate2)",$arr_date[1]);
+        $builder->where("year(InvDate2)",$arr_date[0]);
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
             case 1:
@@ -5733,11 +2725,12 @@ class ProjectModel extends Model
     }
     private function get_next_code_payment($date){
         //sample INV/001/01/2024
-        $builder = $this->db->table("payment");  
-        $builder->select("ifnull(max(SUBSTRING(PaymentCode,5,3)),0) + 1 as nextcode");
-        $builder->where("PaymentDate2",$date);
-        $builder->where("PaymentDoc",1);
         $arr_date = explode("-", $date);
+        $builder = $this->db->table("payment");  
+        $builder->select("ifnull(max(SUBSTRING(PaymentCode,5,3)),0) + 1 as nextcode"); 
+        $builder->where("month(PaymentDate2)",$arr_date[1]);
+        $builder->where("year(PaymentDate2)",$arr_date[0]);
+        $builder->where("PaymentDoc",1);
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
             case 1:
@@ -5756,11 +2749,12 @@ class ProjectModel extends Model
     }
     private function get_next_code_proforma($date){
         //sample INV/001/01/2024
+        $arr_date = explode("-", $date);
         $builder = $this->db->table("payment");  
         $builder->select("ifnull(max(SUBSTRING(PaymentCode,5,3)),0) + 1 as nextcode");
-        $builder->where("PaymentDate2",$date);
+        $builder->where("month(PaymentDate2)",$arr_date[1]);
+        $builder->where("year(PaymentDate2)",$arr_date[0]); 
         $builder->where("PaymentDoc",2);
-        $arr_date = explode("-", $date);
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
             case 1:
@@ -5779,10 +2773,11 @@ class ProjectModel extends Model
     }
     private function get_next_code_delivery($date){
         //sample SPH/001/01/2024
-        $builder = $this->db->table("delivery");  
-        $builder->select("ifnull(max(SUBSTRING(DeliveryCode,5,3)),0) + 1 as nextcode");
-        $builder->where("DeliveryDate2",$date);
         $arr_date = explode("-", $date);
+        $builder = $this->db->table("delivery");  
+        $builder->select("ifnull(max(SUBSTRING(DeliveryCode,5,3)),0) + 1 as nextcode"); 
+        $builder->where("month(DeliveryDate2)",$arr_date[1]);
+        $builder->where("year(DeliveryDate2)",$arr_date[0]); 
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)) {
             case 1:
@@ -5801,10 +2796,11 @@ class ProjectModel extends Model
     } 
     private function get_next_code_pembelian($date){
         //sample SPH/001/01/2024
-        $builder = $this->db->table("pembelian");  
-        $builder->select("ifnull(max(SUBSTRING(POCode,4,3)),0) + 1 as nextcode");
-        $builder->where("PODate2",$date);
         $arr_date = explode("-", $date);
+        $builder = $this->db->table("pembelian");  
+        $builder->select("ifnull(max(SUBSTRING(POCode,4,3)),0) + 1 as nextcode"); 
+        $builder->where("month(PODate2)",$arr_date[1]);
+        $builder->where("year(PODate2)",$arr_date[0]); 
         $data = $builder->get()->getRow(); 
         switch (strlen($data->nextcode)){
             case 1:
@@ -5874,14 +2870,16 @@ class ProjectModel extends Model
         $builder->set('updated_user',user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
         $builder->where('ProjectId', $id); 
-        $builder->update();   
-
+        $builder->update();    
         echo json_encode(array("status"=>true)); 
     }
     public function delete_data_project($id){
         $builder = $this->db->table($this->table);
+        $builder->set('ProjectStatus',2); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
         $builder->where('ProjectId',$id);
-        $builder->delete();  
+        $builder->update();  
 
         return JSON_ENCODE(array("status"=>true));
     } 
@@ -5898,6 +2896,7 @@ class ProjectModel extends Model
         $query = $builder->get()->getRow();
         echo json_encode(array("status"=>true,"data"=>$query)); 
     }
+
     /**
      * FUNCTION UNTUK Sample
      */ 
@@ -5965,8 +2964,17 @@ class ProjectModel extends Model
             $builder->insert($row); 
         } 
 
-    }
+    } 
+    public function delete_data_sample($id){   
+        $builder = $this->db->table("sample"); 
+        $builder->set('SampleStatus', 2);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SampleId', $id); 
+        $builder->update();   
 
+        return JSON_ENCODE(array("status"=>true));
+    } 
     public function getdataSample($id){
         $builder = $this->db->table("sample"); 
         $builder->join("customer","sample.CustomerId = customer.CustomerId");
@@ -6020,6 +3028,14 @@ class ProjectModel extends Model
             $builder = $this->db->table("penawaran_detail");
             $builder->insert($row); 
         }
+
+        //update status sample
+        $builder = $this->db->table("sample"); 
+        $builder->set('SampleStatus', 1); 
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SampleId', $header["SampleId"]); 
+        $builder->update(); 
 
     }
     public function update_data_penawaran($data,$id){ 
@@ -6078,8 +3094,7 @@ class ProjectModel extends Model
     /**
      * FUNCTION UNTUK INVOICE / FAKTUR
      */ 
-
-    
+ 
     public function insert_data_invoice($data){ 
         $header = $data["header"]; 
 
@@ -6115,6 +3130,23 @@ class ProjectModel extends Model
             $builder = $this->db->table("invoice_detail");
             $builder->insert($row); 
         }
+
+        
+        //update status sample
+        $builder = $this->db->table("sample"); 
+        $builder->set('SampleStatus', 1); 
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SampleId', $header["SampleId"]); 
+        $builder->update(); 
+
+        //update status penawaran
+        $builder = $this->db->table("penawaran"); 
+        $builder->set('SphStatus', 1); 
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SphId', $header["SphId"]); 
+        $builder->update(); 
 
     } 
     public function update_data_invoice($data,$id){ 
@@ -6152,7 +3184,7 @@ class ProjectModel extends Model
         $builder->set('updated_user',user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
         $builder->where('InvId',$id);
-        $builder->delete();  
+        $builder->update();  
 
         return JSON_ENCODE(array("status"=>true));
     }
@@ -6172,8 +3204,7 @@ class ProjectModel extends Model
         $builder->where('InvDetailRef',$id); 
         return $builder->get()->getResult();  
     }
-
-
+ 
     /**
      * FUNCTION UNTUK PAYMENT
      */ 

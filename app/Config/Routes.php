@@ -61,6 +61,7 @@ $routes->post('/action/add-data-project-category', 'ActionController::project_ad
 
 $routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/delete-data-sample/(:num)', 'ActionController::sample_delete/$1', ['filter' => 'login']);
 
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 

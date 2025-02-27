@@ -1038,17 +1038,17 @@
     }
     .side-menu .menu-total {
         position: absolute;
-        right: 11px;
-        top: 4px;
-        font-size: 0.75rem;
+        right: 5px;
+        top: 8px;
+        font-size: 0.5rem;
         background: #004591;
         border-radius: 50%;
-        height: 22px;
+        height: 18px;
         outline: 1px solid white;
-        width: 22px;
+        width: 18px;
         align-items: center;
         text-align: center;
-        display: flex ;
+        display: flex;
         justify-content: center;
         color: white;
     }
@@ -1289,6 +1289,34 @@
     .input-group.active .filter-data {
         display: block;
     }
+
+    i.notif {
+        padding: 0.25rem;
+    }
+    i.notif:hover {
+        background: #d9e0ff;
+        color: #305176 !important;
+        border-radius: 0.5rem;
+    }
+    i.notif.active {
+        color: #002247 !important;
+    }
+    i.notif .icon-notif {
+        display: none;
+        padding: 3px !important;
+    }
+    i.notif.active .icon-notif {
+        display: block;
+    }
+    .custom-tooltip {
+        --bs-tooltip-bg: #002247;
+        --bs-tooltip-color: white;
+        --bs-tooltip-font-size: 0.75rem;
+        --bs-tooltip-max-width: 25rem;
+    }
+    .fs-8{
+        font-size:0.25rem !important;
+    }
 </style>
 
 
@@ -1446,7 +1474,6 @@
 
 <body class="<?= $session->sidebar === "false" ? "sidebar-icon-only" : ""; ?>"> <!-- class="sidebar-icon-only" -->
  
-    <script src="<?= base_url(); ?>assets/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
     <!-- plugins:js -->
     <script src="<?= base_url(); ?>assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
@@ -1458,6 +1485,7 @@
     <!-- End plugin js for this page -->
     <!-- inject:js -->
     
+    <script src="<?= base_url(); ?>assets/bootstrap-5.3.3/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url(); ?>assets/js/moment.min.js"></script>
     <script src="<?= base_url(); ?>assets/js/off-canvas.js"></script>
     <script src="<?= base_url(); ?>assets/js/hoverable-collapse.js"></script>
