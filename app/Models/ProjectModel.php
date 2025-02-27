@@ -386,7 +386,7 @@ class ProjectModel extends Model
             $builder->orLike("ProjectName",$filter["search"]);
             $builder->orLike("ProjectCategory",$filter["search"]);
         }
-
+        
         $builder->groupEnd(); 
         $builder->where("ProjectStatus !=",2);
         $builder->orderby('ProjectDate', 'DESC'); 

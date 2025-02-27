@@ -93,7 +93,7 @@
                 <p class="pt-4 fw-bold">CUSTOMER</p> 
             </div>
         </a>
-        <a class="card card-light-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/customer") ?>">
+        <a class="card card-light-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/vendor") ?>">
             <div class="card-body d-flex flex-column text-center">
                 <i class="fa-solid fa-cart-flatbed-suitcase fa-4x"></i>
                 <p class="pt-4 fw-bold">VENDOR</p> 

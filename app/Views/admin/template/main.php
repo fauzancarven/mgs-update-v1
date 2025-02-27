@@ -1300,6 +1300,8 @@
     }
     i.notif.active {
         color: #002247 !important;
+        background: #c4ceff;
+        border-radius: 50%;
     }
     i.notif .icon-notif {
         display: none;
@@ -1703,6 +1705,24 @@
                             <span class="menu-title">Project</span>
                         </a> 
                     </li>   
+                    
+                    <li class="nav-item <?= ($menu === 'Inventory' ? "active" : "") ?>">
+                        <a class="nav-link menu-header" data-toggle="collapse" href="#ui-inventory" aria-expanded="<?= ($menu === 'Inventory' ? "true" : "false") ?>">
+                            <i class="icon-layout menu-icon"></i>
+                            <span class="menu-title">Inventory</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a> 
+                        <div class="collapse <?= ($menu === 'Inventory' ? "show" : "") ?>" id="ui-inventory">
+                            <ul class="nav flex-column sub-menu"> 
+                                <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <span class="menu-title">Stock Barang</span>
+                                    </a>
+                                </li> 
+                            </ul>
+                        </div> 
+                    </li>  
                     <li class="nav-item <?= ($title === 'Accounting' ? "active" : "") ?>">
                         <a class="nav-link" href="<?= base_url(); ?>admin/accounting">
                             <i class="ti-money menu-icon"></i>
