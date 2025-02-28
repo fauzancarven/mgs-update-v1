@@ -1,6 +1,6 @@
  
 <div class="modal fade" id="modal-add-sample" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sample-label" style="overflow-y:auto;">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-add-sample-label">Tambah Sample Barang</h2>

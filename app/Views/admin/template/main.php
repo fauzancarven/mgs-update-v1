@@ -1320,55 +1320,77 @@
     }
     .fs-8{
         font-size:0.25rem !important;
+    } 
+    .modal .modal-dialog {
+        margin-top: 1.5rem;
     }
 </style>
 
 
-<div class="d-lg-none w-100 " style="
-   
-    height: 15rem;
-    position: absolute;
-    left: 0;
-    top: 0;
-    border-radius: 0px 0px 30px 30px; 
-">
 
 
-    <div class=" d-flex justify-content-between px-4 pt-3"> 
-        <h4 class="text-primary pt-2"> <?= $title; ?></h4> 
-        <div class="d-flex">
-            <div class="dropdown dropdown-animated scale-left" class="d-flex">
-                <a href="javascript:void(0);" data-toggle="dropdown">
-                    <svg width="24" height="28" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="  ml-2"> 
-                        <path d="M8.62504 20.8265V21.7218C8.62504 22.0746 8.6994 22.4238 8.84389 22.7497C8.98837 23.0756 9.20014 23.3717 9.46711 23.6211C9.73408 23.8706 10.051 24.0684 10.3998 24.2034C10.7486 24.3384 11.1225 24.4079 11.5 24.4079C11.8776 24.4079 12.2514 24.3384 12.6003 24.2034C12.9491 24.0684 13.266 23.8706 13.533 23.6211C13.7999 23.3717 14.0117 23.0756 14.1562 22.7497C14.3007 22.4238 14.375 22.0746 14.375 21.7218V20.8265M17.25 13.6637C17.25 16.3497 19.1667 20.8265 19.1667 20.8265H3.83337C3.83337 20.8265 5.75004 17.2451 5.75004 13.6637C5.75004 10.7377 8.36821 8.29166 11.5 8.29166C14.6319 8.29166 17.25 10.7377 17.25 13.6637Z" stroke="#0B1460" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <?php if (!empty($notif)) : ?>
-                            <ellipse cx="16.5" cy="7.00704" rx="7.5" ry="7.00704" fill="#E24848" />
-                        <?php endif; ?>
-
-                    </svg>
-                </a>
-
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown overflow-auto py-3 border-0" style="border-radius: 20px; box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;" aria-labelledby="notificationDropdown">
-                    <p class="mb-3 pb-3 float-left dropdown-header text-primary medium border-bottom w-100" style="font-weight: 900;">Notifications</p>
+<body class="<?= $session->sidebar === "false" ? "sidebar-icon-only" : ""; ?>"> <!-- class="sidebar-icon-only" -->
  
-                    <?php if (!empty($notif)) : ?>
-                        <div class="preview-list overflow-auto" style="max-height: 200px; width:350px;">
+    <div class="d-lg-none w-100 " style="height: 15rem; position: absolute;left: 0; top: 0; border-radius: 0px 0px 30px 30px;">
+        <div class=" d-flex justify-content-between px-4 pt-3"> 
+            <h4 class="text-primary pt-2"> <?= $title; ?></h4> 
+            <div class="d-flex">
+                <div class="dropdown dropdown-animated scale-left" class="d-flex">
+                    <a href="javascript:void(0);" data-toggle="dropdown">
+                        <svg width="24" height="28" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="  ml-2"> 
+                            <path d="M8.62504 20.8265V21.7218C8.62504 22.0746 8.6994 22.4238 8.84389 22.7497C8.98837 23.0756 9.20014 23.3717 9.46711 23.6211C9.73408 23.8706 10.051 24.0684 10.3998 24.2034C10.7486 24.3384 11.1225 24.4079 11.5 24.4079C11.8776 24.4079 12.2514 24.3384 12.6003 24.2034C12.9491 24.0684 13.266 23.8706 13.533 23.6211C13.7999 23.3717 14.0117 23.0756 14.1562 22.7497C14.3007 22.4238 14.375 22.0746 14.375 21.7218V20.8265M17.25 13.6637C17.25 16.3497 19.1667 20.8265 19.1667 20.8265H3.83337C3.83337 20.8265 5.75004 17.2451 5.75004 13.6637C5.75004 10.7377 8.36821 8.29166 11.5 8.29166C14.6319 8.29166 17.25 10.7377 17.25 13.6637Z" stroke="#0B1460" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <?php if (!empty($notif)) : ?>
+                                <ellipse cx="16.5" cy="7.00704" rx="7.5" ry="7.00704" fill="#E24848" />
+                            <?php endif; ?>
 
-                            <?php foreach ($notif as $ntf) : ?>
+                        </svg>
+                    </a>
 
-                                <?php if (!in_groups('admin')) : ?>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown overflow-auto py-3 border-0" style="border-radius: 20px; box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;" aria-labelledby="notificationDropdown">
+                        <p class="mb-3 pb-3 float-left dropdown-header text-primary medium border-bottom w-100" style="font-weight: 900;">Notifications</p>
+    
+                        <?php if (!empty($notif)) : ?>
+                            <div class="preview-list overflow-auto" style="max-height: 200px; width:350px;">
 
-                                    <form action="<?= base_url() ?>opened" method="post">
-                                        <input type="hidden" name="id" value="<?= $ntf['id']; ?>">
-                                        <input type="hidden" name="category" value="<?= $ntf['category']; ?>">
-                                        <input type="hidden" name="status" value="Opened">
+                                <?php foreach ($notif as $ntf) : ?>
 
-                                        <button class="dropdown-item preview-item d-flex align-items-center" type="submit">
+                                    <?php if (!in_groups('admin')) : ?>
+
+                                        <form action="<?= base_url() ?>opened" method="post">
+                                            <input type="hidden" name="id" value="<?= $ntf['id']; ?>">
+                                            <input type="hidden" name="category" value="<?= $ntf['category']; ?>">
+                                            <input type="hidden" name="status" value="Opened">
+
+                                            <button class="dropdown-item preview-item d-flex align-items-center" type="submit">
+
+                                                <?php if ($ntf['category'] == "New Lead") : ?>
+                                                    <div class="preview-thumbnail">
+                                                        <div class="preview-icon bg-success">
+                                                            <i class="ti-user mx-0"></i>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <div class="preview-item-content ">
+
+                                                    <h6 class="preview-subject font-weight-normal my-1 text-primary"><?= $ntf['info']; ?> </h6>
+                                                    <p class="font-weight-light small-text mb-0 text-muted">
+                                                        <?= date('D M Y H:i:s', strtotime($ntf['created_at'])); ?>
+                                                    </p>
+
+                                                </div>
+                                            </button>
+                                        </form>
+
+                                    <?php endif; ?>
+
+                                    <?php if (in_groups('admin')) : ?>
+
+                                        <div class="dropdown-item preview-item d-flex align-items-center">
 
                                             <?php if ($ntf['category'] == "New Lead") : ?>
                                                 <div class="preview-thumbnail">
                                                     <div class="preview-icon bg-success">
-                                                        <i class="ti-user mx-0"></i>
+                                                        <i class="ti-info-alt mx-0"></i>
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
@@ -1380,104 +1402,76 @@
                                                 </p>
 
                                             </div>
-                                        </button>
-                                    </form>
-
-                                <?php endif; ?>
-
-                                <?php if (in_groups('admin')) : ?>
-
-                                    <div class="dropdown-item preview-item d-flex align-items-center">
-
-                                        <?php if ($ntf['category'] == "New Lead") : ?>
-                                            <div class="preview-thumbnail">
-                                                <div class="preview-icon bg-success">
-                                                    <i class="ti-info-alt mx-0"></i>
-                                                </div>
-                                            </div>
-                                        <?php endif; ?>
-                                        <div class="preview-item-content ">
-
-                                            <h6 class="preview-subject font-weight-normal my-1 text-primary"><?= $ntf['info']; ?> </h6>
-                                            <p class="font-weight-light small-text mb-0 text-muted">
-                                                <?= date('D M Y H:i:s', strtotime($ntf['created_at'])); ?>
-                                            </p>
-
                                         </div>
-                                    </div>
 
-                                <?php endif; ?>
+                                    <?php endif; ?>
 
-                            <?php endforeach; ?>
+                                <?php endforeach; ?>
 
+                            </div>
+                        <?php else : ?>
+                            <div class="preview-list overflow-auto d-flex justify-content-center align-items-center" style="height: 100px; width:350px;">
+                                <span>No new data</span>
+                            </div>
+                        <?php endif; ?>
+                        <div class="border-top d-flex justify-content-center align-items-center py-2 mt-3">
+                            <a href="<?= base_url() ?>mark_opened" class="pt-3 text-primary text-decoration-none">Mark all as read</a>
                         </div>
-                    <?php else : ?>
-                        <div class="preview-list overflow-auto d-flex justify-content-center align-items-center" style="height: 100px; width:350px;">
-                            <span>No new data</span>
-                        </div>
-                    <?php endif; ?>
-                    <div class="border-top d-flex justify-content-center align-items-center py-2 mt-3">
-                        <a href="<?= base_url() ?>mark_opened" class="pt-3 text-primary text-decoration-none">Mark all as read</a>
                     </div>
-                </div>
 
-            </div> 
-            <!-- TOGGLE MOBILE --> 
-            <div>
-                <a href="javascript:void(0);" data-toggle="dropdown"> <!-- data-toggle=" dropdown" -->
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-3"> 
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M28 8V10.6667H4V8H28ZM28 24H20V21.3333H28V24ZM12 17.3333H28V14.6667H12V17.3333Z" stroke-width="1" fill="#0B1460" /> 
-                    </svg>
-                </a>
-
-                <div class="p-b-15 p-t-20 dropdown-menu pop-profile  ">
-                    <a class="dropdown-item my-3" href="<?= base_url() ?>edit_user">
-                        <i class="ti-settings text-primary"></i>
-                        Account
-                    </a>
-                    <a class="dropdown-item my-3" href="#" data-toggle="modal" data-target="#logout">
-                        <i class="ti-power-off text-primary"></i>
-                        Logout
+                </div> 
+                <!-- TOGGLE MOBILE --> 
+                <div>
+                    <a href="javascript:void(0);" data-toggle="dropdown"> <!-- data-toggle=" dropdown" -->
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-3"> 
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M28 8V10.6667H4V8H28ZM28 24H20V21.3333H28V24ZM12 17.3333H28V14.6667H12V17.3333Z" stroke-width="1" fill="#0B1460" /> 
+                        </svg>
                     </a>
 
+                    <div class="p-b-15 p-t-20 dropdown-menu pop-profile  ">
+                        <a class="dropdown-item my-3" href="<?= base_url() ?>edit_user">
+                            <i class="ti-settings text-primary"></i>
+                            Account
+                        </a>
+                        <a class="dropdown-item my-3" href="#" data-toggle="modal" data-target="#logout">
+                            <i class="ti-power-off text-primary"></i>
+                            Logout
+                        </a>
 
 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-
-<!-- logout Modal-->
-<div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
-    <div class="modal-dialog " role="document">
-        <div class="modal-content" style="border-radius : 20px;" style="border-radius : 20px;">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Logout</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span>×</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">Are you sure want to end this session ?</div>
-            <div class="modal-footer ">
-                <div class="row d-flex col-12 px-0 py-2">
-                    <div class="col-6">
-                        <button class="btn btn-secondary w-100" type="button" data-dismiss="modal">Cancel</button>
-                    </div>
-                    <div class="col-6">
-                        <a type="button" href="<?= base_url() ?>logout" class="btn btn-primary w-100"> Logout</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
-
-<body class="<?= $session->sidebar === "false" ? "sidebar-icon-only" : ""; ?>"> <!-- class="sidebar-icon-only" -->
- 
+    <!-- logout Modal-->
+    <div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
+        <div class="modal-dialog " role="document">
+            <div class="modal-content" style="border-radius : 20px;" style="border-radius : 20px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Logout</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span>×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">Are you sure want to end this session ?</div>
+                <div class="modal-footer ">
+                    <div class="row d-flex col-12 px-0 py-2">
+                        <div class="col-6">
+                            <button class="btn btn-secondary w-100" type="button" data-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-6">
+                            <a type="button" href="<?= base_url() ?>logout" class="btn btn-primary w-100"> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- plugins:js -->
     <script src="<?= base_url(); ?>assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
@@ -1820,7 +1814,7 @@
                     <a class="dropdown-item" href="<?= base_url("/admin/produk") ?>"><i class="ti-package pe-2"></i>Produk</a>
                 </div>
   
-<!--                 
+                <!--                 
                 <div class="dropdown">
                     <button class="btn btn-danger btn-sm dropdown-toggle show" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true" fdprocessedid="cgamd5g">
                     Dropdown
@@ -1933,8 +1927,7 @@
     </div>
 
 
-    <!-- Add Option -->
-
+    <!-- Add Option --> 
     <div class="card add hidden w-100" style="position: fixed; bottom :0px; height: 40%; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
         <div class="card-header" style="background: none;">
             <div class="row d-flex align-items-center">
@@ -1973,7 +1966,7 @@
     </div>
 
 
-<!-- 
+    <!-- 
     <script>
         document.getElementById("showButton").addEventListener("click", function() {
             var card = document.querySelector(".card.add");
@@ -1984,13 +1977,8 @@
             var card = document.querySelector(".card.add");
             card.classList.add("hidden");
         });
-    </script> -->
-
-
-
-
-
-
+    </script> --> 
+    <div id="modal-message"></div>
 </body>
 
 </html>

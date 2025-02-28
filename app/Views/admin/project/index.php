@@ -18,8 +18,9 @@
 <div class="d-flex align-items-center mb-4"> 
     <div class="p-1 flex-fill" > 
         <h4 class="mb-0">LIST PROJECT</h4> 
-    </div>   
-    <div class="justify-content-end d-flex col-lg-2 col-4 pb-lg-2 pb-4  order-lg-3">
+    </div>     
+    <div class="justify-content-end d-flex gap-1">
+        <button class="btn btn-sm btn-secondary px-3 rounded" onclick="produk_click(this)"><i class="fa-solid fa-magnifying-glass"></i><span class="d-none d-md-inline-block ps-2">List Produk<span></button>
         <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Project<span></button>
     </div>
 </div>
@@ -330,8 +331,7 @@
         </div>
     </div>
 </div>   
-<div style="margin-bottom: 100px;"></div> 
-<div id="modal-message"></div>
+<div style="margin-bottom: 100px;"></div>  
 <!-- Modal -->
 <div class="modal fade" id="modal-print-penawaran" tabindex="-1" data-id="0" aria-labelledby="modal-print-penawaranLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -629,6 +629,19 @@
             $(el).html(old_text);
         });
     }  
+    produk_click = function(){
+        $.ajax({ 
+            method: "POST",
+            url: "<?= base_url() ?>message/add-item-select", 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#add-item-select").modal("show"); 
+            },
+            fail: function(xhr, textStatus, errorThrown){
+                alert('request failed');
+            }
+        });
+    }
     /* 
         PROJECT Sample
     */

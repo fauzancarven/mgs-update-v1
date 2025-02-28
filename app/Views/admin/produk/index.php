@@ -147,7 +147,6 @@
     </div>
 </div>  
 <div style="margin-bottom: 100px;"></div> 
-<div id="modal-message"></div>
 <script>
     var paging = 1;
     var filter_arr = {
@@ -211,8 +210,7 @@
         } 
         (total === 0 ?  $("#searchdatafilter").val("") : $("#searchdatafilter").val(String(total) + " varian dipilih"));
         loader_datatable();
-    }
-
+    } 
     function tambahArrayVarian(namaGrup, nilai) {
         if (!filter_arr[namaGrup]) {
             filter_arr[namaGrup] = [];

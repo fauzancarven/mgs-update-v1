@@ -1,6 +1,6 @@
 
 <div class="modal fade" id="modal-reset-account" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-reset-account-label" aria-hidden="true" style="overflow-y:auto;">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-reset-account-label">Reset Password<span style="font-size:0.75rem">(<?= $_account->code." - ".$_account->username?>)</span></h2>

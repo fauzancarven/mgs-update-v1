@@ -147,4 +147,16 @@ class AdminController extends BaseController
         ]; 
         return view('admin/project/index', $data); 
     }
+    public function accounting(){    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Accounting',
+            'menu' => "", 
+        ]; 
+        return view('admin/accounting/index', $data); 
+    }
 }

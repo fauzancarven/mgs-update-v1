@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-add-project" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Tambah Project</h2>

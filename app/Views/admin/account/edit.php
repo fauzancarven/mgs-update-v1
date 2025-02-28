@@ -1,6 +1,6 @@
 
 <div class="modal fade" id="modal-edit-account" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-edit-account-label" aria-hidden="true" style="overflow-y:auto;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-edit-account-label">Edit Account</h2>

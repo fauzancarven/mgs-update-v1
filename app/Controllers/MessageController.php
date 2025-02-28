@@ -8,8 +8,11 @@ use App\Models\CustomerModel;
 use App\Models\ProvinceModel;
 use App\Models\VendorModel;
 use App\Models\ProdukModel;
+use App\Models\ProdukcategoryModel;
+use App\Models\ProdukvarianvalueModel;
+use App\Models\ProdukvarianModel;
 use App\Models\ProjectModel;
-use Myth\Auth\Entities\User; 
+use Myth\Auth\Entities\User;  
 
 use Config\Services; 
 class MessageController extends BaseController
@@ -94,6 +97,21 @@ class MessageController extends BaseController
     public function produk_select()
     {   
         return $this->response->setBody(view('admin/produk/select.php')); 
+    }
+    public function produk_select_new()
+    {   
+        $varian = new ProdukvarianModel();
+        $category = new ProdukcategoryModel();
+        $variandetail = new ProdukvarianvalueModel();
+        $vendor = new VendorModel();
+        $data = [ 
+            'category' => $category->get()->getResult(),
+            'vendor' => $vendor->get()->getResult(),
+            'varian' => $varian->get()->getResult(),
+            'varian_detail' => $variandetail->get()->getResult(),
+            'varianlist' => ''
+        ]; 
+        return $this->response->setBody(view('admin/produk/select_new', $data)); 
     }
 
 

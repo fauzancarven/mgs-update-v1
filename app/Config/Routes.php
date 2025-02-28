@@ -13,6 +13,7 @@ $routes->get('/admin/store', 'AdminController::store', ['filter' => 'login']);
 $routes->get('/admin/customer', 'AdminController::customer', ['filter' => 'login']);
 $routes->get('/admin/produk', 'AdminController::produk', ['filter' => 'login']);
 $routes->get('/admin/vendor', 'AdminController::vendor', ['filter' => 'login']);
+$routes->get('/admin/accounting', 'AdminController::accounting', ['filter' => 'login']);
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
 
@@ -159,6 +160,7 @@ $routes->post('/message/select-produk', 'MessageController::produk_select', ['fi
 
 $routes->post('/message/add-project', 'MessageController::project_add', ['filter' => 'login']);  
 $routes->post('/message/edit-project/(:num)', 'MessageController::project_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/add-item-select', 'MessageController::produk_select_new', ['filter' => 'login']);  
 
 $routes->post('/message/add-project-sample/(:num)', 'MessageController::project_sample_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sample/(:num)', 'MessageController::project_sample_edit/$1', ['filter' => 'login']); 
