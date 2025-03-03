@@ -845,19 +845,25 @@
     .card.project .header {
         cursor: pointer;
     }
-    .card.project .content-data{ 
+    /* .card.project .content-data{ 
         opacity: 0; 
         min-height: 0; 
         height:0;
         transition: min-height 0.15s ease-out,opacity 0.5s;
+    } */
+    .header.notif.selected {
+        background: #002247 !important;
+        color: white !important;
+        outline: 1px solid #000;
+        border-radius: 0.25rem;
     }
-    .card.project.show .content-data{
-        display: flex !important ; 
+    /* .card.project.show .content-data{
+        display: flex ; 
         opacity: 1;  
         min-height: 400px;
         height:auto;
         transition: min-height 0.25s ease-in, opacity 0.5s;
-    }
+    } */
     .card.project .header .logo {
         width: 30px;
         height: 30px;
@@ -1143,8 +1149,7 @@
         background: #F5F7FF; 
         height: 100%;
         border:none;    
-        padding: 0.5rem;
-        padding-left: 1.5rem;
+        padding: 0.25rem; 
     }
     .ql-editor p,.ql-editor span,.ql-editor li{
        font-size: 0.7rem !important ;

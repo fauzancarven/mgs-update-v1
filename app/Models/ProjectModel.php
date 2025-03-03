@@ -488,81 +488,89 @@ class ProjectModel extends Model
                                 <span class="text-detail-2"><i class="fa-regular fa-calendar-xmark pe-2"></i>'.$dateEnd.'</span>  
                             </div> 
                         </div>   
-                        <div class="col-md-3 col-12 border-sm-top-1 order-4 order-sm-3" data-id="'.$row->ProjectId.'">
+                        <div class="col-md-4 col-12 border-sm-top-1 order-4 order-sm-3" data-id="'.$row->ProjectId.'">
+                            <span class="text-head-3" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-title="click icon dibawah ini untuk melihat detail project">DETAIL PROJECT : </span> 
                             <div class="d-flex icon-data p-2 text-head-1 gap-1 overflow-x-auto custom-overflow">
-                                <i class="fa-solid fa-truck-ramp-box position-relative header notif '.(count($alertsample) > 0 ? "active" : "").'" '.$alertsamplemessage.' data-id="'.$row->ProjectId.'" data-menu="sample">
+                                <i data-id="'.$row->ProjectId.'" data-menu="sample" class="fa-solid fa-truck-ramp-box position-relative header notif '.(count($alertsample) > 0 ? "active" : "").'" '.$alertsamplemessage.'>
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <i class="fa-solid fa-hand-holding-droplet position-relative header notif '.(count($alertpenawaran) > 0 ? "active" : "").'" '.$alertpenawaranmessage.'>
+                                <i data-id="'.$row->ProjectId.'" data-menu="penawaran" class="fa-solid fa-hand-holding-droplet position-relative header notif '.(count($alertpenawaran) > 0 ? "active" : "").'" '.$alertpenawaranmessage.'>
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <i class="fa-solid fa-money-bill position-relative header notif '.(count($alertinvoice) > 0 ? "active" : "").'" '.$alertinvoicemessage.'>
+                                <i data-id="'.$row->ProjectId.'" data-menu="invoice" class="fa-solid fa-money-bill position-relative header notif '.(count($alertinvoice) > 0 ? "active" : "").'" '.$alertinvoicemessage.'>
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <i class="fa-solid fa-truck position-relative header notif '.(count($alertdelivery) > 0 ? "active" : "").'" '.$alertdeliverymessage.'>
+                                <i data-id="'.$row->ProjectId.'" data-menu="pengiriman" class="fa-solid fa-truck position-relative header notif '.(count($alertdelivery) > 0 ? "active" : "").'" '.$alertdeliverymessage.'>
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <i class="fa-solid fa-cart-shopping position-relative header notif">
+                                <i data-id="'.$row->ProjectId.'" data-menu="pembelian" class="fa-solid fa-cart-shopping position-relative header notif">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <div class="vr"></div>
-                                <i class="fa-solid fa-list-check position-relative header notif">
+                                <div class="vr" style="padding: 0.05rem;"></div>
+                                <i data-id="'.$row->ProjectId.'" data-menu="survey" class="fa-solid fa-list-check position-relative header notif">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <i class="fa-solid fa-list position-relative header notif">
+                                <i data-id="'.$row->ProjectId.'" data-menu="rab" class="fa-solid fa-list position-relative header notif">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <div class="vr"></div>
-                                <i class="fa-solid fa-dollar position-relative header notif">
+                                <div class="vr" style="padding: 0.05rem;"></div>
+                                <i data-id="'.$row->ProjectId.'" data-menu="keuangan" class="fa-solid fa-dollar position-relative header notif">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <div class="vr"></div> 
-                                <i class="fa-solid fa-folder-open position-relative header notif">
+                                <div class="vr" style="padding: 0.05rem;"></div> 
+                                <i data-id="'.$row->ProjectId.'" data-menu="documentasi" class="fa-solid fa-folder-open position-relative header notif">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
-                                <i class="fa-solid fa-comments position-relative header notif">
+                                <i data-id="'.$row->ProjectId.'" data-menu="diskusi" class="fa-solid fa-comments position-relative header notif">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </i>
                             </div> 
                         </div> 
-                        <div class="col-md-2 col-2 order-1 order-sm-4">
-                            <div class="d-md-flex d-none"> 
-                                <button class="btn btn-sm btn-primary btn-action m-1 ms-auto" onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
-                                <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
-                            </div>
-                            <div class="d-md-none d-flex btn-action float-end m-2"> 
-                                <div class="dropdown">
-                                    <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="ti-more-alt icon-rotate-45"></i>
-                                    </a>
-                                    <ul class="dropdown-menu shadow">
-                                        <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
-                                        <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-                                    </ul>
-                                </div>
-                            </div>
+                        <div class="col-md-1 col-2 order-1 order-sm-4 align-self-start"> 
+                            <div class="dropdown text-end">
+                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="ti-more-alt icon-rotate-45 text-primary"></i>
+                                </a>
+                                <ul class="dropdown-menu shadow">
+                                    <li><a class="dropdown-item m-0 px-2 " onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2 text-warning"></i>Edit</a></li>
+                                    <li><a class="dropdown-item m-0 px-2 " onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2 text-danger"></i>Delete</a></li> 
+                                </ul>
+                            </div> 
                         </div>  
                     </div>   
+                    <div class="content-data" data-id="'.$row->ProjectId.'" style="display: none;">
+                        <div class="tab-content" data-id="'.$row->ProjectId.'">
+                            '. $content->html .'
+                        </div>
+                        <div class="d-flex justify-content-center flex-column align-items-center d-none" style="display:none;background:#F5F7FF;height:100%">
+                            <div class="loading text-center loading-content pt-4 mt-4" data-id="'.$row->ProjectId.'" style="display: none;">
+                                <div class="loading-spinner"></div>
+                                <div class="d-flex justify-content-center flex-column align-items-center">
+                                    <span>Sedang memuat data</span> 
+                                </div>
+                            </div> 
+                        </div>  
+                    </div>
                     <div class="d-flex border-top content-data d-none">
                         <div class="side-menu" data-id="'.$row->ProjectId.'">
                             <div class="d-flex flex-column project-menu"> 

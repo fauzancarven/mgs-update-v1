@@ -653,31 +653,43 @@
 
                     loader_data_project($(this).data("id"),$(this).data("menu")) 
                 }); 
-                $(".btn-side-menu").click(function(){
-                    var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
-                    if($(parent).hasClass("hide")){
-                        $(parent).removeClass("hide");
-                        $(this).find("i").removeClass("fa-rotate-180");
+                // $(".btn-side-menu").click(function(){
+                //     var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
+                //     if($(parent).hasClass("hide")){
+                //         $(parent).removeClass("hide");
+                //         $(this).find("i").removeClass("fa-rotate-180");
+                //     }else{ 
+                //         $(parent).addClass("hide");
+                //         $(this).find("i").addClass("fa-rotate-180");
+                //     } 
+                // }); 
+                $(".header.notif").click(function(){  
+                    $(this).siblings(".selected").removeClass("selected");
+                    if($(this).hasClass("selected")){   
+                        $(this).removeClass("selected");
+                        $(".content-data[data-id='" + $(this).data("id") + "']").slideUp("slow"); 
                     }else{ 
-                        $(parent).addClass("hide");
-                        $(this).find("i").addClass("fa-rotate-180");
-                    } 
-                }); 
-               
-                $(".header").click(function(e){
-
-                    var target = $(e.target);   
-                    if (  target.closest('button').length  ) return;
-
-                    if($(this).parent().parent().hasClass("show")){ 
-                        $(this).parent().parent().removeClass("show");
-
-                    }else{
-                        $(this).parent().parent().addClass("show");
-
+                        $(this).addClass("selected");
+                        $(".content-data[data-id='" + $(this).data("id") + "']").slideDown("slow"); 
+                        loader_data_project($(this).data("id"),$(this).data("menu")) 
                     }
+                })
+                // $(".header").click(function(e){
 
-                }); 
+                //     var target = $(e.target);   
+                //     if (  target.closest('button').length  ) return;
+
+                //     if($(this).parent().parent().hasClass("show")){ 
+                //         $(this).parent().parent().removeClass("show");
+
+                //     }else{
+                //         $(this).parent().parent().addClass("show");
+
+                //     }
+
+                // }); 
+
+
                 // paging data
                 if(data["total"] == 0){
                     $("#table-toko_info").html("Tidak ada data yang ditampilkan")
