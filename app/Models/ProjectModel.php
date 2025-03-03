@@ -399,8 +399,7 @@ class ProjectModel extends Model
         $query = $builder->get();  
         $count = $query->getNumRows();
         $html = "";
-        foreach($query->getResult() as $row){ 
-            $content =  json_decode($this->data_project_sph($row->ProjectId));
+        foreach($query->getResult() as $row){  
             $category = "";
             foreach (explode("|",$row->ProjectCategory) as $index=>$x) {
                 $category .= '<span class="badge badge-'.fmod($index, 5).' me-1">'.$x.'</span>';
@@ -463,16 +462,17 @@ class ProjectModel extends Model
                 <div class="card-body p-1"> 
                     <div class="row header p-1 align-items-sm-end align-items-start">
                         <div class="col-md-3 col-10 order-0 project-store d-flex-column mb-md-0 mb-2"> 
-                            <div class="d-flex align-items-center ">
+                            <div class="d-flex align-items-start ">
                                 <div class="flex-shrink-0 ">
                                     <img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">
                                 </div>
                                 <div class="flex-grow-1 ms-1">
                                     <div class="d-flex flex-column">
                                         <span class="text-head-2">'.$row->StoreCode.' - '.$row->StoreName.'</span>
-                                        <span class="text-detail-2 text-truncate overflow-x-auto">'.$category.'</span> 
-                                    </div>
-                                    <i class="fa-regular fa-user"></i><span class="text-detail-2 text-truncate overflow-x-auto pb-2">'.$row->ProjectAdmin.'</span> 
+                                        <span class="text-detail-2 text-truncate overflow-x-auto">'.$category.'</span>
+                                        <div><i class="fa-regular fa-user pe-2"></i><span class="text-detail-2 text-truncate overflow-x-auto">'.$row->ProjectAdmin.'</span></div>  
+                                        <div class="text-detail-2 text-truncate overflow-x-auto"><i class="fa-solid fa-address-card pe-2"></i><span class="text-detail-2">'.$row->CustomerName.' '.$row->CustomerCompany.'</span></div>  
+                                  </div>   
                                 </div>
                             </div>
                         </div> 
@@ -559,9 +559,7 @@ class ProjectModel extends Model
                         </div>  
                     </div>   
                     <div class="content-data" data-id="'.$row->ProjectId.'" style="display: none;">
-                        <div class="tab-content" data-id="'.$row->ProjectId.'">
-                            '. $content->html .'
-                        </div>
+                        <div class="tab-content" data-id="'.$row->ProjectId.'"></div>
                         <div class="d-flex justify-content-center flex-column align-items-center d-none" style="display:none;background:#F5F7FF;height:100%">
                             <div class="loading text-center loading-content pt-4 mt-4" data-id="'.$row->ProjectId.'" style="display: none;">
                                 <div class="loading-spinner"></div>
@@ -570,103 +568,6 @@ class ProjectModel extends Model
                                 </div>
                             </div> 
                         </div>  
-                    </div>
-                    <div class="d-flex border-top content-data d-none">
-                        <div class="side-menu" data-id="'.$row->ProjectId.'">
-                            <div class="d-flex flex-column project-menu"> 
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="sample"> 
-                                    <i class="fa-solid fa-truck-ramp-box position-relative notif '.(count($alertsample) > 0 ? "active" : "").'">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle '.(count($alertsample) > 0 ? "" : "d-none").'"></span>
-                                    </i>
-                                    <span class="menu-text">Sample Barang</span>
-                                    '.(count($alertsample) > 0 ? "<div class=\"menu-total\">".count($alertsample)."</div>" : "<div class=\"menu-total d-none\"></div>").' 
-                                </div>
-                                <div class="menu-item selected" data-id="'.$row->ProjectId.'" data-menu="penawaran">
-                                    <i class="fa-solid fa-hand-holding-droplet position-relative notif '.(count($alertpenawaran) > 0 ? "active" : "").'">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle '.(count($alertpenawaran) > 0 ? "" : "d-none").'"></span>
-                                    </i>
-                                    <span class="menu-text">Penawaran</span>
-                                    '.(count($alertpenawaran) > 0 ? "<div class=\"menu-total\">".count($alertpenawaran)."</div>" : "<div class=\"menu-total d-none\"></div>").' 
-                                </div> 
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="invoice">
-                                    <i class="fa-solid fa-money-bill position-relative notif '.(count($alertinvoice) > 0 ? "active" : "").'">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle '.(count($alertinvoice) > 0 ? "" : "d-none").'"></span>
-                                    </i>
-                                    <span class="menu-text">Invoice</span>
-                                   '.(count($alertinvoice) > 0 ? "<div class=\"menu-total\">".count($alertinvoice)."</div>" : "<div class=\"menu-total d-none\"></div>").' 
-                                </div> 
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="pengiriman">
-                                    <i class="fa-solid fa-truck position-relative notif '.(count($alertdelivery) > 0 ? "active" : "").'">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle '.(count($alertdelivery) > 0 ? "" : "d-none").'"></span>
-                                    </i>
-                                    <span class="menu-text">Pengiriman</span>
-                                   '.(count($alertdelivery) > 0 ? "<div class=\"menu-total\">".count($alertdelivery)."</div>" : "<div class=\"menu-total d-none\"></div>").' 
-                                </div>   
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="pembelian">
-                                    <i class="fa-solid fa-cart-shopping position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
-                                    </i>
-                                    <span class="menu-text">Pembelian</span>
-                                    <div class="menu-total d-none"></div>
-                                </div> 
-                                <div class="divider-vertical m-1"></div>
-                                <div class="menu-item " data-id="'.$row->ProjectId.'" data-menu="survey">
-                                    <i class="fa-solid fa-list-check position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
-                                    </i>
-                                    <span class="menu-text">Survey</span>
-                                    <div class="menu-total d-none"><span>10</span></div>
-                                </div>
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="rab">
-                                    <i class="fa-solid fa-list position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
-                                    </i>
-                                    <span class="menu-text">RAB</span>
-                                    <div class="menu-total  d-none"><span>10</span></div>
-                                </div>
-                                <div class="divider-vertical m-1"></div>
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="keuangan">
-                                    <i class="fa-solid fa-dollar position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
-                                    </i>
-                                    <span class="menu-text">Keuangan</span>
-                                    <div class="menu-total d-none"></div>
-                                </div>
-                                <div class="divider-vertical m-1"></div>
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="documentasi">
-                                    <i class="fa-solid fa-folder-open position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
-                                    </i>
-                                    <span class="menu-text">File Manager</span>
-                                    <div class="menu-total d-none"></div>
-                                </div>
-                                <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="diskusi">
-                                    <i class="fa-regular fa-comments position-relative">
-                                        <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle d-none"> 
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
-                                    </i>
-                                    <span class="menu-text">Diskusi</span>
-                                    <div class="menu-total d-none"></div>
-                                </div>
-                            </div> 
-                            <button class="btn-side-menu" data-id="'.$row->ProjectId.'"><i class="fa-solid fa-angle-left" style="padding: 0;margin: 0;position: absolute;top: 7px;left: 10px;"></i></button>
-                        </div>
-                        <div class="flex-fill">
-                            <div class="tab-content" data-id="'.$row->ProjectId.'">
-                               '. $content->html .'
-                            </div>
-                            <div class="d-flex justify-content-center flex-column align-items-center d-none" style="display:none;background:#F5F7FF;height:100%">
-                                <div class="loading text-center loading-content pt-4 mt-4" data-id="'.$row->ProjectId.'" style="display: none;">
-                                    <div class="loading-spinner"></div>
-                                    <div class="d-flex justify-content-center flex-column align-items-center">
-                                        <span>Sedang memuat data</span> 
-                                    </div>
-                                </div> 
-                            </div>  
-                        </div>
                     </div> 
                 </div>
             </div>';
@@ -870,7 +771,7 @@ class ProjectModel extends Model
                 $alert = ' 
                     <script>
                         function sample_return_click_'.$project_id.'_'.$queryref->SphId.'(){
-                            $(".menu-item[data-menu=\'penawaran\'][data-id=\''.$project_id.'\'").trigger("click");
+                            $("i[data-menu=\'penawaran\'][data-id=\''.$project_id.'\'").trigger("click");
                             setTimeout(function() {
                                 $("html, body").scrollTop($(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").offset().top - 200); 
                                 $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").addClass("show");
@@ -899,7 +800,7 @@ class ProjectModel extends Model
                     $alert = ' 
                     <script>
                         function sample_return_click_'.$project_id.'_'.$queryref->InvId.'(){
-                            $(".menu-item[data-menu=\'invoice\'][data-id=\''.$project_id.'\'").trigger("click");
+                            $("i[data-menu=\'invoice\'][data-id=\''.$project_id.'\'").trigger("click");
                             setTimeout(function() {
                                 $("html, body").scrollTop($(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").offset().top - 200); 
                                 $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
@@ -961,7 +862,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex gap-2"> 
-                            ' . ($item->SampleDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>") : "").'  
+                            ' . ($item->SampleDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default'>") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->SampleDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SampleDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->SampleDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SampleDetailGroup.'</span> 
@@ -974,25 +875,25 @@ class ProjectModel extends Model
                 if($item->SampleDetailType == "product"){
                     $html_items .= '<div class="col-12 col-md-8 my-1 detail">
                                         <div class="row"> 
-                                            <div class="offset-2 offset-md-0 col-5 col-md-2 px-1">   
+                                            <div class="col-6 col-md-2">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Qty:</span>
                                                     <span class="text-head-2">'.number_format($item->SampleDetailQty, 2, ',', '.').' '.$item->SampleDetailSatuanText.'</span>
                                                 </div>
                                             </div>  
-                                            <div class="col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Harga:</span>
+                                                    <span class="text-detail-2">Harga satuan:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->SampleDetailPrice, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
-                                            <div class="offset-2 offset-md-0 col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Disc:</span>
+                                                    <span class="text-detail-2">Disc satuan:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->SampleDetailDisc, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
-                                            <div class="col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Total:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->SampleDetailTotal, 0, ',', '.').'</span>
@@ -1051,8 +952,7 @@ class ProjectModel extends Model
                         </span>Verified</span>';
                         $status = '<span class="text-head-3 text-success">Terverifikasi</span>';
                     }
-                    $html_payment .= '<div class="list-payment mb-1 p-1">  
-                                    <span class="text-head-2 pt-auto ms-2"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
+                    $html_payment .= '<div class="mb-1 p-1">  
                                     <div class="row mx-2"> 
                                         <div class="col-12 col-md-1 order-2 order-sm-1 p-0"> 
                                             <div class="d-flex flex-row flex-md-column justify-content-between"> 
@@ -1084,7 +984,8 @@ class ProjectModel extends Model
                                                 <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
                                             </div>   
                                         </div>
-                                        <div class="col-3 col-md-6 text-end order-1 order-sm-5"> 
+                                        <div class="col-12 col-md-6 text-end order-1 order-sm-5 p-0"> 
+                                            
                                             <div class="d-none d-md-inline-block"> 
                                                 <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->InvId.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this)">
                                                     <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
@@ -1099,18 +1000,17 @@ class ProjectModel extends Model
                                                     <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
                                                 </button> 
                                             </div>
-                                            <div class="d-inline-block d-md-none">
+                                            <div class="d-flex  d-md-none justify-content-between"> 
+                                                <span class="text-head-2 pt-auto"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
                                                 <div class="dropdown">
                                                     <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <i class="ti-more-alt icon-rotate-45"></i>
                                                     </a>
                                                     <ul class="dropdown-menu shadow">
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_sample('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="payment_project_sample('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="print_project_sample_a4('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="print_project_sample_a5('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sample('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sample('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                                        <li><a class="dropdown-item m-0 px-2 '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->InvId.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-eye pe-2"></i>Lihat Bukti</a></li>
+                                                        <li><a class="dropdown-item m-0 px-2" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Cetak</a></li>  
+                                                        <li><a class="dropdown-item m-0 px-2" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
+                                                        <li><a class="dropdown-item m-0 px-2" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
                                                     </ul>
                                                 </div>
                                             </div>
@@ -1159,8 +1059,8 @@ class ProjectModel extends Model
                 <div class="alert alert-success p-2 m-1" role="alert">
                     <span class="text-head-2">
                         <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
-                        ada '.$delivery .' data pengiriman yang dibuat dari invoice ini, 
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick=\'$(".menu-item[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
+                        ada '.$delivery .' data pengiriman yang dibuat dari Sample ini, 
+                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick=\'$("i[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
                         <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->SampleId.',this,\'sample\')">Tambah Data Pengiriman</a> 
                     </span>
                 </div>';
@@ -1169,7 +1069,7 @@ class ProjectModel extends Model
 
             $html .= '
             <div class="list-project mb-4 p-2">
-                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">
+                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
                     <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Penawaran</span>
@@ -1184,18 +1084,12 @@ class ProjectModel extends Model
                     </div>
                     <div class="col-12 col-xl-4 order-3 order-sm-2 pb-2">
                         <div class="d-flex flex-column justify-content-between">
-                            <span class="text-detail-2 pb-2 pb-md-0"><i class="fa-solid fa-location-dot pe-1"></i> Alamat</span>
+                            <span class="text-detail-2 pb-1 pb-md-0"><i class="fa-solid fa-location-dot pe-1"></i> Alamat</span>
                             <span class="text-head-3 text-wrap">'.$row->SampleAddress.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-3">
-                        <div class="float-end d-md-flex d-none gap-1">
-                            <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="po_project_sample('.$project_id.','.$row->SampleId.',this)">
-                                <i class="fa-solid fa-share-from-square mx-1"></i></i><span >Buat PO</span>
-                            </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border d-none" onclick="invoice_project_sample('.$project_id.','.$row->SampleId.',this)">
-                                <i class="fa-solid fa-share-from-square mx-1"></i><span >Buat Invoice</span>
-                            </button> 
+                        <div class="float-end d-md-flex d-none gap-1"> 
                             <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_sample('.$project_id.','.$row->SampleId.',this)">
                                 <i class="fa-solid fa-print mx-1"></i><span >Cetak</span>
                             </button> 
@@ -1207,14 +1101,12 @@ class ProjectModel extends Model
                             </button> 
                         </div> 
                         <div class="d-md-none d-flex btn-action justify-content-between"> 
-                            <div>Sample Barang</div>
+                            <div class="text-head-1">Sample Barang</div>
                             <div class="dropdown">
                                 <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti-more-alt icon-rotate-45"></i>
                                 </a>
-                                <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item m-0 px-2 d-none" onclick="po_project_Sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Teruskan Vendor</a></li>
-                                    <li><a class="dropdown-item m-0 px-2 d-none" onclick="invoice_project_Sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-money-bill pe-2"></i>Teruskan Invoice</a></li> 
+                                <ul class="dropdown-menu shadow"> 
                                     <li><a class="dropdown-item m-0 px-2" onclick="print_project_sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
                                     <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
                                     <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
@@ -1223,24 +1115,24 @@ class ProjectModel extends Model
                         </div> 
                     </div> 
                 </div> 
+                <div class="border-top pt-2 mb-2 gap-2 align-items-center pt-2 justify-content-between">  
+                     '.$alert.' 
+                </div>
                 <div class="detail-item p-2 border-top">
                     '.$html_items.' 
                 </div>
-                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center"> 
+                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center flex-wrap">   
                     <span class="text-detail-2">Sub Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->SampleSubTotal, 0, ',', '.').'</span>  
-                    <div class="divider-horizontal"></div>
+                    <div class="vr"></div>
                     <span class="text-detail-2">Disc Item:</span>
                     <span class="text-head-2">Rp. '.number_format($row->SampleDiscItemTotal, 0, ',', '.').'</span>   
-                    <div class="divider-horizontal"></div>
+                    <div class="vr"></div>
                     <span class="text-detail-2">Disc Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->SampleDiscTotal, 0, ',', '.').'</span>   
-                    <div class="divider-horizontal"></div>
+                    <div class="vr"></div>
                     <span class="text-detail-2">Grand Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->SampleGrandTotal, 0, ',', '.').'</span> 
-                </div>
-                <div class="border-top pt-2 mb-2 gap-2 align-items-center pt-2 justify-content-between">  
-                     '.$alert.' 
                 </div>
                 <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center pt-2 justify-content-between">  
                     <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span> 
@@ -1353,7 +1245,7 @@ class ProjectModel extends Model
                 $alert = ' 
                     <script>
                         function penawaran_return_click_'.$projectId.'_'.$queryref->InvId.'(){
-                            $(".menu-item[data-menu=\'invoice\'][data-id=\''.$projectId.'\'").trigger("click");
+                            $("i[data-menu=\'invoice\'][data-id=\''.$projectId.'\'").trigger("click");
                             setTimeout(function() {
                                 $("html, body").scrollTop($(".list-project[data-project=\''.$projectId.'\'][data-id=\''.$queryref->InvId.'\'").offset().top - 200); 
                                 $(".list-project[data-project=\''.$projectId.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
@@ -1403,39 +1295,37 @@ class ProjectModel extends Model
                 $html_items .= '
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
-                        <div class="d-flex gap-2"> 
-                            ' . ($item->SphDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>") : "").'  
+                        <div class="d-flex gap-2 align-items-center"> 
+                            ' . ($item->SphDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default'>") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailText.'</span>
-                                <span class="text-detail-2 text-truncate"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailGroup.'</span> 
-                                <div class="d-flex flex-wrap gap-1">
-                                    '.$arr_badge.'
-                                </div>
+                                '.($item->SphDetailGroup == "" ? "" : '<span class="text-detail-2 text-truncate"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailGroup.'</span>').'
+                                '.($arr_badge == "" ? "" : '<div class="d-flex flex-wrap gap-1"> '.$arr_badge.'</div>').' 
                             </div> 
                         </div>
                     </div>';
                 if($item->SphDetailType == "product"){
                     $html_items .= '<div class="col-12 col-md-8 my-1 detail">
                                         <div class="row"> 
-                                            <div class="offset-2 offset-md-0 col-5 col-md-2 px-1">   
+                                            <div class="col-6 col-md-2">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Qty:</span>
                                                     <span class="text-head-2">'.number_format($item->SphDetailQty, 2, ',', '.').' '.$item->SphDetailSatuanText.'</span>
                                                 </div>
                                             </div>  
-                                            <div class="col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Harga:</span>
+                                                    <span class="text-detail-2">Harga Satuan:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->SphDetailPrice, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
-                                            <div class="offset-2 offset-md-0 col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Disc:</span>
+                                                    <span class="text-detail-2">Disc Satuan:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->SphDetailDisc, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
-                                            <div class="col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Total:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->SphDetailTotal, 0, ',', '.').'</span>
@@ -1487,7 +1377,7 @@ class ProjectModel extends Model
                             </button> 
                         </div> 
                         <div class="d-md-none d-flex btn-action justify-content-between"> 
-                            <div>PENAWARAN (SPH)</div>
+                            <div class="text-head-2">PENAWARAN (SPH)</div>
                             <div class="dropdown">
                                 <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti-more-alt icon-rotate-45"></i>
@@ -1506,7 +1396,7 @@ class ProjectModel extends Model
                 <div class="detail-item p-2 border-top">
                     '.$html_items.' 
                 </div>
-                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center"> 
+                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center flex-wrap"> 
                     <span class="text-detail-2">Sub Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->SphSubTotal, 0, ',', '.').'</span>  
                     <div class="divider-horizontal"></div>
@@ -1612,7 +1502,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
                         <div class="d-flex gap-2">
-                            ' . ($item->InvDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>") : "").'  
+                            ' . ($item->InvDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' >") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailGroup.'</span> 
@@ -1625,25 +1515,25 @@ class ProjectModel extends Model
                 if($item->InvDetailType == "product"){
                     $html_items_invoice .= '<div class="col-12 col-md-8 my-1 detail">
                                         <div class="row"> 
-                                            <div class="offset-2 offset-md-0 col-5 col-md-2 px-1">   
+                                            <div class="col-6 col-md-2">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Qty:</span>
                                                     <span class="text-head-2">'.number_format($item->InvDetailQty, 2, ',', '.').' '.$item->InvDetailSatuanText.'</span>
                                                 </div>
                                             </div>  
-                                            <div class="col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Harga:</span>
+                                                    <span class="text-detail-2">Harga Satuan:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->InvDetailPrice, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
-                                            <div class="offset-2 offset-md-0 col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Disc:</span>
+                                                    <span class="text-detail-2">Disc Satuan:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->InvDetailDisc, 0, ',', '.').'</span>
                                                 </div>
                                             </div> 
-                                            <div class="col-5 col-md-3 px-1">   
+                                            <div class="col-6 col-md-3">   
                                                 <div class="d-flex flex-column">
                                                     <span class="text-detail-2">Total:</span>
                                                     <span class="text-head-2">Rp. '.number_format($item->InvDetailTotal, 0, ',', '.').'</span>
@@ -1666,6 +1556,7 @@ class ProjectModel extends Model
             $builder = $this->db->table("payment");
             $builder->select('*'); 
             $builder->where('InvId',$row->InvId);
+            $builder->where('PaymentStatus <',2);
             $builder->orderby('PaymentId', 'ASC'); 
             $payment = $builder->get()->getResult(); 
             $html_payment = "";
@@ -1692,7 +1583,7 @@ class ProjectModel extends Model
                     </span>Verified</span>';
                     $status = '<span class="text-head-3 text-success">Terverifikasi</span>';
                 }
-                $html_payment .= '<div class="list-payment mb-1 p-1">  
+                $html_payment .= '<div class="mb-1 p-1">  
                                 <span class="text-head-2 pt-auto ms-2"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
                                 <div class="row mx-2"> 
                                     <div class="col-12 col-md-1 order-2 order-sm-1 p-0"> 
@@ -1802,7 +1693,7 @@ class ProjectModel extends Model
                     <span class="text-head-2">
                         <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
                         ada '.$delivery .' data pengiriman yang dibuat dari invoice ini, 
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick=\'$(".menu-item[data-menu=\"pengiriman\"][data-id=\"'.$projectId.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
+                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick=\'$("i[data-menu=\"pengiriman\"][data-id=\"'.$projectId.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
                         <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$projectId.','.$row->InvId.',this,\'invoice\')">Tambah Data Pengiriman</a> 
                     </span>
                 </div>';
@@ -1849,19 +1740,16 @@ class ProjectModel extends Model
                             </button> 
                         </div> 
                         <div class="d-md-none d-flex btn-action justify-content-between"> 
-                            <div>INVOICE (SALES ORDER)</div>
+                            <div class="text-head-2">INVOICE (SALES ORDER)</div>
                             <div class="dropdown">
                                 <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti-more-alt icon-rotate-45"></i>
                                 </a>
-                                <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-share pe-2"></i>Proforma</a></li>
-                                    <li><a class="dropdown-item m-0 px-2" onclick="add_project_payment('.$projectId.','.$row->InvId.',this,\'invoice\')"><i class="fa-solid fa-share pe-2"></i>Payment</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="add_project_delivery('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-truck pe-2"></i>Surat Jalan</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                <ul class="dropdown-menu shadow"> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak A4</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak A5</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$projectId.','.$row->InvId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
                                 </ul>
                             </div>
                         </div> 
@@ -1870,7 +1758,7 @@ class ProjectModel extends Model
                 <div class="detail-item mt-2 p-2 border-top">
                     '.$html_items_invoice.' 
                 </div>
-                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center"> 
+                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center flex-wrap"> 
                     <span class="text-detail-2">Sub Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->InvSubTotal, 0, ',', '.').'</span> 
                     <div class="divider-horizontal"></div>
@@ -2025,7 +1913,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-5 my-1 varian">   
                         <div class="d-flex gap-2">
-                            ' . ($item->DeliveryDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>") : "").'  
+                            ' . ($item->DeliveryDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' >") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
                                 <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
@@ -2037,13 +1925,13 @@ class ProjectModel extends Model
                     </div>'; 
                 $html_items .= '<div class="col-12 col-md-7 my-1 detail">
                                     <div class="row"> 
-                                        <div class="col-5 col-md-3 px-1">   
+                                        <div class="col-6 col-md-3">   
                                             <div class="d-flex flex-column">
                                                 <span class="text-detail-2">Dikirim:</span>
                                                 <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
                                             </div>
                                         </div>  
-                                        <div class="col-5 col-md-2 px-1">   
+                                        <div class="col-6 col-md-2">   
                                             <div class="d-flex flex-column">
                                                 <span class="text-detail-2">Spare:</span>
                                                 <span class="text-head-2">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
@@ -2422,7 +2310,7 @@ class ProjectModel extends Model
                 <div class="row">
                     <div class="col-12 col-md-6 my-1 varian">   
                         <div class="d-flex gap-2">
-                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").'  
+                            ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' >").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase">'.$item->PODetailText.'</span>
                                 <span class="text-detail-2 text-truncate">'.$item->PODetailGroup.'</span> 
@@ -2922,6 +2810,7 @@ class ProjectModel extends Model
         $builder->set('ProjectComment', $data["ProjectComment"]); 
         $builder->set('UserId', $data["UserId"]); 
         $builder->set('ProjectAdmin', $data["ProjectAdmin"]);  
+        $builder->set('ProjectName', $data["ProjectName"]); 
         $builder->set('updated_user',user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
         $builder->where('ProjectId', $id); 

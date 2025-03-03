@@ -1002,7 +1002,7 @@
         box-shadow: 3px 0px 2px 0 #5397e1;
     }
     .produk {
-        background-size: cover;
+        object-fit: cover;
         width: 50px;
         height: 50px;
         border-radius: 10px;
@@ -1356,7 +1356,7 @@
 
 <body class="<?= $session->sidebar === "false" ? "sidebar-icon-only" : ""; ?>"> <!-- class="sidebar-icon-only" -->
  
-    <div class="d-lg-none w-100 " style="height: 15rem; position: absolute;left: 0; top: 0; border-radius: 0px 0px 30px 30px;">
+    <div class="d-lg-none w-100 " style="height: 3rem; position: absolute;left: 0; top: 0; border-radius: 0px 0px 30px 30px;">
         <div class=" d-flex justify-content-between px-4 pt-3"> 
             <h4 class="text-primary pt-2"> <?= $title; ?></h4> 
             <div class="d-flex">

@@ -468,7 +468,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-payment").modal("hide");  
-                        $(".menu-item[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");  
+                        $("idata-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");  
                     });
                   
                 }else{

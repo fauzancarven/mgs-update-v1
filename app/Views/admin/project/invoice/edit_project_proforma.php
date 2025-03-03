@@ -409,7 +409,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-proforma").modal("hide");  
-                        $(".menu-item[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        $("idata-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

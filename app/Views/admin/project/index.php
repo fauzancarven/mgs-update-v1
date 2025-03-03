@@ -1446,7 +1446,7 @@
                             confirmButtonColor: "#3085d6",
                         });  
                         if(type == "sample"){
-                            $(".menu-item[data-menu='" + type + "'][data-id='" + ref + "']").trigger("click");   
+                            $("idata-menu='" + type + "'][data-id='" + ref + "']").trigger("click");   
                         } 
                     }, 
                 });

@@ -1,6 +1,6 @@
  
 <div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-add-sph-label">Edit Penawaran</h2>
@@ -1303,7 +1303,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-sph").modal("hide");   
-                        $(".menu-item[data-menu='penawaran'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        $("idata-menu='penawaran'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
                     });
                   
                 }else{

@@ -1248,7 +1248,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-delivery").modal("hide");   
-                        $(".menu-item[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["project_id"] ?>']").trigger("click");  
+                        $("idata-menu='<?= $project["menu"] ?>'][data-id='<?= $project["project_id"] ?>']").trigger("click");  
                     });
                   
                 }else{

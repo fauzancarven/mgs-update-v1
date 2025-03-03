@@ -1,6 +1,6 @@
  
 <div class="modal fade" id="modal-edit-sample" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-sample-label" style="overflow-y:auto;">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-edit-sample-label">Ubah Sample Barang</h2>
@@ -1296,7 +1296,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-sample").modal("hide");   
-                        $(".menu-item[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        $("idata-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
                     });
                   
                 }else{
