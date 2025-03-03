@@ -214,7 +214,7 @@ class ProdukModel extends Model
                 }
             } 
             $html .=   ' 
-            <div class="col-4 d-flex align-items-center">
+            <div class="col-md-4 col-10 order-0 d-flex align-items-center">
                     <div class="flex-shrink-0 ">
                         ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='image-produk'>" : "<img class='image-produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").' 
                     </div>
@@ -233,7 +233,7 @@ class ProdukModel extends Model
             foreach ($datavendor as $varian) {  
                 $vendorhtml .= '<span class="badge badge-3">'.$varian->text.'</span>';  
             } 
-            $vendorhtml = '<span class="fw-bold font-std">Vendor</span><div class="d-flex gap-1">'.$vendorhtml.'</div>';
+            $vendorhtml = '<div><span class="fw-bold font-std">Vendor</span><div class="d-flex gap-1 pb-2 flex-wrap overflow-x-auto">'.$vendorhtml.'</div></div>';
 
             $split_varian = json_decode($row->ProdukVarian); 
             $html_varian = "";
@@ -245,14 +245,14 @@ class ProdukModel extends Model
                     $html_varian .= '<span class="badge badge-'.fmod($i, 5).'">'.$value->text.'</span>';  
                 }
                 $i++;
-                $vendorhtml .= '<span class="fw-bold font-std mt-2">'.$varian->varian.'</span><div class="d-flex gap-1 flex-wrap">'.$html_varian.'</div>';
+                $vendorhtml .= '<div><span class="fw-bold font-std">'.$varian->varian.'</span><div class="d-flex gap-1 pb-2 flex-wrap overflow-x-auto">'.$html_varian.'</div></div>';
             } 
 
-            $html .= '<div class="col-4 d-flex flex-column">'.$vendorhtml.'</div>';
+            $html .= '<div class="col-md-4 order-2 order-sm-1 d-flex flex-sm-row flex-md-column gap-1">'.$vendorhtml.'</div>';
 
 
             // PRICE PRODUK
-            $html .= '<div class="col-2">';
+            $html .= '<div class="col-md-2 order-3">';
             if (strpos($row->ProdukPrice, '-') !== false) {
                 list($min, $max) = explode(' - ', $row->ProdukPrice);
                 $html .= "<span class='text-head-2'>Rp. " . number_format($min, 0, ',', '.') . " - Rp. " . number_format($max, 0, ',', '.')."</span>";
@@ -265,12 +265,12 @@ class ProdukModel extends Model
             //ACTION 
             
             $html .= '
-            <div class="col-2">
+            <div class="col-md-2 col-2 order-1 order-sm-2">
                 <div class="d-md-flex d-none"> 
                     <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$row->ProdukId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
                     <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProdukId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
                 </div>
-                <div class="d-md-none d-flex btn-action"> 
+                <div class="d-md-none d-flex btn-action float-end"> 
                     <div class="dropdown">
                         <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti-more-alt icon-rotate-45"></i>
@@ -295,11 +295,11 @@ class ProdukModel extends Model
             ';
         }
         $html = '
-            <div class="row pb-4">
-                <div class="col-4"><span class="text-head-1">Nama</span></div>
-                <div class="col-4"><span class="text-head-1">Varian</span></div>
-                <div class="col-2"><span class="text-head-1">Harga</span></div>
-                <div class="col-2"><span class="text-head-1">Action</span></div>
+            <div class="row pb-4 d-sm-flex d-none">
+                <div class="col-md-4 col-10 order-0"><span class="text-head-1">Nama</span></div>
+                <div class="col-md-4 order-2 order-sm-1"><span class="text-head-1">Varian</span></div>
+                <div class="col-md-2 order-3 order-sm-2"><span class="text-head-1">Harga</span></div>
+                <div class="col-md-2 col-2 order-1 order-sm-3"><span class="text-head-1">Action</span></div>
             </div>
         '.$html;
  

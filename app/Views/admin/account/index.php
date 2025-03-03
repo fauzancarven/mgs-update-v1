@@ -22,7 +22,7 @@
                 <h4 class="mb-0">LIST ACCOUNT</h4> 
             </div> 
             <div class="justify-content-end d-flex col-lg-2 col-6 pb-lg-2 pb-4  order-lg-3">
-                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="ti-plus pe-2"></i>Tambah <span class="d-none d-md-inline-block">Account<span></button>
+                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="ti-plus pe-2"></i><span class="d-none d-md-inline-block">Tambah Account<span></button>
             </div>
             <div class="d-lg-flex search-bar col-lg-8 col-12 order-lg-2 pb-lg-2 pb-4">
                 <div class="form-inline  navbar-search w-100">

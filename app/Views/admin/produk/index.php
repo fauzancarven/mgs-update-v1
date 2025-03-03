@@ -20,14 +20,100 @@
             <div class="p-1 flex-fill" > 
                 <h4 class="mb-0">LIST PRODUK</h4> 
             </div>   
-            <div class="justify-content-end d-flex col-lg-2 col-4 pb-lg-2 pb-4  order-lg-3">
+            <div class="justify-content-end d-flex">
                 <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Produk<span></button>
             </div>
         </div> 
-        
+        <div class="offcanvas offcanvas-bottom" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="staticBackdropLabel"><i class="fa-solid fa-filter"></i> Filter Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <h6>Pilih Varian</h6>
+                <div class="accordion accordion-flush pb-2" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button p-2 mx-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                Vendor
+                            </button> 
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <ul class="list-group list-group-flush"> 
+                                    <?php
+                                        foreach($vendor as $row){
+                                            echo '
+                                            <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                                <div class="form-check w-100">
+                                                    <input class="form-check-input varian" type="checkbox" data-group="Vendor" data-value="'.$row->VendorCode.'" value="'.$row->VendorCode.'" id="'.$row->VendorCode.'">
+                                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="'.$row->VendorCode.'">'.$row->VendorCode.'</label>
+                                                </div> 
+                                            </li>';
+                                        }
+                                    ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> 
+                    <?php 
+                        foreach($varian as $row){ 
+                            $varianli = '';
+                            foreach($varian_detail as $rows){
+                                if($rows->varian == $row->name){
+                                    $varianli .='
+                                    <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                        <div class="form-check w-100">
+                                            <input class="form-check-input varian" type="checkbox" data-group="'.$row->name.'" data-value="'.$rows->name.'" value="'.$rows->name.'" id="varianvalue'.$rows->id.'">
+                                            <label class="form-check-label ps-0 ms-0" for="varianvalue'.$rows->id.'">'.$rows->name.'</label>
+                                        </div> 
+                                    </li>';
+                                }
+                            }
+                            echo '
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button p-2 mx-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-'.preg_replace("/\s+/", "", $row->name).'" aria-expanded="false" aria-controls="flush-'.preg_replace("/\s+/", "", $row->name).'">
+                                        '.$row->name.'
+                                    </button> 
+                                </h2>     
+                                <div id="flush-'.preg_replace("/\s+/", "", $row->name).'" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body filter-list" data-value="'.$row->name.'">
+                                        <div class="search-filter p-2 bg-white">
+                                            <div class="input-group flex-fill">  
+                                                <input class="form-control form-control-sm input-form" name="filter-list" id="search'.$row->name.'" data-name="'.$row->name.'" placeholder="Cari '.$row->name.'" value="" type="text" style="padding-left: 2rem;border: 1px solid #c7c6c6 !important;">
+                                                <i class="fa-solid fa-magnifying-glass" style="position: absolute;top: 50%;  transform: translate(50%, -50%);z-index: 10;"></i> 
+                                            </div>
+                                        </div>
+                                        <ul class="list-group list-group-flush"> 
+                                            '.$varianli.'
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div> '; 
+                        }
+                    ?> 
+                </div> 
+                <h6>Pilih Kategori</h6>
+                <ul class="list-group list-group-flush">
+                    <?php
+                        foreach($category as $row){ 
+                            echo '
+                            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input category" type="checkbox" data-group="category" data-value="'.$row->ProdukCategoryCode.'" value="'.$row->ProdukCategoryCode.'" id="category'.$row->ProdukCategoryCode.'">
+                                    <label class="form-check-label ps-0 ms-0" for="category'.$row->ProdukCategoryCode.'">'.$row->ProdukCategoryCode.' - '.$row->ProdukCategoryName.'</label>
+                                </div> 
+                            </li> ';
+                        }
+                    ?>
+                    
+                </ul>
+            </div>
+        </div>
         <!-- BAGIAN FILTER -->
         <div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">  
-            <div class="input-group ">  
+            <div class="input-group d-sm-flex d-none">  
                 <input class="form-control form-control-sm input-form combo" id="searchdatafilter" placeholder="Pilih Varian" value="" type="text" readonly style="background: white;">
                 <i class="fa-solid fa-filter"></i>
                 <i class="fa-solid fa-caret-down"></i>
@@ -53,7 +139,7 @@
                                         <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                             <div class="form-check w-100">
                                                 <input class="form-check-input varian" type="checkbox" data-group="'.$row->name.'" data-value="'.$rows->name.'" value="'.$rows->name.'" id="varianvalue'.$rows->id.'">
-                                                <label class="form-check-label ps-0 ms-0" for="varianvalue'.$rows->id.'">'.$rows->name.'</label>
+                                                <label class="form-check-label ps-0 ms-0 stretched-link" for="varianvalue'.$rows->id.'">'.$rows->name.'</label>
                                             </div> 
                                         </li>';
                                     }
@@ -88,7 +174,7 @@
                                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                     <div class="form-check w-100">
                                         <input class="form-check-input varian" type="checkbox" data-group="Vendor" data-value="'.$row->VendorCode.'" value="'.$row->VendorCode.'" id="'.$row->VendorCode.'">
-                                        <label class="form-check-label ps-0 ms-0" for="'.$row->VendorCode.'">'.$row->VendorCode.'</label>
+                                        <label class="form-check-label ps-0 ms-0 stretched-link" for="'.$row->VendorCode.'">'.$row->VendorCode.'</label>
                                     </div> 
                                 </li>';
                             }
@@ -97,7 +183,7 @@
                 </div>  
                 <?=  $varianlist ?>
             </div>
-            <div class="input-group">  
+            <div class="input-group d-sm-flex d-none">  
                 <input class="form-control form-control-sm input-form combo" id="searchdatacategory" placeholder="Pilih Kategori Produk" value="" type="text" data-start="" data-end="" readonly style="background: white;">
                 <i class="fa-solid fa-filter"></i>
                 <i class="fa-solid fa-caret-down"></i>
@@ -121,6 +207,9 @@
             <div class="input-group flex-fill">  
                 <input class="form-control form-control-sm input-form" id="searchdataproduk" placeholder="Cari nama produk" value="" type="text">
                 <i class="fa-solid fa-magnifying-glass"></i> 
+                <div class="d-sm-none d-block ps-2">
+                    <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop"><i class="fa-solid fa-filter"></i></button>
+                </div>
             </div>  
         </div>
     </div> 
@@ -129,10 +218,10 @@
     </div>  
 </div>    
 <div class="row justify-content-between">
-    <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto mr-auto">
+    <div class="d-md-flex justify-content-between justify-content-sm-center align-items-center dt-layout-start col-md-auto mr-auto">
         <div class="dt-info pt-1" aria-live="polite" id="table-toko_info" role="status">Showing 1 to 10 of 10 entries</div>
     </div>
-    <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ml-auto">
+    <div class="d-md-flex justify-content-between justify-content-sm-center align-items-center dt-layout-end col-md-auto ml-auto">
         <div class="dt-paging pt-1">
             <nav aria-label="pagination">
                 <ul class="pagination" id="paging-data">
@@ -175,8 +264,7 @@
         $(".filter-list[data-value='" +  $(this).find("span").html() + "'").show();
         $(".filter-list[data-value='" +  $(this).find("span").html() + "'").css("top",$(this).position()["top"] + 30)  
     }, function () {  
-        if (!$(".filter-list[data-value='" +  $(this).find("span").html() + "'").is(':hover')) { 
-            
+        if (!$(".filter-list[data-value='" +  $(this).find("span").html() + "'").is(':hover')) {  
             $(".filter-list[data-value='" +  $(this).find("span").html() + "'").hide();
         }else{
             var ele = $(this);

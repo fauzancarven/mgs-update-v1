@@ -682,7 +682,7 @@
 
     .btn-action{
         font-size:0.75rem !important;
-        border: 1px solid #ebebeb !important;
+        /* border: 1px solid #ebebeb !important; */
     }
     /* .btn-action span{
         width: 0;
@@ -859,10 +859,9 @@
         transition: min-height 0.25s ease-in, opacity 0.5s;
     }
     .card.project .header .logo {
-        width: 20px;
-        height: 20px;
-        object-fit: cover;
-        margin-right:5px;
+        width: 30px;
+        height: 30px;
+        object-fit: cover; 
     } 
     .card.project .header .badge {
         font-size: 0.5rem;
@@ -1291,14 +1290,15 @@
     }
 
     i.notif {
-        padding: 0.25rem;
+        padding: 0.5rem;
+        font-size: 0.85rem !important;
     }
     i.notif.active {
         color: #002247 !important; 
     }
     i.header.notif.active { 
         background: #b2c5ff;
-        border-radius: 50%;
+        border-radius: 0.25rem;
     }
     i.notif:hover {
         background: #d9e0ff;
@@ -1307,7 +1307,10 @@
     }
     i.notif .icon-notif {
         display: none;
-        padding: 3px !important;
+        padding: 5px !important;
+        font-size: 0.5rem;
+        font-weight: bold;
+        color: white;
     }
     i.notif.active .icon-notif {
         display: block;
@@ -1323,6 +1326,23 @@
     } 
     .modal .modal-dialog {
         margin-top: 1.5rem;
+    }
+    .offcanvas, .offcanvas-lg, .offcanvas-md, .offcanvas-sm, .offcanvas-xl, .offcanvas-xxl{
+        --bs-offcanvas-height: auto;
+    }
+    .project-store .logo {
+        width: 2rem;
+        height: 2rem;
+        object-fit: contain !important;
+        margin-right:0;
+    }
+    .custom-overflow::-webkit-scrollbar {
+        background-color: #f5f7ff;
+        height: 5px;
+    }
+    .custom-overflow::-webkit-scrollbar-thumb {
+        background:#6c757d;
+        border-radius:5px;
     }
 </style>
 

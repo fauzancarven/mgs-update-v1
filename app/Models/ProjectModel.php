@@ -406,6 +406,12 @@ class ProjectModel extends Model
                 $category .= '<span class="badge badge-'.fmod($index, 5).' me-1">'.$x.'</span>';
             }  
             $date = date_create($row->ProjectDate);
+            if($row->ProjectDateEnd == null){ 
+                $dateEnd = "-";
+            }else{
+                $dateEnd = date_create($row->ProjectDateEnd);
+                $dateEnd = date_format($dateEnd,"d M Y").', '.date_format($dateEnd,"H:i:s");
+            }
 
             //ALERT SAMPLE  
             $alertsample = $this->data_project_sample_notif($row->ProjectId);
@@ -454,69 +460,110 @@ class ProjectModel extends Model
 
 
             $html .= '<div class="card project hide"> 
-                <div class="card-body p-0"> 
-                    <div class="d-flex header p-2 gap-1 justify-content-end align-items-center">
-                        <div class="project-store">   
-                            <img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">
-                            <span class="text-head-2">'.$row->StoreCode.'</span>
-                        </div>
-                        <div class="divider-horizontals"></div>
-                        <div class="d-block">
-                            '.$category.'
-                        </div>
-                        <div class="divider-horizontals"></div>
-                        <div class="project-name">  
-                            <span class="text-head-2">'.$row->ProjectName.'</span>
-                        </div>
-                        <div class="divider-horizontals"></div> 
-                        <div class="project-customer">  
-                            <i class="fa-solid fa-users-rectangle"></i>
-                            <span class="text-head-3">'.$row->CustomerName.'</span>  
-                        </div>
-                        <div class="divider-horizontals"></div> 
-                        <div class="project-date">  
-                            <i class="fa-regular fa-calendar"></i>
-                            <span class="text-detail-2">'.date_format($date,"d M Y").', '.date_format($date,"H:i:s").'</span>  
-                        </div>
-                        <div class="divider-horizontals"></div> 
-                        <div class="project-admin flex-fill">  
-                            <i class="fa-regular fa-user"></i>
-                            <span class="text-detail-2">'.$row->ProjectAdmin.'</span>  
-                        </div>
-                        <div class="d-flex icon-data p-2 text-head-1 gap-1">
-                            <i class="fa-solid fa-truck-ramp-box position-relative header notif '.(count($alertsample) > 0 ? "active" : "").'" '.$alertsamplemessage.'>
-                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
-                                    <span class="visually-hidden">unread messages</span>
-                                </span>
-                            </i>
-                            <i class="fa-solid fa-hand-holding-droplet position-relative header notif '.(count($alertpenawaran) > 0 ? "active" : "").'" '.$alertpenawaranmessage.'>
-                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
-                                    <span class="visually-hidden">unread messages</span>
-                                </span>
-                            </i>
-                            <i class="fa-solid fa-money-bill position-relative header notif '.(count($alertinvoice) > 0 ? "active" : "").'" '.$alertinvoicemessage.'>
-                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
-                                    <span class="visually-hidden">unread messages</span>
-                                </span>
-                            </i>
-                            <i class="fa-solid fa-truck position-relative header notif '.(count($alertdelivery) > 0 ? "active" : "").'" '.$alertdeliverymessage.'>
-                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
-                                    <span class="visually-hidden">unread messages</span>
-                                </span>
-                            </i>
-                            <i class="fa-solid fa-cart-shopping position-relative header notif">
-                                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
-                                    <span class="visually-hidden">unread messages</span>
-                                </span>
-                            </i>
+                <div class="card-body p-1"> 
+                    <div class="row header p-1 align-items-sm-end align-items-start">
+                        <div class="col-md-3 col-10 order-0 project-store d-flex-column mb-md-0 mb-2"> 
+                            <div class="d-flex align-items-center ">
+                                <div class="flex-shrink-0 ">
+                                    <img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">
+                                </div>
+                                <div class="flex-grow-1 ms-1">
+                                    <div class="d-flex flex-column">
+                                        <span class="text-head-2">'.$row->StoreCode.' - '.$row->StoreName.'</span>
+                                        <span class="text-detail-2 text-truncate overflow-x-auto">'.$category.'</span> 
+                                    </div>
+                                    <i class="fa-regular fa-user"></i><span class="text-detail-2 text-truncate overflow-x-auto pb-2">'.$row->ProjectAdmin.'</span> 
+                                </div>
+                            </div>
                         </div> 
-                        <div class="project-action action-td">  
-                            <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</button>
-                            <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</button>
-                        </div>
-                    </div>  
-                    
-                    <div class="d-flex border-top content-data ">
+                        <div class="col-md-2 col-6 border-sm-top-1 order-2 order-sm-1">
+                            <div class="d-flex flex-column">
+                                <span class="text-head-2">'.$row->ProjectName.'</span>
+                                <span class="text-detail-2 text-truncate overflow-x-auto">Catatan : '.$row->ProjectComment.'</span> 
+                            </div> 
+                        </div>  
+                        <div class="col-md-2 col-6 border-sm-top-1 order-3 order-sm-2">
+                            <div class="d-flex flex-column">
+                                <span class="text-detail-2"><i class="fa-regular fa-calendar-check pe-2"></i>'.date_format($date,"d M Y").', '.date_format($date,"H:i:s").'</span>  
+                                <span class="text-detail-2"><i class="fa-regular fa-calendar-xmark pe-2"></i>'.$dateEnd.'</span>  
+                            </div> 
+                        </div>   
+                        <div class="col-md-3 col-12 border-sm-top-1 order-4 order-sm-3" data-id="'.$row->ProjectId.'">
+                            <div class="d-flex icon-data p-2 text-head-1 gap-1 overflow-x-auto custom-overflow">
+                                <i class="fa-solid fa-truck-ramp-box position-relative header notif '.(count($alertsample) > 0 ? "active" : "").'" '.$alertsamplemessage.' data-id="'.$row->ProjectId.'" data-menu="sample">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <i class="fa-solid fa-hand-holding-droplet position-relative header notif '.(count($alertpenawaran) > 0 ? "active" : "").'" '.$alertpenawaranmessage.'>
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <i class="fa-solid fa-money-bill position-relative header notif '.(count($alertinvoice) > 0 ? "active" : "").'" '.$alertinvoicemessage.'>
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <i class="fa-solid fa-truck position-relative header notif '.(count($alertdelivery) > 0 ? "active" : "").'" '.$alertdeliverymessage.'>
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <i class="fa-solid fa-cart-shopping position-relative header notif">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <div class="vr"></div>
+                                <i class="fa-solid fa-list-check position-relative header notif">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <i class="fa-solid fa-list position-relative header notif">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <div class="vr"></div>
+                                <i class="fa-solid fa-dollar position-relative header notif">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <div class="vr"></div> 
+                                <i class="fa-solid fa-folder-open position-relative header notif">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <i class="fa-solid fa-comments position-relative header notif">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                            </div> 
+                        </div> 
+                        <div class="col-md-2 col-2 order-1 order-sm-4">
+                            <div class="d-md-flex d-none"> 
+                                <button class="btn btn-sm btn-primary btn-action m-1 ms-auto" onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
+                                <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
+                            </div>
+                            <div class="d-md-none d-flex btn-action float-end m-2"> 
+                                <div class="dropdown">
+                                    <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ti-more-alt icon-rotate-45"></i>
+                                    </a>
+                                    <ul class="dropdown-menu shadow">
+                                        <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$row->ProjectId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$row->ProjectId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>   
+                    <div class="d-flex border-top content-data d-none">
                         <div class="side-menu" data-id="'.$row->ProjectId.'">
                             <div class="d-flex flex-column project-menu"> 
                                 <div class="menu-item" data-id="'.$row->ProjectId.'" data-menu="sample"> 

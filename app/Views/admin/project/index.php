@@ -14,8 +14,8 @@
         <?= session()->getFlashdata('pesan'); ?>
     </div>
 <?php endif; ?>
-
-<div class="d-flex align-items-center mb-4"> 
+<div class="px-2">
+<div class="d-flex align-items-center mb-4 "> 
     <div class="p-1 flex-fill" > 
         <h4 class="mb-0">LIST PROJECT</h4> 
     </div>     
@@ -27,7 +27,7 @@
 
 <!-- BAGIAN FILTER -->
 <div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">  
-    <div class="input-group ">  
+    <div class="input-group d-sm-flex d-none">  
         <input class="form-control form-control-sm input-form" id="searchdatafilter" placeholder="Pilih Filter" value="" type="text" readonly style="background: white;">
         <i class="fa-solid fa-filter"></i>
         <i class="fa-solid fa-caret-down"></i>
@@ -151,16 +151,233 @@
             </ul>
         </div>
     </div>
-    <div class="input-group ">  
+    <div class="input-group d-sm-flex d-none">  
         <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="" readonly style="background: white;">
         <i class="fa-solid fa-calendar-days"></i> 
     </div> 
     <div class="input-group flex-fill">  
         <input class="form-control form-control-sm input-form" id="searchdataproject" placeholder="Cari nama project, catatan, item barang ataupun nomer dokumen" value="" type="text">
-        <i class="fa-solid fa-magnifying-glass"></i> 
+        <i class="fa-solid fa-magnifying-glass"></i>   
+        <div class="d-sm-none d-block ps-2">
+            <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop"><i class="fa-solid fa-filter"></i></button>
+        </div> 
+        <div class="d-sm-none d-block ps-1">
+            <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop-date" aria-controls="staticBackdrop"><i class="fa-solid fa-calendar-days"></i></button>
+        </div>
     </div>  
 </div>
-
+<div class="offcanvas offcanvas-bottom" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop-date" aria-labelledby="staticBackdropLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="staticBackdropLabel"><i class="fa-solid fa-calendar-days"></i> Pilih Tanggal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between">
+                <label class="form-check-label stretched-link" for="radioNoLabel1">Semua Tanggal</label> 
+                <div>
+                    <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel1" value="0" aria-label="..." checked>
+                </div> 
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <label class="form-check-label stretched-link" for="radioNoLabel2">30 Hari Terkahir</label> 
+                <div>
+                    <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel2" value="1" aria-label="...">
+                </div> 
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <label class="form-check-label stretched-link" for="radioNoLabel3">90 Hari Terakhir</label>
+                <div>
+                    <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel3" value="2" aria-label="...">
+                </div> 
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <label class="form-check-label stretched-link" for="radioNoLabel4">Pilih Tanggal Sendiri</label>
+                <div>
+                    <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel4" value="3" aria-label="...">
+                </div>  
+            </li>  
+            <div class="row g-2 p-2 date-select" style="display: none;">
+                <div class="col-6">
+                    <div class="form-floating">
+                        <input type="date" class="form-control bg-white" id="floatingInputGrid" placeholder="3 Maret 2019" value="3 Maret 2019">
+                        <label for="floatingInputGrid">Mulai Dari</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-floating">
+                        <input type="date" class="form-control bg-white" id="floatingInputGrid" placeholder="3 Maret 2019" value="3 Maret 2019">
+                        <label for="floatingInputGrid">Sampai</label>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $('input[type=radio][name=radioNoLabel]').on('change', function() {
+                    switch ($(this).val()) {
+                        case '0':
+                            $(".date-select").hide(); 
+                            break;
+                        case '1':
+                            $(".date-select").hide(); 
+                            break;
+                        case '2':
+                            $(".date-select").hide(); 
+                            break;
+                        case '3':
+                            $(".date-select").show(); 
+                            break;
+                        default:
+                            $(".date-select").hide(); 
+                    }
+                }); 
+            </script>
+        </ul>
+        
+        <button class="btn btn-sm btn-primary w-100 mt-2  rounded" ><i class="fa-solid fa-checked pe-2"></i>Terapkan</button>
+    </div>
+</div>
+<div class="offcanvas offcanvas-bottom" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="staticBackdropLabel"><i class="fa-solid fa-filter"></i> Filter Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="accordion accordion-flush pb-2" id="accordionFlushExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 mx-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-Toko" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Toko
+                    </button> 
+                </h2>
+                <div id="flush-Toko" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <ul class="list-group list-group-flush"> 
+                            <?php
+                                foreach($store as $rows){
+                                    echo ' 
+                                    <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start" for="'.$rows->StoreCode.'">
+                                        <div class="form-check w-100">
+                                            <input class="form-check-input" type="checkbox" data-group="store" data-value="'.$rows->StoreId.'" value="'.$rows->StoreId.'" id="check-'.$rows->StoreCode.'">
+                                            <label class="form-check-label ps-0 ms-0 stretched-link" for="check-'.$rows->StoreCode.'">
+                                                '.$rows->StoreCode.' 
+                                            </label>
+                                        </div> 
+                                    </li>';
+                                }
+                            ?>  
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 mx-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-Kategori" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Kategori
+                    </button> 
+                </h2>
+                <div id="flush-Kategori" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <ul class="list-group list-group-flush"> 
+                            <?php
+                                foreach($kategori as $rows){
+                                    echo ' 
+                                    <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->id.$rows->name.'">
+                                        <div class="form-check w-100">
+                                            <input class="form-check-input" type="checkbox" data-group="kategori" data-value="'.$rows->name.'" id="check-cat-'.$rows->id.$rows->name.'">
+                                            <label class="form-check-label ps-0 ms-0 stretched-link" for="check-cat-'.$rows->id.$rows->name.'">
+                                                '.$rows->name.' 
+                                            </label>
+                                        </div> 
+                                    </li>';
+                                }
+                            ?>  
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 mx-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-Admin" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Admin
+                    </button> 
+                </h2>
+                <div id="flush-Admin" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <ul class="list-group list-group-flush">   
+                            <?php
+                                foreach($admin as $rows){
+                                    echo ' 
+                                    <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->username.'">
+                                        <div class="form-check w-100">
+                                            <input class="form-check-input" type="checkbox" data-group="user" data-value="'.$rows->id.'" id="check-'.$rows->username.'">
+                                            <label class="form-check-label ps-0 ms-0 stretched-link" for="check-'.$rows->username.'">
+                                                '.$rows->username.' 
+                                            </label>
+                                        </div> 
+                                    </li>';
+                                }
+                            ?>  
+                          
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 mx-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-Status" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Status
+                    </button> 
+                </h2>
+                <div id="flush-Status" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <ul class="list-group list-group-flush"> 
+                            <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="sample" value="sample" id="check-statussample">
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statussample">
+                                        Sample Barang
+                                    </label>
+                                </div> 
+                            </li> 
+                            <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="penawaran" value="penawaran" id="check-statuspenawaran">
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statuspenawaran">
+                                        Penawaran
+                                    </label>
+                                </div> 
+                            </li> 
+                            <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="invoice" value="invoice" id="check-statusinvoice">
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statusinvoice">
+                                        Invoice
+                                    </label>
+                                </div> 
+                            </li> 
+                            <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="pengiriman" value="pengiriman" id="check-statuspengiriman">
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statuspengiriman">
+                                        Pengiriman
+                                    </label>
+                                </div> 
+                            </li> 
+                            <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="pembelian" value="pembelian" id="check-statuspembelian">
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statuspembelian">
+                                        Pembelian
+                                    </label>
+                                </div> 
+                            </li>  
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+        </div>  
+    </div>
+</div>
 <div id="data-project">
     <!-- <div class="card project"> 
         <div class="card-body p-0"> 
@@ -330,6 +547,7 @@
             </nav>
         </div>
     </div>
+</div>
 </div>   
 <div style="margin-bottom: 100px;"></div>  
 <!-- Modal -->
@@ -383,6 +601,7 @@
         </div>
     </div>
 </div>
+
 <script>
     var paging = 1;
     var table; 
