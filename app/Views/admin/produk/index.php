@@ -102,7 +102,7 @@
                             <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                                 <div class="form-check w-100">
                                     <input class="form-check-input category" type="checkbox" data-group="category" data-value="'.$row->ProdukCategoryCode.'" value="'.$row->ProdukCategoryCode.'" id="category'.$row->ProdukCategoryCode.'">
-                                    <label class="form-check-label ps-0 ms-0" for="category'.$row->ProdukCategoryCode.'">'.$row->ProdukCategoryCode.' - '.$row->ProdukCategoryName.'</label>
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="category'.$row->ProdukCategoryCode.'">'.$row->ProdukCategoryCode.' - '.$row->ProdukCategoryName.'</label>
                                 </div> 
                             </li> ';
                         }
@@ -194,8 +194,8 @@
                                 echo '
                                 <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                                     <div class="form-check w-100">
-                                        <input class="form-check-input category" type="checkbox" data-group="category" data-value="'.$row->ProdukCategoryCode.'" value="'.$row->ProdukCategoryCode.'" id="category'.$row->ProdukCategoryCode.'">
-                                        <label class="form-check-label ps-0 ms-0" for="category'.$row->ProdukCategoryCode.'">'.$row->ProdukCategoryCode.' - '.$row->ProdukCategoryName.'</label>
+                                        <input class="form-check-input category" type="checkbox" data-group="category" data-value="'.$row->ProdukCategoryCode.'" value="'.$row->ProdukCategoryCode.'" id="category-'.$row->ProdukCategoryCode.'">
+                                        <label class="form-check-label ps-0 ms-0 stretched-link " for="category-'.$row->ProdukCategoryCode.'">'.$row->ProdukCategoryCode.' - '.$row->ProdukCategoryName.'</label>
                                     </div> 
                                 </li> ';
                             }
