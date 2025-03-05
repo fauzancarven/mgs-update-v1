@@ -216,7 +216,7 @@ class ProdukModel extends Model
             $html .=   ' 
             <div class="col-md-4 col-10 order-0 d-flex align-items-center">
                     <div class="flex-shrink-0 ">
-                        ' . ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='image-produk'>" : "<img class='image-produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").' 
+                        ' . ($gambar ? "<img src='".base_url().$gambar."?".date("Y-m-dH:i:s")."' alt='Gambar' class='image-produk'>" : "<img class='image-produk' src='".base_url().$default."' alt='Gambar Default' style='scale: 0.7'>").' 
                     </div>
                     <div class="flex-grow-1 ms-3 ">
                         <div class="d-flex flex-column">
