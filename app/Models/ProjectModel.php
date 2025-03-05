@@ -1584,8 +1584,7 @@ class ProjectModel extends Model
                     $status = '<span class="text-head-3 text-success">Terverifikasi</span>';
                 }
                 $html_payment .= '<div class="mb-1 p-1">  
-                                <span class="text-head-2 pt-auto ms-2"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
-                                <div class="row mx-2"> 
+                                 <div class="row mx-2"> 
                                     <div class="col-12 col-md-1 order-2 order-sm-1 p-0"> 
                                         <div class="d-flex flex-row flex-md-column justify-content-between"> 
                                             <span class="text-detail-2"><i class="fa-solid fa-check text-success pe-1"></i>Status</span>
@@ -1616,7 +1615,7 @@ class ProjectModel extends Model
                                             <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
                                         </div>   
                                     </div>
-                                    <div class="col-3 col-md-6 text-end order-1 order-sm-5"> 
+                                    <div class="col-12 col-md-6 text-end order-1 order-sm-5 p-0"> 
                                         <div class="d-none d-md-inline-block"> 
                                             <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$projectId.','.$row_payment->InvId.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this)">
                                                 <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
@@ -1631,7 +1630,8 @@ class ProjectModel extends Model
                                                 <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
                                             </button> 
                                         </div>
-                                        <div class="d-inline-block d-md-none">
+                                        <div class="d-flex d-md-none justify-content-between">
+                                            <span class="text-head-2 pt-auto"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
                                             <div class="dropdown">
                                                 <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="ti-more-alt icon-rotate-45"></i>
@@ -3022,6 +3022,7 @@ class ProjectModel extends Model
     }  
     public function getdataSPH($id){  
         $builder = $this->db->table("penawaran"); 
+        $builder->select("*,penawaran.SampleId as SampleId");
         $builder->join("customer","penawaran.CustomerId = customer.CustomerId");
         $builder->join("project","project.ProjectId = penawaran.ProjectId"); 
         $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId");

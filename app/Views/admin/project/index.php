@@ -983,6 +983,10 @@
             $(el).html(old_text); 
         });
     };
+    
+    print_project_po_a4 = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/poA4/") ?>' + id, '_blank');
+    };
 
 
     /* 
