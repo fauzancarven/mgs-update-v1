@@ -694,8 +694,7 @@
                     }
                     $(this).parents('.project').scrollTop(0); 
                 })
-                $(".close-project").click(function(){ 
-                    console.log("click")
+                $(".close-project").click(function(){  
                     var header = $(this).parents('.project'); 
                     $(header).find(".header.notif.selected").trigger("click"); 
                 });

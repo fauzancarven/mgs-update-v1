@@ -39,4 +39,10 @@
         </div>
     </div>  
 </div>     
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script> 
+
+<script>
+    const socket = io("https://socket.mahieraglobalsolution.com"); 
+</script>
 <?php $this->endSection(); ?>
