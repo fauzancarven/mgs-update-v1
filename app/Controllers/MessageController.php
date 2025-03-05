@@ -241,7 +241,7 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel();
 
         $project = $models->getdataSPH($id); 
-        $arr_detail = $models->getdataDetailSPH($id);
+        $arr_detail = $models->getdataDetailSPH($id); 
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(

@@ -53,8 +53,8 @@ class ProjectModel extends Model
         $dt = new Datatables(new Codeigniter4Adapter);
 
         $builder = $this->db->table($this->table);
-        $builder->join("customer","customer.CustomerId = project.CustomerId ");
-        $builder->join("store","store.StoreId = project.StoreId");
+        $builder->join("customer","customer.CustomerId = project.CustomerId ","left");
+        $builder->join("store","store.StoreId = project.StoreId","left");
         
         $builder->select('ProjectId,ProjectDate,store.StoreId,ProjectAdmin,UserId,project.CustomerId,ProjectCategory,ProjectComment,ProjectStatus,StoreLogo,StoreCode,StoreName,CustomerName,CustomerCompany,CustomerAddress');
         $query = $builder->getCompiledSelect();
@@ -358,8 +358,8 @@ class ProjectModel extends Model
 
     public function load_table_project($filter = null){
         $builder = $this->db->table($this->table);
-        $builder->join("customer","customer.CustomerId = project.CustomerId ");
-        $builder->join("store","store.StoreId = project.StoreId"); 
+        $builder->join("customer","customer.CustomerId = project.CustomerId ","left");
+        $builder->join("store","store.StoreId = project.StoreId","left"); 
         
         if($filter["datestart"] !== "") $builder->where("ProjectDate >=",$filter["datestart"]);
         if($filter["dateend"] !== "") $builder->where("ProjectDate <=",$filter["dateend"]);
@@ -458,7 +458,7 @@ class ProjectModel extends Model
             $alertdeliverymessage = 'data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="'.$emessage.'"';
 
 
-            $html .= '<div class="card project hide"> 
+            $html .= '<div class="card project" data-id="'.$row->ProjectId.'"> 
                 <div class="card-body p-1"> 
                     <div class="row header p-1 align-items-sm-end align-items-start">
                         <div class="col-md-3 col-10 order-0 project-store d-flex-column mb-md-0 mb-2"> 
@@ -558,7 +558,7 @@ class ProjectModel extends Model
                             </div> 
                         </div>  
                     </div>   
-                    <div class="content-data" data-id="'.$row->ProjectId.'" style="display: none;">
+                    <div class="content-data overflow-y-auto" data-id="'.$row->ProjectId.'" style="display: none;">
                         <div class="tab-content" data-id="'.$row->ProjectId.'"></div>
                         <div class="d-flex justify-content-center flex-column align-items-center d-none" style="display:none;background:#F5F7FF;height:100%">
                             <div class="loading text-center loading-content pt-4 mt-4" data-id="'.$row->ProjectId.'" style="display: none;">
@@ -591,8 +591,8 @@ class ProjectModel extends Model
 
 
         $builder = $this->db->table($this->table);
-        $builder->join("customer","customer.CustomerId = project.CustomerId ");
-        $builder->join("store","store.StoreId = project.StoreId"); 
+        $builder->join("customer","customer.CustomerId = project.CustomerId ","left");
+        $builder->join("store","store.StoreId = project.StoreId","left"); 
         
         if($filter["datestart"] !== "") $builder->where("ProjectDate >=",$filter["datestart"]);
         if($filter["dateend"] !== "") $builder->where("ProjectDate <=",$filter["dateend"]);
@@ -2265,7 +2265,7 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("pembelian");
         $builder->select('*'); 
-        $builder->join("vendor",'POVendor=VendorId'); 
+        $builder->join("vendor",'POVendor=VendorId',"left"); 
         $builder->where('PORef',$id);
         $builder->orderby('POId', 'DESC'); 
         $query = $builder->get()->getResult();  
@@ -2348,7 +2348,7 @@ class ProjectModel extends Model
 
             $builder = $this->db->table("pembelian");
             $builder->select('*'); 
-            $builder->join("vendor",'POVendor=VendorId'); 
+            $builder->join("vendor",'POVendor=VendorId',"left"); 
             $builder->where('PORef',$id);
             $builder->orderby('POId', 'DESC'); 
             $query = $builder->get()->getResult();  
@@ -2921,9 +2921,9 @@ class ProjectModel extends Model
     } 
     public function getdataSample($id){
         $builder = $this->db->table("sample"); 
-        $builder->join("customer","sample.CustomerId = customer.CustomerId");
-        $builder->join("project","project.ProjectId = sample.ProjectId");
-        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
+        $builder->join("customer","sample.CustomerId = customer.CustomerId","left");
+        $builder->join("project","project.ProjectId = sample.ProjectId","left");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('SampleId',$id);
         $builder->limit(1);
         return $builder->get()->getRow();  
@@ -3021,12 +3021,11 @@ class ProjectModel extends Model
         return JSON_ENCODE(array("status"=>true));
     }  
     public function getdataSPH($id){  
-        $builder = $this->db->table("penawaran"); 
-        $builder->select("*,penawaran.SampleId as SampleId");
-        $builder->join("customer","penawaran.CustomerId = customer.CustomerId");
-        $builder->join("project","project.ProjectId = penawaran.ProjectId"); 
-        $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId");
-        $builder->where('SphId',$id);
+        $builder = $this->db->table("penawaran");  
+        $builder->join("customer","penawaran.CustomerId = customer.CustomerId","left");
+        $builder->join("project","project.ProjectId = penawaran.ProjectId","left"); 
+        $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId","left");
+        $builder->where('penawaran.SphId',$id); 
         $builder->limit(1);
         return $builder->get()->getRow();   
     }
@@ -3136,10 +3135,10 @@ class ProjectModel extends Model
     public function getdataInvoice($id){
         $builder = $this->db->table("invoice");
         $builder->select("*");
-        $builder->join("customer","invoice.CustomerId = customer.CustomerId");
-        $builder->join("users","id = InvAdmin");
-        $builder->join("project","project.ProjectId = invoice.ProjectId");
-        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
+        $builder->join("customer","invoice.CustomerId = customer.CustomerId","left");
+        $builder->join("users","id = InvAdmin","left");
+        $builder->join("project","project.ProjectId = invoice.ProjectId","left");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('InvId',$id);
         $builder->limit(1);
         return $builder->get()->getRow();  
@@ -3586,7 +3585,7 @@ class ProjectModel extends Model
         $builder->join('project',"project.ProjectId=delivery.ProjectId","left");   
         $builder->join('customer',"project.CustomerId=customer.CustomerId","left");   
         $builder->join('store',"store.StoreId=project.StoreId","left"); 
-        $builder->join("template_footer","delivery.TemplateId = template_footer.TemplateFooterId");
+        $builder->join("template_footer","delivery.TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('delivery.DeliveryId',$id);  
         return $builder->get()->getRow();  
     }
@@ -3606,7 +3605,7 @@ class ProjectModel extends Model
     }
     public function getQtyDeliveryByRef($ref,$produkid,$varian,$text){
         $builder = $this->db->table("delivery_detail"); 
-        $builder->join("delivery","DeliveryId = DeliveryDetailRef");
+        $builder->join("delivery","DeliveryId = DeliveryDetailRef","left");
         $builder->where('InvId',$ref);  
         $arr_detail_delivery = $builder->get()->getResult(); 
 
@@ -3621,7 +3620,7 @@ class ProjectModel extends Model
 
     public function getQtyDeliveryBySample($ref,$produkid,$varian,$text){
         $builder = $this->db->table("delivery_detail"); 
-        $builder->join("delivery","DeliveryId = DeliveryDetailRef");
+        $builder->join("delivery","DeliveryId = DeliveryDetailRef","left");
         $builder->where('SampleId',$ref);  
         $arr_detail_delivery = $builder->get()->getResult(); 
 
@@ -3639,7 +3638,7 @@ class ProjectModel extends Model
         foreach($arr_detail_invoice as $row){
             if($row->ProdukId == $produkid && $row->InvDetailVarian == $varian && $row->InvDetailText == $text){
                 $builder = $this->db->table("delivery_detail"); 
-                $builder->join("delivery","DeliveryId = DeliveryDetailRef");
+                $builder->join("delivery","DeliveryId = DeliveryDetailRef","left");
                 $builder->where('DeliveryDetailRef',$ref);  
                 $builder->where('ProdukId',$produkid); 
                 $builder->where('DeliveryDetailVarian',$varian,true);
@@ -3732,9 +3731,9 @@ class ProjectModel extends Model
     public function getdataPO($id){
         $builder = $this->db->table("pembelian"); 
         $builder->select("*"); 
-        $builder->join("vendor","POVendor = VendorId");
-        $builder->join("customer","customer.CustomerId = pembelian.CustomerId");
-        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId");
+        $builder->join("vendor","POVendor = VendorId","left");
+        $builder->join("customer","customer.CustomerId = pembelian.CustomerId","left");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('POId',$id);  
         return $builder->get()->getRow();  
     }

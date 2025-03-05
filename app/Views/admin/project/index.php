@@ -63,7 +63,7 @@
                         <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->StoreCode.'">
                             <div class="form-check w-100">
                                 <input class="form-check-input" type="checkbox" data-group="store" data-value="'.$rows->StoreId.'" value="'.$rows->StoreId.'" id="'.$rows->StoreCode.'">
-                                <label class="form-check-label ps-0 ms-0" for="'.$rows->StoreCode.'">
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="'.$rows->StoreCode.'">
                                     '.$rows->StoreCode.' 
                                 </label>
                             </div> 
@@ -79,8 +79,8 @@
                         echo ' 
                         <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->id.$rows->name.'">
                             <div class="form-check w-100">
-                                <input class="form-check-input" type="checkbox" data-group="kategori" data-value="'.$rows->name.'" id="'.$rows->id.$rows->name.'">
-                                <label class="form-check-label ps-0 ms-0" for="'.$rows->name.$rows->name.'">
+                                <input class="form-check-input" type="checkbox" data-group="kategori" data-value="'.$rows->name.'" id="cat-'.$rows->id.$rows->name.'">
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="cat-'.$rows->id.$rows->name.'">
                                     '.$rows->name.' 
                                 </label>
                             </div> 
@@ -96,8 +96,8 @@
                         echo ' 
                         <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->username.'">
                             <div class="form-check w-100">
-                                <input class="form-check-input" type="checkbox" data-group="user" data-value="'.$rows->id.'" id="'.$rows->username.'">
-                                <label class="form-check-label ps-0 ms-0" for="'.$rows->username.'">
+                                <input class="form-check-input" type="checkbox" data-group="user" data-value="'.$rows->id.'" id="user-'.$rows->username.'">
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="user-'.$rows->username.'">
                                     '.$rows->username.' 
                                 </label>
                             </div> 
@@ -111,7 +111,7 @@
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
                         <input class="form-check-input" type="checkbox" data-group="status" data-value="sample" value="sample" id="statussample">
-                        <label class="form-check-label ps-0 ms-0" for="statussample">
+                        <label class="form-check-label ps-0 ms-0 stretched-link" for="statussample">
                             Sample Barang
                         <i class="input-helper"></i></label>
                     </div> 
@@ -119,7 +119,7 @@
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
                         <input class="form-check-input" type="checkbox" data-group="status" data-value="penawaran" value="penawaran" id="statuspenawaran">
-                        <label class="form-check-label ps-0 ms-0" for="statuspenawaran">
+                        <label class="form-check-label ps-0 ms-0 stretched-link" for="statuspenawaran">
                             Penawaran
                         <i class="input-helper"></i></label>
                     </div> 
@@ -127,7 +127,7 @@
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
                         <input class="form-check-input" type="checkbox" data-group="status" data-value="invoice" value="invoice" id="statusinvoice">
-                        <label class="form-check-label ps-0 ms-0" for="statusinvoice">
+                        <label class="form-check-label ps-0 ms-0 stretched-link" for="statusinvoice">
                             Invoice
                         <i class="input-helper"></i></label>
                     </div> 
@@ -135,7 +135,7 @@
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
                         <input class="form-check-input" type="checkbox" data-group="status" data-value="pengiriman" value="pengiriman" id="statuspengiriman">
-                        <label class="form-check-label ps-0 ms-0" for="statuspengiriman">
+                        <label class="form-check-label ps-0 ms-0 stretched-link" for="statuspengiriman">
                             Pengiriman
                         <i class="input-helper"></i></label>
                     </div> 
@@ -143,7 +143,7 @@
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
                         <input class="form-check-input" type="checkbox" data-group="status" data-value="pembelian" value="pembelian" id="statuspembelian">
-                        <label class="form-check-label ps-0 ms-0" for="statuspembelian">
+                        <label class="form-check-label ps-0 ms-0 stretched-link" for="statuspembelian">
                             Pembelian
                         <i class="input-helper"></i></label>
                     </div> 
@@ -667,12 +667,29 @@
                     $(this).siblings(".selected").removeClass("selected");
                     if($(this).hasClass("selected")){   
                         $(this).removeClass("selected");
+                        $(".content-data[data-id='" + $(this).data("id") + "']").css("min-height","0");  
                         $(".content-data[data-id='" + $(this).data("id") + "']").slideUp("slow"); 
+                        $(this).parents('.project').css("border-color","#e3e3e3");
+                        $("html, body").css("overflow","auto");
                     }else{ 
                         $(this).addClass("selected");
-                        $(".content-data[data-id='" + $(this).data("id") + "']").slideDown("slow"); 
+                        if ($(window).width() > 400) {
+                            $(".content-data[data-id='" + $(this).data("id") + "']").css("max-height","calc(100vh - 190px)"); 
+                            $(".content-data[data-id='" + $(this).data("id") + "']").css("min-height","calc(100vh - 190px)");  
+                            $(".tab-content[data-id='" + $(this).data("id") + "']").css("height","calc(100vh - 190px)"); 
+                            $("html, body").css("overflow","hidden");
+                            $(".content-data[data-id='" + $(this).data("id") + "']").on("mousewheel", function(e) {
+                                e.stopPropagation();
+                            });
+                        }
+                        $(".content-data[data-id='" + $(this).data("id") + "']").slideDown("slow");  
+                        $(this).parents('.project').css("border-color","#9f9f9f");
+                        $("html, body").animate({ scrollTop: $(this).parents('.project').offset().top - 70 }, 300); 
+
                         loader_data_project($(this).data("id"),$(this).data("menu")) 
+                        
                     }
+                    $(this).parents('.project').scrollTop(0); 
                 })
                 // $(".header").click(function(e){
 
@@ -983,7 +1000,7 @@
             $(el).html(old_text); 
         });
     };
-    
+
     print_project_po_a4 = function(ref,id,el){ 
         window.open('<?= base_url("print/project/poA4/") ?>' + id, '_blank');
     };

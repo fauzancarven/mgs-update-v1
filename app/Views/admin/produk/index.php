@@ -46,8 +46,8 @@
                                             echo '
                                             <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                                 <div class="form-check w-100">
-                                                    <input class="form-check-input varian" type="checkbox" data-group="Vendor" data-value="'.$row->VendorCode.'" value="'.$row->VendorCode.'" id="'.$row->VendorCode.'">
-                                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="'.$row->VendorCode.'">'.$row->VendorCode.'</label>
+                                                    <input class="form-check-input varian" type="checkbox" data-group="Vendor" data-value="'.$row->VendorCode.'" value="'.$row->VendorCode.'" id="vendor'.$row->VendorCode.'">
+                                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="vendor'.$row->VendorCode.'">'.$row->VendorCode.'</label>
                                                 </div> 
                                             </li>';
                                         }
@@ -117,7 +117,7 @@
                 <input class="form-control form-control-sm input-form combo" id="searchdatafilter" placeholder="Pilih Varian" value="" type="text" readonly style="background: white;">
                 <i class="fa-solid fa-filter"></i>
                 <i class="fa-solid fa-caret-down"></i>
-                <div class="filter-data" for="searchdatafilter">
+                <div class="filter-data desktop" for="searchdatafilter">
                     <ul class="list-group">
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center utama">
                             <span class="ms-2 me-auto">Vendor</span> 
@@ -138,14 +138,14 @@
                                         $varianli .='
                                         <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                             <div class="form-check w-100">
-                                                <input class="form-check-input varian" type="checkbox" data-group="'.$row->name.'" data-value="'.$rows->name.'" value="'.$rows->name.'" id="varianvalue'.$rows->id.'">
-                                                <label class="form-check-label ps-0 ms-0 stretched-link" for="varianvalue'.$rows->id.'">'.$rows->name.'</label>
+                                                <input class="form-check-input varian" type="checkbox" data-group="'.$row->name.'" data-value="'.$rows->name.'" value="'.$rows->name.'" id="varianvalue-'.$rows->id.'">
+                                                <label class="form-check-label ps-0 ms-0 stretched-link" for="varianvalue-'.$rows->id.'">'.$rows->name.'</label>
                                             </div> 
                                         </li>';
                                     }
                                 }
                                 $varianlist .= '
-                                <div class="filter-list" data-value="'.$row->name.'">
+                                <div class="filter-list desktop" data-value="'.$row->name.'">
                                     <div class="search-filter p-2 bg-white">
                                         <div class="input-group flex-fill">  
                                             <input class="form-control form-control-sm input-form" name="filter-list" id="search'.$row->name.'" data-name="'.$row->name.'" placeholder="Cari '.$row->name.'" value="" type="text" style="padding-left: 2rem;border: 1px solid #c7c6c6 !important;">
@@ -160,7 +160,7 @@
                         ?> 
                     </ul>
                 </div>
-                <div class="filter-list" data-value="Vendor">
+                <div class="filter-list desktop" data-value="Vendor">
                     <div class="search-filter p-2 bg-white">
                         <div class="input-group flex-fill">  
                             <input class="form-control form-control-sm input-form" name="filter-list" id="searchvendor" data-name="Vendor" placeholder="Cari Vendor" value="" type="text" style="padding-left: 2rem;border: 1px solid #c7c6c6 !important;">
@@ -260,15 +260,15 @@
             });
         }
     })
-    $(".filter-data .list-group-item.utama").hover(function(){ 
-        $(".filter-list[data-value='" +  $(this).find("span").html() + "'").show();
-        $(".filter-list[data-value='" +  $(this).find("span").html() + "'").css("top",$(this).position()["top"] + 30)  
+    $(".filter-data.desktop .list-group-item.utama").hover(function(){ 
+        $(".filter-list.desktop[data-value='" +  $(this).find("span").html() + "'").show();
+        $(".filter-list.desktop[data-value='" +  $(this).find("span").html() + "'").css("top",$(this).position()["top"] + 30)  
     }, function () {  
-        if (!$(".filter-list[data-value='" +  $(this).find("span").html() + "'").is(':hover')) {  
-            $(".filter-list[data-value='" +  $(this).find("span").html() + "'").hide();
+        if (!$(".filter-list.desktop[data-value='" +  $(this).find("span").html() + "'").is(':hover')) {  
+            $(".filter-list.desktop[data-value='" +  $(this).find("span").html() + "'").hide();
         }else{
             var ele = $(this);
-            $(".filter-list[data-value='" +  $(this).find("span").html() + "'").hover(function() { 
+            $(".filter-list.desktop[data-value='" +  $(this).find("span").html() + "'").hover(function() { 
                 $(this).show();
             }, function() { 
                 if (!$(ele).is(':hover') && !$(this).is(':hover')) {
