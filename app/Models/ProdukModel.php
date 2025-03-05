@@ -265,7 +265,7 @@ class ProdukModel extends Model
             //ACTION 
             
             $html .= '
-            <div class="col-md-2 col-2 order-1 order-sm-2">
+            <div class="col-md-2 col-2 order-1 order-sm-3">
                 <div class="d-md-flex d-none"> 
                     <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$row->ProdukId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
                     <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$row->ProdukId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</button> 
