@@ -601,11 +601,12 @@
         </div>
     </div>
 </div>
-
+ 
 <script>
+   
     var paging = 1;
     var table; 
-  
+    
     var filter_arr = {
         "store":[],
         "kategori":[],
@@ -884,7 +885,14 @@
             $(el).html(old_text);
         });
     }  
+    var no_notif = 0;
     produk_click = function(){
+        socket.emit('message', {
+            "title":"produk add",
+            "message":"produk telah di klik " + no_notif
+        });
+        no_notif++;
+        return;
         $.ajax({ 
             method: "POST",
             url: "<?= base_url() ?>message/add-item-select", 

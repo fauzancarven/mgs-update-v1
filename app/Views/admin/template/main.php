@@ -1531,8 +1531,40 @@
     <script src="<?= base_url(); ?>assets/js/quill.js">  </script> 
     <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 
     
-    
-    <div class="container-scroller" style="background: #f5f7ff;"> 
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script> 
+    <script>
+        const socket = io("wss://socket.mahieraglobalsolution.com"); 
+        socket.on('message', function(msg) { 
+            tampilkanNotifikasi(msg);
+        });
+        $('.toast').toast({
+            delay: 2000,
+            animation: true,
+            autohide: true,
+        });
+
+        function tampilkanNotifikasi(pesan) { 
+            const toast = $('<div class="toast m-1" role="alert" aria-live="assertive" aria-atomic="true"></div>');
+            const toastHeader = $('<div class="toast-header"><i class="fa-solid fa-bell"></i><strong class="me-auto">' + pesan["title"] + '<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button></div>');
+            const toastBody = $('<div class="toast-body"></div>');
+            
+            toastBody.text(pesan["message"]);
+            
+            toast.append(toastHeader);
+            toast.append(toastBody); 
+            $('#toast-container').append(toast);
+            
+            toast.toast({
+                delay: 3000,
+                animation: true,
+                autohide: true,
+            });
+            
+            toast.toast('show');
+        }
+    </script> 
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container"></div>
+    <div class="container-scroller" style="background: #f5f7ff;">  
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-lg-flex d-none flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo" href="<?= base_url(); ?>"><img src="<?= base_url(); ?>assets/images/logo/logo-blue.png" class="mr-2" alt="logo" /></a>
@@ -1758,7 +1790,7 @@
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-
+                    
                     <?= $this->renderSection('content'); ?>
 
 
