@@ -653,6 +653,7 @@
 
                     loader_data_project($(this).data("id"),$(this).data("menu")) 
                 }); 
+                
                 // $(".btn-side-menu").click(function(){
                 //     var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
                 //     if($(parent).hasClass("hide")){
@@ -671,6 +672,7 @@
                         $(".content-data[data-id='" + $(this).data("id") + "']").slideUp("slow"); 
                         $(this).parents('.project').css("border-color","#e3e3e3");
                         $("html, body").css("overflow","auto");
+                        $(".close-project[data-id='" + $(this).data("id") + "']").hide();
                     }else{ 
                         $(this).addClass("selected");
                         if ($(window).width() > 400) {
@@ -681,6 +683,7 @@
                             $(".content-data[data-id='" + $(this).data("id") + "']").on("mousewheel", function(e) {
                                 e.stopPropagation();
                             });
+                            $(".close-project[data-id='" + $(this).data("id") + "']").show();
                         }
                         $(".content-data[data-id='" + $(this).data("id") + "']").slideDown("slow");  
                         $(this).parents('.project').css("border-color","#9f9f9f");
@@ -691,6 +694,11 @@
                     }
                     $(this).parents('.project').scrollTop(0); 
                 })
+                $(".close-project").click(function(){ 
+                    console.log("click")
+                    var header = $(this).parents('.project'); 
+                    $(header).find(".header.notif.selected").trigger("click"); 
+                });
                 // $(".header").click(function(e){
 
                 //     var target = $(e.target);   

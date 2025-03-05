@@ -546,8 +546,10 @@ class ProjectModel extends Model
                                 </i>
                             </div> 
                         </div> 
-                        <div class="col-md-1 col-2 order-1 order-sm-4 align-self-start"> 
+                        <div class="col-md-1 col-2 order-1 order-sm-4 align-self-start">  
+                            
                             <div class="dropdown text-end">
+                                <a class="text-head-2 text-decoration-none close-project" type="button" data-id="'.$row->ProjectId.'" style="display:none"><i class="pe-1 fa-solid fa-close text-head-2" style="color:#305176"></i>Close</a>
                                 <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti-more-alt icon-rotate-45 text-primary"></i>
                                 </a>
