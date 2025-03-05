@@ -1545,7 +1545,7 @@
 
         function tampilkanNotifikasi(pesan) { 
             const toast = $('<div class="toast m-1" role="alert" aria-live="assertive" aria-atomic="true"></div>');
-            const toastHeader = $('<div class="toast-header"><i class="fa-solid fa-bell"></i><strong class="me-auto">' + pesan["title"] + '<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button></div>');
+            const toastHeader = $('<div class="toast-header"><i class="fa-solid fa-bell pe-2"></i><strong class="me-auto">' + pesan["title"] + '</strong><button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button></div>');
             const toastBody = $('<div class="toast-body"></div>');
             
             toastBody.text(pesan["message"]);
