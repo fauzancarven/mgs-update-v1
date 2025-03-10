@@ -390,6 +390,21 @@
                         </div> 
                     </div>  
                 </div>  
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row mx-2 my-3 align-items-center">
+                            <div class="label-border-right position-relative" >
+                                <span class="label-dialog">Lampiran Tambahan</span> 
+                            </div>
+                        </div>   
+                        <div class="card" style="min-height:500px;">
+                            <div class="card-body mx-2 p-2 bg-light">   
+                                <div id="EditFooterMessage" class="border" style="min-height:500px;"></div>  
+                            </div>  
+                        </div>  
+                    </div>
+                </div>
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -399,7 +414,7 @@
     </div>
 </div>  
 
-<div id="modal-optional"></div>
+<div id="modal-optional"></div> 
 <script>    
 
     $('#InvDate').daterangepicker({
@@ -967,8 +982,47 @@
             grand_total_harga();
         }
     });
- 
+    var options = {
+        debug: 'false', 
+        modules: {
+            toolbar: [['bold', 'italic', 'underline', 'strike'],[{ 'list': 'ordered'}],['image']],  
+        },
+        placeholder: 'Isi Lampiran disini',
+        theme: "snow"//'snow'bubble
+    };
+     
+    var quillcontent = new Quill('#EditFooterMessage',options);   
+    
+    quillcontent.setContents(JSON.parse(<?= JSON_ENCODE($project->InvDelta)?>));  
 
+    var imgs = document.querySelectorAll('#EditFooterMessage .ql-editor img');
+    imgs.forEach((img) => {
+        img.style.width = '150px';
+        img.style.height = '250px';
+        img.style.objectFit  = 'cover';
+        $(img).draggable({
+            containment: '#EditFooterMessage',
+            scroll: false,
+        });
+    });
+
+
+    quillcontent.enable(true);
+    quillcontent.root.style.background = '#FFFFFF'; // warna disable   
+    quillcontent.on('text-change',(delta, oldDelta, source) => { 
+        const imgs = document.querySelectorAll('#EditFooterMessage .ql-editor img');
+        imgs.forEach((img) => {
+            img.style.width = '150px';
+            img.style.height = '250px';
+            img.style.objectFit  = 'cover';
+            $(img).draggable({
+                containment: '#EditFooterMessage',
+                scroll: false,
+            });
+        }); 
+    });
+
+    
     var quill = [];  
     $(".template-footer").each(function(index, el){
         var message = $(el).find("[name='EditFooterMessage']")[0];
@@ -1254,7 +1308,9 @@
             InvSubTotal: $("#InvSubTotal").val().replace(/[^0-9]/g, ''), 
             InvDiscItemTotal: $("#InvDiscItemTotal").val().replace(/[^0-9]/g, ''), 
             InvDiscTotal: $("#InvDiscTotal").val().replace(/[^0-9]/g, ''), 
-            InvGrandTotal: $("#InvGrandTotal").val().replace(/[^0-9]/g, '')
+            InvGrandTotal: $("#InvGrandTotal").val().replace(/[^0-9]/g, ''),  
+            InvDelta: quillcontent.getContents(),  
+            InvDetail: quillcontent.root.innerHTML.replace(/\s+/g, " "),  
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){  

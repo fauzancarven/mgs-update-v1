@@ -164,7 +164,7 @@
     } 
     .body{
         margin-top: 0px;
-        padding:30px;
+        padding: 0 30px;
         font-family: "Roboto", serif;
         color: #000;
         font-size: 12px;
@@ -320,7 +320,7 @@
 <body>  
     <?= $header_footer["html"] ?>
     <div class="body" >
-        <h2 class="text-center">SURAT PENAWARAN HARGA (QUOTATION)</h2>
+        <h2 class="text-center" style="margin-top:0;padding-top:0">SURAT PENAWARAN HARGA (QUOTATION)</h2>
         <table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
             <tbody>
                 <tr>

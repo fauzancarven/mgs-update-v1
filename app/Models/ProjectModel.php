@@ -3060,6 +3060,8 @@ class ProjectModel extends Model
             "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
             "InvDiscTotal"=>$header["InvDiscTotal"],
             "InvGrandTotal"=>$header["InvGrandTotal"],
+            "InvDelta"=> JSON_ENCODE($header["InvDelta"]),
+            "InvDetail"=> $header["InvDetail"],
             "created_user"=>user()->id, 
             "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
@@ -3107,6 +3109,8 @@ class ProjectModel extends Model
         $builder->set('InvDiscItemTotal', $header["InvDiscItemTotal"]); 
         $builder->set('InvDiscTotal', $header["InvDiscTotal"]); 
         $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
+        $builder->set('InvDelta', JSON_ENCODE($header["InvDelta"]));  
+        $builder->set('InvDetail', $header["InvDetail"]);   
         $builder->set('updated_user',user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
         $builder->where('InvId', $id); 

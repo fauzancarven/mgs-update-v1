@@ -24,6 +24,9 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/croppie.css">  
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/quill.snow.css"> 
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/quill.bubble.css">  
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.2.2/quill.bubble.css" integrity="sha512-WQTpL51Eas4VrSAIGPsbEyoB5Uh8SL71rO35yGllJzaxuvP0LQB630JBYKI5dSxUdDLP4UYH0VXZ8ECiOPVqcA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.2.2/quill.snow.css" integrity="sha512-13R80ZrT2yyT/Fphe32GH8p3rn5Z6ZM4ComBrMSo2l4z4ZhoGXyMzKj306k54f6WUwzxmJ6zzT0/MngfkWmftw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+
     <link rel="stylesheet" type="text/css" href="<?= base_url("assets/fontawesome.6.7.1/css/fontawesome.css") ?>" > 
     <link rel="stylesheet" type="text/css" href="<?= base_url("assets/fontawesome.6.7.1/css/solid.css") ?>" >  
     <!-- End plugin css for this page -->
@@ -1528,7 +1531,14 @@
     <!-- End custom js for this page-->
 
     <script src="<?= base_url(); ?>assets/js/croppie.min.js">  </script> 
-    <script src="<?= base_url(); ?>assets/js/quill.js">  </script> 
+    <!-- <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.6.0/dist/highlight.min.js"></script>  -->
+    <!-- <script src=" https://cdnjs.cloudflare.com/ajax/libs/quill/1.2.2/quill.min.js"></script>  -->
+    <script src="<?= base_url(); ?>assets/js/quill.js">  </script>  
+    <!-- <script src="<?= base_url(); ?>assets/quill-image-resize-module-master/image-resize.min.js">  </script>   -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+
+
+
     <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 
     
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script> 

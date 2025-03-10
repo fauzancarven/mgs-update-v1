@@ -10,7 +10,7 @@
 </head>
 <style>  
     body { 
-        margin-top: 2cm;
+        margin-top: 3cm;
         margin-bottom: 2.5cm;
         padding: 5px;
         padding-left: 0px;
@@ -164,7 +164,7 @@
     } 
     .body{
         margin-top: 0px;
-        padding:30px;
+        padding:0 30px;
         font-family: "Roboto", serif;
         color: #000;
         font-size: 12px;
@@ -316,11 +316,12 @@
         padding-left: 10px; 
         padding-right: 10px; 
     }
+    .page_break { page-break-before: always; }
 </style>
 <body>  
     <?= $header_footer["html"] ?>
     <div class="body" >
-        <h2 class="text-center">INVOICE</h2>
+        <h2 class="text-center" style="margin-top:0;padding-top:0">INVOICE</h2>
         <table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
             <tbody>
                 <tr>
@@ -483,7 +484,14 @@
                 </tr> 
             </tbody>
         </table>
+
+        <?php
+            if($inv->InvDetail !== ""){
+                echo '<div class="page_break"></div><h2 class="text-center" style="">Lampiran</h2><div style="display:block;position:absolute">'.$inv->InvDetail."</div>";
+            } 
+        ?>  
     </div> 
+
 </body>
 
 </html>
