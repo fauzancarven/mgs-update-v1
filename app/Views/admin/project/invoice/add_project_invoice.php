@@ -1053,7 +1053,8 @@
         const imgs = document.querySelectorAll('#EditFooterMessage .ql-editor img');
         imgs.forEach((img) => {
             img.style.width = '150px';
-            img.style.height = 'auto';
+            img.style.height = '250px';
+            img.style.objectFit  = 'contain';
             $(img).draggable({
                 containment: '#EditFooterMessage',
                 scroll: false,

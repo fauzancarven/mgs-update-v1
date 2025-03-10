@@ -999,7 +999,7 @@
     imgs.forEach((img) => {
         img.style.width = '150px';
         img.style.height = '250px';
-        img.style.objectFit  = 'cover';
+        img.style.objectFit  = 'contain';
         $(img).draggable({
             containment: '#EditFooterMessage',
             scroll: false,
@@ -1014,7 +1014,7 @@
         imgs.forEach((img) => {
             img.style.width = '150px';
             img.style.height = '250px';
-            img.style.objectFit  = 'cover';
+            img.style.objectFit  = 'contain';
             $(img).draggable({
                 containment: '#EditFooterMessage',
                 scroll: false,
