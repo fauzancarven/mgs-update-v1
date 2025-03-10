@@ -46,28 +46,52 @@ class PrintController extends BaseController
                 };
                 $data["detail"] = $detail; 
                 $data["postdata"] = $postData; 
-                $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);   
+                $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);  
+
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/sph/print_sph_a4',$data); 
+                $html = view('admin/project/sph/print_sph_a4',$data);  
+                //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'SPH_'.$data["sph"]->CustomerName.'_'.$data["sph"]->SphDate.'.pdf', [ 'Attachment' => false ]);
 	}
 	public function project_invoice_a4($id)
 	{
+                $request = Services::request();
+                $postData = $request->getGet();
                 $options = new Options(); 
                 $options->set('isHtml5ParserEnabled', true);
                 $options->set('enable_remote', true);
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectModel(); 
+                $models = new ProjectModel();
+                $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
-                $data["project"] = $models->getdataInvoice($id); 
-                $data["detail"] = $models->getdataDetailInvoice($id); 
-                $data["header_footer"] = $modelheader->get_header_a4($data["project"]->StoreId);  
+                $data["inv"] = $models->getdataInvoice($id); 
+                $arr_detail = $models->getdataDetailInvoice($id);
+                $detail = array();
+                foreach($arr_detail as $row){
+                        $detail[] = array(
+                                "image" => $produk->getproductimage($row->ProdukId), 
+                                "produkid" => $row->ProdukId, 
+                                "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                                "satuan_text"=>$row->InvDetailSatuanText,  
+                                "price"=>$row->InvDetailPrice,
+                                "varian"=>  $row->InvDetailVarian,
+                                "total"=> $row->InvDetailTotal,
+                                "disc"=> $row->InvDetailDisc,
+                                "qty"=> $row->InvDetailQty,
+                                "text"=> $row->InvDetailText,
+                                "group"=> $row->InvDetailGroup,
+                                "type"=> $row->InvDetailType
+                        );
+                };
+                $data["detail"] = $detail; 
+                $data["postdata"] = $postData; 
+                $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
                 
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
@@ -75,7 +99,7 @@ class PrintController extends BaseController
                 $html = view('admin/project/invoice/print_invoice_a4',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
-                $dompdf->stream( 'INV_'.$data["project"]->CustomerName.'_'.$data["project"]->InvDate.'.pdf', [ 'Attachment' => false ]);
+                $dompdf->stream( 'INV_'.$data["inv"]->CustomerName.'_'.$data["inv"]->InvDate.'.pdf', [ 'Attachment' => false ]);
 	}
 	public function project_invoice_a5($id)
 	{

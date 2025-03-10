@@ -3,13 +3,14 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'INV_'.$project->CustomerName.'_'.$project->InvDate ?></title>
+    <title><?= 'Inv_'.$inv->CustomerName.'_'.$inv->InvDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
-    <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
+    <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css">  
+    <link rel="shortcut icon" href="assets/images/logo/logo.png" />
 </head>
 <style>  
-   body { 
-        margin-top: 2.5cm;
+    body { 
+        margin-top: 2cm;
         margin-bottom: 2.5cm;
         padding: 5px;
         padding-left: 0px;
@@ -182,8 +183,8 @@
         display: inline-block;
     }
     .width-label{
-        min-width: 50px;
-        width: 50px; 
+        min-width: 100px;
+        width: 100px; 
     }
     table.item{
         width: 100%;
@@ -199,12 +200,12 @@
         width: 5%;
     }
 
-    table.item td:nth-child(2) {
-        width: 30%;
+    table.item td.image {
+        width: 20%;
     }
 
-    table.item td:nth-child(3) {
-        width: 15%;
+    table.item td.text {
+        width: 30%;
     }
 
     table.item td:nth-child(4) {
@@ -246,12 +247,24 @@
     .ps-2{
        padding-left:15px !important;
     }
-    ol {
-        padding: 0 20px;
+    ol { 
+        padding: 0 5px;
+        list-style:none;
+        margin:0;
+    }
+    ul { 
+        margin:0;
     }
     li {
         padding: 0 5px;
     } 
+    li.bullet {
+        padding: 0 5px;
+    } 
+    ol > li > ul {
+        padding: 0;
+        margin: 0;
+    }
     .footer table, .footer th, .footer td { 
         border-collapse: collapse;
         text-align:center;
@@ -279,42 +292,103 @@
         margin-left:7px; 
         margin-right:7px; 
     }
+    tr.hide{
+        display:none !important;
+    }
+    ol {
+    counter-reset: item;
+    }
+
+    ol + ol {
+    counter-reset: none; /* nilai none untuk menjumlahkan dari sebelumnya */
+    }
+
+    li[data-list="ordered"] {
+        counter-increment: item;
+    }
+
+    li[data-list="ordered"]:before {
+        content: counter(item) ". ";
+        padding-right: 10px; 
+    }
+    li[data-list="bullet"]:before {
+        content: "- ";
+        padding-left: 10px; 
+        padding-right: 10px; 
+    }
 </style>
 <body>  
-    <?= $header_footer ?>
-    <div class="body">
-        <h2 class="text-center">INVOICE (SALES ORDER)</h2>
-        <table style="width: 100%;align-items: start;justify-content: baseline;">
+    <?= $header_footer["html"] ?>
+    <div class="body" >
+        <h2 class="text-center">INVOICE</h2>
+        <table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
             <tbody>
                 <tr>
-                    <td style="width: 40%;"> 
-                        <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $project->CustomerName.($project->CustomerCompany == "" ? : " (".$project->CustomerCompany.")") ?></span><br> 
-                        <span class="text-bold"><?= $project->CustomerTelp1.($project->CustomerTelp2 == "" ? : "/".$project->CustomerTelp2) ?></span><br>
-                        <span class="text-bold"><?= $project->InvAddress ?></span><br>
+                    <td style="width: 50%;border:1px solid;vertical-align:start;">  
+                        <table style="border-collapse:collapse;border:none">
+                            <tbody> 
+                                <tr>
+                                    <td style="border:none;vertical-align:start;padding:left:3px;">
+                                        <div class="width-label label-color d-inline-block">Kepada Yth.:</div>
+                                    </td> 
+                                </tr> 
+                                <tr>
+                                    <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
+                                        <span class="text-bold"><?= $inv->CustomerName.($inv->CustomerCompany == "" ? : " (".$inv->CustomerCompany.")") ?></span>
+                                    </td> 
+                                </tr> 
+                                <tr> 
+                                    <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
+                                        <span class="text-bold"><?= $inv->CustomerTelp1.($inv->CustomerTelp2 == "" ? : "/".$inv->CustomerTelp2) ?></span>
+                                    </td> 
+                                </tr> 
+                                <tr> 
+                                    <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
+                                        <span class="text-bold"><?= $inv->CustomerEmail ?></span>
+                                    </td> 
+                                </tr> 
+                            </tbody>
+                        </table>   
+                    </td> 
+                    <td style="vertical-align:start;border:1px solid"> 
+                        <table style="border-collapse:collapse;heigth:100%">
+                            <tbody>
+                                <tr style="border-bottom:1px solid;margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">No. Doc.</div></td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
+                                    <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $inv->InvCode ?></div></td>
+                                </tr>
+                                <tr style="border-bottom:1px solid;margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">Tgl. Pembuatan.</div></td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
+                                    <td style="border:none;width: auto;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($inv->InvDate),"d F Y") ?></div></td>
+                                </tr> 
+                                <tr style="">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">Lokasi Project.</div></td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
+                                    <td style="border:none;width: auto;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $inv->InvAddress ?></div></td>
+                                </tr>
+                            </tbody>
+                        </table> 
                     </td>
-                    <td style="width: 30%;"> 
-                    </td>
-                    <td style="align-items: start;justify-content: center;margin-left:auto"> 
-                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $project->InvCode ?></div><br>
-                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($project->InvDate),"d F Y") ?></div><br> 
-                    </td>
-                </tr>
+                </tr> 
             </tbody>
-        </table>
-        <div style="padding:20px;display:none;">
-            Dengan Hormat. <br>
-            <span style="padding-left:40px">Berikut kami turunkan lampiran penawaran barang dengan detail spesifikasi sebagai berikut :</span>
-        </div>
+        </table> 
                
+        <?php
+            $col = 4;
+            if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++;
+            if($postdata["image"]==1) $col++;
+        ?>
         <table class="item">
             <thead>
                 <tr> 
                     <th>No.</th>
+                    <?= ($postdata["image"] == 1) ? "<th>Gambar</th>" : "" ?>
                     <th>Uraian</th>
                     <th>Qty</th>
                     <th>Harga</th>
-                    <?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "<th>Disc</th>" : "" ?>
+                    <?= (array_filter($detail, fn($item) => $item["disc"] > 0)) ? "<th>Disc</th>" : "" ?>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -323,32 +397,33 @@
                     $no = 1;
                     $huruf  = "A";
                     $html_items = "";
-                    $discShow = array_filter($detail, fn($item) => $item->InvDetailDisc > 0);
+                    $discShow = array_filter($detail, fn($item) => $item["disc"] > 0);
                     foreach($detail as $item){
 
-                        $arr_varian = json_decode($item->InvDetailVarian);
+                        $arr_varian = json_decode($item["varian"]);
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
                            if($varian->varian == "vendor") continue;
 
                             $arr_badge .= '<br><span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>'; 
                         }
-                        if($item->InvDetailType == "product"){
+                        if($item["type"] == "product"){
                             $html_items .= '
                             <tr> 
                                 <td class="td-center">'.$no.'</td>
-                                <td class="ps-2">'.$item->InvDetailText.$arr_badge.'</td>
-                                <td class="td-center">'.number_format($item->InvDetailQty, 2, ',', '.').' '.$item->InvDetailSatuanText.'</td>
-                                <td class="td-center">Rp. '.number_format($item->InvDetailPrice, 0, ',', '.').'</td>
-                                '.($discShow ? "<td class='td-center'>Rp. ".number_format($item->InvDetailDisc, 0, ',', '.')."</td>" : "").'
-                                <td class="td-center">Rp. '.number_format($item->InvDetailTotal, 0, ',', '.').'</td>
+                                 '.($postdata["image"] == 1 ? ($item["image"] == "" ? "<td class='td-center image'></td>" : "<td class='td-center image'><img style='width:75px;height:75px;margin:3px;' src='".$item["image"]."'/></td>") : "").'
+                                <td class="ps-2 text">'.$item["text"].$arr_badge.'</td>
+                                <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
+                                <td class="td-center">Rp. '.number_format($item["price"], 0, ',', '.').'</td>
+                                '.($discShow ? "<td class='td-center'>Rp. ".number_format($item["disc"], 0, ',', '.')."</td>" : "").'
+                                <td class="td-center">Rp. '.number_format($item["total"], 0, ',', '.').'</td>
                             </tr>';
                             $no++;
                         }else{
                             
                           
                             $html_items .= '    <tr>
-                                                    <td class="td-group" colspan="'. ($discShow ? 6 : 5).'">'.$huruf.'. '.$item->InvDetailText.'</td>
+                                                    <td class="td-group" colspan="'.   $col + 1 .'">'.$huruf.'. BARANG</td>
                                                 </tr>';
                             $huruf++;
                             $no = 1;
@@ -356,35 +431,58 @@
                     }
                     echo $html_items;
                 ?> 
+                
+                <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr>
             </tbody>
             <tfoot>
-                <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "5" : "4" ?>">Sub Total</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($project->InvSubTotal, 0, ',', '.') ?></td>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
+                    <td class="td-footer text-bold " colspan="<?= $col ?>">Sub Total</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvSubTotal, 0, ',', '.') ?></td>
                 </tr>
-                <tr style="<?= $project->InvDiscItemTotal > 0 ? "" : "display:none;" ?>">
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "5" : "4" ?>">Disc Item</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($project->InvDiscItemTotal, 0, ',', '.') ?></td>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $inv->InvDiscItemTotal > 0 ? "" : "display:none;" ?>">
+                    <td class="td-footer text-bold" colspan="<?= $col ?>">Disc Item</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvDiscItemTotal, 0, ',', '.') ?></td>
                 </tr> 
-                <tr style="<?= $project->InvDiscTotal > 0 ? "" : "display:none;" ?>">
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "5" : "4" ?>">Disc</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($project->InvDiscTotal, 0, ',', '.') ?></td>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $inv->InvDiscTotal > 0 ? "" : "display:none;" ?>">
+                    <td class="td-footer text-bold" colspan="<?= $col ?>">Disc</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvDiscTotal, 0, ',', '.') ?></td>
+                </tr>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
+                    <td class="td-footer text-bold" colspan="<?= $col ?>">Grand Total</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvGrandTotal, 0, ',', '.') ?></td>
+                </tr>
+                <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr>
+                <tr>
+                    <td class="td-footer text-bold" colspan="<?= $col + 1 ?>"><?= $header_footer["detail"] ?></td> 
                 </tr>
                 <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "5" : "4" ?>">Grand Total</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($project->InvGrandTotal, 0, ',', '.') ?></td>
-                </tr>
-                <tr>
-                    <td class="td-footer text-bold" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "6" : "5" ?>">DISIAPKAN OLEH : ADMIN<br>
-                        DIRECT CONTACT : 0852-1795-2625<br>
-                        BATA REGULER JAKARTA</td> 
-                </tr>
+                    <td class="td-footer text-bold" colspan="<?= $col + 1 ?>"> 
+                        <table style="border-collapse:collapse;border:none">
+                            <tbody> 
+                                <tr>
+                                    <td style="border:none;vertical-align:start;padding:left:3px;">Term and Condition : </td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none;vertical-align:start;padding:left:3px;"> 
+                                        <?= $inv->TemplateFooterDetail ?> 
+                                    </td>
+                                </tr>  
+                            </tbody> 
+                        </table> 
+                    </td> 
+                </tr>  
             </tfoot>
+        </table> 
+        
+        <table style="width: 100%;border-collapse: collapse;margin-bottom:10px;margin-top:10px">
+            <tbody>
+                <tr>
+                    <td style="width: 50%;width:60%">  </td>
+                    <td style="width: 50%;border:1px solid;width:20%;text-align:center;height:120px;vertical-align:top;">Admin</td>
+                    <td style="width: 50%;border:1px solid;width:20%;text-align:center;height:120px;vertical-align:top;">Pembeli</td>
+                </tr> 
+            </tbody>
         </table>
-        <div style="padding-left:20px">
-            Term and Condition :   
-            <?= $project->TemplateFooterDetail ?> 
-        </div>
     </div> 
 </body>
 

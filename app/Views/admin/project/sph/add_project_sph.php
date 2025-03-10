@@ -1158,7 +1158,7 @@
                     url: "<?= base_url() ?>action/add-data-template-footer", 
                     data:{
                         "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
-                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "),
                         "TemplateFooterDelta": quill[type].getContents(), 
                         "TemplateFooterCategory": type, 
                     },
@@ -1189,7 +1189,7 @@
                     url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
                     data:{
                         "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
-                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
                         "TemplateFooterDelta": quill[type].getContents(), 
                         "TemplateFooterCategory": type, 
                     },
@@ -1240,7 +1240,7 @@
                             url: "<?= base_url() ?>action/add-data-template-footer", 
                             data:{ 
                                 "TemplateFooterName": name ,
-                                "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                                "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
                                 "TemplateFooterDelta": quill[type].getContents(), 
                                 "TemplateFooterCategory": type, 
                             },
