@@ -5,12 +5,12 @@
     <meta charset="utf-8"/>
     <title><?= 'Inv_'.$inv->CustomerName.'_'.$inv->InvDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
-    <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css">  
-    <link rel="shortcut icon" href="assets/images/logo/logo.png" />
+    <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css">   
+    <link rel="icon" type="image/png" href="assets/images/logo/logo.png">
 </head>
 <style>  
     body { 
-        margin-top: 3cm;
+        margin-top: 2cm;
         margin-bottom: 2.5cm;
         padding: 5px;
         padding-left: 0px;
@@ -486,8 +486,13 @@
         </table>
 
         <?php
-            if($inv->InvDetail !== ""){
-                echo '<div class="page_break"></div><h2 class="text-center" style="">Lampiran</h2><div style="display:block;position:absolute">'.$inv->InvDetail."</div>";
+            if($inv->InvImageList !== "[]"){
+                echo '<div class="page_break"></div><h2 class="text-center" style="margin-bottom:20px;">Lampiran</h2><div style="display:block;padding-top:30px;">';
+                $image = json_decode($inv->InvImageList);
+                foreach($image as $row){
+                    echo "<img src='".$row."' width='130px' style='padding:5px'>";
+                } 
+                echo '</div>';
             } 
         ?>  
     </div> 

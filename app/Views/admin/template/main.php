@@ -34,6 +34,8 @@
     <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png" />
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    <link rel="stylesheet" 
+	  href="https://static.eu1.mindsphere.io/mdsp-css/v2.7.0/css/mdsp-css.min.css" />
 
 </head>
 <!-- sidebar-icon-only hide this-->
@@ -1522,6 +1524,7 @@
     <script src="<?= base_url(); ?>assets/js/cleave.min.js"></script>
     <script src="<?= base_url(); ?>assets/js/cleave-phone.id.js"></script>
     
+    <script src="<?= base_url(); ?>assets/ckeditor/ckeditor.js"></script> 
     <!-- endinject -->
     <!-- Custom js for this page-->
     <script src="<?= base_url(); ?>assets/js/dashboard.js"></script>
@@ -1535,8 +1538,7 @@
     <!-- <script src=" https://cdnjs.cloudflare.com/ajax/libs/quill/1.2.2/quill.min.js"></script>  -->
     <script src="<?= base_url(); ?>assets/js/quill.js">  </script>  
     <!-- <script src="<?= base_url(); ?>assets/quill-image-resize-module-master/image-resize.min.js">  </script>   -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script> 
 
 
     <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 

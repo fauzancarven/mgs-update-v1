@@ -390,21 +390,70 @@
                         </div> 
                     </div>  
                 </div>  
-
-                <div class="row">
-                    <div class="col-12">
+                <div class="row mx-2 my-3 align-items-center">
+                    <div class="label-border-right position-relative" >
+                        <span class="label-dialog">Lampiran Gambar</span> 
+                    </div>
+                </div>  
+                <div class="row p-2"> 
+                    <input type="file" class="d-none" accept="image/*" id="upload-produk"> 
+                    <div class="col-sm-12 d-flex flex-wrap"> 
+                        <div class="d-flex flex-wrap">
+                            <div class="d-flex flex-wrap" id="list-produk"></div>
+                            <div class="image-default-obi" id="img-produk">
+                                <i class="ti-image" style="font-size:1rem"></i>
+                                <span>Tambah Foto</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+                 
+                <div class="row p-2"> 
+                    <div class="col-12 col-md-6 px-1 order-2 order-md-1">   
                         <div class="row mx-2 my-3 align-items-center">
                             <div class="label-border-right position-relative" >
-                                <span class="label-dialog">Lampiran Tambahan</span> 
+                                <span class="label-dialog">Lampiran KTP</span> 
                             </div>
                         </div>   
-                        <div class="card" style="min-height:500px;">
-                            <div class="card-body mx-2 p-2 bg-light">   
-                                <div id="EditFooterMessage" class="border" style="min-height:500px;"></div>  
+                        <div class="card" style="min-height:50px;">
+                            <div class="card-body mx-2 p-2 bg-light">
+                                <div class="d-flex mb-1 align-items-center mt-2"> 
+                                    <div class="flex-fill pe-2">
+                                        <select class="form-select form-select-sm" name="select-npwp" id="select-npwp" placeholder="Pilih KTP" style="width:100%"></select>  
+                                    </div>  
+                                    <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-upload pe-2"></i>Upload</a> 
+                                </div>    
+                                <div class="row mb-1 align-items-center mt-2"> 
+                                    <div class="col-12"> 
+                                        <div name="EditFooterMessage" class="border"></div> 
+                                    </div>
+                                </div>    
                             </div>  
                         </div>  
-                    </div>
-                </div>
+                    </div>  
+                    <div class="col-12 col-md-6 px-1 order-2 order-md-1">   
+                        <div class="row mx-2 my-3 align-items-center">
+                            <div class="label-border-right position-relative" >
+                                <span class="label-dialog">Lampiran NPWP</span> 
+                            </div>
+                        </div>   
+                        <div class="card" style="min-height:50px;">
+                            <div class="card-body mx-2 p-2 bg-light">
+                                <div class="d-flex mb-1 align-items-center mt-2"> 
+                                    <div class="flex-fill pe-2">
+                                        <select class="form-select form-select-sm" name="select-npwp" id="select-npwp" placeholder="Pilih NPWP" style="width:100%"></select>  
+                                    </div>  
+                                    <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-upload pe-2"></i>Upload</a> 
+                                </div>    
+                                <div class="row mb-1 align-items-center mt-2"> 
+                                    <div class="col-12"> 
+                                        <div name="EditFooterMessage" class="border"></div> 
+                                    </div>
+                                </div>    
+                            </div>  
+                        </div>  
+                    </div>  
+                </div>  
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -989,40 +1038,125 @@
         },
         placeholder: 'Isi Lampiran disini',
         theme: "snow"//'snow'bubble
-    };
-     
-    var quillcontent = new Quill('#EditFooterMessage',options);   
+    }; 
     
-    quillcontent.setContents(JSON.parse(<?= JSON_ENCODE($project->InvDelta)?>));  
+    /** BAGIAN IMAGE UPLOAD */
+    var image_list = JSON.parse(`<?= $project->InvImageList ?>`); 
+    for(var i=0; image_list.length > i; i++){
+        $("#list-produk").append(`<div class="image-default-obi border">
+                <img src="${image_list[i]}" draggable="true"> 
+                <div class="action">
+                    <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
+                    <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
+                </div> 
+        </div>`);
+    }
+    $("#img-produk").on('click',function(){
+        $("#upload-produk").trigger("click");
+    })  
+    $("#upload-produk").on('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                $("#list-produk").append(`<div class="image-default-obi border">
+                                <img src="${reader.result}" draggable="true"> 
+                                <div class="action">
+                                    <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
+                                    <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
+                                </div>
+                                 
+                        </div>`);
+                        var draggedImage = null;
 
-    var imgs = document.querySelectorAll('#EditFooterMessage .ql-editor img');
-    imgs.forEach((img) => {
-        img.style.width = '150px';
-        img.style.height = '250px';
-        img.style.objectFit  = 'contain';
-        $(img).draggable({
-            containment: '#EditFooterMessage',
-            scroll: false,
-        });
+                        // Event dragstart untuk menangkap elemen gambar yang sedang di-drag
+                        $('.image-default-obi.border img').on('dragstart', function (event) {
+                            draggedImage = $(this); // Simpan elemen gambar sebagai referensi
+                        });
+
+                        // Event dragover untuk mencegah default behavior
+                        $('.image-default-obi.border').on('dragover', function (event) {
+                            event.preventDefault(); // Harus ada untuk memungkinkan drop
+                            $(this).addClass('dragover'); // Tambahkan efek visual
+                        });
+
+                        // Event dragleave untuk menghapus efek visual ketika keluar dari dropzone
+                        $('.image-default-obi.border').on('dragleave', function () {
+                            $(this).removeClass('dragover');
+                        });
+
+                        // Event drop untuk memindahkan gambar
+                        $('.image-default-obi.border').on('drop', function (event) {
+                            event.preventDefault(); // Cegah perilaku default
+                            $(this).removeClass('dragover'); // Hapus efek visual
+
+                            // Ambil gambar yang sudah ada di dropzone target
+                            const existingImage = $(this).find('img');
+
+                            // Jika ada gambar yang sedang di-drag
+                            if (draggedImage) {
+                                // Pindahkan gambar yang sudah ada ke tempat asal gambar yang sedang di-drag
+                                const sourceDropzone = draggedImage.closest('.image-default-obi.border');
+                                sourceDropzone.prepend(existingImage);
+
+                                // Pindahkan gambar yang di-drag ke dropzone target
+                                $(this).prepend(draggedImage);
+                            }
+                        });
+            }
+        }
     });
-
-
-    quillcontent.enable(true);
-    quillcontent.root.style.background = '#FFFFFF'; // warna disable   
-    quillcontent.on('text-change',(delta, oldDelta, source) => { 
-        const imgs = document.querySelectorAll('#EditFooterMessage .ql-editor img');
-        imgs.forEach((img) => {
-            img.style.width = '150px';
-            img.style.height = '250px';
-            img.style.objectFit  = 'contain';
-            $(img).draggable({
-                containment: '#EditFooterMessage',
-                scroll: false,
+    var $uploadCrop, tempFilename, rawImg, imageId; 
+    $uploadCrop = $('#crop-image').croppie({
+        viewport: {
+            width: 400,
+            height: 400,
+        },
+        showZoomer: false,
+        enforceBoundary: false,
+        enableExif: true,
+        enableOrientation: true
+    });
+    crop_image = function(el){ 
+        var image_crop = $(el).parent().parent().find('img');
+        var flip = 0;
+        $('#modal-edit').modal('show');
+        
+        $('#modal-edit').on('shown.bs.modal', function(){ 
+            $uploadCrop.croppie('bind', {
+                url: $(image_crop).attr('src')
+            }).then(function(){
+                console.log('jQuery bind complete');
             });
-        }); 
-    });
+        });
+        rotate_image = function(val){
+            $uploadCrop.croppie('rotate',parseInt(val));
+        }
+        flip_image = function(val){
+            flip = flip == 0 ? val : 0;
+            $uploadCrop.croppie('bind', { 
+                url: $(el).parent().parent().find('img').attr('src'),
+                orientation: flip
+            });
+        } 
 
+        $('#submit-crop').unbind().click(function (ev) {
+            $uploadCrop.croppie('result', {
+                type: 'base64',
+                format: 'png',
+                size: {width: 400, height: 400}
+            }).then(function (resp) { 
+                $(image_crop).attr('src',resp) 
+                $('#modal-edit').modal('hide');
+            });
+        });
+    }
+    delete_image = function(el){
+        $(el).parent().parent().remove();
+    }   
     
+
     var quill = [];  
     $(".template-footer").each(function(index, el){
         var message = $(el).find("[name='EditFooterMessage']")[0];
@@ -1309,8 +1443,7 @@
             InvDiscItemTotal: $("#InvDiscItemTotal").val().replace(/[^0-9]/g, ''), 
             InvDiscTotal: $("#InvDiscTotal").val().replace(/[^0-9]/g, ''), 
             InvGrandTotal: $("#InvGrandTotal").val().replace(/[^0-9]/g, ''),  
-            InvDelta: quillcontent.getContents(),  
-            InvDetail: quillcontent.root.innerHTML.replace(/\s+/g, " "),  
+            InvImageList: $("#list-produk img").map(function(){ return $(this).attr("src")}).get(),  
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){  
@@ -1383,4 +1516,5 @@
         });
     });
 
-</script>
+
+</script> 
