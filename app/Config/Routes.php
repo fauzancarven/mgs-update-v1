@@ -197,16 +197,16 @@ $routes->post('/message/edit-finish-delivery/(:num)', 'MessageController::projec
 /**
  *  MODAL print
  */ 
-$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']);  
-$routes->post('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']);  
-$routes->get('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1', ['filter' => 'login']);  
-$routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1', ['filter' => 'login']);  
-$routes->get('/print/project/deliveryA5/(:num)', 'PrintController::project_delivery_a5/$1', ['filter' => 'login']);  
-$routes->get('/print/project/poA4/(:num)', 'PrintController::project_po_a4/$1', ['filter' => 'login']);   
-$routes->get('/print/project/poA5/(:num)', 'PrintController::project_po_a5/$1', ['filter' => 'login']);  
+$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1');  
+$routes->post('/print/project/sph/(:num)', 'PrintController::project_sph/$1');  
+$routes->get('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1');  
+$routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1');  
+$routes->get('/print/project/deliveryA5/(:num)', 'PrintController::project_delivery_a5/$1');  
+$routes->get('/print/project/poA4/(:num)', 'PrintController::project_po_a4/$1');   
+$routes->get('/print/project/poA5/(:num)', 'PrintController::project_po_a5/$1');  
 
-$routes->get('/print/project/proformaA5/(:num)', 'PrintController::project_proforma_a5/$1', ['filter' => 'login']); 
-$routes->get('/print/project/paymentA5/(:num)', 'PrintController::project_payment_a5/$1', ['filter' => 'login']); 
+$routes->get('/print/project/proformaA5/(:num)', 'PrintController::project_proforma_a5/$1'); 
+$routes->get('/print/project/paymentA5/(:num)', 'PrintController::project_payment_a5/$1'); 
 
 
-$routes->get('/printhtml/project/sph/(:num)', 'PrintController::project_sph_html/$1', ['filter' => 'login']); 
+$routes->get('/printhtml/project/sph/(:num)', 'PrintController::project_sph_html/$1'); 
