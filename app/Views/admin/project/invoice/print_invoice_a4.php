@@ -352,10 +352,10 @@
                         </table>   
                     </td> 
                     <td style="vertical-align:start;border:1px solid"> 
-                        <table style="border-collapse:collapse;heigth:100%">
+                        <table style="border-collapse:collapse;heigth:100%;width:100%">
                             <tbody>
                                 <tr style="border-bottom:1px solid;margin:12px;">
-                                    <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">No. Doc.</div></td>
+                                    <td style="border:none;padding-left:3px;vertical-align:start;width:30px;"><div class="width-label label-color d-inline-block">No. Doc.</div></td>
                                     <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
                                     <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $inv->InvCode ?></div></td>
                                 </tr>
