@@ -1805,6 +1805,8 @@
             InvDiscTotal: $("#InvDiscTotal").val().replace(/[^0-9]/g, ''), 
             InvGrandTotal: $("#InvGrandTotal").val().replace(/[^0-9]/g, ''),  
             InvImageList: $("#list-produk img").map(function(){ return $(this).attr("src")}).get(),  
+            InvKtp: $("#select-ktp").val(), 
+            InvNpwp: $("#select-npwp").val(), 
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){  
