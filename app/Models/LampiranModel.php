@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 class LampiranModel extends Model
 { 
     protected $DBGroup = 'default';
-    protected $table = 'Lampiran';
+    protected $table = 'lampiran';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $insertID = 0;
