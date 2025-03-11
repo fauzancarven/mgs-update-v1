@@ -92,7 +92,9 @@ class PrintController extends BaseController
                 $data["detail"] = $detail; 
                 $data["postdata"] = $postData; 
                 $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
-                
+                if(isset($postData["custom"])){ 
+                        $data["header_footer"]["detail"] = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0895-3529-92663<br>MAHIERA GLOBAL SOLUTION';
+                }
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
 
