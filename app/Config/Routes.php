@@ -92,7 +92,9 @@ $routes->post('/action/edit-data-po/(:num)', 'ActionController::pembelian_edit/$
 $routes->post('/action/delete-data-po/(:num)', 'ActionController::pembelian_delete/$1', ['filter' => 'login']);
 
 $routes->post('/action/add-data-template-footer', 'ActionController::template_footer_add', ['filter' => 'login']); 
-$routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);   
+$routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);  
+
+$routes->post('/action/add-data-lampiran', 'ActionController::lampiran_add', ['filter' => 'login']);  
 
 
 /** ACCOUNT VENDOR */
@@ -118,6 +120,8 @@ $routes->post('/action/delete-data-produk/(:num)', 'ActionController::produk_del
  * SELECT2
  */  
 $routes->post('/select2/get-data-customer', 'SelectController::customer', ['filter' => 'login']);
+$routes->post('/select2/get-data-npwp', 'SelectController::lampiran/npwp', ['filter' => 'login']);
+$routes->post('/select2/get-data-ktp', 'SelectController::lampiran/ktp', ['filter' => 'login']);
 $routes->post('/select2/get-data-customer-category', 'SelectController::customer_category', ['filter' => 'login']);
 $routes->post('/select2/get-data-store', 'SelectController::store', ['filter' => 'login']);
 $routes->post('/select2/get-data-city', 'SelectController::city', ['filter' => 'login']);

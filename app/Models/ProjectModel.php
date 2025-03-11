@@ -3060,7 +3060,8 @@ class ProjectModel extends Model
             "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
             "InvDiscTotal"=>$header["InvDiscTotal"], 
             "InvImageList"=> JSON_ENCODE($header["InvImageList"]),
-            "InvDetail"=> $header["InvDetail"],
+            "InvKtp"=>$header["InvKtp"], 
+            "InvNpwp"=>$header["InvNpwp"],  
             "created_user"=>user()->id, 
             "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
@@ -3108,6 +3109,8 @@ class ProjectModel extends Model
         $builder->set('InvDiscItemTotal', $header["InvDiscItemTotal"]); 
         $builder->set('InvDiscTotal', $header["InvDiscTotal"]); 
         $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
+        $builder->set('InvNpwp', $header["InvNpwp"]);  
+        $builder->set('InvKtp', $header["InvKtp"]);  
         $builder->set('InvImageList', JSON_ENCODE($header["InvImageList"]));    
         $builder->set('updated_user',user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
@@ -3138,11 +3141,13 @@ class ProjectModel extends Model
     }
     public function getdataInvoice($id){
         $builder = $this->db->table("invoice");
-        $builder->select("*");
+        $builder->select("*,InvNpwp NpwpId,b.Name NpwpName,b.Image NpwpImage, InvKtp KtpId,a.Name KtpName,a.Image KtpImage");
         $builder->join("customer","invoice.CustomerId = customer.CustomerId","left");
         $builder->join("users","id = InvAdmin","left");
         $builder->join("project","project.ProjectId = invoice.ProjectId","left");
         $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
+        $builder->join("lampiran a","a.Id = invoice.InvKtp","left");
+        $builder->join("lampiran b","b.Id = invoice.InvNpwp","left");
         $builder->where('InvId',$id);
         $builder->limit(1);
         return $builder->get()->getRow();  

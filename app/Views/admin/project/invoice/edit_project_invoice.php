@@ -407,7 +407,7 @@
                         </div>
                     </div>
                 </div>   
-                 
+                
                 <div class="row p-2"> 
                     <div class="col-12 col-md-6 px-1 order-2 order-md-1">   
                         <div class="row mx-2 my-3 align-items-center">
@@ -415,17 +415,18 @@
                                 <span class="label-dialog">Lampiran KTP</span> 
                             </div>
                         </div>   
-                        <div class="card" style="min-height:50px;">
+                        <div class="card">
+                            <input type="file" class="d-none" accept="image/*" id="upload-ktp"> 
                             <div class="card-body mx-2 p-2 bg-light">
                                 <div class="d-flex mb-1 align-items-center mt-2"> 
                                     <div class="flex-fill pe-2">
-                                        <select class="form-select form-select-sm" name="select-npwp" id="select-npwp" placeholder="Pilih KTP" style="width:100%"></select>  
+                                        <select class="form-select form-select-sm" name="select-ktp" id="select-ktp" placeholder="Pilih KTP" style="width:100%"></select>  
                                     </div>  
-                                    <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-upload pe-2"></i>Upload</a> 
+                                    <a type="button" class="btn btn-sm btn-primary rounded text-white" id="btn-ktp" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-upload pe-2"></i>Upload</a> 
                                 </div>    
                                 <div class="row mb-1 align-items-center mt-2"> 
                                     <div class="col-12"> 
-                                        <div name="EditFooterMessage" class="border"></div> 
+                                        <div id="preview-ktp" class="border p-md-4 p-2 text-center" style="min-height:50px;"></div> 
                                     </div>
                                 </div>    
                             </div>  
@@ -437,23 +438,26 @@
                                 <span class="label-dialog">Lampiran NPWP</span> 
                             </div>
                         </div>   
-                        <div class="card" style="min-height:50px;">
+                        <div class="card" >
+                        
+                            <input type="file" class="d-none" accept="image/*" id="upload-npwp"> 
                             <div class="card-body mx-2 p-2 bg-light">
                                 <div class="d-flex mb-1 align-items-center mt-2"> 
                                     <div class="flex-fill pe-2">
                                         <select class="form-select form-select-sm" name="select-npwp" id="select-npwp" placeholder="Pilih NPWP" style="width:100%"></select>  
                                     </div>  
-                                    <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-upload pe-2"></i>Upload</a> 
+                                    
+                                    <a type="button" class="btn btn-sm btn-primary rounded text-white" id="btn-npwp" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-upload pe-2"></i>Upload</a> 
                                 </div>    
-                                <div class="row mb-1 align-items-center mt-2"> 
+                                <div class="row mb-1 align-items-center mt-2" > 
                                     <div class="col-12"> 
-                                        <div name="EditFooterMessage" class="border"></div> 
+                                        <div id="preview-npwp" class="border p-md-4 p-2  text-center" style="min-height:50px;"></div> 
                                     </div>
                                 </div>    
                             </div>  
                         </div>  
                     </div>  
-                </div>  
+                </div>    
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -463,6 +467,87 @@
     </div>
 </div>  
 
+<div class="modal fade " id="modal-edit"  data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">  
+        <div class="modal-content" name="form-action">
+            <div class="modal-header">
+                <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="crop-image" style="height:500px;"></div>
+                <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
+                    <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
+                    <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
+                    <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
+                    <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
+                </div>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary" id="submit-crop" >Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " id="modal-edit-ktp"  data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">  
+        <div class="modal-content" name="form-action">
+            <div class="modal-header">
+                <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Upload Gambar KTP</h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row mb-1 align-items-center mt-2 p-2">
+                    <label for="ktp-rename" class="col-sm-2 col-form-label">Nama</label>
+                    <div class="col-sm-10">
+                        <input id="ktp-rename" name="ktp-rename" type="text" class="form-control form-control-sm input-form" value="">
+                    </div>
+                </div>  
+                <div id="crop-image-ktp" style="height:300px;"></div> 
+                <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
+                    <a class="p-2" onclick="rotate_image_npwp(90)"><i class="fas fa-undo-alt"></i></a>
+                    <a class="p-2" onclick="rotate_image_npwp(-90)"><i class="fas fa-redo-alt"></i></a>
+                    <a class="p-2" onclick="flip_image_npwp(2)"><i class="fas fa-exchange-alt"></i></a>
+                    <a class="p-2" onclick="flip_image_npwp(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
+                </div>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary" id="submit-crop-ktp" >Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " id="modal-edit-npwp"  data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">  
+        <div class="modal-content" name="form-action">
+            <div class="modal-header">
+                <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Upload Gambar NPWP</h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row mb-1 align-items-center mt-2 p-2">
+                    <label for="npwp-rename" class="col-sm-2 col-form-label">Nama</label>
+                    <div class="col-sm-10">
+                        <input id="npwp-rename" name="npwp-rename" type="text" class="form-control form-control-sm input-form" value="">
+                    </div>
+                </div>  
+                <div id="crop-image-npwp" style="height:300px;"></div> 
+                <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
+                    <a class="p-2" onclick="rotate_image_npwp(90)"><i class="fas fa-undo-alt"></i></a>
+                    <a class="p-2" onclick="rotate_image_npwp(-90)"><i class="fas fa-redo-alt"></i></a>
+                    <a class="p-2" onclick="flip_image_npwp(2)"><i class="fas fa-exchange-alt"></i></a>
+                    <a class="p-2" onclick="flip_image_npwp(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
+                </div>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary" id="submit-crop-npwp" >Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="modal-optional"></div> 
 <script>    
 
@@ -1156,6 +1241,282 @@
         $(el).parent().parent().remove();
     }   
     
+    $("#select-npwp").select2({
+        dropdownParent: $('#modal-edit-invoice .modal-content'),
+        placeholder: "Tidak ada yang dipilih", 
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-npwp",
+            dataType: 'json',
+            type: "POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash // CSRF Token
+                };
+            },
+            processResults: function (response) {
+    
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        },  
+        templateResult: function(params) {
+            if (params.newTag) {
+                return "Tambah '" + params.text + "'";
+            }
+            if (params.loading) return params.text; 
+            return params.text;
+            //return params.text;
+        },
+        templateSelection: function(params) {
+            return params.text;
+        }, 
+        //escapeMarkup: function(m) { return m; }
+    }).on("select2:select", function(e) {  
+        var data = e.params.data;   
+        if(data.image == ""){
+            $("#preview-npwp").html("")
+        }  else{
+            var html = "<img src='" + data.image  +"' >"
+            $("#preview-npwp").html(html)
+        } 
+    }); 
+    $("#btn-npwp").on('click',function(){
+        $("#upload-npwp").trigger("click");
+    })    
+    var $uploadCropNpwp = $('#crop-image-npwp').croppie({
+        viewport: {
+            width: 250,
+            height: 150,
+        },
+        showZoomer: false,
+        enforceBoundary: false,
+        enableExif: true,
+        enableOrientation: true
+    });
+    $("#upload-npwp").on('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() { 
+                var flip = 0; 
+                $('#npwp-rename').val("");
+                $('#modal-edit-npwp').modal('show');
+                $('#modal-edit-npwp').on('shown.bs.modal', function(){ 
+                    $uploadCropNpwp.croppie('bind', {
+                        url: reader.result
+                    }).then(function(){
+                         
+                    });
+                });
+                rotate_image_npwp = function(val){
+                    $uploadCropNpwp.croppie('rotate',parseInt(val));
+                }
+                flip_image_npwp = function(val){
+                    flip = flip == 0 ? val : 0;
+                    $uploadCropNpwp.croppie('bind', { 
+                        url: $(el).parent().parent().find('img').attr('src'),
+                        orientation: flip
+                    });
+                } 
+                $('#submit-crop-npwp').unbind().click(function (ev) {
+                    if( $('#npwp-rename').val() == "" ) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'Nama harus diinput...!!!', 
+                            confirmButtonColor: "#3085d6", 
+                        }).then(function(){ 
+                            swal.close();
+                            setTimeout(() => $("#npwp-rename").focus(), 300); 
+                            }) ;
+                        return; 
+                    };
+                    $uploadCropNpwp.croppie('result', {
+                        type: 'base64',
+                        format: 'png',
+                        size: {width: 250, height: 150}
+                    }).then(function (resp) { 
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/add-data-lampiran", 
+                            data:{
+                                "Name":  $('#npwp-rename').val() ,
+                                "Image": resp,  
+                                "Type": "NPWP",
+                            },
+                            success: function(data) {    
+                                //console.log(data); 
+                                if(data["status"]===true){      
+                                    $("#preview-npwp").html(`<img src="${resp}">`) 
+                                    $('#modal-edit-npwp').modal('hide'); 
+                                    $('#select-npwp').append(new Option(data["data"]["Name"] , data["data"]["id"] , true, true)).trigger('change');   
+                                }
+                            },
+                            error : function(xhr, textStatus, errorThrown){   
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: xhr["responseJSON"]['message'], 
+                                    confirmButtonColor: "#3085d6", 
+                                });
+                            }
+                        }); 
+                    });
+                });
+            }
+        }
+    }); 
+    $('#select-npwp').append(new Option("<?= $project->NpwpName?>" , "<?= $project->NpwpId?>" , true, true)).trigger('change'); 
+    $("#preview-npwp").html(`<img src="<?= $project->NpwpImage?>">`) 
+
+
+    $("#select-ktp").select2({
+        dropdownParent: $('#modal-edit-invoice .modal-content'),
+        placeholder: "Tidak ada yang dipilih", 
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-ktp",
+            dataType: 'json',
+            type: "POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash // CSRF Token
+                };
+            },
+            processResults: function (response) {
+    
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        },  
+        templateResult: function(params) {
+            if (params.newTag) {
+                return "Tambah '" + params.text + "'";
+            }
+            if (params.loading) return params.text; 
+            return params.text;
+            //return params.text;
+        },
+        templateSelection: function(params) {
+            return params.text;
+        }, 
+        //escapeMarkup: function(m) { return m; }
+    }).on("select2:select", function(e) {  
+        var data = e.params.data;   
+        if(data.image == ""){
+            $("#preview-ktp").html("")
+        }  else{
+            var html = "<img src='" + data.image  +"'>"
+            $("#preview-ktp").html(html)
+        } 
+    });
+    $("#btn-ktp").on('click',function(){
+        $("#upload-ktp").trigger("click");
+    })
+    var $uploadCropKtp = $('#crop-image-ktp').croppie({
+        viewport: {
+            width: 250,
+            height: 150,
+        },
+        showZoomer: false,
+        enforceBoundary: false,
+        enableExif: true,
+        enableOrientation: true
+    });
+    $("#upload-ktp").on('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() { 
+                var flip = 0; 
+                $('#ktp-rename').val("");
+                $('#modal-edit-ktp').modal('show');
+                $('#modal-edit-ktp').on('shown.bs.modal', function(){ 
+                    $uploadCropKtp.croppie('bind', {
+                        url: reader.result
+                    }).then(function(){
+                         
+                    });
+                });
+                rotate_image_npwp = function(val){
+                    $uploadCropKtp.croppie('rotate',parseInt(val));
+                }
+                flip_image_npwp = function(val){
+                    flip = flip == 0 ? val : 0;
+                    $uploadCropKtp.croppie('bind', { 
+                        url: $(el).parent().parent().find('img').attr('src'),
+                        orientation: flip
+                    });
+                } 
+                $('#submit-crop-ktp').unbind().click(function (ev) {
+                    if( $('#ktp-rename').val() == "" ) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'Nama harus diinput...!!!', 
+                            confirmButtonColor: "#3085d6", 
+                        }).then(function(){ 
+                            swal.close();
+                            setTimeout(() => $("#ktp-rename").focus(), 300); 
+                            }) ;
+                        return; 
+                    };
+                    $uploadCropKtp.croppie('result', {
+                        type: 'base64',
+                        format: 'png',
+                        size: {width: 250, height: 150}
+                    }).then(function (resp) { 
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/add-data-lampiran", 
+                            data:{
+                                "Name":  $('#ktp-rename').val() ,
+                                "Image": resp,  
+                                "Type": "KTP",
+                            },
+                            success: function(data) {    
+                                //console.log(data); 
+                                if(data["status"]===true){      
+                                    $("#preview-ktp").html(`<img src="${resp}">`) 
+                                    $('#modal-edit-ktp').modal('hide'); 
+                                    $('#select-ktp').append(new Option(data["data"]["Name"] , data["data"]["id"] , true, true)).trigger('change');   
+                                }
+                            },
+                            error : function(xhr, textStatus, errorThrown){   
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: xhr["responseJSON"]['message'], 
+                                    confirmButtonColor: "#3085d6", 
+                                });
+                            }
+                        }); 
+                    });
+                });
+            }
+        }
+    }); 
+    $('#select-ktp').append(new Option("<?= $project->KtpName?>" , "<?= $project->KtpId?>" , true, true)).trigger('change'); 
+    $("#preview-ktp").html(`<img src="<?= $project->KtpImage?>">`) 
 
     var quill = [];  
     $(".template-footer").each(function(index, el){

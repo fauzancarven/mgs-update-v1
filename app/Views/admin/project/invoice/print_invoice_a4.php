@@ -493,8 +493,13 @@
                     echo "<img src='".$row."' width='130px' style='padding:5px'>";
                 } 
                 echo '</div>';
-            } 
-        ?>  
+                echo '<div style="display:block;padding-top:50px;">';
+                echo '<img src="'.$inv->KtpImage.'" height="150px" style="padding:5px">';
+                echo '<img src="'.$inv->NpwpImage.'" height="150px" style="padding:5px">';
+                echo '</div>';
+            }    
+        ?>   
+        
     </div> 
 
 </body>

@@ -16,6 +16,7 @@ use App\Models\ProduksatuanModel;
 use App\Models\VendorcategoryModel;
 use App\Models\VendorModel;
 use App\Models\TemplatefooterModel;
+use App\Models\LampiranModel;
 
 use Config\Services; 
 
@@ -519,6 +520,37 @@ class SelectController extends BaseController
                     "text" => $row['TemplateFooterName'], 
                     "detail" => $row['TemplateFooterDetail'], 
                     "delta" => $row['TemplateFooterDelta'],  
+                );
+            } 
+            $response['data'] = $data; 
+            return $this->response->setJSON($response); 
+        }
+    }
+    public function lampiran($type){
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array(); 
+
+
+            $models = new LampiranModel();
+            $models->select('*');  
+            if(isset($postData['searchTerm'])) $models->like('Name',$postData['searchTerm']);  
+            $models->like('Type',$type);
+            $models->orderBy('Id');
+            $customerList = $models->find(); 
+            $data = array();
+
+            $data[] = array(
+                "id" => 0,
+                "text" => "Tidak ada yang dipilih", 
+                "image" => "",    
+            );
+            foreach($customerList as $row){
+                $data[] = array(
+                    "id" => $row['Id'],
+                    "text" => $row['Name'], 
+                    "image" => $row['Image'],    
                 );
             } 
             $response['data'] = $data; 

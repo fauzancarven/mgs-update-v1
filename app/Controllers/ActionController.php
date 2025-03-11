@@ -12,6 +12,7 @@ use App\Models\ProdukvarianModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
+use App\Models\LampiranModel;
 use Config\Services; 
 
 class ActionController extends BaseController
@@ -415,7 +416,20 @@ class ActionController extends BaseController
             echo $models->delete_data_pembelian($id);  
         }
     }
-    
+    public function lampiran_add(){
+        $request = Services::request();
+        $models = new LampiranModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $data = $models->insert($postData); 
+            
+            $models->select('*');
+            $models->orderBy('Id', 'DESC'); 
+            $models->limit(1);
+            $query = $models->get()->getRow();
+            echo json_encode(array("status"=>true,"data"=>$query)); 
+        }
+    }
     public function template_footer_add(){
         $request = Services::request();
         $models = new ProjectModel(); 
