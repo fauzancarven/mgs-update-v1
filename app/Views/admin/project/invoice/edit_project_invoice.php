@@ -551,6 +551,7 @@
 <div id="modal-optional"></div> 
 <script>    
 
+var image_list = JSON.parse(`<?= $project->InvImageList ?>`); 
     $('#InvDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment('<?= $project->InvDate ?>'),
@@ -1126,7 +1127,6 @@
     }; 
     
     /** BAGIAN IMAGE UPLOAD */
-    var image_list = JSON.parse(`<?= $project->InvImageList ?>`); 
     for(var i=0; image_list.length > i; i++){
         $("#list-produk").append(`<div class="image-default-obi border">
                 <img src="${image_list[i]}" draggable="true"> 

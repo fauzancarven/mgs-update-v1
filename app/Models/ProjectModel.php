@@ -3504,7 +3504,7 @@ class ProjectModel extends Model
         $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
         $builder->set('InvNpwp', $header["InvNpwp"]);  
         $builder->set('InvKtp', $header["InvKtp"]);  
-        $builder->set('InvImageList', (isset($row["InvImageList"]) ? json_encode($row["InvImageList"]) : "[]"));
+        $builder->set('InvImageList', (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"));
         $builder->set('updated_user',user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
         $builder->where('InvId', $id); 
