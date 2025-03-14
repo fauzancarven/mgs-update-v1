@@ -605,17 +605,7 @@
 
                     loader_data_project($(this).data("id"),$(this).data("menu")) 
                 }); 
-                
-                // $(".btn-side-menu").click(function(){
-                //     var parent = $(this).parent().parent().find(".side-menu[data-id='" +$(this).data("id")+ "']");
-                //     if($(parent).hasClass("hide")){
-                //         $(parent).removeClass("hide");
-                //         $(this).find("i").removeClass("fa-rotate-180");
-                //     }else{ 
-                //         $(parent).addClass("hide");
-                //         $(this).find("i").addClass("fa-rotate-180");
-                //     } 
-                // }); 
+                 
                 $(".header.notif").click(function(){  
                     $(this).siblings(".selected").removeClass("selected");
                     if($(this).hasClass("selected")){   

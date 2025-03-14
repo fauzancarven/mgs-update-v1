@@ -110,8 +110,9 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-accounting").modal("hide");   
-                        $("i[data-menu='keuangan'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        $("#modal-add-accounting").modal("hide");
+                        loader_data_project(<?= $project->ProjectId ?>,'keuangan')  
+                        // $("i[data-menu='keuangan'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

@@ -398,7 +398,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-finish-delivery").modal("hide");   
-                        $("i[data-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");   
+                        loader_data_project(<?= $project->ProjectId ?>,'pengiriman')  
+                        // $("i[data-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

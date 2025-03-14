@@ -111,7 +111,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-accounting").modal("hide");   
-                        $("i[data-menu='keuangan'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        loader_data_project(<?= $project->ProjectId ?>,'keuangan')
+                        // $("i[data-menu='keuangan'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{
