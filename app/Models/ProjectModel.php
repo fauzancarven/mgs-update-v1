@@ -2833,7 +2833,7 @@ class ProjectModel extends Model
         $query = $builder->get()->getResult();    
         foreach($query as $row){
             $listmodal .= ' 
-            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#delivery-'.$row->AccId.'" aria-expanded="false">
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
                 <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
                 <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
                 <span class="text-detail-3 fw-bold flex-fill">'.$row->AccName.' Tgl. '. date_format(date_create($row->AccDate) ,"d M Y").' 
@@ -2843,10 +2843,7 @@ class ProjectModel extends Model
                 <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==1 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
                 <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
                 <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('(-) Rp. '.number_format($row->AccTotal,0)) : ('(+) Rp. '.number_format($row->AccTotal,0))).'</span>
-            </div>
-            <div class="list-group list-group-flush collapse show" id="delivery-'.$row->AccId.'">
-                '.$htmlpayment.'
-            </div>';
+            </div> ';
             if($row->AccType==1){ 
                 $totalmodal_debt += $row->AccTotal;
                 $realpaymodal +=  $row->AccTotal;
@@ -2887,7 +2884,7 @@ class ProjectModel extends Model
         $query = $builder->get()->getResult();    
         foreach($query as $row){
             $listdll .= ' 
-            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#delivery-'.$row->AccId.'" aria-expanded="false">
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
                 <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
                 <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
                 <span class="text-detail-3 fw-bold flex-fill">'.$row->AccName.' Tgl. '. date_format(date_create($row->AccDate) ,"d M Y").' 
@@ -2897,9 +2894,6 @@ class ProjectModel extends Model
                 <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==1 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
                 <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
                 <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('(-) Rp. '.number_format($row->AccTotal,0)) : ('(+) Rp. '.number_format($row->AccTotal,0))).'</span>
-            </div>
-            <div class="list-group list-group-flush collapse show" id="delivery-'.$row->AccId.'">
-                '.$htmlpayment.'
             </div>';
             if($row->AccType==1){ 
                 $totaldll_debt += $row->AccTotal;
