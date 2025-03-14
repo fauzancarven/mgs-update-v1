@@ -626,11 +626,6 @@
         $('#modal-select-item').modal("hide");   
     }
 
-    var data_detail_ref = JSON.parse('<?= JSON_ENCODE($detailref,true) ?>'); 
-    if(data_detail_ref.length > 0){
-        load_produk_ref(data_detail_ref);
-        $(".head-ref").show();
-    }
     
     edit_varian_click = function(index){ 
         if(data_detail_item[index]["type"] == "category"){  
@@ -1003,6 +998,11 @@
     }
     load_produk();
 
+    var data_detail_ref = JSON.parse('<?= JSON_ENCODE($detailref,true) ?>'); 
+    if(data_detail_ref.length > 0){
+        load_produk_ref(data_detail_ref);
+        $(".head-ref").show();
+    }
     var sph_sub_total = new Cleave(`#SphSubTotal`, {
             numeral: true,
             delimeter: ",",

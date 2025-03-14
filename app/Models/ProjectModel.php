@@ -1842,30 +1842,30 @@ class ProjectModel extends Model
                 } 
             }
 
-            $builder = $this->db->table("delivery");
-            $builder->select('*');   
-            $builder->where("InvId",$row->InvId);
-            $builder->orderby('DeliveryId', 'ASC'); 
-            $delivery = $builder->countAllResults();
-            if($delivery == 0){
-                $alert[] = array(
-                    "type"=>"Pengiriman",
-                    "message"=>"pengiriman ".$row->InvCode." belum dibuat"
-                );
-            }else{
-                $builder = $this->db->table("delivery");
-                $builder->select('*');   
-                $builder->where("InvId",$row->InvId);
-                $builder->where("DeliveryStatus <",2);
-                $builder->orderby('DeliveryId', 'ASC'); 
-                $delivery = $builder->countAllResults();
-                if($delivery == 0){
-                    $alert[] = array(
-                        "type"=>"Delivery",
-                        "message"=>"pengiriman ".$row->InvCode." belum diselesaikan"
-                    );
-                }
-            }
+            // $builder = $this->db->table("delivery");
+            // $builder->select('*');   
+            // $builder->where("InvId",$row->InvId);
+            // $builder->orderby('DeliveryId', 'ASC'); 
+            // $delivery = $builder->countAllResults();
+            // if($delivery == 0){
+            //     $alert[] = array(
+            //         "type"=>"Pengiriman",
+            //         "message"=>"pengiriman ".$row->InvCode." belum dibuat"
+            //     );
+            // }else{
+            //     $builder = $this->db->table("delivery");
+            //     $builder->select('*');   
+            //     $builder->where("InvId",$row->InvId);
+            //     $builder->where("DeliveryStatus <",2);
+            //     $builder->orderby('DeliveryId', 'ASC'); 
+            //     $delivery = $builder->countAllResults();
+            //     if($delivery == 0){
+            //         $alert[] = array(
+            //             "type"=>"Delivery",
+            //             "message"=>"pengiriman ".$row->InvCode." belum diselesaikan"
+            //         );
+            //     }
+            // }
         }
         return $alert;
     }
