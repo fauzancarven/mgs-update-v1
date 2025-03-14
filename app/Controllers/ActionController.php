@@ -416,6 +416,16 @@ class ActionController extends BaseController
             echo $models->delete_data_pembelian($id);  
         }
     }
+
+    public function project_accounting_add($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_accounting($postData);  
+            echo json_encode(array("status"=>true));
+        }
+    }
     public function lampiran_add(){
         $request = Services::request();
         $models = new LampiranModel(); 

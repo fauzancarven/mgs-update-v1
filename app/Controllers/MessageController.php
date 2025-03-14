@@ -290,14 +290,53 @@ class MessageController extends BaseController
         $modelsvendor = new VendorModel();
 
         $project = $models->getdataPO($id); 
-        $arr_detail = $models->getdataDetailSPH($id);
+        $arr_detail = $models->getdataDetailPO($id);
         $detail = array();
+        $detailref = array();
         $ref = JSON_DECODE($project->PORef2,true);
-        if($ref["type"] == "SPH"){
-            $reference = $ref["code"];
+        if($project->InvId == 0 && $project->SphId ==0){
+            $reference = "-";
+        }else if($project->InvId == 0){
+            $reference = $project->SphCode ;
+            
+            $arr_detail_ref = $models->getdataDetailSph($project->SphId);
+            foreach($arr_detail_ref as $row){
+                $detailref[] = array(
+                    "id" => $row->ProdukId, 
+                    "produkid" => $row->ProdukId, 
+                    "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                    "satuan_text"=>$row->SphDetailSatuanText,  
+                    "hargajual"=>$row->SphDetailPrice,
+                    "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                    "total"=> $row->SphDetailTotal,
+                    "disc"=> $row->SphDetailDisc,
+                    "qty"=> $row->SphDetailQty,
+                    "text"=> $row->SphDetailText,
+                    "group"=> $row->SphDetailGroup,
+                    "type"=> $row->SphDetailType
+                );
+            };
         }else{
-            $reference = "";
+            $reference = $project->InvCode;
+            $arr_detail_ref = $models->getdataDetailInvoice($project->InvId);
+            foreach($arr_detail_ref as $row){
+                $detailref[] = array(
+                    "id" => $row->ProdukId, 
+                    "produkid" => $row->ProdukId, 
+                    "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                    "satuan_text"=>$row->InvDetailSatuanText,  
+                    "hargajual"=>$row->InvDetailPrice,
+                    "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                    "total"=> $row->InvDetailTotal,
+                    "disc"=> $row->InvDetailDisc,
+                    "qty"=> $row->InvDetailQty,
+                    "text"=> $row->InvDetailText,
+                    "group"=> $row->InvDetailGroup,
+                    "type"=> $row->InvDetailType
+                );
+            };
         }
+  
         foreach($arr_detail as $row){
             $detail[] = array(
                         "id" => $row->ProdukId, 
@@ -315,9 +354,8 @@ class MessageController extends BaseController
         }; 
         $data["project"] = $project; 
         $data["detail"] =  $detail;
-        $data["reference"] =  $reference;
-        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
-        $data["template"] =$models->get_data_template_footer($project->TemplateId);  
+        $data["detailref"] =  $detailref;
+        $data["reference"] =  $reference;   
         $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/po/edit_project_po',$data)); 
@@ -758,4 +796,21 @@ class MessageController extends BaseController
         $data["detail"] =  $detail; 
         return $this->response->setBody(view('admin/project/delivery/edit_finish_delivery',$data)); 
     }
+
+
+    public function project_accounting_add($id,$group)
+    {       
+        $models = new ProjectModel();
+        $models->join("customer","customer.CustomerId=project.CustomerId");
+        $models->join("users","users.id=project.UserId");
+        $models->join("store","store.StoreId=project.StoreId");
+        $data["project"] = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        if($group==2){ 
+            return $this->response->setBody(view('admin/project/accounting/add_lain_lain.php',$data)); 
+        }else{ 
+            return $this->response->setBody(view('admin/project/accounting/add_modal.php',$data)); 
+        }
+    }
 }
+

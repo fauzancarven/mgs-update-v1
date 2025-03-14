@@ -502,6 +502,56 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-print-po" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Pembelian</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="POPrintFormat" class="col-sm-4 col-form-label">Ukuran Kertas</label>
+                    <div class="col-sm-8">
+                        <select class="form-select form-select-sm" id="POPrintFormat" name="POPrintFormat" placeholder="Pilih Admin" style="width:100%">
+                            <option id="1" selected>A4</option>
+                        </select>  
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="POPrintImage" class="col-sm-4 col-form-label">gunakan gambar item</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="POPrintImage" id="POPrintImage1" value="0">
+                            <label class="text-detail" for="POPrintImage1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="POPrintImage" id="POPrintImage2" value="1" checked>
+                            <label class="text-detail" for="POPrintImage2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="POPrintTotal" class="col-sm-4 col-form-label">gunakan grand total</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="POPrintTotal" id="POPrintTotal1" value="0">
+                            <label class="text-detail" for="POPrintTotal1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="POPrintTotal" id="POPrintTotal2" value="1" checked>
+                            <label class="text-detail" for="POPrintTotal2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btn-print-po">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
  
 <script>
    
@@ -1153,9 +1203,21 @@
         });
     }
 
-    print_project_po_a4 = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/poA4/") ?>' + id, '_blank');
+    print_project_po_a4 = function(ref,id,el){  
+        $("#modal-print-po").modal("show");
+        $("#modal-print-po").data("id",id) 
     };
+    
+    $("#btn-print-po").click(function(i){ 
+        $.redirect('<?= base_url("print/project/poA4/") ?>' +  $("#modal-print-po").data("id"),  {
+            kertas: $("#POPrintFormat").val(),
+            image: $('input[name="POPrintImage"]:checked').val(),
+            total: $('input[name="POPrintTotal"]:checked').val(),
+        },
+        "GET",'_blank');
+        $("#modal-print-po").modal("hide");
+        
+    })
     print_project_po_a5 = function(ref,id,el){ 
         window.open('<?= base_url("print/project/poA5/") ?>' + id, '_blank');
     };
@@ -1396,7 +1458,7 @@
                             confirmButtonColor: "#3085d6",
                         });  
                         if(type == "sample"){
-                            $("idata-menu='" + type + "'][data-id='" + ref + "']").trigger("click");   
+                            $("i[data-menu='" + type + "'][data-id='" + ref + "']").trigger("click");   
                         } 
                     }, 
                 });
@@ -1842,6 +1904,39 @@
     }
 
     
+    var isProcessingAccounting = [];
+    add_project_accounting  = function(id,el,group){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingDelivery[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingDelivery[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-accounting/" + id + "/" + group,  
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-accounting").modal("show"); 
+
+                isProcessingDelivery[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDelivery[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
 </script>
 
 <script>

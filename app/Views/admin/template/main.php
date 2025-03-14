@@ -850,12 +850,9 @@
     .card.project .header {
         cursor: pointer;
     }
-    /* .card.project .content-data{ 
-        opacity: 0; 
-        min-height: 0; 
-        height:0;
-        transition: min-height 0.15s ease-out,opacity 0.5s;
-    } */
+    .card.project .content-data{ 
+        background: #F5F7FF;
+    } 
     .header.notif.selected {
         background: #002247 !important;
         color: white !important;
@@ -1845,6 +1842,12 @@
                 }
             }); 
         });
+        const rupiah = (number)=>{
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR"
+            }).format(number);
+        }
     </script>
 
 

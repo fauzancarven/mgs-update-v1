@@ -407,7 +407,7 @@
                     }).then((result) => {   
                         $("#modal-add-proforma").modal("hide");  
                         
-                        $("idata-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        $("i[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

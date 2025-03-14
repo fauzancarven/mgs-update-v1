@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-select-item" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-select-item-label">
+<div class="modal fade" id="modal-select-item" data-type="sell" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-select-item-label">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -227,7 +227,7 @@
                 }, 
                 success: function(data) { 
                     console.log(data);  
-                    selectharga.setRawValue(data["data"]["ProdukDetailHargaJual"]);
+                    $("#modal-select-item").data("type") == "buy" ?  selectharga.setRawValue(data["data"]["ProdukDetailHargaBeli"]) :  selectharga.setRawValue(data["data"]["ProdukDetailHargaJual"]);
 
                     data_select_produk = {
                         "id": data["data"]["ProdukDetailId"],
@@ -238,15 +238,15 @@
                         "berat": data["data"]["ProdukDetailBerat"],
                         "satuan_id": data["data"]["ProdukDetailSatuanId"],
                         "satuan_text": data["data"]["ProdukDetailSatuanText"],
-                        "pcsM2": data["data"]["ProdukDetailPcsM2"], 
+                        "pcsM2": data["data"]["ProdukDetailPcsM2"],  
                         "price": selectharga.getRawValue(),
                         "disc": selectdisc.getRawValue(),
                         "qty":  selectqty.getRawValue(),
                         "total": selecttotal.getRawValue(),
                     }  
 
-                    $("#select-harga").prop("disabled",true); 
-                    $("#select-satuan").prop("disabled",true); 
+                    $("#select-harga").prop("disabled",false); 
+                    $("#select-satuan").prop("disabled",false); 
                     $("#select-qty").prop("disabled",false); 
                     $("#select-disc").prop("disabled",false); 
                     $('#select-satuan').append(new Option(data["data"]["ProdukDetailSatuanText"] , data["data"]["ProdukDetailSatuanId"], true, true)).trigger('change');   
@@ -262,7 +262,7 @@
                 "berat": 0,
                 "satuan_id": 0,
                 "satuan_text": "",
-                "pcsM2": "", 
+                "pcsM2": "",  
                 "price": selectharga.getRawValue(),
                 "disc": selectdisc.getRawValue(),
                 "qty":  selectqty.getRawValue(),

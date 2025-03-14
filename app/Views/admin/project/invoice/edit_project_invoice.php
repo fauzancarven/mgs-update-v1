@@ -1,6 +1,6 @@
  
 <div class="modal fade" id="modal-edit-invoice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-invoice-label" style="overflow-y:auto;">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl  modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-edit-invoice-label">Edit Invoice</h2>
@@ -1858,7 +1858,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-invoice").modal("hide");  
-                        $("idata-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        $("i[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
                     });
                   
                 }else{

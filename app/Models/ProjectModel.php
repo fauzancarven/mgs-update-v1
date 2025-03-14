@@ -62,6 +62,7 @@ class ProjectModel extends Model
         $dt->query($query); 
 
         $dt->add('date_time', function($data){
+            
             $date = date_create($data["ProjectDate"]);
             return '<div class="d-flex flex-column gap-1 align-items-center">
                         <span class="text-head-2">'.date_format($date,"d M Y").'</span>
@@ -517,6 +518,12 @@ class ProjectModel extends Model
                                     </span>
                                 </i>
                                 <div class="vr" style="padding: 0.05rem;"></div>
+                                <i data-id="'.$row->ProjectId.'" data-menu="keuangan" class="fa-solid fa-dollar position-relative header notif">
+                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <div class="vr" style="padding: 0.05rem;"></div> 
                                 <i data-id="'.$row->ProjectId.'" data-menu="survey" class="fa-solid fa-list-check position-relative header notif">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -528,12 +535,6 @@ class ProjectModel extends Model
                                     </span>
                                 </i>
                                 <div class="vr" style="padding: 0.05rem;"></div>
-                                <i data-id="'.$row->ProjectId.'" data-menu="keuangan" class="fa-solid fa-dollar position-relative header notif">
-                                    <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
-                                        <span class="visually-hidden">unread messages</span>
-                                    </span>
-                                </i>
-                                <div class="vr" style="padding: 0.05rem;"></div> 
                                 <i data-id="'.$row->ProjectId.'" data-menu="documentasi" class="fa-solid fa-folder-open position-relative header notif">
                                     <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle icon-notif"> 
                                         <span class="visually-hidden">unread messages</span>
@@ -688,7 +689,9 @@ class ProjectModel extends Model
                 break; 
                 ; 
 
-                
+            case "keuangan":
+                return $this->data_project_keuangan($data["ProjectId"]);
+                break;
             default: 
                 $html = '
                 <div class="d-flex justify-content-center flex-column align-items-center">
@@ -2266,9 +2269,11 @@ class ProjectModel extends Model
         $html = "";
 
         $builder = $this->db->table("pembelian");
-        $builder->select('*'); 
-        $builder->join("vendor",'POVendor=VendorId',"left"); 
-        $builder->where('PORef',$id);
+        $builder->select('*,pembelian.VendorName VendorName'); 
+        $builder->join("vendor",'pembelian.VendorId=vendor.VendorId',"left"); 
+        $builder->join("invoice",'invoice.InvId=pembelian.InvId',"left"); 
+        $builder->join("penawaran",'penawaran.SphId=pembelian.SphId',"left"); 
+        $builder->where('pembelian.ProjectId',$id);
         $builder->orderby('POId', 'DESC'); 
         $query = $builder->get()->getResult();  
 
@@ -2348,12 +2353,12 @@ class ProjectModel extends Model
                 $no++;  
             } 
 
-            $builder = $this->db->table("pembelian");
-            $builder->select('*'); 
-            $builder->join("vendor",'POVendor=VendorId',"left"); 
-            $builder->where('PORef',$id);
-            $builder->orderby('POId', 'DESC'); 
-            $query = $builder->get()->getResult();  
+            // $builder = $this->db->table("pembelian");
+            // $builder->select('*'); 
+            // $builder->join("vendor",'pembelian.VendorId=vendor.VendorId',"left"); 
+            // $builder->where('ProjectId',$id);
+            // $builder->orderby('POId', 'DESC'); 
+            // $query = $builder->get()->getResult();  
 
             $html_grpo = "";
             if($html_grpo == ""){
@@ -2362,7 +2367,7 @@ class ProjectModel extends Model
                         <span class="text-head-2">
                             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                             Belum ada data penerimaan barang yang dibuat, silahkan tambahkan data 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="terima_project_po('.$row->PORef.','.$row->POId.',this)">Penerimaan barang</a>  
+                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="terima_project_po('.$id.','.$row->POId.',this)">Penerimaan barang</a>  
                         </span> 
                     </div>';
             }else{
@@ -2371,10 +2376,12 @@ class ProjectModel extends Model
                     <span class="text-head-2">
                         <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                         Masih ada sisa pembayaran yang belum diselesaikan, silahkan buat data  
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="terima_project_po('.$row->PORef.','.$row->POId.',this)">Penerimaan barang</a>
+                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="terima_project_po('.$id.','.$row->POId.',this)">Penerimaan barang</a>
                     </span> 
                 </div>';
             }
+
+
 
             $html_payment = "";
             if($html_payment == ""){
@@ -2383,7 +2390,7 @@ class ProjectModel extends Model
                         <span class="text-head-2">
                             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                             Belum ada data pembayaran yang dibuat, silahkan tambahkan data 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="terima_project_po('.$row->PORef.','.$row->POId.',this)">pembayaran</a>  
+                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="terima_project_po('.$id.','.$row->POId.',this)">pembayaran</a>  
                         </span> 
                     </div>';
             }else{
@@ -2392,12 +2399,19 @@ class ProjectModel extends Model
                     <span class="text-head-2">
                         <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                         Masih ada sisa pembayaran yang belum diselesaikan, silahkan buat data  
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="terima_project_po('.$row->PORef.','.$row->POId.',this)">Pembayaran</a>
+                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="terima_project_po('.$id.','.$row->POId.',this)">Pembayaran</a>
                     </span> 
                 </div>';
             }
+ 
 
-            $reference = json_decode($row->PORef2);
+            if($row->InvId == 0 && $row->SphId ==0){
+                $reference = "-";
+            }else if($row->InvId == 0){
+                $reference = $row->SphCode ;
+            }else{
+                $reference = $row->InvCode;
+            }
             $html .= '
             <div class="list-project mb-4 p-2">
                 <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">  
@@ -2416,13 +2430,13 @@ class ProjectModel extends Model
                     <div class="col-12 col-sm-2 col-xl-2 order-3 order-sm-2"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Referensi</span>
-                            <span class="text-head-3">'.($reference->code == null ? "-" : $reference->code) .'</span>
+                            <span class="text-head-3">'.($reference) .'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-2 col-xl-2 order-4 order-sm-3"> 
                         <div class="d-flex flex-row flex-md-column justify-content-between">
                             <span class="text-detail-2"><i class="fa-solid fa-address-card pe-1"></i>Vendor</span>
-                            <span class="text-head-3 text-wrap">'.$row->VendorCode.' - '.$row->VendorName.'</span>
+                            <span class="text-head-3 text-wrap">'.$row->VendorName.'</span>
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-4">
@@ -2432,14 +2446,14 @@ class ProjectModel extends Model
                                     <i class="fa-solid fa-print mx-1"></i><span >Cetak</span>
                                 </a> 
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" onclick="print_project_po_a4('.$row->PORef.','.$row->POId.',this)">Print A4</a></li>
-                                    <li><a class="dropdown-item" onclick="print_project_po_a5('.$row->PORef.','.$row->POId.',this)">Print A5</a></li> 
+                                    <li><a class="dropdown-item" onclick="print_project_po_a4('.$id.','.$row->POId.',this)">Print A4</a></li>
+                                    <li><a class="dropdown-item" onclick="print_project_po_a5('.$id.','.$row->POId.',this)">Print A5</a></li> 
                                 </ul>
                             </div>
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_po('.$row->PORef.','.$row->POId.',this)">
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_po('.$id.','.$row->POId.',this)">
                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                             </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_po('.$row->PORef.','.$row->POId.',this)">
+                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_po('.$id.','.$row->POId.',this)">
                                 <i class="fa-solid fa-close mx-1"></i><span >Delete</span>
                             </button> 
                         </div> 
@@ -2450,10 +2464,10 @@ class ProjectModel extends Model
                                     <i class="ti-more-alt icon-rotate-45"></i>
                                 </a>
                                 <ul class="dropdown-menu shadow"> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_po_a4('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_po_a5('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_po('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_po('.$row->PORef.','.$row->POId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_po_a4('.$id.','.$row->POId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_po_a5('.$id.','.$row->POId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_po('.$id.','.$row->POId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_po('.$id.','.$row->POId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
                                 </ul>
                             </div>
                         </div> 
@@ -2560,6 +2574,385 @@ class ProjectModel extends Model
                 <span>Belum ada percakapan yang dibuat</span>
                 <button class="btn btn-sm btn-primary px-3 mt-4" onclick="add_project_diskusi(\''.$id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>mulai percakapan</button>
             </div> 
+        ';
+        return json_encode(
+            array(
+                "status"=>true,
+                "html"=>$html
+            )
+        );
+    }
+    private function data_project_keuangan($id){
+        $html = '
+        <div class="p-2">
+        <div class="d-flex justify-content-between">
+            <h6 class="text-head-1 pb-2">DATA KEUANGAN PROJECT</h6>
+            
+        </div>
+        <div class="bg-white">
+            <div class="d-flex border-bottom p-2"> 
+                <span class="text-head-2 fw-bold flex-fill">Deskripsi</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Debit (+)</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Credit (-)</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Real Payment</span>
+            </div> ';
+
+
+        //INVOICE
+        $builder = $this->db->table("invoice");
+        $builder->select('*');
+        $builder->where('ProjectId',$id);
+        $builder->where('InvStatus !=',3);
+        $builder->orderby('InvId', 'DESC'); 
+        $query = $builder->get()->getResult();  
+        
+        $totalinvoice = 0;
+        $realpayinvoice = 0;
+        $listinvoice = "";
+        foreach($query as $row){
+
+            $htmlpayment = "";
+            $builder = $this->db->table("payment");
+            $builder->select('*'); 
+            $builder->where('InvId',$row->InvId);
+            $builder->where('PaymentDoc',1);
+            $builder->where('PaymentStatus <',2);
+            $builder->orderby('PaymentId', 'ASC'); 
+            $payment = $builder->get()->getResult(); 
+
+            $iconexpand = '<i class="fa-solid fa-minus"></i>';
+            foreach($payment as $row_payment){  
+                $iconexpand = '<i class="fa-solid fa-chevron-down"></i>';
+                $realpayinvoice += $row_payment->PaymentTotal; 
+                $htmlpayment .= '  
+                <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                    <span class="text-detail-3 fw-bold flex-fill">Pembayaran dari No. Dokumen '.$row_payment->PaymentCode .' Tgl. '.date_format(date_create($row_payment->PaymentDate) ,"d M Y").'</span>
+                    <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold" style="width:10rem;">(+) Rp. '.number_format($row_payment->PaymentTotal,0).' </span>
+                </div>';
+            }
+
+            $totalinvoice += $row->InvGrandTotal; 
+            $listinvoice .= ' 
+                <div class="d-flex p-2 align-items-center list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#invoice-'.$row->InvId.'" aria-expanded="false">
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;">'.$iconexpand.'</span>
+                    <span class="text-detail-3 fw-bold flex-fill">Invoice dari No. Dokumen '.$row->InvCode.' tgl. '. date_format(date_create($row->InvDate) ,"d M Y").'</span>
+                    <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">Rp. '.number_format($row->InvGrandTotal,0).'</span>
+                    <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
+                </div>
+                <div class="list-group list-group-flush collapse show" id="invoice-'.$row->InvId.'">
+                    '.$htmlpayment.'
+                </div>';
+        }
+        if($listinvoice == ""){
+            $listinvoice = '<div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">Tidak ada data invoice yang dibuat</span>
+            </div>';
+        }
+        $html .= '
+        <div class="list-group list-group-flush" data-bs-toggle="collapse" data-bs-target="#invoice-'.$id.'" aria-expanded="false">
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-head-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-chevron-down"></i></span>
+                <span class="text-head-3 fw-bold flex-fill">Penjualan</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totalinvoice,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">-</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">(+) Rp. '.number_format($realpayinvoice,0).'</span>
+            </div> 
+        </div> 
+        <div class="list-group list-group-flush collapse show" id="invoice-'.$id.'"> '.$listinvoice.'</div>';
+
+
+        //PEMBELIAN
+        $builder = $this->db->table("pembelian");
+        $builder->where('ProjectId',$id);
+        $builder->orderby('POId', 'DESC'); 
+        $query = $builder->get()->getResult();   
+        $totalpo = 0;
+        $realpaypo = 0;
+        $pembelian = "";
+        foreach($query as $row){
+            $htmlpayment = "";
+            $builder = $this->db->table("payment");
+            $builder->select('*'); 
+            $builder->where('POId',$row->POId);
+            $builder->where('PaymentDoc',1);
+            $builder->where('PaymentStatus <',2);
+            $builder->orderby('PaymentId', 'ASC'); 
+            $payment = $builder->get()->getResult(); 
+
+            $iconexpand = '<i class="fa-solid fa-minus"></i>';
+            foreach($payment as $row_payment){  
+                $iconexpand = '<i class="fa-solid fa-chevron-down"></i>';
+                $realpaypo += $row_payment->PaymentTotal; 
+                $htmlpayment .= '  
+                <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                    <span class="text-detail-3 fw-bold flex-fill">Pembayaran dari No. Dokumen '.$row_payment->PaymentCode .' Tgl. '.date_format(date_create($row_payment->PaymentDate) ,"d M Y").'</span>
+                    <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold" style="width:10rem;">(-) Rp. '.number_format($row_payment->PaymentTotal,0).'</span>
+                </div>';
+            }
+
+            $totalpo += $row->POGrandTotal; 
+            $pembelian .= ' 
+                <div class="d-flex p-2 align-items-center list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#po-'.$row->POId.'" aria-expanded="false">
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;">'.$iconexpand.'</span>
+                    <span class="text-detail-3 fw-bold flex-fill">PO dari No. Dokumen '.$row->POCode.' tgl. '. date_format(date_create($row->PODate) ,"d M Y").'</span>
+                    <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">Rp. '.number_format($row->POGrandTotal,0).'</span>
+                    <span class="text-detail-3 fw-bold ps-2 " style="width:10rem;">-</span>
+                </div>
+                <div class="list-group list-group-flush collapse show" id="po-'.$row->POId.'">
+                    '.$htmlpayment.'
+                </div>';
+        }
+        if($pembelian == ""){
+            $pembelian = '<div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">Tidak ada data pembelian yang dibuat</span>
+            </div>';
+        }
+        $html .= '
+        <div class="list-group list-group-flush" data-bs-toggle="collapse" data-bs-target="#po-'.$id.'" aria-expanded="false">
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-head-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-chevron-down"></i></span>
+                <span class="text-head-3 fw-bold flex-fill">Pembelian</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">-</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totalpo,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">(-) Rp. '.number_format($realpaypo,0).'</span>
+            </div> 
+        </div> 
+        <div class="list-group list-group-flush collapse show" id="po-'.$id.'"> '.$pembelian.'</div>';
+
+
+        //Pengiriman
+        $builder = $this->db->table("delivery");
+        $builder->where('ProjectId',$id);
+        $builder->orderby('DeliveryId', 'DESC'); 
+        $query = $builder->get()->getResult();   
+        $totalpengiriman = 0;
+        $realpaypengiriman = 0;
+        $delivery = "";
+        foreach($query as $row){
+            $htmlpayment = "";
+            $builder = $this->db->table("payment");
+            $builder->select('*'); 
+            $builder->where('DeliveryId',$row->DeliveryId);
+            $builder->where('PaymentDoc',1);
+            $builder->where('PaymentStatus <',2);
+            $builder->orderby('PaymentId', 'ASC'); 
+            $payment = $builder->get()->getResult(); 
+
+            $iconexpand = '<i class="fa-solid fa-minus"></i>';
+            foreach($payment as $row_payment){  
+                $iconexpand = '<i class="fa-solid fa-chevron-down"></i>';
+                $realpaypengiriman += $row_payment->PaymentTotal; 
+                $htmlpayment .= '  
+                <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                    <span class="text-detail-3 fw-bold flex-fill">Pembayaran dari No. Dokumen '.$row_payment->PaymentCode .' Tgl. '.date_format(date_create($row_payment->PaymentDate) ,"d M Y").'</span>
+                    <span class="text-detail-3 fw-bold ps-3" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold ps-3" style="width:10rem;">(-) Rp. '.number_format($row_payment->PaymentTotal,0).'</span>
+                </div>';
+            }
+
+            $totalpengiriman += $row->DeliveryTotal; 
+            $delivery .= ' 
+                <div class="d-flex p-2 align-items-center list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#delivery-'.$row->DeliveryId.'" aria-expanded="false">
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;">'.$iconexpand.'</span>
+                    <span class="text-detail-3 fw-bold flex-fill">Pengiriman dari No. Dokumen '.$row->DeliveryCode.' tgl. '. date_format(date_create($row->DeliveryDate) ,"d M Y").'</span>
+                    <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">-</span>
+                    <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">Rp. '.number_format($row->DeliveryTotal,0).'</span>
+                    <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">-</span>
+                </div>
+                <div class="list-group list-group-flush collapse show" id="delivery-'.$row->DeliveryId.'">
+                    '.$htmlpayment.'
+                </div>';
+        }
+        if($delivery == ""){
+            $delivery = '<div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">Tidak ada data pengiriman yang dibuat</span>
+            </div>';
+        }
+        $html .= '
+        <div class="list-group list-group-flush" data-bs-toggle="collapse" data-bs-target="#delivery-'.$id.'" aria-expanded="false">
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-head-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-chevron-down"></i></span>
+                <span class="text-head-3 fw-bold flex-fill">Pengiriman</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">-</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totalpengiriman,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">(-) Rp. '.number_format($realpaypengiriman,0).'</span>
+            </div> 
+        </div> 
+        <div class="list-group list-group-flush collapse show" id="delivery-'.$id.'"> '.$delivery.'</div>';
+
+        // $subtotal_debt = $totalinvoice;
+        // $subtotal_crd = $totalpengiriman + $totalpo;
+        // $subtotal_real = $realpayinvoice - $realpaypo - $realpaypengiriman;
+        // $html .= '
+        // <div class="d-flex border-top p-2 bg-light"> 
+        //     <span class="text-head-2 fw-bold flex-fill">Sub Total (PENJUALAN - PEMBELIAN - PENGIRIMAN)</span>
+        //     <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($subtotal_debt,0).'</span>
+        //     <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($subtotal_crd,0).'</span>
+        //     <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($subtotal_real,0).'</span>
+        // </div> 
+        // <div class="d-flex border-bottom p-2 bg-light"> 
+        //     <span class="text-head-2 fw-bold flex-fill">Grand Total (PENJUALAN - PEMBELIAN - PENGIRIMAN)</span>
+        //     <span class="text-head-2 fw-bold text-center" style="width:20rem;">Rp. '.number_format($subtotal_debt - $subtotal_crd,0).'</span> 
+        //     <span class="text-head-2 fw-bold" style="width:10rem;">-</span>
+        // </div> ';
+
+        //MODAL  
+        $listmodal = "";
+        $totalmodal_debt = 0;
+        $totalmodal_crt = 0;
+        $realpaymodal = 0;
+        $builder = $this->db->table("project_accounting");
+        $builder->where('ProjectId',$id);
+        $builder->where('AccGroup',1);
+        $builder->orderby('AccId', 'ASC'); 
+        $query = $builder->get()->getResult();    
+        foreach($query as $row){
+            $listmodal .= ' 
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#delivery-'.$row->AccId.'" aria-expanded="false">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">'.$row->AccName.' Tgl. '. date_format(date_create($row->AccDate) ,"d M Y").' 
+                    <a class="btn btn-sm btn-primary p-1 me-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="edit_project_accounting('.$id.',this)">Edit</a>
+                    <a class="btn btn-sm btn-danger p-1 me-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="delete_project_accounting('.$id.',this)">Delete</a> 
+                </span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==1 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('(-) Rp. '.number_format($row->AccTotal,0)) : ('(+) Rp. '.number_format($row->AccTotal,0))).'</span>
+            </div>
+            <div class="list-group list-group-flush collapse show" id="delivery-'.$row->AccId.'">
+                '.$htmlpayment.'
+            </div>';
+            if($row->AccType==1){ 
+                $totalmodal_debt += $row->AccTotal;
+                $realpaymodal +=  $row->AccTotal;
+            }else{ 
+                $totalmodal_crt += $row->AccTotal;
+                $realpaymodal -=  $row->AccTotal;
+            }  
+        }
+        if($listmodal == ""){
+            $listmodal = '<div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">Tidak ada data modal yang dibuat</span>
+            </div>';
+        }
+        $html .= ' 
+        <div class="list-group list-group-flush" data-bs-toggle="collapse" data-bs-target="#modal-'.$id.'" aria-expanded="false">
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-head-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-chevron-down"></i></span>
+                <span class="text-head-3 fw-bold flex-fill">Modal <a class="btn btn-sm btn-primary p-1 m-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="add_project_accounting('.$id.',this,\'1\')">Tambah Data</a></span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totalmodal_debt,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totalmodal_crt,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">(+) Rp. '.number_format($realpaymodal,0).'</span> 
+            </div> 
+        </div>
+        <div class="list-group list-group-flush collapse show" id="modal-'.$id.'"> '.$listmodal.'</div>
+         ';
+
+        //LAIN-LAIN  
+        $listdll = "";
+        $totaldll_debt = 0;
+        $totaldll_crt = 0;
+        $realpaydll = 0;
+        $builder = $this->db->table("project_accounting");
+        $builder->where('ProjectId',$id);
+        $builder->where('AccGroup',2);
+        $builder->orderby('AccId', 'ASC'); 
+        $query = $builder->get()->getResult();    
+        foreach($query as $row){
+            $listdll .= ' 
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#delivery-'.$row->AccId.'" aria-expanded="false">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">'.$row->AccName.' Tgl. '. date_format(date_create($row->AccDate) ,"d M Y").' 
+                    <a class="btn btn-sm btn-primary p-1 me-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="edit_project_accounting('.$id.',this)">Edit</a>
+                    <a class="btn btn-sm btn-danger p-1 me-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="delete_project_accounting('.$id.',this)">Delete</a> 
+                </span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==1 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('(-) Rp. '.number_format($row->AccTotal,0)) : ('(+) Rp. '.number_format($row->AccTotal,0))).'</span>
+            </div>
+            <div class="list-group list-group-flush collapse show" id="delivery-'.$row->AccId.'">
+                '.$htmlpayment.'
+            </div>';
+            if($row->AccType==1){ 
+                $totaldll_debt += $row->AccTotal;
+                $realpaydll +=  $row->AccTotal;
+            }else{ 
+                $totaldll_crt += $row->AccTotal;
+                $realpaydll -=  $row->AccTotal;
+            }  
+        }
+        if($listdll == ""){
+            $listdll = '<div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">Tidak ada data lain lain yang dibuat</span>
+            </div>';
+        }
+        $html .= ' 
+        <div class="list-group list-group-flush" data-bs-toggle="collapse" data-bs-target="#dll-'.$id.'" aria-expanded="false">
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-head-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-chevron-down"></i></span>
+                <span class="text-head-3 fw-bold flex-fill">Biaya Lain-Lain <a class="btn btn-sm btn-primary p-1 m-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="add_project_accounting('.$id.',this,\'2\')">Tambah Data</a></span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totaldll_debt,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totaldll_crt,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">(+) Rp. '.number_format($realpaydll,0).'</span> 
+            </div> 
+        </div> 
+        <div class="list-group list-group-flush collapse show" id="dll-'.$id.'"> '.$listdll.'</div>';
+
+ 
+
+        $grandtotal_debt = $totalinvoice + $totalmodal_debt + $totaldll_debt;
+        $grandtotal_crd = $totalpengiriman + $totalpo + $totalmodal_crt + $totaldll_crt;
+        $grandtotal_real = $realpayinvoice - $realpaypo - $realpaypengiriman + $realpaymodal + $realpaydll;
+        $html .= ' 
+            <div class="d-flex border-top p-2 bg-light border-primary-subtle"> 
+                <span class="text-head-2 fw-bold flex-fill">Sub Total</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($grandtotal_debt,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($grandtotal_crd,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($grandtotal_real,0).'</span>
+            </div> 
+            <div class="d-flex border-top p-2 bg-light border-primary-subtle"> 
+                <span class="text-head-2 fw-bold flex-fill">Grand Total</span>
+                <span class="text-head-2 fw-bold" style="width:20rem;">Rp. '.number_format($grandtotal_debt - $grandtotal_crd,0).'</span> 
+                <span class="text-head-2 fw-bold" style="width:10rem;">-</span>
+            </div> 
+        </div> 
+        <script>   
+            $(".list-group a").on("click", function(event) { 
+                console.log("a click");
+                event.preventDefault();
+                event.stopPropagation(); 
+            });
+        </script>
         ';
         return json_encode(
             array(
@@ -2765,7 +3158,7 @@ class ProjectModel extends Model
 
     public function getSelectRefVendor($refid,$search = null){
         $builder = $this->db->query('SELECT * FROM 
-        (SELECT SphId refid, SphCode as code,SphRef ref,SphDate date, CustomerId custid, "SPH" AS type FROM penawaran UNION SELECT InvId refid,InvCode,InvRef ref,InvDate date,CustomerId, "INV" FROM invoice) AS ref_join
+        (SELECT SphId refid, SphCode as code,ProjectId ref,SphDate date, CustomerId custid, "SPH" AS type FROM penawaran UNION SELECT InvId refid,InvCode,ProjectId ref,InvDate date,CustomerId, "INV" FROM invoice) AS ref_join
         LEFT JOIN customer ON CustomerId = ref_join.custid
         WHERE ref_join.ref = '.$refid.'
         ORDER BY ref_join.date asc');
@@ -3059,7 +3452,7 @@ class ProjectModel extends Model
             "InvSubTotal"=>$header["InvSubTotal"],
             "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
             "InvDiscTotal"=>$header["InvDiscTotal"], 
-            "InvImageList"=> JSON_ENCODE($header["InvImageList"]),
+            "InvImageList"=> (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"),
             "InvKtp"=>$header["InvKtp"], 
             "InvNpwp"=>$header["InvNpwp"],  
             "created_user"=>user()->id, 
@@ -3111,7 +3504,7 @@ class ProjectModel extends Model
         $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
         $builder->set('InvNpwp', $header["InvNpwp"]);  
         $builder->set('InvKtp', $header["InvKtp"]);  
-        $builder->set('InvImageList', JSON_ENCODE($header["InvImageList"]));    
+        $builder->set('InvImageList', (isset($row["InvImageList"]) ? json_encode($row["InvImageList"]) : "[]"));
         $builder->set('updated_user',user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
         $builder->where('InvId', $id); 
@@ -3673,10 +4066,12 @@ class ProjectModel extends Model
             "POCode"=>$this->get_next_code_pembelian($header["PODate"]),
             "PODate"=>$header["PODate"],  
             "PODate2"=>$header["PODate"],  
-            "PORef"=>$header["PORef"],
-            "PORef2"=> json_encode($header["PORef2"]),
+            "ProjectId"=>$header["ProjectId"],
+            "SphId"=>$header["SphId"],
+            "InvId"=>$header["InvId"], 
             "POAdmin"=>$header["POAdmin"], 
-            "POVendor"=>$header["POVendor"], 
+            "VendorId"=>$header["VendorId"], 
+            "VendorName"=>$header["VendorName"], 
             "TemplateId"=>$header["TemplateId"],
             "CustomerId"=>$header["CustomerId"],
             "POSubTotal"=>$header["POSubTotal"],
@@ -3704,45 +4099,52 @@ class ProjectModel extends Model
     public function update_data_pembelian($data,$id){ 
         $header = $data["header"];  
         $builder = $this->db->table("pembelian"); 
-        $builder->set('date', $header["date"]);   
-        $builder->set('templateid', $header["templateid"]); 
-        $builder->set('subtotal', $header["subtotal"]); 
-        $builder->set('pphtotal', $header["pphtotal"]); 
-        $builder->set('disctotal', $header["disctotal"]); 
-        $builder->set('grandtotal', $header["grandtotal"]);   
-        $builder->where('id', $id); 
+        $builder->set('PODate', $header["PODate"]);    
+        $builder->set('VendorId', $header["VendorId"]);  
+        $builder->set('VendorName', $header["VendorName"]);  
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('POSubTotal', $header["POSubTotal"]); 
+        $builder->set('POPPNTotal', $header["POPPNTotal"]); 
+        $builder->set('PODiscTotal', $header["PODiscTotal"]); 
+        $builder->set('POGrandTotal', $header["POGrandTotal"]);   
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
+        $builder->where('POId', $id); 
         $builder->update(); 
 
         $builder = $this->db->table("pembelian_detail");
-        $builder->where('ref',$id);
+        $builder->where('PODetailRef',$id);
         $builder->delete(); 
 
        // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
-            $row["ref"] = $id;
-            $row["varian"] = (isset($row["varian"]) ? json_encode($row["varian"]) : "[]");  
+            $row["PODetailRef"] = $id;
+            $row["PODetailVarian"] = (isset($row["PODetailVarian"]) ? json_encode($row["PODetailVarian"]) : "[]");  
             $builder = $this->db->table("pembelian_detail");
             $builder->insert($row); 
         }
     }
     public function delete_data_pembelian($id){
         $builder = $this->db->table("pembelian");
-        $builder->where('id',$id);
+        $builder->where('POId',$id);
         $builder->delete(); 
 
        
         $builder = $this->db->table("pembelian_detail");
-        $builder->where('ref',$id);
+        $builder->where('PODetailRef',$id);
         $builder->delete(); 
 
         return JSON_ENCODE(array("status"=>true));
     }
     public function getdataPO($id){
         $builder = $this->db->table("pembelian"); 
-        $builder->select("*"); 
-        $builder->join("vendor","POVendor = VendorId","left");
+        $builder->select("*,pembelian.VendorName VendorName,pembelian.ProjectId ProjectId"); 
+        $builder->join("vendor","vendor.VendorId = pembelian.VendorId","left");
+        $builder->join("invoice",'invoice.InvId=pembelian.InvId',"left"); 
+        $builder->join("penawaran",'penawaran.SphId=pembelian.SphId',"left"); 
+        $builder->join("template_footer","pembelian.TemplateId = template_footer.TemplateFooterId","left");
         $builder->join("customer","customer.CustomerId = pembelian.CustomerId","left");
-        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
+        $builder->join("project",'project.ProjectId=pembelian.ProjectId',"left"); 
         $builder->where('POId',$id);  
         return $builder->get()->getRow();  
     }
@@ -3750,6 +4152,26 @@ class ProjectModel extends Model
         $builder = $this->db->table("pembelian_detail"); 
         $builder->where('PODetailRef',$id);  
         return $builder->get()->getResult();  
+    }
+
+
+    public function insert_data_accounting($data){
+        $builder = $this->db->table("project_accounting");
+        $builder->insert(array(  
+            "AccName"=>$data["AccName"],
+            "AccDate"=>$data["AccDate"],
+            "AccType"=>$data["AccType"],
+            "AccTotal"=>$data["AccTotal"],
+            "AccComment"=>$data["AccComment"], 
+            "ProjectId"=>$data["ProjectId"], 
+            "AccGroup"=>$data["AccGroup"],
+        ));
+
+        $builder = $this->db->table("project_accounting");
+        $builder->select('*');
+        $builder->orderby('AccId', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();    
     }
     
 }

@@ -91,10 +91,13 @@ $routes->post('/action/add-data-po', 'ActionController::pembelian_add', ['filter
 $routes->post('/action/edit-data-po/(:num)', 'ActionController::pembelian_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-po/(:num)', 'ActionController::pembelian_delete/$1', ['filter' => 'login']);
 
+$routes->post('/action/add-data-project-accounting/(:num)', 'ActionController::project_accounting_add/$1', ['filter' => 'login']);  
+
 $routes->post('/action/add-data-template-footer', 'ActionController::template_footer_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);  
 
 $routes->post('/action/add-data-lampiran', 'ActionController::lampiran_add', ['filter' => 'login']);  
+
 
 
 /** ACCOUNT VENDOR */
@@ -114,7 +117,6 @@ $routes->post('/action/get-data-item-unit/(:num)', 'ActionController::item_unit_
 $routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/$1', ['filter' => 'login']);  
 $routes->post('/action/delete-data-produk/(:num)', 'ActionController::produk_delete/$1', ['filter' => 'login']);
-
 
 /**
  * SELECT2
@@ -192,6 +194,8 @@ $routes->post('/message/add-finish-delivery/(:num)', 'MessageController::project
 
 $routes->post('/message/edit-proses-delivery/(:num)', 'MessageController::project_delivery_proses_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-finish-delivery/(:num)', 'MessageController::project_delivery_finish_edit/$1', ['filter' => 'login']);  
+
+$routes->post('/message/add-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_add/$1/$2', ['filter' => 'login']);   
 
 
 /**

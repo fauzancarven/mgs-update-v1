@@ -1,6 +1,6 @@
  
 <div class="modal fade" id="modal-edit-po" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-po-label" style="overflow-y:auto;">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-edit-po-label">Edit PO Vendor</h2>
@@ -22,23 +22,23 @@
                         </div> 
                         <div class="row align-items-center mt-2">
                             <label class="col-2 col-form-label">Nama</label>
-                            <label class="col-10  text-end fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
+                            <label class="col-10  text-end fw-bold"><?= $project->CustomerName ?> <?= $project->CustomerCompany == "" ? "" : " ( " . $project->CustomerCompany . " ) "; ?></label> 
                         </div> 
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Telp</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerTelp1 ?> / <?= $customer->CustomerTelp2 == "" ? "" : $customer->CustomerTelp2 ?></label> 
+                            <label class="col-10 text-end fw-bold"><?= $project->CustomerTelp1 ?> / <?= $project->CustomerTelp2 == "" ? "" : $project->CustomerTelp2 ?></label> 
                         </div> 
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Email</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerEmail ?></label> 
+                            <label class="col-10 text-end fw-bold"><?= $project->CustomerEmail ?></label> 
                         </div>  
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Instagram</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerInstagram ?></label> 
+                            <label class="col-10 text-end fw-bold"><?= $project->CustomerInstagram ?></label> 
                         </div>  
                         <div class="row align-items-center">
                             <label class="col-2 col-form-label">Alamat</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerAddress ?></label> 
+                            <label class="col-10 text-end fw-bold"><?= $project->CustomerAddress ?></label> 
                         </div> 
                     </div>  
                     <div class="col-lg-6 col-12 my-1 mb-2">   
@@ -81,11 +81,74 @@
                         </div>  
                     </div>   
                 </div>
-                  
+                <div class="row mx-2 my-3 align-items-center head-ref mt-3" style="display:none">
+                    <div class="label-border-right position-relative" >
+                        <span class="label-dialog">Detail dari referensi</span>  
+                        <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="action-ref-show" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem;display:none;">
+                            <i class="fas fa-eye"></i>
+                            <span class="fw-bold">
+                                &nbsp;show
+                            </span>
+                        </button> 
+                        <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="action-ref-hide" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem">
+                            <i class="fas fa-eye"></i>
+                            <span class="fw-bold">
+                                &nbsp;Hide
+                            </span>
+                        </button> 
+                    </div>
+                </div>   
+                <div class="card detail-ref head-ref" style="min-height:50px;display:none">
+                    <div class="card-body p-2 bg-light">    
+                        <div class="row align-items-center d-none d-md-flex px-3">
+                            <div class="col-12 col-md-6 my-1">    
+                                <div class="row">  
+                                    <div class="col-12"> 
+                                        <span class="label-head-dialog">Deskripsi</span> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 my-1 ">
+                                <div class="row">  
+                                    <div class="col-12">
+                                        <div class="row"> 
+                                            <div class="col-3">
+                                                <span class="label-head-dialog">Qty</span> 
+                                            </div>
+                                            <div class="col-3">
+                                                <span class="label-head-dialog">Harga</span>  
+                                            </div>
+                                            <div class="col-3">
+                                                <span class="label-head-dialog">Disc</span>  
+                                            </div>
+                                            <div class="col-3">
+                                                <span class="label-head-dialog">Total</span>  
+                                            </div>
+                                        </div> 
+                                    </div>  
+                                </div>
+                            </div> 
+                        </div> 
+                        <div id="tb_varian_ref" class="text-center"> 
+                        </div>  
+                    </div>
+                </div> 
+                <script>
+                    $("#action-ref-show").click(function(){
+                        $(".detail-ref").slideDown("slow");
+                        $("#action-ref-show").hide();
+                        $("#action-ref-hide").show();
+                    })
+                    $("#action-ref-hide").click(function(){
+                        $(".detail-ref").slideUp();
+                        $("#action-ref-hide").hide();
+                        $("#action-ref-show").show();
+                    })
+                </script>
 
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
-                        <span class="label-dialog">Item Detail</span> 
+                        <span class="label-dialog">Detail Pembelian</span> 
                     </div>
                 </div>     
                 <div class="card " style="min-height:50px;">
@@ -184,7 +247,7 @@
                                 </div>     
                             </div>
                         </div> 
-                        <div class="row align-items-center py-1">
+                        <div class="row align-items-center py-1 d-none">
                             <div class="col-4">
                                 <span class="label-head-dialog">PPN</span>   
                             </div>
@@ -328,12 +391,10 @@
             }
         } 
         load_produk();
-    })
-    var vendor_data = <?= json_encode($vendor)?>;
-    var vendor_select = vendor_data.filter((item) => item.VendorId == <?=$project->POVendor?>);
-    template_select_vendor(vendor_select); 
-    var project_data = JSON.parse('<?=$project->PORef2?>');  
-    $('#sphref').append(new Option(project_data["code"] , "1", true, true)).trigger('change');   
+    }) 
+    template_select_vendor({"VendorId": "<?=$project->VendorId?>","VendorName" : "<?=$project->VendorName?>"});  
+
+    $('#sphref').append(new Option("<?= $project->InvId == 0 && $project->SphId == 0 ? "-" : ($project->InvId == 0 ? $project->SphCode : $project->InvCode) ?>" , "1", true, true)).trigger('change');   
     $('#sphref').attr("disabled",true);
 
     $("#SphStore").select2({
@@ -400,7 +461,10 @@
     $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
     $('#SphAdmin').attr("disabled",true);
 
-    var data_detail_item = <?= json_encode($detail)?>;   
+    $('#SphVendor').append(new Option("<?=$project->VendorName?>" , "0", true, true)).trigger('change');  
+    $('#SphVendor').attr("disabled",true);
+
+    var data_detail_item =  JSON.parse('<?= JSON_ENCODE($detail,true) ?>'); 
     
     var isProcessingSphAddCategory = false;
     add_detail_category = function(el){
@@ -481,7 +545,7 @@
 
                 $("#modal-select-item").modal("show"); 
 
-
+                $("#modal-select-item").data("type","buy"); 
                 $('#modal-select-item').on('hidden.bs.modal', function () {
                     if (document.activeElement) {
                         document.activeElement.blur();
@@ -543,14 +607,30 @@
             }
         }  
 
-        data["type"] = "product";
-        data_detail_item.push(data)
-
+        data["type"] = "product"; 
+        console.log(data);
+        data_detail_item.push({
+            "varian" : data.varian,
+            "id" : data.id,
+            "produkid" : data.produkid,
+            "text" : data.text,
+            "satuan_id" : data.satuan_id,
+            "satuan_text" : data.satuan_text, 
+            "qty" : data.qty,  
+            "group" : data.group, 
+            "harga" : data.price, 
+            "total" : data.total,
+        }) 
         load_produk();
 
         $('#modal-select-item').modal("hide");   
     }
 
+    var data_detail_ref = JSON.parse('<?= JSON_ENCODE($detailref,true) ?>'); 
+    if(data_detail_ref.length > 0){
+        load_produk_ref(data_detail_ref);
+        $(".head-ref").show();
+    }
     
     edit_varian_click = function(index){ 
         if(data_detail_item[index]["type"] == "category"){  
@@ -646,6 +726,85 @@
         $("#SphDiscItemTotal").val(discitem.toLocaleString('en-US')) 
         $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     }
+    load_produk_ref = function(data_detail){
+        var html = '';
+        if(data_detail.length == 0){
+            html += `<div class="d-flex justify-content-center flex-column align-items-center"> 
+                        <img src="<?= base_url()?>assets/images/empty.png" alt="" style="width:150px;height:150px;">
+                        <span class="text-head-1">Item belum ditambahkan</span>
+                    </div>`;  
+        }
+        let last_group_abjad = 65;
+        let last_group_no = 1;
+        for(var i = 0; data_detail.length > i;i++){  
+            var varian = ""; 
+            varian = `  <span class="text-detail-2 text-truncate">${data_detail[i]["group"]}</span> 
+                        <div class="d-flex gap-1">`;
+            var return_item = false;
+            for(var j = 0; data_detail[i]["varian"].length > j;j++){
+
+                varian += `<span class="badge badge-${j % 5}">${data_detail[i]["varian"][j]["varian"] + ": " + data_detail[i]["varian"][j]["value"]}</span>`; 
+                // if( data_detail[i]["varian"][j]["value"] == $("#SphVendor").select2("data")[0].code){
+                //     return_item = true;
+                // } 
+            } 
+            // if(!return_item){
+            //     data_detail[i]["visible"] = false;
+            // }else{
+            //     data_detail[i]["visible"] = true;
+            // }
+            
+
+            varian +=  '</div>'; 
+
+            html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
+                            <div class="col-12 col-md-6 my-1 varian px-0">   
+                                <div class="d-flex">
+                                    <span class="no-urut text-head-3">${last_group_no}.</span> 
+                                    <div class="d-flex flex-column text-start flex-fill">
+                                        <span class="text-head-3">${data_detail[i]["text"]}</span>
+                                        ${varian} 
+                                    </div>  
+                                    <div class="btn-group d-inline-block d-md-none float-end" role="group">  
+                                        ${data_detail[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
+                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
+                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
+                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 my-1 detail">
+                                <div class="row px-2">  
+                                    <div class="col-12 col-md-12 px-1">   
+                                        <div class="row">  
+                                            <div class="col-6 col-md-3 px-1 ">  
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span> 
+                                                <span class="font-std px-1">${data_detail[i]["qty"]} ${data_detail[i]["satuan_text"]}</span>   
+                                            </div>   
+                                            <div class="col-6 col-md-3 px-1 ">  
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>  
+                                                <span class="font-std px-1">${rupiah(data_detail[i]["hargajual"])}</span>   
+                                            </div> 
+                                            <div class="col-6 col-md-3 px-1 ">  
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Disc</span>  
+                                                <span class="font-std px-1">${rupiah(data_detail[i]["disc"])}</span>   
+                                            </div> 
+                                            <div class="col-6 col-md-3 px-1 ">  
+                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Total</span>  
+                                                <span class="font-std px-1">${rupiah(data_detail[i]["hargajual"] * data_detail[i]["qty"])}</span>   
+                                            </div> 
+                                        </div>   
+                                    </div>   
+                                </div>    
+                            </div>    
+                        </div> `;
+
+            
+            last_group_no++;  
+        }
+        
+        $("#tb_varian_ref").html(html); 
+    }
     load_produk = function(){
         var html = '';
         if(data_detail_item.length == 0){
@@ -664,9 +823,9 @@
             for(var j = 0; data_detail_item[i]["varian"].length > j;j++){
 
                 varian += `<span class="badge badge-${j % 5}">${data_detail_item[i]["varian"][j]["varian"] + ": " + data_detail_item[i]["varian"][j]["value"]}</span>`; 
-                if( data_detail_item[i]["varian"][j]["value"] == $("#SphVendor").select2("data")[0].code){
-                    return_item = true;
-                } 
+                // if( data_detail_item[i]["varian"][j]["value"] == $("#SphVendor").select2("data")[0].code){
+                //     return_item = true;
+                // } 
             } 
             if(!return_item){
                 data_detail_item[i]["visible"] = false;
@@ -677,7 +836,7 @@
 
             varian +=  '</div>'; 
 
-            html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1 ${!return_item ? "d-none" : "d-flex"}">
+            html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
                             <div class="col-12 col-md-4 my-1 varian px-0">   
                                 <div class="d-flex">
                                     <span class="no-urut text-head-3">${last_group_no}.</span> 
@@ -704,33 +863,26 @@
                                         </div>
                                     </div>  
                                     <div class="col-12 col-md-10 px-1">   
-                                        <div class="row">  
-                                            <div class="col-6 col-md-3 px-1 ">  
-                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
-                                                <div class="input-group"> 
-                                                    <input type="text" class="form-control form-control-sm input-form berat" id="input-ref-${i}" data-id="${i}" disabled> 
-                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span>  
-                                                </div>  
-                                            </div>   
-                                            <div class="col-6 col-md-3 px-1 ">  
+                                        <div class="row">   
+                                            <div class="col-6 col-md-4 px-1 ">  
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                 <div class="input-group"> 
                                                     <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}"> 
-                                                    <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span>  
+                                                    <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "0" ? "disabled" : ""}><option value="${data_detail_item[i]["satuan_text"]}">${data_detail_item[i]["satuan_id"]}</option></select> 
                                                 </div>  
                                             </div> 
-                                            <div class="col-6 col-md-3 px-1 ">  
+                                            <div class="col-6 col-md-4 px-1 ">  
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                 <div class="input-group"> 
                                                     <span class="input-group-text font-std px-1">Rp.</span>  
                                                     <input type="text" class="form-control form-control-sm input-form berat" id="input-harga-${i}" data-id="${i}"> 
                                                 </div>  
                                             </div> 
-                                            <div class="col-6 col-md-3 px-1 ">  
+                                            <div class="col-12 col-md-4 px-1 ">  
                                                 <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                 <div class="input-group"> 
                                                     <span class="input-group-text font-std px-1">Rp.</span>  
-                                                    <input type="text" class="form-control form-control-sm input-form berat" id="input-total-${i}" data-id="${i}">  
+                                                    <input type="text" class="form-control form-control-sm input-form berat" id="input-total-${i}" data-id="${i}" disabled>  
                                                 </div>  
                                             </div> 
                                         </div>   
@@ -746,8 +898,7 @@
         $("#SphPPHTotal").val(0);
         $("#SphDiscTotal").val(0);
         $("#SphGrandTotal").val(0);
-        $("#tb_varian").html(html); 
-        var inputref = [];
+        $("#tb_varian").html(html);  
         var inputqty = [];
         var inputharga = [];
         var inputtotal = [];
@@ -758,16 +909,55 @@
                 data_detail_item[id]["total"] = total;
                 inputtotal[id].setRawValue(total);
                 grand_total_harga();
-            }  
-            //event ref
-            inputref[i] = new Cleave(`#input-ref-${i}`, {
-                    numeral: true,
-                    delimeter: ",",
-                    numeralDecimalScale:2,
-                    numeralThousandGroupStyle:"thousand"
-            }); 
-            inputref[i].setRawValue(data_detail_item[i]["qty"]); 
+            }   
 
+            //event satuan
+            $(`#select-satuan-${i}`).select2({
+                dropdownParent: $('#modal-edit-po .modal-content'), 
+                placeholder: "pilih", 
+                width: '5rem',
+                adaptContainerWidth: true,
+                ajax: {
+                    url: "<?= base_url()?>select2/get-data-produk-satuan",
+                    dataType: 'json',
+                    type:"POST",
+                    delay: 250,
+                    data: function (params) {
+                        // CSRF Hash
+                        var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                        var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
+                        return {
+                            searchTerm: params.term, // search term
+                            [csrfName]: csrfHash // CSRF Token
+                        };
+                    },
+                    processResults: function (response) {
+            
+                        // Update CSRF Token
+                        $('.txt_csrfname').val(response.token); 
+
+                        return {
+                            results: response.data
+                        };
+                    },
+                    cache: true
+                }, 
+                language: {
+                    noResults: function () {
+                        return $("<button class=\"btn btn-sm btn-primary\" onclick=\"select_satuan_add()\">Tambah <b>" + $(`#select-satuan-${i}`).data('select2').dropdown.$search[0].value + "</b></button>");
+                    }
+                },
+                formatResult: select2OptionFormat,
+                formatSelection: select2OptionFormat,
+                escapeMarkup: function(m) { return m; }
+            }).on("select2:select", function(e) {
+                var data = e.params.data;  
+                data_detail_item[$(this).data("id")]["satuan_id"] = data.id
+                data_detail_item[$(this).data("id")]["satuan_text"]= data.text
+            });
+            if(data_detail_item[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(data_detail_item[i]["satuan_text"] , data_detail_item[i]["satuan_id"], true, true)).trigger('change');  
+            if(data_detail_item[i]["id"] === "0")  $(`#select-satuan-${i}`).prop("disabled",false)
+            
             //event qty
             inputqty[i] = new Cleave(`#input-qty-${i}`, {
                     numeral: true,
@@ -791,7 +981,7 @@
             }); 
             inputharga[i].setRawValue(data_detail_item[i]["harga"]);
             $(`#input-harga-${i}`).on("keyup",function(){ 
-                data_detail_item[$(this).data("id")]["harga"] = inputqty[$(this).data("id")].getRawValue();
+                data_detail_item[$(this).data("id")]["harga"] = inputharga[$(this).data("id")].getRawValue();
                 if($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0);
                 total_harga($(this).data("id"));
             });   
@@ -805,7 +995,7 @@
             }); 
             inputtotal[i].setRawValue(data_detail_item[i]["total"]);
             $(`#input-total-${i}`).on("keyup",function(){ 
-                data_detail_item[$(this).data("id")]["total"] = inputqty[$(this).data("id")].getRawValue();
+                data_detail_item[$(this).data("id")]["total"] = inputtotal[$(this).data("id")].getRawValue();
                 if($(`#input-total-${i}`).val() == "") $(`#input-total-${i}`).val(0)  
             });   
             total_harga(i);
@@ -852,12 +1042,8 @@
         }
     });  
     grand_total_harga = function(){
-        var total = data_detail_item.reduce((acc, current) => {
-            if(current.visible == true){
-                return acc + current.harga * current.qty;
-            }else{
-                return acc;
-            }
+        var total = data_detail_item.reduce((acc, current) => { 
+            return acc + current.harga * current.qty; 
         },0); 
         var grandtotal =  total - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
 
@@ -865,6 +1051,7 @@
         $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     }
     grand_total_harga();
+
 
     var quill = [];  
     $(".template-footer").each(function(index, el){
@@ -878,7 +1065,9 @@
             theme: "bubble"//'snow'
         }); 
         quill[type].enable(false);
-        quill[type].root.style.background = '#F7F7F7'; // warna disable 
+        quill[type].root.style.background = '#F7F7F7'; // warna disable  
+        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($project->TemplateFooterDelta)?>));  
+
         const btnsaveas = $(el).find("a[value='simpanAs']")[0];
         const btnsave = $(el).find("a[value='simpan']")[0];
         const btnedit = $(el).find("a[value='edit']")[0];
@@ -962,7 +1151,7 @@
                 quill[type].root.style.background = '#F7F7F7'; // warna enable
             } 
         });
-
+        $(selectoption).append(new Option("<?=$project->TemplateFooterName ?>" , "<?=$project->TemplateFooterId?>", true, true)).trigger('change'); 
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
                 $.ajax({ 
@@ -1106,17 +1295,31 @@
     });
 
     $("#btn-edit-po").click(function(){
-        if($("#SphFormatFooter").val() == null){
+        if($($(".template-footer").find("select")[0]).val() == null){
             Swal.fire({
                 icon: 'error',
                 text: 'Template harus dipilih...!!!', 
                 confirmButtonColor: "#3085d6", 
             }).then(function(){ 
                 swal.close();
-                setTimeout(() => $("#SphFormatFooter").select2("open"), 300); 
+                setTimeout(() => $($(".template-footer").find("select")[0]).select2("open"), 300); 
             }) ;
             return; 
         }    
+        
+        if($("#SphVendor").val() == null){
+            Swal.fire({
+                icon: 'error',
+                text: 'Vendor harus diinput...!!!', 
+                confirmButtonColor: "#3085d6", 
+            }).then(function(){ 
+                swal.close(); 
+                setTimeout(function(){  
+                    // $("#SphVendor").select2("open")
+                } , 500); 
+            }) ;
+            return; 
+        }
         if(data_detail_item.length == 0){
             Swal.fire({
                 icon: 'error',
@@ -1139,26 +1342,29 @@
             return; 
         }
 
-        var header = {  
-            date: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
-            templateid: $("#SphFormatFooter").val(), 
-            subtotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
-            disctotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
-            pphtotal: $("#SphPPHTotal").val().replace(/[^0-9]/g, ''), 
-            grandtotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
+        var header = {   
+            PODate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),    
+            VendorId: ($("#SphVendor").select2("data")[0]["text"] == $("#SphVendor").select2("data")[0]["id"] ? 0 : $("#SphVendor").val()), 
+            VendorName: $("#SphVendor").select2("data")[0]["text"], 
+            POAdmin: $("#SphAdmin").val(),  
+            TemplateId: $($(".template-footer").find("select")[0]).val(), 
+            POSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
+            POPPNTotal: $("#SphPPHTotal").val().replace(/[^0-9]/g, ''), 
+            PODiscTotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
+            POGrandTotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){   
             detail.push({
-                produkid: data_detail_item[i]["produkid"], 
-                text: data_detail_item[i]["text"],
-                satuan_id: data_detail_item[i]["satuan_id"], 
-                satuan_text: data_detail_item[i]["satuan_text"],
-                qty: data_detail_item[i]["qty"], 
-                harga: data_detail_item[i]["harga"],  
-                total: data_detail_item[i]["total"], 
-                group: data_detail_item[i]["group"], 
-                varian: data_detail_item[i]["varian"], 
+                ProdukId: data_detail_item[i]["produkid"], 
+                PODetailText: data_detail_item[i]["text"],
+                PODetailSatuanId: data_detail_item[i]["satuan_id"], 
+                PODetailSatuanText: data_detail_item[i]["satuan_text"],
+                PODetailQty: data_detail_item[i]["qty"], 
+                PODetailPrice: data_detail_item[i]["harga"],  
+                PODetailTotal: data_detail_item[i]["total"], 
+                PODetailGroup: data_detail_item[i]["group"], 
+                PODetailVarian: data_detail_item[i]["varian"], 
             }); 
         }
  
@@ -1179,7 +1385,10 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-po").modal("hide");  
-                        $("idata-menu='pembelian'][data-id='<?= $project->PORef ?>']").trigger("click");    
+                        $("i[data-menu='pembelian'][data-id='<?= $project->ProjectId ?>']").trigger("click");  
+                        
+                        $("#modal-add-po").modal("hide");  
+                        $("i[data-menu='pembelian'][data-id='<?= $project->ProjectId ?>']").trigger("click");     
                     });
                   
                 }else{

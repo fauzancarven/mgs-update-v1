@@ -1296,7 +1296,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-sample").modal("hide");   
-                        $("idata-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        $("i[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
                     });
                   
                 }else{

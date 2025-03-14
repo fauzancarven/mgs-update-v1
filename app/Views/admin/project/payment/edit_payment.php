@@ -470,7 +470,7 @@
                     }).then((result) => {   
                         $("#modal-edit-payment").modal("hide");  
                         
-                        $("idata-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");   
+                        $("i[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");   
                     });
                   
                 }else{

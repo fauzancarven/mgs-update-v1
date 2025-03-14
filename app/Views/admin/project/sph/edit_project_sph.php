@@ -1303,7 +1303,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-sph").modal("hide");   
-                        $("idata-menu='penawaran'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        $("i[data-menu='penawaran'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
                     });
                   
                 }else{
