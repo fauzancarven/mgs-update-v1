@@ -509,6 +509,8 @@ class MessageController extends BaseController
                 "ProjectId"=>$datasample->ProjectId,
                 "SampleId"=>$datasample->SampleId,
                 "InvId"=>"",
+                "POId"=>"",
+                "DeliveryId"=>"",
                 "GrandTotal"=>$datasample->SampleGrandTotal,
                 "menu"=>"sample",
             );
@@ -520,12 +522,39 @@ class MessageController extends BaseController
                 "ProjectId"=>$datainvoice->ProjectId,
                 "SampleId"=>"",
                 "InvId"=>$datainvoice->InvId,
+                "POId"=>"",
+                "DeliveryId"=>"",
                 "GrandTotal"=>$datainvoice->InvGrandTotal,
                 "menu"=>"invoice",
             );
             $data["payment"] = $models->getdataPaymentByInvoice($id);  
         }
-         
+        if($postData['type'] == "po"){
+            $datapo = $models->getDataPO($id); 
+            $project = array(
+                "ProjectId"=>$datapo->ProjectId,
+                "SampleId"=>"",
+                "InvId"=>"",
+                "DeliveryId"=>"",
+                "POId"=>$datapo->POId,
+                "GrandTotal"=>$datapo->POGrandTotal,
+                "menu"=>"pembelian",
+            );
+            $data["payment"] = $models->getdataPaymentByPO($id);  
+        }
+        if($postData['type'] == "delivery"){
+            $datadelivery = $models->getDataDelivery($id); 
+            $project = array(
+                "ProjectId"=>$datadelivery->ProjectId,
+                "SampleId"=>"",
+                "InvId"=>"",
+                "DeliveryId"=>$datadelivery->DeliveryId,
+                "POId"=>"",
+                "GrandTotal"=>$datadelivery->DeliveryTotal,
+                "menu"=>"pengiriman",
+            );
+            $data["payment"] = $models->getdataPaymentByDelivery($id);  
+        }
         $data["project"] = $project; 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
@@ -810,6 +839,18 @@ class MessageController extends BaseController
             return $this->response->setBody(view('admin/project/accounting/add_lain_lain.php',$data)); 
         }else{ 
             return $this->response->setBody(view('admin/project/accounting/add_modal.php',$data)); 
+        }
+    }
+
+    public function project_accounting_edit($id,$group)
+    {       
+        $models = new ProjectModel(); 
+        $data["project"] = $models->getdataAccounting($id); 
+        $data["user"] = User();
+        if($group==2){ 
+            return $this->response->setBody(view('admin/project/accounting/edit_lain_lain.php',$data)); 
+        }else{ 
+            return $this->response->setBody(view('admin/project/accounting/edit_modal.php',$data)); 
         }
     }
 }

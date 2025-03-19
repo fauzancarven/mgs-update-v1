@@ -468,9 +468,9 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-edit-payment").modal("hide");  
-                        
-                        $("i[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");   
+                        $("#modal-edit-payment").modal("hide");   
+                        loader_data_project('<?= $project["ProjectId"] ?>','<?= $project["menu"] ?>') 
+                        //$("i[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");   
                     });
                   
                 }else{

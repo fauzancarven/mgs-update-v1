@@ -451,6 +451,8 @@
             data:{ 
                 "InvId": '<?= $project["InvId"] ?>', 
                 "SampleId": '<?= $project["SampleId"] ?>', 
+                "POId": '<?= $project["POId"] ?>', 
+                "DeliveryId": '<?= $project["DeliveryId"] ?>', 
                 "ProjectId": '<?= $project["ProjectId"] ?>', 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
@@ -468,7 +470,9 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-payment").modal("hide");  
-                        $("i[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");  
+                        
+                        loader_data_project('<?= $project["ProjectId"] ?>','<?= $project["menu"] ?>') 
+                        //$("i[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");  
                     });
                   
                 }else{

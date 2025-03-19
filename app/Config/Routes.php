@@ -92,6 +92,8 @@ $routes->post('/action/edit-data-po/(:num)', 'ActionController::pembelian_edit/$
 $routes->post('/action/delete-data-po/(:num)', 'ActionController::pembelian_delete/$1', ['filter' => 'login']);
 
 $routes->post('/action/add-data-project-accounting/(:num)', 'ActionController::project_accounting_add/$1', ['filter' => 'login']);  
+$routes->post('/action/edit-data-project-accounting/(:num)', 'ActionController::project_accounting_edit/$1', ['filter' => 'login']);  
+$routes->post('/action/delete-project-accounting/(:num)', 'ActionController::project_accounting_delete/$1', ['filter' => 'login']);  
 
 $routes->post('/action/add-data-template-footer', 'ActionController::template_footer_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);  
@@ -196,6 +198,7 @@ $routes->post('/message/edit-proses-delivery/(:num)', 'MessageController::projec
 $routes->post('/message/edit-finish-delivery/(:num)', 'MessageController::project_delivery_finish_edit/$1', ['filter' => 'login']);  
 
 $routes->post('/message/add-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_add/$1/$2', ['filter' => 'login']);   
+$routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_edit/$1/$2', ['filter' => 'login']);   
 
 
 /**

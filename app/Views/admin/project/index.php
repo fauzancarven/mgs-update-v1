@@ -1566,18 +1566,25 @@
         });
     }
 
-    show_project_payment = function(ref,InvId,SampleId,id,el){ 
-        if(InvId == "0"){
+    show_project_payment = function(ref,id,pay_id,el,type){ 
+        if(type == "sample"){
             var urlpayment = ref + "/sample/";
-        }else{
-            var urlpayment = ref + "/invoice/"; 
+        }
+        if(type == "invoice"){
+            var urlpayment = ref + "/invoice/";
+        }
+        if(type == "delivery"){
+            var urlpayment = ref + "/delivery/";
+        }
+        if(type == "pembelian"){
+            var urlpayment = ref + "/pembelian/";
         }
         $.ajax({
             type: "GET",
-            url: "<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + id + ".png",
+            url: "<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + pay_id + ".png",
             success: function() {
                 Swal.fire({ 
-                    html: "<img src='<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + id + ".png' style='width:500px;'>", 
+                    html: "<img src='<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + pay_id + ".png' style='width:500px;'>", 
                     confirmButtonColor: "#3085d6", 
                 }); 
                 return;
@@ -1585,10 +1592,10 @@
             error: function() { 
                 $.ajax({
                     type: "GET",
-                    url: "<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + id + ".jpg",
+                    url: "<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + pay_id + ".jpg",
                     success: function() {
                         Swal.fire({ 
-                            html: "<img src='<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + id + ".jpg' style='width:500px;'>", 
+                            html: "<img src='<?= base_url("assets/images/payment/") ?>" + urlpayment + "/" + pay_id + ".jpg' style='width:500px;'>", 
                             confirmButtonColor: "#3085d6", 
                         }); 
                     },
@@ -1901,11 +1908,12 @@
             console.log("project sph cancel load");
             return;
         }  
-        isProcessingDelivery[id] = true; 
+
+        isProcessingDelivery[id] = true;
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-        $.ajax({  
+        $.ajax({
             method: "POST",
             url: "<?= base_url() ?>message/add-project-accounting/" + id + "/" + group,  
             success: function(data) {  
@@ -1925,6 +1933,82 @@
                     confirmButtonColor: "#3085d6", 
                 });
             }
+        });
+    } 
+
+    var isProcessingAccountingEdit = [];
+    edit_project_accounting  = function(ref,id,el,group){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingAccountingEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+
+        isProcessingAccountingEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-accounting/" + id + "/" + group,  
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-accounting").modal("show"); 
+
+                isProcessingAccountingEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingAccountingEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+ 
+    var isProcessingAccountingDelete = [];
+    delete_project_accounting  = function(ref,id,el,group){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingAccountingDelete[id]) {
+            return;
+        }  
+        isProcessingAccountingDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus data ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-project-accounting/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });   
+                        
+                        loader_data_project(ref,'keuangan')  
+                    }, 
+                });
+            }
+            isProcessingAccountingDelete[id] = false;
+            $(el).html(old_text); 
         });
     }
 </script>

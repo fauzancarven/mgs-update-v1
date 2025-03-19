@@ -426,6 +426,24 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+    public function project_accounting_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_accounting($id,$postData);  
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function project_accounting_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_accounting($id);   
+        }
+    }
+    
     public function lampiran_add(){
         $request = Services::request();
         $models = new LampiranModel(); 
