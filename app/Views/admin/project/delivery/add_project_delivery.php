@@ -842,7 +842,7 @@
                 inputinvoice[i] = new Cleave(`#input-invoice-${i}`, {
                         numeral: true,
                         delimeter: ",",
-                        numeralDecimalScale:2,
+                        numeralDecimalScale:3,
                         numeralThousandGroupStyle:"thousand"
                 }); 
                 inputinvoice[i].setRawValue(data_detail_item[i]["qty_ref"]);
@@ -855,7 +855,7 @@
                 inputdikirim[i] = new Cleave(`#input-dikirim-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
                 }); 
                 inputdikirim[i].setRawValue(data_detail_item[i]["qty_success"]);
@@ -868,7 +868,7 @@
                 inputpengiriman[i] = new Cleave(`#input-pengiriman-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
                 }); 
                 inputpengiriman[i].setRawValue(data_detail_item[i]["qty"]);
@@ -881,7 +881,7 @@
                 inputspare[i] = new Cleave(`#input-spare-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
                 }); 
                 inputspare[i].setRawValue(data_detail_item[i]["qty_spare"]);

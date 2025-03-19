@@ -98,7 +98,7 @@
     var selectqty = new Cleave('#select-qty', {
             numeral: true,
             delimeter: ",",
-            numeralDecimalScale:2,
+            numeralDecimalScale:3,
             numeralThousandGroupStyle:"thousand"
     });
    

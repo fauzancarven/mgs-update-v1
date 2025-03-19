@@ -914,7 +914,7 @@
                 inputqty[i] = new Cleave(`#input-qty-${i}`, {
                         numeral: true,
                         delimeter: ",",
-                        numeralDecimalScale:2,
+                        numeralDecimalScale:3,
                         numeralThousandGroupStyle:"thousand"
                 }); 
                 inputqty[i].setRawValue(data_detail_item[i]["qty"]);

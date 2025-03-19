@@ -968,7 +968,7 @@
             inputqty[i] = new Cleave(`#input-qty-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
             }); 
             inputqty[i].setRawValue(data_detail_item[i]["qty"]);
@@ -982,7 +982,7 @@
             inputharga[i] = new Cleave(`#input-harga-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
             }); 
             inputharga[i].setRawValue(data_detail_item[i]["harga"]);
@@ -996,7 +996,7 @@
             inputtotal[i] = new Cleave(`#input-total-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
             }); 
             inputtotal[i].setRawValue(data_detail_item[i]["total"]);

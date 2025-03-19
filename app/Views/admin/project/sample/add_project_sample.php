@@ -855,7 +855,7 @@
                 inputqty[i] = new Cleave(`#input-qty-${i}`, {
                         numeral: true,
                         delimeter: ",",
-                        numeralDecimalScale:2,
+                        numeralDecimalScale:3,
                         numeralThousandGroupStyle:"thousand"
                 }); 
                 inputqty[i].setRawValue(data_detail_item[i]["qty"]);
@@ -1329,7 +1329,7 @@
                     }).then((result) => {   
                         $("#modal-add-sample").modal("hide");   
                         loader_data_project('<?= $project->ProjectId ?>','sample') 
-                        
+
                         //$("i[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   

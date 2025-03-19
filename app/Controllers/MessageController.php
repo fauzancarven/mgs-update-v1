@@ -599,7 +599,7 @@ class MessageController extends BaseController
         $data["project"] = $project; 
         $data["payment"] = $models->getdataProformaByRef($id);  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/add_project_proforma.php',$data)); 
+        return $this->response->setBody(view('admin/project/payment/add_proforma.php',$data)); 
     }
     public function project_proforma_edit($id)
     {     
@@ -609,7 +609,7 @@ class MessageController extends BaseController
         $data["project"] = $models->getdataInvoice($data["payment"]->InvId);      
         $data["payments"] = $models->getdataProformaByRef($data["payment"]->InvId);   
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/edit_project_proforma.php',$data)); 
+        return $this->response->setBody(view('admin/project/payment/edit_proforma.php',$data)); 
     }
     public function project_delivery_add($id)
     {      
