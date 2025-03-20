@@ -493,13 +493,18 @@
                     echo "<img src='".$row."' width='130px' style='padding:5px'>";
                 } 
                 echo '</div>';
-                echo '<div style="display:block;padding-top:50px;">';
-                echo '<img src="'.$inv->KtpImage.'" height="150px" style="padding:5px">';
-                echo '<img src="'.$inv->NpwpImage.'" height="150px" style="padding:5px">';
-                echo '</div>';
+                echo '<table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
+                        <tbody>
+                            <tr> 
+                                <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$inv->KtpImage.'" style="width:100%"></td>
+                                <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$inv->NpwpImage.'" style="width:100%"></td>
+                            </tr> 
+                        </tbody>
+                    </table>'; 
+
             }    
         ?>   
-        
+         
     </div> 
 
 </body>
