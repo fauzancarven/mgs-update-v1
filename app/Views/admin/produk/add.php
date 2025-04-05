@@ -1021,7 +1021,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
     }
 
     load_data_varian();
-
+    var isProcessingSave 
     $("#btn-add-produk").click(async function(){  
      
         if($("#produk-kategori").val() == null){

@@ -316,7 +316,7 @@
                 "ProjectDate":$('#date-project').data('daterangepicker').startDate.format("YYYY-MM-DD") + " " + moment().format("HH:m:s"),
                 "StoreId":$("#store-project").val(),
                 "UserId":$("#admin-project").val(),
-                "ProjectAdmin":$("#admin-project").select2("data")[0]["text"],
+                "ProjectAdmin": $("#admin-project").select2("data")[0]["text"],
                 "ProjectCategory":$("#category-project").val().join("|"),
                 "ProjectComment":$("#comment-project").val() 
             },
@@ -328,6 +328,12 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
+                        socket.emit('load-project', {
+                            "menu":"project",
+                            "icon": '<i class="ti-blackboard menu-icon pe-2"></i>',
+                            "title":"Project baru telah dibuat",
+                            "message":"ada project baru yang dibuat oleh " + $("#admin-project").select2("data")[0]["text"]
+                        });
                         $("#modal-add-project").modal("hide");  
                         loader_datatable();
                     });

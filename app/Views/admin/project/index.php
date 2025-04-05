@@ -554,7 +554,25 @@
 </div>
  
 <script>
-   
+    togglecustom = function(cls,el){
+        if($("." + cls).hasClass("show")){
+            $("." + cls).removeClass("show")
+            $("." + cls).slideUp()
+            $(el).find("i").addClass("fa-rotate-180")
+            $(el).find("span").html("Tampilkan")
+        }else{
+            $("." + cls).addClass("show")
+            $("." + cls).slideDown()
+            $(el).find("i").removeClass("fa-rotate-180")
+            $(el).find("span").html("Sembunyikan")
+        }
+    }
+
+    socket.on('load-project', function(data) { 
+        if(data["menu"] == "project"){
+            loader_datatable();
+        }
+    });
     var paging = 1;
     var table; 
     
@@ -598,15 +616,15 @@
                         confirmButtonColor: "#3085d6", 
                     });
                 } 
-                $(".menu-item").click(function(){
-                    $(this).data("id"); 
-                    $(this).parent().find(".selected").removeClass("selected")
-                    $(this).addClass("selected") 
+                // $(".menu-item").click(function(){
+                //     $(this).data("id"); 
+                //     $(this).parent().find(".selected").removeClass("selected")
+                //     $(this).addClass("selected") 
 
-                    loader_data_project($(this).data("id"),$(this).data("menu")) 
-                }); 
+                //     loader_data_project($(this).data("id"),$(this).data("menu")) 
+                // }); 
                  
-                $(".header.notif").click(function(){  
+                $(".icon-project").click(function(){  
                     $(this).siblings(".selected").removeClass("selected");
                     if($(this).hasClass("selected")){   
                         $(this).removeClass("selected");
@@ -638,7 +656,7 @@
                 })
                 $(".close-project").click(function(){  
                     var header = $(this).parents('.project'); 
-                    $(header).find(".header.notif.selected").trigger("click"); 
+                    $(header).find(".icon-project.selected").trigger("click"); 
                 });
                 // $(".header").click(function(e){
 
@@ -749,7 +767,28 @@
                 $(".tab-content[data-id='"+ ProjectId+"']").show() 
                 $(".loading-content[data-id='"+ ProjectId+"']").hide() 
                 $(".loading-content[data-id='"+ ProjectId+"']").parent().addClass("d-none");
-               
+                console.log(data["project"]) 
+
+                $(".status-header[data-id='"+ ProjectId+"']").html(data["project"]["status"]) 
+                //update status  
+                
+                //update notif sample
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='sample']").removeClass("active")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='sample']").removeClass("notif")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='sample']").addClass(data["project"]["sample"])
+                //update notif penawaran
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='penawaran']").removeClass("active")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='penawaran']").removeClass("notif")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='penawaran']").addClass(data["project"]["penawaran"])
+                //update notif invoice
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='invoice']").removeClass("active")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='invoice']").removeClass("notif")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='invoice']").addClass(data["project"]["invoice"])
+                //update notif delivery
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pengiriman']").removeClass("active")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pengiriman']").removeClass("notif")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pengiriman']").addClass(data["project"]["pengiriman"]) 
+
             },
             error : function(xhr, textStatus, errorThrown){   
                 Swal.fire({
@@ -818,7 +857,8 @@
                             icon: "success",
                             confirmButtonColor: "#3085d6",
                         });  
-                        table.ajax.reload(null, false).responsive.recalc().columns.adjust();
+                        
+                        loader_datatable(); 
                     }, 
                 });
             }
@@ -827,13 +867,7 @@
         });
     }  
     var no_notif = 0;
-    produk_click = function(){
-        socket.emit('message', {
-            "title":"produk add",
-            "message":"produk telah di klik " + no_notif
-        });
-        no_notif++;
-        return;
+    produk_click = function(){ 
         $.ajax({ 
             method: "POST",
             url: "<?= base_url() ?>message/add-item-select", 

@@ -517,6 +517,14 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true,"data"=>$query));
         }
     }
+    public function produk_get(){
+        $request = Services::request();
+        $models = new ProdukModel(); 
+        if ($request->getMethod(true) === 'POST') {  
+            $postData = $request->getPost(); 
+            echo $models->get_produk($postData); 
+        }
+    }
     public function produk_add(){
         $request = Services::request();
         $models = new ProdukModel(); 
@@ -533,7 +541,16 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
-
+    public function produk_rename($id){
+        $request = Services::request();
+        $models = new ProdukModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->rename_produk($id,$postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    
 
     public function item_unit_add(){ 
         $request = Services::request();

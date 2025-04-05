@@ -96,7 +96,19 @@ class MessageController extends BaseController
     }
     public function produk_select()
     {   
-        return $this->response->setBody(view('admin/produk/select.php')); 
+        $varian = new ProdukvarianModel();
+        $category = new ProdukcategoryModel();
+        $variandetail = new ProdukvarianvalueModel();
+        $vendor = new VendorModel();
+        $data = [ 
+            'category' => $category->get()->getResult(),
+            'vendor' => $vendor->get()->getResult(),
+            'varian' => $varian->get()->getResult(),
+            'varian_detail' => $variandetail->get()->getResult(),
+            'varianlist' => ''
+        ]; 
+        return $this->response->setBody(view('admin/produk/select_new.php',$data)); 
+        //return $this->response->setBody(view('admin/produk/select.php')); 
     }
     public function produk_select_new()
     {   
@@ -161,13 +173,14 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
 
         $project = $models->getdataSample($id); 
         $arr_detail = $models->getdataDetailSample($id);
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(
-                        "id" => $row->ProdukId, 
+                        "id" => $row->ProdukId,  
                         "produkid" => $row->ProdukId, 
                         "satuan_id"=> ($row->SampleDetailSatuanId == 0 ? "" : $row->SampleDetailSatuanId),
                         "satuan_text"=>$row->SampleDetailSatuanText,  
@@ -178,7 +191,8 @@ class MessageController extends BaseController
                         "qty"=> $row->SampleDetailQty,
                         "text"=> $row->SampleDetailText,
                         "group"=> $row->SampleDetailGroup,
-                        "type"=> $row->SampleDetailType
+                        "type"=> $row->SampleDetailType,
+                        "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                     );
         };
         $data["project"] = $project; 
@@ -194,6 +208,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
         $request = Services::request();
         $postData = $request->getPost(); 
 
@@ -217,11 +232,12 @@ class MessageController extends BaseController
                                 "price"=>$row->SampleDetailPrice,
                                 "varian"=> JSON_DECODE($row->SampleDetailVarian,true),
                                 "total"=> $row->SampleDetailTotal,
-                                "disc"=> $row->SampleDetailDisc,
+                                "disc"=> 0,
                                 "qty"=> $row->SampleDetailQty,
                                 "text"=> $row->SampleDetailText,
                                 "group"=> $row->SampleDetailGroup,
-                                "type"=> $row->SampleDetailType
+                                "type"=> $row->SampleDetailType,
+                                "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                             );
                 };
                 $data["ref_detail"] = $detail;
@@ -239,6 +255,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
 
         $project = $models->getdataSPH($id); 
         $arr_detail = $models->getdataDetailSPH($id); 
@@ -256,7 +273,8 @@ class MessageController extends BaseController
                         "qty"=> $row->SphDetailQty,
                         "text"=> $row->SphDetailText,
                         "group"=> $row->SphDetailGroup,
-                        "type"=> $row->SphDetailType
+                        "type"=> $row->SphDetailType,
+                        "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                     );
         };
         $data["project"] = $project; 
@@ -616,6 +634,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
         
         $request = Services::request();
         $postData = $request->getPost(); 
@@ -650,7 +669,8 @@ class MessageController extends BaseController
                             "qty_spare"=> 0,
                             "text"=> $row->SampleDetailText,
                             "group"=> $row->SampleDetailGroup,
-                            "type"=> $row->SampleDetailType 
+                            "type"=> $row->SampleDetailType ,
+                            "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                         );
             };
         }else{
@@ -672,7 +692,7 @@ class MessageController extends BaseController
                             "id" => $row->ProdukId, 
                             "produkid" => $row->ProdukId, 
                             "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
-                            "satuan_text"=>$row->InvDetailSatuanText,  
+                            "satuan_text"=>$row->InvDetailSatuanText, 
                             "price"=>$row->InvDetailPrice,
                             "varian"=> JSON_DECODE($row->InvDetailVarian,true),
                             "total"=> $row->InvDetailTotal,
@@ -683,7 +703,8 @@ class MessageController extends BaseController
                             "qty_spare"=> 0,
                             "text"=> $row->InvDetailText,
                             "group"=> $row->InvDetailGroup,
-                            "type"=> $row->InvDetailType 
+                            "type"=> $row->InvDetailType,
+                            "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                         );
             };
 
@@ -701,6 +722,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
 
         $delivery = $models->getdataDelivery($id); 
         $arr_detail = $models->getdataDetailDelivery($id); 
@@ -734,7 +756,8 @@ class MessageController extends BaseController
                 "qty_success"=> $qty_success,
                 "text"=> $row->DeliveryDetailText,
                 "group"=> $row->DeliveryDetailGroup,
-                "type"=> $row->DeliveryDetailType 
+                "type"=> $row->DeliveryDetailType ,
+                "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
             );
         };
 

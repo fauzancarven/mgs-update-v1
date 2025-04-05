@@ -118,7 +118,9 @@ $routes->post('/action/add-data-item-unit', 'ActionController::item_unit_add', [
 $routes->post('/action/get-data-item-unit/(:num)', 'ActionController::item_unit_get/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/$1', ['filter' => 'login']);  
-$routes->post('/action/delete-data-produk/(:num)', 'ActionController::produk_delete/$1', ['filter' => 'login']);
+$routes->post('/action/delete-data-produk/(:num)', 'ActionController::produk_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/get-data-produk-new', 'ActionController::produk_get', ['filter' => 'login']);   
+$routes->post('/action/rename-data-produk/(:num)', 'ActionController::produk_rename/$1', ['filter' => 'login']);   
 
 /**
  * SELECT2

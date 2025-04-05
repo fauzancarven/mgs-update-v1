@@ -188,24 +188,29 @@
         border-radius: 0.25rem;
     }
     .badge-0 { 
-        background: #bec9ffe6;
+        /* background: #bec9ffe6; */
         color: #001cace6;
+        border: 1px solid #bec9ffe6;
     }
     .badge-1 {
-        background: #ffc55b70;
+        /* background: #ffc55b70; */
         color: #966400;
+        border: 1px solid #ffc55b70;
     }
     .badge-2 { 
+        /* background: #00c5697a; */
         color: #00371e;
-        background: #00c5697a;
+        border: 1px solid #00371e;
     }
     .badge-3 {  
-        background: #b6daffed;
+        /* background: #b6daffed; */
         color: #1c87ff;
+        border: 1px solid #b6daffed;
     }
     .badge-4 { 
-        background: #ffc1c1ba;
+        /* background: #ffc1c1ba; */
         color: #ff0000;
+        border: 1px solid #ffc1c1ba;
     }
     .varian-detail { 
         border-bottom-left-radius: 3rem;
@@ -735,6 +740,21 @@
         color: black;
     } 
 
+    .btn-action.btn-success{ 
+        background: #f5f6f7;
+        border: none;
+        color: black;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem !important;
+    }
+    .btn-action.btn-success i{  
+        color: green  !important;
+    }
+    
+    .btn-action.btn-success:hover{ 
+        background: #e6e8f1;
+        color: black;
+    } 
     
     .btn-action.btn-warning{ 
         background: #f5f6f7;
@@ -751,7 +771,18 @@
         background: #e6e8f1;
         color: black;
     } 
-
+    .custom-input {
+        background: white;
+        border: 1px solid;
+        width: 100%;
+        border-radius: 0.25rem;
+        color: #003571;
+        font-weight: bold;
+    } 
+    .custom-input:disabled {
+        background: none;
+        border: none;
+    }
     .modal-backdrop{
         --bs-backdrop-opacity: 0.25;
     }
@@ -813,7 +844,9 @@
     .simple-pagination .next.current {
         background: #fff;
     }
-
+    .fs-7{
+        font-size:0.6rem !important;
+    }
     .swiper-wrapper {
         position: relative;
         width: 100%;
@@ -846,10 +879,7 @@
         border: 1px solid #e3e3e3;
         box-shadow: 1px 1px 3px 0px #d7d7d7;
         margin-bottom: 10px;
-    }
-    .card.project .header {
-        cursor: pointer;
-    }
+    } 
     .card.project .content-data{ 
         background: #F5F7FF;
     } 
@@ -971,6 +1001,12 @@
         width: 50px;
         height: 50px;
         object-fit: contain;
+    } 
+    img.image-produk-doc {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        border-radius:10px;
     } 
     .ql-editor ol {
         padding-left: 0rem;
@@ -1235,9 +1271,99 @@
         background-color: #001935;
         border-color: #225fba;
     }
+    .input-group-custom{
+        position : relative;
+        /* width: 15rem !important; */
+    }
+    .input-group-custom > i {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translatey(-50%);
+        z-index: 10;
+        font-size: 0.75rem;
+        color: #6b6b6b;
+    }
+    .input-group-custom > input{
+        padding-left: 2rem;
+        border-radius:0.5rem !important;
+    }
+    .input-group-custom.active input{
+        border: 1px solid #002247 !important;
+    } 
+    .input-group-custom > i.fa-caret-down {
+        left: 92%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1rem;
+    }
+    .input-group-custom.active > i.fa-caret-down { 
+        transform: translate(-50%, -50%) rotate(180deg); 
+    }
+    .input-group-custom .filter-data {
+        position: absolute;
+        z-index: 30;
+        top: 100%;
+        width: 100%;
+        padding: 5px 0; 
+        display: none;
+    }
+
+    .input-group-custom .filter-data .list-group{
+        max-height:15rem;
+        overflow-y: auto;
+        box-shadow: 0 0 5px 0 #00224745;
+    }
+    .input-group-custom .filter-list {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 100%;
+        z-index: 1000;
+        margin: 5px 0px;
+        width: 15rem;
+        box-shadow: 0 0 5px 0 #00224745;
+    } 
+    .input-group-custom .filter-list ul {
+        overflow-y:auto;
+        max-height:10rem;
+    }
+
+    .input-group-custom.active .filter-data {
+        display: block;
+    }
+    .hr {
+        border-top: white 2.5px solid;
+        border-bottom: white 2.5px solid;
+    }
+    @media (max-width: 400px) {
+        
+        .input-group-custom .filter-data { 
+            width: 7rem; 
+            display: none;
+        }
+        .input-group-custom .filter-list {
+            margin: 5px 5px;
+            left: 7rem; 
+            width: 10rem;
+        }
+        .input-group-custom .filter-data.left { 
+            left: -100%;
+            width: 200% !important;
+        }
+        img.image-produk{
+            height:100px;
+            width:100px;
+        } 
+        img.image-produk-doc{
+            height:75px;
+            width:75px;
+        } 
+    }
+
 
     .search-data > .input-group{
-        position:relative;
+        position : relative;
         width: 15rem !important;
     }
     .search-data > .input-group > i {
@@ -1343,6 +1469,22 @@
         object-fit: contain !important;
         margin-right:0;
     }
+    /* .custom-overflow::-webkit-scrollbar {
+        height: 10px;
+        background-color: #f5f7ff;
+        position: absolute;
+        top: 0;
+    }
+
+    .custom-overflow::-webkit-scrollbar-thumb {
+        background-color: #6c757d;
+        border-radius: 10px;
+    }
+
+    .custom-overflow::-webkit-scrollbar-thumb:hover {
+        background-color: #aaa;
+    } */
+
     .custom-overflow::-webkit-scrollbar {
         background-color: #f5f7ff;
         height: 5px;
@@ -1350,9 +1492,89 @@
     .custom-overflow::-webkit-scrollbar-thumb {
         background:#6c757d;
         border-radius:5px;
-    }
-</style>
+    } 
 
+    .icon-project {
+        display: flex ;
+        flex-direction: row;
+        align-items: center;
+        font-size: 0.75rem;
+        font-weight: normal;
+        font-family: inherit;
+        width: max-content;
+        flex-wrap: nowrap;
+        padding: 0.25rem 0.25rem 0.25rem 1rem;
+        position: relative;
+        background: #f5f5f5;
+        color: #7b7b7b  !important; 
+        cursor: pointer;
+    }
+    .icon-project i {
+        color: #7b7b7b  !important;
+        font-weight: bold;
+    }
+    .icon-project::after {
+        content: "";
+        position: absolute;
+        height: calc(1rem + 2px);
+        width: calc(1rem + 2px);
+        right: calc(-0.5rem - 2px);
+        transform: rotate(45deg);
+        background: #f5f5f5;
+        z-index: 1;
+        border-style: solid;
+        border-color: #ebebeb #ebebeb transparent transparent;
+    }
+    .icon-project span{
+        z-index: 10;
+    } 
+
+    
+    .icon-project.notif, .icon-project.notif::after{
+        background: #cce0ff !important; 
+        color: #305176 !important; 
+        font-weight: bold;
+    }
+    .icon-project.notif i{ 
+        color: #305176 !important; 
+    } 
+    .icon-project.notif i:after{ 
+        content: "";
+        height: 5px;
+        width: 5px;
+        background: red;
+        border-radius: 50%;
+        position: absolute;
+        top: 0.25rem;
+        left: 0.75rem;
+        box-shadow: 0px 0 6px 0px #ff4040;
+    } 
+    .icon-project.active,.icon-project.active::after{
+        font-weight: bold;
+        background: #d1e7dd; 
+        color: #003e9d !important;
+    } 
+    .icon-project.active i{ 
+        color: #305176 !important; 
+        font-weight: bold;
+    } 
+
+    .icon-project.selected,.icon-project.selected::after{
+        font-weight: bold;
+        color: #003e9d !important;
+        background: #afcbff;
+    } 
+    .icon-project:hover,.icon-project:hover::after{
+        font-weight: bold;
+        color: #003e9d !important;
+        background: #afcbff !important;
+    }  
+    .icon-project:hover i{ 
+        color: #305176 !important; 
+        font-weight: bold;
+    } 
+</style>
+ 
 
 
 
@@ -1520,8 +1742,7 @@
     <script src="<?= base_url(); ?>assets/js/daterangepicker.js"></script>
     <script src="<?= base_url(); ?>assets/js/cleave.min.js"></script>
     <script src="<?= base_url(); ?>assets/js/cleave-phone.id.js"></script>
-    
-    <script src="<?= base_url(); ?>assets/ckeditor/ckeditor.js"></script> 
+     
     <!-- endinject -->
     <!-- Custom js for this page-->
     <script src="<?= base_url(); ?>assets/js/dashboard.js"></script>
@@ -1545,6 +1766,9 @@
         const socket = io("wss://socket.mahieraglobalsolution.com"); 
         socket.on('message', function(msg) { 
             tampilkanNotifikasi(msg);
+        });  
+        socket.on('load-project', function(msg) { 
+            tampilkanNotifikasi(msg);
         });
         $('.toast').toast({
             delay: 2000,
@@ -1554,7 +1778,7 @@
 
         function tampilkanNotifikasi(pesan) { 
             const toast = $('<div class="toast m-1" role="alert" aria-live="assertive" aria-atomic="true"></div>');
-            const toastHeader = $('<div class="toast-header"><i class="fa-solid fa-bell pe-2"></i><strong class="me-auto">' + pesan["title"] + '</strong><button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button></div>');
+            const toastHeader = $('<div class="toast-header">' + pesan["icon"] + '<strong class="me-auto">' + pesan["title"] + '</strong><button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button></div>');
             const toastBody = $('<div class="toast-body"></div>');
             
             toastBody.text(pesan["message"]);

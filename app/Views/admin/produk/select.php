@@ -353,7 +353,6 @@
                 var newOption = new Option($("#select-satuan").data('select2').dropdown.$search[0].value , data["data"]["id"], true, true);
                 $('#select-satuan').append(newOption).trigger('change'); 
                 $('#select-satuan').select2("close");
-
             }
         });
     }

@@ -342,7 +342,13 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-edit-project").modal("hide");  
+                        $("#modal-edit-project").modal("hide"); 
+                        socket.emit('load-project', {
+                            "menu":"project",
+                            "icon": '<i class="ti-blackboard menu-icon pe-2"></i>',
+                            "title": "Project telah diubah",
+                            "message": "<?= $project->ProjectName?> telah diubah oleh " + $("#admin-project").select2("data")[0]["text"]
+                        });
                         loader_datatable();
                     });
                   

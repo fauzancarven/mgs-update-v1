@@ -6,82 +6,86 @@
                 <h2 class="modal-title fs-5 fw-bold" id="modal-add-sample-label">Tambah Sample Barang</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body"> 
+            <div class="modal-body px-3 py-3"> 
                 <div class="row"> 
-                    <div class="col-lg-6 col-12 my-1 mb-2">
-                        <div class="row mx-2 align-items-center">
+                    <div class="col-lg-6 col-12 my-1 mb-2 ">
+                        <div class="row mx-2 align-items-center mb-3 mb-md-1">
                             <div class="label-border-right">
                                 <span class="label-dialog">Customer</span>
-                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="add-varian" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem;">
-                                    <i class="fas fa-pencil"></i>
-                                    <span class="fw-bold">
-                                        &nbsp;Edit
-                                    </span>
+                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('customer-display',this)">
+                                    <span>Sembunyikan</span>
+                                    <i class="fa-solid fa-angle-up"></i> 
                                 </button> 
                             </div>
                         </div> 
-                        <div class="row align-items-center mt-2">
-                            <label class="col-2 col-form-label">Nama</label>
-                            <label class="col-10  text-end fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
-                        </div> 
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Telp</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerTelp1 ?> / <?= $customer->CustomerTelp2 == "" ? "" : $customer->CustomerTelp2 ?></label> 
-                        </div> 
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Email</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerEmail ?></label> 
-                        </div>  
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Instagram</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerInstagram ?></label> 
-                        </div>  
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Alamat</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerAddress ?></label> 
+                        <div class="customer-display card bg-light show mt-4 m-1 p-2">
+                            <div class="row align-items-start">
+                                <label class="col-4 col-md-3">Nama</label>
+                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
+                            </div> 
+                            <div class="row align-items-start">
+                                <label class="col-4 col-md-3">Telp</label>
+                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerTelp1 ?> <?= $customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2 ?></label> 
+                            </div> 
+                            <div class="row align-items-start">
+                                <label class="col-4 col-md-3">Email</label>
+                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerEmail ?></label> 
+                            </div>  
+                            <div class="row align-items-start">
+                                <label class="col-4 col-md-3">Instagram</label>
+                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerInstagram ?></label> 
+                            </div>  
+                            <div class="row align-items-start">
+                                <label class="col-4 col-md-3">Alamat Kantor</label>
+                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerAddress ?></label> 
+                            </div>   
                         </div>  
                     </div>  
-                    <div class="col-lg-6 col-12 my-1 mb-2">   
+                    <div class="col-lg-6 col-12 my-1 mb-3 mb-md-1">   
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
                                 <span class="label-dialog">Document</span>
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SampleCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
-                            <div class="col-sm-10">
-                                <input id="SampleCode" name="SampleCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SampleDate" class="col-sm-2 col-form-label">Tanggal</label>
-                            <div class="col-sm-10">
-                                <input id="SampleDate" name="SampleDate" type="text" class="form-control form-control-sm input-form" value="">
+                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('document-display',this)">
+                                    <span>Sembunyikan</span>
+                                    <i class="fa-solid fa-angle-up"></i> 
+                                </button> 
                             </div>
                         </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SampleAdmin" class="col-sm-2 col-form-label">Admin</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SampleAdmin" name="SampleAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SampleAddress" class="col-sm-2 col-form-label">Alamat Project</label>
-                            <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="SampleAddress"><?= $customer->CustomerAddress ?></textarea>
-                            </div>
+                        <div class="document-display card bg-light show mt-4 m-1 p-2">
+                            <div class="row mb-1 align-items-center">
+                                <label for="SampleCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
+                                <div class="col-sm-10">
+                                    <input id="SampleCode" name="SampleCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SampleDate" class="col-sm-2 col-form-label">Tanggal</label>
+                                <div class="col-sm-10">
+                                    <input id="SampleDate" name="SampleDate" type="text" class="form-control form-control-sm input-form" value="">
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="SampleAdmin" class="col-sm-2 col-form-label">Admin</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select form-select-sm" id="SampleAdmin" name="SampleAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SampleAddress" class="col-sm-2 col-form-label">Alamat Project</label>
+                                <div class="col-sm-10">
+                                    <textarea  class="form-control form-control-sm input-form" id="SampleAddress"><?= $customer->CustomerAddress ?></textarea>
+                                </div>
+                            </div>  
                         </div> 
                     </div>   
                 </div>
-                  
-
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
-                        <span class="label-dialog">Item Detail</span> 
+                        <span class="label-dialog">Detail Produk</span> 
                     </div>
                 </div>     
                 <div class="card " style="min-height:50px;">
-                    <div class="card-body p-2 bg-light"> 
+                    <div class="card-body p-0 bg-light" > 
                         <div class="row align-items-center d-none d-md-flex px-3">
                             <div class="col-12 col-md-4 my-1">    
                                 <div class="row">  
@@ -90,7 +94,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-8 my-1 ">
+                            <div class="col-12 col-md-8 my-1">
                                 <div class="row"> 
                                     <div class="col-2"> 
                                         <span class="label-head-dialog"><i class="ti-settings"></i></span>   
@@ -98,9 +102,9 @@
                                     <div class="col-3"> 
                                         <span class="label-head-dialog">Qty | Satuan</span>   
                                     </div> 
-                                    <div class="col-7">  
-                                        <div class="row"> 
-                                            <div class="col-4"> 
+                                    <div class="col-7">
+                                        <div class="row">
+                                            <div class="col-4">
                                                 <span class="label-head-dialog">Harga</span>   
                                             </div> 
                                             <div class="col-4"> 
@@ -114,7 +118,7 @@
                                 </div>
                             </div> 
                         </div> 
-                        <div id="tb_varian" class="text-center">
+                        <div id="tb_varian" class="text-center" style="border-top: white 2.5px solid; border-bottom: white 2.5px solid;">
                             <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
                                 <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span class="text-head-1">Item belum ditambahkan</span>
@@ -302,8 +306,8 @@
                             </div> 
                         </div> 
                         <div class="d-flex justify-content-center flex-column align-items-center"> 
-                            <div class="d-flex px-3 mt-4 gap-1">
-                                <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Item</button> 
+                            <div class="d-flex px-3 gap-1">
+                                <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Produk</button> 
                             </div>
                         </div>
                     </div>
@@ -394,7 +398,7 @@
 </div>  
 
 <div id="modal-optional"></div>
-<script>    
+<script>     
     $('#SampleDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
@@ -549,8 +553,7 @@
                 $("#modal-add-sample").modal("hide");  
 
                 $("#modal-select-item").modal("show"); 
-
-
+ 
                 $('#modal-select-item').on('hidden.bs.modal', function () {
                     if (document.activeElement) {
                         document.activeElement.blur();
@@ -675,6 +678,14 @@
                 preConfirm: async (name) => {
                     try {  
                         data_detail_item[index]["text"] = name 
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/rename-data-produk/" + data_detail_item[index]["id"], 
+                            data:{
+                                "ProdukName":name, 
+                            }, 
+                        });
                         load_produk();
                     } catch (error) {
                         Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
@@ -764,22 +775,26 @@
                 var varian = "";
                 if(data_detail_item[i]["id"] != "0"){
                     varian = `  <span class="text-detail-2 text-truncate">${data_detail_item[i]["group"]}</span> 
-                                <div class="d-flex gap-1">`;
+                                <div class="d-flex gap-1 flex-wrap">`;
                     for(var j = 0; data_detail_item[i]["varian"].length > j;j++){
                         varian += `<span class="badge badge-${j % 5}">${data_detail_item[i]["varian"][j]["varian"] + ": " + data_detail_item[i]["varian"][j]["value"]}</span>`; 
                     }
                     varian +=  '</div>';
                 }
-                html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
+                html += `    
+                            <div class="row align-items-center mx-0 hr p-2">
                                 <div class="col-12 col-md-4 my-1 varian px-0">   
                                     <div class="d-flex">
-                                        <span class="no-urut text-head-3">${last_group_no}.</span> 
+                                        <span class="no-urut text-head-3 d-none">${last_group_no}.</span> 
+                                        <div class="d-flex pe-2">
+                                            <img src="${data_detail_item[i]["image_url"]}" alt="Gambar" class="image-produk-doc"> 
+                                        </div> 
                                         <div class="d-flex flex-column text-start flex-fill">
                                             <span class="text-head-3">${data_detail_item[i]["text"]}</span>
                                             ${varian} 
                                         </div>  
-                                        <div class="btn-group d-inline-block d-md-none float-end" role="group">  
-                                            ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
+                                        <div class="btn-group d-inline-block d-sm-none float-end" role="group">  
+                                            <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
                                             <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
                                             <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
                                             <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
@@ -788,9 +803,9 @@
                                 </div>
                                 <div class="col-12 col-md-8 my-1 detail">
                                     <div class="row px-2"> 
-                                        <div class="col-2 px-0 d-none d-md-block ">  
+                                        <div class="col-2 px-0 d-none d-sm-block ">  
                                             <div class="btn-group float-end d-inline-block" role="group">  
-                                                ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
+                                                <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
                                                 <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
                                                 <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
                                                 <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
@@ -800,7 +815,7 @@
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                             <div class="input-group"> 
                                                 <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
-                                                <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "-" ? "disabled" : ""}></select>
+                                                <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "-" ? "" : ""}></select>
                                             </div>  
                                         </div>  
                                         <div class="col-12 col-md-7">  
@@ -809,7 +824,7 @@
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
                                                     <div class="input-group"> 
                                                         <span class="input-group-text font-std px-1">Rp.</span> 
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-harga-${i}" data-id="${i}" ${data_detail_item[i]["id"] != "0" ? "disabled" : ""}>
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-harga-${i}" data-id="${i}" ${data_detail_item[i]["id"] != "0" ? "" : ""}>
                                                     </div>    
                                                 </div> 
                                                 <div class="col-6 col-md-4  px-1">  
@@ -990,7 +1005,7 @@
             grand_total_harga();
         }
     });
-
+    var mode_edit = false;
     var quill = [];  
     $(".template-footer").each(function(index, el){
         var message = $(el).find("[name='EditFooterMessage']")[0];
@@ -1111,6 +1126,8 @@
 
                             quill[type].enable(false);
                             quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                            
+                            mode_edit = false;
                         }
                     },
                     error : function(xhr, textStatus, errorThrown){   
@@ -1141,7 +1158,8 @@
                             $(btnedit).show(); 
 
                             quill[type].enable(false);
-                            quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                            quill[type].root.style.background = '#F7F7F7'; // warna disable  
+                            mode_edit = false;  
                         }
                     },
                     error : function(xhr, textStatus, errorThrown){   
@@ -1217,10 +1235,12 @@
                 quill[type].enable(false);
                 quill[type].root.style.background = '#F7F7F7'; // warna disable    
                 $("#modal-add-sample").modal("show");
+                
+                mode_edit = false;
             }); 
         })
         $(btnedit).click(function(){
-
+            mode_edit = true;
             $(btnsave).show();
             $(btnsaveas).show();
             $(btnedit).hide();
@@ -1268,7 +1288,7 @@
 
         var header = {  
             SampleDate: $("#SampleDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
-            SampleRef: <?= $project->ProjectId ?>, 
+            ProjectId: <?= $project->ProjectId ?>, 
             SampleAdmin: $("#SampleAdmin").val(), 
             CustomerId: <?=$customer->CustomerId?>, 
             SampleAddress: $("#SampleAddress").val(), 
