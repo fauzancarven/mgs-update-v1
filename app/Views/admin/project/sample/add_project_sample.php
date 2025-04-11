@@ -1349,8 +1349,7 @@
                     }).then((result) => {   
                         $("#modal-add-sample").modal("hide");   
                         loader_data_project('<?= $project->ProjectId ?>','sample') 
-
-                        //$("i[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+   
                     });
                   
                 }else{

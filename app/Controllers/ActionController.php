@@ -208,6 +208,16 @@ class ActionController extends BaseController
             echo $models->insert_data_project_category($postData); 
         }
     }
+
+    public function survey_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_survey($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
     public function sample_add(){
         $request = Services::request();
         $models = new ProjectModel(); 
