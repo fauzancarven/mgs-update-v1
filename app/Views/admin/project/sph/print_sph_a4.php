@@ -201,7 +201,7 @@
     }
 
     table.item td.image {
-        width: 20%;
+        width: 15%;
     }
 
     table.item td.text {
@@ -432,7 +432,7 @@
                             $html_items .= '
                             <tr> 
                                 <td class="td-center">'.$no.'</td>
-                                 '.($postdata["image"] == 1 ? ($item["image"] == "" ? "<td class='td-center image'></td>" : "<td class='td-center image'><img style='width:50px;height:50px;margin:3px;' src='".$item["image"]."'/></td>") : "").'
+                                 '.($postdata["image"] == 1 ? ($item["image"] == "" ? "<td class='td-center image'></td>" : "<td class='td-center image'><img style='width:75px;height:75px;margin:3px;' src='".$item["image"]."'/></td>") : "").'
                                 <td class="ps-2 text">'.$item["text"].$arr_badge.'</td>
                                 <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
                                 <td class="td-center">Rp. '.number_format($item["price"], 0, ',', '.').'</td>
