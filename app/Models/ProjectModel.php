@@ -844,7 +844,7 @@ class ProjectModel extends Model
         $html = ""; 
         $builder = $this->db->table("survey");
         $builder->select('*');
-        $builder->join('Users',"id=SurveyAdmin","left"); 
+        $builder->join('users',"id=SurveyAdmin","left"); 
         $builder->where('ProjectId',$project_id);
         $builder->where('SurveyStatus !=',2);
         $builder->orderby('SurveyId', 'ASC'); 
