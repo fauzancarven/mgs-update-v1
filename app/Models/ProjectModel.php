@@ -854,7 +854,7 @@ class ProjectModel extends Model
             $data_count++;  
 
             $staffArray = explode('|', $row->SurveyStaff);
-            $query =  $this->db->table('Users');
+            $query =  $this->db->table('users');
             $query->whereIn('id', $staffArray);
             $result = $query->get()->getResult();
             $staffname = implode(', ', array_column($result, 'username'));
