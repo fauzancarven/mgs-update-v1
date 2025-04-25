@@ -463,20 +463,22 @@
     </div> 
     <div class="footer"> 
         <table style="width: 100%;align-items: start;justify-content: baseline;line-height: 1.2;padding-left:20px;padding-right:30px">
-            <tr>
+            <tr >
                 <td style="vertical-align: top;">
                     Term and Condition :
                 </td>
-                <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
-                    <div style="border-top:1px solid black;margin-right:10px;">Admin</div>
+                <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;z-index:10"> 
+                    <span style="text-transform:capitalize;font-weight:bold"><?= $project->username?></span><br>
+                    <div style="border-top:1px solid black;">Admin</div>
                 </td>
                 <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
                     <div style="border-top:1px solid black;margin-left:10px;">Pembeli</div>
                 </td>
             </tr>
-            <tr>
+            <tr style="position:relative">
                 <td style="vertical-align: top;">
                     <?= $project->TemplateFooterDetail ?>
+                    <!-- <img style='width:200px;height:100px;position:absolute;top:-50px;left:500px;z-index:-10;' src='assets/images/Picture.png'/> -->
                 </td>
             </tr>
         </table>

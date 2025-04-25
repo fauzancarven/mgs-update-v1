@@ -161,6 +161,55 @@ class PrintController extends BaseController
 
                 
 	}
+	public function project_payment_a4($id)
+	{
+                $request = Services::request();
+                $postData = $request->getGet();
+                $options = new Options(); 
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('enable_remote', true);
+                $options->set('paper', 'A4');
+                $options->set('orientation', 'potrait');
+
+                $models = new ProjectModel();
+                $produk = new ProdukModel();
+                $modelheader = new HeaderModel(); 
+                $data["payment"] = $models->getdataPayment($id); 
+                $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->InvId); 
+                $data["inv"] = $models->getdataInvoice($data["payment"]->InvId); 
+                $arr_detail = $models->getdataDetailInvoice($data["payment"]->InvId);
+                $detail = array();
+                foreach($arr_detail as $row){
+                        $detail[] = array(
+                                "image" => $produk->getproductimage($row->ProdukId), 
+                                "produkid" => $row->ProdukId, 
+                                "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                                "satuan_text"=>$row->InvDetailSatuanText,  
+                                "price"=>$row->InvDetailPrice,
+                                "varian"=>  $row->InvDetailVarian,
+                                "total"=> $row->InvDetailTotal,
+                                "disc"=> $row->InvDetailDisc,
+                                "qty"=> $row->InvDetailQty,
+                                "text"=> $row->InvDetailText,
+                                "group"=> $row->InvDetailGroup,
+                                "type"=> $row->InvDetailType
+                        );
+                };
+                $data["detail"] = $detail; 
+                $data["postdata"] = $postData; 
+                $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
+                if(isset($postData["custom"])){ 
+                        $data["header_footer"]["detail"] = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0895-3529-92663<br>MAHIERA GLOBAL SOLUTION';
+                }
+                $dompdf = new Dompdf($options);  
+                $dompdf->getOptions()->setChroot('assets');   
+
+                $html = view('admin/project/payment/print_payment_a4',$data); 
+                //return $html;
+                $dompdf->loadHtml($html);
+                $dompdf->render();
+                $dompdf->stream( 'PAY_'.$data["inv"]->CustomerName.'_'.$data["inv"]->InvDate.'.pdf', [ 'Attachment' => false ]);
+	}
         public function project_proforma_a5($id)
 	{
                 $options = new Options(); 
