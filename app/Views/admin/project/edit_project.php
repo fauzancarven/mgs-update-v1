@@ -344,6 +344,14 @@
                     }).then((result) => {   
                         $("#modal-edit-project").modal("hide");  
                         loader_datatable();
+                        
+                        socket.emit('message', {
+                            "icon":'<i class="fa-solid fa-bell text-primary pe-2"></i>',
+                            "title":"Edit Project",
+                            "message":"Project <?= $project->ProjectName ?> telah diubah oleh <?=$user->username ?>",
+                            "username": "<?=$user->username ?>",
+                            "menu": "project",
+                        });
                     });
                   
                 }else{

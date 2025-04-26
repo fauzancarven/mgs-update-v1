@@ -330,6 +330,13 @@
                     }).then((result) => {   
                         $("#modal-add-project").modal("hide");  
                         loader_datatable();
+                        socket.emit('message', {
+                            "icon":'<i class="fa-solid fa-check text-success pe-2"></i>',
+                            "title":"New Project",
+                            "message":"Project baru telah dibuat oleh <?=$user->username ?>",
+                            "username": "<?=$user->username ?>",
+                            "menu": "project",
+                        });
                     });
                   
                 }else{

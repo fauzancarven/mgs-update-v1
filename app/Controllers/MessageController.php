@@ -140,6 +140,7 @@ class MessageController extends BaseController
         $models->join("users","users.id=project.UserId");
         $models->join("store","store.StoreId=project.StoreId");
         $data["project"] = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+        $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/edit_project.php',$data)); 
     }
 
