@@ -1573,6 +1573,34 @@
         color: #305176 !important; 
         font-weight: bold;
     } 
+
+
+    .image-detail-produk {
+        border: 2px dashed #dedede;
+        width: 5rem;
+        height: 5rem;
+        border-radius: 0.5rem;
+        margin: 0.25rem;
+        display: flex ;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    .image-detail-produk.border:hover,
+    .image-detail-produk:hover {
+        border-color: #7bc8ff;
+        color: #7bc8ff;
+        cursor: pointer;
+    }
+    .image-detail-produk img {
+        width: 75px;
+        height: 75px;
+        object-fit: cover;  
+    }
+    .image-detail-produk:hover img {
+        filter: blur(1px);
+    }
 </style>
  
 

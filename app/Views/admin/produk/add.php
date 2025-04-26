@@ -782,6 +782,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         arr_varian_detail = [];
         for(var i = 0; i < arr_varian_list.length;i++){    
             arr_varian_detail.push({ 
+                "ProdukDetailImage": "",
                 "ProdukDetailVarian": arr_varian_list[i],
                 "ProdukDetailPcsM2":  (get_arr_val_old(arr_varian_list[i],"ProdukDetailPcsM2") == "" ? "-" : get_arr_val_old(arr_varian_list[i],"ProdukDetailPcsM2")),
                 "ProdukDetailBerat": (get_arr_val_old(arr_varian_list[i],"ProdukDetailBerat") == "" ? "0" : get_arr_val_old(arr_varian_list[i],"ProdukDetailBerat")),
@@ -797,9 +798,15 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         var detailhtml = ``;
         for(var i = 0; i < arr_varian_detail.length;i++){ 
             headerVarian ="";
-            detailhtml += `<div class="row m-2 border-bottom varian-item" data-id="${i}">
-                                <div class="col-10 col-md-4 my-2"> 
-                                    <div class="row">`; 
+            detailhtml += `<div class="row m-2 border-bottom align-items-center varian-item" data-id="${i}">
+                                <div class="col-2 col-md-1 my-2">  
+                                    <input type="file" id="image-input-${i}" style="display: none;" accept="image/*">
+                                    <div class="image-detail-produk border" data-id="${i}">
+                                        ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_detail[i]["ProdukDetailImage"] + '" />'}
+                                    </div> 
+                                </div> 
+                                <div class="col-8 col-md-3 my-2"> 
+                                    <div class="row  mb-3">`; 
             $.each(arr_varian_detail[i]["ProdukDetailVarian"], function(key, value) {   
                     headerVarian += `<div class="col"><span class="label-head-dialog text-capitalize">${key}</span></div>`;  
                     detailhtml +=  `<div class="col-12 col-md"> 
@@ -876,7 +883,10 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                             </div>
                         </div>
                         <div class="row m-2 border-bottom">
-                            <div class="col-12 col-md-4 mb-2 d-none d-md-block"> 
+                            <div class="col-2 col-md-1 mb-2 d-none d-md-block"> 
+                                <span class="label-head-dialog">Image</span> 
+                            </div>
+                            <div class="col-10 col-md-3 mb-2 d-none d-md-block"> 
                                 <div class="row"> 
                                     ${headerVarian} 
                                 </div>
@@ -1017,11 +1027,26 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     $(this).find("i").addClass("fa-rotate-180");
                 }
             });
+
+            $(".image-detail-produk").click(function(){
+                $("#image-input-" + $(this).data("id")).click();
+                var id_index_image = $(this).data("id"); 
+                $("#image-input-" + $(this).data("id")).on('change', (e) => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        arr_varian_detail[$(this).data("id")]["ProdukDetailImage"] = reader.result;
+                        $(".image-detail-produk[data-id='" + id_index_image + "']").html('<img src="' + reader.result + '" />');
+                    };
+                    reader.readAsDataURL(file);
+                });
+            })
+           
         } 
     }
 
     load_data_varian();
-    var isProcessingSave 
+    var isProcessingSaveProduk 
     $("#btn-add-produk").click(async function(){  
      
         if($("#produk-kategori").val() == null){
@@ -1120,11 +1145,11 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
  
         
         // INSERT LOADER BUTTON
-        if (isProcessingSave) {
+        if (isProcessingSaveProduk) {
             return;
         }  
 
-        isProcessingSave = true; 
+        isProcessingSaveProduk = true; 
         let old_text = $(this).html();
         $(this).html('<span class="spinner-border spinner-border-sm pe-2"></span><span class="ps-2" role="status">Loading...</span>');
         
@@ -1139,7 +1164,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             },
             success: function(data) {   
                 console.log(data) 
-                isProcessingSave = false; 
+                isProcessingSaveProduk = false; 
                 $("#btn-add-produk").html(old_text);
                 if(data["status"]===true){
                     Swal.fire({
@@ -1160,7 +1185,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 
             },
             error : function(xhr, textStatus, errorThrown){  
-                isProcessingSave = false;
+                isProcessingSaveProduk = false;
                 $("#btn-add-produk").html(old_text); 
             }
         }); 
