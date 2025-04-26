@@ -60,6 +60,8 @@ $routes->post('/action/edit-data-project/(:any)', 'ActionController::project_edi
 $routes->post('/action/delete-data-project/(:num)', 'ActionController::project_delete/$1', ['filter' => 'login']);
 $routes->post('/action/add-data-project-category', 'ActionController::project_add_category', ['filter' => 'login']); 
 
+$routes->post('/action/add-data-survey', 'ActionController::survey_add', ['filter' => 'login']); 
+
 $routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-sample/(:num)', 'ActionController::sample_delete/$1', ['filter' => 'login']);
@@ -91,8 +93,15 @@ $routes->post('/action/add-data-po', 'ActionController::pembelian_add', ['filter
 $routes->post('/action/edit-data-po/(:num)', 'ActionController::pembelian_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-po/(:num)', 'ActionController::pembelian_delete/$1', ['filter' => 'login']);
 
+$routes->post('/action/add-data-project-accounting/(:num)', 'ActionController::project_accounting_add/$1', ['filter' => 'login']);  
+$routes->post('/action/edit-data-project-accounting/(:num)', 'ActionController::project_accounting_edit/$1', ['filter' => 'login']);  
+$routes->post('/action/delete-project-accounting/(:num)', 'ActionController::project_accounting_delete/$1', ['filter' => 'login']);  
+
 $routes->post('/action/add-data-template-footer', 'ActionController::template_footer_add', ['filter' => 'login']); 
-$routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);   
+$routes->post('/action/edit-data-template-footer/(:num)', 'ActionController::template_footer_edit/$1', ['filter' => 'login']);  
+
+$routes->post('/action/add-data-lampiran', 'ActionController::lampiran_add', ['filter' => 'login']);  
+
 
 
 /** ACCOUNT VENDOR */
@@ -111,13 +120,16 @@ $routes->post('/action/add-data-item-unit', 'ActionController::item_unit_add', [
 $routes->post('/action/get-data-item-unit/(:num)', 'ActionController::item_unit_get/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-produk', 'ActionController::produk_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/$1', ['filter' => 'login']);  
-$routes->post('/action/delete-data-produk/(:num)', 'ActionController::produk_delete/$1', ['filter' => 'login']);
-
+$routes->post('/action/delete-data-produk/(:num)', 'ActionController::produk_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/get-data-produk-new', 'ActionController::produk_get', ['filter' => 'login']);   
+$routes->post('/action/rename-data-produk/(:num)', 'ActionController::produk_rename/$1', ['filter' => 'login']);   
 
 /**
  * SELECT2
  */  
 $routes->post('/select2/get-data-customer', 'SelectController::customer', ['filter' => 'login']);
+$routes->post('/select2/get-data-npwp', 'SelectController::lampiran/npwp', ['filter' => 'login']);
+$routes->post('/select2/get-data-ktp', 'SelectController::lampiran/ktp', ['filter' => 'login']);
 $routes->post('/select2/get-data-customer-category', 'SelectController::customer_category', ['filter' => 'login']);
 $routes->post('/select2/get-data-store', 'SelectController::store', ['filter' => 'login']);
 $routes->post('/select2/get-data-city', 'SelectController::city', ['filter' => 'login']);
@@ -162,6 +174,8 @@ $routes->post('/message/add-project', 'MessageController::project_add', ['filter
 $routes->post('/message/edit-project/(:num)', 'MessageController::project_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-item-select', 'MessageController::produk_select_new', ['filter' => 'login']);  
 
+
+$routes->post('/message/add-project-survey/(:num)', 'MessageController::project_survey_add/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-sample/(:num)', 'MessageController::project_sample_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sample/(:num)', 'MessageController::project_sample_edit/$1', ['filter' => 'login']); 
 
@@ -189,20 +203,24 @@ $routes->post('/message/add-finish-delivery/(:num)', 'MessageController::project
 $routes->post('/message/edit-proses-delivery/(:num)', 'MessageController::project_delivery_proses_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-finish-delivery/(:num)', 'MessageController::project_delivery_finish_edit/$1', ['filter' => 'login']);  
 
+$routes->post('/message/add-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_add/$1/$2', ['filter' => 'login']);   
+$routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_edit/$1/$2', ['filter' => 'login']);   
+
 
 /**
  *  MODAL print
  */ 
-$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']);  
-$routes->post('/print/project/sph/(:num)', 'PrintController::project_sph/$1', ['filter' => 'login']);  
-$routes->get('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1', ['filter' => 'login']);  
-$routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1', ['filter' => 'login']);  
-$routes->get('/print/project/deliveryA5/(:num)', 'PrintController::project_delivery_a5/$1', ['filter' => 'login']);  
-$routes->get('/print/project/poA4/(:num)', 'PrintController::project_po_a4/$1', ['filter' => 'login']);   
-$routes->get('/print/project/poA5/(:num)', 'PrintController::project_po_a5/$1', ['filter' => 'login']);  
+$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1');  
+$routes->post('/print/project/sph/(:num)', 'PrintController::project_sph/$1');  
+$routes->get('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1');  
+$routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1');  
+$routes->get('/print/project/deliveryA5/(:num)', 'PrintController::project_delivery_a5/$1');  
+$routes->get('/print/project/poA4/(:num)', 'PrintController::project_po_a4/$1');   
+$routes->get('/print/project/poA5/(:num)', 'PrintController::project_po_a5/$1');  
 
-$routes->get('/print/project/proformaA5/(:num)', 'PrintController::project_proforma_a5/$1', ['filter' => 'login']); 
-$routes->get('/print/project/paymentA5/(:num)', 'PrintController::project_payment_a5/$1', ['filter' => 'login']); 
+$routes->get('/print/project/proformaA5/(:num)', 'PrintController::project_proforma_a5/$1'); 
+$routes->get('/print/project/paymentA5/(:num)', 'PrintController::project_payment_a5/$1'); 
+$routes->get('/print/project/paymentA4/(:num)', 'PrintController::project_payment_a4/$1'); 
 
 
-$routes->get('/printhtml/project/sph/(:num)', 'PrintController::project_sph_html/$1', ['filter' => 'login']); 
+$routes->get('/printhtml/project/sph/(:num)', 'PrintController::project_sph_html/$1'); 

@@ -1,114 +1,140 @@
  
 <div class="modal fade" id="modal-add-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-delivery-label" style="overflow-y:auto;">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5 fw-bold" id="modal-add-delivery-label">Tambah pengiriman dari <?= $project["menu"] ?></h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body"> 
+            <div class="modal-body px-3 py-3"> 
                 <div class="row"> 
-                    <div class="col-lg-6 col-12 my-1">
-                        <div class="row mx-2 align-items-center">
+                    <div class="col-lg-6 col-12 my-1 mb-2">
+                        <div class="row mx-2 align-items-center mb-3 mb-md-1">
                             <div class="label-border-right">
                                 <span class="label-dialog">Document</span> 
+                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('document-display',this)">
+                                    <span>Sembunyikan</span>    
+                                    <i class="fa-solid fa-angle-up"></i> 
+                                </button> 
                             </div>
                         </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
-                            <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(Auto)" disabled>
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphRef" class="col-sm-2 col-form-label">No. Ref<sup class="error">&nbsp;*</sup></label>
-                            <div class="col-sm-10">
-                                <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= $project["code"] ?>" disabled>
-                            </div>
-                        </div>   
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
-                            <div class="col-sm-10">
-                                <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
-                            </div>
-                        </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
-                            </div>
-                        </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="armada" class="col-sm-2 col-form-label">Armada</label>
-                            <div class="col-sm-10">
-                                <input class="form-control form-control-sm input-form" id="armada" value="">
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="ritase" class="col-sm-2 col-form-label">Ritase</label>
-                            <div class="col-sm-10">
-                                <input class="form-control form-control-sm input-form" id="ritase" value="1">
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="biayapengiriman" class="col-sm-2 col-form-label">Biaya</label>
-                            <div class="col-sm-10"> 
-                                <div class="input-group"> 
-                                    <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="biayapengiriman" value="0">
-                                </div>      
-                            </div>
+                        <div class="document-display card bg-light show mt-4 m-1 p-2">
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
+                                <div class="col-sm-10">
+                                    <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(Auto)" disabled>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphRef" class="col-sm-2 col-form-label">No. Ref<sup class="error">&nbsp;*</sup></label>
+                                <div class="col-sm-10">
+                                    <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= $project["code"] ?>" disabled>
+                                </div>
+                            </div>   
+                            <div class="row mb-1 align-items-center">
+                                <label for="DeliveryDate" class="col-sm-2 col-form-label">Tanggal</label>
+                                <div class="col-sm-10">
+                                    <input id="DeliveryDate" name="DeliveryDate" type="text" class="form-control form-control-sm input-form" value="">
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="armada" class="col-sm-2 col-form-label">Armada</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control form-control-sm input-form" id="armada" value="">
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="ritase" class="col-sm-2 col-form-label">Ritase</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control form-control-sm input-form" id="ritase" value="1">
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="biayapengiriman" class="col-sm-2 col-form-label">Biaya</label>
+                                <div class="col-sm-10"> 
+                                    <div class="input-group"> 
+                                        <span class="input-group-text font-std">Rp.</span>
+                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="biayapengiriman" value="0">
+                                    </div>      
+                                </div>
+                            </div>  
                         </div> 
                     </div>  
-                    <div class="col-lg-6 col-12 my-1">   
-                        <div class="row mx-2 align-items-center">
-                            <div class="label-border-right">
-                                <span class="label-dialog">Pengiriman</span>
-                            </div>
-                        </div>  
-                       
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="FromName" class="col-sm-2 col-form-label">Pengirim</label>
-                            <div class="col-sm-10">
-                                <input class="form-control form-control-sm input-form" id="FromName" value="MGS">
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="FromTelp" class="col-sm-2 col-form-label">No Telp</label>
-                            <div class="col-sm-10">
-                                <input class="form-control form-control-sm input-form" id="FromTelp" value="">
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="FromAddress" class="col-sm-2 col-form-label">Alamat</label>
-                            <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="FromAddress"></textarea>
-                            </div>
+                    <div class="col-lg-6 col-12 my-1 mb-2 mt-2"> 
+                        <div class="row"> 
+                            <div class="col-12">
+                                <div class="row mx-2 align-items-center">
+                                    <div class="label-border-right">
+                                        <span class="label-dialog">Pengiriman</span>
+                                        <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('pengiriman-display',this)">
+                                            <span>Sembunyikan</span>
+                                            <i class="fa-solid fa-angle-up"></i> 
+                                        </button> 
+                                    </div>
+                                </div>   
+                                <div class="pengiriman-display card bg-light show mt-4 m-1 p-2">
+                                    <div class="row mb-1 align-items-center">
+                                        <label for="FromName" class="col-sm-2 col-form-label">Pengirim</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control form-control-sm input-form" id="FromName" value="MGS">
+                                        </div>
+                                    </div> 
+                                    <div class="row mb-1 align-items-center">
+                                        <label for="FromTelp" class="col-sm-2 col-form-label">No Telp</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control form-control-sm input-form" id="FromTelp" value="">
+                                        </div>
+                                    </div> 
+                                    <div class="row mb-1 align-items-center">
+                                        <label for="FromAddress" class="col-sm-2 col-form-label">Alamat</label>
+                                        <div class="col-sm-10">
+                                            <textarea  class="form-control form-control-sm input-form" id="FromAddress"></textarea>
+                                        </div>
+                                    </div> 
+                                </div> 
+                            </div> 
                         </div> 
 
-                        <div class="row mx-2 align-items-center mt-4">
-                            <div class="label-border-right">
-                                <span class="label-dialog">Penerima</span>
-                            </div>
-                        </div>   
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="ToName" class="col-sm-2 col-form-label">Penerima</label>
-                            <div class="col-sm-10">
-                                <input class="form-control form-control-sm input-form" id="ToName" value="<?= $project["CustomerName"] ?>">
-                            </div>
+                        <div class="row"> 
+                            <div class="col-12 mt-3 mt-md-4">
+                                <div class="row mx-2 align-items-center mb-3 mb-md-1">
+                                    <div class="label-border-right">
+                                        <span class="label-dialog">Penerima</span>
+                                        <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('penerima-display',this)">
+                                            <span>Sembunyikan</span>
+                                            <i class="fa-solid fa-angle-up"></i> 
+                                        </button> 
+                                    </div>
+                                </div>   
+                                <div class="penerima-display card bg-light show mt-4 m-1 p-2">
+                                    <div class="row mb-1 align-items-center">
+                                        <label for="ToName" class="col-sm-2 col-form-label">Penerima</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control form-control-sm input-form" id="ToName" value="<?= $project["CustomerName"] ?>">
+                                        </div>
+                                    </div> 
+                                    <div class="row mb-1 align-items-center">
+                                        <label for="ToTelp" class="col-sm-2 col-form-label">No Telp</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control form-control-sm input-form" id="ToTelp" value="<?= $project["CustomerTelp"] ?>">
+                                        </div>
+                                    </div> 
+                                    <div class="row mb-1 align-items-center">
+                                        <label for="ToAddress" class="col-sm-2 col-form-label">Alamat</label>
+                                        <div class="col-sm-10">
+                                            <textarea  class="form-control form-control-sm input-form" id="ToAddress"><?= $project["CustomerAddress"] ?></textarea>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div> 
                         </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="ToTelp" class="col-sm-2 col-form-label">No Telp</label>
-                            <div class="col-sm-10">
-                                <input class="form-control form-control-sm input-form" id="ToTelp" value="<?= $project["CustomerTelp"] ?>">
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="ToAddress" class="col-sm-2 col-form-label">Alamat</label>
-                            <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="ToAddress"><?= $project["CustomerAddress"] ?></textarea>
-                            </div>
-                        </div> 
+
                     </div>   
                 </div>
                   
@@ -117,10 +143,10 @@
                     <div class="label-border-right position-relative" >
                         <span class="label-dialog">Item Detail</span> 
                     </div>
-                </div>     
+                </div> 
                 <div class="card " style="min-height:50px;">
-                    <div class="card-body p-2 bg-light"> 
-                        <div class="row align-items-center  d-none d-md-flex px-3">
+                    <div class="card-body p-0 bg-light" > 
+                        <div class="row align-items-center d-none d-md-flex px-3">
                             <div class="col-12 col-md-4 my-1">    
                                 <div class="row">  
                                     <div class="col-12"> 
@@ -128,36 +154,36 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-8 my-1">
+                            <div class="col-12 col-md-8 my-1 ">
                                 <div class="row"> 
                                     <div class="col-2"> 
                                         <span class="label-head-dialog"><i class="ti-settings"></i></span>   
                                     </div> 
-                                    <div class="col-10">
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <span class="label-head-dialog">Invoice</span> 
-                                            </div>
-                                            <div class="col-3">
-                                                <span class="label-head-dialog">Sudah Dikirim</span> 
-                                            </div>
-                                            <div class="col-3">
-                                                <span class="label-head-dialog">Pengiriman</span>  
-                                            </div>
-                                            <div class="col-3">
-                                                <span class="label-head-dialog">Spare</span>  
-                                            </div>
+                                    <div class="col-3"> 
+                                        <span class="label-head-dialog">Invoice</span>   
+                                    </div> 
+                                    <div class="col-7">  
+                                        <div class="row"> 
+                                            <div class="col-4"> 
+                                                <span class="label-head-dialog">Terkirim</span>   
+                                            </div> 
+                                            <div class="col-4"> 
+                                                <span class="label-head-dialog">Qty</span>   
+                                            </div> 
+                                            <div class="col-4"> 
+                                                <span class="label-head-dialog">Spare</span>   
+                                            </div> 
                                         </div> 
-                                    </div>  
+                                    </div>
                                 </div>
                             </div> 
                         </div> 
-                        <div id="tb_varian" class="text-center">
+                        <div id="tb_varian" class="text-center" style="border-top: white 2.5px solid; border-bottom: white 2.5px solid;">
                             <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
                                 <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span class="text-head-1">Item belum ditambahkan</span>
                             </div> 
-                            <div class="row align-items-center d-none">
+                            <div class="row align-items-center">
                                 <div class="col-12 col-md-12 my-1 group text-start"> 
                                     <span class="text-head-3">A. Barang</span>
                                 </div>   
@@ -339,10 +365,9 @@
                                 </div> 
                             </div> 
                         </div> 
-                        <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
-                            <div class="d-flex px-3 mt-4 gap-1">
-                                <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Item</button>
-                                <button class="btn btn-sm btn-primary my-2" onclick="add_detail_category(this)"><i class="fa-solid fa-plus pe-2"></i>Tambah Kategori</button> 
+                        <div class="d-flex justify-content-center flex-column align-items-center"> 
+                            <div class="d-flex px-3 gap-1">
+                                <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Item</button> 
                             </div>
                         </div>
                     </div>
@@ -357,7 +382,7 @@
                         </div>   
                         <div class="card template-footer" style="min-height:50px;">
                             <div class="card-body mx-2 p-2 bg-light">
-                                <div class="row mb-1 align-items-center mt-2"> 
+                                <div class="row align-items-center mb-2"> 
                                     <div class="col-7">
                                         <select class="form-select form-select-sm" name="Select" placeholder="Pilih Format" style="width:100%"></select>  
                                     </div>
@@ -367,7 +392,7 @@
                                         <a type="button" class="btn btn-sm btn-primary rounded text-white" aria-pressed="false" value="edit" aria-label="name: edit"><i class="fa-solid fa-pencil pe-2"></i>Edit</a>
                                     </div>
                                 </div>    
-                                <div class="row mb-1 align-items-center mt-2"> 
+                                <div class="row align-items-center"> 
                                     <div class="col-12"> 
                                         <div name="EditFooterMessage" class="border"></div> 
                                     </div>
@@ -387,8 +412,7 @@
 
 <div id="modal-optional"></div>
 <script>    
-
-    $('#SphDate').daterangepicker({
+    $('#DeliveryDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
         "endDate":  moment(),
@@ -667,6 +691,14 @@
                 preConfirm: async (name) => {
                     try {  
                         data_detail_item[index]["text"] = name 
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/rename-data-produk/" + data_detail_item[index]["id"], 
+                            data:{
+                                "ProdukName":name, 
+                            }, 
+                        });
                         load_produk();
                     } catch (error) {
                         Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
@@ -765,10 +797,13 @@
                     }
                     varian +=  '</div>';
                 }
-                html += `   <div class="row align-items-center  ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
+                html += `   <div class="row align-items-center mx-0 hr p-2">
                                 <div class="col-12 col-md-4 my-1 varian px-0">   
                                     <div class="d-flex">
-                                        <span class="no-urut text-head-3">${last_group_no}.</span> 
+                                        <span class="no-urut text-head-3 d-none">${last_group_no}.</span> 
+                                        <div class="d-flex pe-2">
+                                            <img src="${data_detail_item[i]["image_url"]}" alt="Gambar" class="image-produk-doc"> 
+                                        </div> 
                                         <div class="d-flex flex-column text-start flex-fill">
                                             <span class="text-head-3">${data_detail_item[i]["text"]}</span>
                                             ${varian} 
@@ -797,7 +832,7 @@
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Invoice</span>
                                                     <div class="input-group"> 
                                                         <input type="text" class="form-control form-control-sm input-form berat" id="input-invoice-${i}" data-id="${i}" disabled>
-                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span>  
+                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span> 
                                                     </div>  
                                                 </div> 
                                                 <div class="col-6 col-md-3 px-1">  
@@ -842,7 +877,7 @@
                 inputinvoice[i] = new Cleave(`#input-invoice-${i}`, {
                         numeral: true,
                         delimeter: ",",
-                        numeralDecimalScale:2,
+                        numeralDecimalScale:3,
                         numeralThousandGroupStyle:"thousand"
                 }); 
                 inputinvoice[i].setRawValue(data_detail_item[i]["qty_ref"]);
@@ -855,7 +890,7 @@
                 inputdikirim[i] = new Cleave(`#input-dikirim-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
                 }); 
                 inputdikirim[i].setRawValue(data_detail_item[i]["qty_success"]);
@@ -868,7 +903,7 @@
                 inputpengiriman[i] = new Cleave(`#input-pengiriman-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
                 }); 
                 inputpengiriman[i].setRawValue(data_detail_item[i]["qty"]);
@@ -881,7 +916,7 @@
                 inputspare[i] = new Cleave(`#input-spare-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
                 }); 
                 inputspare[i].setRawValue(data_detail_item[i]["qty_spare"]);
@@ -1198,7 +1233,7 @@
 
 
         var header = {  
-            DeliveryDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
+            DeliveryDate: $("#DeliveryDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
             InvId: '<?= $project["InvId"] ?>',  
             SampleId: '<?= $project["SampleId"] ?>',
             ProjectId: '<?= $project["project_id"] ?>',
@@ -1248,7 +1283,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-delivery").modal("hide");   
-                        $("idata-menu='<?= $project["menu"] ?>'][data-id='<?= $project["project_id"] ?>']").trigger("click");  
+                        loader_data_project('<?= $project["project_id"] ?>','<?= $project["menu"] ?>')  
                     });
                   
                 }else{

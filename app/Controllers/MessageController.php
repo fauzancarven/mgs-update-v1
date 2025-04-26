@@ -96,7 +96,19 @@ class MessageController extends BaseController
     }
     public function produk_select()
     {   
-        return $this->response->setBody(view('admin/produk/select.php')); 
+        $varian = new ProdukvarianModel();
+        $category = new ProdukcategoryModel();
+        $variandetail = new ProdukvarianvalueModel();
+        $vendor = new VendorModel();
+        $data = [ 
+            'category' => $category->get()->getResult(),
+            'vendor' => $vendor->get()->getResult(),
+            'varian' => $varian->get()->getResult(),
+            'varian_detail' => $variandetail->get()->getResult(),
+            'varianlist' => ''
+        ]; 
+        return $this->response->setBody(view('admin/produk/select_new.php',$data)); 
+        //return $this->response->setBody(view('admin/produk/select.php')); 
     }
     public function produk_select_new()
     {   
@@ -144,6 +156,19 @@ class MessageController extends BaseController
         return $this->response->setBody(view('admin/project/edit_project.php',$data)); 
     }
 
+    public function project_survey_add($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+
+        $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+        $data["project"] = $project;
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/survey/add_project_survey.php',$data)); 
+    }
     public function project_sample_add($id)
     {     
         $models = new ProjectModel();
@@ -162,13 +187,14 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
 
         $project = $models->getdataSample($id); 
         $arr_detail = $models->getdataDetailSample($id);
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(
-                        "id" => $row->ProdukId, 
+                        "id" => $row->ProdukId,  
                         "produkid" => $row->ProdukId, 
                         "satuan_id"=> ($row->SampleDetailSatuanId == 0 ? "" : $row->SampleDetailSatuanId),
                         "satuan_text"=>$row->SampleDetailSatuanText,  
@@ -179,7 +205,8 @@ class MessageController extends BaseController
                         "qty"=> $row->SampleDetailQty,
                         "text"=> $row->SampleDetailText,
                         "group"=> $row->SampleDetailGroup,
-                        "type"=> $row->SampleDetailType
+                        "type"=> $row->SampleDetailType,
+                        "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                     );
         };
         $data["project"] = $project; 
@@ -195,6 +222,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
         $request = Services::request();
         $postData = $request->getPost(); 
 
@@ -218,11 +246,12 @@ class MessageController extends BaseController
                                 "price"=>$row->SampleDetailPrice,
                                 "varian"=> JSON_DECODE($row->SampleDetailVarian,true),
                                 "total"=> $row->SampleDetailTotal,
-                                "disc"=> $row->SampleDetailDisc,
+                                "disc"=> 0,
                                 "qty"=> $row->SampleDetailQty,
                                 "text"=> $row->SampleDetailText,
                                 "group"=> $row->SampleDetailGroup,
-                                "type"=> $row->SampleDetailType
+                                "type"=> $row->SampleDetailType,
+                                "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                             );
                 };
                 $data["ref_detail"] = $detail;
@@ -240,6 +269,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
 
         $project = $models->getdataSPH($id); 
         $arr_detail = $models->getdataDetailSPH($id); 
@@ -257,7 +287,8 @@ class MessageController extends BaseController
                         "qty"=> $row->SphDetailQty,
                         "text"=> $row->SphDetailText,
                         "group"=> $row->SphDetailGroup,
-                        "type"=> $row->SphDetailType
+                        "type"=> $row->SphDetailType,
+                        "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                     );
         };
         $data["project"] = $project; 
@@ -291,14 +322,53 @@ class MessageController extends BaseController
         $modelsvendor = new VendorModel();
 
         $project = $models->getdataPO($id); 
-        $arr_detail = $models->getdataDetailSPH($id);
+        $arr_detail = $models->getdataDetailPO($id);
         $detail = array();
+        $detailref = array();
         $ref = JSON_DECODE($project->PORef2,true);
-        if($ref["type"] == "SPH"){
-            $reference = $ref["code"];
+        if($project->InvId == 0 && $project->SphId ==0){
+            $reference = "-";
+        }else if($project->InvId == 0){
+            $reference = $project->SphCode ;
+            
+            $arr_detail_ref = $models->getdataDetailSph($project->SphId);
+            foreach($arr_detail_ref as $row){
+                $detailref[] = array(
+                    "id" => $row->ProdukId, 
+                    "produkid" => $row->ProdukId, 
+                    "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                    "satuan_text"=>$row->SphDetailSatuanText,  
+                    "hargajual"=>$row->SphDetailPrice,
+                    "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                    "total"=> $row->SphDetailTotal,
+                    "disc"=> $row->SphDetailDisc,
+                    "qty"=> $row->SphDetailQty,
+                    "text"=> $row->SphDetailText,
+                    "group"=> $row->SphDetailGroup,
+                    "type"=> $row->SphDetailType
+                );
+            };
         }else{
-            $reference = "";
+            $reference = $project->InvCode;
+            $arr_detail_ref = $models->getdataDetailInvoice($project->InvId);
+            foreach($arr_detail_ref as $row){
+                $detailref[] = array(
+                    "id" => $row->ProdukId, 
+                    "produkid" => $row->ProdukId, 
+                    "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                    "satuan_text"=>$row->InvDetailSatuanText,  
+                    "hargajual"=>$row->InvDetailPrice,
+                    "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                    "total"=> $row->InvDetailTotal,
+                    "disc"=> $row->InvDetailDisc,
+                    "qty"=> $row->InvDetailQty,
+                    "text"=> $row->InvDetailText,
+                    "group"=> $row->InvDetailGroup,
+                    "type"=> $row->InvDetailType
+                );
+            };
         }
+  
         foreach($arr_detail as $row){
             $detail[] = array(
                         "id" => $row->ProdukId, 
@@ -316,9 +386,8 @@ class MessageController extends BaseController
         }; 
         $data["project"] = $project; 
         $data["detail"] =  $detail;
-        $data["reference"] =  $reference;
-        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
-        $data["template"] =$models->get_data_template_footer($project->TemplateId);  
+        $data["detailref"] =  $detailref;
+        $data["reference"] =  $reference;   
         $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/po/edit_project_po',$data)); 
@@ -472,6 +541,8 @@ class MessageController extends BaseController
                 "ProjectId"=>$datasample->ProjectId,
                 "SampleId"=>$datasample->SampleId,
                 "InvId"=>"",
+                "POId"=>"",
+                "DeliveryId"=>"",
                 "GrandTotal"=>$datasample->SampleGrandTotal,
                 "menu"=>"sample",
             );
@@ -483,12 +554,39 @@ class MessageController extends BaseController
                 "ProjectId"=>$datainvoice->ProjectId,
                 "SampleId"=>"",
                 "InvId"=>$datainvoice->InvId,
+                "POId"=>"",
+                "DeliveryId"=>"",
                 "GrandTotal"=>$datainvoice->InvGrandTotal,
                 "menu"=>"invoice",
             );
             $data["payment"] = $models->getdataPaymentByInvoice($id);  
         }
-         
+        if($postData['type'] == "po"){
+            $datapo = $models->getDataPO($id); 
+            $project = array(
+                "ProjectId"=>$datapo->ProjectId,
+                "SampleId"=>"",
+                "InvId"=>"",
+                "DeliveryId"=>"",
+                "POId"=>$datapo->POId,
+                "GrandTotal"=>$datapo->POGrandTotal,
+                "menu"=>"pembelian",
+            );
+            $data["payment"] = $models->getdataPaymentByPO($id);  
+        }
+        if($postData['type'] == "delivery"){
+            $datadelivery = $models->getDataDelivery($id); 
+            $project = array(
+                "ProjectId"=>$datadelivery->ProjectId,
+                "SampleId"=>"",
+                "InvId"=>"",
+                "DeliveryId"=>$datadelivery->DeliveryId,
+                "POId"=>"",
+                "GrandTotal"=>$datadelivery->DeliveryTotal,
+                "menu"=>"pengiriman",
+            );
+            $data["payment"] = $models->getdataPaymentByDelivery($id);  
+        }
         $data["project"] = $project; 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
@@ -533,7 +631,7 @@ class MessageController extends BaseController
         $data["project"] = $project; 
         $data["payment"] = $models->getdataProformaByRef($id);  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/add_project_proforma.php',$data)); 
+        return $this->response->setBody(view('admin/project/payment/add_proforma.php',$data)); 
     }
     public function project_proforma_edit($id)
     {     
@@ -543,13 +641,14 @@ class MessageController extends BaseController
         $data["project"] = $models->getdataInvoice($data["payment"]->InvId);      
         $data["payments"] = $models->getdataProformaByRef($data["payment"]->InvId);   
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/edit_project_proforma.php',$data)); 
+        return $this->response->setBody(view('admin/project/payment/edit_proforma.php',$data)); 
     }
     public function project_delivery_add($id)
     {      
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
         
         $request = Services::request();
         $postData = $request->getPost(); 
@@ -584,7 +683,8 @@ class MessageController extends BaseController
                             "qty_spare"=> 0,
                             "text"=> $row->SampleDetailText,
                             "group"=> $row->SampleDetailGroup,
-                            "type"=> $row->SampleDetailType 
+                            "type"=> $row->SampleDetailType ,
+                            "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                         );
             };
         }else{
@@ -606,7 +706,7 @@ class MessageController extends BaseController
                             "id" => $row->ProdukId, 
                             "produkid" => $row->ProdukId, 
                             "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
-                            "satuan_text"=>$row->InvDetailSatuanText,  
+                            "satuan_text"=>$row->InvDetailSatuanText, 
                             "price"=>$row->InvDetailPrice,
                             "varian"=> JSON_DECODE($row->InvDetailVarian,true),
                             "total"=> $row->InvDetailTotal,
@@ -617,7 +717,8 @@ class MessageController extends BaseController
                             "qty_spare"=> 0,
                             "text"=> $row->InvDetailText,
                             "group"=> $row->InvDetailGroup,
-                            "type"=> $row->InvDetailType 
+                            "type"=> $row->InvDetailType,
+                            "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
                         );
             };
 
@@ -635,6 +736,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
 
         $delivery = $models->getdataDelivery($id); 
         $arr_detail = $models->getdataDetailDelivery($id); 
@@ -668,7 +770,8 @@ class MessageController extends BaseController
                 "qty_success"=> $qty_success,
                 "text"=> $row->DeliveryDetailText,
                 "group"=> $row->DeliveryDetailGroup,
-                "type"=> $row->DeliveryDetailType 
+                "type"=> $row->DeliveryDetailType ,
+                "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
             );
         };
 
@@ -759,4 +862,33 @@ class MessageController extends BaseController
         $data["detail"] =  $detail; 
         return $this->response->setBody(view('admin/project/delivery/edit_finish_delivery',$data)); 
     }
+
+
+    public function project_accounting_add($id,$group)
+    {       
+        $models = new ProjectModel();
+        $models->join("customer","customer.CustomerId=project.CustomerId");
+        $models->join("users","users.id=project.UserId");
+        $models->join("store","store.StoreId=project.StoreId");
+        $data["project"] = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        if($group==2){ 
+            return $this->response->setBody(view('admin/project/accounting/add_lain_lain.php',$data)); 
+        }else{ 
+            return $this->response->setBody(view('admin/project/accounting/add_modal.php',$data)); 
+        }
+    }
+
+    public function project_accounting_edit($id,$group)
+    {       
+        $models = new ProjectModel(); 
+        $data["project"] = $models->getdataAccounting($id); 
+        $data["user"] = User();
+        if($group==2){ 
+            return $this->response->setBody(view('admin/project/accounting/edit_lain_lain.php',$data)); 
+        }else{ 
+            return $this->response->setBody(view('admin/project/accounting/edit_modal.php',$data)); 
+        }
+    }
 }
+

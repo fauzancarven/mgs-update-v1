@@ -10,7 +10,7 @@
 </head>
 <style>  
     body { 
-        margin-top: 2.5cm;
+        margin-top: 2cm;
         margin-bottom: 2.5cm;
         padding: 5px;
         padding-left: 0px;
@@ -164,7 +164,7 @@
     } 
     .body{
         margin-top: 0px;
-        padding:30px;
+        padding: 0 30px;
         font-family: "Roboto", serif;
         color: #000;
         font-size: 12px;
@@ -183,8 +183,8 @@
         display: inline-block;
     }
     .width-label{
-        min-width: 50px;
-        width: 50px; 
+        min-width: 100px;
+        width: 100px; 
     }
     table.item{
         width: 100%;
@@ -201,7 +201,7 @@
     }
 
     table.item td.image {
-        width: 20%;
+        width: 15%;
     }
 
     table.item td.text {
@@ -247,10 +247,18 @@
     .ps-2{
        padding-left:15px !important;
     }
-    ol {
-        padding: 0 20px;
+    ol { 
+        padding: 0 5px;
+        list-style:none;
+        margin:0;
+    }
+    ul { 
+        margin:0;
     }
     li {
+        padding: 0 5px;
+    } 
+    li.bullet {
         padding: 0 5px;
     } 
     ol > li > ul {
@@ -287,33 +295,106 @@
     tr.hide{
         display:none !important;
     }
+    ol {
+    counter-reset: item;
+    }
+
+    ol + ol {
+    counter-reset: none; /* nilai none untuk menjumlahkan dari sebelumnya */
+    }
+
+    li[data-list="ordered"] {
+        counter-increment: item;
+    }
+
+    li[data-list="ordered"]:before {
+        content: counter(item) ". ";
+        padding-right: 10px; 
+    }
+    li[data-list="bullet"]:before {
+        content: "- ";
+        padding-left: 10px; 
+        padding-right: 10px; 
+    }
+    .width-label {
+        width: 30px;
+    }
 </style>
 <body>  
     <?= $header_footer["html"] ?>
-    <div class="body">
-        <h2 class="text-center">SURAT PENAWARAN HARGA (QUOTATION)</h2>
-        <table style="width: 100%;align-items: start;justify-content: baseline;">
+    <div class="body" >
+        <h2 class="text-center" style="margin-top:0;padding-top:0">SURAT PENAWARAN HARGA (QUOTATION)</h2>
+        <table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
             <tbody>
                 <tr>
-                    <td style="width: 40%;"> 
-                        <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $sph->CustomerName.($sph->CustomerCompany == "" ? : " (".$sph->CustomerCompany.")") ?></span><br> 
-                        <span class="text-bold"><?= $sph->CustomerTelp1.($sph->CustomerTelp2 == "" ? : "/".$sph->CustomerTelp2) ?></span><br>
-                        <span class="text-bold"><?= $sph->CustomerAddress ?></span><br>
+                    <td style="width: 50%;border:1px solid;vertical-align:start;">  
+                        <table style="border-collapse:collapse;border:none">
+                            <tbody> 
+                                <tr>
+                                    <td style="border:none;vertical-align:start;padding:left:3px;">
+                                        <div class="width-label label-color d-inline-block">Kepada Yth.:</div>
+                                    </td> 
+                                </tr> 
+                                <tr>
+                                    <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
+                                        <span class="text-bold"><?= $sph->CustomerName.($sph->CustomerCompany == "" ? : " (".$sph->CustomerCompany.")") ?></span>
+                                    </td> 
+                                </tr> 
+                                <tr> 
+                                    <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
+                                        <span class="text-bold"><?= $sph->CustomerTelp1.($sph->CustomerTelp2 == "" ? : "/".$sph->CustomerTelp2) ?></span>
+                                    </td> 
+                                </tr> 
+                                <tr> 
+                                    <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
+                                        <span class="text-bold"><?= $sph->CustomerEmail ?></span>
+                                    </td> 
+                                </tr> 
+                            </tbody>
+                        </table>   
+                    </td> 
+                    <td style="width: 50%;vertical-align:start;border:1px solid"> 
+                        <table style="border-collapse:collapse;heigth:100%;width: 100%;">
+                            <tbody>
+                                <tr style="border-bottom:1px solid;margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;width:30px;">
+                                        <div class="label-color d-inline-block">No. Doc.</div>
+                                    </td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;">
+                                        <div class="label-color d-inline-block">:</div>
+                                    </td>
+                                    <td style="border:none;vertical-align:start;">
+                                        <div class="label-color-1 d-inline-block text-bold"><?= $sph->SphCode ?></div>
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom:1px solid;margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;">
+                                        <div class="width-label label-color d-inline-block">Tgl. Pembuatan.</div>
+                                    </td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;">
+                                        <div class="label-color d-inline-block">:</div>
+                                    </td>
+                                    <td style="border:none;width: auto;vertical-align:start;">
+                                        <div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($sph->SphDate),"d F Y") ?></div>
+                                    </td>
+                                </tr> 
+                                <tr style="">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;">
+                                        <div class="width-label label-color d-inline-block">Lokasi Project.</div>
+                                    </td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;">
+                                        <div class="label-color d-inline-block">:</div>
+                                    </td>
+                                    <td style="border:none;width: auto;vertical-align:start;">
+                                        <div class="label-color-1 d-inline-block text-bold"><?= $sph->SphAddress ?></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table> 
                     </td>
-                    <td style="width: 30%;"> 
-                    </td>
-                    <td style="align-items: start;justify-content: center;margin-left:auto"> 
-                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $sph->SphCode ?></div><br>
-                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($sph->SphDate),"d F Y") ?></div><br> 
-                    </td>
-                </tr>
+                </tr> 
             </tbody>
-        </table>
-        <div style="padding:20px">
-            Dengan Hormat. <br>
-            <span style="padding-left:40px">Berikut kami turunkan lampiran penawaran dengan detail spesifikasi sebagai berikut :</span>
-        </div>
+        </table> 
                
         <?php
             $col = 4;
@@ -324,7 +405,7 @@
             <thead>
                 <tr> 
                     <th>No.</th>
-                    <?= ($postdata["image"] == 1) ? "<th>Image</th>" : "" ?>
+                    <?= ($postdata["image"] == 1) ? "<th>Gambar</th>" : "" ?>
                     <th>Uraian</th>
                     <th>Qty</th>
                     <th>Harga</th>
@@ -371,6 +452,8 @@
                     }
                     echo $html_items;
                 ?> 
+                
+                <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr>
             </tbody>
             <tfoot>
                 <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
@@ -389,19 +472,38 @@
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Grand Total</td>
                     <td class="td-center text-bold">Rp. <?= number_format($sph->SphGrandTotal, 0, ',', '.') ?></td>
                 </tr>
+                <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr>
                 <tr>
                     <td class="td-footer text-bold" colspan="<?= $col + 1 ?>"><?= $header_footer["detail"] ?></td> 
                 </tr>
+                <tr>
+                    <td class="td-footer text-bold" colspan="<?= $col + 1 ?>"> 
+                        <table style="border-collapse:collapse;border:none">
+                            <tbody> 
+                                <tr>
+                                    <td style="border:none;vertical-align:start;padding:left:3px;">Term and Condition : </td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none;vertical-align:start;padding:left:3px;"> 
+                                        <?= $sph->TemplateFooterDetail ?> 
+                                    </td>
+                                </tr>  
+                            </tbody> 
+                        </table> 
+                    </td> 
+                </tr>  
             </tfoot>
+        </table> 
+        
+        <table style="width: 100%;border-collapse: collapse;margin-bottom:10px;margin-top:10px;display:none;">
+            <tbody>
+                <tr>
+                    <td style="width: 50%;width:60%">  </td>
+                    <td style="width: 50%;border:1px solid;width:20%;text-align:center;height:120px;vertical-align:top;">Admin</td>
+                    <td style="width: 50%;border:1px solid;width:20%;text-align:center;height:120px;vertical-align:top;">Pembeli</td>
+                </tr> 
+            </tbody>
         </table>
-        <div style="padding-left:20px">
-            Term and Condition :   
-            <?= $sph->TemplateFooterDetail ?> 
-            <!-- <ol>
-                <li data-list="ordered">
-                    <span class="ql-ui" contenteditable="false">
-                    </span>Pembayaran&nbsp;Melalui&nbsp;Bank&nbsp;Transfer&nbsp;Pada&nbsp;No.&nbsp;<strong>Rekening&nbsp;BCA,&nbsp;MAHIERA&nbsp;GLOBAL&nbsp;SOLUTION&nbsp;2370448356</strong></li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Transaksi&nbsp;yang&nbsp;sudah&nbsp;dilakukan&nbsp;baik&nbsp;<strong>DP&nbsp;atau&nbsp;PelunasanTidak&nbsp;Dapat&nbsp;Dikembalikan</strong></li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Barang&nbsp;yang&nbsp;sudah&nbsp;dibeli&nbsp;tidak&nbsp;dapat&nbsp;<strong>ditukar/dikembalikan</strong></li><li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>Jasa Barang</li><li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>Data Barang</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>test lah</li></ol> -->
-        </div> 
     </div> 
 </body>
 

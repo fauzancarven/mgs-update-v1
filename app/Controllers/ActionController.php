@@ -12,6 +12,7 @@ use App\Models\ProdukvarianModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
+use App\Models\LampiranModel;
 use Config\Services; 
 
 class ActionController extends BaseController
@@ -205,6 +206,16 @@ class ActionController extends BaseController
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->insert_data_project_category($postData); 
+        }
+    }
+
+    public function survey_add(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_survey($postData); 
+            echo json_encode(array("status"=>true));
         }
     }
     public function sample_add(){
@@ -415,7 +426,48 @@ class ActionController extends BaseController
             echo $models->delete_data_pembelian($id);  
         }
     }
+
+    public function project_accounting_add($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_accounting($postData);  
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function project_accounting_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_accounting($id,$postData);  
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function project_accounting_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_accounting($id);   
+        }
+    }
     
+    public function lampiran_add(){
+        $request = Services::request();
+        $models = new LampiranModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $data = $models->insert($postData); 
+            
+            $models->select('*');
+            $models->orderBy('Id', 'DESC'); 
+            $models->limit(1);
+            $query = $models->get()->getRow();
+            echo json_encode(array("status"=>true,"data"=>$query)); 
+        }
+    }
     public function template_footer_add(){
         $request = Services::request();
         $models = new ProjectModel(); 
@@ -475,6 +527,14 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true,"data"=>$query));
         }
     }
+    public function produk_get(){
+        $request = Services::request();
+        $models = new ProdukModel(); 
+        if ($request->getMethod(true) === 'POST') {  
+            $postData = $request->getPost(); 
+            echo $models->get_produk($postData); 
+        }
+    }
     public function produk_add(){
         $request = Services::request();
         $models = new ProdukModel(); 
@@ -491,7 +551,16 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
-
+    public function produk_rename($id){
+        $request = Services::request();
+        $models = new ProdukModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->rename_produk($id,$postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    
 
     public function item_unit_add(){ 
         $request = Services::request();

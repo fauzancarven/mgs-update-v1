@@ -583,6 +583,13 @@ class ProdukModel extends Model
  
         echo json_encode(array("status"=>true)); 
     }
+    public function rename_produk($id,$data){
+        
+        $builder = $this->db->table($this->table); 
+        $builder->set('ProdukName', $data["ProdukName"]);
+        $builder->where('ProdukId', $id);
+        $builder->update(); 
+    }
     public function delete_produk($id){
         //delete data lama
         $builder = $this->db->table("produk");  
@@ -603,6 +610,59 @@ class ProdukModel extends Model
                 }
             }  
         }
+    }
+    public function get_produk($post){ 
+        $builder = $this->db->table("produk");   
+        $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");   
+        $builder->join("produk_detail","produk.ProdukId= produk_detail.ProdukDetailRef","left");  
+        $builder->join("produk_satuan","produk_satuan.ProdukSatuanId= produk_detail.ProdukDetailSatuanId","left");   
+        $builder->like('ProdukName', $post["search"]);  
+        if(isset($post["category"])){  
+            $builder->whereIn("ProdukCategoryCode",$post["category"]);
+        }  
+        if(isset($post["filter"])){  
+            $builder->groupStart(); 
+            foreach($post["filter"] as $key => $value){
+                if($key == "Vendor"){ 
+                    foreach($post["filter"]["Vendor"] as $row){
+                        $builder->orLike("ProdukDetailVarian",$row);  
+                    }
+                } else{
+                    foreach($post["filter"][$key] as $row){
+                        $builder->orLike("ProdukDetailVarian",$row);  
+                    } 
+                }
+            }  
+            $builder->groupEnd(); 
+
+        } 
+        $result =  $builder->get()->getResult();  
+        $array_php = array();
+        foreach($result as $row){ 
+            $array_php[] = array(
+                'image' => $this->getproductimageUrl($row->ProdukId),
+                'name' => $row->ProdukName,
+                'kode' => $row->ProdukCode,
+                'kategori' => $row->ProdukCategoryName,
+                'varian' => json_decode($row->ProdukDetailVarian),
+                'price_buy' => $row->ProdukDetailHargaBeli,
+                'price_sell' => $row->ProdukDetailHargaJual,
+                'id' => $row->ProdukId,
+                'produkid' => $row->ProdukId, 
+                'text' => $row->ProdukName,
+                'group' => $row->ProdukCategoryName,
+                'berat' => $row->ProdukDetailBerat,
+                'satuan_id' => $row->ProdukSatuanId,
+                'satuan_text' => $row->ProdukSatuanName,
+                'pcsM2' => $row->ProdukDetailPcsM2,
+                'disc' => "0",
+                'qty' => "1",
+                'total' => $row->ProdukDetailHargaJual,
+            ); 
+        }
+        return json_encode(
+            $array_php
+        );
     }
 
 
@@ -647,6 +707,18 @@ class ProdukModel extends Model
             }
         } 
         return "";
+        //return $this->ambil_gambar_base64('assets/images/produk/default.png'); 
+    }
+    public function getproductimageUrl($id){
+        $folder = 'assets/images/produk/'.$id."/";  
+        $files = scandir($folder);
+        $gambar = array(); 
+        foreach ($files as $file) {
+            if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                return  base_url().$folder . $file."?".date("Y-m-dH:i:s"); 
+            }
+        } 
+        return base_url()."assets/images/produk/default.png";
         //return $this->ambil_gambar_base64('assets/images/produk/default.png'); 
     }
     public function getDetailProduk($data,$id){ 

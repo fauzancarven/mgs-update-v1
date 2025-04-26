@@ -1,8 +1,8 @@
-<div class="modal fade" id="modal-edit-proforma" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
+<div class="modal fade" id="modal-add-proforma" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Edit Proforma</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Tambah Proforma</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3"> 
@@ -19,7 +19,7 @@
                             <label for="sisa-payment" class="col-form-label">Sisa Pembayaran:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
-                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="sisa-payment" value="<?= $project->InvGrandTotal - (array_sum(array_column($payments, 'PaymentTotal'))) + $payment->PaymentTotal ?>" disabled>
+                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="sisa-payment" value="<?= $project->InvGrandTotal - (array_sum(array_column($payment, 'PaymentTotal'))) ?>" disabled>
                             </div>  
                         </div>
                     </div>  
@@ -48,15 +48,16 @@
                             <label for="total-payment" class="col-form-label">Total Payment:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
-                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="total-payment" value="<?= $payment->PaymentTotal ?>">
+                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="total-payment" value="0">
                             </div>  
                         </div>
                     </div>  
                 </div> 
                 <div class="mb-1">
                     <label for="comment-payment" class="col-form-label">Catatan:</label>
-                    <input class="form-control form-control-sm input-form" style="width:100%" id="comment-payment" value="<?= $payment->PaymentNote ?>">
+                    <input class="form-control form-control-sm input-form" style="width:100%" id="comment-payment">
                 </div> 
+                
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
                         <span class="label-dialog">Term and Condition </span> 
@@ -94,7 +95,7 @@
 <script>
      $('#date-payment').daterangepicker({
         "singleDatePicker": true,
-        "startDate": moment("<?= $payment->PaymentDate ?>"),
+        "startDate": moment(),
         "endDate":  moment(),
         locale: {
             format: 'DD MMMM YYYY'
@@ -113,15 +114,15 @@
     }); 
      
     $("#type-payment").select2({
-        dropdownParent: $('#modal-edit-proforma .modal-content'),
-        tags:true,
+        dropdownParent: $('#modal-add-proforma .modal-content'),
+        tags:true
     });
-    $("#type-payment").val("<?= $payment->PaymentType ?>").trigger("change");
     $("#method-payment").select2({
-        dropdownParent: $('#modal-edit-proforma .modal-content'),
+        dropdownParent: $('#modal-add-proforma .modal-content'),
+        tags:true
     });  
-    $("#method-payment").val("<?= $payment->PaymentMethod ?>").trigger("change");
  
+    
     var quill = [];  
     $(".template-footer").each(function(index, el){
         var message = $(el).find("[name='EditFooterMessage']")[0];
@@ -135,8 +136,6 @@
         }); 
         quill[type].enable(false);
         quill[type].root.style.background = '#F7F7F7'; // warna disable 
-        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($template->TemplateFooterDelta)?>));  
-
         const btnsaveas = $(el).find("a[value='simpanAs']")[0];
         const btnsave = $(el).find("a[value='simpan']")[0];
         const btnedit = $(el).find("a[value='edit']")[0];
@@ -221,8 +220,6 @@
             } 
         });
 
-        $(selectoption).append(new Option("<?=$template->TemplateFooterName ?>" , "<?=$template->TemplateFooterId?>", true, true)).trigger('change'); 
-        
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
                 $.ajax({ 
@@ -231,7 +228,7 @@
                     url: "<?= base_url() ?>action/add-data-template-footer", 
                     data:{
                         "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
-                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
                         "TemplateFooterDelta": quill[type].getContents(), 
                         "TemplateFooterCategory": type, 
                     },
@@ -262,7 +259,7 @@
                     url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
                     data:{
                         "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
-                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
                         "TemplateFooterDelta": quill[type].getContents(), 
                         "TemplateFooterCategory": type, 
                     },
@@ -313,7 +310,7 @@
                             url: "<?= base_url() ?>action/add-data-template-footer", 
                             data:{ 
                                 "TemplateFooterName": name ,
-                                "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                                "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
                                 "TemplateFooterDelta": quill[type].getContents(), 
                                 "TemplateFooterCategory": type, 
                             },
@@ -364,7 +361,6 @@
 
         }) 
     });
-
     $("#btn-add-payment").click(function(){
         if($($(".template-footer").find("select")[0]).val() == null){
             Swal.fire({
@@ -392,14 +388,15 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/edit-data-proforma/<?= $payment->PaymentId?>", 
-            data:{  
+            url: "<?= base_url() ?>action/add-data-proforma", 
+            data:{ 
+                "InvId": <?= $project->InvId ?>, 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
                 "PaymentMethod":$("#method-payment").val(), 
                 "PaymentTotal": $("#total-payment").val().replace(/[^0-9]/g, ''), 
                 "PaymentNote":$("#comment-payment").val(), 
-                "TemplateId": $($(".template-footer").find("select")[0]).val(),  
+                "TemplateId": $($(".template-footer").find("select")[0]).val(),   
             },
             success: function(data) {   
                 if(data["status"]===true){
@@ -408,8 +405,9 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-edit-proforma").modal("hide");  
-                        $("idata-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        $("#modal-add-proforma").modal("hide");  
+                        
+                        $("i[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

@@ -286,7 +286,7 @@
                     url: "<?= base_url() ?>action/add-data-template-footer", 
                     data:{
                         "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
-                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
                         "TemplateFooterDelta": quill[type].getContents(), 
                         "TemplateFooterCategory": type, 
                     },
@@ -317,7 +317,7 @@
                     url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
                     data:{
                         "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
-                        "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                        "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
                         "TemplateFooterDelta": quill[type].getContents(), 
                         "TemplateFooterCategory": type, 
                     },
@@ -368,7 +368,7 @@
                             url: "<?= base_url() ?>action/add-data-template-footer", 
                             data:{ 
                                 "TemplateFooterName": name ,
-                                "TemplateFooterDetail": quill[type].getSemanticHTML(), 
+                                "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
                                 "TemplateFooterDelta": quill[type].getContents(), 
                                 "TemplateFooterCategory": type, 
                             },
@@ -451,6 +451,8 @@
             data:{ 
                 "InvId": '<?= $project["InvId"] ?>', 
                 "SampleId": '<?= $project["SampleId"] ?>', 
+                "POId": '<?= $project["POId"] ?>', 
+                "DeliveryId": '<?= $project["DeliveryId"] ?>', 
                 "ProjectId": '<?= $project["ProjectId"] ?>', 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
@@ -468,7 +470,9 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-payment").modal("hide");  
-                        $("idata-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");  
+                        
+                        loader_data_project('<?= $project["ProjectId"] ?>','<?= $project["menu"] ?>') 
+                        //$("i[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");  
                     });
                   
                 }else{

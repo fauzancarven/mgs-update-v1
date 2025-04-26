@@ -254,7 +254,7 @@
                 inputpengiriman[i] = new Cleave(`#input-pengiriman-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
                 }); 
                 inputpengiriman[i].setRawValue(data_detail_item[i]["qty"]);
@@ -267,7 +267,7 @@
                 inputrusak[i] = new Cleave(`#input-rusak-${i}`, {
                         numeral: true,
                         delimeter: ",",
-                        numeralDecimalScale:2,
+                        numeralDecimalScale:3,
                         numeralThousandGroupStyle:"thousand"
                 }); 
                 inputrusak[i].setRawValue(data_detail_item[i]["qty_waste"]);
@@ -280,7 +280,7 @@
                 inputspare[i] = new Cleave(`#input-spare-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:2,
+                    numeralDecimalScale:3,
                     numeralThousandGroupStyle:"thousand"
                 }); 
                 inputspare[i].setRawValue(data_detail_item[i]["qty_spare"]);
@@ -398,7 +398,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-finish-delivery").modal("hide");   
-                        $("idata-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");   
+                        loader_data_project(<?= $project->ProjectId ?>,'pengiriman')  
+                        // $("i[data-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

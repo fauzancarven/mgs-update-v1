@@ -16,6 +16,7 @@ use App\Models\ProduksatuanModel;
 use App\Models\VendorcategoryModel;
 use App\Models\VendorModel;
 use App\Models\TemplatefooterModel;
+use App\Models\LampiranModel;
 
 use Config\Services; 
 
@@ -525,6 +526,37 @@ class SelectController extends BaseController
             return $this->response->setJSON($response); 
         }
     }
+    public function lampiran($type){
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array(); 
+
+
+            $models = new LampiranModel();
+            $models->select('*');  
+            if(isset($postData['searchTerm'])) $models->like('Name',$postData['searchTerm']);  
+            $models->like('Type',$type);
+            $models->orderBy('Id');
+            $customerList = $models->find(); 
+            $data = array();
+
+            $data[] = array(
+                "id" => 0,
+                "text" => "Tidak ada yang dipilih", 
+                "image" => "",    
+            );
+            foreach($customerList as $row){
+                $data[] = array(
+                    "id" => $row['Id'],
+                    "text" => $row['Name'], 
+                    "image" => $row['Image'],    
+                );
+            } 
+            $response['data'] = $data; 
+            return $this->response->setJSON($response); 
+        }
+    }
 
     public function ref_project_vendor($id){
         $request = Services::request();
@@ -587,6 +619,7 @@ class SelectController extends BaseController
                             $harga = 0;
                         }
                         $detail[] = array(
+                            "id" => $row_item->ProdukId, 
                             "produkid" => $row_item->ProdukId, 
                             "satuan_id"=> ($row_item->InvDetailSatuanId == 0 ? "" : $row_item->InvDetailSatuanId),
                             "satuan_text"=>$row_item->InvDetailSatuanText, 
@@ -596,6 +629,8 @@ class SelectController extends BaseController
                             "type"=> $row_item->InvDetailType,
                             "ref"=>  $row_item->InvDetailQty,
                             "qty"=>  $row_item->InvDetailQty,
+                            "hargajual"=>  $row_item->InvDetailPrice,
+                            "disc"=>  $row_item->InvDetailDisc,
                             "harga"=>  $harga, 
                             "data"=>  $data_total, 
                             "total"=>  $row_item->InvDetailQty * $harga,
@@ -625,6 +660,7 @@ class SelectController extends BaseController
                             $harga = 0;
                         }
                         $detail[] = array(
+                            "id" => $row_item->ProdukId, 
                             "produkid" => $row_item->ProdukId, 
                             "satuan_id"=> ($row_item->SphDetailSatuanId == 0 ? "" : $row_item->SphDetailSatuanId),
                             "satuan_text"=>$row_item->SphDetailSatuanText, 
@@ -634,7 +670,10 @@ class SelectController extends BaseController
                             "type"=> $row_item->SphDetailType,
                             "ref"=>  $row_item->SphDetailQty,
                             "qty"=>  $row_item->SphDetailQty,
+                            "hargajual"=>  $row_item->SphDetailPrice,
+                            "disc"=>  $row_item->SphDetailDisc,
                             "harga"=>  $harga,
+                            "data"=>  $data_total, 
                             "total"=>  $row_item->SphDetailQty * $harga,
                         );
                     } 
