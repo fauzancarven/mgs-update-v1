@@ -802,7 +802,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                 <div class="col-2 col-md-1 my-2">  
                                     <input type="file" id="image-input-${i}" style="display: none;" accept="image/*">
                                     <div class="image-detail-produk border" data-id="${i}">
-                                        ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_detail[i]["ProdukDetailImage"] + '" />'}
+                                        ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_detail[i]["ProdukDetailImage"] + '" />'}  
                                     </div> 
                                 </div> 
                                 <div class="col-8 col-md-3 my-2"> 
@@ -1036,7 +1036,12 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     const reader = new FileReader();
                     reader.onload = () => {
                         arr_varian_detail[$(this).data("id")]["ProdukDetailImage"] = reader.result;
-                        $(".image-detail-produk[data-id='" + id_index_image + "']").html('<img src="' + reader.result + '" />');
+                        $(".image-detail-produk[data-id='" + id_index_image + "']").html(`<img src="${ reader.result}"/>
+                        <div class="action">
+                            <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
+                        </div>`);
+
                     };
                     reader.readAsDataURL(file);
                 });
