@@ -2221,10 +2221,10 @@ class ProjectModel extends Model
             $builder->orderby('DeliveryId', 'ASC'); 
             $delivery = $builder->countAllResults();
             if($delivery == 0){
-                $alert[] = array(
-                    "type"=>"Pengiriman",
-                    "message"=>"pengiriman ".$row->InvCode." belum dibuat"
-                );
+                // $alert[] = array(
+                //     "type"=>"Pengiriman",
+                //     "message"=>"pengiriman ".$row->InvCode." belum dibuat"
+                // );
             }else{
                 $builder = $this->db->table("delivery");
                 $builder->select('*');   
@@ -2233,10 +2233,10 @@ class ProjectModel extends Model
                 $builder->orderby('DeliveryId', 'ASC'); 
                 $delivery = $builder->countAllResults();
                 if($delivery == 0){
-                    $alert[] = array(
-                        "type"=>"Delivery",
-                        "message"=>"pengiriman ".$row->InvCode." belum diselesaikan"
-                    );
+                    // $alert[] = array(
+                    //     "type"=>"Delivery",
+                    //     "message"=>"pengiriman ".$row->InvCode." belum diselesaikan"
+                    // );
                 }
             }
         }
@@ -3149,10 +3149,10 @@ class ProjectModel extends Model
                     "message"=>"Pembayaran belum diproses"
                 );
             }else if($row->POStatus == 1){
-                $alert[] = array(
-                    "type"=>"diterima",
-                    "message"=>"pembelian belum sampai/diterima"
-                );
+                // $alert[] = array(
+                //     "type"=>"diterima",
+                //     "message"=>"pembelian belum sampai/diterima"
+                // );
             }
         }
 

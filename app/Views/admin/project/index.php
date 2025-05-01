@@ -636,9 +636,9 @@
                     }else{ 
                         $(this).addClass("selected");
                         if ($(window).width() > 400) {
-                            $(".content-data[data-id='" + $(this).data("id") + "']").css("max-height","calc(100vh - 190px)"); 
-                            $(".content-data[data-id='" + $(this).data("id") + "']").css("min-height","calc(100vh - 190px)");  
-                            $(".tab-content[data-id='" + $(this).data("id") + "']").css("height","calc(100vh - 190px)"); 
+                            $(".content-data[data-id='" + $(this).data("id") + "']").css("max-height","calc(100vh - 15rem)"); 
+                            $(".content-data[data-id='" + $(this).data("id") + "']").css("min-height","calc(100vh - 15rem)");  
+                            $(".tab-content[data-id='" + $(this).data("id") + "']").css("height","calc(100vh - 15rem)"); 
                             $("html, body").css("overflow","hidden");
                             $(".content-data[data-id='" + $(this).data("id") + "']").on("mousewheel", function(e) {
                                 e.stopPropagation();

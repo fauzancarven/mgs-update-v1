@@ -1394,7 +1394,7 @@
     }
     .input-group .filter-data {
         position: absolute;
-        z-index: 10;
+        z-index: 12;
         top: 100%;
         width: 100%;
         padding: 5px 0; 
