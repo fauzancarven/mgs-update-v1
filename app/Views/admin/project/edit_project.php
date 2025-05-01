@@ -58,7 +58,7 @@
 
 <div id="modal-optional"></div>
 <script>
-
+    console.log(`<?= JSON_ENCODE($project) ?>`)
     $("#name-project").val("<?= $project->ProjectName ?>");
     $("#comment-project").val("<?= $project->ProjectComment ?>");
 

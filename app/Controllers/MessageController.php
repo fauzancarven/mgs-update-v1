@@ -148,11 +148,11 @@ class MessageController extends BaseController
     public function project_edit($id)
     {    
         $models = new ProjectModel();
-        $models->join("customer","customer.CustomerId=project.CustomerId");
-        $models->join("users","users.id=project.UserId");
-        $models->join("store","store.StoreId=project.StoreId");
+        $models->join("customer","customer.CustomerId=project.CustomerId","left");
+        $models->join("users","users.id=project.UserId","left");
+        $models->join("store","store.StoreId=project.StoreId","left");
         $data["project"] = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
-        $data["user"] = User(); //mengambil session dari mythauth
+        $data["user"] = User(); //mengambil session dari mythauth 
         return $this->response->setBody(view('admin/project/edit_project.php',$data)); 
     }
 
