@@ -1601,6 +1601,18 @@
     .image-detail-produk:hover img {
         filter: blur(1px);
     }
+    .image-detail-produk .action {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: none;
+    }
+    .image-detail-produk:hover .action {
+        display: block;
+    }
+    .image-detail-produk:hover .action i{
+        color :#7bc8ff;
+    }
     .span-custom-input:hover {
         border: 1px solid gray;
         border-radius: 0.25rem;

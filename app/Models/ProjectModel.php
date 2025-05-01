@@ -703,13 +703,25 @@ class ProjectModel extends Model
         $alertdeliverymessage = 'data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="'. $message.'"';
 
  
+        //ALERT PEMBELIAN
+        $alertpo = $this->data_project_po_notif($row->ProjectId);
+        $po = $this->data_project_po_count($row->ProjectId);
+        $message = "";
+        $alertpomessage = "";
+        $no = 1;
+        foreach($alertdelivery as $row_sample){
+            $message .= "<i class='fa-solid fa-circle fs-8'></i> ".$row_sample["message"]."<br>";
+            $no++;
+        } 
+        $po_message = $message;
+        $alertpomessage = 'data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="'. $message.'"';
 
         return array(
             "status"=>$status, 
             "survey"=> (count($alertsurvey) > 0 ? "notif" : "")." ".($survey > 0 ? "active" : ""),
             "sample"=> (count($alertsample) > 0 ? "notif" : "")." ".($sample > 0 ? "active" : ""),
             "penawaran"=> (count($alertpenawaran) > 0 ? "notif" : "")." ".($penawaran > 0 ? "active" : ""),
-            "pembelian"=> "",
+            "pembelian"=> (count($alertpo) > 0 ? "notif" : "")." ".($po > 0 ? "active" : ""),
             "perintahkerja"=> "",
             "invoice"=> (count($alertinvoice) > 0 ? "notif" : "")." ".($invoice > 0 ? "active" : ""),
             "pengiriman"=> (count($alertdelivery) > 0 ? "notif" : "")." ".($delivery > 0 ? "active" : ""),  
@@ -3123,6 +3135,36 @@ class ProjectModel extends Model
             )
         ); 
     }  
+    private function data_project_po_notif($project_id){ 
+        $alert = array();
+        $builder = $this->db->table("pembelian");
+        $builder->select('*');   
+        $builder->where("ProjectId",$project_id);
+        $builder->orderby('POId', 'ASC'); 
+        $query = $builder->get()->getResult(); 
+        foreach($query as $row){
+            if($row->POStatus == 0){
+                $alert[] = array(
+                    "type"=>"pembelian",
+                    "message"=>"Pembayaran belum diproses"
+                );
+            }else if($row->POStatus == 1){
+                $alert[] = array(
+                    "type"=>"diterima",
+                    "message"=>"pembelian belum sampai/diterima"
+                );
+            }
+        }
+
+        return $alert;
+    } 
+    private function data_project_po_count($project_id){ 
+        $builder = $this->db->table("pembelian");
+        $builder->select('*');
+        $builder->where("ProjectId",$project_id);
+        $builder->orderby('POId', 'ASC');  
+        return  $builder->countAllResults();
+    }
     private function data_project_rab($project_id){
         $html = '
             <div class="d-flex justify-content-center flex-column align-items-center">
@@ -3766,8 +3808,9 @@ class ProjectModel extends Model
 
     public function getSelectRefVendor($refid,$search = null){
         $builder = $this->db->query('SELECT * FROM 
-        (SELECT SphId refid, SphCode as code,ProjectId ref,SphDate date, CustomerId custid, "SPH" AS type FROM penawaran UNION SELECT InvId refid,InvCode,ProjectId ref,InvDate date,CustomerId, "INV" FROM invoice) AS ref_join
-        LEFT JOIN customer ON CustomerId = ref_join.custid
+        (SELECT SphId refid, SphCode as code,ProjectId ref,SphDate date,"SPH" AS type FROM penawaran UNION SELECT InvId refid,InvCode,ProjectId ref,InvDate date, "INV" FROM invoice) AS ref_join
+        LEFT JOIN project ON project.ProjectId = ref_join.ref
+        LEFT JOIN customer ON customer.CustomerId = project.CustomerId
         WHERE ref_join.ref = '.$refid.'
         ORDER BY ref_join.date asc');
         return $builder->getResultArray();  
@@ -4273,6 +4316,12 @@ class ProjectModel extends Model
                 mkdir($folder_utama."/".$data["ProjectId"]."/pembelian", 0777, true);  
             }
             $folder_utama = $folder_utama."/".$data["ProjectId"]."/pembelian"; 
+
+            $builder = $this->db->table("pembelian"); 
+            $builder->set('POStatus', 1);    
+            $builder->where('POId', $data["POId"]); 
+            $builder->update(); 
+     
         }
 
         if (isset($data['image'])) {  
@@ -4763,7 +4812,9 @@ class ProjectModel extends Model
             "VendorId"=>$header["VendorId"], 
             "VendorName"=>$header["VendorName"], 
             "TemplateId"=>$header["TemplateId"],
-            "CustomerId"=>$header["CustomerId"],
+            "POCustName"=>$header["POCustName"],
+            "POCustTelp"=>$header["POCustTelp"],
+            "POAddress"=>$header["POAddress"],
             "POSubTotal"=>$header["POSubTotal"],
             "POPPNTotal"=>$header["POPPNTotal"],
             "PODiscTotal"=>$header["PODiscTotal"],
@@ -4784,6 +4835,13 @@ class ProjectModel extends Model
             $builder = $this->db->table("pembelian_detail");
             $builder->insert($row); 
         }
+
+        
+        //update status project
+        $builder = $this->db->table("project"); 
+        $builder->set('ProjectStatus', 4);  
+        $builder->where('ProjectId', $header["ProjectId"]); 
+        $builder->update();  
 
     } 
     public function update_data_pembelian($data,$id){ 
@@ -4833,8 +4891,8 @@ class ProjectModel extends Model
         $builder->join("invoice",'invoice.InvId=pembelian.InvId',"left"); 
         $builder->join("penawaran",'penawaran.SphId=pembelian.SphId',"left"); 
         $builder->join("template_footer","pembelian.TemplateId = template_footer.TemplateFooterId","left");
-        $builder->join("customer","customer.CustomerId = pembelian.CustomerId","left");
         $builder->join("project",'project.ProjectId=pembelian.ProjectId',"left"); 
+        $builder->join("customer","customer.CustomerId = project.CustomerId","left");
         $builder->where('POId',$id);  
         return $builder->get()->getRow();  
     }

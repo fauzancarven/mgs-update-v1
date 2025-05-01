@@ -131,7 +131,9 @@ class ActionController extends BaseController
 
             $models->selectMax('VendorId');
             $query = $models->get()->getRow();
-            echo json_encode(array("status"=>true,"data"=>$query));
+            $id = $query->VendorId;
+            $data = $models->getWhere(["VendorId"=>$id])->getRow();
+            echo json_encode(array("status"=>true,"data"=>$data));
         }
     }
     public function vendor_edit($id){

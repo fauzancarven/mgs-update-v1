@@ -57,6 +57,7 @@
     </div>
 </div>
 <script>
+    var data_vendor ;
     $(".input-phone").toArray().forEach(function(el){
         new Cleave(el,{
             phone: true,
@@ -95,11 +96,12 @@
             cache: true
         }, 
     });
+    var isProcessingSaveVendor;
     $("#btn-add-vendor").click(function(){ 
         if($("#vendorcode").val() == ""){
             Swal.fire({
                 icon: 'error',
-                text: 'Email harus diisi...!!!', 
+                text: 'Kode harus diisi...!!!', 
                 confirmButtonColor: "#3085d6", 
             }).then(function(){ 
                 swal.close();
@@ -131,10 +133,10 @@
         } 
 
         // INSERT LOADER BUTTON
-        if (isProcessingSave) {
+        if (isProcessingSaveVendor) {
             return;
         }  
-        isProcessingSave = true; 
+        isProcessingSaveVendor = true; 
         let old_text = $(this).html();
         $(this).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
         
@@ -151,16 +153,16 @@
                 "VendorCategory":$("#vendorcategory").val().join("|"),
             },
             success: function(data) {   
-                isProcessingSave = false;
+                isProcessingSaveVendor = false;
                 $(this).html(old_text); 
 
                 if(data["status"]===true){
+                    data_vendor = data["data"];
                     Swal.fire({
                         icon: 'success',
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
-                    }).then((result) => {
-                        table.ajax.reload(null, false).responsive.recalc().columns.adjust();
+                    }).then((result) => { 
                         $("#modal-add-vendor").modal("hide");
                     });
                   
@@ -174,7 +176,7 @@
             },
             error : function(xhr, textStatus, errorThrown){ 
                 
-                isProcessingSave = false;
+                isProcessingSaveVendor = false;
                 $(this).html(old_text);
  
                 Swal.fire({

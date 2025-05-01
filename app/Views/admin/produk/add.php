@@ -107,31 +107,9 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         </div>
     </div>
 </div>
-
-<div class="modal fade " id="modal-edit"  data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">  
-        <div class="modal-content" name="form-action">
-            <div class="modal-header">
-                <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
-                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0">
-                <div id="crop-image" style="height:500px;"></div>
-                <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
-                    <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
-                    <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
-                    <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
-                    <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
-                </div>
-            </div>
-            <div class="modal-footer"> 
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary" id="submit-crop" >Simpan</button>
-            </div>
-        </div>
-    </div>
-</div>
+ 
 <div id="message-vendor"></div>
+<div id="message-crop-item"></div>
 <!-- SCRIPT ITEM -->
 <script>  
 
@@ -139,107 +117,137 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
     $("#img-produk").on('click',function(){
         $("#upload-produk").trigger("click");
     })  
+    var image_index = 0;
+    var $uploadCrop = [];
     $("#upload-produk").on('change', function() {
         const file = this.files[0];
         if (file) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function() {
-                $("#list-produk").append(`<div class="image-default-obi border">
-                                <img src="${reader.result}" draggable="true"> 
-                                <div class="action">
-                                    <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
-                                    <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
+                image_index++;
+                $("#list-produk").append(`
+                    <div class="image-default-obi border" id="image-frame-${image_index}">
+                        <img src="${reader.result}" draggable="true" id="img-${image_index}"> 
+                        <div class="action">
+                            <a class="btn btn-sm btn-white p-1" onclick="crop_image('${image_index}')"><i class="fas fa-crop-alt"></i></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><i class="fas fa-trash"></i></a>
+                        </div>
+                        <span class="badge text-bg-primary">Utama</span>
+                    </div>
+                    <div class="modal fade" id="modal-frame-image-${image_index}"  data-bs-keyboard="false" data-bs-backdrop="static">
+                        <div class="modal-dialog modal-dialog-centered">  
+                            <div class="modal-content" name="form-action">
+                                <div class="modal-header">
+                                    <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
+                                    <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <span class="badge text-bg-primary">Utama</span>
-                        </div>`);
-                        var draggedImage = null;
+                                <div class="modal-body p-0">
+                                    <div id="crop-image-${image_index}" style="height:500px;"></div>
+                                    <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
+                                        <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
+                                        <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
+                                        <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
+                                        <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
+                                    </div>
+                                </div>
+                                <div class="modal-footer"> 
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary" id="submit-crop-${image_index}" >Simpan</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                `);
+                var draggedImage = null;
 
-                        // Event dragstart untuk menangkap elemen gambar yang sedang di-drag
-                        $('.image-default-obi.border img').on('dragstart', function (event) {
-                            draggedImage = $(this); // Simpan elemen gambar sebagai referensi
-                        });
+                // Event dragstart untuk menangkap elemen gambar yang sedang di-drag
+                $('.image-default-obi.border img').on('dragstart', function (event) {
+                    draggedImage = $(this); // Simpan elemen gambar sebagai referensi
+                });
 
-                        // Event dragover untuk mencegah default behavior
-                        $('.image-default-obi.border').on('dragover', function (event) {
-                            event.preventDefault(); // Harus ada untuk memungkinkan drop
-                            $(this).addClass('dragover'); // Tambahkan efek visual
-                        });
+                // Event dragover untuk mencegah default behavior
+                $('.image-default-obi.border').on('dragover', function (event) {
+                    event.preventDefault(); // Harus ada untuk memungkinkan drop
+                    $(this).addClass('dragover'); // Tambahkan efek visual
+                });
 
-                        // Event dragleave untuk menghapus efek visual ketika keluar dari dropzone
-                        $('.image-default-obi.border').on('dragleave', function () {
-                            $(this).removeClass('dragover');
-                        });
+                // Event dragleave untuk menghapus efek visual ketika keluar dari dropzone
+                $('.image-default-obi.border').on('dragleave', function () {
+                    $(this).removeClass('dragover');
+                });
 
-                        // Event drop untuk memindahkan gambar
-                        $('.image-default-obi.border').on('drop', function (event) {
-                            event.preventDefault(); // Cegah perilaku default
-                            $(this).removeClass('dragover'); // Hapus efek visual
+                // Event drop untuk memindahkan gambar
+                $('.image-default-obi.border').on('drop', function (event) {
+                    event.preventDefault(); // Cegah perilaku default
+                    $(this).removeClass('dragover'); // Hapus efek visual
 
-                            // Ambil gambar yang sudah ada di dropzone target
-                            const existingImage = $(this).find('img');
+                    // Ambil gambar yang sudah ada di dropzone target
+                    const existingImage = $(this).find('img');
 
-                            // Jika ada gambar yang sedang di-drag
-                            if (draggedImage) {
-                                // Pindahkan gambar yang sudah ada ke tempat asal gambar yang sedang di-drag
-                                const sourceDropzone = draggedImage.closest('.image-default-obi.border');
-                                sourceDropzone.prepend(existingImage);
+                    // Jika ada gambar yang sedang di-drag
+                    if (draggedImage) {
+                        // Pindahkan gambar yang sudah ada ke tempat asal gambar yang sedang di-drag
+                        const sourceDropzone = draggedImage.closest('.image-default-obi.border');
+                        sourceDropzone.prepend(existingImage);
 
-                                // Pindahkan gambar yang di-drag ke dropzone target
-                                $(this).prepend(draggedImage);
-                            }
-                        });
+                        // Pindahkan gambar yang di-drag ke dropzone target
+                        $(this).prepend(draggedImage);
+                    }
+                }); 
+                $uploadCrop[image_index]  = $('#crop-image-' + image_index).croppie({
+                    viewport: {
+                        width: 400,
+                        height: 400,
+                    },
+                    showZoomer: false,
+                    enforceBoundary: false,
+                    enableExif: true,
+                    enableOrientation: true, 
+                });
+                crop_image(image_index);
             }
         }
-    });
-    var $uploadCrop, tempFilename, rawImg, imageId; 
-    $uploadCrop = $('#crop-image').croppie({
-        viewport: {
-            width: 400,
-            height: 400,
-        },
-        showZoomer: false,
-        enforceBoundary: false,
-        enableExif: true,
-        enableOrientation: true
-    });
-    crop_image = function(el){ 
-        var image_crop = $(el).parent().parent().find('img');
-        var flip = 0;
-        $('#modal-edit').modal('show');
-        
-        $('#modal-edit').on('shown.bs.modal', function(){ 
-            $uploadCrop.croppie('bind', {
-                url: $(image_crop).attr('src')
-            }).then(function(){
-                console.log('jQuery bind complete');
+        crop_image = function(id){   
+            var image_crop = $("#img-" +id);
+            var flip = 0;
+            $('#modal-frame-image-' +id).modal('show'); 
+            $('#modal-frame-image-' +id).on('shown.bs.modal', function(){ 
+                $uploadCrop[id].croppie('bind', {
+                    url: $(image_crop).attr('src')
+                }).then(function(){
+                    console.log('jQuery bind complete');
+                });
             });
-        });
-        rotate_image = function(val){
-            $uploadCrop.croppie('rotate',parseInt(val));
+            $('#submit-crop-' +id).unbind().click(function (ev) {
+                $uploadCrop[id].croppie('result', {
+                    type: 'base64',
+                    format: 'png',
+                    size: {width: 400, height: 400}
+                }).then(function (resp) { 
+                    $(image_crop).attr('src',resp) 
+                    $('#modal-frame-image-' +id).modal('hide');
+                });
+            });
+            rotate_image = function(val){
+                $uploadCrop[id].croppie('rotate',parseInt(val));
+            }
+            flip_image = function(val){
+                flip = flip == 0 ? val : 0;
+                $uploadCrop[id].croppie('bind', { 
+                    url: $(image_crop).attr('src'),
+                    orientation: flip
+                });
+            }  
         }
-        flip_image = function(val){
-            flip = flip == 0 ? val : 0;
-            $uploadCrop.croppie('bind', { 
-                url: $(el).parent().parent().find('img').attr('src'),
-                orientation: flip
-            });
-        } 
+        delete_image = function(id){ 
+            $("#image-frame-" + id).remove();
+            $("#modal-frame-image-" + id).remove();
+        }   
+    }); 
+   
 
-        $('#submit-crop').unbind().click(function (ev) {
-            $uploadCrop.croppie('result', {
-                type: 'base64',
-                format: 'png',
-                size: {width: 400, height: 400}
-            }).then(function (resp) { 
-                $(image_crop).attr('src',resp) 
-                $('#modal-edit').modal('hide');
-            });
-        });
-    }
-    delete_image = function(el){
-        $(el).parent().parent().remove();
-    }   
+    
 
    
     /** BAGIAN DESKRIPSI */
@@ -710,11 +718,10 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
     var arr_varian_list = []; 
     var arr_varian_detail = []; 
     var arr_varian_detail_old= [];
-
+  
     load_data_list_varian = function(){
-        arr_varian = [];
-        let checkedData = true;
-        
+        arr_varian = []; 
+        let checkedData = true;  
         function replaceOrInsertValue(kunci, nilai) {
             let index = arr_varian.findIndex(obj => obj.key === kunci);
             
@@ -782,7 +789,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         arr_varian_detail = [];
         for(var i = 0; i < arr_varian_list.length;i++){    
             arr_varian_detail.push({ 
-                "ProdukDetailImage": "",
+                "ProdukDetailImage": (get_arr_val_old(arr_varian_list[i],"ProdukDetailImage") == "" ? "" : get_arr_val_old(arr_varian_list[i],"ProdukDetailImage")),
                 "ProdukDetailVarian": arr_varian_list[i],
                 "ProdukDetailPcsM2":  (get_arr_val_old(arr_varian_list[i],"ProdukDetailPcsM2") == "" ? "-" : get_arr_val_old(arr_varian_list[i],"ProdukDetailPcsM2")),
                 "ProdukDetailBerat": (get_arr_val_old(arr_varian_list[i],"ProdukDetailBerat") == "" ? "0" : get_arr_val_old(arr_varian_list[i],"ProdukDetailBerat")),
@@ -796,14 +803,16 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
 
         var headerVarian = ``; 
         var detailhtml = ``;
-        for(var i = 0; i < arr_varian_detail.length;i++){ 
+        var modalhtmlitem = ``;
+        for(var i = 0; i < arr_varian_detail.length;i++){  
             headerVarian ="";
+            var image = `<input type="file" id="image-input-${i}" style="display: none;" accept="image/*">
+                        <div class="image-detail-produk border  ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? "no-image": "" }"  data-id="${i}">
+                            ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_detail[i]["ProdukDetailImage"] + '" id="img-detail-'+ i +'"/> <div class="action"> <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(' + i + ')"><i class="fas fa-crop-alt"></i></a>  <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(' + i + ')"><i class="fas fa-trash"></i></a>  </div>'}   
+                        </div>`;
             detailhtml += `<div class="row m-2 border-bottom align-items-center varian-item" data-id="${i}">
                                 <div class="col-2 col-md-1 my-2">  
-                                    <input type="file" id="image-input-${i}" style="display: none;" accept="image/*">
-                                    <div class="image-detail-produk border" data-id="${i}">
-                                        ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_detail[i]["ProdukDetailImage"] + '" />'}  
-                                    </div> 
+                                   ${image}
                                 </div> 
                                 <div class="col-8 col-md-3 my-2"> 
                                     <div class="row  mb-3">`; 
@@ -869,7 +878,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                     </div> 
                                 </div>    
                             </div>  
-                        </div>`;
+                        </div> `; 
         }   
         var headerhtml = ` 
                         <div class="form-inline p-2 w-100">
@@ -914,8 +923,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         if(checkedData === false){ 
            $('#tb_list_varian').html(`<div class="d-flex flex-column justify-content-center align-items-center"><i class="fa-solid fa-ban fa-4x text-secondary py-2"></i><h6 class="text-secondary">Lengkapi data vendor dan varian terlebih dahulu</span></h6>`);
         }else{ 
-            $('#tb_list_varian').html(`${headerhtml}${detailhtml}`); 
-
+            $('#tb_list_varian').html(`${headerhtml}${detailhtml}`);  
             $(".varian-item").each(function(index, element) { 
                 // Harga Jual  
                 var elHargajual = $(element).find(".ProdukDetailHargaJual");
@@ -1005,6 +1013,23 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 $(elsatuan).append(newOption).trigger('change'); 
                 $(elsatuan).select2("close");
  
+                $("#image-input-" + index).on('change', (e) => {
+                    var data_index = $(this).data("id");
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        arr_varian_detail[data_index]["ProdukDetailImage"] = reader.result;
+                        $(".image-detail-produk[data-id='" + data_index + "']").removeClass("no-image");
+                        $(".image-detail-produk[data-id='" + data_index + "']").html(`<img src="${reader.result}" id="img-detail-${data_index}"/>
+                        <div class="action">
+                            <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(${data_index})"><i class="fas fa-crop-alt"></i></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(${data_index})"><i class="fas fa-trash"></i></a>
+                        </div>`); 
+
+                        crop_image_detail(data_index);
+                    };
+                    reader.readAsDataURL(file);
+                }); 
             });    
 
             $("#input-search-data-varian").keyup(function(){ 
@@ -1017,6 +1042,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     
                 }   
             });
+
             $(".btn-detail").click(function(){
                 var detail = $(this).parent().parent().find(".detail");
                 if($(detail).hasClass("hide")){
@@ -1027,28 +1053,82 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     $(this).find("i").addClass("fa-rotate-180");
                 }
             });
+ 
+            crop_image_detail = function(id){
+                $("#message-crop-item").html(`<div class="modal fade" id="modal-frame-image-detail-${id}"  data-bs-keyboard="false" data-bs-backdrop="static">
+                                <div class="modal-dialog modal-dialog-centered">  
+                                    <div class="modal-content" name="form-action">
+                                        <div class="modal-header">
+                                            <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
+                                            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body p-0">
+                                            <div id="crop-image-detail-${id}" style="height:500px;"></div>
+                                            <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
+                                                <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
+                                                <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
+                                                <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
+                                                <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer"> 
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                            <button type="submit" class="btn btn-primary" id="submit-crop-detail-${id}" >Simpan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> `)
+                try{ 
+                if ($.data($('#crop-image-detail-' + id)[0], 'croppie')) {
+                    $('#crop-image-detail-' + id).croppie('destroy');
+                }
+                }catch(e){
 
-            $(".image-detail-produk").click(function(){
-                $("#image-input-" + $(this).data("id")).click();
-                var id_index_image = $(this).data("id"); 
-                $("#image-input-" + $(this).data("id")).on('change', (e) => {
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        arr_varian_detail[$(this).data("id")]["ProdukDetailImage"] = reader.result;
-                        $(".image-detail-produk[data-id='" + id_index_image + "']").html(`<img src="${ reader.result}"/>
-                        <div class="action">
-                            <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
-                            <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
-                        </div>`);
-
-                    };
-                    reader.readAsDataURL(file);
+                }
+                var $uploadCropDetail = $('#crop-image-detail-' + id).croppie({
+                    viewport: { width: 400, height: 400, },
+                    showZoomer: false,
+                    enforceBoundary: false,
+                    enableExif: true,
+                    enableOrientation: true,
                 });
+
+                var image_crop = $("#img-detail-" +id);
+                var flip = 0;
+
+                $('#modal-frame-image-detail-' + id).modal('show');
+
+                $('#modal-frame-image-detail-' + id).on('shown.bs.modal', function(){
+                    $uploadCropDetail.croppie('bind', { url: $(image_crop).attr('src') }).then(function(){
+                    console.log('jQuery bind complete');
+                    });
+                });
+
+                $('#submit-crop-detail-' + id).off('click').on('click', function (ev) {
+                    $uploadCropDetail.croppie('result', { type: 'base64', format: 'png', size: {width: 400, height: 400} }).then(function (resp) {
+                    $(image_crop).attr('src',resp)
+                    $('#modal-frame-image-detail-' + id).modal('hide');
+                    arr_varian_detail[id]["ProdukDetailImage"] = resp;
+                    }).catch(function(error){
+                    console.error(error);
+                    });
+                });
+
+                var rotate_image = function(val){
+                    $uploadCropDetail.croppie('rotate',parseInt(val));
+                }
+
+                var flip_image = function(val){
+                    flip = flip == 0 ? val : 0;
+                    $uploadCropDetail.croppie('bind', { url: $(image_crop).attr('src'), orientation: flip });
+                } 
+            }
+            $(".image-detail-produk.no-image").unbind().click(function(){
+                if(!$(this).hasClass("no-image")) return;
+                $("#image-input-" + $(this).data("id")).click(); 
             })
-           
-        } 
-    }
+        }
+    }  
 
     load_data_varian();
     var isProcessingSaveProduk 

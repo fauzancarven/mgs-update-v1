@@ -788,6 +788,10 @@
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pengiriman']").removeClass("active")
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pengiriman']").removeClass("notif")
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pengiriman']").addClass(data["project"]["pengiriman"]) 
+                //update notif pembelian
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").removeClass("active")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").removeClass("notif")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").addClass(data["project"]["pembelian"]) 
 
             },
             error : function(xhr, textStatus, errorThrown){   

@@ -685,7 +685,7 @@
                 $("#modal-add-produk").modal("show"); 
 
                 $("#modal-add-produk").on("hidden.bs.modal",function(){
-                    table.ajax.reload(null, false).responsive.recalc().columns.adjust();
+                    loader_datatable();
                 })   
                 isProcessingAdd = false;
                 $(el).html(old_text);

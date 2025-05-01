@@ -9,76 +9,86 @@
             <div class="modal-body"> 
                 <div class="row"> 
                     <div class="col-lg-5 col-12 my-1 mb-2">
-                        <div class="row mx-2 align-items-center">
+                        <div class="row mx-2 align-items-center mb-3 mb-md-1">
                             <div class="label-border-right">
                                 <span class="label-dialog">Customer</span>
-                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="add-varian" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem;">
-                                    <i class="fas fa-pencil"></i>
-                                    <span class="fw-bold">
-                                        &nbsp;Edit
-                                    </span>
+                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('customer-display',this)">
+                                    <span>Sembunyikan</span>
+                                    <i class="fa-solid fa-angle-up"></i> 
                                 </button> 
                             </div>
                         </div> 
-                        <div class="row align-items-center mt-2">
-                            <label class="col-2 col-form-label">Nama</label>
-                            <label class="col-10  text-end fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
-                        </div> 
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Telp</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerTelp1 ?> / <?= $customer->CustomerTelp2 == "" ? "" : $customer->CustomerTelp2 ?></label> 
-                        </div> 
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Email</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerEmail ?></label> 
+                        <div class="customer-display card bg-light show mt-4 m-1 p-2"> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphCustName" class="col-sm-3 col-form-label">Nama Customer</label>
+                                <div class="col-sm-9">
+                                    <input  class="form-control form-control-sm input-form" id="SphCustName" type="text" value="<?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?>"/>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphCustTelp" class="col-sm-3 col-form-label">Telp Customer</label>
+                                <div class="col-sm-9">
+                                    <input  class="form-control form-control-sm input-form" id="SphCustTelp"  type="text" value="<?= $customer->CustomerTelp1 ?> <?= $customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2 ?>"/>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAddress" class="col-sm-3 col-form-label">Alamat Project</label>
+                                <div class="col-sm-9">
+                                    <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->CustomerAddress ?></textarea>
+                                </div>
+                            </div>   
                         </div>  
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Instagram</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerInstagram ?></label> 
-                        </div>  
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Alamat</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerAddress ?></label> 
-                        </div> 
                     </div>  
-                    <div class="col-lg-7 col-12 my-1 mb-2">   
+                    <div class="col-lg-7 col-12 my-1 mb-2">    
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
                                 <span class="label-dialog">Document</span>
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
-                            <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="sphref" class="col-sm-2 col-form-label">ref</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="sphref" name="sphref" placeholder="Pilih Toko" style="width:100%">
-                                    <option value="0" selected>-</option>
-                                </select>  
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
-                            <div class="col-sm-10">
-                                <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
+                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('document-display',this)">
+                                    <span>Sembunyikan</span>
+                                    <i class="fa-solid fa-angle-up"></i> 
+                                </button> 
                             </div>
                         </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
-                            </div>
-                        </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphVendor" class="col-sm-2 col-form-label">Vendor</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphVendor" name="SphVendor" placeholder="Pilih Vendor" style="width:100%"></select>  
-                            </div>
-                        </div>  
+                        
+                        <div class="document-display card bg-light show mt-4 m-1 p-2">
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
+                                <div class="col-sm-10">
+                                    <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="sphref" class="col-sm-2 col-form-label">ref</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select form-select-sm" id="sphref" name="sphref" placeholder="Pilih Toko" style="width:100%">
+                                        <option value="0" selected>-</option>
+                                    </select>  
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
+                                <div class="col-sm-10">
+                                    <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphVendor" class="col-sm-2 col-form-label">Vendor</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group input-group-sm">  
+                                        <select class="form-select form-select-sm" id="SphVendor" name="SphVendor" placeholder="Pilih Vendor" style="width:90%"></select>  
+                                        <button class="btn btn-primary btn-sm" type="button" style="width:10%" onclick="vendor_add()"> 
+                                            <i class="ti-plus"></i> 
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>   
                     </div>   
                 </div>
                   
@@ -153,41 +163,47 @@
                     </div>
                 </div>     
                 <div class="card " style="min-height:50px;">
-                    <div class="card-body p-2 bg-light"> 
+                    <div class="card-body p-0 bg-light" > 
                         <div class="row align-items-center d-none d-md-flex px-3">
-                            <div class="col-12 col-md-4 my-1">    
+                            <div class="col-12 col-md-6 my-1">    
                                 <div class="row">  
                                     <div class="col-12"> 
                                         <span class="label-head-dialog">Deskripsi</span> 
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-8 my-1 ">
-                                <div class="row"> 
-                                    <div class="col-2"> 
-                                        <span class="label-head-dialog"><i class="ti-settings"></i></span>   
+                            <div class="col-12 col-md-6 my-1">
+                                <div class="row">  
+                                    <div class="col-4"> 
+                                        <span class="label-head-dialog">Qty | Satuan</span>   
                                     </div> 
-                                    <div class="col-10">
-                                        <div class="row"> 
+                                    <div class="col-8">
+                                        <div class="row">
                                             <div class="col-4">
-                                                <span class="label-head-dialog">Qty PO</span> 
-                                            </div>
-                                            <div class="col-4">
-                                                <span class="label-head-dialog">Harga</span>  
-                                            </div>
-                                            <div class="col-4">
-                                                <span class="label-head-dialog">Total</span>  
-                                            </div>
+                                                <span class="label-head-dialog">Harga</span>   
+                                            </div> 
+                                            <div class="col-4"> 
+                                                <span class="label-head-dialog">Diskon Item</span>   
+                                            </div> 
+                                            <div class="col-4"> 
+                                                <span class="label-head-dialog">Total</span>   
+                                            </div> 
                                         </div> 
-                                    </div>  
+                                    </div>
                                 </div>
                             </div> 
                         </div> 
                         <div id="tb_varian" class="text-center"> 
                         </div> 
                         <div class="d-flex justify-content-center flex-column align-items-center"> 
-                            <div class="d-flex px-3 mt-4 gap-1">
-                                <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Item</button> 
+                            <div class="d-flex px-3 mt-4 gap-1"> 
+                                <div class="dropdown text-end"> 
+                                    <button class="btn btn-sm btn-primary my-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-plus pe-2"></i>Tambah Produk</button>  
+                                    <ul class="dropdown-menu shadow">
+                                        <li><a class="dropdown-item m-0 px-2 " id="btn-add-product-manual"><i class="fa-solid fa-plus pe-2 text-primary"></i>Manual Produk</a></li> 
+                                        <li><a class="dropdown-item m-0 px-2 " id="btn-add-product"><i class="fa-solid fa-magnifying-glass pe-2 text-primary"></i>Cari Produk</a></li> 
+                                    </ul>
+                                </div>  
                             </div>
                         </div>
                     </div>
@@ -379,27 +395,27 @@
     $("#sphref").on("select2:select", function(e) {  
         var data = e.params.data;     
        
-        console.log(data)
-        $('#SphVendor').select2('destroy');
-        $('#SphVendor').empty();    
-        template_select_vendor(data.vendor); 
+        //console.log(data)
+        // $('#SphVendor').select2('destroy');
+        // $('#SphVendor').empty();    
+       // template_select_vendor(data.vendor); 
         data_detail_item = [];  
-        for(var i = 0;data.detail_item.length >i;i++){
-            if(data.detail_item[i].type == "product"){
-                data_detail_item.push({
-                    "varian" : data.detail_item[i].varian,
-                    "id" : data.detail_item[i].id,
-                    "produkid" : data.detail_item[i].produkid,
-                    "text" : data.detail_item[i].text,
-                    "satuan_id" : data.detail_item[i].satuan_id,
-                    "satuan_text" : data.detail_item[i].satuan_text, 
-                    "qty" : data.detail_item[i].qty,  
-                    "group" : data.detail_item[i].group, 
-                    "harga" : data.detail_item[i].harga, 
-                    "total" : data.detail_item[i].total,
-                }) 
-            }
-        } 
+        // for(var i = 0;data.detail_item.length >i;i++){
+        //     if(data.detail_item[i].type == "product"){
+        //         data_detail_item.push({
+        //             "varian" : data.detail_item[i].varian,
+        //             "id" : data.detail_item[i].id,
+        //             "produkid" : data.detail_item[i].produkid,
+        //             "text" : data.detail_item[i].text,
+        //             "satuan_id" : data.detail_item[i].satuan_id,
+        //             "satuan_text" : data.detail_item[i].satuan_text, 
+        //             "qty" : data.detail_item[i].qty,  
+        //             "group" : data.detail_item[i].group, 
+        //             "harga" : data.detail_item[i].harga, 
+        //             "total" : data.detail_item[i].total,
+        //         }) 
+        //     }
+        // } 
         load_produk_ref(data.detail_item) 
         load_produk();
         if(data["id"] == 0) {
@@ -596,7 +612,25 @@
             }
         });
     });
-
+    $("#btn-add-product-manual").click(function(){
+        data_detail_item.push({
+            "id": 0,
+            "produkid": 0,
+            "varian": [],
+            "text" : "produk",
+            "group" : "", 
+            "berat": 0,
+            "satuan_id": 0,
+            "satuan_text": "",
+            "pcsM2": "",  
+            "price":0,
+            "disc": 0,
+            "qty":  1,
+            "total": 0,
+            "type" :"product"
+        });
+        load_produk();
+    });
     select_produk = function(data){
         if(data.id === undefined) return;
  
@@ -608,7 +642,7 @@
                 arr1.sort((a, b) => a.varian.localeCompare(b.varian));
                 arr2.sort((a, b) => a.varian.localeCompare(b.varian));
             }
-            if(JSON.stringify(arr1) === JSON.stringify(arr2) && data_detail_item[i]["id"] === data.id ){
+            if(JSON.stringify(arr1) === JSON.stringify(arr2) && data_detail_item[i]["produkid"] === data.produkid ){
                 Swal.fire({
                     icon: 'error',
                     text: "Item sudah ada !!!", 
@@ -618,20 +652,9 @@
             }
         }  
 
-        data["type"] = "product"; 
+        data["type"] = "product";
         console.log(data);
-        data_detail_item.push({
-            "varian" : data.varian,
-            "id" : data.id,
-            "produkid" : data.produkid,
-            "text" : data.text,
-            "satuan_id" : data.satuan_id,
-            "satuan_text" : data.satuan_text, 
-            "qty" : data.qty,  
-            "group" : data.group, 
-            "harga" : data.price, 
-            "total" : data.total,
-        }) 
+        data_detail_item.push(data)
         load_produk();
 
         $('#modal-select-item').modal("hide");   
@@ -639,69 +662,28 @@
 
     
     edit_varian_click = function(index){ 
-        if(data_detail_item[index]["type"] == "category"){  
-            $("#modal-add-po").modal("hide");
-            $("#modal-add-po").blur();
-            Swal.fire({
-                title: 'Rename Kategori',
-                input: 'text',
-                inputValue: data_detail_item[index]["text"],
-                buttonsStyling: false,
-                showCancelButton: true,
-                showCancelButton: true,
-                customClass: {
-                    confirmButton: 'btn btn-primary mx-1',
-                    cancelButton: 'btn btn-secondary mx-1',
-                    loader: 'custom-loader',
-                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
-                },
-                backdrop: true,
-                confirmButtonText: "Simpan",
-                loaderHtml: '<div class="spinner-border text-primary"></div>',
-                preConfirm: async (name) => {
-                    try {  
-                        data_detail_item[index]["text"] = name 
-                        load_produk();
-                    } catch (error) {
-                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
-                    }
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {   
-                $("#modal-add-po").modal("show");
-            });  
-        }else{
-            $("#modal-add-po").modal("hide");
-            $("#modal-add-po").blur();
-            Swal.fire({
-                title: 'Rename Produk',
-                input: 'text',
-                inputValue: data_detail_item[index]["text"],
-                buttonsStyling: false,
-                showCancelButton: true,
-                showCancelButton: true,
-                customClass: {
-                    confirmButton: 'btn btn-primary mx-1',
-                    cancelButton: 'btn btn-secondary mx-1',
-                    loader: 'custom-loader',
-                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
-                },
-                backdrop: true,
-                confirmButtonText: "Simpan",
-                loaderHtml: '<div class="spinner-border text-primary"></div>',
-                preConfirm: async (name) => {
-                    try {  
-                        data_detail_item[index]["text"] = name 
-                        load_produk();
-                    } catch (error) {
-                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
-                    }
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {   
-                $("#modal-add-po").modal("show");
-            });  
+        if(data_detail_item[index]["id"] == 0 || data_detail_item[index]["type"] == "category"){ 
+            $("#text-custom-" + index).show();
+            $("#span-custom-" + index).hide();
+            $(".btn-action.detail[data-id='"+ index +"'][data-type='edit']").hide();
+            $(".btn-action.detail[data-id='"+ index +"'][data-type='save']").show(); 
         }
+        $("#text-custom-" + index).on('input', function() {  
+            $(this).height('auto');
+            $(this).height(this.scrollHeight);
+        }).on('focusout', function() {  
+            save_varian_click(index)
+        }); 
+    }
+    save_varian_click = function(index){  
+        var data_value = $("#text-custom-" + index).val();
+        $("#span-custom-" + index).html(data_value.replaceAll(/\n/g, '<br>'));
+        $("#text-custom-" + index).hide();
+        $("#span-custom-" + index).show();
+        $(".btn-action.detail[data-id='"+ index +"'][data-type='edit']").show();
+        $(".btn-action.detail[data-id='"+ index +"'][data-type='save']").hide();
+ 
+        data_detail_item[index]["text"] = $("#text-custom-" + index).val();
     }
     delete_varian_click = function(index){ 
         data_detail_item.splice(index, 1);
@@ -724,7 +706,7 @@
         load_produk() 
     }
     function grand_total_harga(){
-        var total = data_detail_item.reduce((acc, current) => acc + current.hargajual * current.qty, 0);
+        var total = data_detail_item.reduce((acc, current) => acc + current.total * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
         var grandtotal =  total - discitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
 
@@ -821,190 +803,228 @@
         }
         let last_group_abjad = 65;
         let last_group_no = 1;
-        for(var i = 0; data_detail_item.length > i;i++){  
-            var varian = ""; 
-            varian = `  <span class="text-detail-2 text-truncate">${data_detail_item[i]["group"]}</span> 
-                        <div class="d-flex gap-1">`;
-            var return_item = false;
-            for(var j = 0; data_detail_item[i]["varian"].length > j;j++){
-
-                varian += `<span class="badge badge-${j % 5}">${data_detail_item[i]["varian"][j]["varian"] + ": " + data_detail_item[i]["varian"][j]["value"]}</span>`; 
-                // if( data_detail_item[i]["varian"][j]["value"] == $("#SphVendor").select2("data")[0].code){
-                //     return_item = true;
-                // } 
-            } 
-            if(!return_item){
-                data_detail_item[i]["visible"] = false;
-            }else{
-                data_detail_item[i]["visible"] = true;
-            }
-            
-
-            varian +=  '</div>'; 
-
-            html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
-                            <div class="col-12 col-md-4 my-1 varian px-0">   
-                                <div class="d-flex">
-                                    <span class="no-urut text-head-3">${last_group_no}.</span> 
-                                    <div class="d-flex flex-column text-start flex-fill">
-                                        <span class="text-head-3">${data_detail_item[i]["text"]}</span>
-                                        ${varian} 
-                                    </div>  
-                                    <div class="btn-group d-inline-block d-md-none float-end" role="group">  
-                                        ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
-                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
+        for(var i = 0; data_detail_item.length > i;i++){
+            var data_value = data_detail_item[i]["text"];
+            if(data_detail_item[i]["type"] == "category"){ 
+                html += `
+                    <div class="row align-items-center mx-0 hr p-2">
+                        <div class="col-12 col-md-6 px-0">      
+                            <div class="d-flex">   
+                                <span class="no-urut text-head-3 order-md-2 order-1 p-2">${String.fromCharCode(last_group_abjad)}. </span>  
+                                <div class="d-flex flex-column text-start flex-fill order-md-3 order-2 justify-content-center">
+                                    <span class="text-head-3" onclick="edit_varian_click(${i})" id="span-custom-${i}" data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
+                                    <textarea class="custom-input" id="text-custom-${i}" data-id="${i}" style="display:none" rows="1">${data_detail_item[i]["text"]}</textarea> 
+                                </div>  
+                                <div class="px-0 order-md-1 order-3"> 
+                                    <div class="btn-group d-inline-block" role="group"> 
                                         <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
                                         <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
+                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
+                                        <button class="btn btn-sm btn-warning btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="edit" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
+                                        <button class="btn btn-sm btn-success btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="save" onclick="save_varian_click(${i})" style="display:none"><i class="fa-solid fa-check"></i></button>
+                                    </div>
+                                </div>   
+                            </div> 
+                        </div> 
+                    </div>`;
+                last_group_abjad++;
+                last_group_no = 1;
+            }  
+            if(data_detail_item[i]["type"] == "product"){ 
+                var varian = "";
+                if(data_detail_item[i]["id"] != "0"){
+                    varian = `  <span class="text-detail-2 text-truncate">${data_detail_item[i]["group"]}</span> 
+                                <div class="d-flex gap-1 flex-wrap">`;
+                    for(var j = 0; data_detail_item[i]["varian"].length > j;j++){
+                        varian += `<span class="badge badge-${j % 5}">${data_detail_item[i]["varian"][j]["varian"] + ": " + data_detail_item[i]["varian"][j]["value"]}</span>`; 
+                    }
+                    varian +=  '</div>';
+                } 
+                html += `   <div class="row align-items-center mx-0 hr p-2">
+                                <div class="col-12 col-md-6 my-1 varian px-0">   
+                                    <div class="d-flex">
+                                        <div class="px-0 order-md-1 order-4"> 
+                                            <div class="btn-group d-inline-block" role="group"> 
+                                                <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
+                                                <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button>  
+                                                <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button>
+                                                <button class="btn btn-sm btn-warning btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="edit" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
+                                                <button class="btn btn-sm btn-success btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="save" onclick="save_varian_click(${i})" style="display:none"><i class="fa-solid fa-check"></i></button>
+                                            </div>
+                                        </div> 
+                                        <span class="no-urut text-head-3 order-md-2 order-1 p-2">${last_group_no}. </span> 
+                                        <div class="d-flex pe-2 order-md-3 order-2 ${data_detail_item[i]["id"] == "0" ? "d-none" : ""}">
+                                            <img src="${data_detail_item[i]["image_url"]}" alt="Gambar" class="image-produk-doc"> 
+                                        </div> 
+                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                            <span class="text-head-3 span-custom-input" onclick="edit_varian_click(${i})" id="span-custom-${i}" data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
+                                            <textarea class="custom-input" id="text-custom-${i}" data-id="${i}" style="display:none" rows="1">${data_detail_item[i]["text"]}</textarea>
+                                            ${varian} 
+                                        </div>  
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-12 col-md-8 my-1 detail">
-                                <div class="row px-2"> 
-                                    <div class="col-2 px-1 d-none d-md-block ">  
-                                        <div class="btn-group float-end d-inline-block" role="group">  
-                                            ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
-                                            <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
-                                            <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
-                                            <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
-                                        </div>
-                                    </div>  
-                                    <div class="col-12 col-md-10 px-1">   
-                                        <div class="row">   
-                                            <div class="col-6 col-md-4 px-1 ">  
-                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
-                                                <div class="input-group"> 
-                                                    <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}"> 
-                                                    <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "0" ? "disabled" : ""}><option value="${data_detail_item[i]["satuan_text"]}">${data_detail_item[i]["satuan_id"]}</option></select> 
-                                                </div>  
-                                            </div> 
-                                            <div class="col-6 col-md-4 px-1 ">  
-                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
-                                                <div class="input-group"> 
-                                                    <span class="input-group-text font-std px-1">Rp.</span>  
-                                                    <input type="text" class="form-control form-control-sm input-form berat" id="input-harga-${i}" data-id="${i}"> 
-                                                </div>  
-                                            </div> 
-                                            <div class="col-12 col-md-4 px-1 ">  
-                                                <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
-                                                <div class="input-group"> 
-                                                    <span class="input-group-text font-std px-1">Rp.</span>  
-                                                    <input type="text" class="form-control form-control-sm input-form berat" id="input-total-${i}" data-id="${i}">  
-                                                </div>  
-                                            </div> 
+                                <div class="col-12 col-md-6 my-1 detail">
+                                    <div class="row px-2">  
+                                        <div class="col-12 col-md-4 px-1 ">  
+                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
+                                            <div class="input-group"> 
+                                                <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
+                                                <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "-" ? "" : ""}></select>
+                                            </div>  
+                                        </div>  
+                                        <div class="col-12 col-md-8">  
+                                            <div class="row">  
+                                                <div class="col-6 col-md-4 px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
+                                                    <div class="input-group"> 
+                                                        <span class="input-group-text font-std px-1">Rp.</span> 
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-harga-${i}" data-id="${i}" ${data_detail_item[i]["id"] != "0" ? "" : ""}>
+                                                    </div>    
+                                                </div> 
+                                                <div class="col-6 col-md-4  px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
+                                                    <div class="input-group">  
+                                                        <span class="input-group-text font-std px-1">Rp.</span> 
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" id="input-disc-${i}" data-id="${i}">
+                                                    </div>   
+                                                </div> 
+                                                <div class="col-12 col-md-4  px-1">  
+                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Total</span>
+                                                    <div class="input-group"> 
+                                                        <span class="input-group-text font-std px-1">Rp.</span>
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="input-total-${i}" data-id="${i}" disabled>
+                                                    </div>     
+                                                </div> 
+                                            </div>   
                                         </div>   
-                                    </div>   
+                                    </div>    
                                 </div>    
-                            </div>    
-                        </div> `;
+                            </div> `;
 
-            
-            last_group_no++;  
+                
+                last_group_no++; 
+            } 
         }
-        $("#SphSubTotal").val(0);
-        $("#SphPPHTotal").val(0);
-        $("#SphDiscTotal").val(0);
-        $("#SphGrandTotal").val(0);
-        $("#tb_varian").html(html);  
+        $("#tb_varian").html(html); 
+        var inputdeskripsi = [];
         var inputqty = [];
         var inputharga = [];
+        var inputdisc = [];
         var inputtotal = [];
-        for(var i = 0; data_detail_item.length > i;i++){  
+        for(var i = 0; data_detail_item.length > i;i++){
+            if(data_detail_item[i]["type"] == "product"){
+
+                function total_harga(id){
+                    var total = (inputharga[id].getRawValue() - inputdisc[id].getRawValue() ) * inputqty[id].getRawValue();
+                    data_detail_item[id]["total"] = total;
+                    inputtotal[id].setRawValue(total);
+                    grand_total_harga();
+                } 
+
+                //event qty
+                inputqty[i] = new Cleave(`#input-qty-${i}`, {
+                        numeral: true,
+                        delimeter: ",",
+                        numeralDecimalScale:3,
+                        numeralThousandGroupStyle:"thousand"
+                }); 
+                inputqty[i].setRawValue(data_detail_item[i]["qty"]);
+                $(`#input-qty-${i}`).on("keyup",function(){ 
+                    data_detail_item[$(this).data("id")]["qty"] = inputqty[$(this).data("id")].getRawValue();
+                    if($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0) 
+                    total_harga($(this).data("id"));
+                });  
  
-            function total_harga(id){
-                var total = inputharga[id].getRawValue()  * inputqty[id].getRawValue();
-                data_detail_item[id]["total"] = total;
-                inputtotal[id].setRawValue(total);
-                grand_total_harga();
-            }   
+                //event satuan
+                $(`#select-satuan-${i}`).select2({
+                    dropdownParent: $('#modal-add-po .modal-content'), 
+                    placeholder: "pilih",
+                    width: 'auto',
+                    adaptContainerWidth: true,
+                    ajax: {
+                        url: "<?= base_url()?>select2/get-data-produk-satuan",
+                        dataType: 'json',
+                        type:"POST",
+                        delay: 250,
+                        data: function (params) {
+                            // CSRF Hash
+                            var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                            var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
+                            return {
+                                searchTerm: params.term, // search term
+                                [csrfName]: csrfHash // CSRF Token
+                            };
+                        },
+                        processResults: function (response) {
+                
+                            // Update CSRF Token
+                            $('.txt_csrfname').val(response.token); 
 
-            //event satuan
-            $(`#select-satuan-${i}`).select2({
-                dropdownParent: $('#modal-add-po .modal-content'), 
-                placeholder: "pilih",
-                width: 'auto',
-                adaptContainerWidth: true,
-                ajax: {
-                    url: "<?= base_url()?>select2/get-data-produk-satuan",
-                    dataType: 'json',
-                    type:"POST",
-                    delay: 250,
-                    data: function (params) {
-                        // CSRF Hash
-                        var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
-                        var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
-                        return {
-                            searchTerm: params.term, // search term
-                            [csrfName]: csrfHash // CSRF Token
-                        };
+                            return {
+                                results: response.data
+                            };
+                        },
+                        cache: true
+                    }, 
+                    language: {
+                        noResults: function () {
+                            return $("<button class=\"btn btn-sm btn-primary\" onclick=\"select_satuan_add()\">Tambah <b>" + $(`#select-satuan-${i}`).data('select2').dropdown.$search[0].value + "</b></button>");
+                        }
                     },
-                    processResults: function (response) {
-            
-                        // Update CSRF Token
-                        $('.txt_csrfname').val(response.token); 
-
-                        return {
-                            results: response.data
-                        };
-                    },
-                    cache: true
-                }, 
-                language: {
-                    noResults: function () {
-                        return $("<button class=\"btn btn-sm btn-primary\" onclick=\"select_satuan_add()\">Tambah <b>" + $(`#select-satuan-${i}`).data('select2').dropdown.$search[0].value + "</b></button>");
-                    }
-                },
-                formatResult: select2OptionFormat,
-                formatSelection: select2OptionFormat,
-                escapeMarkup: function(m) { return m; }
-            }).on("select2:select", function(e) {
-                var data = e.params.data;  
-                data_detail_item[$(this).data("id")]["satuan_id"] = data.id
-                data_detail_item[$(this).data("id")]["satuan_text"]= data.text
-            });
-            if(data_detail_item[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(data_detail_item[i]["satuan_text"] , data_detail_item[i]["satuan_id"], true, true)).trigger('change');  
-            if(data_detail_item[i]["id"] === "0")  $(`#select-satuan-${i}`).prop("disabled",false)
-            
-            //event qty
-            inputqty[i] = new Cleave(`#input-qty-${i}`, {
+                    formatResult: select2OptionFormat,
+                    formatSelection: select2OptionFormat,
+                    escapeMarkup: function(m) { return m; }
+                }).on("select2:select", function(e) {
+                    var data = e.params.data;  
+                    data_detail_item[$(this).data("id")]["satuan_id"] = data.id
+                    data_detail_item[$(this).data("id")]["satuan_text"]= data.text
+                });
+                if(data_detail_item[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(data_detail_item[i]["satuan_text"] , data_detail_item[i]["satuan_id"], true, true)).trigger('change');  
+                if(data_detail_item[i]["id"] === "0")  $(`#select-satuan-${i}`).prop("disabled",false)
+                //event harga
+                inputharga[i] = new Cleave(`#input-harga-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:3,
+                    numeralDecimalScale:0,
                     numeralThousandGroupStyle:"thousand"
-            }); 
-            inputqty[i].setRawValue(data_detail_item[i]["qty"]);
-            $(`#input-qty-${i}`).on("keyup",function(){ 
-                data_detail_item[$(this).data("id")]["qty"] = inputqty[$(this).data("id")].getRawValue();
-                if($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0);
-                total_harga($(this).data("id"));
-            });   
-
-            //event harga
-            inputharga[i] = new Cleave(`#input-harga-${i}`, {
+                }); 
+                inputharga[i].setRawValue(data_detail_item[i]["price"]);
+                $(`#input-harga-${i}`).on("keyup",function(){ 
+                    data_detail_item[$(this).data("id")]["price"] = inputharga[$(this).data("id")].getRawValue();
+                    if($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0) 
+                    total_harga($(this).data("id"));
+                });   
+                //event disc
+                inputdisc[i] = new Cleave(`#input-disc-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:3,
+                    numeralDecimalScale:0,
                     numeralThousandGroupStyle:"thousand"
-            }); 
-            inputharga[i].setRawValue(data_detail_item[i]["harga"]);
-            $(`#input-harga-${i}`).on("keyup",function(){ 
-                data_detail_item[$(this).data("id")]["harga"] = inputharga[$(this).data("id")].getRawValue();
-                if($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0);
-                total_harga($(this).data("id"));
-            });   
+                }); 
+                inputdisc[i].setRawValue(data_detail_item[i]["disc"]);
+                $(`#input-disc-${i}`).on("keyup",function(){ 
+                    var nilaiSaatIni = parseInt(inputdisc[$(this).data("id")].getRawValue());
+                    var maksvalue = parseInt(inputharga[$(this).data("id")].getRawValue());
+                    if (nilaiSaatIni > maksvalue) { 
+                        inputdisc[$(this).data("id")].setRawValue(maksvalue);
+                    } 
+                    data_detail_item[$(this).data("id")]["disc"] = inputdisc[$(this).data("id")].getRawValue(); 
 
-            //event total
-            inputtotal[i] = new Cleave(`#input-total-${i}`, {
+                    if($(`#input-disc-${i}`).val() == "") $(`#input-disc-${i}`).val(0) 
+                    total_harga($(this).data("id")); 
+                });  
+
+                //event total
+                inputtotal[i] = new Cleave(`#input-total-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:3,
+                    numeralDecimalScale:0,
                     numeralThousandGroupStyle:"thousand"
-            }); 
-            inputtotal[i].setRawValue(data_detail_item[i]["total"]);
-            $(`#input-total-${i}`).on("keyup",function(){ 
-                data_detail_item[$(this).data("id")]["total"] = inputtotal[$(this).data("id")].getRawValue();
-                if($(`#input-total-${i}`).val() == "") $(`#input-total-${i}`).val(0)  
-            });   
-            total_harga(i);
+                }); 
+                inputtotal[i].setRawValue(data_detail_item[i]["total"]); 
+                
+                total_harga(i);
+            }
         }
     }
     load_produk();
@@ -1049,7 +1069,7 @@
     });  
     grand_total_harga = function(){
         var total = data_detail_item.reduce((acc, current) => { 
-            return acc + current.harga * current.qty; 
+            return acc + current.price * current.qty; 
         },0); 
         var grandtotal =  total - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
 
@@ -1347,12 +1367,14 @@
 
         var header = {  
             PODate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
-            ProjectId: <?= $project->ProjectId ?>, 
-            CustomerId: <?=$customer->CustomerId?>,  
+            ProjectId: <?= $project->ProjectId ?>,   
             InvId: ($("#sphref").select2("data")[0]["type"] == "INV" ? $("#sphref").select2("data")[0]["id"] : "0"),
             SphId: ($("#sphref").select2("data")[0]["type"] == "SPH" ? $("#sphref").select2("data")[0]["id"] : "0"), 
             VendorId: ($("#SphVendor").select2("data")[0]["text"] == $("#SphVendor").select2("data")[0]["id"] ? 0 : $("#SphVendor").val()), 
             VendorName: $("#SphVendor").select2("data")[0]["text"], 
+            POCustName: $("#SphCustName").val(),   
+            POCustTelp: $("#SphCustTelp").val(),  
+            POAddress: $("#SphAddress").val(),  
             POAdmin: $("#SphAdmin").val(),  
             TemplateId: $($(".template-footer").find("select")[0]).val(), 
             POSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
@@ -1368,7 +1390,7 @@
                 PODetailSatuanId: data_detail_item[i]["satuan_id"], 
                 PODetailSatuanText: data_detail_item[i]["satuan_text"],
                 PODetailQty: data_detail_item[i]["qty"], 
-                PODetailPrice: data_detail_item[i]["harga"],  
+                PODetailPrice: data_detail_item[i]["price"],  
                 PODetailTotal: data_detail_item[i]["total"], 
                 PODetailGroup: data_detail_item[i]["group"], 
                 PODetailVarian: data_detail_item[i]["varian"], 
@@ -1412,4 +1434,41 @@
             }
         });
     });
+    var isProcessingVendorAdd;
+    function vendor_add(){
+        if (isProcessingVendorAdd) { 
+            return;
+        }  
+        isProcessingVendorAdd = true;  
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-vendor", 
+            success: function(data) {  
+
+                $("#modal-add-po").modal("hide"); 
+                $("#modal-optional").html(data);
+                $("#modal-add-vendor").modal("show");  
+
+                $("#modal-add-vendor").on("hidden.bs.modal",function(){ 
+                    $("#modal-add-po").modal("show");  
+
+                    if(data_vendor){ 
+                        $('#SphVendor').append(new Option(data_vendor.VendorCode + " - " - data_vendor.VendorName, data_vendor.VendorId, true, true)).trigger('change');
+                    } 
+
+                })   
+                isProcessingVendorAdd = false;   
+ 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingVendorAdd = false; 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
 </script>

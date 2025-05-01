@@ -640,7 +640,7 @@ class ProdukModel extends Model
         $array_php = array();
         foreach($result as $row){ 
             $array_php[] = array(
-                'image' => $this->getproductimageUrl($row->ProdukId),
+                'image' => ($row->ProdukDetailImage == "" ? $this->getproductimageUrl($row->ProdukId): $row->ProdukDetailImage),
                 'name' => $row->ProdukName,
                 'kode' => $row->ProdukCode,
                 'kategori' => $row->ProdukCategoryName,
@@ -681,6 +681,7 @@ class ProdukModel extends Model
                 'ProdukDetailPcsM2' => $row->ProdukDetailPcsM2,
                 'ProdukDetailHargaBeli' => $row->ProdukDetailHargaBeli,
                 'ProdukDetailHargaJual' => $row->ProdukDetailHargaJual,
+                'ProdukDetailImage' => $row->ProdukDetailImage,
                 'ProdukDetailVarian' =>  json_decode($row->ProdukDetailVarian),
             );
         } 
