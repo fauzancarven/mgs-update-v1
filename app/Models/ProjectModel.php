@@ -3955,8 +3955,8 @@ class ProjectModel extends Model
     } 
     public function getdataSample($id){
         $builder = $this->db->table("sample"); 
-        $builder->join("customer","sample.CustomerId = customer.CustomerId","left");
         $builder->join("project","project.ProjectId = sample.ProjectId","left");
+        $builder->join("customer","project.CustomerId = customer.CustomerId","left");
         $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('SampleId',$id);
         $builder->limit(1);
@@ -3983,6 +3983,8 @@ class ProjectModel extends Model
             "ProjectId"=>$header["ProjectId"],
             "SampleId"=>$header["SampleId"],
             "SphAdmin"=>$header["SphAdmin"],
+            "SphCustName"=>$header["SphCustName"],
+            "SphCustTelp"=>$header["SphCustTelp"],
             "CustomerId"=>$header["CustomerId"],
             "SphAddress"=>$header["SphAddress"],
             "TemplateId"=>$header["TemplateId"],
@@ -4029,6 +4031,8 @@ class ProjectModel extends Model
         $builder = $this->db->table("penawaran"); 
         $builder->set('SphDate', $header["SphDate"]);   
         $builder->set('SphAdmin', $header["SphAdmin"]);  
+        $builder->set('SphCustName', $header["SphCustName"]); 
+        $builder->set('SphCustTelp', $header["SphCustTelp"]); 
         $builder->set('SphAddress', $header["SphAddress"]); 
         $builder->set('TemplateId', $header["TemplateId"]); 
         $builder->set('SphSubTotal', $header["SphSubTotal"]); 
@@ -4063,8 +4067,8 @@ class ProjectModel extends Model
     }  
     public function getdataSPH($id){  
         $builder = $this->db->table("penawaran");  
-        $builder->join("customer","penawaran.CustomerId = customer.CustomerId","left");
         $builder->join("project","project.ProjectId = penawaran.ProjectId","left"); 
+        $builder->join("customer","project.CustomerId = customer.CustomerId","left");
         $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('penawaran.SphId',$id); 
         $builder->limit(1);

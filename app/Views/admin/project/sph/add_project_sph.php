@@ -18,27 +18,25 @@
                                 </button> 
                             </div>
                         </div> 
-                        <div class="customer-display card bg-light show mt-4 m-1 p-2">
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Nama</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
+                        <div class="customer-display card bg-light show mt-4 m-1 p-2"> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAddress" class="col-sm-3 col-form-label">Nama Customer</label>
+                                <div class="col-sm-9">
+                                    <input  class="form-control form-control-sm input-form" id="SphCustName" type="text" value="<?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?>"/>
+                                </div>
                             </div> 
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Telp</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerTelp1 ?> <?= $customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2 ?></label> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAddress" class="col-sm-3 col-form-label">Telp Customer</label>
+                                <div class="col-sm-9">
+                                    <input  class="form-control form-control-sm input-form" id="SphCustTelp"  type="text" value="<?= $customer->CustomerTelp1 ?> <?= $customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2 ?>"/>
+                                </div>
                             </div> 
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Email</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerEmail ?></label> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAddress" class="col-sm-3 col-form-label">Alamat Project</label>
+                                <div class="col-sm-9">
+                                    <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->CustomerAddress ?></textarea>
+                                </div>
                             </div>  
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Instagram</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerInstagram ?></label> 
-                            </div>  
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Alamat Kantor</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerAddress ?></label> 
-                            </div>   
                         </div>  
                     </div>  
                     <div class="col-lg-6 col-12 my-1 mb-3 mb-md-1">   
@@ -76,12 +74,6 @@
                                 <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
                                 <div class="col-sm-10">
                                     <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
-                                </div>
-                            </div> 
-                            <div class="row mb-1 align-items-center">
-                                <label for="SphAddress" class="col-sm-2 col-form-label">Alamat Project</label>
-                                <div class="col-sm-10">
-                                    <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->CustomerAddress ?></textarea>
                                 </div>
                             </div> 
                         </div>   
@@ -833,7 +825,7 @@
                                             <img src="${data_detail_item[i]["image_url"]}" alt="Gambar" class="image-produk-doc"> 
                                         </div> 
                                         <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
-                                            <span class="text-head-3" onclick="edit_varian_click(${i})" id="span-custom-${i}" data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
+                                            <span class="text-head-3 span-custom-input" onclick="edit_varian_click(${i})" id="span-custom-${i}" data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
                                             <textarea class="custom-input" id="text-custom-${i}" data-id="${i}" style="display:none" rows="1">${data_detail_item[i]["text"]}</textarea>
                                             ${varian} 
                                         </div>  
@@ -1318,6 +1310,8 @@
             ProjectId: <?= $project->ProjectId ?>,  
             SampleId: $("#SphRef1").val(), 
             SphAdmin: $("#SphAdmin").val(), 
+            SphCustName: $("#SphCustName").val(), 
+            SphCustTelp: $("#SphCustTelp").val(), 
             CustomerId: <?=$customer->CustomerId?>, 
             SphAddress: $("#SphAddress").val(), 
             TemplateId: $($(".template-footer").find("select")[0]).val(), 

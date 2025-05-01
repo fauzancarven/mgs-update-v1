@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body"> 
                 <div class="row"> 
-                    <div class="col-lg-6 col-12 my-1 mb-2">
+                    <div class="col-lg-5 col-12 my-1 mb-2">
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
                                 <span class="label-dialog">Customer</span>
@@ -41,7 +41,7 @@
                             <label class="col-10 text-end fw-bold"><?= $customer->CustomerAddress ?></label> 
                         </div> 
                     </div>  
-                    <div class="col-lg-6 col-12 my-1 mb-2">   
+                    <div class="col-lg-7 col-12 my-1 mb-2">   
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
                                 <span class="label-dialog">Document</span>

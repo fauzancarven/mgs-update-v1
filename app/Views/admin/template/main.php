@@ -1601,6 +1601,10 @@
     .image-detail-produk:hover img {
         filter: blur(1px);
     }
+    .span-custom-input:hover {
+        border: 1px solid gray;
+        border-radius: 0.25rem;
+    }
 </style>
  
 

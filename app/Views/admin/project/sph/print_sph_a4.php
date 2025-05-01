@@ -337,12 +337,12 @@
                                 </tr> 
                                 <tr>
                                     <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
-                                        <span class="text-bold"><?= $sph->CustomerName.($sph->CustomerCompany == "" ? "" : " (".$sph->CustomerCompany.")") ?></span>
+                                        <span class="text-bold"><?= $sph->SphCustName ?></span>
                                     </td> 
                                 </tr> 
                                 <tr> 
                                     <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
-                                        <span class="text-bold"><?= $sph->CustomerTelp1.($sph->CustomerTelp2 == "" ? : "/".$sph->CustomerTelp2) ?></span>
+                                        <span class="text-bold"><?= $sph->SphCustTelp ?></span>
                                     </td> 
                                 </tr> 
                                 <tr> 
