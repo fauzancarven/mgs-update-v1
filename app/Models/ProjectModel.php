@@ -2057,8 +2057,8 @@ class ProjectModel extends Model
                 $alert = ' 
                     <div class="alert alert-warning p-2 m-1" role="alert">
                         <span class="text-head-2">
-                            <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                            Belum ada data pengiriman yang dibuat dari invoice ini, 
+                            <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                            Tidak ada data pengiriman yang dibuat dari invoice ini, 
                             <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> 
                         </span>
                     </div>';
