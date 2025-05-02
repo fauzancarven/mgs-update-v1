@@ -19,8 +19,12 @@
                     <select class="form-select form-select-sm" style="width:100%" id="SurveyAdmin"></select>
                 </div> 
                 <div class="mb-1">
-                    <label for="SurveyCustName" class="col-form-label">PIC Proyek</label>
+                    <label for="SurveyCustName" class="col-form-label">nama PIC</label>
                     <input class="form-control form-control-sm input-form" style="width:100%" id="SurveyCustName" value="<?= $customer->CustomerName?>"> 
+                </div> 
+                <div class="mb-1">
+                    <label for="SurveyCustTelp" class="col-form-label">Telp PIC</label>
+                    <input class="form-control form-control-sm input-form" style="width:100%" id="SurveyCustTelp" value="<?= $customer->CustomerTelp1?>"> 
                 </div> 
                 <div class="mb-1">
                     <label for="SurveyAddress" class="col-form-label">Alamat Proyek</label>
@@ -150,6 +154,7 @@
                 "SurveyDate":$('#SurveyDate').data('daterangepicker').startDate.format("YYYY-MM-DD") + " " + moment().format("HH:m:s"),
                 "SurveyAdmin": $("#SurveyAdmin").val(), 
                 "SurveyStaff":$("#SurveyStaff").val().join("|"), 
+                "SurveyCustTelp":$("#SurveyCustTelp").val() ,
                 "SurveyCustName":$("#SurveyCustName").val() ,
                 "SurveyAddress":$("#SurveyAddress").val(),
                 "SurveyTotal": $("#SurveyTotal").val().replace(/[^0-9]/g, ''),  

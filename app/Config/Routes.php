@@ -61,6 +61,8 @@ $routes->post('/action/delete-data-project/(:num)', 'ActionController::project_d
 $routes->post('/action/add-data-project-category', 'ActionController::project_add_category', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-survey', 'ActionController::survey_add', ['filter' => 'login']); 
+$routes->post('/action/edit-data-survey/(:num)', 'ActionController::survey_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/delete-data-survey/(:num)', 'ActionController::survey_delete/$1', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 
@@ -176,6 +178,9 @@ $routes->post('/message/add-item-select', 'MessageController::produk_select_new'
 
 
 $routes->post('/message/add-project-survey/(:num)', 'MessageController::project_survey_add/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-project-survey/(:num)', 'MessageController::project_survey_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/add-project-survey-finish/(:num)', 'MessageController::project_survey_finish/$1', ['filter' => 'login']);  
+
 $routes->post('/message/add-project-sample/(:num)', 'MessageController::project_sample_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sample/(:num)', 'MessageController::project_sample_edit/$1', ['filter' => 'login']); 
 
@@ -210,8 +215,8 @@ $routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageControll
 /**
  *  MODAL print
  */ 
-$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1');  
-$routes->post('/print/project/sph/(:num)', 'PrintController::project_sph/$1');  
+$routes->get('/print/project/survey/(:num)', 'PrintController::project_survey/$1');  
+$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1');   
 $routes->get('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1');  
 $routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1');  
 $routes->get('/print/project/deliveryA5/(:num)', 'PrintController::project_delivery_a5/$1');  

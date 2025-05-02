@@ -169,6 +169,30 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/survey/add_project_survey.php',$data)); 
     }
+    public function project_survey_edit($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+ 
+        $data["project"] = $models->getdataSurvey($id);
+        $data["staff"] = $models->getdataSurveyStaff($data["project"]->SurveyStaff);
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $data["project"]->CustomerId], 1)->getRow();
+        $data["store"] = $modelsstore->getWhere(['StoreId' => $data["project"]->StoreId], 1)->getRow();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/survey/edit_project_survey.php',$data)); 
+    }
+    public function project_survey_finish($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+ 
+        $data["project"] = $models->getdataSurvey($id);
+        return $this->response->setBody(view('admin/project/survey/add_project_survey_finish.php',$data)); 
+    }
+
+    
     public function project_sample_add($id)
     {     
         $models = new ProjectModel();

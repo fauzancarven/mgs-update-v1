@@ -1617,6 +1617,17 @@
         border: 1px solid gray;
         border-radius: 0.25rem;
     }
+    .drop-box {
+        width: 100%;
+        height: 5rem;
+        border: 1px dashed gray;
+        border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
+    }
+    .drop-box:hover {
+        background-color: #f0f0f0;
+    }
 </style>
  
 

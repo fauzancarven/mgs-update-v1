@@ -3897,9 +3897,9 @@ class ProjectModel extends Model
             "SurveyDate"=>$data["SurveyDate"],
             "SurveyDate2"=>$data["SurveyDate"],  
             "ProjectId"=>$data["ProjectId"],
-            "SurveyAdmin"=>$data["SurveyAdmin"],
-            "CustomerId"=>$data["CustomerId"],
+            "SurveyAdmin"=>$data["SurveyAdmin"], 
             "SurveyCustName"=>$data["SurveyCustName"], 
+            "SurveyCustTelp"=>$data["SurveyCustTelp"], 
             "SurveyAddress"=>$data["SurveyAddress"], 
             "SurveyTotal"=>$data["SurveyTotal"], 
             "SurveyStaff"=>$data["SurveyStaff"],  
@@ -3913,7 +3913,46 @@ class ProjectModel extends Model
         $builder->where('ProjectId', $data["ProjectId"]); 
         $builder->update();  
     }
+    public function update_data_survey($id,$data){ 
+        $builder = $this->db->table("survey"); 
+        $builder->set('SurveyDate', $data["SurveyDate"]);   
+        $builder->set('ProjectId', $data["ProjectId"]);  
+        $builder->set('SurveyAdmin', $data["SurveyAdmin"]);  
+        $builder->set('SurveyCustName', $data["SurveyCustName"]);  
+        $builder->set('SurveyCustTelp', $data["SurveyCustTelp"]);  
+        $builder->set('SurveyAddress', $data["SurveyAddress"]);  
+        $builder->set('SurveyTotal', $data["SurveyTotal"]);  
+        $builder->set('SurveyStaff', $data["SurveyStaff"]);   
+        $builder->set('updated_user', user()->id);  
+        $builder->set('updated_at', new RawSql('CURRENT_TIMESTAMP()'));   
+        $builder->where('SurveyId', $id); 
+        $builder->update();  
+    }
+    public function getdataSurvey($id){
+        $builder = $this->db->table("survey"); 
+        $builder->join("project","project.ProjectId = survey.ProjectId","left");
+        $builder->join("customer","project.CustomerId = customer.CustomerId","left"); 
+        $builder->where('SurveyId',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
+    }
+    public function getdataSurveyStaff($staff){ 
+        $arrayData = explode("|", $staff);
+        $builder = $this->db->table("users");  
+        $builder->whereIn('id',$arrayData); 
+        return $builder->get()->getResult();  
+    }
+    
+    public function delete_data_survey($id){   
+        $builder = $this->db->table("survey"); 
+        $builder->set('SurveyStatus', 2);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SurveyId', $id); 
+        $builder->update();   
 
+        return JSON_ENCODE(array("status"=>true));
+    } 
     /**
      * FUNCTION UNTUK Sample
      */  
@@ -4027,8 +4066,7 @@ class ProjectModel extends Model
             "SampleId"=>$header["SampleId"],
             "SphAdmin"=>$header["SphAdmin"],
             "SphCustName"=>$header["SphCustName"],
-            "SphCustTelp"=>$header["SphCustTelp"],
-            "CustomerId"=>$header["CustomerId"],
+            "SphCustTelp"=>$header["SphCustTelp"], 
             "SphAddress"=>$header["SphAddress"],
             "TemplateId"=>$header["TemplateId"],
             "SphSubTotal"=>$header["SphSubTotal"],

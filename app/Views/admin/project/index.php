@@ -952,6 +952,82 @@
             }
         });
     }; 
+    var isProcessingSurveyPrint = []; 
+    print_project_Survey = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/survey/") ?>' + id, '_blank');
+    };
+    var isProcessingSurveyDelete = [];
+    delete_project_Survey = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingSurveyDelete[id]) {
+            return;
+        }  
+        isProcessingSurveyDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus survey ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-survey/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        loader_data_project(ref,"survey"); 
+                    }, 
+                });
+            }
+            isProcessingSurveyDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
+    var isProcessingSurveyFinish = [];
+    add_project_survey_finish = function(ref,id,el){
+        if (isProcessingSurveyFinish[id]) {
+            console.log("project survey cancel load");
+            return;
+        }  
+
+        isProcessingSurveyFinish[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-survey-finish/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-finish-survey").modal("show"); 
+
+                isProcessingSurveyFinish[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSurveyFinish[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
     // ***************** SAMPLE PROJECT *****************
     var isProcessingSample = [];
     add_project_sample = function(id,el){ 

@@ -220,6 +220,23 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+    public function survey_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_survey($id,$postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function survey_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_survey($id);  
+        }
+    }
     public function sample_add(){
         $request = Services::request();
         $models = new ProjectModel(); 
