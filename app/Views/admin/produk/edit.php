@@ -1231,6 +1231,11 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     $uploadCropDetail.croppie('bind', { url: $(image_crop).attr('src'), orientation: flip });
                 } 
             }
+            delete_image_detail = function(id){
+                
+                arr_varian_detail[id]["ProdukDetailImage"] = "";
+                load_data_list_varian();
+            }
             $(".image-detail-produk.no-image").unbind().click(function(){
                 if(!$(this).hasClass("no-image")) return;
                 $("#image-input-" + $(this).data("id")).click(); 

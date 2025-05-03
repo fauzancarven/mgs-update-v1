@@ -237,6 +237,15 @@ class ActionController extends BaseController
             echo $models->delete_data_survey($id);  
         }
     }
+    public function survey_finish($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $files = $request->getFiles(); 
+            $data = $request->getPost(); 
+            echo $models->insert_data_survey_finish_file($id,$files,$data);  
+        }
+    }
     public function sample_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

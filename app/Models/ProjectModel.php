@@ -3953,6 +3953,48 @@ class ProjectModel extends Model
 
         return JSON_ENCODE(array("status"=>true));
     } 
+
+    public function insert_data_survey_finish_file($id,$data,$data1){  
+        
+        $builder = $this->db->table("survey_finish");
+        $builder->insert(array(
+            "SurveyFinishDelta"=>$data1["delta"],
+            "SurveyFinishDetail"=>$data1["html"],
+            "SurveyId"=>$id,  
+        )); 
+
+        $folder_utama = 'assets/images/project'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        
+        $folder_utama = 'assets/images/project/'.$id; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+
+        //hapus semua file di folder id tersebut
+        if (is_dir($folder_utama)) {
+            $files = scandir($folder_utama);
+            foreach ($files as $file) {
+                if ($file != '.' && $file != '..') {
+                    unlink($folder_utama."/" . $file);
+                }
+            }  
+        }
+        if ($data) { 
+            foreach ($data['files'] as $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = time() . '_' . $file->getName();
+                    $file->move($folder_utama, $newName); 
+                } else { 
+
+                }
+            } 
+
+        }
+        return JSON_ENCODE(array("status"=>true)); 
+    }
     /**
      * FUNCTION UNTUK Sample
      */  

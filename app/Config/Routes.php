@@ -63,6 +63,7 @@ $routes->post('/action/add-data-project-category', 'ActionController::project_ad
 $routes->post('/action/add-data-survey', 'ActionController::survey_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-survey/(:num)', 'ActionController::survey_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-survey/(:num)', 'ActionController::survey_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/add-data-survey-finish/(:num)', 'ActionController::survey_finish/$1', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 
