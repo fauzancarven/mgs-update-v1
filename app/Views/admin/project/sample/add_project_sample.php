@@ -18,28 +18,26 @@
                                 </button> 
                             </div>
                         </div> 
-                        <div class="customer-display card bg-light show mt-4 m-1 p-2">
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Nama</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
+                        <div class="customer-display card bg-light show mt-4 m-1 p-2"> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAddress" class="col-sm-3 col-form-label">Nama Customer</label>
+                                <div class="col-sm-9">
+                                    <input  class="form-control form-control-sm input-form" id="SphCustName" type="text" value="<?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?>"/>
+                                </div>
                             </div> 
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Telp</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerTelp1 ?> <?= $customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2 ?></label> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAddress" class="col-sm-3 col-form-label">Telp Customer</label>
+                                <div class="col-sm-9">
+                                    <input  class="form-control form-control-sm input-form" id="SphCustTelp"  type="text" value="<?= $customer->CustomerTelp1 ?> <?= $customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2 ?>"/>
+                                </div>
                             </div> 
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Email</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerEmail ?></label> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="SphAddress" class="col-sm-3 col-form-label">Alamat Project</label>
+                                <div class="col-sm-9">
+                                    <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->CustomerAddress ?></textarea>
+                                </div>
                             </div>  
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Instagram</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerInstagram ?></label> 
-                            </div>  
-                            <div class="row align-items-start">
-                                <label class="col-4 col-md-3">Alamat Kantor</label>
-                                <label class="col-8 col-md-9 fw-bold"><?= $customer->CustomerAddress ?></label> 
-                            </div>   
-                        </div>  
+                        </div>   
                     </div>  
                     <div class="col-lg-6 col-12 my-1 mb-3 mb-md-1">   
                         <div class="row mx-2 align-items-center">
@@ -68,12 +66,6 @@
                                 <label for="SampleAdmin" class="col-sm-2 col-form-label">Admin</label>
                                 <div class="col-sm-10">
                                     <select class="form-select form-select-sm" id="SampleAdmin" name="SampleAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
-                                </div>
-                            </div> 
-                            <div class="row mb-1 align-items-center">
-                                <label for="SampleAddress" class="col-sm-2 col-form-label">Alamat Project</label>
-                                <div class="col-sm-10">
-                                    <textarea  class="form-control form-control-sm input-form" id="SampleAddress"><?= $customer->CustomerAddress ?></textarea>
                                 </div>
                             </div>  
                         </div> 
@@ -1289,9 +1281,10 @@
         var header = {  
             SampleDate: $("#SampleDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
             ProjectId: <?= $project->ProjectId ?>, 
-            SampleAdmin: $("#SampleAdmin").val(), 
-            CustomerId: <?=$customer->CustomerId?>, 
-            SampleAddress: $("#SampleAddress").val(), 
+            SampleAdmin: $("#SampleAdmin").val(),  
+            SampleCustName: $("#SphCustName").val(), 
+            SampleCustTelp: $("#SphCustTelp").val(), 
+            SampleAddress: $("#SphAddress").val(), 
             TemplateId: $($(".template-footer").find("select")[0]).val(),  
             SampleSubTotal: $("#SampleSubTotal").val().replace(/[^0-9]/g, ''), 
             SampleDiscItemTotal: $("#SampleDiscItemTotal").val().replace(/[^0-9]/g, ''), 

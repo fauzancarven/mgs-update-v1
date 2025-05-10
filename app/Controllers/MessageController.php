@@ -191,6 +191,16 @@ class MessageController extends BaseController
         $data["project"] = $models->getdataSurvey($id);
         return $this->response->setBody(view('admin/project/survey/add_project_survey_finish.php',$data)); 
     }
+    public function project_survey_finish_edit($id)
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+ 
+        $data["project"] = $models->getdataSurveyFinish($id);
+        return $this->response->setBody(view('admin/project/survey/edit_project_survey_finish.php',$data)); 
+    }
+
 
     
     public function project_sample_add($id)

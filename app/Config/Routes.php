@@ -64,6 +64,7 @@ $routes->post('/action/add-data-survey', 'ActionController::survey_add', ['filte
 $routes->post('/action/edit-data-survey/(:num)', 'ActionController::survey_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-survey/(:num)', 'ActionController::survey_delete/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-survey-finish/(:num)', 'ActionController::survey_finish/$1', ['filter' => 'login']); 
+$routes->post('/action/edit-data-survey-finish/(:num)', 'ActionController::survey_finish_edit/$1', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 
@@ -181,6 +182,7 @@ $routes->post('/message/add-item-select', 'MessageController::produk_select_new'
 $routes->post('/message/add-project-survey/(:num)', 'MessageController::project_survey_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-survey/(:num)', 'MessageController::project_survey_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-survey-finish/(:num)', 'MessageController::project_survey_finish/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-project-survey-finish/(:num)', 'MessageController::project_survey_finish_edit/$1', ['filter' => 'login']);  
 
 $routes->post('/message/add-project-sample/(:num)', 'MessageController::project_sample_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sample/(:num)', 'MessageController::project_sample_edit/$1', ['filter' => 'login']); 

@@ -1144,6 +1144,7 @@ class ProjectModel extends Model
         $builder = $this->db->table("survey");
         $builder->select('*');
         $builder->where('ProjectId',$project_id); 
+        $builder->where('SurveyStatus !=',2);
         $builder->orderby('SurveyId', 'DESC'); 
         return  $builder->countAllResults();
     }
@@ -1624,6 +1625,7 @@ class ProjectModel extends Model
         $builder = $this->db->table("sample");
         $builder->select('*');
         $builder->where('ProjectId',$project_id); 
+        $builder->where('SampleStatus !=',2);
         $builder->orderby('SampleId', 'DESC'); 
         return  $builder->countAllResults();
     }
@@ -3992,6 +3994,15 @@ class ProjectModel extends Model
         $builder->limit(1);
         return $builder->get()->getRow();  
     }
+    public function getdataSurveyFinish($id){
+        $builder = $this->db->table("survey_finish"); 
+        $builder->join("survey","survey.SurveyId = survey_finish.SurveyId","left");
+        $builder->join("project","project.ProjectId = survey.ProjectId","left");
+        $builder->join("customer","project.CustomerId = customer.CustomerId","left"); 
+        $builder->where('SurveyFinishId',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
+    }
     public function getdataSurveyStaff($staff){ 
         $arrayData = explode("|", $staff);
         $builder = $this->db->table("users");  
@@ -4051,6 +4062,43 @@ class ProjectModel extends Model
         }
         return JSON_ENCODE(array("status"=>true)); 
     }
+
+    public function update_data_survey_finish_file($id,$data,$data1){   
+
+        $builder = $this->db->table("survey_finish");
+        $builder->set('SurveyFinishDelta', $data1["delta"]);   
+        $builder->set('SurveyFinishDetail', $data1["html"]);    
+        $builder->where('SurveyId', $id);    
+        $builder->update();   
+
+        $folder_utama = 'assets/images/project'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        
+        $folder_utama = 'assets/images/project/'.$id; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        }  ;
+        //hapus file yang eksis
+        $array = json_decode($data1["remove_file"], true);
+        $datasdas = [];
+        foreach ( $array  as $file) { 
+            unlink($folder_utama.'/' .$file['name']);
+        }
+        if ($data) { 
+            foreach ($data['files'] as $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = time() . '_' . $file->getName();
+                    $file->move($folder_utama, $newName); 
+                } else { 
+
+                }
+            } 
+
+        }
+        return JSON_ENCODE(array("status"=>true)); 
+    }
     /**
      * FUNCTION UNTUK Sample
      */  
@@ -4063,8 +4111,9 @@ class ProjectModel extends Model
             "SampleDate"=>$header["SampleDate"],
             "SampleDate2"=>$header["SampleDate"],  
             "ProjectId"=>$header["ProjectId"],
-            "SampleAdmin"=>$header["SampleAdmin"],
-            "CustomerId"=>$header["CustomerId"],
+            "SampleCustName"=>$header["SampleCustName"],
+            "SampleCustTelp"=>$header["SampleCustTelp"],
+            "SampleAdmin"=>$header["SampleAdmin"], 
             "SampleAddress"=>$header["SampleAddress"],
             "TemplateId"=>$header["TemplateId"],
             "SampleSubTotal"=>$header["SampleSubTotal"],
@@ -4100,6 +4149,8 @@ class ProjectModel extends Model
         $builder = $this->db->table("sample"); 
         $builder->set('SampleDate', $header["SampleDate"]);   
         $builder->set('SampleAdmin', $header["SampleAdmin"]);  
+        $builder->set('SampleCustName', $header["SampleCustName"]);
+        $builder->set('SampleCustTelp', $header["SampleCustTelp"]);
         $builder->set('SampleAddress', $header["SampleAddress"]); 
         $builder->set('TemplateId', $header["TemplateId"]); 
         $builder->set('SampleSubTotal', $header["SampleSubTotal"]); 
