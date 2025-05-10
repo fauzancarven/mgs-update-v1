@@ -230,3 +230,4 @@ $routes->get('/print/project/paymentA4/(:num)', 'PrintController::project_paymen
 
 
 $routes->get('/printhtml/project/sph/(:num)', 'PrintController::project_sph_html/$1'); 
+$routes->get('/project/surveyfinish', 'DownloadController::survey_finish'); 

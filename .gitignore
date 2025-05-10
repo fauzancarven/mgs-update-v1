@@ -8,5 +8,6 @@ assets/images/produk/*
 assets/images/profile/*
 assets/images/payment/*
 assets/images/delivery/*
+assets/images/project/*
 deploy.php
 composer.lock

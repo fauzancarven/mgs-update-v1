@@ -43,7 +43,19 @@ class ProjectModel extends Model
     protected $beforeDelete = [];
     protected $afterDelete = [];
 
- 
+    function format_filesize($bytes) {
+        if ($bytes >= 1073741824) {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        } else {
+            $bytes = $bytes . ' byte';
+        }
+    
+        return $bytes;
+    }
     /**
      * FUNCTION UNTUK DATATABLE
      */ 
@@ -941,6 +953,9 @@ class ProjectModel extends Model
                     </div>'; 
                 }
             }  
+
+
+            //load data hasil survey
             $html_Survey = '  
             <div class="alert alert-warning p-2 m-1" role="alert">
                 <span class="text-head-2">
@@ -949,7 +964,48 @@ class ProjectModel extends Model
                     <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_survey_finish('.$project_id.','.$row->SurveyId.',this)">Buat hasil survey</a> 
                 </span>
             </div>';
+            $builders = $this->db->table("survey_finish");
+            $builders->select('*');
+            $builders->where('SurveyId',$row->SurveyId); 
+            $query_finish = $builders->get()->getResult();  
+            
+            foreach($query_finish as $row_finish){ 
+                $html_Survey = '<div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
+                                    <div class="col-12 bg-light"> 
+                                        '.$row_finish->SurveyFinishDetail.'
+                                    </div>  
+                                    <div class="list-group"> ';
+                                
+                $folder_utama = 'assets/images/project'; 
+                $files = scandir($folder_utama."/".$row->SurveyId);
+                foreach ($files as $file) {
+                    if ($file != '.' && $file != '..') {
 
+                        $filesize = filesize($folder_utama."/".$row->SurveyId . '/' . $file);
+                       // $html_Survey .= $folder_utama."/".$row->SurveyId . '/' . $file;
+                        $html_Survey .= ' <li class="list-group-item list-group-item-action align-items-center d-flex view-document file" > 
+                                            <i class="fa-solid fa-file fa-2x me-2"></i>
+                                            <div class="d-flex flex-column flex-fill ms-2">
+                                                <span class="fs-6">'.$file.'</span>
+                                                <span class="text-muted">'.$this->format_filesize($filesize).'</span>
+                                            </div>  
+                                             
+                                            <button class="btn btn-sm float-end" onclick="download_file(this)" data-file="'.$folder_utama."/".$row->SurveyId . '/' . $file.'">
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                            
+                                        </li>';
+                    }
+                }  
+                $html_Survey .= '</div>
+                
+                    <div class="col-12 bg-light text-center"> 
+                        <button class="btn btn-sm btn-primary rounded border" onclick="edit_project_Survey_finish('.$row->ProjectId.','.$row_finish->SurveyFinishId.',this)">
+                            <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
+                        </button>
+                    </div> 
+                </div>'; 
+            } 
             $html .= '
             <div class="list-project mb-4 p-2">
                 <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
