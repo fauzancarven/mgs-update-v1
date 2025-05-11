@@ -181,7 +181,7 @@
         $.ajax({
             dataType: "json",
             type: 'POST',
-            url: '<?= base_url() ?>/action/add-data-survey-finish/<?= $project->ProjectId ?>',
+            url: '<?= base_url() ?>/action/add-data-survey-finish/<?= $project->SurveyId ?>',
             data: formData,
             processData: false,
             contentType: false,

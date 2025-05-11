@@ -62,7 +62,7 @@
                         echo ' 
                         <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->StoreCode.'">
                             <div class="form-check w-100">
-                                <input class="form-check-input" type="checkbox" data-group="store" data-value="'.$rows->StoreId.'" value="'.$rows->StoreId.'" id="'.$rows->StoreCode.'">
+                                <input class="form-check-input filter-array" type="checkbox" data-group="store" data-value="'.$rows->StoreId.'" value="'.$rows->StoreId.'" id="'.$rows->StoreCode.'">
                                 <label class="form-check-label ps-0 ms-0 stretched-link" for="'.$rows->StoreCode.'">
                                     '.$rows->StoreCode.' 
                                 </label>
@@ -79,7 +79,7 @@
                         echo ' 
                         <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->id.$rows->name.'">
                             <div class="form-check w-100">
-                                <input class="form-check-input" type="checkbox" data-group="kategori" data-value="'.$rows->name.'" id="cat-'.$rows->id.$rows->name.'">
+                                <input class="form-check-input filter-array" type="checkbox" data-group="kategori" data-value="'.$rows->name.'" id="cat-'.$rows->id.$rows->name.'">
                                 <label class="form-check-label ps-0 ms-0 stretched-link" for="cat-'.$rows->id.$rows->name.'">
                                     '.$rows->name.' 
                                 </label>
@@ -96,7 +96,7 @@
                         echo ' 
                         <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->username.'">
                             <div class="form-check w-100">
-                                <input class="form-check-input" type="checkbox" data-group="user" data-value="'.$rows->id.'" id="user-'.$rows->username.'">
+                                <input class="form-check-input filter-array" type="checkbox" data-group="user" data-value="'.$rows->id.'" id="user-'.$rows->username.'">
                                 <label class="form-check-label ps-0 ms-0 stretched-link" for="user-'.$rows->username.'">
                                     '.$rows->username.' 
                                 </label>
@@ -110,7 +110,7 @@
             <ul class="list-group">
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
-                        <input class="form-check-input" type="checkbox" data-group="status" data-value="sample" value="sample" id="statussample">
+                        <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="sample" value="sample" id="statussample">
                         <label class="form-check-label ps-0 ms-0 stretched-link" for="statussample">
                             Sample Barang
                         <i class="input-helper"></i></label>
@@ -118,7 +118,7 @@
                 </li> 
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
-                        <input class="form-check-input" type="checkbox" data-group="status" data-value="penawaran" value="penawaran" id="statuspenawaran">
+                        <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="penawaran" value="penawaran" id="statuspenawaran">
                         <label class="form-check-label ps-0 ms-0 stretched-link" for="statuspenawaran">
                             Penawaran
                         <i class="input-helper"></i></label>
@@ -126,7 +126,7 @@
                 </li> 
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
-                        <input class="form-check-input" type="checkbox" data-group="status" data-value="invoice" value="invoice" id="statusinvoice">
+                        <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="invoice" value="invoice" id="statusinvoice">
                         <label class="form-check-label ps-0 ms-0 stretched-link" for="statusinvoice">
                             Invoice
                         <i class="input-helper"></i></label>
@@ -134,7 +134,7 @@
                 </li> 
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
-                        <input class="form-check-input" type="checkbox" data-group="status" data-value="pengiriman" value="pengiriman" id="statuspengiriman">
+                        <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="pengiriman" value="pengiriman" id="statuspengiriman">
                         <label class="form-check-label ps-0 ms-0 stretched-link" for="statuspengiriman">
                             Pengiriman
                         <i class="input-helper"></i></label>
@@ -142,7 +142,7 @@
                 </li> 
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
-                        <input class="form-check-input" type="checkbox" data-group="status" data-value="pembelian" value="pembelian" id="statuspembelian">
+                        <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="pembelian" value="pembelian" id="statuspembelian">
                         <label class="form-check-label ps-0 ms-0 stretched-link" for="statuspembelian">
                             Pembelian
                         <i class="input-helper"></i></label>
@@ -176,25 +176,25 @@
             <li class="list-group-item d-flex justify-content-between">
                 <label class="form-check-label stretched-link" for="radioNoLabel1">Semua Tanggal</label> 
                 <div>
-                    <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel1" value="0" aria-label="..." checked>
+                    <input class="form-check-input filter-array" type="radio" name="radioNoLabel" id="radioNoLabel1" value="0" aria-label="..." checked>
                 </div> 
             </li>
             <li class="list-group-item d-flex justify-content-between">
                 <label class="form-check-label stretched-link" for="radioNoLabel2">30 Hari Terkahir</label> 
                 <div>
-                    <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel2" value="1" aria-label="...">
+                    <input class="form-check-input filter-array" type="radio" name="radioNoLabel" id="radioNoLabel2" value="1" aria-label="...">
                 </div> 
             </li>
             <li class="list-group-item d-flex justify-content-between">
                 <label class="form-check-label stretched-link" for="radioNoLabel3">90 Hari Terakhir</label>
                 <div>
-                    <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel3" value="2" aria-label="...">
+                    <input class="form-check-input filter-array" type="radio" name="radioNoLabel" id="radioNoLabel3" value="2" aria-label="...">
                 </div> 
             </li>
             <li class="list-group-item d-flex justify-content-between">
                 <label class="form-check-label stretched-link" for="radioNoLabel4">Pilih Tanggal Sendiri</label>
                 <div>
-                    <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel4" value="3" aria-label="...">
+                    <input class="form-check-input filter-array" type="radio" name="radioNoLabel" id="radioNoLabel4" value="3" aria-label="...">
                 </div>  
             </li>  
             <div class="row g-2 p-2 date-select" style="display: none;">
@@ -257,7 +257,7 @@
                                     echo ' 
                                     <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start" for="'.$rows->StoreCode.'">
                                         <div class="form-check w-100">
-                                            <input class="form-check-input" type="checkbox" data-group="store" data-value="'.$rows->StoreId.'" value="'.$rows->StoreId.'" id="check-'.$rows->StoreCode.'">
+                                            <input class="form-check-input filter-array" type="checkbox" data-group="store" data-value="'.$rows->StoreId.'" value="'.$rows->StoreId.'" id="check-'.$rows->StoreCode.'">
                                             <label class="form-check-label ps-0 ms-0 stretched-link" for="check-'.$rows->StoreCode.'">
                                                 '.$rows->StoreCode.' 
                                             </label>
@@ -283,7 +283,7 @@
                                     echo ' 
                                     <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->id.$rows->name.'">
                                         <div class="form-check w-100">
-                                            <input class="form-check-input" type="checkbox" data-group="kategori" data-value="'.$rows->name.'" id="check-cat-'.$rows->id.$rows->name.'">
+                                            <input class="form-check-input filter-array" type="checkbox" data-group="kategori" data-value="'.$rows->name.'" id="check-cat-'.$rows->id.$rows->name.'">
                                             <label class="form-check-label ps-0 ms-0 stretched-link" for="check-cat-'.$rows->id.$rows->name.'">
                                                 '.$rows->name.' 
                                             </label>
@@ -309,7 +309,7 @@
                                     echo ' 
                                     <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start " for="'.$rows->username.'">
                                         <div class="form-check w-100">
-                                            <input class="form-check-input" type="checkbox" data-group="user" data-value="'.$rows->id.'" id="check-'.$rows->username.'">
+                                            <input class="form-check-input filter-array" type="checkbox" data-group="user" data-value="'.$rows->id.'" id="check-'.$rows->username.'">
                                             <label class="form-check-label ps-0 ms-0 stretched-link" for="check-'.$rows->username.'">
                                                 '.$rows->username.' 
                                             </label>
@@ -333,7 +333,7 @@
                         <ul class="list-group list-group-flush"> 
                             <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                 <div class="form-check w-100">
-                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="sample" value="sample" id="check-statussample">
+                                    <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="sample" value="sample" id="check-statussample">
                                     <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statussample">
                                         Sample Barang
                                     </label>
@@ -341,7 +341,7 @@
                             </li> 
                             <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                 <div class="form-check w-100">
-                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="penawaran" value="penawaran" id="check-statuspenawaran">
+                                    <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="penawaran" value="penawaran" id="check-statuspenawaran">
                                     <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statuspenawaran">
                                         Penawaran
                                     </label>
@@ -349,7 +349,7 @@
                             </li> 
                             <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                 <div class="form-check w-100">
-                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="invoice" value="invoice" id="check-statusinvoice">
+                                    <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="invoice" value="invoice" id="check-statusinvoice">
                                     <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statusinvoice">
                                         Invoice
                                     </label>
@@ -357,7 +357,7 @@
                             </li> 
                             <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                 <div class="form-check w-100">
-                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="pengiriman" value="pengiriman" id="check-statuspengiriman">
+                                    <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="pengiriman" value="pengiriman" id="check-statuspengiriman">
                                     <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statuspengiriman">
                                         Pengiriman
                                     </label>
@@ -365,7 +365,7 @@
                             </li> 
                             <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                                 <div class="form-check w-100">
-                                    <input class="form-check-input" type="checkbox" data-group="status" data-value="pembelian" value="pembelian" id="check-statuspembelian">
+                                    <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="pembelian" value="pembelian" id="check-statuspembelian">
                                     <label class="form-check-label ps-0 ms-0 stretched-link" for="check-statuspembelian">
                                         Pembelian
                                     </label>
@@ -515,6 +515,7 @@
                     <div class="col-sm-8">
                         <select class="form-select form-select-sm" id="POPrintFormat" name="POPrintFormat" placeholder="Pilih Admin" style="width:100%">
                             <option id="1" selected>A4</option>
+                            <option id="2">A5</option>
                         </select>  
                     </div>
                 </div>   
@@ -532,6 +533,19 @@
                     </div>
                 </div>   
                 <div class="row mb-1 align-items-center mt-2">
+                    <label for="POPrintPrice" class="col-sm-4 col-form-label">gunakan harga</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="POPrintPrice" id="POPrintPrice1" value="0">
+                            <label class="text-detail" for="POPrintPrice1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="POPrintPrice" id="POPrintPrice2" value="1" checked>
+                            <label class="text-detail" for="POPrintPrice2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
                     <label for="POPrintTotal" class="col-sm-4 col-form-label">gunakan grand total</label>
                     <div class="col-sm-8">
                         <div class="form-check form-check-inline">
@@ -544,6 +558,27 @@
                         </div>
                     </div>
                 </div>   
+                <script>
+                   $('input[name="POPrintPrice"]').change(function() {
+                        if($(this).val() == 0){
+                            $('input[name="POPrintTotal"]').prop("disabled",true)
+                        }else{
+
+                            $('input[name="POPrintTotal"]').prop("disabled",false)
+                        }
+                    });
+                    $("#POPrintFormat").change(function(){
+                        if($(this).val() == "A5"){
+                            $('input[name="POPrintTotal"]').prop("disabled",true)
+                            $('input[name="POPrintPrice"]').prop("disabled",true)
+                            $('input[name="POPrintImage"]').prop("disabled",true)
+                        } else{ 
+                            $('input[name="POPrintTotal"]').prop("disabled",false)
+                            $('input[name="POPrintPrice"]').prop("disabled",false)
+                            $('input[name="POPrintImage"]').prop("disabled",false)
+                        }
+                    })
+                </script>
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -772,6 +807,11 @@
                 $(".status-header[data-id='"+ ProjectId+"']").html(data["project"]["status"]) 
                 //update status  
 
+                //update notif survey
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='survey']").removeClass("active")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='survey']").removeClass("notif")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='survey']").addClass(data["project"]["survey"])
+
                 //update notif sample
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='sample']").removeClass("active")
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='sample']").removeClass("notif")
@@ -803,7 +843,10 @@
             }
         });
     }  
-
+    download_file = function(el){
+        var file = $(el).data('file'); 
+        window.open('<?= base_url("project/surveyfinish?file=") ?>' + file, '_blank');
+    }
     add_click = function(){ 
         $.ajax({ 
             method: "POST",
@@ -1018,6 +1061,39 @@
             },
             error: function(xhr, textStatus, errorThrown){ 
                 isProcessingSurveyFinish[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+    
+    var isProcessingSurveyFinishEdit = [];
+    edit_project_Survey_finish = function(ref,id,el){
+        if (isProcessingSurveyFinishEdit[id]) {
+            console.log("project survey cancel load");
+            return;
+        }  
+        isProcessingSurveyFinishEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-survey-finish/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-finish-survey").modal("show"); 
+
+                isProcessingSurveyFinishEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSurveyFinishEdit[id] = false;
                 $(el).html(old_text); 
 
                 Swal.fire({
@@ -1383,6 +1459,7 @@
             kertas: $("#POPrintFormat").val(),
             image: $('input[name="POPrintImage"]:checked').val(),
             total: $('input[name="POPrintTotal"]:checked').val(),
+            price: $('input[name="POPrintPrice"]:checked').val(),
         },
         "GET",'_blank');
         $("#modal-print-po").modal("hide");
@@ -2252,7 +2329,7 @@
         loader_datatable();
     }
 
-    $('.form-check-input').on('change', function() {
+    $('.form-check-input.filter-array').on('change', function() {
         if ($(this).is(':checked')) {
             tambahArray(filter_arr,$(this).data("group"), $(this).data("value"));  
         } else {
