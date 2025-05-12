@@ -1284,7 +1284,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-sph").modal("hide");   
-                        loader_data_project('<?= $project->ProjectId ?>','penawaran')    
+                        
+                        $(".icon-project[data-menu='penawaran'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

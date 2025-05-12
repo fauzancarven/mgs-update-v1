@@ -437,8 +437,9 @@ class ProjectModel extends Model
                                 </div>
                                 <div class="flex-grow-1 ms-1">
                                     <div class="d-flex flex-column">
+                                        <span class="text-detail-2 text-wrap overflow-x-auto">Status : NEW</span> 
                                         <span class="text-head-2 d-flex gap-1 align-items-center"><div>'.$row->StoreCode.' - '.$row->StoreName.'</div></span>
-                                        <span class="text-detail-2 text-wrap overflow-x-auto">'.$category.'</span> 
+                                        <span class="text-detail-2 text-wrap overflow-x-auto">'.$category.'</span>  
                                     </div>   
                                 </div>
                             </div>
@@ -1041,7 +1042,7 @@ class ProjectModel extends Model
                             <div class="col-8">
                                 <span class="text-head-3">'.$staffname .'</span>
                             </div>
-                        </div> 
+                        </div>  
                     </div>
                     <div class="col-12  col-md-5 order-2 order-sm-1"> 
                         <div class="row">
@@ -1050,6 +1051,14 @@ class ProjectModel extends Model
                             </div>
                             <div class="col-8">
                                 <span class="text-head-3">'.$row->SurveyCustName.'</span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-phone pe-1"></i>No. Hp</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SurveyCustTelp.'</span>
                             </div>
                         </div> 
                         <div class="row">
@@ -3112,16 +3121,10 @@ class ProjectModel extends Model
                         </div>  
                     </div>
                     <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-4">
-                        <div class="float-end d-md-flex d-none gap-1">  
-                            <div class="dropdown">
-                                <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-print mx-1"></i><span >Cetak</span>
-                                </a> 
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" onclick="print_project_po_a4('.$project_id.','.$row->POId.',this)">Print A4</a></li>
-                                    <li><a class="dropdown-item" onclick="print_project_po_a5('.$project_id.','.$row->POId.',this)">Print A5</a></li> 
-                                </ul>
-                            </div>
+                        <div class="float-end d-md-flex d-none gap-1">   
+                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_po_a4('.$project_id.','.$row->POId.',this)">
+                                <i class="fa-solid fa-print mx-1"></i><span >Cetak</span>
+                            </button> 
                             <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_po('.$project_id.','.$row->POId.',this)">
                                 <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
                             </button>
@@ -4332,6 +4335,7 @@ class ProjectModel extends Model
             "InvSubTotal"=>$header["InvSubTotal"],
             "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
             "InvDiscTotal"=>$header["InvDiscTotal"], 
+            "InvGrandTotal"=>$header["InvGrandTotal"], 
             "InvImageList"=> (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"),
             "InvKtp"=>$header["InvKtp"], 
             "InvNpwp"=>$header["InvNpwp"],  

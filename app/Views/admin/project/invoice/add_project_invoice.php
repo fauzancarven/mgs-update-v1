@@ -1887,8 +1887,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-invoice").modal("hide");   
-                        $("i[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                        $("#modal-add-invoice").modal("hide");    
+                        $(".icon-project[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
                     });
                   
                 }else{

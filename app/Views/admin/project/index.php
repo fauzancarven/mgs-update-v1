@@ -567,17 +567,17 @@
                             $('input[name="POPrintTotal"]').prop("disabled",false)
                         }
                     });
-                    $("#POPrintFormat").change(function(){
-                        if($(this).val() == "A5"){
-                            $('input[name="POPrintTotal"]').prop("disabled",true)
-                            $('input[name="POPrintPrice"]').prop("disabled",true)
-                            $('input[name="POPrintImage"]').prop("disabled",true)
-                        } else{ 
-                            $('input[name="POPrintTotal"]').prop("disabled",false)
-                            $('input[name="POPrintPrice"]').prop("disabled",false)
-                            $('input[name="POPrintImage"]').prop("disabled",false)
-                        }
-                    })
+                    // $("#POPrintFormat").change(function(){
+                    //     if($(this).val() == "A5"){
+                    //         $('input[name="POPrintTotal"]').prop("disabled",true)
+                    //         $('input[name="POPrintPrice"]').prop("disabled",true)
+                    //         $('input[name="POPrintImage"]').prop("disabled",true)
+                    //     } else{ 
+                    //         $('input[name="POPrintTotal"]').prop("disabled",false)
+                    //         $('input[name="POPrintPrice"]').prop("disabled",false)
+                    //         $('input[name="POPrintImage"]').prop("disabled",false)
+                    //     }
+                    // })
                 </script>
             </div>
             <div class="modal-footer p-2">
@@ -689,6 +689,7 @@
                     }
                     $(this).parents('.project').scrollTop(0); 
                 })
+               
                 $(".close-project").click(function(){  
                     var header = $(this).parents('.project'); 
                     $(header).find(".icon-project.selected").trigger("click"); 
@@ -776,7 +777,8 @@
         });
     }
     loader_datatable();
-    loader_data_project = function(ProjectId,type){  
+    loader_data_project = function(ProjectId,type){ 
+         
         $(".tab-content[data-id='"+ ProjectId+"']").hide() 
         $(".loading-content[data-id='"+ ProjectId+"']").show()
         $(".loading-content[data-id='"+ ProjectId+"']").parent().removeClass("d-none");
@@ -842,7 +844,7 @@
                 });
             }
         });
-    }  
+    }   
     download_file = function(el){
         var file = $(el).data('file'); 
         window.open('<?= base_url("project/surveyfinish?file=") ?>' + file, '_blank');
@@ -1213,9 +1215,6 @@
         });
     };
 
-    print_project_po_a4 = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/poA4/") ?>' + id, '_blank');
-    };
 
 
     /* 
@@ -1448,14 +1447,14 @@
             } 
         });
     }
-
+ 
     print_project_po_a4 = function(ref,id,el){  
         $("#modal-print-po").modal("show");
         $("#modal-print-po").data("id",id) 
     };
     
     $("#btn-print-po").click(function(i){ 
-        $.redirect('<?= base_url("print/project/poA4/") ?>' +  $("#modal-print-po").data("id"),  {
+        $.redirect('<?= base_url("print/project/po/") ?>' +  $("#modal-print-po").data("id"),  {
             kertas: $("#POPrintFormat").val(),
             image: $('input[name="POPrintImage"]:checked').val(),
             total: $('input[name="POPrintTotal"]:checked').val(),

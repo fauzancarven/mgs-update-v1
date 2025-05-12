@@ -178,8 +178,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {    
-                        $("#modal-finish-survey").modal("hide");   
-                        loader_data_project('<?= $project->ProjectId ?>','survey') 
+                        $("#modal-finish-survey").modal("hide");    
+                        $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

@@ -337,14 +337,20 @@
                 </tr>
             </tbody>
         </table> 
+        <?php
+            $col = 2;
+            if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++; 
+            if($postdata["price"]==1) $col++;
+            if($postdata["price"]==1) $col++;
+        ?> 
         <table class="item">
             <thead>
                 <tr> 
                     <th>No.</th>
                     <th>Uraian</th>
-                    <th>Qty</th>
-                    <th>Harga</th> 
-                    <th>Total</th>
+                    <th>Qty</th> 
+                    <?= ($postdata["price"] == 1) ? "<th>Harga</th>".((array_filter($detail, fn($item) => $item["disc"] > 0)) ? "<th>Disc</th>" : "")."
+                    <th>Total</th>" : "" ?>
                 </tr>
             </thead>
             <tbody> 
@@ -353,28 +359,32 @@
                     $huruf  = "A";
                     $html_items = ""; 
                     foreach($detail as $item){
-
-                        $arr_varian = json_decode($item->PODetailVarian);
+ 
+                        $arr_varian = json_decode($item["varian"]);
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
-                            if($varian->varian == "vendor") continue; 
-                           // $arr_badge .= ' | <span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>';  
+                           if($varian->varian == "vendor") continue;
+
                             $arr_badge .= ' | <span style="font-size:10px;">'.$varian->value.'</span>';  
-                        }  
+                           // $arr_badge .= '<br><span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>'; 
+                        }
                         $html_items .= '
                         <tr> 
                             <td class="td-center">'.$no.'</td>
-                            <td class="ps-1">'.$item->PODetailText.$arr_badge.'</td>
-                            <td class="td-center">'.number_format($item->PODetailQty, 2, ',', '.').' '.$item->PODetailSatuanText.'</td>
+                            <td class="ps-1">'.$item["text"].$arr_badge.'</td>
+                            <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item['satuan_text'].'</td>';
+                        if($postdata["price"] == 1){ 
+                            $html_items .= '
                             <td class="td-center">
                                 <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->PODetailPrice, 0, ',', '.').'</div>
+                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item["price"], 0, ',', '.').'</div>
                             </td>
                             <td class="td-center">
                                 <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->PODetailTotal, 0, ',', '.').'</div>
-                            </td>
-                        </tr>';
+                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item["total"], 0, ',', '.').'</div>
+                            </td>';
+                        }
+                        $html_items .= '</tr>';
                         $no++;  
                     }
                     echo $html_items;
@@ -382,9 +392,8 @@
  
             </tbody>
             <tfoot>
-                <tr>
-                    <td colspan="2" style="border-top:1px solid;border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="2">Sub Total</th>
+                <tr> 
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Sub Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
                         <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($po->POSubTotal, 0, ',', '.') ?></div>
@@ -392,7 +401,7 @@
                 </tr>
                 <tr style="<?= $po->PODiscTotal > 0 ? "" : "display:none;" ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="2">Disc Total</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="1">Disc Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
                         <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($po->PODiscTotal, 0, ',', '.') ?></div>
@@ -400,15 +409,14 @@
                 </tr> 
                 <tr style="<?= $po->POPPNTotal > 0 ? "" : "display:none;" ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="2">Disc Total</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="1">Disc Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
                         <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($po->POPPNTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>  
-                <tr>
-                    <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="2">Grand Total</th>
+                <tr> 
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Grand Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
                         <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($po->POGrandTotal, 0, ',', '.') ?></div>
