@@ -101,7 +101,7 @@ class ProdukModel extends Model
             if (!file_exists($folder)) {
                 mkdir($folder, 0777, true);  
             } 
-            $files = array_diff(scandir($folder), array('.', '..'));  
+            $files = array_diff(scandir($folder) , array('.', '..'));  
             $gambar = null;
 
             foreach ($files as $file) {
@@ -500,7 +500,7 @@ class ProdukModel extends Model
 
         //hapus semua file di folder id tersebut
         if (is_dir($folder_utama."/".$id)) {
-            $files = scandir($folder_utama."/".$id);
+            $files = scandir($folder_utama."/".$id)?: [];
             foreach ($files as $file) {
                 if ($file != '.' && $file != '..') {
                     unlink($folder_utama."/".$id . '/' . $file);
@@ -565,7 +565,7 @@ class ProdukModel extends Model
 
         //hapus semua file di folder id tersebut
         if (is_dir($folder_utama."/".$id)) {
-            $files = scandir($folder_utama."/".$id);
+            $files = scandir($folder_utama."/".$id)?: [];;
             foreach ($files as $file) {
                 if ($file != '.' && $file != '..') {
                     unlink($folder_utama."/".$id . '/' . $file);
@@ -603,7 +603,7 @@ class ProdukModel extends Model
         //hapus semua file di folder id tersebut
         $folder_utama = 'assets/images/produk'; 
         if (is_dir($folder_utama."/".$id)) {
-            $files = scandir($folder_utama."/".$id);
+            $files = scandir($folder_utama."/".$id) ?: [];
             foreach ($files as $file) {
                 if ($file != '.' && $file != '..') {
                     unlink($folder_utama."/".$id . '/' . $file);
@@ -689,35 +689,42 @@ class ProdukModel extends Model
     }
     public function getproductimageAll($id){
         $folder = 'assets/images/produk/'.$id."/";  
-        $files = scandir($folder);
-        $gambar = array(); 
-        foreach ($files as $file) {
-            if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
-                $gambar[] = $this->ambil_gambar_base64($folder . $file); 
-            }
-        } 
+
+        if (is_dir($folder)) { 
+            $files = scandir($folder);
+            $gambar = array(); 
+            foreach ($files as $file) {
+                if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                    $gambar[] = $this->ambil_gambar_base64($folder . $file); 
+                }
+            } 
+        }
         return $gambar;
     }
     public function getproductimage($id){
         $folder = 'assets/images/produk/'.$id."/";  
-        $files = scandir($folder);
-        $gambar = array(); 
-        foreach ($files as $file) {
-            if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
-                return $this->ambil_gambar_base64($folder . $file); 
-            }
+        if (is_dir($folder)) { 
+            $files = scandir($folder);
+            $gambar = array(); 
+            foreach ($files as $file) {
+                if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                    return $this->ambil_gambar_base64($folder . $file); 
+                }
+            } 
         } 
         return "";
         //return $this->ambil_gambar_base64('assets/images/produk/default.png'); 
     }
     public function getproductimageUrl($id){
         $folder = 'assets/images/produk/'.$id."/";  
-        $files = scandir($folder);
-        $gambar = array(); 
-        foreach ($files as $file) {
-            if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
-                return  base_url().$folder . $file."?".date("Y-m-dH:i:s"); 
-            }
+        if (is_dir($folder)) { 
+            $files = scandir($folder) ?: [];
+            $gambar = array(); 
+            foreach ($files as $file) {
+                if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                    return  base_url().$folder . $file."?".date("Y-m-dH:i:s"); 
+                }
+            } 
         } 
         return base_url()."assets/images/produk/default.png";
         //return $this->ambil_gambar_base64('assets/images/produk/default.png'); 
