@@ -313,15 +313,18 @@ class PrintController extends BaseController
                 $dompdf->stream( 'PO_'.$data["po"]->CustomerName.'_'.$data["po"]->PODate.'.pdf', [ 'Attachment' => false ]);
 	} 
         
-	public function project_po_a4($id)
+	public function project_po($id)
 	{
                 $request = Services::request();
                 $postData = $request->getGet();
                 $options = new Options(); 
                 $options->set('isHtml5ParserEnabled', true);
-                $options->set('enable_remote', true);
-                $options->set('paper', 'A4');
-                $options->set('orientation', 'potrait');
+                $options->set('enable_remote', true); 
+                 
+                        $options->set('paper', "A4");  
+                $options->set('orientation', 'potrait'); 
+                $dompdf = new Dompdf($options);  
+                $dompdf->getOptions()->setChroot('assets');   
 
                 $models = new ProjectModel();
                 $produk = new ProdukModel();
@@ -351,10 +354,13 @@ class PrintController extends BaseController
                 if(isset($postData["custom"])){ 
                         $data["header_footer"]["detail"] = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0895-3529-92663<br>MAHIERA GLOBAL SOLUTION';
                 }
-                $dompdf = new Dompdf($options);  
-                $dompdf->getOptions()->setChroot('assets');   
-
-                $html = view('admin/project/po/print_po_a4',$data); 
+                if($postData["kertas"] =="A4"){
+                        $html = view('admin/project/po/print_po_a4',$data);  
+                }else{ 
+                        $dompdf->set_paper(array(0,0,420, 620),  'landscape');
+                        $html = view('admin/project/po/print_po_a5',$data); 
+                        
+                }
                 //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();

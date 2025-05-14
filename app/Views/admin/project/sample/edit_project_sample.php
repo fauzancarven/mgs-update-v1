@@ -1312,8 +1312,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-sample").modal("hide");    
-                        loader_data_project('<?= $project->ProjectId ?>','sample') 
-                        //$("i[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        
+                        $(".icon-project[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
                     });
                   
                 }else{

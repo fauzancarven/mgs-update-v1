@@ -1858,7 +1858,7 @@ var image_list = JSON.parse(`<?= $project->InvImageList ?>`);
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-invoice").modal("hide");  
-                        $("i[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        $(".icon-project[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");  
                     });
                   
                 }else{

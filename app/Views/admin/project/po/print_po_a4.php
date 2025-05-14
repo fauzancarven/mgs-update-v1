@@ -372,9 +372,11 @@
         </table> 
                
         <?php
-            $col = 4;
+            $col = 2;
             if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++;
             if($postdata["image"]==1) $col++;
+            if($postdata["price"]==1) $col++;
+            if($postdata["price"]==1) $col++;
         ?> 
         <table class="item">
             <thead>
@@ -383,9 +385,8 @@
                     <?= ($postdata["image"] == 1) ? "<th>Gambar</th>" : "" ?>
                     <th>Uraian</th>
                     <th>Qty</th>
-                    <th>Harga</th>
-                    <?= (array_filter($detail, fn($item) => $item["disc"] > 0)) ? "<th>Disc</th>" : "" ?>
-                    <th>Total</th>
+                    <?= ($postdata["price"] == 1) ? "<th>Harga</th>".((array_filter($detail, fn($item) => $item["disc"] > 0)) ? "<th>Disc</th>" : "")."
+                    <th>Total</th>" : "" ?>
                 </tr>
             </thead>
             <tbody> 
@@ -410,9 +411,10 @@
                                  '.($postdata["image"] == 1 ? ($item["image"] == "" ? "<td class='td-center image'></td>" : "<td class='td-center image'><img style='width:75px;height:75px;margin:3px;' src='".$item["image"]."'/></td>") : "").'
                                 <td class="ps-2 text">'.$item["text"].$arr_badge.'</td>
                                 <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
+                                '.($postdata["price"] == 1 ? '
                                 <td class="td-center">Rp. '.number_format($item["price"], 0, ',', '.').'</td>
                                 '.($discShow ? "<td class='td-center'>Rp. ".number_format($item["disc"], 0, ',', '.')."</td>" : "").'
-                                <td class="td-center">Rp. '.number_format($item["total"], 0, ',', '.').'</td>
+                                <td class="td-center">Rp. '.number_format($item["total"], 0, ',', '.').'</td>': '' ).'
                             </tr>';
                             $no++;
                         }else{
@@ -431,19 +433,19 @@
                 <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr>
             </tbody>
             <tfoot>
-                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
+                <tr class="<?= ($postdata["total"]==1 && $postdata["price"]==1) ? "":"hide" ?>">
                     <td class="td-footer text-bold " colspan="<?= $col ?>">Sub Total</td>
                     <td class="td-center text-bold">Rp. <?= number_format($po->POSubTotal, 0, ',', '.') ?></td>
                 </tr> 
-                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $po->PODiscTotal > 0 ? "" : "display:none;" ?>">
+                <tr class="<?= ($postdata["total"]==1 && $postdata["price"]==1) ? "":"hide" ?>" style="<?= $po->PODiscTotal > 0 ? "" : "display:none;" ?>">
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Disc</td>
                     <td class="td-center text-bold">Rp. <?= number_format($po->PODiscTotal, 0, ',', '.') ?></td>
                 </tr>
-                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
+                <tr class="<?= ($postdata["total"]==1 && $postdata["price"]==1) ? "":"hide" ?>">
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Grand Total</td>
                     <td class="td-center text-bold">Rp. <?= number_format($po->POGrandTotal, 0, ',', '.') ?></td>
                 </tr>
-                <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr>
+                <tr class="<?= ($postdata["total"]==1 && $postdata["price"]==1) ? "":"hide" ?>"><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr>
                 <tr>
                     <td class="td-footer text-bold" colspan="<?= $col + 1 ?>"><?= $header_footer["detail"] ?></td> 
                 </tr>
