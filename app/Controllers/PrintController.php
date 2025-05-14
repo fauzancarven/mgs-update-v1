@@ -246,9 +246,9 @@ class PrintController extends BaseController
                 $models = new ProjectModel();   
                 $modelheader = new HeaderModel();  
                 $data["payment"] = $models->getdataProforma($id); 
-                $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef); 
-                $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef); 
-                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->PaymentRef);  
+                $data["payments"] = $models->getdataProformaByRef($data["payment"]->InvId); 
+                $data["project"] = $models->getdataInvoice($data["payment"]->InvId); 
+                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->InvId);  
                 $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  
                 $dompdf = new Dompdf($options);  
                 
