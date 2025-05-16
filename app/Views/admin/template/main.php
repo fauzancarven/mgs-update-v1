@@ -2040,12 +2040,71 @@
                             </ul>
                         </div> 
                     </li>  
-                    <li class="nav-item <?= ($title === 'Project' ? "active" : "") ?>">
+                    <li class="nav-item <?= ($menu === 'Project' ? "active" : "") ?>">
+                        <a class="nav-link menu-header" data-toggle="collapse" href="#ui-basic-1" aria-expanded="<?= ($menu === 'Project' ? "true" : "false") ?>">
+                            <i class="ti-blackboard menu-icon"></i>
+                            <span class="menu-title">Project</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a> 
+                        <div class="collapse <?= ($menu === 'Project' ? "show" : "") ?>" id="ui-basic-1">
+                            <ul class="nav flex-column sub-menu"> 
+                                <li class="nav-item <?= ($title === 'List Project' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/project">
+                                        <i class="ti-home menu-icon"></i>
+                                        <span class="menu-title">List Project</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item <?= ($title === 'Survey' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/survey">
+                                        <i class="ti-home menu-icon"></i>
+                                        <span class="menu-title">Survey</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item <?= ($title === 'Account' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/account">
+                                        <i class="ti-user menu-icon"></i>
+                                        <span class="menu-title">Sample</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item <?= ($title === 'Customer' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/customer">
+                                        <i class="ti-id-badge menu-icon"></i>
+                                        <span class="menu-title">Penawaran</span> 
+                                    </a>
+                                </li>
+                                <li class="nav-item <?= ($title === 'Vendor' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/vendor">
+                                        <i class="ti-dropbox menu-icon"></i>
+                                        <span class="menu-title">Pembelian</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item <?= ($title === 'Produk' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/produk">
+                                        <i class="ti-package menu-icon"></i>
+                                        <span class="menu-title">Perintah Kerja (SPK)</span>
+                                    </a>
+                                </li> 
+                                <li class="nav-item <?= ($title === 'Produk' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/produk">
+                                        <i class="ti-package menu-icon"></i>
+                                        <span class="menu-title">Invoice</span>
+                                    </a>
+                                </li> 
+                                <li class="nav-item <?= ($title === 'Produk' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/produk">
+                                        <i class="ti-package menu-icon"></i>
+                                        <span class="menu-title">Pengiriman</span>
+                                    </a>
+                                </li> 
+                            </ul>
+                        </div> 
+                    </li>  
+                    <!-- <li class="nav-item <?= ($title === 'Project' ? "active" : "") ?>">
                         <a class="nav-link" href="<?= base_url(); ?>admin/project">
                             <i class="ti-blackboard menu-icon"></i>
                             <span class="menu-title">Project</span>
                         </a> 
-                    </li>   
+                    </li>    -->
                     
                     <li class="nav-item <?= ($menu === 'Inventory' ? "active" : "") ?>">
                         <a class="nav-link menu-header" data-toggle="collapse" href="#ui-inventory" aria-expanded="<?= ($menu === 'Inventory' ? "true" : "false") ?>">

@@ -14,6 +14,7 @@ $routes->get('/admin/customer', 'AdminController::customer', ['filter' => 'login
 $routes->get('/admin/produk', 'AdminController::produk', ['filter' => 'login']);
 $routes->get('/admin/vendor', 'AdminController::vendor', ['filter' => 'login']);
 $routes->get('/admin/accounting', 'AdminController::accounting', ['filter' => 'login']);
+$routes->get('/admin/project/survey', 'AdminController::survey', ['filter' => 'login']);
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
 
@@ -24,6 +25,7 @@ $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login'
 $routes->post('/datatables/get-data-account', 'TableController::account', ['filter' => 'login']);
 $routes->post('/datatables/get-data-store', 'TableController::store', ['filter' => 'login']); 
 $routes->post('/datatables/get-data-project', 'TableController::project', ['filter' => 'login']);
+$routes->post('/datatables/get-data-project/survey', 'TableController::project_survey', ['filter' => 'login']);
 $routes->post('/datatables/get-data-customer', 'TableController::customer', ['filter' => 'login']);
 $routes->post('/datatables/get-data-produk', 'TableController::produk', ['filter' => 'login']);
 $routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter' => 'login']);

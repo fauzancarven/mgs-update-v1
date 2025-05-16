@@ -827,6 +827,7 @@ class ProjectModel extends Model
       
     }
 
+    
     public function insert_data_template_footer($data){  
 
         $builder = $this->db->table("template_footer");

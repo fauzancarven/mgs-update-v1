@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\StoreModel;
 use App\Models\ProjectModel;
+use App\Models\ProjectsurveyModel;
 use App\Models\CustomerModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
@@ -39,6 +40,15 @@ class TableController extends BaseController
         $datatable = new ProjectModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_table_project($request->getPost());
+        }    
+        
+    } 
+    public function project_survey()
+    {   
+        $request = Services::request();
+        $datatable = new ProjectsurveyModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_table_project_survey($request->getPost());
         }    
         
     } 

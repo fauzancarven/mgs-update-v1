@@ -1072,8 +1072,7 @@
                 });
             }
         });
-    }
-    
+    } 
     var isProcessingSurveyFinishEdit = [];
     edit_project_Survey_finish = function(ref,id,el){
         if (isProcessingSurveyFinishEdit[id]) {

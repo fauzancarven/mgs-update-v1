@@ -1,0 +1,333 @@
+<?php $this->extend('admin/template/main'); ?>
+
+<?php $this->section('content'); ?>
+
+<div class="px-2">
+    <div class="d-flex align-items-center mb-4 "> 
+        <div class="p-1 flex-fill" > 
+            <h4 class="mb-0">LIST SURVEY</h4> 
+        </div>     
+    </div>
+    <!-- BAGIAN FILTER -->
+    <div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">   
+        <div class="input-group d-sm-flex d-none">  
+            <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="" readonly style="background: white;">
+            <i class="fa-solid fa-calendar-days"></i> 
+        </div> 
+        <div class="input-group flex-fill">  
+            <input class="form-control form-control-sm input-form" id="searchdatasurvey" placeholder="Cari nama project, catatan, item barang ataupun nomer dokumen" value="" type="text">
+            <i class="fa-solid fa-magnifying-glass"></i>   
+            <div class="d-sm-none d-block ps-2">
+                <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop"><i class="fa-solid fa-filter"></i></button>
+            </div> 
+            <div class="d-sm-none d-block ps-1">
+                <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop-date" aria-controls="staticBackdrop"><i class="fa-solid fa-calendar-days"></i></button>
+            </div>
+        </div>  
+    </div>
+    
+    <div id="data-project"> 
+    </div>
+
+    <div class="row justify-content-between">
+        <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto mr-auto">
+            <div class="dt-info pt-1" aria-live="polite" id="table-toko_info" role="status">Showing 1 to 10 of 10 entries</div>
+        </div>
+        <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ml-auto">
+            <div class="dt-paging pt-1">
+                <nav aria-label="pagination">
+                    <ul class="pagination" id="paging-data">
+                        <li class="dt-paging-button page-item disabled"><a class="page-link first" aria-controls="table-toko" aria-disabled="true" aria-label="First" data-dt-idx="first" tabindex="-1">«</a></li>
+                        <li class="dt-paging-button page-item disabled"><a class="page-link previous" aria-controls="table-toko" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">‹</a></li>
+                        <li class="dt-paging-button page-item active"><a href="#" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">1</a></li>
+                        <li class="dt-paging-button page-item disabled"><a class="page-link next" aria-controls="table-toko" aria-disabled="true" aria-label="Next" data-dt-idx="next" tabindex="-1">›</a></li>
+                        <li class="dt-paging-button page-item disabled"><a class="page-link last" aria-controls="table-toko" aria-disabled="true" aria-label="Last" data-dt-idx="last" tabindex="-1">»</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>   
+
+<script>
+     var xhr_load_project; 
+    function loader_datatable(){
+        if (xhr_load_project) {
+            xhr_load_project.abort();
+        }
+
+        xhr_load_project = $.ajax({ 
+            dataType: "json",
+            method: "POST",
+            url: "<?= base_url()?>datatables/get-data-project/survey", 
+            data:{  
+                "search" : $("#searchdatasurvey").val(), 
+                "datestart" : $("#searchdatadate").data("start"),
+                "dateend" : $("#searchdatadate").data("end"),
+                "paging" : paging
+            },
+            success: function(data) {       
+                if(data["status"]===true){ 
+                    $("#data-project").html(data["html"])   
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        text: data, 
+                        confirmButtonColor: "#3085d6", 
+                    });
+                }  
+                load_paging_html(data);
+            },
+            error : function(xhr, textStatus, errorThrown){   
+                if (textStatus === 'abort') {
+                    // request AJAX dibatalkan, tidak perlu menampilkan error
+                    return;
+                }
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+    load_paging_html = function(data){ 
+        // paging data
+        if(data["total"] == 0){
+            $("#table-toko_info").html("Tidak ada data yang ditampilkan")
+        }else{
+            $("#table-toko_info").html("Tampilkan " + (data["paging"] + 1) +" sampai " + (data["paging"] + data["totalresult"]) +" dari " + data["total"] + " data") ;
+        }
+        var page = Math.ceil(data["total"] / 10);
+        if(page == 0){ 
+            paging = 1; 
+        }else{
+            if(paging > page) load_paging(page)   
+        }
+         
+        var page_html = `    
+            <li class="dt-paging-button page-item"><a onclick="load_paging(${1})" class="page-link first" aria-controls="table-toko" aria-disabled="true" aria-label="First" data-dt-idx="first" tabindex="-1">«</a></li>
+            <li class="dt-paging-button page-item"><a onclick="load_paging(${(paging == 1 ? paging : paging - 1)})" class="page-link previous" aria-controls="table-toko" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">‹</a></li>
+        `;  
+
+        if(page > 5){
+            if(paging < 3){
+                page_html += '<li class="dt-paging-button page-item ' + (paging == 1 ? "active" : "") + '"><a onclick="load_paging(1)" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">1</a></li>';
+                page_html += '<li class="dt-paging-button page-item ' + (paging == 2 ? "active" : "") + '"><a onclick="load_paging(2)" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">2</a></li>';
+                page_html += '<li class="dt-paging-button page-item ' + (paging == 3 ? "active" : "") + '"><a onclick="load_paging(3)" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">3</a></li>';
+            }else if((paging + 2 ) > page){
+                page_html += '<li class="dt-paging-button page-item disabled"><a class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">...</a></li>';
+                page_html += '<li class="dt-paging-button page-item ' + (paging == (page - 2) ? "active" : "") + '"><a onclick="load_paging('+ (page - 2) +')" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">'+ (page - 2) +'</a></li>';
+                page_html += '<li class="dt-paging-button page-item ' + (paging == (page - 1) ? "active" : "") + '"><a onclick="load_paging('+ (page - 1) +')" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">'+ (page - 1) +'</a></li>';
+                page_html += '<li class="dt-paging-button page-item ' + (paging == page ? "active" : "") + '"><a onclick="load_paging('+ page +')" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">'+ page +'</a></li>';
+            }else{
+                page_html += '<li class="dt-paging-button page-item disabled"><a class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">...</a></li>';
+                page_html += '<li class="dt-paging-button page-item"><a onclick="load_paging('+ (paging - 1) +')" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">'+ (paging - 1) +'</a></li>';
+                page_html += '<li class="dt-paging-button page-item active"><a onclick="load_paging('+ paging +')" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">'+ paging +'</a></li>';
+                if(paging !== page)  page_html += '<li class="dt-paging-button page-item"><a onclick="load_paging('+ (paging + 1) +')" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">'+ (paging + 1) +'</a></li>';
+            } 
+            if((paging + 1 ) < page) page_html += '<li class="dt-paging-button page-item disabled"><a class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">...</a></li>';
+            
+        }else{ 
+            for(let i = 1; page + 1 > i;i++){
+                if(paging == i){ 
+                    page_html += '<li class="dt-paging-button page-item active"><a onclick="load_paging('+i+')" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">'+ i +'</a></li>';
+                }else{ 
+                    page_html += '<li class="dt-paging-button page-item"><a onclick="load_paging('+i+')" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">'+ i +'</a></li>';
+                }
+            }
+        }
+
+        page_html += `    
+            <li class="dt-paging-button page-item"><a onclick="load_paging(${(paging == page ? paging : paging + 1)})" class="page-link next" aria-controls="table-toko" aria-disabled="true" aria-label="Next" data-dt-idx="next" tabindex="-1">›</a></li>
+            <li class="dt-paging-button page-item"><a onclick="load_paging(${page})" class="page-link last" aria-controls="table-toko" aria-disabled="true" aria-label="Last" data-dt-idx="last" tabindex="-1">»</a></li>
+        `;
+        $("#paging-data").html(page_html);
+    }
+     // FILTER TANGGAL
+    $('#searchdatadate').daterangepicker({  
+        autoUpdateInput: false,
+        locale: {
+            format: 'DD MMMM YYYY',
+            cancelLabel: 'Reset'
+        }
+    });
+    $('#searchdatadate').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('DD MMM YYYY') + ' - ' + picker.endDate.format('DD MMM YYYY'));
+        $(this).data("start",picker.startDate.format('YYYY/MM/DD'))
+        $(this).data("end",picker.endDate.format('YYYY/MM/DD'))
+        loader_datatable();
+    }).on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+        $(this).data("start","")
+        $(this).data("end","")
+        loader_datatable();
+    });
+    
+    // FILTER SEARCH
+    $("#searchdatasurvey").keyup(function(){
+        loader_datatable();
+    })
+
+    var paging = 1;
+    var table; 
+    
+    function load_paging(i){
+        paging = i;
+        loader_datatable();
+    }
+    loader_datatable();
+
+
+    var isProcessingSurveyEdit = [];
+    edit_project_Survey = function(ref,id,el){ 
+          // INSERT LOADER BUTTON
+          if (isProcessingSurveyEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingSurveyEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-survey/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-survey").modal("show"); 
+                $("#modal-edit-survey").data("menu","survey"); 
+
+                isProcessingSurveyEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSurveyEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };  
+    print_project_Survey = function(ref,id,el){ 
+        window.open('<?= base_url("print/project/survey/") ?>' + id, '_blank');
+    };
+    var isProcessingSurveyFinish = [];
+    
+    var isProcessingSurveyDelete = [];
+    delete_project_Survey = function(ref,id,el){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingSurveyDelete[id]) {
+            return;
+        }  
+        isProcessingSurveyDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus survey ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-survey/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        loader_datatable()
+                    }, 
+                });
+            }
+            isProcessingSurveyDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
+    add_project_survey_finish = function(ref,id,el){
+        if (isProcessingSurveyFinish[id]) {
+            console.log("project survey cancel load");
+            return;
+        }  
+
+        isProcessingSurveyFinish[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-project-survey-finish/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-finish-survey").modal("show"); 
+                $("#modal-finish-survey").data("menu","survey"); 
+
+                isProcessingSurveyFinish[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSurveyFinish[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    var isProcessingSurveyFinishEdit = [];
+    edit_project_Survey_finish = function(ref,id,el){
+        if (isProcessingSurveyFinishEdit[id]) {
+            console.log("project survey cancel load");
+            return;
+        }  
+        isProcessingSurveyFinishEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-project-survey-finish/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-finish-survey").modal("show"); 
+                $("#modal-finish-survey").data("menu","survey"); 
+
+                isProcessingSurveyFinishEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSurveyFinishEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+</script>
+
+
+<div style="margin-bottom: 100px;"></div>  
+
+
+<?php $this->endSection(); ?>

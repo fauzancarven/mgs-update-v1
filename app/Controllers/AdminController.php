@@ -139,13 +139,30 @@ class AdminController extends BaseController
         $data = [
             'notif' => [],
             'session' => $this->session,
-            'title' => 'Project',
-            'menu' => "",
+            'title' => 'List Project',
+            'menu' => "Project",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
         return view('admin/project/index', $data); 
+    }
+    
+    public function survey()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Survey',
+            'menu' => "Project",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/project/survey/index', $data); 
     }
     public function accounting(){    
         $modelsstore = new StoreModel();

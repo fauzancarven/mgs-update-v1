@@ -15,15 +15,6 @@
                     <input class="form-control form-control-sm input-form" style="width:100%" id="date-project">
                 </div>
                 <div class="mb-1">
-                    <label for="customer-project" class="col-form-label">Pelanggan:</label>
-                    <div class="input-group input-group-sm">  
-                        <select class="form-control form-control-sm" id="customer-project" name="customer-project"  style="width:90%"></select> 
-                        <button class="btn btn-primary btn-sm" type="button" style="width:10%" onclick="customer_add()"> 
-                            <i class="ti-plus"></i> 
-                        </button>
-                    </div> 
-                </div>
-                <div class="mb-1">
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <label for="store-project" class="col-form-label">Toko:</label>
@@ -45,6 +36,27 @@
                 </div>
                 <div class="mb-1">
                     <label for="comment-project" class="col-form-label">Catatan:</label>
+                    <input class="form-control form-control-sm input-form" style="width:100%" id="comment-project">
+                </div>
+                <div class="mb-1">
+                    <label for="customer-project" class="col-form-label">Pelanggan:</label>
+                    <div class="input-group input-group-sm">  
+                        <select class="form-control form-control-sm" id="customer-project" name="customer-project"  style="width:90%"></select> 
+                        <button class="btn btn-primary btn-sm" type="button" style="width:10%" onclick="customer_add()"> 
+                            <i class="ti-plus"></i> 
+                        </button>
+                    </div> 
+                </div>
+                <div class="mb-1">
+                    <label for="comment-project" class="col-form-label">Nama Project:</label>
+                    <input class="form-control form-control-sm input-form" style="width:100%" id="comment-project">
+                </div>
+                <div class="mb-1">
+                    <label for="comment-project" class="col-form-label">Telp Project:</label>
+                    <input class="form-control form-control-sm input-form" style="width:100%" id="comment-project">
+                </div>
+                <div class="mb-1">
+                    <label for="comment-project" class="col-form-label">Alamat Project:</label>
                     <input class="form-control form-control-sm input-form" style="width:100%" id="comment-project">
                 </div>
             </div>
