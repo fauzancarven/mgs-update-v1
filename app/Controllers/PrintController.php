@@ -246,9 +246,9 @@ class PrintController extends BaseController
                 $models = new ProjectModel();   
                 $modelheader = new HeaderModel();  
                 $data["payment"] = $models->getdataProforma($id); 
-                $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef); 
-                $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef); 
-                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->PaymentRef);  
+                $data["payments"] = $models->getdataProformaByRef($data["payment"]->InvId); 
+                $data["project"] = $models->getdataInvoice($data["payment"]->InvId); 
+                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->InvId);  
                 $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  
                 $dompdf = new Dompdf($options);  
                 
@@ -256,7 +256,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/invoice/print_proforma_a5',$data); 
+                $html = view('admin/project/payment/print_proforma_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'PRO_INV_'.$data["project"]->CustomerName.'_'.$data["payment"]->PaymentDate.'.pdf', [ 'Attachment' => false ]);
