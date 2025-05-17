@@ -5,7 +5,7 @@
 <div class="px-2">
     <div class="d-flex align-items-center mb-4 "> 
         <div class="p-1 flex-fill" > 
-            <h4 class="mb-0">LIST SURVEY</h4> 
+            <h4 class="mb-0">LIST SAMPLE</h4> 
         </div>     
     </div>
     <!-- BAGIAN FILTER -->
@@ -14,40 +14,6 @@
             <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="" readonly style="background: white;">
             <i class="fa-solid fa-calendar-days"></i> 
         </div> 
-       
-        <div class="input-group">  
-            <input class="form-control form-control-sm input-form combo" id="searchdatafilter" placeholder="Status" value="" type="text" data-start="" data-end="" readonly style="background: white;">
-            <i class="fa-solid fa-filter"></i>
-            <i class="fa-solid fa-caret-down"></i>
-            <div class="filter-data left" style="width: 18rem;" for="searchdatafilter">
-                <ul class="list-group w-75" > 
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
-                        <div class="form-check w-100">
-                            <input class="form-check-input select category" type="checkbox" data-group="category" data-value="0" value="New" id="status-0">
-                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-0">New</label>
-                        </div> 
-                    </li>   
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
-                        <div class="form-check w-100">
-                            <input class="form-check-input select category" type="checkbox" data-group="category" data-value="1" value="Proses" id="status-1">
-                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Proses</label>
-                        </div> 
-                    </li>   
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
-                        <div class="form-check w-100">
-                            <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Finish" id="status-2">
-                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Finish</label>
-                        </div> 
-                    </li>  
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
-                        <div class="form-check w-100">
-                            <input class="form-check-input select category" type="checkbox" data-group="category" data-value="3" value="Cancel" id="status-3">
-                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-3">Cancel</label>
-                        </div> 
-                    </li>  
-                </ul>
-            </div>
-        </div>  
         <div class="input-group flex-fill">  
             <input class="form-control form-control-sm input-form" id="searchdatasurvey" placeholder="Cari nama project, catatan, lokasi ataupun nomer dokumen" value="" type="text">
             <i class="fa-solid fa-magnifying-glass"></i>   
@@ -59,6 +25,7 @@
             </div>
         </div>  
     </div>
+    
     <div id="data-project"> 
     </div>
 
@@ -83,8 +50,7 @@
 </div>   
 
 <script>
-    var xhr_load_project; 
-    var filter_status_select = []
+     var xhr_load_project; 
     function loader_datatable(){
         if (xhr_load_project) {
             xhr_load_project.abort();
@@ -93,10 +59,9 @@
         xhr_load_project = $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url()?>datatables/get-data-project/survey", 
+            url: "<?= base_url()?>datatables/get-data-project/sample", 
             data:{  
                 "search" : $("#searchdatasurvey").val(), 
-                "status" : filter_status_select, 
                 "datestart" : $("#searchdatadate").data("start"),
                 "dateend" : $("#searchdatadate").data("end"),
                 "paging" : paging
@@ -203,41 +168,7 @@
     $("#searchdatasurvey").keyup(function(){
         loader_datatable();
     })
-    $('#filterdatastatus').select2({
-        multiple: true,
-        templateSelection: function(selection) {
-            var selected = $('#filterdatastatus').val().length;
-            return selected + " item dipilih";
-        }
-    });
-    $('#filterdatastatus').on('select2:select', function(e) {
-        $('.select2-selection__choice').remove();
-    }); 
-    $(".input-group .combo").click(function(){
-        if($(this).parent().hasClass("active")){
-            $(this).parent().removeClass("active");
-        }else{ 
-            $(this).parent().addClass("active"); 
-            var ele = $(this);
-            $(document).on('click', function(event) { 
-                if (!$(event.target).closest(ele).length  && !$(event.target).closest(".filter-data").length  && !$(event.target).closest(".filter-list").length) {
-                    $(ele).parent().removeClass('active');
-                }
-            });
-        }
-    })
-    $('.form-check-input.select.category').change(function() { 
-        if ($(this).is(':checked')) {
-            filter_status_select.push($(this).data("value")) 
-        }else{  
-            var index = filter_status_select.indexOf($(this).data("value"));
-            if (index !== -1) {
-                filter_status_select.splice(index, 1);
-            } 
-        } 
-        (filter_status_select.length === 0 ?  $("#searchdatafilter").val("") : $("#searchdatafilter").val(String(filter_status_select.length) + " status dipilih")); 
-        loader_datatable(); 
-    }) 
+
     var paging = 1;
     var table; 
     
@@ -247,152 +178,7 @@
     }
     loader_datatable();
 
-
-    var isProcessingSurveyEdit = [];
-    edit_project_Survey = function(ref,id,el){ 
-          // INSERT LOADER BUTTON
-          if (isProcessingSurveyEdit[id]) {
-            console.log("project sph cancel load");
-            return;
-        }  
-        isProcessingSurveyEdit[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        $.ajax({  
-            method: "POST",
-            url: "<?= base_url() ?>message/edit-project-survey/" + id, 
-            success: function(data) {  
-                $("#modal-message").html(data);
-                $("#modal-edit-survey").modal("show"); 
-                $("#modal-edit-survey").data("menu","survey"); 
-
-                isProcessingSurveyEdit[id] = false;
-                $(el).html(old_text); 
-            },
-            error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyEdit[id] = false;
-                $(el).html(old_text); 
-
-                Swal.fire({
-                    icon: 'error',
-                    text: xhr["responseJSON"]['message'], 
-                    confirmButtonColor: "#3085d6", 
-                });
-            }
-        });
-    };  
-    print_project_Survey = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/survey/") ?>' + id, '_blank');
-    };
-    var isProcessingSurveyFinish = [];
-    
-    var isProcessingSurveyDelete = [];
-    delete_project_Survey = function(ref,id,el){ 
-         // INSERT LOADER BUTTON
-        if (isProcessingSurveyDelete[id]) {
-            return;
-        }  
-        isProcessingSurveyDelete[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: "Anda yakin ingin menghapus survey ini...???",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Yakin Hapus!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    dataType: "json",
-                    method: "POST",
-                    url: "<?= base_url() ?>action/delete-data-survey/" + id, 
-                    success: function(data) { 
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
-                            icon: "success",
-                            confirmButtonColor: "#3085d6",
-                        });  
-                        loader_datatable()
-                    }, 
-                });
-            }
-            isProcessingSurveyDelete[id] = false;
-            $(el).html(old_text); 
-        });
-    };
-    add_project_survey_finish = function(ref,id,el){
-        if (isProcessingSurveyFinish[id]) {
-            console.log("project survey cancel load");
-            return;
-        }  
-
-        isProcessingSurveyFinish[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        $.ajax({  
-            method: "POST",
-            url: "<?= base_url() ?>message/add-project-survey-finish/" + id, 
-            success: function(data) {  
-                $("#modal-message").html(data);
-                $("#modal-finish-survey").modal("show"); 
-                $("#modal-finish-survey").data("menu","survey"); 
-
-                isProcessingSurveyFinish[id] = false;
-                $(el).html(old_text); 
-            },
-            error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyFinish[id] = false;
-                $(el).html(old_text); 
-
-                Swal.fire({
-                    icon: 'error',
-                    text: xhr["responseJSON"]['message'], 
-                    confirmButtonColor: "#3085d6", 
-                });
-            }
-        });
-    }
-
-    var isProcessingSurveyFinishEdit = [];
-    edit_project_Survey_finish = function(ref,id,el){
-        if (isProcessingSurveyFinishEdit[id]) {
-            console.log("project survey cancel load");
-            return;
-        }  
-        isProcessingSurveyFinishEdit[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        $.ajax({  
-            method: "POST",
-            url: "<?= base_url() ?>message/edit-project-survey-finish/" + id, 
-            success: function(data) {  
-                $("#modal-message").html(data);
-                $("#modal-finish-survey").modal("show"); 
-                $("#modal-finish-survey").data("menu","survey"); 
-
-                isProcessingSurveyFinishEdit[id] = false;
-                $(el).html(old_text); 
-            },
-            error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyFinishEdit[id] = false;
-                $(el).html(old_text); 
-
-                Swal.fire({
-                    icon: 'error',
-                    text: xhr["responseJSON"]['message'], 
-                    confirmButtonColor: "#3085d6", 
-                });
-            }
-        });
-    }
+ 
 </script>
 
 

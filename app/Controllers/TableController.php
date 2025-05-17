@@ -5,6 +5,8 @@ use App\Models\UserModel;
 use App\Models\StoreModel;
 use App\Models\ProjectModel;
 use App\Models\ProjectsurveyModel;
+use App\Models\ProjectsampleModel;
+use App\Models\ProjectsphModel;
 use App\Models\CustomerModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
@@ -49,6 +51,24 @@ class TableController extends BaseController
         $datatable = new ProjectsurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_table_project_survey($request->getPost());
+        }    
+        
+    } 
+    public function project_sample()
+    {   
+        $request = Services::request();
+        $datatable = new ProjectsampleModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_table_project_sample($request->getPost());
+        }    
+        
+    } 
+    public function project_penawaran()
+    {   
+        $request = Services::request();
+        $datatable = new ProjectsphModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_table_project_penawaran($request->getPost());
         }    
         
     } 

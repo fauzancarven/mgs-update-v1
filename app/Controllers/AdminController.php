@@ -164,6 +164,38 @@ class AdminController extends BaseController
         ]; 
         return view('admin/project/survey/index', $data); 
     }
+    public function sample()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Sample',
+            'menu' => "Project",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/project/sample/index', $data); 
+    }
+    public function penawaran()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Penawaran',
+            'menu' => "Project",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/project/sph/index', $data); 
+    }
     public function accounting(){    
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();

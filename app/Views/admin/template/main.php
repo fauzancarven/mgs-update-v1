@@ -1628,6 +1628,9 @@
     .drop-box:hover {
         background-color: #f0f0f0;
     }
+    .pointer{
+        cursor: pointer;
+    }
 </style>
  
 
@@ -2060,14 +2063,14 @@
                                         <span class="menu-title">Survey</span>
                                     </a>
                                 </li>
-                                <li class="nav-item <?= ($title === 'Account' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/account">
+                                <li class="nav-item <?= ($title === 'Sample' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/sample">
                                         <i class="ti-user menu-icon"></i>
                                         <span class="menu-title">Sample</span>
                                     </a>
                                 </li>
-                                <li class="nav-item <?= ($title === 'Customer' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/customer">
+                                <li class="nav-item <?= ($title === 'Penawaran' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/penawaran">
                                         <i class="ti-id-badge menu-icon"></i>
                                         <span class="menu-title">Penawaran</span> 
                                     </a>

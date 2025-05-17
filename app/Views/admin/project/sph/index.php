@@ -5,7 +5,7 @@
 <div class="px-2">
     <div class="d-flex align-items-center mb-4 "> 
         <div class="p-1 flex-fill" > 
-            <h4 class="mb-0">LIST SURVEY</h4> 
+            <h4 class="mb-0">LIST PENAWARAN</h4> 
         </div>     
     </div>
     <!-- BAGIAN FILTER -->
@@ -24,27 +24,21 @@
                     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                         <div class="form-check w-100">
                             <input class="form-check-input select category" type="checkbox" data-group="category" data-value="0" value="New" id="status-0">
-                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-0">New</label>
+                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-0">Baru</label>
                         </div> 
                     </li>   
                     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                         <div class="form-check w-100">
                             <input class="form-check-input select category" type="checkbox" data-group="category" data-value="1" value="Proses" id="status-1">
-                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Proses</label>
+                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Selesai</label>
                         </div> 
                     </li>   
                     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                         <div class="form-check w-100">
                             <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Finish" id="status-2">
-                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Finish</label>
+                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Batal</label>
                         </div> 
-                    </li>  
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
-                        <div class="form-check w-100">
-                            <input class="form-check-input select category" type="checkbox" data-group="category" data-value="3" value="Cancel" id="status-3">
-                            <label class="form-check-label ps-0 ms-0 stretched-link" for="status-3">Cancel</label>
-                        </div> 
-                    </li>  
+                    </li>   
                 </ul>
             </div>
         </div>  
@@ -93,7 +87,7 @@
         xhr_load_project = $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url()?>datatables/get-data-project/survey", 
+            url: "<?= base_url()?>datatables/get-data-project/sph", 
             data:{  
                 "search" : $("#searchdatasurvey").val(), 
                 "status" : filter_status_select, 

@@ -827,7 +827,7 @@ class ProjectModel extends Model
       
     }
 
-    
+
     public function insert_data_template_footer($data){  
 
         $builder = $this->db->table("template_footer");
@@ -866,7 +866,7 @@ class ProjectModel extends Model
      */ 
 
    
-     private function data_project_survey($project_id){
+    private function data_project_survey($project_id){
         $html = ""; 
         $builder = $this->db->table("survey");
         $builder->select('*');
@@ -4033,6 +4033,11 @@ class ProjectModel extends Model
             "SurveyFinishDetail"=>$data1["html"],
             "SurveyId"=>$id,  
         )); 
+
+        $builder = $this->db->table("survey");  
+        $builder->set('SurveyStatus',1);
+        $builder->where('SurveyId', $id); 
+        $builder->update();  
 
         $folder_utama = 'assets/images/project'; 
         if (!file_exists($folder_utama)) {

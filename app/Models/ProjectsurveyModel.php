@@ -27,8 +27,24 @@ class ProjectsurveyModel extends Model
         $builder = $this->db->table("survey");
         $builder->join("project","project.ProjectId = survey.ProjectId ","left");  
         $builder->join("users","users.id = survey.SurveyAdmin ","left"); 
-        $builder->join("store","store.StoreId = project.StoreId","left"); 
-        $builder->where("SurveyStatus <",2);
+        $builder->join("store","store.StoreId = project.StoreId","left");  
+        if($filter["datestart"]){
+            $builder->where("SurveyDate >=",$filter["datestart"]);
+            $builder->where("SurveyDate <=",$filter["dateend"]); 
+        }
+        
+        if($filter["search"]){ 
+            $builder->groupStart(); 
+            $builder->like("ProjectName",$filter["search"]);
+            $builder->orLike("ProjectComment",$filter["search"]);
+            $builder->orLike("SurveyAddress",$filter["search"]);
+            $builder->orLike("SurveyCode",$filter["search"]);
+            $builder->groupEnd();  
+        }
+        
+        if(isset($filter["status"])){ 
+            $builder->whereIn("SurveyStatus",$filter["status"]); 
+        }
         $builder->orderby('survey.SurveyId', 'DESC'); 
         $perPage = 10;
         $page = $filter["paging"]; // atau dapatkan dari parameter GET 
@@ -127,7 +143,7 @@ class ProjectsurveyModel extends Model
             $html_Survey = "";
             if($row_finish){ 
                 $html_Survey .= '<div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
-                                    <div class="col bg-light mx-4"> 
+                                    <div class="col bg-light ms-4 me-2 py-2"> 
                                         '.$row_finish->SurveyFinishDetail.' 
                                     <div class="list-group  "> ';
                                 
@@ -136,9 +152,8 @@ class ProjectsurveyModel extends Model
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..') {
 
-                        $filesize = filesize($folder_utama."/".$row->SurveyId . '/' . $file);
-                        // $html_Survey .= $folder_utama."/".$row->SurveyId . '/' . $file;
-                        $html_Survey .= ' <li class="list-group-item list-group-item-action align-items-center d-flex view-document file" > 
+                        $filesize = filesize($folder_utama."/".$row->SurveyId . '/' . $file); 
+                        $html_Survey .= ' <li class="list-group-item list-group-item-action align-items-center d-flex view-document file pb-2" > 
                                             <i class="fa-solid fa-file fa-2x me-2"></i>
                                             <div class="d-flex flex-column flex-fill ms-2">
                                                 <span class="fs-6">'.$file.'</span>
@@ -170,6 +185,70 @@ class ProjectsurveyModel extends Model
             foreach (explode("|",$row->ProjectCategory) as $index=>$x) {
                 $category .= '<span class="badge badge-'.fmod($index, 5).' me-1">'.$x.'</span>';
             }  
+            $status = "";
+            if($row->SurveyStatus==0){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3"><span class="badge text-bg-primary me-1 pointer" onclick="update_status_survey(0,'.$row->SurveyId.')">NEW</span></span>
+                    </div>
+                </div> ';
+            }
+            if($row->SurveyStatus==1){
+                $status .= ' 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3"><span class="badge text-bg-info me-1 pointer" onclick="update_status_survey(1,'.$row->SurveyId.')">PROGRESS</span></span>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-regular fa-share-from-square pe-1"></i>Diteruskan</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3"><a class="text-detail-2" onclick="forward_survey_penawaran('.$row->SurveyId.')">Penawaran</a> | </span>
+                        <span class="text-head-3"><a class="text-detail-2" onclick="forward_survey_sample('.$row->SurveyId.')">Sample</a> | </span>
+                        <span class="text-head-3"><a class="text-detail-2" onclick="forward_survey_invoice('.$row->SurveyId.')">Invoice</a></span>
+                    </div>
+                </div>  ';
+            }
+            if($row->SurveyStatus==2){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3"><span class="badge text-bg-success me-1 pointer" onclick="update_status_survey(2,'.$row->SurveyId.')">FINISH</span></span>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-regular fa-share-from-square pe-1"></i>Diteruskan</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3"><a class="text-head-3 cursor">INV/006/05/2025</a></span> 
+                    </div>
+                </div>  ';
+            }
+            if($row->SurveyStatus==3){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3"><span class="badge text-bg-danger me-1 pointer" onclick="update_status_survey(3,'.$row->SurveyId.')">CANCEL</span></span>
+                    </div>
+                </div> '; 
+            }
+
             $html .= '
             <div class="card project mb-4 p-2">
                 <div class="row">
@@ -186,9 +265,17 @@ class ProjectsurveyModel extends Model
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="col-md-3 col-12 order-2 order-sm-1">
+                        <div class="d-flex flex-column">
+                            <span class="text-head-2">'.$row->ProjectName.'</span>
+                            <span class="text-detail-2 text-truncate overflow-x-auto">Catatan : '.$row->ProjectComment.'</span>  
+                        </div> 
+                    </div>   
                 </div>
                 <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
                     <div class="col-12  col-md-4 order-1 order-sm-0">
+                   
                         <div class="row">
                             <div class="col-4"> 
                                 <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Survey</span>
@@ -197,6 +284,7 @@ class ProjectsurveyModel extends Model
                                 <span class="text-head-3">'.$row->SurveyCode.'</span>
                             </div>
                         </div> 
+                        '.$status.'
                         <div class="row">
                             <div class="col-4"> 
                                 <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
@@ -219,6 +307,14 @@ class ProjectsurveyModel extends Model
                             </div>
                             <div class="col-8">
                                 <span class="text-head-3">'.$staffname .'</span>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-dollar-sign pe-1"></i>Biaya Operasional</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">Rp. '.number_format($row->SurveyTotal,0) .'</span>
                             </div>
                         </div>  
                     </div>
@@ -251,13 +347,13 @@ class ProjectsurveyModel extends Model
                     <div class="col-12  col-md-3 order-0 order-sm-2">
                         <div class="float-end d-md-flex d-none gap-1">  
                             <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)">
-                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
+                                <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
                             </button>
                             <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)">
-                                <i class="fa-solid fa-pencil mx-1"></i><span >Ubah</span>
+                                <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
                             </button>
                             <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)">
-                                <i class="fa-solid fa-close mx-1"></i><span >Hapus</span>
+                                <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
                             </button> 
                         </div> 
                         <div class="d-md-none d-flex btn-action justify-content-between"> 
