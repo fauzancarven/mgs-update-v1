@@ -368,7 +368,47 @@ class ProjectModel extends Model
 
         return $dt->generate();
     }
-
+    public function get_project_by_status($status){
+        //survey,sample,penawaran,invoice,pengiriman,pembelian
+        $ListProjectId = [];
+        foreach($status as $row){
+            if($row=="survey"){ 
+                $builders = $this->db->table("survey");
+                $builders->whereIn("SurveyStatus",array('0','1'));  
+                $query = $builders->get()->getResult(); 
+                foreach($query as $rows) { 
+                    $ListProjectId[] = $rows->ProjectId;
+                }
+            }
+            if($row=="sample"){
+                $builders = $this->db->table("sample");
+                $builders->where("SampleStatus",0); 
+                $query = $builders->get()->getResult();  
+                foreach($query as $rows) { 
+                    $ListProjectId[] = $rows->ProjectId;
+                }
+                 
+            }
+            if($row=="penawaran"){
+                $builders = $this->db->table("penawaran");
+                $builders->where("SphStatus",0); 
+                $query = $builders->get()->getResult();  
+                foreach($query as $rows) { 
+                    $ListProjectId[] = $rows->ProjectId;
+                }  
+            }
+            if($row=="invoice"){
+                
+            }
+            if($row=="pengiriman"){
+                
+            }
+            if($row=="pembelian"){
+                
+            } 
+        } 
+        return $ListProjectId;
+    }
     public function load_table_project($filter = null){
         $builder = $this->db->table($this->table);
         $builder->join("customer","customer.CustomerId = project.CustomerId ","left");
@@ -392,15 +432,24 @@ class ProjectModel extends Model
             } 
             $builder->groupEnd(); 
         }
-        $builder->groupStart(); 
         if(isset($filter["search"])){
+            $builder->groupStart(); 
             $builder->like("ProjectAdmin",$filter["search"]);
             $builder->orLike("ProjectComment",$filter["search"]);
             $builder->orLike("ProjectName",$filter["search"]);
             $builder->orLike("ProjectCategory",$filter["search"]);
+            $builder->groupEnd(); 
+        }
+        $listid = null;
+        if(isset($filter["filter"]["status"])){
+            $listid = $this->get_project_by_status($filter["filter"]["status"]); 
+            if($listid){ 
+                $builder->whereIn("project.ProjectId",$listid);
+            }  else{
+                $builder->where("project.ProjectId",0);
+            }
         }
 
-        $builder->groupEnd(); 
         // $builder->where("ProjectStatus!=",9);
         $builder->orderby('ProjectDate', 'DESC'); 
 
@@ -411,6 +460,7 @@ class ProjectModel extends Model
 
         $query = $builder->get();  
         $count = $query->getNumRows();
+
         $html = "";
         foreach($query->getResult() as $row){  
             $notif = $this->load_project_status($row->ProjectId);
@@ -492,14 +542,6 @@ class ProjectModel extends Model
                                     <i class="fa-solid fa-hand-holding-droplet header p-1"></i>
                                     <span>Penawaran</span>
                                 </div>
-                                <div class="icon-project text-nowrap '.$notif['pembelian'].' '.(strlen($notif['pembelian_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'" data-menu="pembelian">
-                                    <i class="fa-solid fa-cart-shopping header p-1"></i>
-                                    <span>Pembelian</span>
-                                </div>
-                                <div class="icon-project text-nowrap '.$notif['perintahkerja'].' '.(strlen($notif['perintahkerja_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'" data-menu="perintahkerja">
-                                    <i class="fa-solid fa-briefcase header p-1"></i>
-                                    <span>Perintah Kerja</span>
-                                </div>
                                 <div class="icon-project text-nowrap '.$notif['invoice'].' '.(strlen($notif['invoice_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'" data-menu="invoice">
                                     <i class="fa-solid fa-money-bill header p-1"></i>
                                     <span>Invoice</span>
@@ -507,6 +549,14 @@ class ProjectModel extends Model
                                 <div class="icon-project text-nowrap '.$notif['pengiriman'].' '.(strlen($notif['pengiriman_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'" data-menu="pengiriman">
                                     <i class="fa-solid fa-truck header p-1"></i>
                                     <span>Pengiriman</span>
+                                </div>
+                                <div class="icon-project text-nowrap '.$notif['pembelian'].' '.(strlen($notif['pembelian_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'" data-menu="pembelian">
+                                    <i class="fa-solid fa-cart-shopping header p-1"></i>
+                                    <span>Pembelian</span>
+                                </div>
+                                <div class="icon-project text-nowrap '.$notif['perintahkerja'].' '.(strlen($notif['perintahkerja_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'" data-menu="perintahkerja">
+                                    <i class="fa-solid fa-briefcase header p-1"></i>
+                                    <span>Perintah Kerja</span>
                                 </div>
                                 <div class="icon-project text-nowrap '.$notif['keuangan'].' '.(strlen($notif['keuangan_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'"  data-menu="keuangan">
                                     <i class="fa-solid fa-dollar header p-1"></i>
@@ -585,6 +635,14 @@ class ProjectModel extends Model
             $builder->orLike("ProjectCategory",$filter["search"]);
         } 
         $builder->groupEnd(); 
+        
+        if(isset($filter["filter"]["status"])){ 
+            if($listid){ 
+                $builder->whereIn("project.ProjectId",$listid);
+            }else{
+                $builder->where("project.ProjectId",0);
+            }
+        }
 
         $countTotal = $builder->get()->getNumRows();
         return json_encode(
@@ -594,6 +652,7 @@ class ProjectModel extends Model
                 "total"=>$countTotal,
                 "totalresult"=>$count,
                 "paging"=>$offset, 
+                "list"=>$listid, 
             )
         ); 
 
@@ -872,126 +931,171 @@ class ProjectModel extends Model
         $builder->select('*');
         $builder->join('users',"id=SurveyAdmin","left"); 
         $builder->where('ProjectId',$project_id);
-        $builder->where('SurveyStatus !=',2);
-        $builder->orderby('SurveyId', 'ASC'); 
+        $builder->where('SurveyStatus !=',3);
+        $builder->orderBy('SurveyStatus', 'ASC');
+        $builder->orderBy('SurveyDate', 'ASC');
         $query = $builder->get()->getResult();  
         $data_count = 0;
         foreach($query as $row){ 
             $data_count++;  
 
+            // MENGAMBIL DATA STAFF
             $staffArray = explode('|', $row->SurveyStaff);
             $query =  $this->db->table('users');
             $query->whereIn('id', $staffArray);
             $result = $query->get()->getResult();
-            $staffname = implode(', ', array_column($result, 'username'));
+            $staffnames = array_column($result, 'username'); 
+            $staffname = implode('<br>', array_map(function($value, $key) {
+                return ($key + 1) . '. ' . strtoupper($value);
+            }, $staffnames, array_keys($staffnames))); 
 
-            $alert = "";
+
+            
+            // MENGAMBIL DATA DITERUSKAN
+            $SurveyForward = "";
+            // Penawaran
             $builder = $this->db->table("penawaran");
             $builder->select('*');
-            $builder->where('SurveyId',$row->SurveyId); 
-            $builder->orderby('SphId', 'ASC'); 
+            $builder->where('SphRef',$row->SurveyId); 
+            $builder->where('SphRefType',"Survey"); 
+            $builder->where('SphStatus <',"2"); 
+            $builder->orderBy('SphStatus', 'ASC');
+            $builder->orderBy('SphDate', 'ASC');
             $queryref = $builder->get()->getRow();  
             if($queryref){
-                $alert = ' 
+                $SurveyForward = ' 
                     <script>
-                        function Survey_return_click_'.$project_id.'_'.$queryref->SphId.'(){
-                            $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$project_id.'\'").trigger("click");
+                        function survey_return_click_'.$project_id.'_'.$queryref->SphId.'(){
+                            $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$project_id.'\']").trigger("click");
                             setTimeout(function() {
-                                $("html, body").scrollTop($(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").offset().top - 200); 
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
                                 $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").addClass("show");
                                 $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").hover(function() {
                                     setTimeout(function() {
                                          $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").removeClass("show"); 
-                                    }, 1000); // delay 1 detik
+                                    }, 2000); // delay 1 detik
                                 })
 
-                            }, 1000); // delay 1 detik
+                            }, 500); // delay 1 detik
                         }
-                    </script>
-                    <div class="alert alert-success p-2 m-1" role="alert"> 
-                    <span class="text-head-2">
-                        <i class="fa-solid fa-check text-success pe-0 me-2 text-success" style="font-size:0.75rem"></i>
-                        Survey berhasil diteruskan ke penawaran, dengan No. Penawaran :  <a class="text-head-2" style="cursor:pointer" onclick="Survey_return_click_'.$project_id.'_'.$queryref->SphId.'()">'.$queryref->SphCode.'</a>  
-                    </span> 
-                </div>';
+                    </script> 
+                    
+                    <span class="text-head-3">Penawaran </span><span class="text-head-3 pointer text-decoration-underline" onclick="survey_return_click_'.$project_id.'_'.$queryref->SphId.'()">('.$queryref->SphCode.')
+                    </span>  ';
             }else{
-                $builder = $this->db->table("invoice");
+                
+                // SAMPLE
+                $builder = $this->db->table("sample");
                 $builder->select('*');
-                $builder->where('SurveyId',$row->SurveyId); 
-                $builder->orderby('InvId', 'DESC'); 
+                $builder->where('SampleRef',$row->SurveyId); 
+                $builder->where('SampleRefType',"Survey"); 
+                $builder->orderby('SampleId', 'DESC'); 
                 $queryref = $builder->get()->getRow();   
                 if($queryref){
-                    $alert = ' 
-                    <script>
-                        function Survey_return_click_'.$project_id.'_'.$queryref->InvId.'(){
-                            $(".icon-project[data-menu=\'invoice\'][data-id=\''.$project_id.'\'").trigger("click");
-                            setTimeout(function() {
-                                $("html, body").scrollTop($(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").offset().top - 200); 
-                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
-                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
-                                    setTimeout(function() {
-                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
-                                    }, 1000); // delay 1 detik
-                                })
+                    $SurveyForward = ' 
+                        <script>
+                            function survey_return_click_'.$project_id.'_'.$queryref->SampleId.'(){
+                                $(".icon-project[data-menu=\'sample\'][data-id=\''.$project_id.'\'").trigger("click");
+                                setTimeout(function() {
+                                    var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\']");
+                                    var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                    if (targetElement.length > 0 && contentData.length > 0) {
+                                        var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                        contentData.scrollTop(targetOffset);
+                                    }
+                                   
+                                    $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
+                                    $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
+                                        setTimeout(function() {
+                                             $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
+                                        }, 2000); // delay 1 detik
+                                    })
 
-                            }, 1000); // delay 1 detik
-                        }
-                    </script>
-                    <div class="alert alert-success p-2 m-1" role="alert"> 
-                    <span class="text-head-2">
-                        <i class="fa-solid fa-check text-success pe-0 me-2 text-success" style="font-size:0.75rem"></i>
-                        Survey berhasil diteruskan ke invoice, dengan No. Invoice :  <a class="text-head-2" style="cursor:pointer" onclick="Survey_return_click_'.$project_id.'_'.$queryref->InvId.'()">'.$queryref->InvCode.'</a>  
-                    </span> 
-                </div>';
-                }else{
-                    $alert = '<div class="alert alert-primary p-2 m-1" role="alert"> 
-                        <span class="text-head-2">
-                            <i class="fa-solid fa-reply me-2 fa-rotate-180" style="font-size:0.75rem"></i>
-                            Teruskan Survey ini ke 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_sph('.$project_id.',this,'.$row->SurveyId.')">penawaran</a> 
-                            atau langsung ke pembuatan 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_invoice('.$project_id.',this,'.$row->SurveyId.',\'Survey\')">invoice</a>
+                                }, 1000); // delay 1 detik
+                            }
+                        </script>
+                        
+                        <span class="text-head-3">Sample </span><span class="text-head-3 pointer text-decoration-underline" onclick="survey_return_click_'.$project_id.'_'.$queryref->SampleId.'()">('.$queryref->SampleCode.')
                         </span> 
-                    </div>'; 
+                    ';
+                }else{ 
+                    
+                    // INVOICE
+                    $builder = $this->db->table("invoice");
+                    $builder->select('*');
+                    $builder->where('InvRef',$row->SurveyId); 
+                    $builder->where('InvRefType',"Survey");  
+                    $builder->orderby('InvId', 'DESC'); 
+                    $queryref = $builder->get()->getRow();   
+                    if($queryref){
+                        $SurveyForward = ' 
+                            <script>
+                                function survey_return_click_'.$project_id.'_'.$queryref->InvId.'(){
+                                    $(".icon-project[data-menu=\'invoice\'][data-id=\''.$project_id.'\'").trigger("click");
+                                    setTimeout(function() {
+                                        var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\']");
+                                        var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                        if (targetElement.length > 0 && contentData.length > 0) {
+                                            var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                            contentData.scrollTop(targetOffset);
+                                        }
+                                       
+                                        $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
+                                        $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
+                                            setTimeout(function() {
+                                                 $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
+                                            }, 2000); // delay 1 detik
+                                        })
+
+                                    }, 1000); // delay 1 detik
+                                }
+                            </script>
+                            
+                            <span class="text-head-3">Invoice </span><span class="text-head-3 pointer text-decoration-underline" onclick="survey_return_click_'.$project_id.'_'.$queryref->InvId.'()">('.$queryref->InvCode.')
+                            </span> 
+                        ';
+                    }else{
+                        $SurveyForward = ' <span class="text-head-3"><a class="text-detail-2" onclick="add_project_sph('.$project_id.',this,'.$row->SurveyId.',\'Survey\')">Penawaran</a> | </span>
+                        <span class="text-head-3"><a class="text-detail-2" onclick="add_project_sample('.$project_id.',this,'.$row->SurveyId.',\'Survey\')">Sample</a> | </span>
+                        <span class="text-head-3"><a class="text-detail-2" onclick="add_project_invoice('.$project_id.',this,'.$row->SurveyId.',\'Survey\')">Invoice</a></span>'; 
+                    }
                 }
             }  
 
 
-            //load data hasil survey
-            $html_Survey = '  
-            <div class="alert alert-warning p-2 m-1" role="alert">
-                <span class="text-head-2">
-                    <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                    Belum ada hasil survey yang dibuat dari dokumen ini, 
-                    <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_survey_finish('.$project_id.','.$row->SurveyId.',this)">Buat hasil survey</a> 
-                </span>
-            </div>';
+
+             //load data hasil survey
             $builders = $this->db->table("survey_finish");
             $builders->select('*');
             $builders->where('SurveyId',$row->SurveyId); 
-            $query_finish = $builders->get()->getResult();  
-            
-            foreach($query_finish as $row_finish){ 
-                $html_Survey = '<div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
-                                    <div class="col-12 bg-light"> 
-                                        '.$row_finish->SurveyFinishDetail.'
-                                    </div>  
-                                    <div class="list-group"> ';
+            $row_finish = $builders->get()->getRow();   
+            $html_Survey = "";
+
+            if($row_finish){ 
+                $html_Survey .= '<div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
+                                    <div class="col bg-light ms-4 me-2 py-2"> 
+                                        '.$row_finish->SurveyFinishDetail.' 
+                                    <div class="list-group  "> ';
                                 
                 $folder_utama = 'assets/images/project'; 
                 $files = scandir($folder_utama."/".$row->SurveyId);
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..') {
 
-                        $filesize = filesize($folder_utama."/".$row->SurveyId . '/' . $file);
-                       // $html_Survey .= $folder_utama."/".$row->SurveyId . '/' . $file;
-                        $html_Survey .= ' <li class="list-group-item list-group-item-action align-items-center d-flex view-document file" > 
+                        $filesize = filesize($folder_utama."/".$row->SurveyId . '/' . $file); 
+                        $html_Survey .= ' <li class="list-group-item list-group-item-action align-items-center d-flex view-document file pb-2" > 
                                             <i class="fa-solid fa-file fa-2x me-2"></i>
                                             <div class="d-flex flex-column flex-fill ms-2">
                                                 <span class="fs-6">'.$file.'</span>
                                                 <span class="text-muted">'.$this->format_filesize($filesize).'</span>
                                             </div>  
-                                             
+                                                
                                             <button class="btn btn-sm float-end" onclick="download_file(this)" data-file="'.$folder_utama."/".$row->SurveyId . '/' . $file.'">
                                                 <i class="fa-solid fa-download"></i>
                                             </button>
@@ -999,27 +1103,111 @@ class ProjectModel extends Model
                                         </li>';
                     }
                 }  
-                $html_Survey .= '</div>
-                
-                    <div class="col-12 bg-light text-center"> 
-                        <button class="btn btn-sm btn-primary rounded border" onclick="edit_project_Survey_finish('.$row->ProjectId.','.$row_finish->SurveyFinishId.',this)">
-                            <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-                        </button>
-                    </div> 
+                $html_Survey .= ' </div></div></div> ';   
+            }
+            if($html_Survey == ""){
+                $html_Survey = '  
+                <div class="alert alert-warning p-2 m-1" role="alert">
+                    <span class="text-head-2">
+                        <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
+                        Belum ada hasil survey yang dibuat dari dokumen ini, 
+                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_survey_finish('.$row->ProjectId.','.$row->SurveyId.',this)">Buat hasil survey</a> 
+                    </span>
                 </div>'; 
             } 
+            
+            $status = "";
+            if($row->SurveyStatus==0){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8"> 
+                        <span class="text-head-3">
+                            <span class="badge text-bg-primary me-1">Baru</span> 
+                        </span>
+                    </div>
+                </div> ';
+            }
+            if($row->SurveyStatus==1){
+                $status .= ' 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3">
+                            <span class="badge text-bg-info me-1">Proses</span>
+                            <span class="text-primary pointer d-none" onclick="update_status_survey(1,'.$row->SurveyId.')"><i class="fa-solid fa-pen-to-square"></i></span>
+                        </span>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-regular fa-share-from-square pe-1"></i>Teruskan</span>
+                    </div>
+                    <div class="col-8">
+                        '.$SurveyForward.'
+                    </div>
+                </div>  ';
+            }
+            if($row->SurveyStatus==2){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3">
+                            <span class="badge text-bg-success me-1">Selesai</span>
+                        </span>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-regular fa-share-from-square pe-1"></i>Diteruskan</span>
+                    </div>
+                    <div class="col-8">
+                        '.$SurveyForward.'
+                    </div>
+                </div>  ';
+            }
+            if($row->SurveyStatus==3){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3">
+                            <span class="badge text-bg-danger me-1">Batal</span>
+                        </span>
+                    </div>
+                </div> '; 
+            }
+
             $html .= '
-            <div class="list-project mb-4 p-2">
+            <div class="list-project mb-4 p-2" data-id="'.$row->SurveyId.'" data-project="'.$project_id.'">
                 <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
-                    <div class="col-12  col-md-4 order-1 order-sm-0">
+                    <div class="col-12  col-md-4 order-1 order-sm-0"> 
                         <div class="row">
                             <div class="col-4"> 
                                 <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Survey</span>
                             </div>
                             <div class="col-8">
                                 <span class="text-head-3">'.$row->SurveyCode.'</span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Print Form Survey" onclick="print_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-print"></i></span>
+                                <div class="d-inline '.($row->SurveyStatus > 1 ? "d-none" : "").'">
+                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Survey" onclick="edit_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Survey"  onclick="delete_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                                </div>
                             </div>
                         </div> 
+                        '.$status.'
+                        
+                    </div>  
+                    <div class="col-12  col-md-4 order-1 order-sm-1"> 
                         <div class="row">
                             <div class="col-4"> 
                                 <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
@@ -1027,7 +1215,7 @@ class ProjectModel extends Model
                             <div class="col-8">
                                 <span class="text-head-3">'.date_format(date_create($row->SurveyDate),"d M Y").'</span>
                             </div>
-                        </div> 
+                        </div>  
                         <div class="row">
                             <div class="col-4"> 
                                 <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>Admin</span>
@@ -1044,8 +1232,16 @@ class ProjectModel extends Model
                                 <span class="text-head-3">'.$staffname .'</span>
                             </div>
                         </div>  
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-dollar-sign pe-1"></i>Biaya Operasional</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">Rp. '.number_format($row->SurveyTotal,0) .'</span>
+                            </div>
+                        </div>  
                     </div>
-                    <div class="col-12  col-md-5 order-2 order-sm-1"> 
+                    <div class="col-12  col-md-4 order-2 order-sm-1"> 
                         <div class="row">
                             <div class="col-4"> 
                                 <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>PIC Lapangan</span>
@@ -1070,40 +1266,21 @@ class ProjectModel extends Model
                                 <span class="text-head-3">'.$row->SurveyAddress.'</span>
                             </div>
                         </div>  
-                    </div> 
-                    <div class="col-12  col-md-3 order-0 order-sm-2">
-                        <div class="float-end d-md-flex d-none gap-1">  
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_Survey('.$project_id.','.$row->SurveyId.',this)">
-                                <i class="fa-solid fa-print mx-1"></i><span >Print</span>
-                            </button>
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_Survey('.$project_id.','.$row->SurveyId.',this)">
-                                <i class="fa-solid fa-pencil mx-1"></i><span >Ubah</span>
-                            </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_Survey('.$project_id.','.$row->SurveyId.',this)">
-                                <i class="fa-solid fa-close mx-1"></i><span >Hapus</span>
-                            </button> 
-                        </div> 
-                        <div class="d-md-none d-flex btn-action justify-content-between"> 
-                            <div class="text-head-1">Survey</div>
-                            <div class="dropdown">
-                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti-more-alt icon-rotate-45"></i>
-                                </a>
-                                <ul class="dropdown-menu shadow"> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_Survey('.$project_id.','.$row->SurveyId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_Survey('.$project_id.','.$row->SurveyId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
-                                </ul>
-                            </div>
-                        </div> 
-                    </div> 
+                    </div>  
                 </div> 
                 <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center pt-2 justify-content-between">   
-                    <span class="text-head-2"><i class="fa-solid fa-file-signature pe-2"></i>Hasil Survey</span> 
+                    <span class="text-head-2"><i class="fa-solid fa-file-signature pe-2"></i>Hasil Survey</span>
+                    '. ($row_finish ? 
+                    '<button class="btn btn-sm btn-primary rounded border '.($row->SurveyStatus > 1 ? "d-none" : "").'" onclick="edit_project_Survey_finish('.$row->ProjectId.','.$row_finish->SurveyFinishId.',this)"><i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
+                    </button>' : "").'
                 </div>
                 '.$html_Survey.'  
             </div> 
             ';
         }
+        
+            
+       
 
         if($html == ""){ 
             $html = '
@@ -1116,7 +1293,7 @@ class ProjectModel extends Model
         $html = '<div class="p-2 text-center"><h5 class="fw-bold" style="color: #032e7c !important; ">Survey Project</h5></div>'.$html;
         $html .= '   <div class="d-flex justify-content-center flex-column align-items-center">
                         <button class="btn btn-sm btn-primary px-3 m-2" onclick="add_project_survey(\''.$project_id.'\',this)"><i class="fa-solid fa-plus pe-2"></i>Buat data survey</button>
-                    </div>';
+                    </div> ';
 
         return json_encode(
             array(
@@ -1133,7 +1310,7 @@ class ProjectModel extends Model
         $builder = $this->db->table("survey");
         $builder->select('*');
         $builder->where('ProjectId',$project_id);
-        $builder->where('SurveyStatus !=',2);
+        $builder->where('SurveyStatus <',3);
         $builder->orderby('SurveyId', 'DESC'); 
         $query = $builder->get()->getResult();  
         foreach($query as $row){  
@@ -1146,6 +1323,39 @@ class ProjectModel extends Model
                     "type"=>"hasil",
                     "message"=>"hasil survey ".$row->SurveyCode." belum dibuat"
                 ); 
+            }else{
+                $builder = $this->db->table("penawaran");
+                $builder->select('*');
+                $builder->where('SphRef',$row->SurveyId); 
+                $builder->where('SphRefType',"Survey"); 
+                $builder->where('SphStatus <',"2"); 
+                $builder->orderby('SphId', 'ASC'); 
+                $queryref = $builder->get()->getRow();  
+                if(!$queryref){
+                    $builder = $this->db->table("invoice");
+                    $builder->select('*');
+                    $builder->where('InvRef',$row->SurveyId); 
+                    $builder->where('InvRefType',"Survey"); 
+                    $builder->orderby('InvId', 'DESC'); 
+                    $queryref = $builder->get()->getRow();   
+
+                    if(!$queryref){
+                        $builder = $this->db->table("sample");
+                        $builder->select('*');
+                        $builder->where('SampleRef',$row->SurveyId); 
+                        $builder->where('SampleRefType',"Survey"); 
+                        $builder->orderby('SampleId', 'DESC'); 
+                        $queryref = $builder->get()->getRow();   
+    
+                        if(!$queryref){
+                            $alert[] = array(
+                                "type"=>"proses",
+                                "message"=>"survey ".$row->SurveyCode." belum diteruskan"
+                            );  
+                        }
+                    }
+                }
+               
             }
         }
         return $alert;
@@ -1154,7 +1364,7 @@ class ProjectModel extends Model
         $builder = $this->db->table("survey");
         $builder->select('*');
         $builder->where('ProjectId',$project_id); 
-        $builder->where('SurveyStatus !=',2);
+        $builder->where('SurveyStatus <',3);
         $builder->orderby('SurveyId', 'DESC'); 
         return  $builder->countAllResults();
     }
@@ -1162,13 +1372,17 @@ class ProjectModel extends Model
         $html = ""; 
         $builder = $this->db->table("sample");
         $builder->select('*');
+        $builder->join('users',"id=SampleAdmin","left"); 
         $builder->where('ProjectId',$project_id);
-        $builder->where('SampleStatus !=',2);
-        $builder->orderby('SampleId', 'DESC'); 
+        $builder->where('SampleStatus !=',3);
+        $builder->orderby('SampleStatus', 'ASC'); 
+        $builder->orderby('SampleDate', 'ASC'); 
         $query = $builder->get()->getResult();  
         $data_count = 0;
         foreach($query as $row){ 
             $data_count++;
+
+
             $builder = $this->db->table("sample_detail");
             $builder->select('*'); 
             $builder->where('SampleDetailRef',$row->SampleId);
@@ -1176,78 +1390,7 @@ class ProjectModel extends Model
             $items = $builder->get()->getResult(); 
             $html_items = "";
             $no = 1;
-            $huruf  = "A";
-
-            $builder = $this->db->table("penawaran");
-            $builder->select('*');
-            $builder->where('SampleId',$row->SampleId); 
-            $builder->orderby('SphId', 'DESC'); 
-            $queryref = $builder->get()->getRow();  
-            if($queryref){
-                $alert = ' 
-                    <script>
-                        function sample_return_click_'.$project_id.'_'.$queryref->SphId.'(){
-                            $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$project_id.'\'").trigger("click");
-                            setTimeout(function() {
-                                $("html, body").scrollTop($(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").offset().top - 200); 
-                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").addClass("show");
-                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").hover(function() {
-                                    setTimeout(function() {
-                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").removeClass("show"); 
-                                    }, 1000); // delay 1 detik
-                                })
-
-                            }, 1000); // delay 1 detik
-                        }
-                    </script>
-                    <div class="alert alert-success p-2 m-1" role="alert"> 
-                    <span class="text-head-2">
-                        <i class="fa-solid fa-check text-success pe-0 me-2 text-success" style="font-size:0.75rem"></i>
-                        Sample berhasil diteruskan ke penawaran, dengan No. Penawaran :  <a class="text-head-2" style="cursor:pointer" onclick="sample_return_click_'.$project_id.'_'.$queryref->SphId.'()">'.$queryref->SphCode.'</a>  
-                    </span> 
-                </div>';
-            }else{
-                $builder = $this->db->table("invoice");
-                $builder->select('*');
-                $builder->where('SampleId',$row->SampleId); 
-                $builder->orderby('InvId', 'DESC'); 
-                $queryref = $builder->get()->getRow();   
-                if($queryref){
-                    $alert = ' 
-                    <script>
-                        function sample_return_click_'.$project_id.'_'.$queryref->InvId.'(){
-                            $(".icon-project[data-menu=\'invoice\'][data-id=\''.$project_id.'\'").trigger("click");
-                            setTimeout(function() {
-                                $("html, body").scrollTop($(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").offset().top - 200); 
-                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
-                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
-                                    setTimeout(function() {
-                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
-                                    }, 1000); // delay 1 detik
-                                })
-
-                            }, 1000); // delay 1 detik
-                        }
-                    </script>
-                    <div class="alert alert-success p-2 m-1" role="alert"> 
-                    <span class="text-head-2">
-                        <i class="fa-solid fa-check text-success pe-0 me-2 text-success" style="font-size:0.75rem"></i>
-                        Sample berhasil diteruskan ke invoice, dengan No. Invoice :  <a class="text-head-2" style="cursor:pointer" onclick="sample_return_click_'.$project_id.'_'.$queryref->InvId.'()">'.$queryref->InvCode.'</a>  
-                    </span> 
-                </div>';
-                }else{
-                    $alert = '<div class="alert alert-primary p-2 m-1" role="alert"> 
-                        <span class="text-head-2">
-                            <i class="fa-solid fa-reply me-2 fa-rotate-180" style="font-size:0.75rem"></i>
-                            Teruskan sample ini ke 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_sph('.$project_id.',this,'.$row->SampleId.')">penawaran</a> 
-                            atau langsung ke pembuatan 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_invoice('.$project_id.',this,'.$row->SampleId.',\'sample\')">invoice</a>
-                        </span> 
-                    </div>'; 
-                }
-            }
-
+            $huruf  = "A"; 
             foreach($items as $item){
 
                 $folder = 'assets/images/produk/'.$item->ProdukId."/";
@@ -1327,17 +1470,121 @@ class ProjectModel extends Model
                      
                 
             }
+            $SampleRef = '-';
+            // MENGAMBIL DATA REFERENSI
+            if($row->SampleRefType == "Survey"){
+                $builder = $this->db->table("survey");
+                $builder->where('SurveyId',$row->SampleRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $SampleRef = ' 
+                    <script>
+                        function sample_ref_click_'.$project_id.'_'.$queryref->SurveyId.'(){
+                            $(".icon-project[data-menu=\'survey\'][data-id=\''.$project_id.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <span class="text-head-3">Survey </span><span class="text-head-3 pointer text-decoration-underline" onclick="sample_ref_click_'.$project_id.'_'.$queryref->SurveyId.'()">('.$queryref->SurveyCode.')
+                    </span>  '; 
+                } 
+            }
+            // MENGAMBIL DATA DITERUSKAN
+            $builder = $this->db->table("penawaran");
+            $builder->select('*');
+            $builder->where('SphRef',$row->SampleId); 
+            $builder->where('SphRefType',"Sample"); 
+            $builder->where('SphStatus <',"2"); 
+            $builder->orderby('SphId', 'DESC'); 
+            $queryref = $builder->get()->getRow();  
+            if($queryref){
+                $SampleForward = ' 
+                <script>
+                    function sample_return_click_'.$project_id.'_'.$queryref->SphId.'(){
+                        $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$project_id.'\']").trigger("click");
+                        setTimeout(function() {
+                            var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\']");
+                            var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                            if (targetElement.length > 0 && contentData.length > 0) {
+                                var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                contentData.scrollTop(targetOffset);
+                            }
+                           
+                            $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").addClass("show");
+                            $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").hover(function() {
+                                setTimeout(function() {
+                                     $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").removeClass("show"); 
+                                }, 2000); // delay 1 detik
+                            })
 
+                        }, 500); // delay 1 detik
+                    }
+                </script> 
+                <span class="text-head-3">Penawaran </span><span class="text-head-3 pointer text-decoration-underline" onclick="sample_return_click_'.$project_id.'_'.$queryref->SphId.'()">('.$queryref->SphCode.')
+                </span>  '; 
+            }else{
+                $builder = $this->db->table("invoice");
+                $builder->select('*');
+                $builder->where('InvRef',$row->SampleId); 
+                $builder->where('InvRefType',"Sample");  
+                $builder->orderby('InvId', 'DESC'); 
+                $queryref = $builder->get()->getRow();   
+                if($queryref){
+                    $SampleForward = ' 
+                            <script>
+                                function survey_return_click_'.$project_id.'_'.$queryref->InvId.'(){
+                                    $(".icon-project[data-menu=\'invoice\'][data-id=\''.$project_id.'\'").trigger("click");
+                                    setTimeout(function() {
+                                        var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\']");
+                                        var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                        if (targetElement.length > 0 && contentData.length > 0) {
+                                            var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                            contentData.scrollTop(targetOffset);
+                                        }
+                                       
+                                        $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
+                                        $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
+                                            setTimeout(function() {
+                                                 $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
+                                            }, 2000); // delay 1 detik
+                                        })
 
+                                    }, 1000); // delay 1 detik
+                                }
+                            </script>
+                            
+                            <span class="text-head-3">Invoice </span><span class="text-head-3 pointer text-decoration-underline" onclick="survey_return_click_'.$project_id.'_'.$queryref->InvId.'()">('.$queryref->InvCode.')
+                            </span> 
+                        ';
+                }else{
+                    $SampleForward = ' <span class="text-head-3"><a class="text-detail-2" onclick="add_project_sph('.$project_id.',this,'.$row->SampleId.',\'Sample\')">Penawaran</a> | </span> 
+                    <span class="text-head-3"><a class="text-detail-2" onclick="add_project_invoice('.$project_id.',this,'.$row->SampleId.',\'Sample\')">Invoice</a></span>'; 
+                }
+            }
+            
+            // MENGAMBIL DATA PEMBAYARAN
             $html_payment = "";
             $payment_total = 0;
             if($row->SampleGrandTotal == 0){
-                $html_payment = '<div class="alert alert-success p-2 m-1" role="alert"> 
-                <span class="text-head-2">
+                $html_payment = ' 
+                <span class="text-head-3 ps-4">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
                     Tidak ada pembayaran yang harus diselesaikan untuk transaksi ini 
-                </span> 
-                </div>';
+                </span> ';
             }else{
                 $builder = $this->db->table("payment");
                 $builder->select('*'); 
@@ -1359,27 +1606,27 @@ class ProjectModel extends Model
                             <i class="fa-solid fa-certificate fa-stack-2x"></i> 
                             <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
                         </span>Pending</span>';
-                        $status = '<span class="text-head-3 text-warning">Pending</span>';
+                        //$status = '<span class="text-head-3 text-warning">Pending</span>';
                     }else{
                         $status = ' <span class="text-head-3 text-success">
                         <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
                             <i class="fa-solid fa-certificate fa-stack-2x"></i>
-                            <i class="fa-solid fa-check text-success fa-stack-1x fa-inverse"></i>
+                            <i class="fa-solid fa-check fa-stack-1x fa-inverse"></i>
                         </span>Verified</span>';
-                        $status = '<span class="text-head-3 text-success">Terverifikasi</span>';
+                        //$status = '<span class="text-head-3 text-success">Terverifikasi</span>';
                     }
                     $html_payment .= '<div class="mb-1 p-1">  
                                     <div class="row mx-2"> 
                                         <div class="col-12 col-md-1 order-2 order-sm-1 p-0"> 
-                                            <div class="d-flex flex-row flex-md-column justify-content-between"> 
-                                                <span class="text-detail-2"><i class="fa-solid fa-check text-success pe-1"></i>Status</span>
-                                                '.$status.'
-                                            </div>  
-                                        </div>
-                                        <div class="col-12 col-md-1 order-3 order-sm-2 p-0"> 
                                             <div class="d-flex flex-row flex-md-column justify-content-between">
                                                 <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
                                                 <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
+                                            </div>  
+                                        </div>
+                                        <div class="col-12 col-md-1 order-3 order-sm-2 p-0"> 
+                                            <div class="d-flex flex-row flex-md-column justify-content-between"> 
+                                                <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                                                '.$status.'
                                             </div>  
                                         </div>
                                         <div class="col-12 col-md-1 order-4 order-sm-3 p-0"> 
@@ -1437,19 +1684,19 @@ class ProjectModel extends Model
                 } 
                 if($html_payment == ""){
                     $html_payment = '<div class="alert alert-warning p-2 m-1" role="alert"> 
-                            <span class="text-head-2">
+                            <span class="text-head-3">
                                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                                Belum ada data pembayaran yang dibuat, Silahkan tambahkan data  
-                                <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->SampleId.',this,\'sample\')">Pembayaran</a>
+                                Belum ada data pembayaran, silahkan tambahkan data  
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->SampleId.',this,\'sample\')">Pembayaran</a>
                             </span> 
                         </div>';
                 }elseif($payment_total < $row->SampleGrandTotal){
                     $html_payment .= '
                     <div class="alert alert-warning p-2 m-1" role="alert"> 
-                        <span class="text-head-2">
+                        <span class="text-head-3">
                             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                            Masih ada sisa pembayaran yang belum diselesaikan, Silahkan buat data  
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->SampleId.',this,\'sample\')">Pembayaran</a>
+                            Masih ada sisa pembayaran yang belum diselesaikan, silahkan buat data  
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->SampleId.',this,\'sample\')">Pembayaran</a>
                         </span> 
                     </div>';
                 }
@@ -1464,10 +1711,10 @@ class ProjectModel extends Model
             if($delivery == 0){
                 $html_delivery = ' 
                     <div class="alert alert-warning p-2 m-1" role="alert">
-                        <span class="text-head-2">
+                        <span class="text-head-3">
                             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                            Belum ada data pengiriman yang dibuat dari dokumen ini, 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->SampleId.',this,\'sample\')">Buat Data Pengiriman</a> 
+                            Belum ada data pengiriman, 
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->SampleId.',this,\'sample\')">Buat Data Pengiriman</a> 
                         </span>
                     </div>';
             }else{
@@ -1482,55 +1729,153 @@ class ProjectModel extends Model
                 </div>';
             }
             
+            $status = "";
+            if($row->SampleStatus==0){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8"> 
+                        <span class="text-head-3">
+                            <span class="badge text-bg-primary me-1">Baru</span> 
+                        </span>
+                    </div>
+                </div> ';
+            }
+            if($row->SampleStatus==1){
+                $status .= ' 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3">
+                            <span class="badge text-bg-info me-1">Proses</span>
+                            <span class="text-primary pointer d-none" onclick="update_status_survey(1,'.$row->SampleId.')"><i class="fa-solid fa-pen-to-square"></i></span>
+                        </span>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-regular fa-share-from-square pe-1"></i>Teruskan</span>
+                    </div>
+                    <div class="col-8">
+                        '.$SampleForward.'
+                    </div>
+                </div>  ';
+            }
+            if($row->SampleStatus==2){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3">
+                            <span class="badge text-bg-success me-1">Selesai</span>
+                        </span>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-regular fa-share-from-square pe-1"></i>Diteruskan</span>
+                    </div>
+                    <div class="col-8">
+                        '.$SampleForward.'
+                    </div>
+                </div>  ';
+            }
+            if($row->SampleStatus==3){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="text-head-3">
+                            <span class="badge text-bg-danger me-1">Batal</span>
+                        </span>
+                    </div>
+                </div> '; 
+            }
+
 
             $html .= '
-            <div class="list-project mb-4 p-2">
+            <div class="list-project mb-4 p-2" data-id="'.$row->SampleId.'" data-project="'.$project_id.'">
                 <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
-                    <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Penawaran</span>
-                            <span class="text-head-3">'.$row->SampleCode.'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-                            <span class="text-head-3">'.date_format(date_create($row->SampleDate),"d M Y").'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-xl-4 order-3 order-sm-2 pb-2">
-                        <div class="d-flex flex-column justify-content-between">
-                            <span class="text-detail-2 pb-1 pb-md-0"><i class="fa-solid fa-location-dot pe-1"></i> Alamat</span>
-                            <span class="text-head-3 text-wrap">'.$row->SampleAddress.'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-3">
-                        <div class="float-end d-md-flex d-none gap-1">  
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_sample('.$project_id.','.$row->SampleId.',this)">
-                                <i class="fa-solid fa-pencil mx-1"></i><span >Ubah</span>
-                            </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_sample('.$project_id.','.$row->SampleId.',this)">
-                                <i class="fa-solid fa-close mx-1"></i><span >Hapus</span>
-                            </button> 
-                        </div> 
-                        <div class="d-md-none d-flex btn-action justify-content-between"> 
-                            <div class="text-head-1">Sample Barang</div>
-                            <div class="dropdown">
-                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti-more-alt icon-rotate-45"></i>
-                                </a>
-                                <ul class="dropdown-menu shadow"> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sample('.$project_id.','.$row->SampleId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
-                                </ul>
+                    <div class="col-12  col-md-4 order-1 order-sm-0"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Sample</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SampleCode.'</span>
+                                <span class="text-primary pointer text-head-3 d-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Print Form Sample" onclick="print_project_Sample('.$row->ProjectId.','.$row->SampleId.',this)"><i class="fa-solid fa-print"></i></span>
+                                <div class="d-inline '.($row->SampleStatus > 1 ? "d-none" : "").'">
+                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Sample" onclick="edit_project_sample('.$row->ProjectId.','.$row->SampleId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Sample"  onclick="delete_project_sample('.$row->ProjectId.','.$row->SampleId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                                </div>
                             </div>
                         </div> 
-                    </div> 
-                </div> 
-                <div class="border-top pt-2 mb-2 gap-2 align-items-center pt-2 justify-content-between">  
-                     '.$alert.' 
-                </div>
-                <div class="detail-item p-2 border-top">
+                        
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Referensi</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$SampleRef .'</span>
+                            </div>
+                        </div>    
+                        '.$status.'
+                        
+                    </div>  
+                    <div class="col-12  col-md-4 order-1 order-sm-1"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row->SampleDate),"d M Y").'</span>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>Admin</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->username .'</span>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="col-12  col-md-4 order-2 order-sm-1"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>PIC Lapangan</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SampleCustName.'</span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-phone pe-1"></i>No. Hp</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SampleCustTelp.'</span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-location-dot pe-1"></i>Lokasi</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SampleAddress.'</span>
+                            </div>
+                        </div>  
+                    </div>  
+                </div>  
+                <div class="detail-item p-2 m-1 border-top">
                     '.$html_items.' 
                 </div>
                 <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center flex-wrap">   
@@ -1581,12 +1926,11 @@ class ProjectModel extends Model
         );
     }
     private function data_project_sample_notif($project_id){
-        $alert = array();
-
+        $alert = array(); 
         $builder = $this->db->table("sample");
         $builder->select('*');
         $builder->where('ProjectId',$project_id);
-        $builder->where('SampleStatus !=',2);
+        $builder->where('SampleStatus <',3);
         $builder->orderby('SampleId', 'DESC'); 
         $query = $builder->get()->getResult();  
         foreach($query as $row){ 
@@ -1628,6 +1972,11 @@ class ProjectModel extends Model
                     );
                 }
             }
+            
+            $alert[] = array(
+                "type"=>"teruskan",
+                "message"=>"dokumen ". $row->SampleCode ." belum diteruskan"
+            );
         }
         return $alert;
     }
@@ -1635,7 +1984,7 @@ class ProjectModel extends Model
         $builder = $this->db->table("sample");
         $builder->select('*');
         $builder->where('ProjectId',$project_id); 
-        $builder->where('SampleStatus !=',2);
+        $builder->where('SampleStatus <',3);
         $builder->orderby('SampleId', 'DESC'); 
         return  $builder->countAllResults();
     }
@@ -1844,7 +2193,7 @@ class ProjectModel extends Model
                   '.$alert.'
                 </div>
             </div> 
-        ';
+            ';
         }
 
         if($html == ""){ 
@@ -4016,7 +4365,7 @@ class ProjectModel extends Model
     
     public function delete_data_survey($id){   
         $builder = $this->db->table("survey"); 
-        $builder->set('SurveyStatus', 2);    
+        $builder->set('SurveyStatus', 3);    
         $builder->set('updated_user', user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
         $builder->where('SurveyId', $id); 
@@ -4120,15 +4469,18 @@ class ProjectModel extends Model
             "SampleDate"=>$header["SampleDate"],
             "SampleDate2"=>$header["SampleDate"],  
             "ProjectId"=>$header["ProjectId"],
+            "SampleRef"=>$header["SampleRef"],
+            "SampleRefType"=>$header["SampleRefType"],
             "SampleCustName"=>$header["SampleCustName"],
             "SampleCustTelp"=>$header["SampleCustTelp"],
-            "SampleAdmin"=>$header["SampleAdmin"], 
             "SampleAddress"=>$header["SampleAddress"],
+            "SampleAdmin"=>$header["SampleAdmin"], 
             "TemplateId"=>$header["TemplateId"],
             "SampleSubTotal"=>$header["SampleSubTotal"],
             "SampleDiscItemTotal"=>$header["SampleDiscItemTotal"],
             "SampleDiscTotal"=>$header["SampleDiscTotal"],
             "SampleGrandTotal"=>$header["SampleGrandTotal"],
+            "SampleStatus"=>($header["SampleGrandTotal"] == "0" ? 1 : 0),
             "created_user"=>user()->id, 
             "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
@@ -4147,10 +4499,31 @@ class ProjectModel extends Model
         }
 
         
+        //update status sample
+        if( $header["SampleRefType"] == "Penawaran"){ 
+            $builder = $this->db->table("penawaran"); 
+            $builder->set('SphStatus', 1); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SphId', $header["SampleRef"]); 
+            $builder->update(); 
+        }  
+        //update status Survey
+        if( $header["SampleRefType"] == "Survey"){ 
+            $builder = $this->db->table("survey"); 
+            $builder->set('SurveyStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SurveyId', $header["SampleRef"]); 
+            $builder->update(); 
+        }  
+
+        
+        //update status project
         $builder = $this->db->table("project"); 
         $builder->set('ProjectStatus', 2);  
         $builder->where('ProjectId', $header["ProjectId"]); 
-        $builder->update();  
+        $builder->update();   
     }
     public function update_data_sample($data,$id){ 
         $header = $data["header"]; 
@@ -4174,6 +4547,10 @@ class ProjectModel extends Model
         $builder = $this->db->table("sample_detail");
         $builder->where('SampleDetailRef',$id);
         $builder->delete(); 
+
+        
+        //update status Sample
+        $this->update_data_sample_status($id);
         // ADD DETAIL PRODUK 
         foreach($data["detail"] as $row){ 
             $row["SampleDetailRef"] = $id;
@@ -4183,6 +4560,61 @@ class ProjectModel extends Model
         } 
 
     } 
+    public function update_data_sample_status($id){
+        
+        $builder = $this->db->table("sample");  
+        $builder->where('SampleId',$id);
+        $result = $builder->get()->getRow(); 
+
+        //status payment
+        $paymentstatus = 1;
+        if($result->SampleGrandTotal > 0){
+            $builder = $this->db->table("payment");  
+            $builder->where('PaymentRef',$id);
+            $builder->where('PaymentRefType','Sample');
+            $results = $builder->get()->getResult(); 
+            $hasil = array_sum(array_column($results, 'PaymentTotal')); 
+            if($result->SampleGrandTotal > $hasil ){
+                $paymentstatus = 0;
+            }
+        }
+
+        //status delivery
+        $deliverystatus = 0; 
+        $builder = $this->db->table("delivery"); 
+        $builder->join('delivery_detail',"DeliveryDetailRef=DeliveryId","left"); 
+        $builder->where('SampleId',$id); 
+        $results = $builder->get()->getResult(); 
+        $hasildelivery = array_sum(array_column($results, 'DeliveryDetailQty')); 
+ 
+        $builder = $this->db->table("sample_detail");  
+        $builder->join('sample',"SampleDetailRef=SampleId","left"); 
+        $builder->where('SampleId',$id);
+        $results = $builder->get()->getResult(); 
+        $hasilsample = array_sum(array_column($results, 'DeliveryDetailQty')); 
+
+        if($hasilsample <= $hasildelivery ){
+            $deliverystatus = 1;
+        } 
+
+        if(($paymentstatus == 1 || $deliverystatus == 1 )){ 
+            if($result->SampleStatus < 2){ 
+                $builder = $this->db->table("sample"); 
+                $builder->set('SampleStatus', 1); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('SampleId', $id); 
+                $builder->update();  
+            }
+        }else{
+            $builder = $this->db->table("sample"); 
+            $builder->set('SampleStatus', 0); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SampleId', $id); 
+            $builder->update();  
+        }
+    }
     public function delete_data_sample($id){   
         $builder = $this->db->table("sample"); 
         $builder->set('SampleStatus', 2);    
@@ -4220,8 +4652,9 @@ class ProjectModel extends Model
             "SphCode"=>$this->get_next_code_penawaran($header["SphDate"]),
             "SphDate"=>$header["SphDate"],
             "SphDate2"=>$header["SphDate"],  
-            "ProjectId"=>$header["ProjectId"],
-            "SampleId"=>$header["SampleId"],
+            "ProjectId"=>$header["ProjectId"], 
+            "SphRef"=>$header["SphRef"],
+            "SphRefType"=>$header["SphRefType"],
             "SphAdmin"=>$header["SphAdmin"],
             "SphCustName"=>$header["SphCustName"],
             "SphCustTelp"=>$header["SphCustTelp"], 
@@ -4249,12 +4682,23 @@ class ProjectModel extends Model
         }
 
         //update status sample
-        $builder = $this->db->table("sample"); 
-        $builder->set('SampleStatus', 1); 
-        $builder->set('updated_user', user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('SampleId', $header["SampleId"]); 
-        $builder->update(); 
+        if( $header["SphRefType"] == "Sample"){ 
+            $builder = $this->db->table("sample"); 
+            $builder->set('SampleStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SampleId', $header["SphRef"]); 
+            $builder->update(); 
+        }  
+        //update status Survey
+        if( $header["SphRefType"] == "Survey"){ 
+            $builder = $this->db->table("survey"); 
+            $builder->set('SurveyStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SurveyId', $header["SphRef"]); 
+            $builder->update(); 
+        }  
 
         
         //update status project
@@ -4332,11 +4776,12 @@ class ProjectModel extends Model
             "InvDate"=>$header["InvDate"], 
             "InvDate2"=>$header["InvDate"],  
             "ProjectId"=>$header["ProjectId"],
-            "SampleId"=>$header["SampleId"],
-            "SphId"=>$header["SphId"],
-            "InvAdmin"=>$header["InvAdmin"],
-            "CustomerId"=>$header["CustomerId"],
-            "InvAddress"=>$header["InvAddress"],
+            "InvRef"=>$header["InvRef"],
+            "InvRefType"=>$header["InvRefType"],
+            "InvAdmin"=>$header["InvAdmin"], 
+            "InvCustName"=>$header["InvCustName"],
+            "InvCustTelp"=>$header["InvCustTelp"],
+            "InvAddress"=>$header["InvAddress"], 
             "TemplateId"=>$header["TemplateId"],
             "InvSubTotal"=>$header["InvSubTotal"],
             "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
@@ -4363,28 +4808,42 @@ class ProjectModel extends Model
         }
 
         
+        
         //update status sample
-        $builder = $this->db->table("sample"); 
-        $builder->set('SampleStatus', 1); 
-        $builder->set('updated_user', user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('SampleId', $header["SampleId"]); 
-        $builder->update(); 
+        if( $header["InvRefType"] == "Penawaran"){ 
+            $builder = $this->db->table("penawaran"); 
+            $builder->set('SphStatus', 1); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SphId', $header["InvRef"]); 
+            $builder->update(); 
+        }  
+        //update status Survey
+        if( $header["InvRefType"] == "Survey"){ 
+            $builder = $this->db->table("survey"); 
+            $builder->set('SurveyStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SurveyId', $header["InvRef"]); 
+            $builder->update(); 
+        }  
 
-        //update status penawaran
-        $builder = $this->db->table("penawaran"); 
-        $builder->set('SphStatus', 1); 
-        $builder->set('updated_user', user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('SphId', $header["SphId"]); 
-        $builder->update(); 
+        //update status Survey
+        if( $header["InvRefType"] == "Sample"){ 
+            $builder = $this->db->table("sample"); 
+            $builder->set('SampleStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SampleId', $header["InvRef"]); 
+            $builder->update(); 
+        }  
+
         
         //update status project
         $builder = $this->db->table("project"); 
-        $builder->set('ProjectStatus', 6);  
+        $builder->set('ProjectStatus', 2);  
         $builder->where('ProjectId', $header["ProjectId"]); 
-        $builder->update();  
-
+        $builder->update();     
     } 
     public function update_data_invoice($data,$id){ 
         $header = $data["header"]; 
@@ -4456,10 +4915,8 @@ class ProjectModel extends Model
         $builder = $this->db->table("payment");
         $builder->insert(array( 
             "PaymentCode"=>$this->get_next_code_payment($data["PaymentDate"]),
-            "InvId"=>$data["InvId"],
-            "SampleId"=>$data["SampleId"],
-            "POId"=>$data["POId"],
-            "DeliveryId"=>$data["DeliveryId"],
+            "PaymentRef"=>$data["PaymentRef"],
+            "PaymentRefType"=>$data["PaymentRefType"], 
             "ProjectId"=>$data["ProjectId"],
             "PaymentDate"=>$data["PaymentDate"],
             "PaymentDate2"=>$data["PaymentDate"],
@@ -4490,41 +4947,18 @@ class ProjectModel extends Model
             mkdir($folder_utama."/".$data["ProjectId"], 0777, true);  
         }
 
-        if($data["SampleId"] !== ""){
-            if (!file_exists($folder_utama."/".$data["ProjectId"]."/sample")) {
-                mkdir($folder_utama."/".$data["ProjectId"]."/sample", 0777, true);  
-            }
-            $folder_utama = $folder_utama."/".$data["ProjectId"]."/sample"; 
+        if (!file_exists($folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"])) {
+            mkdir($folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"], 0777, true);  
         }
-        if($data["InvId"] !== ""){
-            if (!file_exists($folder_utama."/".$data["ProjectId"]."/invoice")) {
-                mkdir($folder_utama."/".$data["ProjectId"]."/invoice", 0777, true);  
-            }
-            $folder_utama = $folder_utama."/".$data["ProjectId"]."/invoice"; 
-        }
-        if($data["DeliveryId"] !== ""){
-            if (!file_exists($folder_utama."/".$data["ProjectId"]."/delivery")) {
-                mkdir($folder_utama."/".$data["ProjectId"]."/delivery", 0777, true);  
-            }
-            $folder_utama = $folder_utama."/".$data["ProjectId"]."/delivery"; 
-        }
-        if($data["POId"] !== ""){
-            if (!file_exists($folder_utama."/".$data["ProjectId"]."/pembelian")) {
-                mkdir($folder_utama."/".$data["ProjectId"]."/pembelian", 0777, true);  
-            }
-            $folder_utama = $folder_utama."/".$data["ProjectId"]."/pembelian"; 
-
-            $builder = $this->db->table("pembelian"); 
-            $builder->set('POStatus', 1);    
-            $builder->where('POId', $data["POId"]); 
-            $builder->update(); 
-     
-        }
-
+        $folder_utama = $folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"];  
         if (isset($data['image'])) {  
             $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama, $query->PaymentId);  
-        }
+        } 
 
+
+        if($data["PaymentRefType"] == "Sample"){
+            $this->update_data_sample_status($data["PaymentRef"]);
+        }
     }
     public function update_data_payment($data,$id){
         $builder = $this->db->table("payment"); 

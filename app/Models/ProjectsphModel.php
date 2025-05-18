@@ -354,6 +354,24 @@ class ProjectsphModel extends Model
         $builder = $this->db->table("penawaran");
         $builder->join("project","project.ProjectId = penawaran.ProjectId ","left"); 
         $builder->join("users","users.id = penawaran.SphAdmin ","left"); 
+         
+        if($filter["datestart"]){
+            $builder->where("SphDate >=",$filter["datestart"]);
+            $builder->where("SphDate <=",$filter["dateend"]); 
+        }
+        
+        if($filter["search"]){ 
+            $builder->groupStart(); 
+            $builder->like("ProjectName",$filter["search"]);
+            $builder->orLike("ProjectComment",$filter["search"]);
+            $builder->orLike("SphAddress",$filter["search"]);
+            $builder->orLike("SphCode",$filter["search"]);
+            $builder->groupEnd();  
+        }
+        
+        if(isset($filter["status"])){ 
+            $builder->whereIn("SphStatus",$filter["status"]); 
+        }
         $countTotal = $builder->get()->getNumRows();
         return json_encode(
             array(

@@ -1,5 +1,5 @@
  
-<div class="modal fade" id="modal-add-sample" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sample-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-sample" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sample-label" style="overflow-y:auto;" data-menu="project">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -20,21 +20,21 @@
                         </div> 
                         <div class="customer-display card bg-light show mt-4 m-1 p-2"> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphAddress" class="col-sm-3 col-form-label">Nama Customer</label>
+                                <label for="SampleAddress" class="col-sm-3 col-form-label">Nama Customer</label>
                                 <div class="col-sm-9">
-                                    <input  class="form-control form-control-sm input-form" id="SphCustName" type="text" value="<?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?>"/>
+                                    <input  class="form-control form-control-sm input-form" id="SampleCustName" type="text" value="<?= $customer["CustomerName"]?>"/>
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphAddress" class="col-sm-3 col-form-label">Telp Customer</label>
+                                <label for="SampleAddress" class="col-sm-3 col-form-label">Telp Customer</label>
                                 <div class="col-sm-9">
-                                    <input  class="form-control form-control-sm input-form" id="SphCustTelp"  type="text" value="<?= $customer->CustomerTelp1 ?> <?= $customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2 ?>"/>
+                                    <input  class="form-control form-control-sm input-form" id="SampleCustTelp"  type="text" value="<?= $customer["CustomerTelp"]?>"/>
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphAddress" class="col-sm-3 col-form-label">Alamat Project</label>
+                                <label for="SampleAddress" class="col-sm-3 col-form-label">Alamat Project</label>
                                 <div class="col-sm-9">
-                                    <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->CustomerAddress ?></textarea>
+                                    <textarea  class="form-control form-control-sm input-form" id="SampleAddress"><?= $customer["CustomerAddress"]?></textarea>
                                 </div>
                             </div>  
                         </div>   
@@ -56,6 +56,15 @@
                                     <input id="SampleCode" name="SampleCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
                                 </div>
                             </div> 
+                            
+                            <div class="row mb-1 align-items-center">
+                                <label for="SampleRef" class="col-sm-2 col-form-label">Ref</label>
+                                <div class="col-sm-10"> 
+                                    <select class="form-select form-select-sm" id="SampleRef" name="SampleRef"  style="width:100%" >
+                                        <option value="0" selected>No Data Selected</option>
+                                    </select>  
+                                </div> 
+                            </div>  
                             <div class="row mb-1 align-items-center">
                                 <label for="SampleDate" class="col-sm-2 col-form-label">Tanggal</label>
                                 <div class="col-sm-10">
@@ -399,12 +408,12 @@
             format: 'DD MMMM YYYY'
         }
     });
-    
-    $("#SampleStore").select2({
-        dropdownParent: $('#modal-add-sample .modal-content'),
+
+    $("#SampleRef").select2({
+        dropdownParent: $('#modal-add-sph .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
-            url: "<?= base_url()?>select2/get-data-store",
+            url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
             dataType: 'json',
             type:"POST",
             delay: 250,
@@ -428,9 +437,35 @@
                 };
             },
             cache: true
-        }, 
+        },  
+        escapeMarkup: function(m) {
+            return m;
+        },
+        templateResult: function template(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return $(data.html);
+        },
+        templateSelection: function templateSelect(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return data['text'];
+        }
     });
-    $('#SampleStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
+    var header_ref = '<?= is_null($ref_header) ? false : true ?>'; 
+    if(header_ref){ 
+        var option = new Option(
+            '<?= is_null($ref_header) ? "" : $ref_header["code"] ?>', 
+            '<?= is_null($ref_header) ? "" : $ref_header["id"] ?>', 
+            false, 
+            true
+        );
+        $(option).attr('data-type', '<?= is_null($ref_header) ? "" : $ref_header["type"] ?>'); 
+        $('#SampleRef').append(option).trigger('change.select2');
+        $('#SampleRef').attr("disabled",true);
+    }
 
     $("#SampleAdmin").select2({
         dropdownParent: $('#modal-add-sample .modal-content'),
@@ -1281,10 +1316,12 @@
         var header = {  
             SampleDate: $("#SampleDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
             ProjectId: <?= $project->ProjectId ?>, 
+            SampleRef: $("#SampleRef").val(), 
+            SampleRefType: $('#SampleRef option:selected').data('type'), 
             SampleAdmin: $("#SampleAdmin").val(),  
-            SampleCustName: $("#SphCustName").val(), 
-            SampleCustTelp: $("#SphCustTelp").val(), 
-            SampleAddress: $("#SphAddress").val(), 
+            SampleCustName: $("#SampleCustName").val(), 
+            SampleCustTelp: $("#SampleCustTelp").val(), 
+            SampleAddress: $("#SampleAddress").val(), 
             TemplateId: $($(".template-footer").find("select")[0]).val(),  
             SampleSubTotal: $("#SampleSubTotal").val().replace(/[^0-9]/g, ''), 
             SampleDiscItemTotal: $("#SampleDiscItemTotal").val().replace(/[^0-9]/g, ''), 
@@ -1341,8 +1378,13 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-sample").modal("hide");   
-                        
-                        $(".icon-project[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        if($("#modal-add-sample").data("menu") =="sample"){
+                            loader_datatable(); 
+                        }else{
+                            
+                            loader_data_project(<?= $project->ProjectId ?>,"sample"); 
+                            // $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                        } 
    
                     });
                   

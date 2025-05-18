@@ -49,7 +49,7 @@
                     <i class="fa-solid fa-angle-right"></i>
                 </li> 
                 <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center utama">
-                    <span class="ms-2 me-auto">Status</span>
+                    <span class="ms-2 me-auto">Status Progress</span>
                     <span class="badge text-bg-primary rounded-pill"  id="badge-status"></span>
                     <i class="fa-solid fa-angle-right"></i>
                 </li> 
@@ -106,8 +106,16 @@
                 ?>  
             </ul>
         </div>
-        <div class="filter-list" data-value="Status">
+        <div class="filter-list" data-value="Status Progress">
             <ul class="list-group">
+                <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                    <div class="form-check w-100">
+                        <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="survey" value="survey" id="statussurvey">
+                        <label class="form-check-label ps-0 ms-0 stretched-link" for="statussurvey">
+                            Survey
+                        <i class="input-helper"></i></label>
+                    </div> 
+                </li> 
                 <li class="py-0 list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                     <div class="form-check w-100">
                         <input class="form-check-input filter-array" type="checkbox" data-group="status" data-value="sample" value="sample" id="statussample">
@@ -325,7 +333,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 mx-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-Status" aria-expanded="false" aria-controls="flush-collapseOne">
-                        Status
+                        Status Progress
                     </button> 
                 </h2>
                 <div id="flush-Status" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
@@ -608,9 +616,9 @@
             loader_datatable();
         }
     });
+
     var paging = 1;
-    var table; 
-    
+    var table;  
     var filter_arr = {
         "store":[],
         "kategori":[],
@@ -803,8 +811,7 @@
                 }
                 $(".tab-content[data-id='"+ ProjectId+"']").show() 
                 $(".loading-content[data-id='"+ ProjectId+"']").hide() 
-                $(".loading-content[data-id='"+ ProjectId+"']").parent().addClass("d-none");
-                console.log(data["project"]) 
+                $(".loading-content[data-id='"+ ProjectId+"']").parent().addClass("d-none"); 
 
                 $(".status-header[data-id='"+ ProjectId+"']").html(data["project"]["status"]) 
                 //update status  
@@ -833,7 +840,26 @@
                 //update notif pembelian
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").removeClass("active")
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").removeClass("notif")
-                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").addClass(data["project"]["pembelian"]) 
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").addClass(data["project"]["pembelian"]);
+
+                // Hapus tooltip sebelumnya
+                var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerListOld.map(function (tooltipTriggerEl) {
+                    var tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                    if (tooltip) {
+                        tooltip.dispose();
+                    }
+                });
+                $(".tooltip").remove(); 
+                // Buat tooltip baru
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+                    if (tooltipTriggerEl.innerText?.includes('top')) {
+                        tooltip.enable();
+                    }
+                    return tooltip;
+                });
 
             },
             error : function(xhr, textStatus, errorThrown){   
@@ -849,6 +875,8 @@
         var file = $(el).data('file'); 
         window.open('<?= base_url("project/surveyfinish?file=") ?>' + file, '_blank');
     }
+
+    // ***************** PROJECT *****************  
     add_click = function(){ 
         $.ajax({ 
             method: "POST",
@@ -949,6 +977,7 @@
                 $("#modal-message").html(data);
                 $("#modal-add-survey").modal("show"); 
 
+                $(".tooltip").remove(); 
                 isProcessingSurvey[id] = false;
                 $(el).html(old_text); 
             },
@@ -967,7 +996,7 @@
     var isProcessingSurveyEdit = [];
     edit_project_Survey = function(ref,id,el){ 
           // INSERT LOADER BUTTON
-          if (isProcessingSampleEdit[id]) {
+        if (isProcessingSampleEdit[id]) {
             console.log("project sph cancel load");
             return;
         }  
@@ -982,6 +1011,7 @@
                 $("#modal-message").html(data);
                 $("#modal-edit-survey").modal("show"); 
 
+                $(".tooltip").remove(); 
                 isProcessingSurveyEdit[id] = false;
                 $(el).html(old_text); 
             },
@@ -1058,6 +1088,7 @@
                 $("#modal-message").html(data);
                 $("#modal-finish-survey").modal("show"); 
 
+                $(".tooltip").remove(); 
                 isProcessingSurveyFinish[id] = false;
                 $(el).html(old_text); 
             },
@@ -1090,6 +1121,7 @@
                 $("#modal-message").html(data);
                 $("#modal-finish-survey").modal("show"); 
 
+                $(".tooltip").remove(); 
                 isProcessingSurveyFinishEdit[id] = false;
                 $(el).html(old_text); 
             },
@@ -1105,9 +1137,11 @@
             }
         });
     }
+
+
     // ***************** SAMPLE PROJECT *****************
     var isProcessingSample = [];
-    add_project_sample = function(id,el){ 
+    add_project_sample =  function(id,el,ref = 0,type = "Sample"){ 
          // INSERT LOADER BUTTON
         if (isProcessingSample[id]) {
             console.log("project sph cancel load");
@@ -1120,10 +1154,15 @@
         $.ajax({  
             method: "POST",
             url: "<?= base_url() ?>message/add-project-sample/" + id, 
+            data: {
+                "RefId" : ref,
+                "Type" : type
+            },
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-sample").modal("show"); 
 
+                $(".tooltip").remove(); 
                 isProcessingSample[id] = false;
                 $(el).html(old_text); 
             },
@@ -1158,6 +1197,7 @@
                 $("#modal-message").html(data);
                 $("#modal-edit-sample").modal("show"); 
 
+                $(".tooltip").remove(); 
                 isProcessingSampleEdit[id] = false;
                 $(el).html(old_text); 
             },
@@ -1216,11 +1256,9 @@
 
 
 
-    /* 
-        PROJECT SPH / PENAWARAN
-    */
+    // ***************** SPH / PENAWARAN PROJECT ***************** 
     var isProcessingSph = [];
-    add_project_sph = function(id,el,sampleid = 0){ 
+    add_project_sph = function(id,el,ref = 0,type = "Sample"){ 
          // INSERT LOADER BUTTON
         if (isProcessingSph[id]) {
             console.log("project sph cancel load");
@@ -1234,7 +1272,8 @@
             method: "POST",
             url: "<?= base_url() ?>message/add-project-sph/" + id, 
             data: {
-                "SampleId" : sampleid
+                "RefId" : ref,
+                "Type" : type
             },
             success: function(data) {  
                 $("#modal-message").html(data);
@@ -1347,10 +1386,9 @@
         $("#modal-print-penawaran").modal("hide");
         
     })
-    
-    /* 
-        PROJECT PEMBELIAN
-    */
+     
+   
+    // ***************** PEMBELIAN PROJECT *****************
     var  isProcessingPo = [];
     add_project_po = function(id,el){ 
          // INSERT LOADER BUTTON
@@ -1466,9 +1504,8 @@
     print_project_po_a5 = function(ref,id,el){ 
         window.open('<?= base_url("print/project/poA5/") ?>' + id, '_blank');
     };
-    /* 
-        PROJECT INVOICE
-    */
+ 
+    // ***************** INVOICE PROJECT *****************
     var isProcessingInvoice= [];
     add_project_invoice = function(id,el,refid = 0,type = "penawaran"){
         // INSERT LOADER BUTTON
@@ -1484,8 +1521,8 @@
             method: "POST",
             url: "<?= base_url() ?>message/add-project-invoice/" + id, 
             data: {
-                "id" : refid,
-                "type" : type
+                "RefId" : refid,
+                "Type" : type
             },
             success: function(data) {  
                 $("#modal-message").html(data);
@@ -1618,7 +1655,7 @@
             },
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-add-payment").modal("show"); 
+                $("#modal-add-payment").modal("show");  
 
                 isProcessingInvoicePayment[id] = false;
                 $(el).html(old_text); 
@@ -1701,9 +1738,9 @@
                             text: "Your file has been deleted.",
                             icon: "success",
                             confirmButtonColor: "#3085d6",
-                        });  
+                        });   
                         if(type == "sample"){
-                            $("i[data-menu='" + type + "'][data-id='" + ref + "']").trigger("click");   
+                            loader_data_project(ref,type) 
                         } 
                     }, 
                 });

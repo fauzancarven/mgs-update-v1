@@ -1,5 +1,5 @@
  
-<div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;" data-menu="project">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">

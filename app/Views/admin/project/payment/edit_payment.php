@@ -106,10 +106,7 @@
         "endDate":  moment(),
         locale: {
             format: 'DD MMMM YYYY'
-        }
-    }, function(start, end, label) {
-        // $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        } 
     });
     $(".number-price").each(function(){
         new Cleave(this, {
@@ -124,7 +121,8 @@
         dropdownParent: $('#modal-edit-payment .modal-content'),
         tags:true,
     });
-    $("#type-payment").val("<?= $payment->PaymentType ?>").trigger("change");
+    $('#type-payment').append(new Option( '<?= $payment->PaymentType ?>' , '<?= $payment->PaymentType ?>', true, true)).trigger('change'); 
+
     $("#method-payment").select2({
         dropdownParent: $('#modal-edit-payment .modal-content'),
     });  

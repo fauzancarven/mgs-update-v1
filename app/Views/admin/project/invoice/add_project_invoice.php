@@ -1,5 +1,5 @@
  
-<div class="modal fade" id="modal-add-invoice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-invoice-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-invoice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-invoice-label" style="overflow-y:auto;"  data-menu="project">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,107 +8,102 @@
             </div>
             <div class="modal-body"> 
                 <div class="row"> 
-                    <div class="col-lg-6 col-12 my-1 mb-2">
-                        <div class="row mx-2 align-items-center">
+                    <div class="col-lg-6 col-12 my-1 mb-2 ">
+                        <div class="row mx-2 align-items-center mb-3 mb-md-1">
                             <div class="label-border-right">
                                 <span class="label-dialog">Customer</span>
-                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="add-varian" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem;">
-                                    <i class="fas fa-pencil"></i>
-                                    <span class="fw-bold">
-                                        &nbsp;Edit
-                                    </span>
+                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('customer-display',this)">
+                                    <span>Sembunyikan</span>
+                                    <i class="fa-solid fa-angle-up"></i> 
                                 </button> 
                             </div>
                         </div> 
-                        <div class="row align-items-center mt-2">
-                            <label class="col-2 col-form-label">Nama</label>
-                            <label class="col-10  text-end fw-bold"><?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?></label> 
-                        </div> 
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Telp</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerTelp1 ?> / <?= $customer->CustomerTelp2 == "" ? "" : $customer->CustomerTelp2 ?></label> 
-                        </div> 
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Email</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerEmail ?></label> 
+                        <div class="customer-display card bg-light show mt-4 m-1 p-2"> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvAddress" class="col-sm-3 col-form-label">Nama Customer</label>
+                                <div class="col-sm-9">
+                                    <input  class="form-control form-control-sm input-form" id="InvCustName" type="text" value="<?= $customer["CustomerName"]?>"/>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvAddress" class="col-sm-3 col-form-label">Telp Customer</label>
+                                <div class="col-sm-9">
+                                    <input  class="form-control form-control-sm input-form" id="InvCustTelp"  type="text" value="<?= $customer["CustomerTelp"] ?>"/>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvAddress" class="col-sm-3 col-form-label">Alamat Project</label>
+                                <div class="col-sm-9">
+                                    <textarea  class="form-control form-control-sm input-form" id="InvAddress"><?= $customer["CustomerAddress"] ?></textarea>
+                                </div>
+                            </div>  
                         </div>  
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Instagram</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerInstagram ?></label> 
-                        </div>  
-                        <div class="row align-items-center">
-                            <label class="col-2 col-form-label">Alamat</label>
-                            <label class="col-10 text-end fw-bold"><?= $customer->CustomerAddress ?></label> 
-                        </div> 
                     </div>  
-                    <div class="col-lg-6 col-12 my-1 mb-2">   
+                    <div class="col-lg-6 col-12 my-1 mb-3 mb-md-1">   
                         <div class="row mx-2 align-items-center">
                             <div class="label-border-right">
                                 <span class="label-dialog">Document</span>
+                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('document-display',this)">
+                                    <span>Sembunyikan</span>
+                                    <i class="fa-solid fa-angle-up"></i> 
+                                </button> 
                             </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
-                            <div class="col-sm-10">
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
-                            </div>
+                        </div>  
+                        <div class="document-display card bg-light show mt-4 m-1 p-2">
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
+                                <div class="col-sm-10">
+                                    <input id="InvCode" name="InvCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
+                                </div>
+                            </div>   
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvRef" class="col-sm-2 col-form-label">Ref</label>
+                                <div class="col-sm-10"> 
+                                    <select class="form-select form-select-sm" id="InvRef" name="InvRef"  style="width:100%" >
+                                        <option value="0" selected data-type="-">No Data Selected</option>
+                                    </select>  
+                                </div> 
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvDate" class="col-sm-2 col-form-label">Tanggal</label>
+                                <div class="col-sm-10">
+                                    <input id="InvDate" name="InvDate" type="text" class="form-control form-control-sm input-form" value="">
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvAdmin" class="col-sm-2 col-form-label">Admin</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select form-select-sm" id="InvAdmin" name="InvAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                </div>
+                            </div>    
                         </div>   
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphRef1" class="col-sm-2 col-form-label">Ref</label>
-                            <div class="col-sm-10"> 
-                                <select class="form-select form-select-sm" id="SphRef1" name="SphRef1"  style="width:100%" >
-                                    <option value="0" selected>No Data Selected</option>
-                                </select>  
-                            </div> 
-                        </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
-                            <div class="col-sm-10">
-                                <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
-                            </div>
-                        </div>  
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
-                            <div class="col-sm-10">
-                                <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
-                            </div>
-                        </div> 
-                        <div class="row mb-1 align-items-center mt-2">
-                            <label for="SphAddress" class="col-sm-2 col-form-label">Alamat Project</label>
-                            <div class="col-sm-10">
-                                <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->CustomerAddress ?></textarea>
-                            </div>
-                        </div> 
                     </div>   
                 </div>
                   
 
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
-                        <span class="label-dialog">Item Detail</span> 
+                        <span class="label-dialog">Detail Produk</span> 
                     </div>
                 </div>     
                 <div class="card " style="min-height:50px;">
-                    <div class="card-body p-2 bg-light"> 
+                    <div class="card-body p-0 bg-light" > 
                         <div class="row align-items-center d-none d-md-flex px-3">
-                            <div class="col-12 col-md-4 my-1">    
+                            <div class="col-12 col-md-6 my-1">    
                                 <div class="row">  
                                     <div class="col-12"> 
                                         <span class="label-head-dialog">Deskripsi</span> 
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-8 my-1 ">
-                                <div class="row"> 
-                                    <div class="col-2"> 
-                                        <span class="label-head-dialog"><i class="ti-settings"></i></span>   
-                                    </div> 
-                                    <div class="col-3"> 
+                            <div class="col-12 col-md-6 my-1">
+                                <div class="row">  
+                                    <div class="col-4"> 
                                         <span class="label-head-dialog">Qty | Satuan</span>   
                                     </div> 
-                                    <div class="col-7">  
-                                        <div class="row"> 
-                                            <div class="col-4"> 
+                                    <div class="col-8">
+                                        <div class="row">
+                                            <div class="col-4">
                                                 <span class="label-head-dialog">Harga</span>   
                                             </div> 
                                             <div class="col-4"> 
@@ -122,7 +117,7 @@
                                 </div>
                             </div> 
                         </div> 
-                        <div id="tb_varian" class="text-center">
+                        <div id="tb_varian" class="text-center" style="border-top: white 2.5px solid; border-bottom: white 2.5px solid;">
                             <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
                                 <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span class="text-head-1">Item belum ditambahkan</span>
@@ -310,8 +305,14 @@
                             </div> 
                         </div> 
                         <div class="d-flex justify-content-center flex-column align-items-center"> 
-                            <div class="d-flex px-3 mt-4 gap-1">
-                                <button class="btn btn-sm btn-primary my-2" id="btn-add-product"><i class="fa-solid fa-plus pe-2"></i>Tambah Item</button>
+                            <div class="d-flex px-3 gap-1"> 
+                                <div class="dropdown text-end"> 
+                                    <button class="btn btn-sm btn-primary my-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-plus pe-2"></i>Tambah Produk</button>  
+                                    <ul class="dropdown-menu shadow">
+                                        <li><a class="dropdown-item m-0 px-2 " id="btn-add-product-manual"><i class="fa-solid fa-plus pe-2 text-primary"></i>Manual Produk</a></li> 
+                                        <li><a class="dropdown-item m-0 px-2 " id="btn-add-product"><i class="fa-solid fa-magnifying-glass pe-2 text-primary"></i>Cari Produk</a></li> 
+                                    </ul>
+                                </div> 
                                 <button class="btn btn-sm btn-primary my-2" onclick="add_detail_category(this)"><i class="fa-solid fa-plus pe-2"></i>Tambah Kategori</button> 
                             </div>
                         </div>
@@ -353,7 +354,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="SphSubTotal">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="InvSubTotal">
                                 </div>     
                             </div>
                         </div> 
@@ -364,7 +365,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled id="SphDiscItemTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled id="InvDiscItemTotal" value="0">
                                 </div>     
                             </div>
                         </div> 
@@ -375,7 +376,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SphDiscTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="InvDiscTotal" value="0">
                                 </div>     
                             </div>
                         </div> 
@@ -386,7 +387,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="SphGrandTotal" >
+                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="InvGrandTotal" >
                                 </div>     
                             </div>
                         </div> 
@@ -553,7 +554,7 @@
 <div id="modal-optional"></div>
 <script>    
 
-    $('#SphDate').daterangepicker({
+    $('#InvDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
         "endDate":  moment(),
@@ -562,7 +563,7 @@
         }
     });
     
-    $("#SphRef1").select2({
+    $("#InvRef").select2({
         dropdownParent: $('#modal-add-invoice .modal-content'),
         placeholder: "Pilih Referensi dokumen",
         ajax: {
@@ -607,13 +608,20 @@
             return data['text'];
         }
     });
-    var header_ref = '<?= is_null($ref_header) ? false : true ?>';  
-    if(header_ref["code"] != ""){ 
-        $('#SphRef1').append(new Option( '<?= is_null($ref_header) ? "" :  $ref_header["code"] ?>' , '<?= is_null($ref_header) ? "" :  $ref_header["id"] ?>', true, true)).trigger('change');
-        $('#SphRef1').attr("disabled",true)
+    var header_ref = '<?= is_null($ref_header) ? false : true ?>'; 
+    if(header_ref){ 
+        var option = new Option(
+            '<?= is_null($ref_header) ? "" : $ref_header["code"] ?>', 
+            '<?= is_null($ref_header) ? "" : $ref_header["id"] ?>', 
+            false, 
+            true
+        );
+        $(option).attr('data-type', '<?= is_null($ref_header) ? "" : $ref_header["type"] ?>'); 
+        $('#InvRef').append(option).trigger('change.select2');
+        $('#InvRef').attr("disabled",true);
     }
 
-    $("#SphAdmin").select2({
+    $("#InvAdmin").select2({
         dropdownParent: $('#modal-add-invoice .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
@@ -643,60 +651,24 @@
             cache: true
         }, 
     });
-    $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
+    $('#InvAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
       
      
     var detail_item_ref = '<?= json_encode($ref_detail) ?>';  
     var data_detail_item = JSON.parse(detail_item_ref);
 
-    var isProcessingSphAddCategory = false;
+    var isProcessingInvAddCategory = false;
     add_detail_category = function(el){
-        if (isProcessingSphAddCategory) {
-            console.log("project sph cancel load");
-            return;
-        }  
-        isProcessingSphAddCategory = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        $("#modal-add-invoice").modal("hide"); 
-        Swal.fire({
-            title: 'Tambah Kategori',
-            input: 'text',
-            buttonsStyling: false,
-            showCancelButton: true,
-            showCancelButton: true,
-            customClass: {
-                confirmButton: 'btn btn-primary mx-1',
-                cancelButton: 'btn btn-secondary mx-1',
-                loader: 'custom-loader',
-                input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
-            },
-            backdrop: true,
-            confirmButtonText: "Simpan",
-            loaderHtml: '<div class="spinner-border text-primary"></div>',
-            preConfirm: async (name) => {
-                try {  
-                    data_detail_item.push({
-                        type: "category",
-                        text: name,
-                        qty: 0,
-                        hargajual: 0,
-                        disc: 0,
-                        total: 0, 
-                        varian: [], 
-                    });
-                    load_produk();
-                } catch (error) {
-                    Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
-                }
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {  
-            isProcessingSphAddCategory = false;
-            $(el).html(old_text); 
-            $("#modal-add-invoice").modal("show");
-        }); 
+        data_detail_item.push({
+            type: "category",
+            text: "Kategori",
+            qty: 0,
+            price: 0,
+            disc: 0,
+            total: 0, 
+            varian: [], 
+        });
+        load_produk();
     }
  
     $('#modal-select-item').on('hidden.bs.modal', function () {
@@ -704,14 +676,14 @@
             document.activeElement.blur();
         }
     });
-    var isProcessingSphAddproduk = false;
+    var isProcessingInvAddproduk = false;
 
     $("#btn-add-product").click(function(){
-        if (isProcessingSphAddproduk) {
+        if (isProcessingInvAddproduk) {
             console.log("project sph cancel load");
             return;
         }  
-        isProcessingSphAddproduk = true; 
+        isProcessingInvAddproduk = true; 
         let old_text = $("#btn-add-product").html();
         $("#btn-add-product").html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
@@ -719,7 +691,7 @@
             method: "POST",
             url: "<?= base_url() ?>message/select-produk", 
             success: function(data) {  
-                isProcessingSphAddproduk = false; 
+                isProcessingInvAddproduk = false; 
                 $("#btn-add-product").html(old_text);
                 
                 $("#modal-optional").html(data);
@@ -757,7 +729,7 @@
                 });
             },
             error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSphAddproduk = false;
+                isProcessingInvAddproduk = false;
                 $("#btn-add-product").html(old_text); 
 
                 Swal.fire({
@@ -767,6 +739,25 @@
                 });
             }
         });
+    });
+    $("#btn-add-product-manual").click(function(){
+        data_detail_item.push({
+            "id": 0,
+            "produkid": 0,
+            "varian": [],
+            "text" : "produk",
+            "group" : "", 
+            "berat": 0,
+            "satuan_id": 0,
+            "satuan_text": "",
+            "pcsM2": "",  
+            "price":0,
+            "disc": 0,
+            "qty":  1,
+            "total": 0,
+            "type" :"product"
+        });
+        load_produk();
     });
 
     select_produk = function(data){
@@ -795,74 +786,33 @@
 
         load_produk();
 
-        $('#modal-select-item').modal("hide");   
+        $('#modal-select-item').modal("hide");
     }
 
     
     edit_varian_click = function(index){ 
-        if(data_detail_item[index]["type"] == "category"){  
-            $("#modal-add-invoice").modal("hide");
-            $("#modal-add-invoice").blur();
-            Swal.fire({
-                title: 'Rename Kategori',
-                input: 'text',
-                inputValue: data_detail_item[index]["text"],
-                buttonsStyling: false,
-                showCancelButton: true,
-                showCancelButton: true,
-                customClass: {
-                    confirmButton: 'btn btn-primary mx-1',
-                    cancelButton: 'btn btn-secondary mx-1',
-                    loader: 'custom-loader',
-                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
-                },
-                backdrop: true,
-                confirmButtonText: "Simpan",
-                loaderHtml: '<div class="spinner-border text-primary"></div>',
-                preConfirm: async (name) => {
-                    try {  
-                        data_detail_item[index]["text"] = name 
-                        load_produk();
-                    } catch (error) {
-                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
-                    }
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {   
-                $("#modal-add-invoice").modal("show");
-            });  
-        }else{
-            $("#modal-add-invoice").modal("hide");
-            $("#modal-add-invoice").blur();
-            Swal.fire({
-                title: 'Rename Produk',
-                input: 'text',
-                inputValue: data_detail_item[index]["text"],
-                buttonsStyling: false,
-                showCancelButton: true,
-                showCancelButton: true,
-                customClass: {
-                    confirmButton: 'btn btn-primary mx-1',
-                    cancelButton: 'btn btn-secondary mx-1',
-                    loader: 'custom-loader',
-                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
-                },
-                backdrop: true,
-                confirmButtonText: "Simpan",
-                loaderHtml: '<div class="spinner-border text-primary"></div>',
-                preConfirm: async (name) => {
-                    try {  
-                        data_detail_item[index]["text"] = name 
-                        load_produk();
-                    } catch (error) {
-                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
-                    }
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {   
-                $("#modal-add-invoice").modal("show");
-            });  
+        if(data_detail_item[index]["id"] == 0 || data_detail_item[index]["type"] == "category"){ 
+            $("#text-custom-" + index).show();
+            $("#span-custom-" + index).hide();
+            $(".btn-action.detail[data-id='"+ index +"'][data-type='edit']").hide();
+            $(".btn-action.detail[data-id='"+ index +"'][data-type='save']").show(); 
         }
+        $("#text-custom-" + index).on('input', function() {  
+            $(this).height('auto');
+            $(this).height(this.scrollHeight);
+        }).on('focusout', function() {  
+            save_varian_click(index)
+        }); 
+    }
+    save_varian_click = function(index){  
+        var data_value = $("#text-custom-" + index).val();
+        $("#span-custom-" + index).html(data_value.replaceAll(/\n/g, '<br>'));
+        $("#text-custom-" + index).hide();
+        $("#span-custom-" + index).show();
+        $(".btn-action.detail[data-id='"+ index +"'][data-type='edit']").show();
+        $(".btn-action.detail[data-id='"+ index +"'][data-type='save']").hide();
+ 
+        data_detail_item[index]["text"] = $("#text-custom-" + index).val();
     }
     delete_varian_click = function(index){ 
         data_detail_item.splice(index, 1);
@@ -887,11 +837,11 @@
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.price * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
+        var grandtotal =  total - discitem - $("#InvDiscTotal").val().replace(/[^0-9-]/g, ''); 
 
-        $("#SphSubTotal").val(total.toLocaleString('en-US')) 
-        $("#SphDiscItemTotal").val(discitem.toLocaleString('en-US')) 
-        $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
+        $("#InvSubTotal").val(total.toLocaleString('en-US')) 
+        $("#InvDiscItemTotal").val(discitem.toLocaleString('en-US')) 
+        $("#InvGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     }
     load_produk = function(){
         var html = '';
@@ -904,90 +854,81 @@
         let last_group_abjad = 65;
         let last_group_no = 1;
         for(var i = 0; data_detail_item.length > i;i++){
+            var data_value = data_detail_item[i]["text"];
             if(data_detail_item[i]["type"] == "category"){ 
                 html += `
-                    <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
-                        <div class="col-12 col-md-4"> 
-                            <div class="row align-items-center"> 
-                                <div class="col-7 col-md-12 my-1 group text-start"> 
-                                    <span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${data_detail_item[i]["text"]}</span>  
-                                </div>   
-                                <div class="col-5 d-md-none d-block col-0 px-0"> 
-                                    <div class="btn-group d-inline-block float-end" role="group"> 
-                                        <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
-                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
+                    <div class="row align-items-center mx-0 hr p-2">
+                        <div class="col-12 col-md-6 px-0">      
+                            <div class="d-flex">   
+                                <span class="no-urut text-head-3 order-md-2 order-1 p-2">${String.fromCharCode(last_group_abjad)}. </span>  
+                                <div class="d-flex flex-column text-start flex-fill order-md-3 order-2 justify-content-center">
+                                    <span class="text-head-3" onclick="edit_varian_click(${i})" id="span-custom-${i}" data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
+                                    <textarea class="custom-input" id="text-custom-${i}" data-id="${i}" style="display:none" rows="1">${data_detail_item[i]["text"]}</textarea> 
+                                </div>  
+                                <div class="px-0 order-md-1 order-3"> 
+                                    <div class="btn-group d-inline-block" role="group"> 
                                         <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
                                         <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
+                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
+                                        <button class="btn btn-sm btn-warning btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="edit" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
+                                        <button class="btn btn-sm btn-success btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="save" onclick="save_varian_click(${i})" style="display:none"><i class="fa-solid fa-check"></i></button>
                                     </div>
                                 </div>   
-                            </div>
-                        </div>
-                        <div class="col-8 my-1 d-md-block d-none">   
-                            <div class="row px-2 align-items-center">
-                                <div class="col-2 px-0"> 
-                                    <div class="btn-group d-inline-block float-end" role="group"> 
-                                        <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
-                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
-                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
-                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
-                                    </div>
-                                </div> 
                             </div> 
-                        </div>
+                        </div> 
                     </div>`;
                 last_group_abjad++;
                 last_group_no = 1;
             }  
             if(data_detail_item[i]["type"] == "product"){ 
-                var varian = "";
+                var varian = ""; 
                 if(data_detail_item[i]["id"] != "0"){
                     varian = `  <span class="text-detail-2 text-truncate">${data_detail_item[i]["group"]}</span> 
-                                <div class="d-flex gap-1">`;
+                                <div class="d-flex gap-1 flex-wrap">`;
                     for(var j = 0; data_detail_item[i]["varian"].length > j;j++){
                         varian += `<span class="badge badge-${j % 5}">${data_detail_item[i]["varian"][j]["varian"] + ": " + data_detail_item[i]["varian"][j]["value"]}</span>`; 
                     }
                     varian +=  '</div>';
-                }
-                html += `   <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
-                                <div class="col-12 col-md-4 my-1 varian px-0">   
+                } 
+                html += `   <div class="row align-items-center mx-0 hr p-2">
+                                <div class="col-12 col-md-6 my-1 varian px-0">   
                                     <div class="d-flex">
-                                        <span class="no-urut text-head-3">${last_group_no}.</span> 
-                                        <div class="d-flex flex-column text-start flex-fill">
-                                            <span class="text-head-3">${data_detail_item[i]["text"]}</span>
+                                        <div class="px-0 order-md-1 order-4"> 
+                                            <div class="btn-group d-inline-block" role="group"> 
+                                                <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
+                                                <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button>  
+                                                <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button>
+                                                <button class="btn btn-sm btn-warning btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="edit" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
+                                                <button class="btn btn-sm btn-success btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="save" onclick="save_varian_click(${i})" style="display:none"><i class="fa-solid fa-check"></i></button>
+                                            </div>
+                                        </div> 
+                                        <span class="no-urut text-head-3 order-md-2 order-1 p-2">${last_group_no}. </span> 
+                                        <div class="d-flex pe-2 order-md-3 order-2 ${data_detail_item[i]["id"] == "0" ? "d-none" : ""}">
+                                            <img src="${data_detail_item[i]["image_url"]}" alt="Gambar" class="image-produk-doc"> 
+                                        </div> 
+                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                            <span class="text-head-3 span-custom-input" onclick="edit_varian_click(${i})" id="span-custom-${i}" data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
+                                            <textarea class="custom-input" id="text-custom-${i}" data-id="${i}" style="display:none" rows="1">${data_detail_item[i]["text"]}</textarea>
                                             ${varian} 
                                         </div>  
-                                        <div class="btn-group d-inline-block d-md-none float-end" role="group">  
-                                            ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
-                                            <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
-                                            <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
-                                            <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
-                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row px-2"> 
-                                        <div class="col-2 px-0 d-none d-md-block ">  
-                                            <div class="btn-group float-end d-inline-block" role="group">  
-                                                ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
-                                                <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
-                                                <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
-                                                <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
-                                            </div>
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-0 ">  
+                                <div class="col-12 col-md-6 my-1 detail">
+                                    <div class="row px-2">  
+                                        <div class="col-12 col-md-4 px-1 ">  
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                             <div class="input-group"> 
                                                 <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
-                                                <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "-" ? "disabled" : ""}></select>
+                                                <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${data_detail_item[i]["id"] != "-" ? "" : ""}></select>
                                             </div>  
                                         </div>  
-                                        <div class="col-12 col-md-7">  
+                                        <div class="col-12 col-md-8">  
                                             <div class="row">  
                                                 <div class="col-6 col-md-4 px-1">  
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
                                                     <div class="input-group"> 
                                                         <span class="input-group-text font-std px-1">Rp.</span> 
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-harga-${i}" data-id="${i}" ${data_detail_item[i]["id"] != "0" ? "disabled" : ""}>
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-harga-${i}" data-id="${i}" ${data_detail_item[i]["id"] != "0" ? "" : ""}>
                                                     </div>    
                                                 </div> 
                                                 <div class="col-6 col-md-4  px-1">  
@@ -1009,6 +950,7 @@
                                     </div>    
                                 </div>    
                             </div> `;
+
 
                 
                 last_group_no++; 
@@ -1137,34 +1079,34 @@
     }
     load_produk();
 
-    var sph_sub_total = new Cleave(`#SphSubTotal`, {
+    var inv_sub_total = new Cleave(`#InvSubTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_disc_item_total = new Cleave(`#SphDiscItemTotal`, {
+    var inv_disc_item_total = new Cleave(`#InvDiscItemTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_disc_total = new Cleave(`#SphDiscTotal`, {
+    var inv_disc_total = new Cleave(`#InvDiscTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var sph_grand_total = new Cleave(`#SphGrandTotal`, {
+    var inv_grand_total = new Cleave(`#InvGrandTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    $("#SphDiscTotal").on("keyup",function(){ 
+    $("#InvDiscTotal").on("keyup",function(){ 
         grand_total_harga();
-        if(parseInt($("#SphGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
-            $("#SphDiscTotal").val(0)
+        if(parseInt($("#InvGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
+            $("#InvDiscTotal").val(0)
             grand_total_harga();
         }
     });
@@ -1822,18 +1764,19 @@
         }
 
         var header = {  
-            InvDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
+            InvDate: $("#InvDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
             ProjectId: <?= $project->ProjectId ?>, 
-            SampleId: '<?= $ref_header["SampleId"] ?>',
-            SphId: '<?= $ref_header["SphId"] ?>',
-            InvAdmin: $("#SphAdmin").val(), 
-            CustomerId: <?=$customer->CustomerId?>, 
-            InvAddress: $("#SphAddress").val(), 
+            InvRef: $("#InvRef").val(), 
+            InvRefType: $('#InvRef option:selected').data('type'), 
+            InvAdmin: $("#InvAdmin").val(),  
+            InvCustName: $("#InvCustName").val(),
+            InvCustTelp: $("#InvCustTelp").val(),
+            InvAddress: $("#InvAddress").val(), 
             TemplateId: $($(".template-footer").find("select")[0]).val(), 
-            InvSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
-            InvDiscItemTotal: $("#SphDiscItemTotal").val().replace(/[^0-9]/g, ''), 
-            InvDiscTotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
-            InvGrandTotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, ''), 
+            InvSubTotal: $("#InvSubTotal").val().replace(/[^0-9]/g, ''), 
+            InvDiscItemTotal: $("#InvDiscItemTotal").val().replace(/[^0-9]/g, ''), 
+            InvDiscTotal: $("#InvDiscTotal").val().replace(/[^0-9]/g, ''), 
+            InvGrandTotal: $("#InvGrandTotal").val().replace(/[^0-9]/g, ''), 
             InvImageList: $("#list-produk img").map(function(){ return $(this).attr("src")}).get(),    
             InvKtp: $("#select-ktp").val(), 
             InvNpwp: $("#select-npwp").val(), 

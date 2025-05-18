@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-add-survey" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
+<div class="modal fade" id="modal-add-survey" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true" data-menu="project">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -168,7 +168,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {    
                         $("#modal-add-survey").modal("hide");     
-                        $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        loader_data_project(<?= $project->ProjectId ?>,'survey');
+                        // $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                     });
                   
                 }else{

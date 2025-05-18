@@ -1,5 +1,5 @@
  
-<div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;" data-menu="project">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -22,19 +22,19 @@
                             <div class="row mb-1 align-items-center">
                                 <label for="SphAddress" class="col-sm-3 col-form-label">Nama Customer</label>
                                 <div class="col-sm-9">
-                                    <input  class="form-control form-control-sm input-form" id="SphCustName" type="text" value="<?= $customer->CustomerName ?> <?= $customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " ) "; ?>"/>
+                                    <input  class="form-control form-control-sm input-form" id="SphCustName" type="text" value="<?= $customer["CustomerName"]?>"/>
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
                                 <label for="SphAddress" class="col-sm-3 col-form-label">Telp Customer</label>
                                 <div class="col-sm-9">
-                                    <input  class="form-control form-control-sm input-form" id="SphCustTelp"  type="text" value="<?= $customer->CustomerTelp1 ?> <?= $customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2 ?>"/>
+                                    <input  class="form-control form-control-sm input-form" id="SphCustTelp"  type="text" value="<?= $customer["CustomerTelp"] ?>"/>
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
                                 <label for="SphAddress" class="col-sm-3 col-form-label">Alamat Project</label>
                                 <div class="col-sm-9">
-                                    <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer->CustomerAddress ?></textarea>
+                                    <textarea  class="form-control form-control-sm input-form" id="SphAddress"><?= $customer["CustomerAddress"] ?></textarea>
                                 </div>
                             </div>  
                         </div>  
@@ -57,10 +57,10 @@
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphRef1" class="col-sm-2 col-form-label">Ref</label>
+                                <label for="SphRef" class="col-sm-2 col-form-label">Ref</label>
                                 <div class="col-sm-10"> 
-                                    <select class="form-select form-select-sm" id="SphRef1" name="SphRef1"  style="width:100%" >
-                                        <option value="0" selected>No Data Selected</option>
+                                    <select class="form-select form-select-sm" id="SphRef" name="SphRef"  style="width:100%" >
+                                        <option value="0" selected data-type="-">No Data Selected</option>
                                     </select>  
                                 </div> 
                             </div>  
@@ -412,7 +412,7 @@
             format: 'DD MMMM YYYY'
         }
     });
-    $("#SphRef1").select2({
+    $("#SphRef").select2({
         dropdownParent: $('#modal-add-sph .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
@@ -459,41 +459,18 @@
     });
     var header_ref = '<?= is_null($ref_header) ? false : true ?>'; 
     if(header_ref){ 
-        $('#SphRef1').append(new Option( '<?= is_null($ref_header) ? "" :  $ref_header->SampleCode ?>' , '<?= is_null($ref_header) ? "" :  $ref_header->SampleId ?>', true, true)).trigger('change');
-        $('#SphRef1').attr("disabled",true)
+        var option = new Option(
+            '<?= is_null($ref_header) ? "" : $ref_header["code"] ?>', 
+            '<?= is_null($ref_header) ? "" : $ref_header["id"] ?>', 
+            false, 
+            true
+        );
+        $(option).attr('data-type', '<?= is_null($ref_header) ? "" : $ref_header["type"] ?>'); 
+        $('#SphRef').append(option).trigger('change.select2');
+        $('#SphRef').attr("disabled",true);
     }
 
-    $("#SphStore").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
-        placeholder: "Pilih Toko",
-        ajax: {
-            url: "<?= base_url()?>select2/get-data-store",
-            dataType: 'json',
-            type:"POST",
-            delay: 250,
-            data: function (params) {
-                // CSRF Hash
-                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
-                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
-
-                return {
-                    searchTerm: params.term, // search term
-                    [csrfName]: csrfHash // CSRF Token
-                };
-            },
-            processResults: function (response) {
-    
-                // Update CSRF Token
-                $('.txt_csrfname').val(response.token); 
-
-                return {
-                    results: response.data
-                };
-            },
-            cache: true
-        }, 
-    });
-    $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
+     
 
     $("#SphAdmin").select2({
         dropdownParent: $('#modal-add-sph .modal-content'),
@@ -679,6 +656,7 @@
         });
         load_produk();
     });
+
     select_produk = function(data){
         if(data.id === undefined) return;
  
@@ -1308,11 +1286,11 @@
         var header = {  
             SphDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
             ProjectId: <?= $project->ProjectId ?>,  
-            SampleId: $("#SphRef1").val(), 
+            SphRef: $("#SphRef").val(), 
+            SphRefType: $('#SphRef option:selected').data('type'), 
             SphAdmin: $("#SphAdmin").val(), 
             SphCustName: $("#SphCustName").val(), 
-            SphCustTelp: $("#SphCustTelp").val(), 
-            CustomerId: <?=$customer->CustomerId?>, 
+            SphCustTelp: $("#SphCustTelp").val(),   
             SphAddress: $("#SphAddress").val(), 
             TemplateId: $($(".template-footer").find("select")[0]).val(), 
             SphSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
@@ -1369,8 +1347,13 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-sph").modal("hide");   
-                        $(".icon-project[data-menu='penawaran'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        $("#modal-add-sph").modal("hide");      
+                        if($("#modal-add-sph").data("menu") =="penawaran"){
+                            loader_datatable(); 
+                        }else{ 
+                            loader_data_project(<?= $project->ProjectId ?>,"penawaran"); 
+                            // $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                        }  
                     });
                   
                 }else{

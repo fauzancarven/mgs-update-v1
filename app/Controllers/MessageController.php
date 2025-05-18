@@ -206,13 +206,37 @@ class MessageController extends BaseController
     public function project_sample_add($id)
     {     
         $models = new ProjectModel();
-        $modelscustomer = new CustomerModel();
-        $modelsstore = new StoreModel();
+        $modelscustomer = new CustomerModel(); 
+        $request = Services::request();
+        $postData = $request->getPost(); 
 
         $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+
         $data["project"] = $project;
-        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
+        $customer =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["customer"] = array(
+            "CustomerName"=> $customer->CustomerName.($customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " )"),
+            "CustomerTelp"=> $customer->CustomerTelp1.($customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2),
+            "CustomerAddress"=>$customer->CustomerAddress,
+        ); 
+        
+        $data["ref_header"] = null;
+        $data["ref_detail"] = []; 
+        $data["ref_type"] = ""; 
+        
+        if(isset($postData['RefId']) && $postData['RefId'] > 0 ){   
+            $data["ref_type"] = $postData['Type'];
+            if($postData['Type'] == "Survey") {  
+                $ref = $models->getdataSurvey($postData['RefId']); 
+                $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
+                $data["ref_detail"] = [];  
+                $data["customer"] = array(
+                    "CustomerName"=> $ref->SurveyCustName,
+                    "CustomerTelp"=> $ref->SurveyCustTelp,
+                    "CustomerAddress"=>$ref->SurveyAddress,
+                ) ;
+            } 
+        }
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/sample/add_project_sample.php',$data)); 
     }
@@ -260,16 +284,23 @@ class MessageController extends BaseController
         $request = Services::request();
         $postData = $request->getPost(); 
 
-        if(!isset($postData['SampleId']) ){
-            $data["ref_header"] = null;
-            $data["ref_detail"] = []; 
-        }else{
-            if($postData['SampleId'] == 0) {  
-                $data["ref_header"] = null;
-                $data["ref_detail"] = []; 
-            }else{
-                $data["ref_header"] = $models->getdataSample($postData['SampleId']); 
-                $arr_detail = $models->getdataDetailSample($postData['SampleId']);
+        $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+        $data["project"] = $project;
+        $customer =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["customer"] = array(
+            "CustomerName"=> $customer->CustomerName.($customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " )"),
+            "CustomerTelp"=> $customer->CustomerTelp1.($customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2),
+            "CustomerAddress"=>$customer->CustomerAddress,
+        ) ;
+        $data["ref_header"] = null;
+        $data["ref_detail"] = []; 
+        $data["ref_type"] = ""; 
+        if(isset($postData['RefId']) && $postData['RefId'] > 0 ){   
+            $data["ref_type"] = $postData['Type']; 
+            if($postData['Type'] == "Sample") {  
+                $ref = $models->getdataSample($postData['RefId']); 
+                $data["ref_header"] = array("code"=>$ref->SampleCode,"id"=>$ref->SampleId,"type"=>"Sample");
+                $arr_detail = $models->getdataDetailSample($postData['RefId']);
                 $detail = array();
                 foreach($arr_detail as $row){
                     $detail[] = array(
@@ -289,12 +320,39 @@ class MessageController extends BaseController
                             );
                 };
                 $data["ref_detail"] = $detail;
+                $data["customer"] = array(
+                    "CustomerName"=> $ref->SampleCustName,
+                    "CustomerTelp"=> $ref->SampleCustTelp,
+                    "CustomerAddress"=>$ref->SampleAddress,
+                ) ;
             }
+            
+            if($postData['Type'] == "Survey") {  
+                $ref = $models->getdataSurvey($postData['RefId']); 
+                $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
+                $data["ref_detail"] = array(array(
+                    "id" => 0, 
+                    "produkid" => 0, 
+                    "satuan_id"=> "28",
+                    "satuan_text"=> "Visit",  
+                    "price"=> $ref->SurveyTotal,
+                    "varian"=> [],
+                    "total"=> $ref->SurveyTotal,
+                    "disc"=> 0,
+                    "qty"=> 1,
+                    "text"=> "Jasa Survey Proyek",
+                    "group"=> "",
+                    "type"=> "product",
+                    "image_url"=> base_url("assets/images/produk/default.png")
+                )); 
+                $data["customer"] = array(
+                    "CustomerName"=> $ref->SurveyCustName,
+                    "CustomerTelp"=> $ref->SurveyCustTelp,
+                    "CustomerAddress"=>$ref->SurveyAddress,
+                ) ;
+            } 
         }
-        $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
-        $data["project"] = $project;
-        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
+ 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/sph/add_project_sph.php',$data)); 
     }
@@ -432,91 +490,107 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel(); 
-        $request = Services::request();
+        $modelsproduk = new ProdukModel();
+        $request = Services::request(); 
         $postData = $request->getPost(); 
-        if(!isset($postData['id']) ){
-             $data["ref_header"] = array(
-                "code"=> "",
-                "id"=> "",
-                "SphId"=> "",
-                "SampleId"=> "",
-            );
-            $data["ref_detail"] = []; 
-            $data["ref_type"] = null;
-        }else{
-            if($postData['id'] == 0) {  
-                $data["ref_header"] = array(
-                    "code"=> "",
-                    "id"=> "",
-                    "SphId"=> "",
-                    "SampleId"=> "",
-                );
-                $data["ref_detail"] = []; 
-                $data["ref_type"] = null;
-            }else{
-                if($postData['type'] == "penawaran") {  
-                    $datasample = $models->getdataSPH($postData['id']); 
-                    $data["ref_header"] = array(
-                        "code"=> $datasample->SphCode,
-                        "id"=> $datasample->SphId,
-                        "SphId"=> $datasample->SphId,
-                        "SampleId"=> "",
-                    );
-                    $arr_detail = $models->getdataDetailSPH($postData['id']);
-                    $detail = array();
-                    foreach($arr_detail as $row){
-                        $detail[] = array(
-                                    "id" => $row->ProdukId, 
-                                    "produkid" => $row->ProdukId, 
-                                    "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
-                                    "satuan_text"=>$row->SphDetailSatuanText,  
-                                    "price"=>$row->SphDetailPrice,
-                                    "varian"=> JSON_DECODE($row->SphDetailVarian,true),
-                                    "total"=> $row->SphDetailTotal,
-                                    "disc"=> $row->SphDetailDisc,
-                                    "qty"=> $row->SphDetailQty,
-                                    "text"=> $row->SphDetailText,
-                                    "group"=> $row->SphDetailGroup,
-                                    "type"=> $row->SphDetailType
-                                );
-                    };
-                    $data["ref_detail"] = $detail;
-                    $data["ref_type"] = "penawaran";
-                }else{  
-                    $datasample = $models->getdataSample($postData['id']); 
-                    $data["ref_header"] = array(
-                        "code"=> $datasample->SampleCode,
-                        "id"=> $datasample->SampleId,
-                        "SphId"=> "",
-                        "SampleId"=> $datasample->SampleId,
-                    );
-                    $arr_detail = $models->getdataDetailSample($postData['id']);
-                    $detail = array();
-                    foreach($arr_detail as $row){
-                        $detail[] = array(
-                                    "id" => $row->ProdukId, 
-                                    "produkid" => $row->ProdukId, 
-                                    "satuan_id"=> ($row->SampleDetailSatuanId == 0 ? "" : $row->SampleDetailSatuanId),
-                                    "satuan_text"=>$row->SampleDetailSatuanText,  
-                                    "price"=>$row->SampleDetailPrice,
-                                    "varian"=> JSON_DECODE($row->SampleDetailVarian,true),
-                                    "total"=> $row->SampleDetailTotal,
-                                    "disc"=> $row->SampleDetailDisc,
-                                    "qty"=> $row->SampleDetailQty,
-                                    "text"=> $row->SampleDetailText,
-                                    "group"=> $row->SampleDetailGroup,
-                                    "type"=> $row->SampleDetailType
-                                );
-                    };
-                    $data["ref_detail"] = $detail;
-                    $data["ref_type"] = "sample";
-                }
-            }
-        }
+
+        
         $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
         $data["project"] = $project;
-        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
+        $customer =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        $data["customer"] = array(
+            "CustomerName"=> $customer->CustomerName.($customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " )"),
+            "CustomerTelp"=> $customer->CustomerTelp1.($customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2),
+            "CustomerAddress"=>$customer->CustomerAddress,
+        );
+        $data["ref_header"] = null;
+        $data["ref_detail"] = []; 
+        $data["ref_type"] = ""; 
+        if(isset($postData['RefId']) && $postData['RefId'] > 0 ){  
+            $data["ref_type"] = $postData['Type']; 
+            if($postData['Type'] == "penawaran") {   
+                $ref = $models->getdataSPH($postData['RefId']); 
+                $data["ref_header"] = array("code"=>$ref->SphCode,"id"=>$ref->SphId,"type"=>"Penawaran");  
+                $arr_detail = $models->getdataDetailSPH($postData['id']);
+                $detail = array();
+                foreach($arr_detail as $row){
+                    $detail[] = array(
+                                "id" => $row->ProdukId, 
+                                "produkid" => $row->ProdukId, 
+                                "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                                "satuan_text"=>$row->SphDetailSatuanText,  
+                                "price"=>$row->SphDetailPrice,
+                                "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                                "total"=> $row->SphDetailTotal,
+                                "disc"=> $row->SphDetailDisc,
+                                "qty"=> $row->SphDetailQty,
+                                "text"=> $row->SphDetailText,
+                                "group"=> $row->SphDetailGroup,
+                                "type"=> $row->SphDetailType
+                            );
+                };
+                $data["ref_detail"] = $detail;
+                $data["customer"] = array(
+                    "CustomerName"=> $ref->SphCustName,
+                    "CustomerTelp"=> $ref->SphCustTelp,
+                    "CustomerAddress"=>$ref->SphAddress,
+                ) ;
+            } 
+            if($postData['Type'] == "Sample") {  
+                $ref = $models->getdataSample($postData['RefId']); 
+                $data["ref_header"] = array("code"=>$ref->SampleCode,"id"=>$ref->SampleId,"type"=>"Sample");
+                $arr_detail = $models->getdataDetailSample($postData['RefId']);
+                $detail = array();
+                foreach($arr_detail as $row){
+                    $detail[] = array(
+                                "id" => $row->ProdukId, 
+                                "produkid" => $row->ProdukId, 
+                                "satuan_id"=> ($row->SampleDetailSatuanId == 0 ? "" : $row->SampleDetailSatuanId),
+                                "satuan_text"=>$row->SampleDetailSatuanText,  
+                                "price"=>$row->SampleDetailPrice,
+                                "varian"=> JSON_DECODE($row->SampleDetailVarian,true),
+                                "total"=> $row->SampleDetailTotal,
+                                "disc"=> 0,
+                                "qty"=> $row->SampleDetailQty,
+                                "text"=> $row->SampleDetailText,
+                                "group"=> $row->SampleDetailGroup,
+                                "type"=> $row->SampleDetailType,
+                                "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
+                            );
+                };
+                $data["ref_detail"] = $detail;
+                $data["customer"] = array(
+                    "CustomerName"=> $ref->SampleCustName,
+                    "CustomerTelp"=> $ref->SampleCustTelp,
+                    "CustomerAddress"=>$ref->SampleAddress,
+                ) ;
+            }  
+            if($postData['Type'] == "Survey") {  
+                $ref = $models->getdataSurvey($postData['RefId']); 
+                $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
+                $data["ref_detail"] = array(array(
+                    "id" => 0, 
+                    "produkid" => 0, 
+                    "satuan_id"=> "28",
+                    "satuan_text"=> "Visit",  
+                    "price"=> $ref->SurveyTotal,
+                    "varian"=> [],
+                    "total"=> $ref->SurveyTotal,
+                    "disc"=> 0,
+                    "qty"=> 1,
+                    "text"=> "Jasa Survey Proyek",
+                    "group"=> "",
+                    "type"=> "product",
+                    "image_url"=> base_url("assets/images/produk/default.png")
+                )); 
+                $data["customer"] = array(
+                    "CustomerName"=> $ref->SurveyCustName,
+                    "CustomerTelp"=> $ref->SurveyCustTelp,
+                    "CustomerAddress"=>$ref->SurveyAddress,
+                ) ;
+            } 
+        }
+ 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/invoice/add_project_invoice.php',$data)); 
 
@@ -573,51 +647,39 @@ class MessageController extends BaseController
             $datasample = $models->getdataSample($id); 
             $project = array(
                 "ProjectId"=>$datasample->ProjectId,
-                "SampleId"=>$datasample->SampleId,
-                "InvId"=>"",
-                "POId"=>"",
-                "DeliveryId"=>"",
+                "PaymentRef"=>$datasample->SampleId, 
+                "PaymentRefType"=>"Sample",
                 "GrandTotal"=>$datasample->SampleGrandTotal,
-                "menu"=>"sample",
             );
             $data["payment"] = $models->getdataPaymentBySample($id);  
         }
         if($postData['type'] == "invoice"){
             $datainvoice = $models->getdataInvoice($id); 
             $project = array(
-                "ProjectId"=>$datainvoice->ProjectId,
-                "SampleId"=>"",
-                "InvId"=>$datainvoice->InvId,
-                "POId"=>"",
-                "DeliveryId"=>"",
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
                 "GrandTotal"=>$datainvoice->InvGrandTotal,
-                "menu"=>"invoice",
             );
             $data["payment"] = $models->getdataPaymentByInvoice($id);  
         }
         if($postData['type'] == "po"){
             $datapo = $models->getDataPO($id); 
             $project = array(
-                "ProjectId"=>$datapo->ProjectId,
-                "SampleId"=>"",
-                "InvId"=>"",
-                "DeliveryId"=>"",
-                "POId"=>$datapo->POId,
+                "ProjectId"=>$datapo->ProjectId, 
+                "PaymentRef"=>$datapo->POId,
+                "PaymentRefType"=>"Pembelian",
                 "GrandTotal"=>$datapo->POGrandTotal,
-                "menu"=>"pembelian",
             );
             $data["payment"] = $models->getdataPaymentByPO($id);  
         }
         if($postData['type'] == "delivery"){
             $datadelivery = $models->getDataDelivery($id); 
             $project = array(
-                "ProjectId"=>$datadelivery->ProjectId,
-                "SampleId"=>"",
-                "InvId"=>"",
-                "DeliveryId"=>$datadelivery->DeliveryId,
-                "POId"=>"",
+                "ProjectId"=>$datadelivery->ProjectId, 
+                "PaymentRef"=>$datadelivery->DeliveryId, 
+                "PaymentRefType"=>"Pengiriman",
                 "GrandTotal"=>$datadelivery->DeliveryTotal,
-                "menu"=>"pengiriman",
             );
             $data["payment"] = $models->getdataPaymentByDelivery($id);  
         }

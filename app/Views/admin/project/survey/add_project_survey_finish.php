@@ -198,7 +198,9 @@
                         if($("#modal-finish-survey").data("menu") =="survey"){
                             loader_datatable(); 
                         }else{
-                            $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                            
+                            loader_data_project(<?= $project->ProjectId ?>,"survey"); 
+                            // $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
                         }
                          
                     });

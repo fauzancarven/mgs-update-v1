@@ -1,8 +1,8 @@
-<div class="modal fade" id="modal-add-payment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
+<div class="modal fade" id="modal-add-payment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true" data-menu="project">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Tambah Payment</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Tambah Pembayaran</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3"> 
@@ -29,10 +29,19 @@
                     <input class="form-control form-control-sm input-form" style="width:100%" id="date-payment">
                 </div> 
                 <div class="mb-1"> 
-                    <label for="category-project" class="col-form-label">Type:</label> 
+                    <label for="type-payment" class="col-form-label">Type:</label> 
                     <select class="form-select form-select-sm" style="width:100%" id="type-payment">
-                        <option value="DP" selected>DP</option>
-                        <option value="Pelunasan">Pelunasan</option>
+                        <option value="DP">DP</option>
+                        <option value="DP10">DP 10%</option>
+                        <option value="DP20">DP 20%</option>
+                        <option value="DP30">DP 30%</option>
+                        <option value="DP40">DP 40%</option>
+                        <option value="DP50">DP 50%</option>
+                        <option value="DP60">DP 60%</option>
+                        <option value="DP70">DP 70%</option>
+                        <option value="DP80">DP 80%</option>
+                        <option value="DP90">DP 90%</option> 
+                        <option value="Pelunasan" selected>Pelunasan</option>
                     </select>  
                 </div> 
                 <div class="mb-1"> 
@@ -48,7 +57,7 @@
                             <label for="total-payment" class="col-form-label">Total Payment:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
-                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="total-payment" value="0">
+                                <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="total-payment" value="<?= $project["GrandTotal"] - (array_sum(array_column($payment, 'PaymentTotal'))) ?>">
                             </div>  
                         </div>
                     </div>  
@@ -420,6 +429,9 @@
         }) 
     });
 
+</script>
+<script>
+    
     $("#btn-add-payment").click(function(){
         if($($(".template-footer").find("select")[0]).val() == null){
             Swal.fire({
@@ -449,10 +461,8 @@
             method: "POST",
             url: "<?= base_url() ?>action/add-data-payment", 
             data:{ 
-                "InvId": '<?= $project["InvId"] ?>', 
-                "SampleId": '<?= $project["SampleId"] ?>', 
-                "POId": '<?= $project["POId"] ?>', 
-                "DeliveryId": '<?= $project["DeliveryId"] ?>', 
+                "PaymentRef": '<?= $project["PaymentRef"] ?>', 
+                "PaymentRefType": '<?= $project["PaymentRefType"] ?>',  
                 "ProjectId": '<?= $project["ProjectId"] ?>', 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
@@ -469,10 +479,13 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-payment").modal("hide");  
-                        
-                        loader_data_project('<?= $project["ProjectId"] ?>','<?= $project["menu"] ?>') 
-                        //$("i[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");  
+                        $("#modal-add-payment").modal("hide");
+                        if($("#modal-add-payment").data("menu") =="sample"){
+                            loader_datatable(); 
+                        }else{  
+                            loader_data_project('<?= $project["ProjectId"] ?>','<?= $project ["PaymentRefType"] ?>') 
+                        }  
+                         
                     });
                   
                 }else{

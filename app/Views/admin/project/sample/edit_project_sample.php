@@ -1,5 +1,5 @@
  
-<div class="modal fade" id="modal-edit-sample" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-sample-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-edit-sample" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-sample-label" style="overflow-y:auto;" data-menu="project">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -1312,8 +1312,13 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-sample").modal("hide");    
-                        
-                        $(".icon-project[data-menu='sample'][data-id='<?= $project->ProjectId ?>']").trigger("click");    
+                        if($("#modal-add-sample").data("menu") =="sample"){
+                            loader_datatable(); 
+                        }else{
+                            
+                            loader_data_project(<?= $project->ProjectId ?>,"sample"); 
+                            // $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                        }  
                     });
                   
                 }else{
