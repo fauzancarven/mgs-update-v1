@@ -5582,6 +5582,8 @@ class ProjectModel extends Model
         $builder = $this->db->table("invoice"); 
         $builder->set('InvDate', $header["InvDate"]);   
         $builder->set('InvAdmin', $header["InvAdmin"]); 
+        $builder->set('InvCustName', $header["InvCustName"]);
+        $builder->set('InvCustTelp', $header["InvCustTelp"]);
         $builder->set('InvAddress', $header["InvAddress"]); 
         $builder->set('TemplateId', $header["TemplateId"]); 
         $builder->set('InvSubTotal', $header["InvSubTotal"]); 
