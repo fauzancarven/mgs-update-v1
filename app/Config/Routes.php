@@ -226,7 +226,7 @@ $routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageControll
  */ 
 $routes->get('/print/project/survey/(:num)', 'PrintController::project_survey/$1');  
 $routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1');   
-$routes->get('/print/project/invoiceA4/(:num)', 'PrintController::project_invoice_a4/$1');  
+$routes->get('/print/project/invoice/(:num)', 'PrintController::project_invoice/$1');  
 $routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1');  
 $routes->get('/print/project/deliveryA5/(:num)', 'PrintController::project_delivery_a5/$1');  
 $routes->get('/print/project/po/(:num)', 'PrintController::project_po/$1');   

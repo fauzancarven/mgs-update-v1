@@ -511,7 +511,7 @@ class MessageController extends BaseController
             if($postData['Type'] == "penawaran") {   
                 $ref = $models->getdataSPH($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SphCode,"id"=>$ref->SphId,"type"=>"Penawaran");  
-                $arr_detail = $models->getdataDetailSPH($postData['id']);
+                $arr_detail = $models->getdataDetailSPH($postData['RefId']);
                 $detail = array();
                 foreach($arr_detail as $row){
                     $detail[] = array(
@@ -526,7 +526,8 @@ class MessageController extends BaseController
                                 "qty"=> $row->SphDetailQty,
                                 "text"=> $row->SphDetailText,
                                 "group"=> $row->SphDetailGroup,
-                                "type"=> $row->SphDetailType
+                                "type"=> $row->SphDetailType,
+                                "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
                             );
                 };
                 $data["ref_detail"] = $detail;
@@ -600,6 +601,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
 
         $project = $models->getdataInvoice($id); 
         $arr_detail = $models->getdataDetailInvoice($id);
@@ -617,7 +619,8 @@ class MessageController extends BaseController
                         "qty"=> $row->InvDetailQty,
                         "text"=> $row->InvDetailText,
                         "group"=> $row->InvDetailGroup,
-                        "type"=> $row->InvDetailType
+                        "type"=> $row->InvDetailType,
+                        "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
                     );
         };
         $data["project"] = $project; 
@@ -690,33 +693,53 @@ class MessageController extends BaseController
     public function project_payment_edit($id)
     {     
         $models = new ProjectModel();      
-        $data["payment"] = $models->getdataPayment($id);  
-        if($data['payment']->SampleId > 0){
-            $datasample = $models->getdataSample($data['payment']->SampleId); 
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        $data["payment"] = $models->getdataPayment($id);   
+        if($postData['type'] == "sample"){
+            $datasample = $models->getdataSample($data["payment"]->PaymentRef); 
             $project = array(
                 "ProjectId"=>$datasample->ProjectId,
-                "SampleId"=>$datasample->SampleId,
-                "InvId"=>"",
+                "PaymentRef"=>$datasample->SampleId, 
+                "PaymentRefType"=>"Sample",
                 "GrandTotal"=>$datasample->SampleGrandTotal,
-                "menu"=>"sample",
             );
-            $data["payments"] = $models->getdataPaymentBySample($data['payment']->SampleId);  
+            $data["payments"] = $models->getdataPaymentBySample($data["payment"]->PaymentRef);  
         }
-        if($data['payment']->InvId > 0){
-            $datainvoice = $models->getdataInvoice($data['payment']->InvId); 
+        if($postData['type'] == "invoice"){
+            $datainvoice = $models->getdataInvoice($id); 
             $project = array(
-                "ProjectId"=>$datainvoice->ProjectId,
-                "SampleId"=>"",
-                "InvId"=>$datainvoice->InvId,
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
                 "GrandTotal"=>$datainvoice->InvGrandTotal,
-                "menu"=>"invoice",
             );
-            $data["payments"] = $models->getdataPaymentByInvoice($data['payment']->InvId);  
-        } 
-        
+            $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->PaymentRef);  
+        }
+        if($postData['type'] == "po"){
+            $datapo = $models->getDataPO($id); 
+            $project = array(
+                "ProjectId"=>$datapo->ProjectId, 
+                "PaymentRef"=>$datapo->POId,
+                "PaymentRefType"=>"Pembelian",
+                "GrandTotal"=>$datapo->POGrandTotal,
+            );
+            $data["payments"] = $models->getdataPaymentByPO($data["payment"]->PaymentRef);  
+        }
+        if($postData['type'] == "delivery"){
+            $datadelivery = $models->getDataDelivery($id); 
+            $project = array(
+                "ProjectId"=>$datadelivery->ProjectId, 
+                "PaymentRef"=>$datadelivery->DeliveryId, 
+                "PaymentRefType"=>"Pengiriman",
+                "GrandTotal"=>$datadelivery->DeliveryTotal,
+            );
+            $data["payments"] = $models->getdataPaymentByDelivery($data["payment"]->PaymentRef);  
+        }
+
         $data["project"] = $project; 
         $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
-        $data["image"] = $models->getdataImagePayment($data["payment"]->ProjectId,$data["payment"]->InvId,$data["payment"]->SampleId,$id);    
+        $data["image"] = $models->getdataImagePayment($data["payment"]->ProjectId,$data["payment"]->PaymentRef,$data["payment"]->PaymentRefType,$id);    
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
     }
@@ -742,8 +765,7 @@ class MessageController extends BaseController
     public function project_delivery_add($id)
     {      
         $models = new ProjectModel();
-        $modelscustomer = new CustomerModel();
-        $modelsstore = new StoreModel();
+        $modelscustomer = new CustomerModel(); 
         $modelsproduk = new ProdukModel();
         
         $request = Services::request();
@@ -754,13 +776,11 @@ class MessageController extends BaseController
             $project = array(
                 "code"=>$datasample->SampleCode,
                 "project_id"=>$datasample->ProjectId,
-                "SampleId"=>$datasample->SampleId, 
-                "InvId"=>"", 
-                "menu"=>"sample",
-                "CustomerName"=>$datasample->CustomerName,
-                "CustomerTelp"=>$datasample->CustomerTelp1,
-                "CustomerAddress"=>$datasample->CustomerAddress,
-                "StoreId"=>$datasample->StoreId
+                "DeliveryRef"=>$datasample->SampleId,  
+                "DeliveryRefType"=>"Sample",
+                "CustomerName"=>$datasample->SampleCustName,
+                "CustomerTelp"=>$datasample->SampleCustTelp,
+                "CustomerAddress"=>$datasample->SampleAddress
             );
             $arr_detail = $models->getdataDetailSample($id);
             foreach($arr_detail as $row){
@@ -787,14 +807,12 @@ class MessageController extends BaseController
             $datainvoice = $models->getdataInvoice($id);  
             $project = array(
                 "code"=>$datainvoice->InvCode,
-                "project_id"=>$datainvoice->ProjectId,
-                "SampleId"=>"",
-                "InvId"=>$datainvoice->InvId, 
-                "menu"=>"invoice",
-                "CustomerName"=>$datainvoice->CustomerName,
-                "CustomerTelp"=>$datainvoice->CustomerTelp1,
-                "CustomerAddress"=>$datainvoice->CustomerAddress,
-                "StoreId"=>$datainvoice->StoreId
+                "project_id"=>$datainvoice->ProjectId, 
+                "DeliveryRef"=>$datainvoice->InvId, 
+                "DeliveryRefType"=>"Invoice",
+                "CustomerName"=>$datainvoice->InvCustName,
+                "CustomerTelp"=>$datainvoice->InvCustTelp,
+                "CustomerAddress"=>$datainvoice->InvAddress, 
             );
             $arr_detail = $models->getdataDetailInvoice($id);
             foreach($arr_detail as $row){
@@ -822,8 +840,7 @@ class MessageController extends BaseController
         }  
        
         $data["project"] = $project; 
-        $data["detail"] =  $detail; 
-        $data["store"] = $modelsstore->getWhere(['StoreId' => $project["StoreId"]], 1)->getRow();
+        $data["detail"] =  $detail;  
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/add_project_delivery',$data)); 
     } 

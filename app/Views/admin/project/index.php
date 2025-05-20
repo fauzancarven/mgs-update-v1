@@ -472,7 +472,8 @@
                     <label for="InvPrintFormat" class="col-sm-4 col-form-label">Ukuran Kertas</label>
                     <div class="col-sm-8">
                         <select class="form-select form-select-sm" id="InvPrintFormat" name="InvPrintFormat" placeholder="Pilih Admin" style="width:100%">
-                            <option id="1" selected>A4</option>
+                            <option id="A4" selected>A4</option>
+                            <option id="A5" >A5</option>
                         </select>  
                     </div>
                 </div>   
@@ -489,7 +490,7 @@
                         </div>
                     </div>
                 </div>   
-                <div class="row mb-1 align-items-center mt-2">
+                <div class="row mb-1 align-items-center mt-2 d-none">
                     <label for="InvPrintTotal" class="col-sm-4 col-form-label">gunakan grand total</label>
                     <div class="col-sm-8">
                         <div class="form-check form-check-inline">
@@ -501,7 +502,19 @@
                             <label class="text-detail" for="InvPrintTotal2">Ya</label>
                         </div>
                     </div>
-                </div>   
+                </div>
+                <script> 
+                   $('#InvPrintFormat').change(function() {
+                        if($(this).val() == "A5"){
+                            $('input[name="InvPrintImage"]').prop("disabled",true)
+                            $('input[name="InvPrintTotal"]').prop("disabled",true)
+                        }else{
+
+                            $('input[name="InvPrintImage"]').prop("disabled",false)
+                            $('input[name="InvPrintTotal"]').prop("disabled",false)
+                        }
+                    });
+                </script>   
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -1618,15 +1631,15 @@
             $(el).html(old_text); 
         });
     }; 
-    print_project_invoice_a4 = function(ref,id,el){  
+    print_project_invoice = function(ref,id,el){  
         $("#modal-print-invoice").modal("show");
         $("#modal-print-invoice").data("id",id) 
     }; 
-    print_project_invoice_a5 = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/invoiceA5/") ?>' + id, '_blank');
-    }; 
+    // print_project_invoice_a5 = function(ref,id,el){ 
+    //     window.open('<?= base_url("print/project/invoiceA5/") ?>' + id, '_blank');
+    // }; 
     $("#btn-print-invoice").click(function(i){ 
-        $.redirect('<?= base_url("print/project/invoiceA4/") ?>' +  $("#modal-print-invoice").data("id"),  {
+        $.redirect('<?= base_url("print/project/invoice/") ?>' +  $("#modal-print-invoice").data("id"),  {
             kertas: $("#InvPrintFormat").val(),
             image: $('input[name="InvPrintImage"]:checked').val(),
             total: $('input[name="InvPrintTotal"]:checked').val(),
@@ -1674,7 +1687,7 @@
     }
     
     var isProcessingPaymentEdit = [];
-    edit_project_payment  = function(ref,id,el){ 
+    edit_project_payment  = function(ref,id,el,type){ 
          // INSERT LOADER BUTTON
          if (isProcessingPaymentEdit[id]) {
             console.log("project sph cancel load");
@@ -1687,6 +1700,9 @@
         $.ajax({  
             method: "POST",
             url: "<?= base_url() ?>message/edit-project-payment/" + id,  
+            data:{
+                type:type
+            },
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-payment").modal("show"); 

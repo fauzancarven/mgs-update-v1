@@ -81,7 +81,7 @@ class PrintController extends BaseController
                 $dompdf->render();
                 $dompdf->stream( 'SPH_'.$data["sph"]->CustomerName.'_'.$data["sph"]->SphDate.'.pdf', [ 'Attachment' => false ]);
 	}
-	public function project_invoice_a4($id)
+	public function project_invoice($id)
 	{
                 $request = Services::request();
                 $postData = $request->getGet();
@@ -115,18 +115,24 @@ class PrintController extends BaseController
                 };
                 $data["detail"] = $detail; 
                 $data["postdata"] = $postData; 
-                $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
+              
                 if(isset($postData["custom"])){ 
                         $data["header_footer"]["detail"] = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0895-3529-92663<br>MAHIERA GLOBAL SOLUTION';
                 }
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
-
-                $html = view('admin/project/invoice/print_invoice_a4',$data); 
+                if($data["postdata"]["kertas"] == "A5"){ 
+                        $dompdf->set_paper(array(0,0,420, 620), 'landscape');
+                        $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);
+                        $html = view('admin/project/invoice/print_invoice_a5',$data); 
+                }else{ 
+                        $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
+                        $html = view('admin/project/invoice/print_invoice_a4',$data); 
+                }
                 //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();
-                $dompdf->stream( 'INV_'.$data["inv"]->CustomerName.'_'.$data["inv"]->InvDate.'.pdf', [ 'Attachment' => false ]);
+                $dompdf->stream( 'INV_'.$data["inv"]->InvCustName.'_'.$data["inv"]->InvDate.'.pdf', [ 'Attachment' => false ]);
 	}
 	public function project_invoice_a5($id)
 	{

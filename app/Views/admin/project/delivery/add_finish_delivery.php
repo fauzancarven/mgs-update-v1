@@ -250,7 +250,7 @@
             if(data_detail_item[i]["type"] == "product"){
    
 
-                //event harga
+                //input Pengiiman
                 inputpengiriman[i] = new Cleave(`#input-pengiriman-${i}`, {
                     numeral: true,
                     delimeter: ",",
@@ -263,7 +263,7 @@
                     if($(`#input-pengiriman-${i}`).val() == "") $(`#input-pengiriman-${i}`).val(0) 
                 });   
  
-                //event qty
+                //input Rusak
                 inputrusak[i] = new Cleave(`#input-rusak-${i}`, {
                         numeral: true,
                         delimeter: ",",
@@ -276,7 +276,7 @@
                     if($(`#input-rusak-${i}`).val() == "") $(`#input-rusak-${i}`).val(0) 
                 });  
 
-                //event harga
+                //input Spare
                 inputspare[i] = new Cleave(`#input-spare-${i}`, {
                     numeral: true,
                     delimeter: ",",
@@ -398,7 +398,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-finish-delivery").modal("hide");   
-                        loader_data_project(<?= $project->ProjectId ?>,'pengiriman')  
+                        loader_data_project(<?= $delivery->ProjectId ?>,'pengiriman')  
                         // $("i[data-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");   
                     });
                   

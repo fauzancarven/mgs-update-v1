@@ -448,10 +448,7 @@
             dataType: "json",
             method: "POST",
             url: "<?= base_url() ?>action/edit-data-payment/<?= $payment->PaymentId?>", 
-            data:{  
-                "InvId": '<?= $project["InvId"] ?>', 
-                "SampleId": '<?= $project["SampleId"] ?>', 
-                "ProjectId": '<?= $project["ProjectId"] ?>', 
+            data:{   
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(),  
                 "PaymentMethod":$("#method-payment").val(), 
@@ -467,8 +464,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-payment").modal("hide");   
-                        loader_data_project('<?= $project["ProjectId"] ?>','<?= $project["menu"] ?>') 
-                        //$("i[data-menu='<?= $project["menu"] ?>'][data-id='<?= $project["ProjectId"] ?>']").trigger("click");   
+                        loader_data_project('<?= $project["ProjectId"] ?>','<?= $project["PaymentRefType"] ?>') 
                     });
                   
                 }else{

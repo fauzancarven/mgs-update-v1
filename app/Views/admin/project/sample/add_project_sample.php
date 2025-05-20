@@ -61,7 +61,7 @@
                                 <label for="SampleRef" class="col-sm-2 col-form-label">Ref</label>
                                 <div class="col-sm-10"> 
                                     <select class="form-select form-select-sm" id="SampleRef" name="SampleRef"  style="width:100%" >
-                                        <option value="0" selected>No Data Selected</option>
+                                        <option value="0" selected data-type="-">No Data Selected</option>
                                     </select>  
                                 </div> 
                             </div>  

@@ -42,7 +42,76 @@ class ProjectModel extends Model
     protected $afterFind = [];
     protected $beforeDelete = [];
     protected $afterDelete = [];
+    function getTerbilang($number) {
+        $terbilang = array(
+            1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
+            6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
+            11 => 'Sebelas', 12 => 'Dua Belas', 13 => 'Tiga Belas', 14 => 'Empat Belas', 15 => 'Lima Belas',
+            16 => 'Enam Belas', 17 => 'Tujuh Belas', 18 => 'Delapan Belas', 19 => 'Sembilan Belas', 20 => 'Dua Puluh',
+            30 => 'Tiga Puluh', 40 => 'Empat Puluh', 50 => 'Lima Puluh', 60 => 'Enam Puluh',
+            70 => 'Tujuh Puluh', 80 => 'Delapan Puluh', 90 => 'Sembilan Puluh', 100 => 'Seratus'
+        );
 
+        if ($number < 20 || $number == 100) {
+            return $terbilang[$number];
+        } elseif ($number < 100) {
+            $puluh = floor($number / 10) * 10;
+            $sisa = $number % 10;
+            if ($sisa > 0) {
+                return $terbilang[$puluh] . ' ' . $terbilang[$sisa];
+            } else {
+                return $terbilang[$puluh];
+            }
+        } elseif ($number < 1000) {
+            $ratus = floor($number / 100);
+            $sisa = $number % 100;
+            if ($sisa > 0) {
+                if ($ratus == 1) {
+                    return 'Seratus ' . getTerbilang($sisa);
+                } else {
+                    return $terbilang[$ratus] . ' Ratus ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($ratus == 1) {
+                    return 'Seratus';
+                } else {
+                    return $terbilang[$ratus] . ' Ratus';
+                }
+            }
+        } elseif ($number < 1000000) {
+            $ribu = floor($number / 1000);
+            $sisa = $number % 1000;
+            if ($sisa > 0) {
+                if ($ribu == 1) {
+                    return 'Seribu ' . getTerbilang($sisa);
+                } else {
+                    return getTerbilang($ribu) . ' Ribu ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($ribu == 1) {
+                    return 'Seribu';
+                } else {
+                    return getTerbilang($ribu) . ' Ribu';
+                }
+            }
+        } elseif ($number < 1000000000) {
+            $juta = floor($number / 1000000);
+            $sisa = $number % 1000000;
+            if ($sisa > 0) {
+                if ($juta == 1) {
+                    return 'Satu Juta ' . getTerbilang($sisa);
+                } else {
+                    return getTerbilang($juta) . ' Juta ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($juta == 1) {
+                    return 'Satu Juta';
+                } else {
+                    return getTerbilang($juta) . ' Juta';
+                }
+            }
+        }
+    }
     function format_filesize($bytes) {
         if ($bytes >= 1073741824) {
             $bytes = number_format($bytes / 1073741824, 2) . ' GB';
@@ -1503,6 +1572,7 @@ class ProjectModel extends Model
                     </span>  '; 
                 } 
             }
+
             // MENGAMBIL DATA DITERUSKAN
             $builder = $this->db->table("penawaran");
             $builder->select('*');
@@ -1588,7 +1658,8 @@ class ProjectModel extends Model
             }else{
                 $builder = $this->db->table("payment");
                 $builder->select('*'); 
-                $builder->where('SampleId',$row->SampleId);
+                $builder->where('PaymentRef',$row->SampleId);
+                $builder->where('PaymentRefType',"Sample");
                 $builder->orderby('PaymentId', 'ASC'); 
                 $payment = $builder->get()->getResult(); 
                 $html_payment = "";
@@ -1615,72 +1686,124 @@ class ProjectModel extends Model
                         </span>Verified</span>';
                         //$status = '<span class="text-head-3 text-success">Terverifikasi</span>';
                     }
-                    $html_payment .= '<div class="mb-1 p-1">  
-                                    <div class="row mx-2"> 
-                                        <div class="col-12 col-md-1 order-2 order-sm-1 p-0"> 
-                                            <div class="d-flex flex-row flex-md-column justify-content-between">
-                                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-                                                <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
-                                            </div>  
-                                        </div>
-                                        <div class="col-12 col-md-1 order-3 order-sm-2 p-0"> 
-                                            <div class="d-flex flex-row flex-md-column justify-content-between"> 
-                                                <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
-                                                '.$status.'
-                                            </div>  
-                                        </div>
-                                        <div class="col-12 col-md-1 order-4 order-sm-3 p-0"> 
-                                            <div class="d-flex flex-row flex-md-column justify-content-between">
-                                                <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
-                                                <span class="text-head-3">'.$row_payment->PaymentType.'</span>
-                                            </div>  
-                                        </div>
-                                        <div class="col-12 col-md-1 order-5 order-sm-4 p-0">
-                                            <div class="d-flex flex-row flex-md-column justify-content-between">
-                                                <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
-                                                <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
-                                            </div>  
-                                        </div>
-                                        <div class="col-12 col-md-2 order-6 order-sm-5 p-0">
-                                            <div class="d-flex flex-row flex-md-column justify-content-between">
-                                                <span class="text-detail-2"><i class="fa-solid fa-wallet pe-1"></i>Total</span>
-                                                <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
-                                            </div>   
-                                        </div>
-                                        <div class="col-12 col-md-6 text-end order-1 order-sm-5 p-0"> 
-                                            
-                                            <div class="d-none d-md-inline-block"> 
-                                                <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'sample\')">
-                                                    <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
-                                                </button>
-                                                <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
-                                                    <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-                                                </button>
-                                                <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
-                                                    <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
-                                                    <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-                                                </button> 
-                                            </div>
-                                            <div class="d-flex  d-md-none justify-content-between"> 
-                                                <span class="text-head-2 pt-auto"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
-                                                <div class="dropdown">
-                                                    <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="ti-more-alt icon-rotate-45"></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu shadow">
-                                                        <li><a class="dropdown-item m-0 px-2 '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-eye pe-2"></i>Lihat Bukti</a></li>
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-dollar pe-2"></i>Cetak</a></li>  
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
-                                                        <li><a class="dropdown-item m-0 px-2" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                ';
+                    // $html_payment .= '
+                    // <div class="list-project mb-4 p-2 project-hide">  
+                    //     <div class="header row gx-0 gy-0 gx-md-4 gy-md-2 ps-3" >  
+                    //         <div class="col-12 col-sm-2 col-xl-2">
+                    //             <div class="d-flex flex-row flex-md-column justify-content-between">
+                    //                 <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pembayaran</span>
+                    //                 <span class="text-head-3">'.$row_payment->PaymentCode.'</span>
+                    //             </div>  
+                    //         </div>
+                    //         <div class="col-12 col-sm-1 col-xl-1 p-0"> 
+                    //             <div class="d-flex flex-row flex-md-column justify-content-between">
+                    //                 <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                    //                 <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
+                    //             </div>  
+                    //         </div> 
+                    //         <div class="col-12 col-sm-1 col-xl-1 p-0">
+                    //             <div class="d-flex flex-row flex-md-column justify-content-between">
+                    //                 <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    //                 '.$status.'
+                    //             </div>  
+                    //         </div> 
+                    //         <div class="col-12 col-sm-1 col-xl-1 p-0">
+                    //             <div class="d-flex flex-row flex-md-column justify-content-between">
+                    //                 <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
+                    //                 <span class="text-head-3">'.$row_payment->PaymentType.'</span>
+                    //             </div>  
+                    //         </div>
+                    //         <div class="col-12 col-sm-1 col-xl-1 p-0">
+                    //             <div class="d-flex flex-row flex-md-column justify-content-between">
+                    //                 <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
+                    //                 <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
+                    //             </div>  
+                    //         </div>
+                    //         <div class="col-12 col-sm-2 col-xl-2">
+                    //             <div class="d-flex flex-row flex-md-column justify-content-between">
+                    //                 <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i></span>
+                    //                 <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</span>
+                    //             </div>  
+                    //         </div>
+                    //         <div class="col-3 col-md-4 text-end"> 
+                    //             <div class="d-none d-md-inline-block">  
+                    //                 <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'sample\')">
+                    //                     <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
+                    //                 </button>
+                    //                 <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                    //                     <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
+                    //                 </button>
+                    //                 <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                    //                     <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
+                    //                 </button>
+                    //                 <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                    //                     <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
+                    //                 </button> 
+                    //             </div>
+                    //             <div class="d-inline-block d-md-none">
+                    //                 <span class="text-head-2 pt-auto"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
+                    //                 <div class="dropdown">
+                    //                     <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    //                         <i class="ti-more-alt icon-rotate-45"></i>
+                    //                     </a>
+                    //                     <ul class="dropdown-menu shadow">
+                    //                         <li><a class="dropdown-item m-0 px-2 '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-eye pe-2"></i>Lihat Bukti</a></li>
+                    //                         <li><a class="dropdown-item m-0 px-2" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-dollar pe-2"></i>Cetak</a></li>  
+                    //                         <li><a class="dropdown-item m-0 px-2" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
+                    //                         <li><a class="dropdown-item m-0 px-2" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
+                    //                     </ul>
+                    //                 </div>
+                    //             </div>
+                    //         </div>
+                    //     </div>
+                    // </div>';
+
+                    $html_payment .= '
+                    <div class="list-project mb-4 p-2 project-hide">  
+                        <div class="header row gx-0 gy-0 gx-md-4 gy-md-2 ps-3" >
+                            <div class="d-flex gap-4"> 
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pembayaran</span>
+                                    <span class="text-head-3">'.$row_payment->PaymentCode.'</span>
+                                </div>    
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                                    <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
+                                </div>   
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                                    '.$status.'
+                                </div>   
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
+                                    <span class="text-head-3">'.$row_payment->PaymentType.'</span>
+                                </div>   
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
+                                    <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
+                                </div>   
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i></span>
+                                    <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</span>
+                                </div>   
+                                <div class="flex-fill text-end">  
+                                    <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'sample\')">
+                                        <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                                        <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                                        <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                                        <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
+                                    </button> 
+                                </div> 
+                            </div>
+                        </div>
+                    </div>';
+                
                 } 
                 if($html_payment == ""){
                     $html_payment = '<div class="alert alert-warning p-2 m-1" role="alert"> 
@@ -1702,13 +1825,262 @@ class ProjectModel extends Model
                 }
             }
 
+            // MENGAMBIL DATA PENGIRIMAN
             $html_delivery = "";
             $builder = $this->db->table("delivery");
-            $builder->select('*');   
-            $builder->where("SampleId",$row->SampleId);
+            $builder->select('*');    
+            $builder->where('DeliveryRef',$row->SampleId); 
+            $builder->where('DeliveryRefType',"Sample");  
+            $builder->where('DeliveryStatus <',"3"); 
             $builder->orderby('DeliveryId', 'ASC'); 
-            $delivery = $builder->countAllResults();
-            if($delivery == 0){
+            $delivery = $builder->get()->getResult();
+            
+            foreach($delivery as $row_delivery){
+
+                $builder = $this->db->table("delivery_detail");
+                $builder->select('*'); 
+                $builder->where('DeliveryDetailRef',$row_delivery->DeliveryId);
+                $builder->orderby('DeliveryDetailId', 'ASC'); 
+                $items = $builder->get()->getResult(); 
+                $html_items_delivery = "";
+                $no = 1;
+                $huruf  = "A";
+                foreach($items as $item){
+                    $folder = 'assets/images/produk/'.$item->ProdukId."/";
+                    $default = 'assets/images/produk/default.png';
+        
+                    if (!file_exists($folder)) {
+                        mkdir($folder, 0777, true);  
+                    } 
+                    $files = array_diff(scandir($folder), array('.', '..')); 
+                    $gambar = null;
+        
+                    foreach ($files as $file) {
+                        if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                            $gambar = $folder . $file;
+                            break;
+                        }
+                    }  
+
+                    $arr_varian = json_decode($item->DeliveryDetailVarian);
+                    $arr_badge = "";
+                    $arr_no = 0;
+                    foreach($arr_varian as $varian){
+                        $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                        $arr_no++;
+                    }
+
+                    $html_items_delivery .= '
+                    <div class="row">
+                        <div class="col-12 col-md-5 my-1 varian">   
+                            <div class="d-flex gap-2">
+                                ' . ($item->DeliveryDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' >") : "").'  
+                                <div class="d-flex flex-column text-start">
+                                    <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
+                                    <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
+                                    <div class="d-flex flex-wrap gap-1">
+                                        '.$arr_badge.'
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>'; 
+                    $html_items_delivery .= '<div class="col-12 col-md-7 my-1 detail">
+                                        <div class="row"> 
+                                            <div class="col-6 col-md-3">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Dikirim:</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-6 col-md-2">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Spare:</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-4 col-md-3 px-1 border-left">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Diterima:</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceive, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-4 col-md-2 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Spare:</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceiveSpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-4 col-md-2 px-1">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Rusak:</span>
+                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceiveWaste, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                </div>
+                                            </div>  
+                                        </div>   
+                                    </div> 
+                                </div>';
+                    $no++; 
+                        
+                    
+                } 
+                $delivery_status = "";
+                $delivery_date = "";
+                if($row_delivery->DeliveryStatus == 0){ 
+                    $delivery_status = '<span class="text-head-3">
+                        <span class="badge text-bg-primary me-1">Dijadwalkan</span> 
+                    </span>';
+                    $delivery_date = '
+                                    <div class="row">
+                                        <div class="col-4"> 
+                                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                                        </div>
+                                        <div class="col-8">
+                                            <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                                        </div>
+                                    </div>  <div class="row">
+                                        <div class="col-4"> 
+                                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                                        </div>
+                                        <div class="col-8">
+                                            <span class="text-head-3"><a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_project_proses('.$project_id.','.$row_delivery->DeliveryId.',this)">Proses Pengiriman</a></span>
+                                        </div>
+                                    </div> ';
+                }elseif($row_delivery->DeliveryStatus == 1){
+                    $delivery_status = '<span class="text-head-3">
+                        <span class="badge text-bg-info me-1">Dikirim</span> 
+                    </span>'; 
+                    $delivery_date = '
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                            </div>
+                        </div>  <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateProses),"d M Y").' </span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Proses Pengiriman" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Proses Pengiriman" onclick="delivery_proses_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Diterima</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3"><a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_project_finish('.$project_id.','.$row_delivery->DeliveryId.',this)">Terima Pengiriman</a></span>
+                            </div>
+                        </div> ';
+                }elseif($row_delivery->DeliveryStatus == 2){
+                    $delivery_status = '<span class="text-head-3">
+                        <span class="badge text-bg-success me-1">Selesai</span> 
+                    </span>'; 
+                    $delivery_date = '
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                            </div>
+                            <div class="col-8">   
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateProses),"d M Y").' </span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Proses Pengiriman" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Proses Pengiriman" onclick="delivery_proses_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Diterima</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateFinish),"d M Y").'</span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Terima Pengiriman" onclick="delivery_finish_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Terima Pengiriman" onclick="delivery_finish_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                            
+                            </div>
+                        </div>';
+                }
+                $html_delivery .= '
+                    <div class="list-project mb-4 p-2 project-hide">  
+                        <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
+                            <div class="col-12  col-md-4 order-1 order-sm-0"> 
+                                <div class="row">
+                                    <div class="col-4"> 
+                                        <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
+                                    </div>
+                                    <div class="col-8">
+                                        <span class="text-head-3">'.$row_delivery->DeliveryCode.'</span>
+                                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Pengiriman" onclick="print_project_delivery('.$project_id.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-print"></i></span>
+                                        <span class="text-warning pointer text-head-3 '.($row_delivery->DeliveryStatus > 1 ? "d-none" : "").'" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Pengiriman" onclick="edit_project_delivery('.$project_id.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                        <span class="text-danger pointer text-head-3 '.($row_delivery->DeliveryStatus > 0 ? "d-none" : "").'" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Pengiriman"  onclick="delete_project_delivery('.$project_id.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                                            
+                                    </div>
+                                </div> 
+                                
+                                <div class="row">
+                                    <div class="col-4"> 
+                                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                                    </div>
+                                    <div class="col-8">
+                                        <span class="text-head-3">'.$delivery_status.'</span>
+                                    </div>
+                                </div>     
+                                <div class="row">
+                                    <div class="col-4"> 
+                                        <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
+                                    </div>
+                                    <div class="col-8">
+                                        <span class="text-head-3">'.$row_delivery->DeliveryRitase.' ('.$this->getTerbilang($row_delivery->DeliveryRitase).')</span>
+                                    </div>
+                                </div>   
+                                <div class="row">
+                                    <div class="col-4"> 
+                                        <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
+                                    </div>
+                                    <div class="col-8">
+                                        <span class="text-head-3">'.$row_delivery->DeliveryArmada.'</span>
+                                    </div>
+                                </div>    
+                                '.$delivery_date .'   
+                            </div>   
+                            <div class="col-12  col-md-8 order-1 order-sm-1">  
+                                <div class="d-flex mt-2 p-2 gap-4 align-items-center">   
+                                    <div class="d-flex flex-row flex-md-column align-self-start">
+                                        <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i></i>Dari</span>
+                                        <span class="text-head-2">'.$row_delivery->DeliveryFromName.'</span>
+                                        <span class="text-head-3">'.$row_delivery->DeliveryFromTelp.'</span>
+                                        <span class="text-detail-2">'.$row_delivery->DeliveryFromAddress.'</span>
+                                    </div>    
+                                    <div class="d-flex text-primary align-items-center">
+                                        <i class="fa-solid fa-truck pe-1"></i>
+                                        <div class="line-dot"></div>
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </div>
+                                    <div class="d-flex flex-row flex-md-column align-self-start">
+                                        <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
+                                        <span class="text-head-2">'.$row_delivery->DeliveryToName.'</span>
+                                        <span class="text-head-3">'.$row_delivery->DeliveryToTelp.'</span>
+                                        <span class="text-detail-2">'.$row_delivery->DeliveryToAddress.'</span>
+                                    </div>   
+                                </div>   
+                            </div>  
+                        </div>   
+                        <div class="detail-item mt-1 p-2 border-top">
+                            '.$html_items_delivery.' 
+                        </div>  
+                    </div>';
+            }
+            if($html_delivery == ""){
                 $html_delivery = ' 
                     <div class="alert alert-warning p-2 m-1" role="alert">
                         <span class="text-head-3">
@@ -1717,17 +2089,18 @@ class ProjectModel extends Model
                             <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->SampleId.',this,\'sample\')">Buat Data Pengiriman</a> 
                         </span>
                     </div>';
-            }else{
-                $html_delivery = ' 
-                <div class="alert alert-success p-2 m-1" role="alert">
-                    <span class="text-head-2">
-                        <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
-                        ada '.$delivery .' data pengiriman yang dibuat dari Sample ini, 
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick=\'$(".icon-project[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->SampleId.',this,\'sample\')">Tambah Data Pengiriman</a> 
-                    </span>
-                </div>';
             }
+            // else{
+            //     $html_delivery = ' 
+            //     <div class="alert alert-success p-2 m-1" role="alert">
+            //         <span class="text-head-2">
+            //             <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
+            //             ada '.$delivery .' data pengiriman yang dibuat dari Sample ini, 
+            //             <a class="text-head-2 text-primary" style="cursor:pointer" onclick=\'$(".icon-project[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
+            //             <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->SampleId.',this,\'sample\')">Tambah Data Pengiriman</a> 
+            //         </span>
+            //     </div>';
+            // }
             
             $status = "";
             if($row->SampleStatus==0){
@@ -1811,7 +2184,7 @@ class ProjectModel extends Model
                             </div>
                             <div class="col-8">
                                 <span class="text-head-3">'.$row->SampleCode.'</span>
-                                <span class="text-primary pointer text-head-3 d-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Print Form Sample" onclick="print_project_Sample('.$row->ProjectId.','.$row->SampleId.',this)"><i class="fa-solid fa-print"></i></span>
+                                <span class="text-primary pointer text-head-3 d-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Sample" onclick="print_project_Sample('.$row->ProjectId.','.$row->SampleId.',this)"><i class="fa-solid fa-print"></i></span>
                                 <div class="d-inline '.($row->SampleStatus > 1 ? "d-none" : "").'">
                                     <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Sample" onclick="edit_project_sample('.$row->ProjectId.','.$row->SampleId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
                                     <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Sample"  onclick="delete_project_sample('.$row->ProjectId.','.$row->SampleId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
@@ -1830,7 +2203,7 @@ class ProjectModel extends Model
                         '.$status.'
                         
                     </div>  
-                    <div class="col-12  col-md-4 order-1 order-sm-1"> 
+                    <div class="col-12  col-md-3 order-1 order-sm-1"> 
                         <div class="row">
                             <div class="col-4"> 
                                 <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
@@ -1848,10 +2221,10 @@ class ProjectModel extends Model
                             </div>
                         </div>    
                     </div>
-                    <div class="col-12  col-md-4 order-2 order-sm-1"> 
+                    <div class="col-12  col-md-5 order-2 order-sm-1"> 
                         <div class="row">
                             <div class="col-4"> 
-                                <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>PIC Lapangan</span>
+                                <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>Nama</span>
                             </div>
                             <div class="col-8">
                                 <span class="text-head-3">'.$row->SampleCustName.'</span>
@@ -1938,7 +2311,8 @@ class ProjectModel extends Model
                 $builder = $this->db->table("payment");
                 $builder->select('sum(PaymentTotal) as total');  
                 $builder->where('PaymentDoc',"1");
-                $builder->where('SampleId',$row->SampleId);
+                $builder->where('PaymentRef',$row->SampleId);
+                $builder->where('PaymentRefType',"Sample");
                 $builder->orderby('PaymentId', 'ASC'); 
                 $payment = $builder->get()->getRow()->total; 
                 if($payment < $row->SampleGrandTotal){
@@ -1948,9 +2322,11 @@ class ProjectModel extends Model
                     );
                 } 
             }
+            
             $builder = $this->db->table("delivery");
             $builder->select('*');   
-            $builder->where("SampleId",$row->SampleId);
+            $builder->where("DeliveryRef",$row->SampleId);
+            $builder->where("DeliveryRefType","Sample");
             $builder->orderby('DeliveryId', 'ASC'); 
             $delivery = $builder->countAllResults();
             if($delivery == 0){
@@ -1958,25 +2334,13 @@ class ProjectModel extends Model
                     "type"=>"Pengiriman",
                     "message"=>"Pengiriman ".$row->SampleCode." belum dibuat"
                 );
-            }else{
-                $builder = $this->db->table("delivery");
-                $builder->select('*');   
-                $builder->where("SampleId",$row->SampleId);
-                $builder->where("DeliveryStatus <",2);
-                $builder->orderby('DeliveryId', 'ASC'); 
-                $delivery = $builder->countAllResults();
-                if($delivery == 0){
-                    $alert[] = array(
-                        "type"=>"Delivery",
-                        "message"=>"Pengiriman ".$row->SampleCode." belum diselesaikan"
-                    );
-                }
+            } 
+            if($row->SampleStatus <2){ 
+                $alert[] = array(
+                    "type"=>"teruskan",
+                    "message"=>"dokumen ". $row->SampleCode ." belum diteruskan"
+                );
             }
-            
-            $alert[] = array(
-                "type"=>"teruskan",
-                "message"=>"dokumen ". $row->SampleCode ." belum diteruskan"
-            );
         }
         return $alert;
     }
@@ -1992,6 +2356,7 @@ class ProjectModel extends Model
         $html = ""; 
         $builder = $this->db->table("penawaran");
         $builder->select('*');
+        $builder->join('users',"id=SphAdmin","left"); 
         $builder->where('ProjectId',$project_id);
         $builder->where('SphStatus !=',2);
         $builder->orderby('SphId', 'DESC'); 
@@ -2007,45 +2372,7 @@ class ProjectModel extends Model
             $items = $builder->get()->getResult(); 
             $html_items = "";
             $no = 1;
-            $huruf  = "A";
-
-            $builder = $this->db->table("invoice");
-            $builder->select('*');
-            $builder->where('SphId',$row->SphId); 
-            $builder->orderby('InvId', 'DESC'); 
-            $queryref = $builder->get()->getRow();  
-            if($queryref){
-                $alert = ' 
-                    <script>
-                        function penawaran_return_click_'.$project_id.'_'.$queryref->InvId.'(){
-                            $(".icon-project[data-menu=\'invoice\'][data-id=\''.$project_id.'\'").trigger("click");
-                            setTimeout(function() {
-                                $("html, body").scrollTop($(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").offset().top - 200); 
-                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
-                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
-                                    setTimeout(function() {
-                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
-                                    }, 1000); // delay 1 detik
-                                })
-
-                            }, 1000); // delay 1 detik
-                        }
-                    </script>  
-                    <div class="alert alert-success p-2 m-1" role="alert">
-                        <span class="text-head-2"><i class="fa-solid fa-check text-success me-2 text-success"></i>Penawaran berhasil diteruskan, dengan No. Invoice :  <a class="text-head-2" style="cursor:pointer" onclick="penawaran_return_click_'.$project_id.'_'.$queryref->InvId.'()">'.$queryref->InvCode.'</a></span>
-                    </div>';
-            }else{
-                
-                $alert = '<div class="alert alert-primary p-2 m-1" role="alert"> 
-                    <span class="text-head-2">
-                        <i class="fa-solid fa-reply me-2 fa-rotate-180" style="font-size:0.75rem"></i>
-                        Teruskan penawran ini ke 
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_invoice('.$project_id.',this,'.$row->SphId.',\'penawaran\')">Invoice</a> 
-                        atau pembuatan 
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_spk('.$project_id.',this,'.$row->SampleId.',\'penawaran\')">Perintah Kerja (SPK)</a>
-                    </span> 
-                </div>';  
-            }
+            $huruf  = "A"; 
             foreach($items as $item){
 
                 $folder = 'assets/images/produk/'.$item->ProdukId."/";
@@ -2123,56 +2450,230 @@ class ProjectModel extends Model
                      
                 
             }
+
+            $SphRef = '-';
+            // MENGAMBIL DATA REFERENSI
+            if($row->SphRefType == "Survey"){
+                $builder = $this->db->table("survey");
+                $builder->where('SurveyId',$row->SphRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $SphRef = ' 
+                    <script>
+                        function sph_ref_click_'.$project_id.'_'.$queryref->SurveyId.'(){
+                            $(".icon-project[data-menu=\'survey\'][data-id=\''.$project_id.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <span class="text-head-3">Survey </span><span class="text-head-3 pointer text-decoration-underline" onclick="sph_ref_click_'.$project_id.'_'.$queryref->SurveyId.'()">('.$queryref->SurveyCode.')
+                    </span>  '; 
+                } 
+            }
+            if($row->SphRefType == "Sample"){
+                $builder = $this->db->table("sample");
+                $builder->where('SampleId',$row->SphRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $SphRef = ' 
+                    <script>
+                        function sph_ref_click_'.$project_id.'_'.$queryref->SampleId.'(){
+                            $(".icon-project[data-menu=\'sample\'][data-id=\''.$project_id.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <span class="text-head-3">Sample </span><span class="text-head-3 pointer text-decoration-underline" onclick="sph_ref_click_'.$project_id.'_'.$queryref->SampleId.'()">('.$queryref->SampleCode.')
+                    </span>  '; 
+                } 
+            }
+
+            // Mengambil data diteruskan
+            $builder = $this->db->table("invoice");
+            $builder->select('*');
+            $builder->where('InvRef',$row->SphId); 
+            $builder->where('InvRefType',"Penawaran");  
+            $builder->orderby('InvId', 'DESC'); 
+            $queryref = $builder->get()->getRow();   
+            if($queryref){
+                $SampleForward = ' 
+                    <script>
+                        function penawaran_return_click_'.$project_id.'_'.$queryref->InvId.'(){
+                            $(".icon-project[data-menu=\'invoice\'][data-id=\''.$project_id.'\'").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                                
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                            $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+
+                            }, 1000); // delay 1 detik
+                        }
+                    </script>
+                    
+                    <span class="text-head-3">Invoice </span><span class="text-head-3 pointer text-decoration-underline" onclick="penawaran_return_click_'.$project_id.'_'.$queryref->InvId.'()">('.$queryref->InvCode.')
+                    </span> 
+                ';
+            }else{
+                $SampleForward = '<span class="text-head-3"><a class="text-detail-2" onclick="add_project_invoice('.$project_id.',this,'.$row->SphId.',\'penawaran\')">Invoice</a></span>'; 
+            }
+
+            $status = "";
+            if($row->SphStatus==0){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8"> 
+                        <span class="text-head-3">
+                            <span class="badge text-bg-primary me-1">Baru</span> 
+                        </span>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-regular fa-share-from-square pe-1"></i>Teruskan</span>
+                    </div>
+                    <div class="col-8">
+                        '.$SampleForward.'
+                    </div>
+                </div>';
+            }else{
+                {
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8"> 
+                        <span class="text-head-3">
+                            <span class="badge text-bg-success me-1">Selesai</span> 
+                        </span>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-regular fa-share-from-square pe-1"></i>Teruskan</span>
+                    </div>
+                    <div class="col-8">
+                        '.$SampleForward.'
+                    </div>
+                </div>';
+            }
+            }
+
+            
             $html .= '
             <div class="list-project mb-4 p-2" data-id="'.$row->SphId.'" data-project="'.$project_id.'">
-                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">
-                    <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Penawaran</span>
-                            <span class="text-head-3">'.$row->SphCode.'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-                            <span class="text-head-3">'.date_format(date_create($row->SphDate),"d M Y").'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-xl-4 order-3 order-sm-2 pb-2">
-                        <div class="d-flex flex-column justify-content-between">
-                            <span class="text-detail-2 pb-2 pb-md-0"><i class="fa-solid fa-location-dot pe-1"></i> Alamat</span>
-                            <span class="text-head-3 text-wrap">'.$row->SphAddress.'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-3">
-                        <div class="float-end d-md-flex d-none gap-1">  
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_sph('.$project_id.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-print mx-1"></i><span >Cetak</span>
-                            </button> 
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_sph('.$project_id.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-pencil mx-1"></i><span >Ubah</span>
-                            </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_sph('.$project_id.','.$row->SphId.',this)">
-                                <i class="fa-solid fa-close mx-1"></i><span >Hapus</span>
-                            </button> 
-                        </div> 
-                        <div class="d-md-none d-flex btn-action justify-content-between"> 
-                            <div class="text-head-2">PENAWARAN (SPH)</div>
-                            <div class="dropdown">
-                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti-more-alt icon-rotate-45"></i>
-                                </a>
-                                <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item m-0 px-2 d-none" onclick="po_project_sph('.$project_id.','.$row->SphId.',this)"><i class="fa-solid fa-cart-shopping pe-2"></i>Teruskan Vendor</a></li>
-                                    <li><a class="dropdown-item m-0 px-2 d-none" onclick="invoice_project_sph('.$project_id.','.$row->SphId.',this)"><i class="fa-solid fa-money-bill pe-2"></i>Teruskan Invoice</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_sph('.$project_id.','.$row->SphId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_sph('.$project_id.','.$row->SphId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_sph('.$project_id.','.$row->SphId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
-                                </ul>
+                  <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
+                    <div class="col-12  col-md-4 order-1 order-sm-0"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Penawaran</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SphCode.'</span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Penawaran" onclick="print_project_sph('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-print"></i></span>
+                                <div class="d-inline '.($row->SphStatus > 0 ? "d-none" : "").'">
+                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_sph('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran"  onclick="delete_project_sph('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                                </div>
                             </div>
                         </div> 
-                    </div> 
-                </div> 
+                        
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Referensi</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$SphRef .'</span>
+                            </div>
+                        </div>    
+                        '.$status.'
+                        
+                    </div>  
+                    <div class="col-12  col-md-3 order-1 order-sm-1"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row->SphDate),"d M Y").'</span>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>Admin</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->username .'</span>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="col-12  col-md-5 order-2 order-sm-1"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>Nama</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SphCustName.'</span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-phone pe-1"></i>No. Hp</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SphCustTelp.'</span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-location-dot pe-1"></i>Lokasi</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->SphAddress.'</span>
+                            </div>
+                        </div>  
+                    </div>  
+                </div>   
                 <div class="detail-item p-2 border-top">
                     '.$html_items.' 
                 </div>
@@ -2188,10 +2689,7 @@ class ProjectModel extends Model
                     <div class="divider-horizontal"></div>
                     <span class="text-detail-2">Grand Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->SphGrandTotal, 0, ',', '.').'</span> 
-                </div>
-                <div class="border-top p-2">
-                  '.$alert.'
-                </div>
+                </div> 
             </div> 
             ';
         }
@@ -2249,6 +2747,7 @@ class ProjectModel extends Model
 
         $builder = $this->db->table("invoice");
         $builder->select('*');
+        $builder->join('users',"id=InvAdmin","left"); 
         $builder->where('ProjectId',$project_id);
         $builder->where('InvStatus !=',3);
         $builder->orderby('InvId', 'DESC'); 
@@ -2344,209 +2843,444 @@ class ProjectModel extends Model
                 
             }
 
+            $InvRef = '-';
+            // MENGAMBIL DATA REFERENSI
+            if($row->InvRefType == "Survey"){
+                $builder = $this->db->table("survey");
+                $builder->where('SurveyId',$row->InvRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $InvRef = ' 
+                    <script>
+                        function invoice_ref_click_'.$project_id.'_'.$queryref->SurveyId.'(){
+                            $(".icon-project[data-menu=\'survey\'][data-id=\''.$project_id.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SurveyId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <span class="text-head-3">Survey </span><span class="text-head-3 pointer text-decoration-underline" onclick="invoice_ref_click_'.$project_id.'_'.$queryref->SurveyId.'()">('.$queryref->SurveyCode.')
+                    </span>  '; 
+                } 
+            }
+            if($row->InvRefType == "Sample"){
+                $builder = $this->db->table("sample");
+                $builder->where('SampleId',$row->InvRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $InvRef = ' 
+                    <script>
+                        function invoice_ref_click_'.$project_id.'_'.$queryref->SampleId.'(){
+                            $(".icon-project[data-menu=\'sample\'][data-id=\''.$project_id.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <span class="text-head-3">Sample </span><span class="text-head-3 pointer text-decoration-underline" onclick="invoice_ref_click_'.$project_id.'_'.$queryref->SampleId.'()">('.$queryref->SampleCode.')
+                    </span>  '; 
+                } 
+            }
+            if($row->InvRefType == "Penawaran"){
+                $builder = $this->db->table("penawaran");
+                $builder->where('SphId',$row->InvRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $InvRef = ' 
+                    <script>
+                        function invoice_ref_click_'.$project_id.'_'.$queryref->SphId.'(){
+                            $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$project_id.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <span class="text-head-3">Penawaran </span><span class="text-head-3 pointer text-decoration-underline" onclick="invoice_ref_click_'.$project_id.'_'.$queryref->SphId.'()">('.$queryref->SphCode.')
+                    </span>  '; 
+                } 
+            }
 
-            $builder = $this->db->table("payment");
-            $builder->select('*'); 
-            $builder->where('InvId',$row->InvId);
-            $builder->where('PaymentStatus <',2);
-            $builder->orderby('PaymentId', 'ASC'); 
-            $payment = $builder->get()->getResult(); 
+            // MENGAMBIL Data Pembayaran
             $html_payment = "";
             $payment_total = 0;
-            $performa_total = 0;
-            foreach($payment as $row_payment){ 
-                if($row_payment->PaymentDoc == "1"){
-                    $payment_total += $row_payment->PaymentTotal;
-                }else{
-                    $performa_total += $row_payment->PaymentTotal;
-                } 
-                if($row_payment->PaymentStatus == "0"){
-                    $status = '<span class="text-head-3 text-warning">
-                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
-                        <i class="fa-solid fa-certificate fa-stack-2x"></i> 
-                        <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
-                    </span>Pending</span>';
-                    $status = '<span class="text-head-3 text-warning">Pending</span>';
-                }else{
-                    $status = ' <span class="text-head-3 text-success">
-                    <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
-                        <i class="fa-solid fa-certificate fa-stack-2x"></i>
-                        <i class="fa-solid fa-check text-success fa-stack-1x fa-inverse"></i>
-                    </span>Verified</span>';
-                    $status = '<span class="text-head-3 text-success">Terverifikasi</span>';
-                }
-                $html_payment .= '<div class="mb-1 p-1">  
-                                 <div class="row mx-2"> 
-                                    <div class="col-12 col-md-1 order-2 order-sm-1 p-0"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between"> 
-                                            <span class="text-detail-2"><i class="fa-solid fa-check text-success pe-1"></i>Status</span>
-                                            '.$status.'
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-3 order-sm-2 p-0"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-                                            <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-4 order-sm-3 p-0"> 
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
-                                            <span class="text-head-3">'.$row_payment->PaymentType.'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-1 order-5 order-sm-4 p-0">
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
-                                            <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
-                                        </div>  
-                                    </div>
-                                    <div class="col-12 col-md-2 order-6 order-sm-5 p-0">
-                                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2"><i class="fa-solid fa-wallet pe-1"></i>Total</span>
-                                            <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
-                                        </div>   
-                                    </div>
-                                    <div class="col-12 col-md-6 text-end order-1 order-sm-5 p-0"> 
-                                        <div class="d-none d-md-inline-block"> 
-                                            <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->InvId.','.$row_payment->PaymentId.',this,\'invoice\')">
-                                                <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
-                                            </button>
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
-                                                <i class="fa-solid fa-print mx-1"></i><span>Print</span>
-                                            </button>
-                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
-                                                <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
-                                                <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-                                            </button> 
-                                        </div>
-                                        <div class="d-flex d-md-none justify-content-between">
-                                            <span class="text-head-2 pt-auto"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
-                                            <div class="dropdown">
-                                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="ti-more-alt icon-rotate-45"></i>
-                                                </a>
-                                                <ul class="dropdown-menu shadow">
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="add_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-                                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            if($row->InvGrandTotal == 0){
+                $html_payment = ' 
+                <span class="text-head-3 ps-4">
+                    <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                    Tidak ada pembayaran yang harus diselesaikan untuk transaksi ini 
+                </span> ';
+            }else{
+                $builder = $this->db->table("payment");
+                $builder->select('*'); 
+                $builder->where('PaymentRef',$row->SampleId);
+                $builder->where('PaymentRefType',"Sample");
+                $builder->orderby('PaymentId', 'ASC'); 
+                $payment = $builder->get()->getResult(); 
+                $html_payment = "";
+                $payment_total = 0;
+                $performa_total = 0; 
+                foreach($payment as $row_payment){ 
+                    if($row_payment->PaymentDoc == "1"){
+                        $payment_total += $row_payment->PaymentTotal;
+                    }else{
+                        $performa_total += $row_payment->PaymentTotal;
+                    } 
+                    if($row_payment->PaymentStatus == "0"){
+                        $status = '<span class="text-head-3 text-warning">
+                        <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+                            <i class="fa-solid fa-certificate fa-stack-2x"></i> 
+                            <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
+                        </span>Pending</span>';
+                        //$status = '<span class="text-head-3 text-warning">Pending</span>';
+                    }else{
+                        $status = ' <span class="text-head-3 text-success">
+                        <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+                            <i class="fa-solid fa-certificate fa-stack-2x"></i>
+                            <i class="fa-solid fa-check fa-stack-1x fa-inverse"></i>
+                        </span>Verified</span>';
+                        //$status = '<span class="text-head-3 text-success">Terverifikasi</span>';
+                    }
+                    
+                    $html_payment .= '
+                    <div class="list-project mb-4 p-2 project-hide">  
+                        <div class="header row gx-0 gy-0 gx-md-4 gy-md-2 ps-3" >
+                            <div class="d-flex gap-4"> 
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pembayaran</span>
+                                    <span class="text-head-3">'.$row_payment->PaymentCode.'</span>
+                                </div>    
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                                    <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
+                                </div>   
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                                    '.$status.'
+                                </div>   
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
+                                    <span class="text-head-3">'.$row_payment->PaymentType.'</span>
+                                </div>   
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
+                                    <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
+                                </div>   
+                                <div class="d-flex flex-row flex-md-column justify-content-between">
+                                    <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i></span>
+                                    <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</span>
+                                </div>   
+                                <div class="flex-fill text-end">  
+                                    <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'sample\')">
+                                        <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                                        <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                                        <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
+                                        <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
+                                    </button> 
+                                </div> 
                             </div>
-                            ';
-            } 
-            if($html_payment == ""){
-                $html_payment = '<div class="alert alert-warning p-2 m-1" role="alert"> 
-                        <span class="text-head-2">
+                        </div>
+                    </div>';
+                
+                } 
+                if($html_payment == ""){
+                    $html_payment = '<div class="alert alert-warning p-2 m-1" role="alert"> 
+                            <span class="text-head-3">
+                                <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
+                                Belum ada data pembayaran, silahkan tambahkan data  
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->SampleId.',this,\'sample\')">Pembayaran</a>
+                            </span> 
+                        </div>';
+                }elseif($payment_total < $row->InvGrandTotal){
+                    $html_payment .= '
+                    <div class="alert alert-warning p-2 m-1" role="alert"> 
+                        <span class="text-head-3">
                             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                            Belum ada data pembayaran yang dibuat, Silahkan tambahkan data 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="proforma_project_invoice('.$project_id.','.$row->InvId.',this)">Proforma</a> atau 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
+                            Masih ada sisa pembayaran yang belum diselesaikan, silahkan buat data  
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->SampleId.',this,\'sample\')">Pembayaran</a>
                         </span> 
                     </div>';
-            }elseif($payment_total < $row->InvGrandTotal){
-                $html_payment .= '
-                <div class="alert alert-warning p-2 m-1" role="alert"> 
-                    <span class="text-head-2">
-                        <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                        Masih ada sisa pembayaran yang belum diselesaikan, Silahkan buat data  
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
-                    </span> 
-                </div>';
+                }
             }
+            // $builder = $this->db->table("payment");
+            // $builder->select('*'); 
+            // $builder->where('InvId',$row->InvId);
+            // $builder->where('PaymentStatus <',2);
+            // $builder->orderby('PaymentId', 'ASC'); 
+            // $payment = $builder->get()->getResult(); 
+            // $html_payment = "";
+            // $payment_total = 0;
+            // $performa_total = 0;
+            // foreach($payment as $row_payment){ 
+            //     if($row_payment->PaymentDoc == "1"){
+            //         $payment_total += $row_payment->PaymentTotal;
+            //     }else{
+            //         $performa_total += $row_payment->PaymentTotal;
+            //     } 
+            //     if($row_payment->PaymentStatus == "0"){
+            //         $status = '<span class="text-head-3 text-warning">
+            //         <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+            //             <i class="fa-solid fa-certificate fa-stack-2x"></i> 
+            //             <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
+            //         </span>Pending</span>';
+            //         $status = '<span class="text-head-3 text-warning">Pending</span>';
+            //     }else{
+            //         $status = ' <span class="text-head-3 text-success">
+            //         <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
+            //             <i class="fa-solid fa-certificate fa-stack-2x"></i>
+            //             <i class="fa-solid fa-check text-success fa-stack-1x fa-inverse"></i>
+            //         </span>Verified</span>';
+            //         $status = '<span class="text-head-3 text-success">Terverifikasi</span>';
+            //     }
+            //     $html_payment .= '<div class="mb-1 p-1">  
+            //                      <div class="row mx-2"> 
+            //                         <div class="col-12 col-md-1 order-2 order-sm-1 p-0"> 
+            //                             <div class="d-flex flex-row flex-md-column justify-content-between"> 
+            //                                 <span class="text-detail-2"><i class="fa-solid fa-check text-success pe-1"></i>Status</span>
+            //                                 '.$status.'
+            //                             </div>  
+            //                         </div>
+            //                         <div class="col-12 col-md-1 order-3 order-sm-2 p-0"> 
+            //                             <div class="d-flex flex-row flex-md-column justify-content-between">
+            //                                 <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+            //                                 <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
+            //                             </div>  
+            //                         </div>
+            //                         <div class="col-12 col-md-1 order-4 order-sm-3 p-0"> 
+            //                             <div class="d-flex flex-row flex-md-column justify-content-between">
+            //                                 <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
+            //                                 <span class="text-head-3">'.$row_payment->PaymentType.'</span>
+            //                             </div>  
+            //                         </div>
+            //                         <div class="col-12 col-md-1 order-5 order-sm-4 p-0">
+            //                             <div class="d-flex flex-row flex-md-column justify-content-between">
+            //                                 <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
+            //                                 <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
+            //                             </div>  
+            //                         </div>
+            //                         <div class="col-12 col-md-2 order-6 order-sm-5 p-0">
+            //                             <div class="d-flex flex-row flex-md-column justify-content-between">
+            //                                 <span class="text-detail-2"><i class="fa-solid fa-wallet pe-1"></i>Total</span>
+            //                                 <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
+            //                             </div>   
+            //                         </div>
+            //                         <div class="col-12 col-md-6 text-end order-1 order-sm-5 p-0"> 
+            //                             <div class="d-none d-md-inline-block"> 
+            //                                 <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->InvId.','.$row_payment->PaymentId.',this,\'invoice\')">
+            //                                     <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
+            //                                 </button>
+            //                                 <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+            //                                     <i class="fa-solid fa-print mx-1"></i><span>Print</span>
+            //                                 </button>
+            //                                 <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+            //                                     <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
+            //                                 </button>
+            //                                 <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+            //                                     <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
+            //                                 </button> 
+            //                             </div>
+            //                             <div class="d-flex d-md-none justify-content-between">
+            //                                 <span class="text-head-2 pt-auto"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
+            //                                 <div class="dropdown">
+            //                                     <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            //                                         <i class="ti-more-alt icon-rotate-45"></i>
+            //                                     </a>
+            //                                     <ul class="dropdown-menu shadow">
+            //                                         <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
+            //                                         <li><a class="dropdown-item m-0 px-2" onclick="add_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
+            //                                         <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
+            //                                         <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
+            //                                         <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
+            //                                         <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
+            //                                     </ul>
+            //                                 </div>
+            //                             </div>
+            //                         </div>
+            //                     </div>
+            //                 </div>
+            //                 ';
+            // } 
+            // if($html_payment == ""){
+            //     $html_payment = '<div class="alert alert-warning p-2 m-1" role="alert"> 
+            //             <span class="text-head-2">
+            //                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
+            //                 Belum ada data pembayaran yang dibuat, Silahkan tambahkan data 
+            //                 <a class="text-head-2 text-primary" style="cursor:pointer" onclick="proforma_project_invoice('.$project_id.','.$row->InvId.',this)">Proforma</a> atau 
+            //                 <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
+            //             </span> 
+            //         </div>';
+            // }elseif($payment_total < $row->InvGrandTotal){
+            //     $html_payment .= '
+            //     <div class="alert alert-warning p-2 m-1" role="alert"> 
+            //         <span class="text-head-2">
+            //             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
+            //             Masih ada sisa pembayaran yang belum diselesaikan, Silahkan buat data  
+            //             <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
+            //         </span> 
+            //     </div>';
+            // }
 
 
             $builder = $this->db->table("delivery");
             $builder->select('*');   
-            $builder->where("InvId",$row->InvId);
+            $builder->where("DeliveryRef",$row->InvId);
+            $builder->where("DeliveryRefType","Invoice");
             $builder->where("ProjectId",$project_id);
             $builder->orderby('DeliveryId', 'ASC'); 
             $delivery = $builder->countAllResults();
             if($delivery == 0){
                 $alert = ' 
                     <div class="alert alert-warning p-2 m-1" role="alert">
-                        <span class="text-head-2">
-                            <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                        <span class="text-head-3">
+                            <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                             Tidak ada data pengiriman yang dibuat dari invoice ini, 
-                            <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> 
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> 
                         </span>
                     </div>';
             }else{
                 $alert = ' 
                 <div class="alert alert-success p-2 m-1" role="alert">
-                    <span class="text-head-2">
+                    <span class="text-head-3">
                         <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
-                        ada '.$delivery .' data pengiriman yang dibuat dari invoice ini, 
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick=\'$(".icon-project[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
-                        <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Tambah Data Pengiriman</a> 
+                        Ada '.$delivery .' data pengiriman yang dibuat dari invoice ini, 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick=\'$(".icon-project[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
+                        <a class="text-head-32 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Tambah Data Pengiriman</a> 
                     </span>
                 </div>';
             }
             
-
+            $status = "";
+            if($row->InvStatus==0){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8"> 
+                        <span class="text-head-3">
+                            <span class="badge text-bg-primary me-1">Baru</span> 
+                        </span>
+                    </div>
+                </div> ';
+            }
             $html .= '
             <div class="list-project mb-4 p-2" data-id="'.$row->InvId.'" data-project="'.$project_id.'">
-                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3">
-                    <div class="col-12 col-sm-3 col-xl-2 order-1 order-sm-0">
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Invoice</span>
-                            <span class="text-head-3">'.$row->InvCode.'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-sm-2 col-xl-2 order-2 order-sm-1"> 
-                        <div class="d-flex flex-row flex-md-column justify-content-between">
-                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-                            <span class="text-head-3">'.date_format(date_create($row->InvDate),"d M Y").'</span>
-                        </div>  
-                    </div> 
-                    <div class="col-12 col-xl-4 order-3 order-sm-2 pb-2">
-                        <div class="d-flex flex-column justify-content-between">
-                            <span class="text-detail-2 pb-2 pb-md-0"><i class="fa-solid fa-location-dot pe-1"></i> Alamat</span>
-                            <span class="text-head-3 text-wrap">'.$row->InvAddress.'</span>
-                        </div>  
-                    </div>
-                    <div class="col-12 col-sm-7 col-xl-4 order-0 order-sm-3">
-                        <div class="float-end d-md-flex d-none gap-1">  
-                            <div class="dropdown">
-                                <a class="btn btn-sm btn-primary btn-action rounded border dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-print mx-1"></i><span >Cetak</span>
-                                </a> 
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" onclick="print_project_invoice_a4('.$project_id.','.$row->InvId.',this)">Print A4</a></li>
-                                    <li><a class="dropdown-item" onclick="print_project_invoice_a5('.$project_id.','.$row->InvId.',this)">Print A5</a></li> 
-                                </ul>
+                <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
+                    <div class="col-12  col-md-4 order-1 order-sm-0"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Invoice</span>
                             </div>
-                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_invoice('.$project_id.','.$row->InvId.',this)">
-                                <i class="fa-solid fa-pencil mx-1"></i><span >Edit</span>
-                            </button>
-                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_invoice('.$project_id.','.$row->InvId.',this)">
-                                <i class="fa-solid fa-close mx-1"></i><span >Hapus</span>
-                            </button> 
-                        </div> 
-                        <div class="d-md-none d-flex btn-action justify-content-between"> 
-                            <div class="text-head-2">INVOICE (SALES ORDER)</div>
-                            <div class="dropdown">
-                                <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti-more-alt icon-rotate-45"></i>
-                                </a>
-                                <ul class="dropdown-menu shadow"> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$project_id.','.$row->InvId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak A4</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$project_id.','.$row->InvId.',this)"><i class="fa-solid fa-print pe-2"></i>Cetak A5</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$project_id.','.$row->InvId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Ubah</a></li> 
-                                    <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$project_id.','.$row->InvId.',this)"><i class="fa-solid fa-close pe-2"></i>Hapus</a></li> 
-                                </ul>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->InvCode.'</span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Invoice" onclick="print_project_invoice('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-print"></i></span>
+                                <div class="d-inline '.($row->InvStatus > 1 ? "d-none" : "").'">
+                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Invoice" onclick="edit_project_invoice('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Invoice"  onclick="delete_project_invoice('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                                </div>
                             </div>
                         </div> 
-                    </div> 
-                </div> 
+                        
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Referensi</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$InvRef .'</span>
+                            </div>
+                        </div>    
+                        '.$status.'
+                        
+                    </div>  
+                    <div class="col-12  col-md-3 order-1 order-sm-1"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row->InvDate),"d M Y").'</span>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>Admin</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->username .'</span>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="col-12  col-md-5 order-2 order-sm-1"> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-user pe-1"></i>Nama</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->InvCustName.'</span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-phone pe-1"></i>No. Hp</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->InvCustTelp.'</span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-location-dot pe-1"></i>Lokasi</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.$row->InvAddress.'</span>
+                            </div>
+                        </div>  
+                    </div>  
+                </div>   
                 <div class="detail-item mt-2 p-2 border-top">
                     '.$html_items_invoice.' 
                 </div>
@@ -2579,10 +3313,8 @@ class ProjectModel extends Model
                 '.$html_payment.' 
                 <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
                     <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
-                </div>
-                <div class="border-top pt-2">
-                   '.  $alert .'
                 </div> 
+                '.  $alert .' 
             </div> 
             '; 
         }
@@ -4827,7 +5559,6 @@ class ProjectModel extends Model
             $builder->where('SurveyId', $header["InvRef"]); 
             $builder->update(); 
         }  
-
         //update status Survey
         if( $header["InvRefType"] == "Sample"){ 
             $builder = $this->db->table("sample"); 
@@ -4841,7 +5572,7 @@ class ProjectModel extends Model
         
         //update status project
         $builder = $this->db->table("project"); 
-        $builder->set('ProjectStatus', 2);  
+        $builder->set('ProjectStatus', 6);  
         $builder->where('ProjectId', $header["ProjectId"]); 
         $builder->update();     
     } 
@@ -5019,7 +5750,8 @@ class ProjectModel extends Model
     }
     public function getdataPaymentBySample($id){
         $builder = $this->db->table("payment"); 
-        $builder->where('SampleId',$id); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Sample"); 
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
@@ -5041,15 +5773,10 @@ class ProjectModel extends Model
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getRow();  
     }
-    public function getdataImagePayment($project_id,$invid,$sampleid,$id){
+    public function getdataImagePayment($project_id,$ref,$type,$id){
 
-        // Cek apakah file gambar ada 
-        if($invid > 0) { 
-            $path_gambar = 'assets/images/payment/'.$project_id.'/invoice/'.$id.'.*'; 
-        }
-        if($sampleid > 0) { 
-            $path_gambar = 'assets/images/payment/'.$project_id.'/sample/'.$id.'.*'; 
-        }
+        // Cek apakah file gambar ada  
+        $path_gambar = 'assets/images/payment/'.$project_id.'/.'.$type.'/'.$id.'.*';   
         $files = glob($path_gambar);
         foreach ($files as $file) {
             if (!file_exists($file)) {
@@ -5137,8 +5864,8 @@ class ProjectModel extends Model
             "DeliveryCode"=>$this->get_next_code_delivery($header["DeliveryDate"]),
             "DeliveryDate"=>$header["DeliveryDate"], 
             "DeliveryDate2"=>$header["DeliveryDate"],  
-            "InvId"=>$header["InvId"], 
-            "SampleId"=>$header["SampleId"], 
+            "DeliveryRef"=>$header["DeliveryRef"], 
+            "DeliveryRefType"=>$header["DeliveryRefType"], 
             "ProjectId"=>$header["ProjectId"], 
             "DeliveryAdmin"=>$header["DeliveryAdmin"],
             "DeliveryArmada"=>$header["DeliveryArmada"],
@@ -5169,6 +5896,10 @@ class ProjectModel extends Model
             $builder->insert($row); 
         }
 
+
+        if($header["DeliveryRefType"] == "Sample"){
+            $this->update_data_sample_status($header["DeliveryRef"]);
+        }
         //update status project
         $builder = $this->db->table("project"); 
         $builder->set('ProjectStatus', 7);  
@@ -5299,7 +6030,7 @@ class ProjectModel extends Model
             $varian = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
             $builder = $this->db->table("delivery_detail"); 
             $builder->set('DeliveryDetailQtyReceive', $row["DeliveryDetailQtyReceive"]); 
-            $builder->set('DeliveryDetailQtyReceiveSpare', $row["DeliveryDetailQtyReceiveWaste"]); 
+            $builder->set('DeliveryDetailQtyReceiveSpare', $row["DeliveryDetailQtyReceiveSpare"]); 
             $builder->set('DeliveryDetailQtyReceiveWaste', $row["DeliveryDetailQtyReceiveWaste"]); 
             $builder->where('ProdukId',$row["ProdukId"]);
             $builder->where('DeliveryDetailVarian',$varian);
@@ -5337,7 +6068,7 @@ class ProjectModel extends Model
             $varian = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
             $builder = $this->db->table("delivery_detail"); 
             $builder->set('DeliveryDetailQtyReceive', $row["DeliveryDetailQtyReceive"]); 
-            $builder->set('DeliveryDetailQtyReceiveSpare', $row["DeliveryDetailQtyReceiveWaste"]); 
+            $builder->set('DeliveryDetailQtyReceiveSpare', $row["DeliveryDetailQtyReceiveSpare"]); 
             $builder->set('DeliveryDetailQtyReceiveWaste', $row["DeliveryDetailQtyReceiveWaste"]); 
             $builder->where('ProdukId',$row["ProdukId"]);
             $builder->where('DeliveryDetailVarian',$varian);

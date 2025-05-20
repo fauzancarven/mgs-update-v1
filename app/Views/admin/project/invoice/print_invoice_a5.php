@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'INV_'.$project->CustomerName.'_'.$project->InvDate ?></title>
+    <title><?= 'INV_'.$inv->InvCustName.'_'.$inv->InvDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
 </head>
@@ -290,17 +290,22 @@
                 <tr>
                     <td style="width: 75%;"> 
                         <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $project->InvCustName ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
-                        <span class="text-bold"><?= $project->InvCustTelp ?></span><br>
-                        <span class="text-bold"><?= $project->InvAddress ?></span><br> 
+                        <span class="text-bold"><?= $inv->InvCustName ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
+                        <span class="text-bold"><?= $inv->InvCustTelp ?></span><br>
+                        <span class="text-bold"><?= $inv->InvAddress ?></span><br> 
                     </td> 
                     <td style="align-items: start;justify-content: center"> 
-                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $project->InvCode ?></div><br>
-                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($project->InvDate),"d F Y") ?></div><br> 
+                        <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $inv->InvCode ?></div><br>
+                        <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($inv->InvDate),"d F Y") ?></div><br> 
                     </td>
                 </tr>
             </tbody>
         </table> 
+        <?php
+            $col = 1;
+            if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++;
+            if($postdata["image"]==1) $col++;
+        ?>
         <table class="item">
             <thead>
                 <tr> 
@@ -308,7 +313,7 @@
                     <th>Uraian</th>
                     <th>Qty</th>
                     <th>Harga</th>
-                    <?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "<th>Disc</th>" : "" ?>
+                    <?= (array_filter($detail, fn($item) => $item["disc"] > 0)) ? "<th>Disc</th>" : "" ?>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -317,32 +322,31 @@
                     $no = 1;
                     $huruf  = "A";
                     $html_items = "";
-                    $discShow = array_filter($detail, fn($item) => $item->InvDetailDisc > 0);
+                    $discShow = array_filter($detail, fn($item) => $item["disc"] > 0);
                     foreach($detail as $item){
 
-                        $arr_varian = json_decode($item->InvDetailVarian);
+                        $arr_varian = json_decode($item["varian"]);
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
-                            if($varian->varian == "vendor") continue; 
-                           // $arr_badge .= ' | <span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>';  
-                            $arr_badge .= ' | <span style="font-size:10px;">'.$varian->value.'</span>';  
-                        } 
-                        if($item->InvDetailType == "product"){
+                           if($varian->varian == "vendor") continue; 
+                            $arr_badge .= '<br><span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>'; 
+                        }
+                        if($item["type"] == "product"){
                             $html_items .= '
                             <tr> 
                                 <td class="td-center">'.$no.'</td>
-                                <td class="ps-1">'.$item->InvDetailText.$arr_badge.'</td>
-                                <td class="td-center">'.number_format($item->InvDetailQty, 2, ',', '.').' '.$item->InvDetailSatuanText.'</td>
+                                <td class="ps-1">'.$item["text"].$arr_badge.'</td>
+                                <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
                                 <td class="td-center">
                                     <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->InvDetailPrice, 0, ',', '.').'</div>
+                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item["price"], 0, ',', '.').'</div>
                                 </td>
                                 '.($discShow ? "<td class='td-center'>
                                     <div style='width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;'>Rp.</div> 
-                                    <div style='width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;'>".number_format($item->InvDetailDisc, 0, ',', '.')."</div></td>" : "").'
+                                    <div style='width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;'>".number_format($item["disc"], 0, ',', '.')."</div></td>" : "").'
                                 <td class="td-center">
                                     <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item->InvDetailTotal, 0, ',', '.').'</div>
+                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item["total"], 0, ',', '.').'</div>
                                 </td>
                             </tr>';
                             $no++;
@@ -351,7 +355,7 @@
                           
                             $html_items .= '    <tr> 
                                                     <td class="td-center text-bold">'.$huruf.'</td>
-                                                    <td class="ps-1 text-bold">'.$item->InvDetailText.'</td>
+                                                    <td class="ps-1 text-bold">'.$item["text"].'</td>
                                                     <td class="td-center"></td>
                                                     <td class="td-center"></td>
                                                     '.($discShow ? "<td class='td-center'></td>" : "").'
@@ -395,34 +399,34 @@
             <tfoot>
                 <tr>
                     <td colspan="2" style="border-top:1px solid;border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Sub Total</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Sub Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvSubTotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($inv->InvSubTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>
-                <tr style="<?= $project->InvDiscItemTotal > 0 ? "" : "display:none;" ?>">
+                <tr style="<?= $inv->InvDiscItemTotal > 0 ? "" : "display:none;" ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Disc Item</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Disc Item</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvDiscItemTotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($inv->InvDiscItemTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr> 
-                <tr style="<?= $project->InvDiscTotal > 0 ? "" : "display:none;" ?>">
+                <tr style="<?= $inv->InvDiscTotal > 0 ? "" : "display:none;" ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Disc Total</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Disc Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvDiscTotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($inv->InvDiscTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>  
                 <tr>
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">Grand Total</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Grand Total</th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($project->InvGrandTotal, 0, ',', '.') ?></div>
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($inv->InvGrandTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>   
             </tfoot>
@@ -435,7 +439,7 @@
                     Term and Condition :
                 </td>
                 <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
-                    <span style="text-transform:capitalize;font-weight:bold"><?= $project->username?></span><br>
+                    <span style="text-transform:capitalize;font-weight:bold"><?= $inv->username?></span><br>
                     <div style="border-top:1px solid black;">Admin</div>
                 </td>
                 <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
@@ -444,7 +448,7 @@
             </tr>
             <tr>
                 <td style="vertical-align: top;">
-                    <?= $project->TemplateFooterDetail ?>
+                    <?= $inv->TemplateFooterDetail ?>
                 </td>
             </tr>
         </table>

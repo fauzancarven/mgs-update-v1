@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-delivery-label">Tambah pengiriman dari <?= $project["menu"] ?></h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-delivery-label">Tambah pengiriman dari <?= $project["DeliveryRefType"] ?></h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-3 py-3"> 
@@ -12,7 +12,7 @@
                         <div class="row mx-2 align-items-center mb-3 mb-md-1">
                             <div class="label-border-right">
                                 <span class="label-dialog">Document</span> 
-                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button"             style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('document-display',this)">
+                                <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" type="button" style="position:absolute;top: -11px;right: 10px;font-size: 0.6rem;" onclick="togglecustom('document-display',this)">
                                     <span>Sembunyikan</span>    
                                     <i class="fa-solid fa-angle-up"></i> 
                                 </button> 
@@ -20,15 +20,15 @@
                         </div>  
                         <div class="document-display card bg-light show mt-4 m-1 p-2">
                             <div class="row mb-1 align-items-center">
-                                <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
+                                <label for="DeliveryCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                                 <div class="col-sm-10">
-                                    <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(Auto)" disabled>
+                                    <input id="DeliveryCode" name="DeliveryCode" type="text" class="form-control form-control-sm input-form" value="(Auto)" disabled>
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphRef" class="col-sm-2 col-form-label">No. Ref<sup class="error">&nbsp;*</sup></label>
+                                <label for="DeliveryRef" class="col-sm-2 col-form-label">No. Ref<sup class="error">&nbsp;*</sup></label>
                                 <div class="col-sm-10">
-                                    <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= $project["code"] ?>" disabled>
+                                    <input id="Deliveryref" name="Deliveryref" type="text" class="form-control form-control-sm input-form" value="<?= $project["code"] ?>" disabled>
                                 </div>
                             </div>   
                             <div class="row mb-1 align-items-center">
@@ -38,9 +38,9 @@
                                 </div>
                             </div>  
                             <div class="row mb-1 align-items-center">
-                                <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
+                                <label for="DeliveryAdmin" class="col-sm-2 col-form-label">Admin</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                    <select class="form-select form-select-sm" id="DeliveryAdmin" name="DeliveryAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
                                 </div>
                             </div>  
                             <div class="row mb-1 align-items-center">
@@ -420,40 +420,8 @@
             format: 'DD MMMM YYYY'
         }
     });
-    
-    $("#SphStore").select2({
-        dropdownParent: $('#modal-add-delivery .modal-content'),
-        placeholder: "Pilih Toko",
-        ajax: {
-            url: "<?= base_url()?>select2/get-data-store",
-            dataType: 'json',
-            type:"POST",
-            delay: 250,
-            data: function (params) {
-                // CSRF Hash
-                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
-                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
-
-                return {
-                    searchTerm: params.term, // search term
-                    [csrfName]: csrfHash // CSRF Token
-                };
-            },
-            processResults: function (response) {
-    
-                // Update CSRF Token
-                $('.txt_csrfname').val(response.token); 
-
-                return {
-                    results: response.data
-                };
-            },
-            cache: true
-        }, 
-    });
-    $('#SphStore').append(new Option("<?=$store->StoreCode. " - " . $store->StoreName ?>" , "<?=$store->StoreId?>", true, true)).trigger('change');  
-
-    $("#SphAdmin").select2({
+     
+    $("#DeliveryAdmin").select2({
         dropdownParent: $('#modal-add-delivery .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
@@ -483,17 +451,17 @@
             cache: true
         }, 
     });
-    $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
+    $('#DeliveryAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
         
     var data_detail_item = JSON.parse('<?= JSON_ENCODE($detail,true) ?>');   
     
-    var isProcessingSphAddCategory = false;
+    var isProcessingDeliveryAddCategory = false;
     add_detail_category = function(el){
-        if (isProcessingSphAddCategory) {
+        if (isProcessingDeliveryAddCategory) {
             //console.log("project sph cancel load");
             return;
         }  
-        isProcessingSphAddCategory = true; 
+        isProcessingDeliveryAddCategory = true; 
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
@@ -531,7 +499,7 @@
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {  
-            isProcessingSphAddCategory = false;
+            isProcessingDeliveryAddCategory = false;
             $(el).html(old_text); 
             $("#modal-add-delivery").modal("show");
         }); 
@@ -542,14 +510,14 @@
             document.activeElement.blur();
         }
     });
-    var isProcessingSphAddproduk = false;
+    var isProcessingDeliveryAddproduk = false;
 
     $("#btn-add-product").click(function(){
-        if (isProcessingSphAddproduk) {
+        if (isProcessingDeliveryAddproduk) {
             //console.log("project sph cancel load");
             return;
         }  
-        isProcessingSphAddproduk = true; 
+        isProcessingDeliveryAddproduk = true; 
         let old_text = $("#btn-add-product").html();
         $("#btn-add-product").html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
@@ -557,7 +525,7 @@
             method: "POST",
             url: "<?= base_url() ?>message/select-produk", 
             success: function(data) {  
-                isProcessingSphAddproduk = false; 
+                isProcessingDeliveryAddproduk = false; 
                 $("#btn-add-product").html(old_text);
                 
                 $("#modal-optional").html(data);
@@ -595,7 +563,7 @@
                 });
             },
             error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSphAddproduk = false;
+                isProcessingDeliveryAddproduk = false;
                 $("#btn-add-product").html(old_text); 
 
                 Swal.fire({
@@ -735,11 +703,11 @@
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.hargajual * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, ''); 
+        var grandtotal =  total - discitem - $("#DeliveryDiscTotal").val().replace(/[^0-9-]/g, ''); 
 
-        $("#SphSubTotal").val(total.toLocaleString('en-US')) 
-        $("#SphDiscItemTotal").val(discitem.toLocaleString('en-US')) 
-        $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
+        $("#DeliverySubTotal").val(total.toLocaleString('en-US')) 
+        $("#DeliveryDiscItemTotal").val(discitem.toLocaleString('en-US')) 
+        $("#DeliveryGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     }
     
     load_produk = function(){
@@ -1234,10 +1202,10 @@
 
         var header = {  
             DeliveryDate: $("#DeliveryDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
-            InvId: '<?= $project["InvId"] ?>',  
-            SampleId: '<?= $project["SampleId"] ?>',
+            DeliveryRef: '<?= $project["DeliveryRef"] ?>',  
+            DeliveryRefType: '<?= $project["DeliveryRefType"] ?>',
             ProjectId: '<?= $project["project_id"] ?>',
-            DeliveryAdmin: $("#SphAdmin").val(), 
+            DeliveryAdmin: $("#DeliveryAdmin").val(), 
             DeliveryArmada: $("#armada").val(), 
             DeliveryRitase: $("#ritase").val(), 
             DeliveryTotal: $("#biayapengiriman").val().replace(/[^0-9]/g, ''),  
@@ -1283,7 +1251,11 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-delivery").modal("hide");   
-                        loader_data_project('<?= $project["project_id"] ?>','<?= $project["menu"] ?>')  
+                         if($("#modal-add-delivery").data("menu") =="delivery"){
+                            loader_datatable(); 
+                        }else{ 
+                            loader_data_project(<?= $project["project_id"] ?>,"pengiriman");   
+                        }   
                     });
                   
                 }else{
