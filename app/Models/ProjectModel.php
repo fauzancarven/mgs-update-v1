@@ -1529,7 +1529,7 @@ class ProjectModel extends Model
                 }
                 
                 $models = new ProdukModel();
-                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->SampleDetailVarian,false) ;
+                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->SampleDetailVarian,true) ;
                 $html_items .= '
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
@@ -1829,7 +1829,7 @@ class ProjectModel extends Model
                         $arr_no++;
                     }
 
-                    $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->DeliveryDetailVarian,false) ; 
+                    $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->DeliveryDetailVarian,true) ; 
                     $html_items_delivery .= '
                     <div class="row">
                         <div class="col-12 col-md-5 my-1 varian">   
@@ -2343,7 +2343,7 @@ class ProjectModel extends Model
                     $arr_no++;
                 }
                 $models = new ProdukModel();
-                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->SphDetailVarian,false) ;
+                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->SphDetailVarian,true) ;
                 $html_items .= '
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
@@ -2720,7 +2720,7 @@ class ProjectModel extends Model
                     $arr_no++;
                 }
                 $models = new ProdukModel();
-                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->InvDetailVarian,false) ;
+                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->InvDetailVarian,true) ;
 
                 $html_items_invoice .= '
                 <div class="row">
@@ -3351,7 +3351,7 @@ class ProjectModel extends Model
                 }
 
                 $models = new ProdukModel();
-                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->DeliveryDetailVarian,false) ;
+                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->DeliveryDetailVarian,true) ;
 
                 $html_items .= '
                 <div class="row">
@@ -3932,7 +3932,7 @@ class ProjectModel extends Model
                 }
 
                 $models = new ProdukModel();
-                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->PODetailVarian,false) ;
+                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->PODetailVarian,true) ;
 
                 $html_items .= '
                 <div class="row">
