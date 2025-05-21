@@ -32,29 +32,32 @@
                     <label for="type-payment" class="col-form-label">Type:</label> 
                     <select class="form-select form-select-sm" style="width:100%" id="type-payment">
                         <option value="DP">DP</option>
-                        <option value="DP10">DP 10%</option>
-                        <option value="DP20">DP 20%</option>
-                        <option value="DP30">DP 30%</option>
-                        <option value="DP40">DP 40%</option>
-                        <option value="DP50">DP 50%</option>
-                        <option value="DP60">DP 60%</option>
-                        <option value="DP70">DP 70%</option>
-                        <option value="DP80">DP 80%</option>
-                        <option value="DP90">DP 90%</option> 
+                        <option value="DP 10%">DP 10%</option>
+                        <option value="DP 20%">DP 20%</option>
+                        <option value="DP 30%">DP 30%</option>
+                        <option value="DP 40%">DP 40%</option>
+                        <option value="DP 50%">DP 50%</option>
+                        <option value="DP 60%">DP 60%</option>
+                        <option value="DP 70%">DP 70%</option>
+                        <option value="DP 80%">DP 80%</option>
+                        <option value="DP 90%">DP 90%</option> 
                         <option value="Pelunasan" selected>Pelunasan</option>
                     </select>  
                 </div> 
                 <div class="mb-1"> 
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <label for="method-payment" class="col-form-label">Method Payment:</label>
+                            <label for="method-payment" class="col-form-label">Metode Pembayaran:</label>
                             <select class="form-select form-select-sm" style="width:100%" id="method-payment">
                                 <option value="TUNAI (CASH)" selected>TUNAI (CASH)</option>
-                                <option value="BCA TF">BCA TF</option>
+                                <option value="BCA">Bank BCA</option>
+                                <option value="Mandiri">Bank Mandiri</option>
+                                <option value="BNI">Bank BNI</option>
+                                <option value="PERMATA">Bank PERMATA</option>
                             </select> 
                         </div>
                         <div class="col-12 col-md-6">
-                            <label for="total-payment" class="col-form-label">Total Payment:</label>
+                            <label for="total-payment" class="col-form-label">Total Pembayaran:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
                                 <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="total-payment" value="<?= $project["GrandTotal"] - (array_sum(array_column($payment, 'PaymentTotal'))) ?>">

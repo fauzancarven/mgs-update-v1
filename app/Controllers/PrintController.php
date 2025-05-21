@@ -97,9 +97,10 @@ class PrintController extends BaseController
                 $data["inv"] = $models->getdataInvoice($id); 
                 $arr_detail = $models->getdataDetailInvoice($id);
                 $detail = array();
-                foreach($arr_detail as $row){
+                foreach($arr_detail as $row){ 
+                        
                         $detail[] = array(
-                                "image" => $produk->getproductimage($row->ProdukId), 
+                                "image" =>  $produk->getproductimagedatavarian($row->ProdukId,$row->InvDetailVarian,false) , 
                                 "produkid" => $row->ProdukId, 
                                 "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
                                 "satuan_text"=>$row->InvDetailSatuanText,  
@@ -173,11 +174,18 @@ class PrintController extends BaseController
                 $models = new ProjectModel();   
                 $modelheader = new HeaderModel(); 
                 $data["payment"] = $models->getdataPayment($id); 
-                $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->InvId); 
-                $data["project"] = $models->getdataInvoice($data["payment"]->InvId); 
-                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->InvId);  
-                $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  
+                if($data["payment"]->PaymentRefType=="Invoice"){ 
+                        $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->PaymentRef); 
+                        $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef); 
+                        $data["detail"] = $models->getdataDetailInvoice($data["payment"]->PaymentRef); 
+                        $data["customer"] = array(
+                                "CustomerName" => $data["project"]->InvCustName,
+                                "CustomerTelp" => $data["project"]->InvCustTelp,
+                                "CustomerAddress" => $data["project"]->InvAddress,
+                        ) ;
+                }  
                 
+                $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);
                 $dompdf = new Dompdf($options);  
                 
                 //$dompdf->set_paper(array(0,0,419.53, 595.28), 'landscape');
@@ -205,27 +213,63 @@ class PrintController extends BaseController
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
                 $data["payment"] = $models->getdataPayment($id); 
-                $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->InvId); 
-                $data["inv"] = $models->getdataInvoice($data["payment"]->InvId); 
-                $arr_detail = $models->getdataDetailInvoice($data["payment"]->InvId);
-                $detail = array();
-                foreach($arr_detail as $row){
-                        $detail[] = array(
-                                "image" => $produk->getproductimage($row->ProdukId), 
-                                "produkid" => $row->ProdukId, 
-                                "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
-                                "satuan_text"=>$row->InvDetailSatuanText,  
-                                "price"=>$row->InvDetailPrice,
-                                "varian"=>  $row->InvDetailVarian,
-                                "total"=> $row->InvDetailTotal,
-                                "disc"=> $row->InvDetailDisc,
-                                "qty"=> $row->InvDetailQty,
-                                "text"=> $row->InvDetailText,
-                                "group"=> $row->InvDetailGroup,
-                                "type"=> $row->InvDetailType
-                        );
-                };
-                $data["detail"] = $detail; 
+                if($data["payment"]->PaymentRefType == "Invoice"){
+                        $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->PaymentRef); 
+
+                        $data["inv"] = $models->getdataInvoice($data["payment"]->PaymentRef);
+                        $dataref = "";
+                        if($data["inv"]->InvImageList !== "[]"){
+                                $dataref .= '<div class="page_break"></div><h2 class="text-center" style="margin-bottom:20px;">Lampiran</h2><div style="display:block;padding-top:30px;">';
+                                $image = json_decode($data["inv"]->InvImageList);
+                                foreach($image as $row){
+                                        $dataref .=  "<img src='".$row."' width='130px' style='padding:5px'>";
+                                } 
+                                $dataref .=  '</div>';
+                                $dataref .=  '<table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
+                                        <tbody>
+                                            <tr> 
+                                                <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$data["inv"]->InvKtpImage.'" style="width:100%"></td>
+                                                <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$data["inv"]->InvNpwpImage.'" style="width:100%"></td>
+                                            </tr> 
+                                        </tbody>
+                                    </table>'; 
+                        }
+                        $data["ref"] = array(
+                                "SubTotal" =>  $data["inv"]->InvSubTotal,
+                                "DiscItemTotal" =>  $data["inv"]->InvDiscItemTotal,
+                                "DiscTotal" =>  $data["inv"]->InvDiscTotal,
+                                "GrandTotal" =>  $data["inv"]->InvGrandTotal, 
+                                "Date"=>  $data["inv"]->InvDate,
+                                "CustomerName" => $data["inv"]->InvCustName,
+                                "CustomerTelp" => $data["inv"]->InvCustTelp,
+                                "CustomerAddress" => $data["inv"]->InvAddress,
+                                "optional" => $dataref,
+                        ); 
+                        
+                        $arr_detail = $models->getdataDetailInvoice($data["payment"]->PaymentRef);
+                        $detail = array();
+                        foreach($arr_detail as $row){
+                                $detail[] = array(
+                                        "image" => $produk->getproductimage($row->ProdukId), 
+                                        "produkid" => $row->ProdukId, 
+                                        "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                                        "satuan_text"=>$row->InvDetailSatuanText,  
+                                        "price"=>$row->InvDetailPrice,
+                                        "varian"=>  $row->InvDetailVarian,
+                                        "total"=> $row->InvDetailTotal,
+                                        "disc"=> $row->InvDetailDisc,
+                                        "qty"=> $row->InvDetailQty,
+                                        "text"=> $row->InvDetailText,
+                                        "group"=> $row->InvDetailGroup,
+                                        "type"=> $row->InvDetailType
+                                );
+                        };
+                        $data["detail"] = $detail; 
+                }
+                
+              
+                
+              
                 $data["postdata"] = $postData; 
                 $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
                 if(isset($postData["custom"])){ 
@@ -238,7 +282,8 @@ class PrintController extends BaseController
                 //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();
-                $dompdf->stream( 'PAY_'.$data["inv"]->CustomerName.'_'.$data["inv"]->InvDate.'.pdf', [ 'Attachment' => false ]);
+                $dompdf->stream( 'PAY_'.$data["ref"]["CustomerName"].'_'.$data["ref"]["Date"].'.pdf', [ 'Attachment' => false ]);
+                
 	}
         public function project_proforma_a5($id)
 	{
@@ -252,9 +297,9 @@ class PrintController extends BaseController
                 $models = new ProjectModel();   
                 $modelheader = new HeaderModel();  
                 $data["payment"] = $models->getdataProforma($id); 
-                $data["payments"] = $models->getdataProformaByRef($data["payment"]->InvId); 
-                $data["project"] = $models->getdataInvoice($data["payment"]->InvId); 
-                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->InvId);  
+                $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef); 
+                $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef); 
+                $data["detail"] = $models->getdataDetailInvoice($data["payment"]->PaymentRef);  
                 $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  
                 $dompdf = new Dompdf($options);  
                 

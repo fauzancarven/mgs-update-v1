@@ -432,7 +432,7 @@
                         if($row->PaymentId < $payment->PaymentId){
                             echo '<tr>
                             <td colspan="2" style="border-left:none;line-height:1;"></td>
-                            <th class="td-footer text-bold"  style="line-height:1;" colspan="'.((array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2").'">('.date_format(date_create($row->PaymentDate),"d M Y").") ".$row->PaymentType.'</th>
+                            <th class="td-footer text-bold"  style="line-height:1;" colspan="'.((array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2").'">'.$row->PaymentType.'</th>
                             <th class="td-center text-bold">
                                 <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
                                 <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($row->PaymentTotal, 0, ',', '.').'</div>
@@ -444,7 +444,7 @@
                 ?> 
                 <tr>
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
-                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>">DP 30%</th>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= (array_filter($detail, fn($item) => $item->InvDetailDisc > 0)) ? "3" : "2" ?>"><?= $payment->PaymentType ?></th>
                     <th class="td-center text-bold">
                         <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
                         <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($payment->PaymentTotal, 0, ',', '.') ?></div>

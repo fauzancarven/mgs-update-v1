@@ -729,7 +729,7 @@ class ProdukModel extends Model
         return base_url()."assets/images/produk/default.png";
         //return $this->ambil_gambar_base64('assets/images/produk/default.png'); 
     }
-    public function getDetailProduk($data,$id){ 
+    public function getDetailProduk($data,$id,$url = true){ 
         $query = "select * from produk_detail left join produk_satuan on produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId where ProdukDetailRef = ".$id;
         $builder = $this->db->table("produk_detail");
         $builder->join("produk_satuan","produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId"); 
@@ -751,10 +751,36 @@ class ProdukModel extends Model
                 'ProdukDetailHargaBeli' => $result->ProdukDetailHargaBeli,
                 'ProdukDetailHargaJual' => $result->ProdukDetailHargaJual,
                 'ProdukDetailVarian' =>  json_decode($result->ProdukDetailVarian), 
+                'ProdukDetailImage' => ($result->ProdukDetailImage == "" ? ($url == true ? $this->getproductimageUrl($id) : $this->getproductimage($id)): $result->ProdukDetailImage),
             ); 
         }else{
             return null;
         }
+    }
+    public function getproductimagedatavarian($id,$data,$url = true){
+        $arr_varian = json_decode($data); 
+        $data_varian = array();
+        foreach($arr_varian as $varian){ 
+            $data_varian[] = array("varian"=>$varian->varian,  "value"=> $varian->value); 
+        }
+        $data_image = $this->getDetailProduk($data_varian,$id,$url) ; 
+
+        if($data_image){
+            return $data_image["ProdukDetailImage"];
+        }else{
+            $folder = 'assets/images/produk/'.$id."/";  
+            if (is_dir($folder)) { 
+                $files = scandir($folder);
+                $gambar = array(); 
+                foreach ($files as $file) {
+                    if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                        return $this->ambil_gambar_base64($folder . $file); 
+                    }
+                } 
+            }
+        }
+        return null;
+        //return $this->ambil_gambar_base64('assets/images/produk/default.png'); 
     }
 
 }

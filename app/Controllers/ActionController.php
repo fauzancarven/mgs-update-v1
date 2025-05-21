@@ -161,6 +161,15 @@ class ActionController extends BaseController
     }  
     
 
+    public function update_status_project($id,$status){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {  
+            $postData = $request->getPost(); 
+            echo $models->update_project_status($id,$status);
+        }
+
+    }
     public function project_tab(){ 
         $request = Services::request();
         $models = new ProjectModel(); 

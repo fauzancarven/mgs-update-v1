@@ -201,11 +201,11 @@
     }
 
     table.item td.image {
-        width: 20%;
+        width: 12%;
     }
 
     table.item td.text {
-        width: 30%;
+        width: 27%;
     }
 
     table.item td:nth-child(4) {

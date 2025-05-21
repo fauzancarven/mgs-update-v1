@@ -32,6 +32,15 @@
                     <label for="category-project" class="col-form-label">Type:</label> 
                     <select class="form-select form-select-sm" style="width:100%" id="type-payment">
                         <option value="DP" selected>DP</option>
+                        <option value="DP 10%">DP 10%</option>
+                        <option value="DP 20%">DP 20%</option>
+                        <option value="DP 30%">DP 30%</option>
+                        <option value="DP 40%">DP 40%</option>
+                        <option value="DP 50%">DP 50%</option>
+                        <option value="DP 60%">DP 60%</option>
+                        <option value="DP 70%">DP 70%</option>
+                        <option value="DP 80%">DP 80%</option>
+                        <option value="DP 90%">DP 90%</option> 
                         <option value="Pelunasan">Pelunasan</option>
                     </select>  
                 </div> 

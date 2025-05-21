@@ -241,7 +241,14 @@
         border:none;
         padding:1rem;
     }
-
+    ul.dropdown-menu.shadow.drop-status li a {
+        padding: 0;
+        font-size: 0.75rem;
+        color:#305176;
+    }
+    ul.dropdown-menu.shadow.drop-status li a i { 
+        color:#305176;
+    }
     .project-menu.mobile {
         padding: 0;
         width: 100%;

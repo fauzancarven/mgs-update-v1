@@ -1281,8 +1281,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-edit-delivery").modal("hide");   
-                        $("i[data-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");   
+                        $("#modal-edit-delivery").modal("hide");
+                        loader_data_project(<?= $delivery->ProjectId?>,"pengiriman");  
                     });
                   
                 }else{

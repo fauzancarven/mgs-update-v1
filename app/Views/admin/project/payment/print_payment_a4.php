@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'Inv_'.$inv->CustomerName.'_'.$inv->InvDate ?></title>
+    <title><?= 'Inv_'.$ref["CustomerName"].'_'.$ref["Date"] ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css">   
     <link rel="icon" type="image/png" href="assets/images/logo/logo.png">
@@ -201,11 +201,11 @@
     }
 
     table.item td.image {
-        width: 20%;
+        width: 15%;
     }
 
     table.item td.text {
-        width: 30%;
+        width: 25%;
     }
 
     table.item td:nth-child(4) {
@@ -335,19 +335,14 @@
                                 </tr> 
                                 <tr>
                                     <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
-                                        <span class="text-bold"><?= $inv->CustomerName.($inv->CustomerCompany == "" ? : " (".$inv->CustomerCompany.")") ?></span>
+                                        <span class="text-bold"><?= $ref["CustomerName"]?></span>
                                     </td> 
                                 </tr> 
                                 <tr> 
                                     <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
-                                        <span class="text-bold"><?= $inv->CustomerTelp1.($inv->CustomerTelp2 == "" ? : "/".$inv->CustomerTelp2) ?></span>
+                                        <span class="text-bold"><?= $ref["CustomerTelp"] ?></span>
                                     </td> 
-                                </tr> 
-                                <tr> 
-                                    <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
-                                        <span class="text-bold"><?= $inv->CustomerEmail ?></span>
-                                    </td> 
-                                </tr> 
+                                </tr>  
                             </tbody>
                         </table>   
                     </td> 
@@ -362,12 +357,12 @@
                                 <tr style="border-bottom:1px solid;margin:12px;">
                                     <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">Tgl. Pembuatan.</div></td>
                                     <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
-                                    <td style="border:none;width: auto;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($inv->InvDate),"d F Y") ?></div></td>
+                                    <td style="border:none;width: auto;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($payment->PaymentDate),"d F Y") ?></div></td>
                                 </tr> 
                                 <tr style="">
                                     <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">Lokasi Project.</div></td>
                                     <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
-                                    <td style="border:none;width: auto;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $inv->InvAddress ?></div></td>
+                                    <td style="border:none;width: auto;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $ref["CustomerAddress"] ?></div></td>
                                 </tr>
                             </tbody>
                         </table> 
@@ -438,38 +433,39 @@
             <tfoot>
                 <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
                     <td class="td-footer text-bold " colspan="<?= $col ?>">Sub Total</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvSubTotal, 0, ',', '.') ?></td>
+                    <td class="td-center text-bold">Rp. <?= number_format($ref["SubTotal"], 0, ',', '.') ?></td>
                 </tr>
-                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $inv->InvDiscItemTotal > 0 ? "" : "display:none;" ?>">
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $ref["DiscItemTotal"] > 0 ? "" : "display:none;" ?>">
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Disc Item</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvDiscItemTotal, 0, ',', '.') ?></td>
+                    <td class="td-center text-bold">Rp. <?= number_format($ref["DiscItemTotal"], 0, ',', '.') ?></td>
                 </tr> 
-                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $inv->InvDiscTotal > 0 ? "" : "display:none;" ?>">
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $ref["DiscTotal"] > 0 ? "" : "display:none;" ?>">
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Disc</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvDiscTotal, 0, ',', '.') ?></td>
+                    <td class="td-center text-bold">Rp. <?= number_format($ref["DiscTotal"], 0, ',', '.') ?></td>
                 </tr>
                 <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Grand Total</td>
-                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvGrandTotal, 0, ',', '.') ?></td>
+                    <td class="td-center text-bold">Rp. <?= number_format($ref["GrandTotal"], 0, ',', '.') ?></td>
                 </tr>
-                <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr>
+                <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;padding-left:15px;font-weight:bold;">* Pembayaran</td></tr>
                  
                 <?php 
                     $total_pay = 0;
                     foreach($payments as $row){
                         if($row->PaymentId < $payment->PaymentId){
-                            // echo '<tr class="'.($postdata["total"]==1 ? "":"hide").'"> 
-                            // <td class="td-footer text-bold" colspan="'.$col.'>.'"(".date_format(date_create($row->PaymentDate),"d M Y").") ".$row->PaymentType.'</td>
-                            // <td class="td-center text-bold">Rp. '.number_format($row->PaymentTotal, 0, ',', '.').'</td> 
-                            // </tr>';
+                            echo '<tr class="'.($postdata["total"]==1 ? "":"hide").'"><td class="td-footer text-bold" colspan="'.$col.'">'.$row->PaymentType.' pada tanggal '.date_format(date_create($row->PaymentDate),"d M Y").')</td> <td class="td-center text-bold">Rp. '.number_format($row->PaymentTotal, 0, ',', '.').'</td></tr>';
                             $total_pay += $row->PaymentTotal;
                         }
                     }
                 ?>  
                 
                 <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
-                    <td class="td-footer text-bold" colspan="<?= $col ?>"><?= "(".date_format(date_create($payment->PaymentDate),"d M Y").") ".$payment->PaymentType ?></td>
+                    <td class="td-footer text-bold" colspan="<?= $col ?>"><?= $payment->PaymentType." pada tanggal ".date_format(date_create($payment->PaymentDate),"d M Y")." " ?></td>
                     <td class="td-center text-bold">Rp. <?= number_format($payment->PaymentTotal, 0, ',', '.') ?></td>
+                <tr> 
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
+                    <td class="td-footer text-bold" colspan="<?= $col ?>">Sisa Pembayaran</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($ref["GrandTotal"] - ($total_pay + $payment->PaymentTotal), 0, ',', '.') ?></td>
                 <tr> 
                 <tr><td colspan="<?= $col + 1 ?>" style="height:5px;background:#f3f3f3;"></td></tr> 
                 <tr><td class="td-footer text-bold" colspan="<?= $col + 1 ?>"><?= $header_footer["detail"] ?></td> 
@@ -502,26 +498,8 @@
                 </tr> 
             </tbody>
         </table>
-
-        <?php
-            if($inv->InvImageList !== "[]"){
-                echo '<div class="page_break"></div><h2 class="text-center" style="margin-bottom:20px;">Lampiran</h2><div style="display:block;padding-top:30px;">';
-                $image = json_decode($inv->InvImageList);
-                foreach($image as $row){
-                    echo "<img src='".$row."' width='130px' style='padding:5px'>";
-                } 
-                echo '</div>';
-                echo '<table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
-                        <tbody>
-                            <tr> 
-                                <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$inv->KtpImage.'" style="width:100%"></td>
-                                <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$inv->NpwpImage.'" style="width:100%"></td>
-                            </tr> 
-                        </tbody>
-                    </table>'; 
-
-            }    
-        ?>   
+        <?= $ref["optional"] ?>           
+       
          
     </div> 
 

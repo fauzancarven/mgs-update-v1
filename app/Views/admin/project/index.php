@@ -922,6 +922,38 @@
             }
         });
     }; 
+    var IsUpdateStatus = [];
+    update_status = function(status,id,el){ 
+        if (IsUpdateStatus[id]) {
+            console.log("project survey cancel load");
+            return;
+        }  
+
+        IsUpdateStatus[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>action/update-project/" + id +  "/" + status, 
+            success: function(data) {     
+                IsUpdateStatus[id] = false;
+                $(el).html(old_text); 
+
+                loader_datatable();  
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                IsUpdateStatus[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };  
     var isProcessingDelete;
     delete_click = function(id,el){
         // INSERT LOADER BUTTON
@@ -964,6 +996,7 @@
     }  
     var no_notif = 0;
     produk_click = function(){ 
+        
         $.ajax({ 
             method: "POST",
             url: "<?= base_url() ?>message/add-item-select", 
@@ -1051,6 +1084,7 @@
     print_project_Survey = function(ref,id,el){ 
         window.open('<?= base_url("print/project/survey/") ?>' + id, '_blank');
     };
+    
     var isProcessingSurveyDelete = [];
     delete_project_Survey = function(ref,id,el){ 
          // INSERT LOADER BUTTON
@@ -1235,6 +1269,7 @@
     }; 
 
     var isProcessingSampleDelete = [];
+    
     delete_project_sample = function(ref,id,el){ 
          // INSERT LOADER BUTTON
         if (isProcessingSampleDelete[id]) {

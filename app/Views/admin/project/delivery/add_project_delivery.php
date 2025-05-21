@@ -1251,7 +1251,7 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-delivery").modal("hide");   
-                         if($("#modal-add-delivery").data("menu") =="delivery"){
+                        if($("#modal-add-delivery").data("menu") =="delivery"){
                             loader_datatable(); 
                         }else{ 
                             loader_data_project(<?= $project["project_id"] ?>,"pengiriman");   

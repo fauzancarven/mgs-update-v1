@@ -264,7 +264,7 @@ class MessageController extends BaseController
                         "text"=> $row->SampleDetailText,
                         "group"=> $row->SampleDetailGroup,
                         "type"=> $row->SampleDetailType,
-                        "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
+                        "image_url"=> $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->SampleDetailVarian,true)
                     );
         };
         $data["project"] = $project; 
@@ -380,7 +380,8 @@ class MessageController extends BaseController
                         "text"=> $row->SphDetailText,
                         "group"=> $row->SphDetailGroup,
                         "type"=> $row->SphDetailType,
-                        "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->SphDetailVarian,true)
                     );
         };
         $data["project"] = $project; 
@@ -527,7 +528,8 @@ class MessageController extends BaseController
                                 "text"=> $row->SphDetailText,
                                 "group"=> $row->SphDetailGroup,
                                 "type"=> $row->SphDetailType,
-                                "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
+                                "image_url"=>  
+                                $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->SphDetailVarian,true)
                             );
                 };
                 $data["ref_detail"] = $detail;
@@ -556,7 +558,8 @@ class MessageController extends BaseController
                                 "text"=> $row->SampleDetailText,
                                 "group"=> $row->SampleDetailGroup,
                                 "type"=> $row->SampleDetailType,
-                                "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
+                                "image_url"=>  
+                                $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->SampleDetailVarian,true)
                             );
                 };
                 $data["ref_detail"] = $detail;
@@ -620,7 +623,8 @@ class MessageController extends BaseController
                         "text"=> $row->InvDetailText,
                         "group"=> $row->InvDetailGroup,
                         "type"=> $row->InvDetailType,
-                        "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->InvDetailVarian,true)
                     );
         };
 
@@ -763,8 +767,8 @@ class MessageController extends BaseController
         $models = new ProjectModel();      
         $data["payment"] = $models->getdataProforma($id);  
         $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
-        $data["project"] = $models->getdataInvoice($data["payment"]->InvId);      
-        $data["payments"] = $models->getdataProformaByRef($data["payment"]->InvId);   
+        $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef);      
+        $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef);   
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/edit_proforma.php',$data)); 
     }
@@ -806,7 +810,8 @@ class MessageController extends BaseController
                             "text"=> $row->SampleDetailText,
                             "group"=> $row->SampleDetailGroup,
                             "type"=> $row->SampleDetailType ,
-                            "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
+                            "image_url"=>  
+                            $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->SampleDetailVarian,true)
                         );
             };
         }else{
@@ -838,7 +843,8 @@ class MessageController extends BaseController
                             "text"=> $row->InvDetailText,
                             "group"=> $row->InvDetailGroup,
                             "type"=> $row->InvDetailType,
-                            "image_url"=> $modelsproduk->getproductimageUrl(  $row->ProdukId)
+                            "image_url"=>  
+                            $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->InvDetailVarian,true)
                         );
             };
 
@@ -890,7 +896,8 @@ class MessageController extends BaseController
                 "text"=> $row->DeliveryDetailText,
                 "group"=> $row->DeliveryDetailGroup,
                 "type"=> $row->DeliveryDetailType ,
-                "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
+                "image_url"=> 
+                $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->DeliveryDetailVarian,true)
             );
         };
 

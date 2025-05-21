@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-add-proforma" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
+<div class="modal fade" id="modal-add-proforma" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true" data-menu="project">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -32,19 +32,21 @@
                     <label for="category-project" class="col-form-label">Type:</label> 
                     <select class="form-select form-select-sm" style="width:100%" id="type-payment">
                         <option value="DP" selected>DP</option>
+                        <option value="DP 10%">DP 10%</option>
+                        <option value="DP 20%">DP 20%</option>
+                        <option value="DP 30%">DP 30%</option>
+                        <option value="DP 40%">DP 40%</option>
+                        <option value="DP 50%">DP 50%</option>
+                        <option value="DP 60%">DP 60%</option>
+                        <option value="DP 70%">DP 70%</option>
+                        <option value="DP 80%">DP 80%</option>
+                        <option value="DP 90%">DP 90%</option> 
                         <option value="Pelunasan">Pelunasan</option>
                     </select>  
                 </div> 
                 <div class="mb-1"> 
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <label for="method-payment" class="col-form-label">Method Payment:</label>
-                            <select class="form-select form-select-sm" style="width:100%" id="method-payment">
-                                <option value="TUNAI (CASH)" selected>TUNAI (CASH)</option>
-                                <option value="BCA TF">BCA TF</option>
-                            </select> 
-                        </div>
-                        <div class="col-12 col-md-6">
+                    <div class="row"> 
+                        <div class="col-12">
                             <label for="total-payment" class="col-form-label">Total Payment:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
@@ -391,6 +393,7 @@
             url: "<?= base_url() ?>action/add-data-proforma", 
             data:{ 
                 "PaymentRef": <?= $project->InvId ?>, 
+                "ProjectId": <?= $project->ProjectId ?>, 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
                 "PaymentRefType": "Invoice",
@@ -408,7 +411,11 @@
                     }).then((result) => {   
                         $("#modal-add-proforma").modal("hide");  
                         
-                        $("i[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                        if($("#modal-add-proforma").data("menu") =="sample"){
+                            loader_datatable(); 
+                        }else{  
+                            loader_data_project('<?= $project->ProjectId ?>','invoice') 
+                        }  
                     });
                   
                 }else{
