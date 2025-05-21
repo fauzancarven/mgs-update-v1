@@ -50,30 +50,30 @@
                             </div>
                         </div>  
                         <div class="document-display card bg-light show mt-4 m-1 p-2">
-                            <div class="row mb-1 align-items-center mt-2">
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvRef1" class="col-sm-2 col-form-label">No. Invoice</label>
+                                <div class="col-sm-10"> 
+                                    <input id="InvCode" name="InvCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->InvCode ?>" disabled>
+                                </div> 
+                            </div>  
+                            <div class="row mb-1 align-items-center">
                                 <label for="InvRef1" class="col-sm-2 col-form-label">Ref</label>
                                 <div class="col-sm-10"> 
                                     <input id="InvCode" name="InvCode" type="text" class="form-control form-control-sm input-form" value="<?= $ref ?>" disabled>
                                 </div> 
                             </div>  
-                            <div class="row mb-1 align-items-center mt-2">
+                            <div class="row mb-1 align-items-center">
                                 <label for="InvDate" class="col-sm-2 col-form-label">Tanggal</label>
                                 <div class="col-sm-10">
                                     <input id="InvDate" name="InvDate" type="text" class="form-control form-control-sm input-form" value="">
                                 </div>
                             </div>  
-                            <div class="row mb-1 align-items-center mt-2">
+                            <div class="row mb-1 align-items-center">
                                 <label for="InvAdmin" class="col-sm-2 col-form-label">Admin</label>
                                 <div class="col-sm-10">
                                     <select class="form-select form-select-sm" id="InvAdmin" name="InvAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
                                 </div>
-                            </div> 
-                            <div class="row mb-1 align-items-center mt-2">
-                                <label for="InvAddress" class="col-sm-2 col-form-label">Alamat Project</label>
-                                <div class="col-sm-10">
-                                    <textarea  class="form-control form-control-sm input-form" id="InvAddress"><?= $project->InvAddress ?></textarea>
-                                </div>
-                            </div> 
+                            </div>  
                         </div>   
                     </div>   
                 </div>

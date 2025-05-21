@@ -41,6 +41,7 @@ $routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter
  */
 
 /** STORE ACTION */
+$routes->get('/action/test', 'ActionController::test', ['filter' => 'login']);
 $routes->post('/action/delete-data-store', 'ActionController::store_delete', ['filter' => 'login']);
 $routes->post('/action/add-data-store', 'ActionController::store_add', ['filter' => 'login']);
 $routes->post('/action/edit-data-store/(:any)', 'ActionController::store_edit/$1', ['filter' => 'login']);

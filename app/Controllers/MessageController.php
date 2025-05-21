@@ -623,16 +623,22 @@ class MessageController extends BaseController
                         "image_url"=> $modelsproduk->getproductimageUrl($row->ProdukId)
                     );
         };
+
+
         $data["project"] = $project; 
-        if($project->SampleId > 0){
-            $sample = $models->getdataSample($project->SampleId); 
+        if($project->InvRefType  == "Sample"){
+            $sample = $models->getdataSample($project->InvRef); 
             $data["ref"] = $sample->SampleCode;
-        }else if($project->SphId > 0){ 
-            $sph = $models->getdataSPH($project->SphId); 
+        }else if($project->InvRefType ==  "Penawaran"){
+            $sph = $models->getdataSPH($project->InvRef); 
             $data["ref"] = $sph->SphCode; 
+        }else if($project->InvRefType ==  "Survey"){
+            $sph = $models->getdataSurvey($project->InvRef); 
+            $data["ref"] = $sph->SurveyCode; 
         }else{ 
             $data["ref"] = "-"; 
         }
+
         $data["detail"] =  $detail;
         $data["template"] = $models->get_data_template_footer($project->TemplateId); 
         $data["customer"] =$modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();

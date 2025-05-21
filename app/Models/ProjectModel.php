@@ -451,7 +451,7 @@ class ProjectModel extends Model
             }
             if($row=="sample"){
                 $builders = $this->db->table("sample");
-                $builders->where("SampleStatus",0); 
+                $builders->whereIn("SampleStatus",array('0','1')); 
                 $query = $builders->get()->getResult();  
                 foreach($query as $rows) { 
                     $ListProjectId[] = $rows->ProjectId;
@@ -467,7 +467,12 @@ class ProjectModel extends Model
                 }  
             }
             if($row=="invoice"){
-                
+                $builders = $this->db->table("invoice");
+                $builders->whereIn("InvStatus",array('0','1')); 
+                $query = $builders->get()->getResult();  
+                foreach($query as $rows) { 
+                    $ListProjectId[] = $rows->ProjectId;
+                }  
             }
             if($row=="pengiriman"){
                 
@@ -2358,8 +2363,9 @@ class ProjectModel extends Model
         $builder->select('*');
         $builder->join('users',"id=SphAdmin","left"); 
         $builder->where('ProjectId',$project_id);
-        $builder->where('SphStatus !=',2);
-        $builder->orderby('SphId', 'DESC'); 
+        $builder->where('SphStatus !=',2); 
+        $builder->orderby('SphStatus', 'ASC'); 
+        $builder->orderby('SphDate', 'ASC');  
         $query = $builder->get()->getResult();  
         $data_count = 0;
 
@@ -2750,7 +2756,8 @@ class ProjectModel extends Model
         $builder->join('users',"id=InvAdmin","left"); 
         $builder->where('ProjectId',$project_id);
         $builder->where('InvStatus !=',3);
-        $builder->orderby('InvId', 'DESC'); 
+        $builder->orderby('InvStatus', 'ASC'); 
+        $builder->orderby('InvDate', 'ASC');  
         $query = $builder->get()->getResult();  
         $data_count = 0;
         foreach($query as $row){
@@ -2764,6 +2771,7 @@ class ProjectModel extends Model
             $html_items_invoice = "";
             $no = 1;
             $huruf  = "A";
+            $produkjasa = 0;
             foreach($items as $item){
                 $folder = 'assets/images/produk/'.$item->ProdukId."/";
                 $default = 'assets/images/produk/default.png';
@@ -2792,7 +2800,7 @@ class ProjectModel extends Model
                 $html_items_invoice .= '
                 <div class="row">
                     <div class="col-12 col-md-4 my-1 varian">   
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2 align-items-center"> 
                             ' . ($item->InvDetailType == "product" ? ($gambar ? "<img src='".base_url().$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url().$default."' alt='Gambar Default' >") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->InvDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->InvDetailText.'</span>
@@ -2803,6 +2811,8 @@ class ProjectModel extends Model
                             </div> 
                         </div>
                     </div>';
+
+                    
                 if($item->InvDetailType == "product"){
                     $html_items_invoice .= '<div class="col-12 col-md-8 my-1 detail">
                                         <div class="row"> 
@@ -2839,7 +2849,7 @@ class ProjectModel extends Model
                     $huruf++;
                     $no = 1;
                 }
-                     
+                if($item->ProdukId > 0) $produkjasa = 1;
                 
             }
 
@@ -2941,6 +2951,7 @@ class ProjectModel extends Model
 
             // MENGAMBIL Data Pembayaran
             $html_payment = "";
+            $html_proforma = "";
             $payment_total = 0;
             if($row->InvGrandTotal == 0){
                 $html_payment = ' 
@@ -2951,19 +2962,13 @@ class ProjectModel extends Model
             }else{
                 $builder = $this->db->table("payment");
                 $builder->select('*'); 
-                $builder->where('PaymentRef',$row->SampleId);
-                $builder->where('PaymentRefType',"Sample");
+                $builder->where('PaymentRef',$row->InvId);
+                $builder->where('PaymentRefType',"Invoice");
                 $builder->orderby('PaymentId', 'ASC'); 
-                $payment = $builder->get()->getResult(); 
-                $html_payment = "";
+                $payment = $builder->get()->getResult();  
                 $payment_total = 0;
                 $performa_total = 0; 
-                foreach($payment as $row_payment){ 
-                    if($row_payment->PaymentDoc == "1"){
-                        $payment_total += $row_payment->PaymentTotal;
-                    }else{
-                        $performa_total += $row_payment->PaymentTotal;
-                    } 
+                foreach($payment as $row_payment){  
                     if($row_payment->PaymentStatus == "0"){
                         $status = '<span class="text-head-3 text-warning">
                         <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
@@ -2979,218 +2984,167 @@ class ProjectModel extends Model
                         </span>Verified</span>';
                         //$status = '<span class="text-head-3 text-success">Terverifikasi</span>';
                     }
-                    
-                    $html_payment .= '
-                    <div class="list-project mb-4 p-2 project-hide">  
-                        <div class="header row gx-0 gy-0 gx-md-4 gy-md-2 ps-3" >
-                            <div class="d-flex gap-4"> 
-                                <div class="d-flex flex-row flex-md-column justify-content-between">
-                                    <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pembayaran</span>
-                                    <span class="text-head-3">'.$row_payment->PaymentCode.'</span>
-                                </div>    
-                                <div class="d-flex flex-row flex-md-column justify-content-between">
-                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-                                    <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
-                                </div>   
-                                <div class="d-flex flex-row flex-md-column justify-content-between">
-                                    <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
-                                    '.$status.'
-                                </div>   
-                                <div class="d-flex flex-row flex-md-column justify-content-between">
-                                    <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
-                                    <span class="text-head-3">'.$row_payment->PaymentType.'</span>
-                                </div>   
-                                <div class="d-flex flex-row flex-md-column justify-content-between">
-                                    <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
-                                    <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
-                                </div>   
-                                <div class="d-flex flex-row flex-md-column justify-content-between">
-                                    <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i></span>
-                                    <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</span>
-                                </div>   
-                                <div class="flex-fill text-end">  
-                                    <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'sample\')">
-                                        <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
-                                    </button>
-                                    <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
-                                        <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
-                                    </button>
-                                    <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
-                                        <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'sample\')">
-                                        <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-                                    </button> 
-                                </div> 
-                            </div>
-                        </div>
-                    </div>';
+                    if($row_payment->PaymentDoc == "1"){
+                        $payment_total += $row_payment->PaymentTotal; 
+                        $html_payment .= '
+                            <div class="list-project p-2 project-hide my-0">  
+                                <div class="header row gx-0 gy-0 gx-md-4 gy-md-2 ps-3" >
+                                    <div class="d-flex gap-4"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pembayaran</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentCode.'</span>
+                                        </div>    
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                                            <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
+                                        </div>   
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                                            '.$status.'
+                                        </div>   
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentType.'</span>
+                                        </div>   
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
+                                        </div>   
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i></span>
+                                            <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</span>
+                                        </div>   
+                                        <div class="flex-fill text-end">  
+                                            <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'invoice\')">
+                                                <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+                                                <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+                                                <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+                                                <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
+                                            </button> 
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>';
+                    }else{
+                        $performa_total += $row_payment->PaymentTotal;
+                        $html_proforma .= '
+                            <div class="list-project p-2 project-hide my-0">  
+                                <div class="header row gx-0 gy-0 gx-md-4 gy-md-2 ps-3" >
+                                    <div class="d-flex gap-4"> 
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pembayaran</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentCode.'</span>
+                                        </div>    
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
+                                            <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
+                                        </div>    
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentType.'</span>
+                                        </div>   
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
+                                            <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
+                                        </div>   
+                                        <div class="d-flex flex-row flex-md-column justify-content-between">
+                                            <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i></span>
+                                            <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</span>
+                                        </div>   
+                                        <div class="flex-fill text-end">  
+                                            <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->SampleId.','.$row_payment->PaymentId.',this,\'invoice\')">
+                                                <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+                                                <i class="fa-solid fa-print mx-1"></i><span>Cetak</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+                                                <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
+                                                <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
+                                            </button> 
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>';
+                    } 
                 
                 } 
-                if($html_payment == ""){
-                    $html_payment = '<div class="alert alert-warning p-2 m-1" role="alert"> 
+                
+                if($html_proforma !== ""){
+                    $html_proforma = '<span class="ps-2 text-head-3">DATA PROFORMA</span>'.$html_proforma;
+                }
+                
+                if($html_payment !== ""){
+                    $html_payment = '<span class="ps-2 text-head-3">DATA PAYMENT</span>'.$html_payment;
+                }
+                if($payment_total == 0){
+                    $html_payment .= '<div class="alert alert-warning p-2 m-1" role="alert"> 
                             <span class="text-head-3">
                                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                                 Belum ada data pembayaran, silahkan tambahkan data  
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->SampleId.',this,\'sample\')">Pembayaran</a>
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="proforma_project_invoice('.$project_id.','.$row->InvId.',this)">Proforma</a> atau 
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
                             </span> 
                         </div>';
-                }elseif($payment_total < $row->InvGrandTotal){
+                } else if($payment_total < $row->InvGrandTotal){   
                     $html_payment .= '
                     <div class="alert alert-warning p-2 m-1" role="alert"> 
                         <span class="text-head-3">
                             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                            Masih ada sisa pembayaran yang belum diselesaikan, silahkan buat data  
-                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->SampleId.',this,\'sample\')">Pembayaran</a>
+                            Masih ada sisa pembayaran yang belum diselesaikan, silahkan buat data   
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="proforma_project_invoice('.$project_id.','.$row->InvId.',this)">Proforma</a> atau 
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
                         </span> 
                     </div>';
                 }
-            }
-            // $builder = $this->db->table("payment");
-            // $builder->select('*'); 
-            // $builder->where('InvId',$row->InvId);
-            // $builder->where('PaymentStatus <',2);
-            // $builder->orderby('PaymentId', 'ASC'); 
-            // $payment = $builder->get()->getResult(); 
-            // $html_payment = "";
-            // $payment_total = 0;
-            // $performa_total = 0;
-            // foreach($payment as $row_payment){ 
-            //     if($row_payment->PaymentDoc == "1"){
-            //         $payment_total += $row_payment->PaymentTotal;
-            //     }else{
-            //         $performa_total += $row_payment->PaymentTotal;
-            //     } 
-            //     if($row_payment->PaymentStatus == "0"){
-            //         $status = '<span class="text-head-3 text-warning">
-            //         <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
-            //             <i class="fa-solid fa-certificate fa-stack-2x"></i> 
-            //             <i class="fa-solid fa-exclamation fa-stack-1x fa-inverse"></i>
-            //         </span>Pending</span>';
-            //         $status = '<span class="text-head-3 text-warning">Pending</span>';
-            //     }else{
-            //         $status = ' <span class="text-head-3 text-success">
-            //         <span class="fa-stack" small style="vertical-align: top;font-size:0.4rem"> 
-            //             <i class="fa-solid fa-certificate fa-stack-2x"></i>
-            //             <i class="fa-solid fa-check text-success fa-stack-1x fa-inverse"></i>
-            //         </span>Verified</span>';
-            //         $status = '<span class="text-head-3 text-success">Terverifikasi</span>';
-            //     }
-            //     $html_payment .= '<div class="mb-1 p-1">  
-            //                      <div class="row mx-2"> 
-            //                         <div class="col-12 col-md-1 order-2 order-sm-1 p-0"> 
-            //                             <div class="d-flex flex-row flex-md-column justify-content-between"> 
-            //                                 <span class="text-detail-2"><i class="fa-solid fa-check text-success pe-1"></i>Status</span>
-            //                                 '.$status.'
-            //                             </div>  
-            //                         </div>
-            //                         <div class="col-12 col-md-1 order-3 order-sm-2 p-0"> 
-            //                             <div class="d-flex flex-row flex-md-column justify-content-between">
-            //                                 <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Tanggal</span>
-            //                                 <span class="text-head-3">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</span>
-            //                             </div>  
-            //                         </div>
-            //                         <div class="col-12 col-md-1 order-4 order-sm-3 p-0"> 
-            //                             <div class="d-flex flex-row flex-md-column justify-content-between">
-            //                                 <span class="text-detail-2"><i class="fa-solid fa-layer-group pe-1"></i>Type</span>
-            //                                 <span class="text-head-3">'.$row_payment->PaymentType.'</span>
-            //                             </div>  
-            //                         </div>
-            //                         <div class="col-12 col-md-1 order-5 order-sm-4 p-0">
-            //                             <div class="d-flex flex-row flex-md-column justify-content-between">
-            //                                 <span class="text-detail-2"><i class="fa-solid fa-credit-card pe-1"></i>Method</span>
-            //                                 <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
-            //                             </div>  
-            //                         </div>
-            //                         <div class="col-12 col-md-2 order-6 order-sm-5 p-0">
-            //                             <div class="d-flex flex-row flex-md-column justify-content-between">
-            //                                 <span class="text-detail-2"><i class="fa-solid fa-wallet pe-1"></i>Total</span>
-            //                                 <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal).'</span>
-            //                             </div>   
-            //                         </div>
-            //                         <div class="col-12 col-md-6 text-end order-1 order-sm-5 p-0"> 
-            //                             <div class="d-none d-md-inline-block"> 
-            //                                 <button class="btn btn-sm btn-primary btn-action rounded border '.($row_payment->PaymentDoc == "1" ? "" : "d-none" ).'" onclick="show_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->InvId.','.$row_payment->PaymentId.',this,\'invoice\')">
-            //                                     <i class="fa-solid fa-eye mx-1"></i><span>Lihat Bukti</span>
-            //                                 </button>
-            //                                 <button class="btn btn-sm btn-primary btn-action rounded border" onclick="print_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
-            //                                     <i class="fa-solid fa-print mx-1"></i><span>Print</span>
-            //                                 </button>
-            //                                 <button class="btn btn-sm btn-primary btn-action rounded border" onclick="edit_project_'.($row_payment->PaymentDoc == "1" ? "payment" : "proforma" ).'('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
-            //                                     <i class="fa-solid fa-pencil mx-1"></i><span>Ubah</span>
-            //                                 </button>
-            //                                 <button class="btn btn-sm btn-danger btn-action rounded border" onclick="delete_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')">
-            //                                     <i class="fa-solid fa-close mx-1"></i><span>Hapus</span>
-            //                                 </button> 
-            //                             </div>
-            //                             <div class="d-flex d-md-none justify-content-between">
-            //                                 <span class="text-head-2 pt-auto"><i class="fa-solid fa-money-check-dollar pe-2"></i>'.($row_payment->PaymentDoc == "1" ? "Payment" : "Proforma" ).'</span>
-            //                                 <div class="dropdown">
-            //                                     <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            //                                         <i class="ti-more-alt icon-rotate-45"></i>
-            //                                     </a>
-            //                                     <ul class="dropdown-menu shadow">
-            //                                         <li><a class="dropdown-item m-0 px-2" onclick="proforma_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-dollar pe-2"></i>Proforma</a></li>
-            //                                         <li><a class="dropdown-item m-0 px-2" onclick="add_project_payment('.$project_id.','.$row_payment->PaymentId.',this,\'invoice\')"><i class="fa-solid fa-dollar pe-2"></i>Payment</a></li> 
-            //                                         <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a4('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A4</a></li> 
-            //                                         <li><a class="dropdown-item m-0 px-2" onclick="print_project_invoice_a5('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-print pe-2"></i>Print A5</a></li> 
-            //                                         <li><a class="dropdown-item m-0 px-2" onclick="edit_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li> 
-            //                                         <li><a class="dropdown-item m-0 px-2" onclick="delete_project_invoice('.$project_id.','.$row_payment->PaymentId.',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-            //                                     </ul>
-            //                                 </div>
-            //                             </div>
-            //                         </div>
-            //                     </div>
-            //                 </div>
-            //                 ';
-            // } 
-            // if($html_payment == ""){
-            //     $html_payment = '<div class="alert alert-warning p-2 m-1" role="alert"> 
-            //             <span class="text-head-2">
-            //                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-            //                 Belum ada data pembayaran yang dibuat, Silahkan tambahkan data 
-            //                 <a class="text-head-2 text-primary" style="cursor:pointer" onclick="proforma_project_invoice('.$project_id.','.$row->InvId.',this)">Proforma</a> atau 
-            //                 <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
-            //             </span> 
-            //         </div>';
-            // }elseif($payment_total < $row->InvGrandTotal){
-            //     $html_payment .= '
-            //     <div class="alert alert-warning p-2 m-1" role="alert"> 
-            //         <span class="text-head-2">
-            //             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-            //             Masih ada sisa pembayaran yang belum diselesaikan, Silahkan buat data  
-            //             <a class="text-head-2 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
-            //         </span> 
-            //     </div>';
-            // }
+                
+            } 
 
-
-            $builder = $this->db->table("delivery");
-            $builder->select('*');   
-            $builder->where("DeliveryRef",$row->InvId);
-            $builder->where("DeliveryRefType","Invoice");
-            $builder->where("ProjectId",$project_id);
-            $builder->orderby('DeliveryId', 'ASC'); 
-            $delivery = $builder->countAllResults();
-            if($delivery == 0){
-                $alert = ' 
-                    <div class="alert alert-warning p-2 m-1" role="alert">
+            
+            // MENGAMBIL Data Pengiriman
+            $html_delivery = "";
+            if($produkjasa == 1){ 
+                $builder = $this->db->table("delivery");
+                $builder->select('*');   
+                $builder->where("DeliveryRef",$row->InvId);
+                $builder->where("DeliveryRefType","Invoice");
+                $builder->where("ProjectId",$project_id);
+                $builder->orderby('DeliveryId', 'ASC'); 
+                $delivery = $builder->countAllResults();
+                if($delivery == 0){
+                    $html_delivery = ' 
+                        <div class="alert alert-warning p-2 m-1" role="alert">
+                            <span class="text-head-3">
+                                <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
+                                Tidak ada data pengiriman yang dibuat dari invoice ini, 
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> 
+                            </span>
+                        </div>';
+                }else{
+                    $html_delivery = ' 
+                    <div class="alert alert-success p-2 m-1" role="alert">
                         <span class="text-head-3">
-                            <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                            Tidak ada data pengiriman yang dibuat dari invoice ini, 
-                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> 
+                            <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
+                            Ada '.$delivery .' data pengiriman yang dibuat dari invoice ini, 
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick=\'$(".icon-project[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
+                            <a class="text-head-32 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Tambah Data Pengiriman</a> 
                         </span>
                     </div>';
+                }
             }else{
-                $alert = ' 
-                <div class="alert alert-success p-2 m-1" role="alert">
-                    <span class="text-head-3">
-                        <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
-                        Ada '.$delivery .' data pengiriman yang dibuat dari invoice ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick=\'$(".icon-project[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
-                        <a class="text-head-32 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Tambah Data Pengiriman</a> 
-                    </span>
-                </div>';
+                $html_delivery = ' 
+                <span class="text-head-3 ps-4">
+                    <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                    Tidak ada pengiriman yang harus diselesaikan untuk transaksi ini 
+                </span> ';
             }
             
             $status = "";
@@ -3203,6 +3157,42 @@ class ProjectModel extends Model
                     <div class="col-8"> 
                         <span class="text-head-3">
                             <span class="badge text-bg-primary me-1">Baru</span> 
+                        </span>
+                    </div>
+                </div> ';
+            }elseif($row->InvStatus==1){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8"> 
+                        <span class="text-head-3">
+                            <span class="badge text-bg-info me-1">Proses</span> 
+                        </span>
+                    </div>
+                </div> ';
+            }elseif($row->InvStatus==2){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8"> 
+                        <span class="text-head-3">
+                            <span class="badge text-bg-success me-1">Selesai</span> 
+                        </span>
+                    </div>
+                </div> ';
+            }elseif($row->InvStatus==3){
+                $status .= '
+                <div class="row">
+                    <div class="col-4"> 
+                        <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                    </div>
+                    <div class="col-8"> 
+                        <span class="text-head-3">
+                            <span class="badge text-bg-danger me-1">Batal</span> 
                         </span>
                     </div>
                 </div> ';
@@ -3303,18 +3293,19 @@ class ProjectModel extends Model
                     <span class="text-detail-2">Sisa:</span>
                     <span class="text-head-2">Rp. '.number_format($row->InvGrandTotal - $payment_total, 0, ',', '.').'</span> 
                 </div>
-                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center pt-4 justify-content-between">  
+                <div class="d-flex border-top pt-2 m-1 gap-2 align-items-center justify-content-between">  
                     <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span>
                     <div class="action">
                         <a class="btn btn-sm btn-primary btn-action rounded" onclick="proforma_project_invoice('.$project_id.','.$row->InvId.',this)"><i class="fa-solid fa-circle-plus pe-2"></i>Buat Data Proforma</a> 
                         <a class="btn btn-sm btn-primary btn-action rounded" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')"><i class="fa-solid fa-circle-plus pe-2"></i>Buat Data Payment</a>
                     </div>
                 </div>
+                '.$html_proforma.' 
                 '.$html_payment.' 
                 <div class="d-flex border-top mt-2 m-1 pt-2 gap-2 align-items-center justify-content-between">  
                     <span class="text-head-2"><i class="fa-solid fa-truck pe-2"></i>Rincian Pengiriman</span> 
                 </div> 
-                '.  $alert .' 
+                '.  $html_delivery .' 
             </div> 
             '; 
         }
@@ -5323,28 +5314,28 @@ class ProjectModel extends Model
         $builder->join('sample',"SampleDetailRef=SampleId","left"); 
         $builder->where('SampleId',$id);
         $results = $builder->get()->getResult(); 
-        $hasilsample = array_sum(array_column($results, 'DeliveryDetailQty')); 
+        $hasilsample = array_sum(array_column($results, 'SampleDetailQty')); 
 
         if($hasilsample <= $hasildelivery ){
             $deliverystatus = 1;
         } 
 
-        if(($paymentstatus == 1 || $deliverystatus == 1 )){ 
-            if($result->SampleStatus < 2){ 
+        if($result->SampleStatus < 2){ 
+            if(($paymentstatus == 1 || $deliverystatus == 1 )){ 
                 $builder = $this->db->table("sample"); 
                 $builder->set('SampleStatus', 1); 
                 $builder->set('updated_user', user()->id); 
                 $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
                 $builder->where('SampleId', $id); 
+                $builder->update();   
+            }else{
+                $builder = $this->db->table("sample"); 
+                $builder->set('SampleStatus', 0); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('SampleId', $id); 
                 $builder->update();  
-            }
-        }else{
-            $builder = $this->db->table("sample"); 
-            $builder->set('SampleStatus', 0); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SampleId', $id); 
-            $builder->update();  
+            } 
         }
     }
     public function delete_data_sample($id){   
@@ -5609,6 +5600,8 @@ class ProjectModel extends Model
             $builder = $this->db->table("invoice_detail");
             $builder->insert($row); 
         } 
+
+        $this->update_data_invoice_status($id);
     }
     public function delete_data_invoice($id){
         $builder = $this->db->table("invoice");
@@ -5637,6 +5630,74 @@ class ProjectModel extends Model
         $builder = $this->db->table("invoice_detail");
         $builder->where('InvDetailRef',$id); 
         return $builder->get()->getResult();  
+    } 
+    public function update_data_invoice_status($id){
+        
+        $builder = $this->db->table("invoice");  
+        $builder->where('InvId',$id);
+        $result = $builder->get()->getRow(); 
+
+        //status payment
+        $paymentstatus = 1;
+        if($result->InvGrandTotal > 0){
+            $builder = $this->db->table("payment");  
+            $builder->where('PaymentDoc',1);
+            $builder->where('PaymentRef',$id);
+            $builder->where('PaymentRefType','Invoice');
+            $results = $builder->get()->getResult(); 
+            $hasil = array_sum(array_column($results, 'PaymentTotal')); 
+            if($result->InvGrandTotal > $hasil ){
+                $paymentstatus = 0;
+            }
+        }
+
+        //status delivery
+        $deliverystatus = 0; 
+        $builder = $this->db->table("delivery"); 
+        $builder->join('delivery_detail',"DeliveryDetailRef=DeliveryId","left"); 
+        $builder->where('DeliveryRef',$id); 
+        $builder->where('DeliveryRefType',"Invoice"); 
+        $results = $builder->get()->getResult(); 
+        $hasildelivery = array_sum(array_column($results, 'DeliveryDetailQty')); 
+ 
+        $builder = $this->db->table("invoice_detail");  
+        $builder->join('invoice',"InvDetailRef=InvId","left"); 
+        $builder->where('InvId',$id);
+        $builder->where('ProdukId >',0);
+        $results = $builder->get()->getResult(); 
+        $hasilsample = array_sum(array_column($results, 'InvDetailQty')); 
+
+        if($hasilsample <= $hasildelivery ){
+            $deliverystatus = 1;
+        } 
+ 
+        if($result->InvStatus < 2){ 
+            if($paymentstatus == 1 && $deliverystatus == 1 ){ 
+                $builder = $this->db->table("invoice"); 
+                $builder->set('InvStatus', 2); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('InvId', $id); 
+                $builder->update();   
+                
+            }elseif($paymentstatus == 1 || $deliverystatus == 1 ){ 
+                $builder = $this->db->table("invoice"); 
+                $builder->set('InvStatus', 1); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('InvId', $id); 
+                $builder->update();   
+
+            }else{
+                $builder = $this->db->table("invoice"); 
+                $builder->set('InvStatus', 0); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('InvId', $id); 
+                $builder->update();  
+            }
+        }
+        return $paymentstatus. " | ".$deliverystatus;
     }
  
     /**
@@ -5692,6 +5753,10 @@ class ProjectModel extends Model
         if($data["PaymentRefType"] == "Sample"){
             $this->update_data_sample_status($data["PaymentRef"]);
         }
+
+        if($data["PaymentRefType"] == "Invoice"){ 
+            $this->update_data_invoice_status($data["PaymentRef"]);
+        }
     }
     public function update_data_payment($data,$id){
         $builder = $this->db->table("payment"); 
@@ -5737,16 +5802,38 @@ class ProjectModel extends Model
             $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama, $id);  
         } 
 
+        
+        if($data["PaymentRefType"] == "Sample"){
+            $this->update_data_sample_status($data["PaymentRef"]);
+        }
+
+        if($data["PaymentRefType"] == "Invoice"){ 
+            $this->update_data_invoice_status($data["PaymentRef"]);
+        }
+
     }
-    public function delete_data_payment($id){
+    public function delete_data_payment($id){ 
+         
+        $data_payment = $this->getdataPayment($id); 
+ 
         $builder = $this->db->table("payment");
         $builder->where('PaymentId',$id);
         $builder->delete();   
+
+        if( $data_payment->PaymentRefType == "Sample"){
+            $this->update_data_sample_status($data_payment->PaymentRef);
+        }
+
+        if($data_payment->PaymentRefType == "Invoice"){ 
+            $this->update_data_invoice_status($data_payment->PaymentRef);
+        }
+
         return JSON_ENCODE(array("status"=>true));
     }
     public function getdataPaymentByInvoice($id){
-        $builder = $this->db->table("payment"); 
-        $builder->where('InvId',$id); 
+        $builder = $this->db->table("payment");  
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Invoice"); 
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
@@ -5759,13 +5846,15 @@ class ProjectModel extends Model
     }
     public function getdataPaymentByPO($id){
         $builder = $this->db->table("payment"); 
-        $builder->where('POId',$id); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Pembelian");  
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
     public function getdataPaymentByDelivery($id){
         $builder = $this->db->table("payment"); 
-        $builder->where('DeliveryId',$id); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Pengiriman");  
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
@@ -5810,8 +5899,9 @@ class ProjectModel extends Model
     public function insert_data_proforma($data){
         $builder = $this->db->table("payment");
         $builder->insert(array(
-            "PaymentCode"=>$this->get_next_code_proforma($data["PaymentDate"]),
-            "InvId"=>$data["InvId"],
+            "PaymentCode"=>$this->get_next_code_proforma($data["PaymentDate"]), 
+            "PaymentRef"=>$data["PaymentRef"],
+            "PaymentRefType"=>$data["PaymentRefType"],
             "PaymentDate"=>$data["PaymentDate"],
             "PaymentDate2"=>$data["PaymentDate"],
             "PaymentType"=>$data["PaymentType"],
@@ -5828,7 +5918,16 @@ class ProjectModel extends Model
         $builder->select('*');
         $builder->orderby('PaymentId', 'DESC');
         $builder->limit(1);
-        $query = $builder->get()->getRow();    
+        $query = $builder->get()->getRow();   
+        
+        
+        if($data["PaymentRefType"] == "Sample"){
+            $this->update_data_sample_status($data["PaymentRef"]);
+        }
+
+        if($data["PaymentRefType"] == "Invoice"){ 
+            $this->update_data_invoice_status($data["PaymentRef"]);
+        }
     }
     public function update_data_proforma($data,$id){
         $builder = $this->db->table("payment"); 
@@ -5841,10 +5940,20 @@ class ProjectModel extends Model
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
         $builder->where('PaymentId', $id); 
         $builder->update();   
+
+        
+        if($data["PaymentRefType"] == "Sample"){
+            $this->update_data_sample_status($data["PaymentRef"]);
+        }
+
+        if($data["PaymentRefType"] == "Invoice"){ 
+            $this->update_data_invoice_status($data["PaymentRef"]);
+        }
     }
     public function getdataProformaByRef($id){
         $builder = $this->db->table("payment"); 
-        $builder->where('InvId',$id); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Invoice"); 
         $builder->where('PaymentDoc',2); 
         return $builder->get()->getResult();  
     }

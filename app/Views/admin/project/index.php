@@ -897,6 +897,9 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-project").modal("show"); 
+
+                
+                $(".tooltip").remove(); 
             },
             fail: function(xhr, textStatus, errorThrown){
                 alert('request failed');
@@ -910,6 +913,9 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-project").modal("show"); 
+
+                
+                $(".tooltip").remove(); 
             },
             fail: function(xhr, textStatus, errorThrown){
                 alert('request failed');
@@ -963,7 +969,8 @@
             url: "<?= base_url() ?>message/add-item-select", 
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#add-item-select").modal("show"); 
+                $("#add-item-select").modal("show");  
+                $(".tooltip").remove(); 
             },
             fail: function(xhr, textStatus, errorThrown){
                 alert('request failed');
@@ -1174,8 +1181,8 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-sample").modal("show"); 
-
                 $(".tooltip").remove(); 
+ 
                 isProcessingSample[id] = false;
                 $(el).html(old_text); 
             },
@@ -1291,6 +1298,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-sph").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingSph[id] = false;
                 $(el).html(old_text); 
@@ -1332,6 +1340,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-sph").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingSphEdit[id] = false;
                 $(el).html(old_text); 
@@ -1419,6 +1428,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-po").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingPo[id] = false;
                 $(el).html(old_text);
@@ -1453,6 +1463,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-po").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingPOEdit[id] = false;
                 $(el).html(old_text); 
@@ -1540,6 +1551,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-invoice").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingPo[id] = false;
                 $(el).html(old_text); 
@@ -1574,6 +1586,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-invoice").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingInvoiceEdit[id] = false;
                 $(el).html(old_text); 
@@ -1669,6 +1682,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-payment").modal("show");  
+                $(".tooltip").remove(); 
 
                 isProcessingInvoicePayment[id] = false;
                 $(el).html(old_text); 
@@ -1706,6 +1720,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-payment").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingPaymentEdit[id] = false;
                 $(el).html(old_text); 
@@ -1754,10 +1769,8 @@
                             text: "Your file has been deleted.",
                             icon: "success",
                             confirmButtonColor: "#3085d6",
-                        });   
-                        if(type == "sample"){
-                            loader_data_project(ref,type) 
-                        } 
+                        });    
+                        loader_data_project(ref,type)  
                     }, 
                 });
             }
@@ -1787,6 +1800,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-proforma").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingInvoiceProforma[id] = false;
                 $(el).html(old_text); 
@@ -1821,6 +1835,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-proforma").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingProformaEdit[id] = false;
                 $(el).html(old_text); 
@@ -1857,6 +1872,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-payment").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingInvoicePayment[id] = false;
                 $(el).html(old_text); 
@@ -1939,6 +1955,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-delivery").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingDelivery[id] = false;
                 $(el).html(old_text); 
@@ -1973,6 +1990,7 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-delivery").modal("show"); 
+                $(".tooltip").remove(); 
 
                 isProcessingDeliveryEdit[id] = false;
                 $(el).html(old_text); 
@@ -2039,6 +2057,9 @@
                 $("#modal-message").html(data);
                 $("#modal-add-proses-delivery").modal("show"); 
 
+                
+                $(".tooltip").remove(); 
+
                 isProcessingDeliveryProses[id] = false;
                 $(el).html(old_text); 
             },
@@ -2098,6 +2119,9 @@
                 $("#modal-message").html(data);
                 $("#modal-edit-proses-delivery").modal("show"); 
 
+                
+                $(".tooltip").remove(); 
+
                 isProcessingDeliveryProses[id] = false;
                 $(el).html(old_text); 
             },
@@ -2130,6 +2154,9 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-finish-delivery").modal("show"); 
+
+                
+                $(".tooltip").remove(); 
 
                 isProcessingDeliveryEdit[id] = false;
                 $(el).html(old_text); 
@@ -2191,6 +2218,8 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-finish-delivery").modal("show"); 
+                
+                $(".tooltip").remove(); 
 
                 isProcessingDeliveryProses[id] = false;
                 $(el).html(old_text); 
@@ -2228,6 +2257,9 @@
                 $("#modal-message").html(data);
                 $("#modal-add-accounting").modal("show"); 
 
+                
+                $(".tooltip").remove(); 
+
                 isProcessingDelivery[id] = false;
                 $(el).html(old_text); 
             },
@@ -2262,6 +2294,9 @@
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-accounting").modal("show"); 
+
+                
+                $(".tooltip").remove(); 
 
                 isProcessingAccountingEdit[id] = false;
                 $(el).html(old_text); 

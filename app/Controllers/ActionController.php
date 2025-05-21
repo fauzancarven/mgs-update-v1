@@ -22,7 +22,10 @@ class ActionController extends BaseController
     { 
         $this->helpers = ['form', 'url'];  
     }
-
+    public function test(){
+        $models = new ProjectModel(); 
+        echo $models->update_data_invoice_status(49);
+    }
     public function store_add(){   
         $request = Services::request();
         $models = new StoreModel(); 

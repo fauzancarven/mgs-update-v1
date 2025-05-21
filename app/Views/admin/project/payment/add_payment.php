@@ -483,7 +483,7 @@
                         if($("#modal-add-payment").data("menu") =="sample"){
                             loader_datatable(); 
                         }else{  
-                            loader_data_project('<?= $project["ProjectId"] ?>','<?= $project ["PaymentRefType"] ?>') 
+                            loader_data_project('<?= $project["ProjectId"] ?>','<?= strtolower($project["PaymentRefType"]) ?>') 
                         }  
                          
                     });

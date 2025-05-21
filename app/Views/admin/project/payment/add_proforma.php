@@ -390,9 +390,10 @@
             method: "POST",
             url: "<?= base_url() ?>action/add-data-proforma", 
             data:{ 
-                "InvId": <?= $project->InvId ?>, 
+                "PaymentRef": <?= $project->InvId ?>, 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
+                "PaymentRefType": "Invoice",
                 "PaymentMethod":$("#method-payment").val(), 
                 "PaymentTotal": $("#total-payment").val().replace(/[^0-9]/g, ''), 
                 "PaymentNote":$("#comment-payment").val(), 
