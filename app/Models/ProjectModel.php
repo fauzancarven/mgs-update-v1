@@ -487,7 +487,7 @@ class ProjectModel extends Model
         $builder = $this->db->table($this->table);
         $builder->join("customer","customer.CustomerId = project.CustomerId ","left");
         $builder->join("store","store.StoreId = project.StoreId","left"); 
-        
+        $builder->where("ProjectStatus <",9);
         if($filter["datestart"] !== "") $builder->where("ProjectDate >=",$filter["datestart"]);
         if($filter["dateend"] !== "") $builder->where("ProjectDate <=",$filter["dateend"]);
 
@@ -555,24 +555,23 @@ class ProjectModel extends Model
                 <div class="card-body p-1"> 
                     <div class="row header p-1 align-items-start" data-id="'.$row->ProjectId.'">
                         <div class="col-md-3 col-10 order-0 project-store d-flex-column mb-md-0 mb-2"> 
-                            <div class="d-flex align-items-center ">
+                            <div class="d-flex align-items-center "> 
                                 <div class="flex-shrink-0 ">
                                     <img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">
                                 </div>
                                 <div class="flex-grow-1 ms-1">
-                                    <div class="d-flex flex-column">
-                                        <span class="text-detail-2 text-wrap overflow-x-auto">Status : NEW</span> 
+                                    <div class="d-flex flex-column"> 
                                         <span class="text-head-2 d-flex gap-1 align-items-center"><div>'.$row->StoreCode.' - '.$row->StoreName.'</div></span>
                                         <span class="text-detail-2 text-wrap overflow-x-auto">'.$category.'</span>  
                                     </div>   
                                 </div>
-                            </div>
+                            </div> 
                         </div>   
                         <div class="col-md-3 col-12 order-2 order-sm-1">
                             <div class="d-flex flex-column">
+                                <span class="status-header m-0" data-id="'.$row->ProjectId.'">'.$notif["status"].'</span>
                                 <span class="text-head-2">'.$row->ProjectName.'</span>
-                                <span class="text-detail-2 text-truncate overflow-x-auto">Catatan : '.$row->ProjectComment.'</span> 
-                                <span class="status-header pb-1 " data-id="'.$row->ProjectId.'">'.$notif["status"].'</span>
+                                '.($row->ProjectComment == "" ? "" : '<span class="text-detail-2 text-truncate overflow-x-auto">Catatan : '.$row->ProjectComment.'</span>').'
                             </div> 
                         </div>   
                         <div class="col-md-2 col-5 order-3 order-sm-2 m-0">
@@ -742,43 +741,43 @@ class ProjectModel extends Model
         //status
         switch ($row->ProjectStatus ) {
             case 0:
-                $status = "<div class='badge text-bg-primary fs-7'>New</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-street-view text-white  pe-1'></i>New</div>";
                 break;
 
             case 1:
-                $status = "<div class='badge text-bg-primary fs-7'>Survey Lokasi</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-star text-white  pe-1'></i>Survey Lokasi</div>";
                 break;
 
             case 2:
-                $status = "<div class='badge text-bg-primary fs-7'>Sampel Barang</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-truck-ramp-box text-white  pe-1'></i>Sampel Barang</div>";
                 break;
 
             case 3:
-                $status = "<div class='badge text-bg-primary fs-7'>Penawaran</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-hand-holding-droplet text-white  pe-1'></i>Penawaran</div>";
                 break;
 
             case 4:
-                $status = "<div class='badge text-bg-primary fs-7'>Pembelian</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-cart-shopping text-white  pe-1'></i>Pembelian</div>";
                 break;
 
             case 5:
-                $status = "<div class='badge text-bg-primary fs-7'>Perintah Kerja (WO)</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-briefcase  text-white  pe-1'></i>Perintah Kerja (WO)</div>";
                 break;
 
             case 6:
-                $status = "<div class='badge text-bg-primary fs-7'>Invoice</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-money-bill pe-1 text-white'></i>Invoice</div>";
                 break;
 
             case 7:
-                $status = "<div class='badge text-bg-primary fs-7'>Pengiriman</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-truck  text-white  pe-1'></i>Pengiriman</div>";
                 break;
 
-            case 8:
-                $status = "<div class='badge text-bg-success fs-7'>Selesai</div>";
+            case 8: 
+                $status = "<div class='badge text-bg-success fs-7'><i class='fa-solid fa-flag-checkered text-white  pe-1'></i>Selesai</div>";
                 break;
             
             default:
-                $status = "<div class='badge text-bg-danger fs-7'>Close</div>";
+                $status = "<div class='badge text-bg-danger fs-7'><i class='fa-solid fa-close pe-1 text-white'></i>Close</div>";
                 # code...
                 break;
         }
@@ -6011,6 +6010,11 @@ class ProjectModel extends Model
         if($header["DeliveryRefType"] == "Sample"){
             $this->update_data_sample_status($header["DeliveryRef"]);
         }
+        if($header["DeliveryRefType"] == "Invoice"){
+            $this->update_data_invoice_status($header["DeliveryRef"]);
+        }
+
+
         //update status project
         $builder = $this->db->table("project"); 
         $builder->set('ProjectStatus', 7);  

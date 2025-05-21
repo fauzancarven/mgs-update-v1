@@ -199,8 +199,8 @@
     }
     .badge-2 { 
         /* background: #00c5697a; */
-        color: #00371e;
-        border: 1px solid #00371e;
+        color: #555555;
+        border: 1px solid #8fb7a5;
     }
     .badge-3 {  
         /* background: #b6daffed; */
