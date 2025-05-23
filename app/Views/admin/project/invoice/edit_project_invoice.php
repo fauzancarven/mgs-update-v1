@@ -1,5 +1,5 @@
  
-<div class="modal fade" id="modal-edit-invoice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-invoice-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-edit-invoice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-invoice-label" style="overflow-y:auto;" data-menu="project">
     <div class="modal-dialog modal-xl  modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -1795,7 +1795,11 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-invoice").modal("hide");  
-                        $(".icon-project[data-menu='invoice'][data-id='<?= $project->ProjectId ?>']").trigger("click");  
+                        if($("#modal-add-invoice").data("menu") =="invoice"){
+                            loader_datatable(); 
+                        }else{ 
+                            loader_data_project(<?= $project->ProjectId ?>,"invoice");  
+                        }   
                     });
                   
                 }else{

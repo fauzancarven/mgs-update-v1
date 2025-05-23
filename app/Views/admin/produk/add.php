@@ -62,13 +62,13 @@
                             <div class="col-sm-9">
                                 <textarea id="produk-detail" name="produk-detail" type="text" class="form-control form-control-sm input-form" rows="6" value="" placeholder="Roster dan Lubang Angin XYZ - Solusi Ventilasi Maksimal
 
-- Meningkatkan kualitas udara dan pencahayaan
-- Desain elegan dan minimalis
-- Bahan berkualitas tinggi
-- Mudah dipasang dan dirawat
-- Menghemat energi dan biaya listrik
+                                - Meningkatkan kualitas udara dan pencahayaan
+                                - Desain elegan dan minimalis
+                                - Bahan berkualitas tinggi
+                                - Mudah dipasang dan dirawat
+                                - Menghemat energi dan biaya listrik
 
-Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahayaan ruangan,Solusi ideal untuk mengatur suhu dan kelembaban udara di dalam ruangan,Meningkatkan kualitas udara dan kenyamanan hidup"></textarea>
+                                Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahayaan ruangan,Solusi ideal untuk mengatur suhu dan kelembaban udara di dalam ruangan,Meningkatkan kualitas udara dan kenyamanan hidup"></textarea>
                             </div>
                         </div> 
                     </div> 
@@ -76,7 +76,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
                         <span class="label-dialog">Varian</span>
-                        <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="add-varian" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem;">
+                        <button class="btn btn-primary btn-sm py-1 me-1 rounded-pill" id="add-varian-produk" type="button" style="position:absolute;top: -11px;right: -5px;font-size: 0.6rem;">
                             <i class="fas fa-plus"></i>
                             <span class="fw-bold">
                                 &nbsp;Tambah Varian
@@ -86,7 +86,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 </div>     
                 <div class="card " style="min-height:50px;">
                     <div class="card-body p-2 bg-light">
-                        <div id="tb_varian" class="text-center"></div> 
+                        <div id="tb_varian_produk" class="text-center"></div> 
                     </div>
                 </div>   
                 <div class="row mx-2 my-3 align-items-center">
@@ -376,9 +376,9 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
     /* BAGIAN VARIAN */
     var activeSelect2Varian = null; 
     var activeSelect2VarianValue = null; 
-    var data_varian = [];
+    var data_varian_produk = [];
 
-    $("#add-varian").click(function() {
+    $("#add-varian-produk").click(function() {
         try{ 
             var htmlItem = `<div class="row row-table get-item">
                                 <div class="col-8 col-lg-3" >
@@ -394,17 +394,17 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             arr["html"] = htmlItem;
             arr["varian"] = "-";
             arr["value"] = []; 
-            data_varian.push(arr);
-            $("#add-varian").prop("disabled", true); 
-            load_data_varian();
+            data_varian_produk.push(arr);
+            $("#add-varian-produk").prop("disabled", true); 
+            load_data_varian_produk();
         }catch(err){
             console.log(err);
         }
     }); 
     hapus_varian = async function(varian, newitem) {
         var load_data = false;
-        for (var i = 0; data_varian.length > i; i++) {
-            if (data_varian[i]["varian"] == varian  ) {
+        for (var i = 0; data_varian_produk.length > i; i++) {
+            if (data_varian_produk[i]["varian"] == varian  ) {
                 var index = i;
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
@@ -425,12 +425,12 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     reverseButtons: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        data_varian.splice(index, 1);  
-                        load_data_varian();
+                        data_varian_produk.splice(index, 1);  
+                        load_data_varian_produk();
                         
                         load_data_list_varian();
                         if (newitem) {
-                            $("#add-varian").prop("disabled", false);
+                            $("#add-varian-produk").prop("disabled", false);
                             return true;
                         } else if (result.dismiss === Swal.DismissReason.cancel) {
                             return false;
@@ -545,20 +545,20 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             $("#modal-add-produk").modal("show");
         });
     }
-    load_data_varian = function(){
-        $("#tb_varian").html("");
+    load_data_varian_produk = function(){
+        $("#tb_varian_produk").html("");
         var select = [];
         var html = "";
-        for(var i = 0 ; i < data_varian.length;i++){ 
-            $("#tb_varian").append(data_varian[i]["html"]); 
+        for(var i = 0 ; i < data_varian_produk.length;i++){ 
+            $("#tb_varian_produk").append(data_varian_produk[i]["html"]); 
 
-            if(data_varian[i]["varian"]!="-") select.push(data_varian[i]["varian"]);
+            if(data_varian_produk[i]["varian"]!="-") select.push(data_varian_produk[i]["varian"]);
              
-            var datavalue = data_varian[i]["value"]; 
+            var datavalue = data_varian_produk[i]["value"]; 
             var dataindex = i;
             for(var j = 0; j < datavalue.length;j++){ 
                 var option = new Option(datavalue[j]["text"],datavalue[j]["id"],true,true); 
-                $('.selectvarianvalue[data-type="'+data_varian[dataindex]["varian"] +'"]').append(option).trigger('change');
+                $('.selectvarianvalue[data-type="'+data_varian_produk[dataindex]["varian"] +'"]').append(option).trigger('change');
             }  
             
         } 
@@ -602,8 +602,8 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             escapeMarkup: function(m) { return m; }
         }).on("select2:selecting", function(e) {  
             var data = e.params.args.data;  
-            for(var i = 0 ; i < data_varian.length;i++){ 
-                if(data.text == data_varian[i]["varian"]) {
+            for(var i = 0 ; i < data_varian_produk.length;i++){ 
+                if(data.text == data_varian_produk[i]["varian"]) {
                     e.preventDefault(); 
                     break;
                 }
@@ -631,17 +631,17 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             arr["html"] = htmlItem;
             arr["varian"] = data.text;
             arr["value"] = [];
-            data_varian[dataindex] = arr; 
-            $("#add-varian").prop("disabled", false); 
-            load_data_varian(); 
+            data_varian_produk[dataindex] = arr; 
+            $("#add-varian-produk").prop("disabled", false); 
+            load_data_varian_produk(); 
         }).on("select2:open",function(e){
             activeSelect2Varian = $(this);
         });
 
         
 
-        if(data_varian.length == 0){
-            $("#tb_varian").html('<div class="d-flex flex-column justify-content-center align-items-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:100px;height:100px;"><h6 class="text-secondary">Tidak ada data varian</span></h6>');
+        if(data_varian_produk.length == 0){
+            $("#tb_varian_produk").html('<div class="d-flex flex-column justify-content-center align-items-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:100px;height:100px;"><h6 class="text-secondary">Tidak ada data varian</span></h6>');
         }
         $(".selectvarianvalue").select2({
             placeholder: "Pilih data varian",
@@ -688,21 +688,21 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             if(data.id == 0) e.preventDefault(); 
         }).on("select2:select", function(e) {    
             var data = e.params.data;  
-            for (var j = 0; data_varian.length > j; j++) {
-                if (data_varian[j]["varian"] == $(this).data("type") ) {
-                    data_varian[j]["value"].push(data);
+            for (var j = 0; data_varian_produk.length > j; j++) {
+                if (data_varian_produk[j]["varian"] == $(this).data("type") ) {
+                    data_varian_produk[j]["value"].push(data);
                     break;
                 }
             }  
             load_data_list_varian();
         }).on("select2:unselect", function(e) {   
             var data = e.params.data; 
-            for (var j = 0; data_varian.length > j; j++) {
-                if (data_varian[j]["varian"] == $(this).data("type") ) {
-                    var datavalue = data_varian[j]["value"];
+            for (var j = 0; data_varian_produk.length > j; j++) {
+                if (data_varian_produk[j]["varian"] == $(this).data("type") ) {
+                    var datavalue = data_varian_produk[j]["value"];
                     for (var k = 0; datavalue.length > k; k++) {
                         if (datavalue[k]["id"] == data.id ) {
-                            data_varian[j]["value"].splice(k, 1);   
+                            data_varian_produk[j]["value"].splice(k, 1);   
                         }
                     }  
                 }
@@ -714,40 +714,40 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
     } 
  
     /* BAGIAN LIST VARIAN */ 
-    var arr_varian = []; 
-    var arr_varian_list = []; 
-    var arr_varian_detail = []; 
-    var arr_varian_detail_old= [];
+    var arr_varian_produk = []; 
+    var arr_varian_produk_list = []; 
+    var arr_varian_produk_detail = []; 
+    var arr_varian_produk_detail_old= [];
   
     load_data_list_varian = function(){
-        arr_varian = []; 
+        arr_varian_produk = []; 
         let checkedData = true;  
         function replaceOrInsertValue(kunci, nilai) {
-            let index = arr_varian.findIndex(obj => obj.key === kunci);
+            let index = arr_varian_produk.findIndex(obj => obj.key === kunci);
             
             if (index !== -1) {
-                let nilaiIndex = arr_varian[index].values.indexOf(nilai);
+                let nilaiIndex = arr_varian_produk[index].values.indexOf(nilai);
                 
                 if (nilaiIndex !== -1) {
                 // Nilai sudah ada, ganti nilai
-                arr_varian[index].values[nilaiIndex] = nilai;
+                arr_varian_produk[index].values[nilaiIndex] = nilai;
                 } else {
                 // Nilai belum ada, tambahkan
-                arr_varian[index].values.push(nilai);
+                arr_varian_produk[index].values.push(nilai);
                 }
             } else {
                 // Kunci belum ada, tambahkan
-                arr_varian.push({ key: kunci, values: [nilai] });
+                arr_varian_produk.push({ key: kunci, values: [nilai] });
             }
         } 
         function get_arr_val_old(varian_baru, tipe_harga) {
-            const varian_lama = arr_varian_detail_old.find((item) =>
+            const varian_lama = arr_varian_produk_detail_old.find((item) =>
                 Object.keys(varian_baru).every((k) => item.ProdukDetailVarian[k] === varian_baru[k])
             );
 
             if (!varian_lama) {
                 // Cari varian lama dengan kunci yang ada di varian baru
-                const varian_lama_filtered = arr_varian_detail_old.find((item) =>
+                const varian_lama_filtered = arr_varian_produk_detail_old.find((item) =>
                 Object.keys(varian_baru).filter((k) => item.ProdukDetailVarian[k] !== undefined).every((k) => item.ProdukDetailVarian[k] === varian_baru[k])
                 );
 
@@ -763,19 +763,19 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             replaceOrInsertValue("vendor", $("#produk-vendor").select2("data")[i]["code"]); 
         } 
 
-        for(var j = 0; j < data_varian.length;j++){  
-            if(data_varian[j]["value"].length == 0) checkedData = false;
-            for(var k = 0; k < data_varian[j]["value"].length;k++){
-                replaceOrInsertValue(data_varian[j]["varian"], data_varian[j]["value"][k]["text"]); 
+        for(var j = 0; j < data_varian_produk.length;j++){  
+            if(data_varian_produk[j]["value"].length == 0) checkedData = false;
+            for(var k = 0; k < data_varian_produk[j]["value"].length;k++){
+                replaceOrInsertValue(data_varian_produk[j]["varian"], data_varian_produk[j]["value"][k]["text"]); 
             }  
         }    
 
-        arr_varian_list = []; 
-        if(arr_varian.length == 0){
-        } else if(arr_varian.length == 1){
-            arr_varian_list = arr_varian[0].values.map(val => ({ [arr_varian[0].key]: val }));
+        arr_varian_produk_list = []; 
+        if(arr_varian_produk.length == 0){
+        } else if(arr_varian_produk.length == 1){
+            arr_varian_produk_list = arr_varian_produk[0].values.map(val => ({ [arr_varian_produk[0].key]: val }));
         }else{
-            arr_varian.reduce((acc, curr) => {
+            arr_varian_produk.reduce((acc, curr) => {
             if (acc.length === 0) {
                 return curr.values.map(val => ({ [curr.key.toLowerCase()]: val }));
             }
@@ -783,20 +783,20 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             return acc.flatMap(obj =>
                 curr.values.map(val => ({ ...obj, [curr.key.toLowerCase()]: val }))
             );
-            }, []).forEach(obj => arr_varian_list.push(obj));
+            }, []).forEach(obj => arr_varian_produk_list.push(obj));
         }
-        arr_varian_detail_old = arr_varian_detail; 
-        arr_varian_detail = [];
-        for(var i = 0; i < arr_varian_list.length;i++){    
-            arr_varian_detail.push({ 
-                "ProdukDetailImage": (get_arr_val_old(arr_varian_list[i],"ProdukDetailImage") == "" ? "" : get_arr_val_old(arr_varian_list[i],"ProdukDetailImage")),
-                "ProdukDetailVarian": arr_varian_list[i],
-                "ProdukDetailPcsM2":  (get_arr_val_old(arr_varian_list[i],"ProdukDetailPcsM2") == "" ? "-" : get_arr_val_old(arr_varian_list[i],"ProdukDetailPcsM2")),
-                "ProdukDetailBerat": (get_arr_val_old(arr_varian_list[i],"ProdukDetailBerat") == "" ? "0" : get_arr_val_old(arr_varian_list[i],"ProdukDetailBerat")),
-                "ProdukDetailSatuanId": (get_arr_val_old(arr_varian_list[i],"ProdukDetailSatuanId") == "" ? "1" : get_arr_val_old(arr_varian_list[i],"ProdukDetailSatuanId")),
-                "ProdukDetailSatuanText": (get_arr_val_old(arr_varian_list[i],"ProdukDetailSatuanText") == "" ? "Pcs" : get_arr_val_old(arr_varian_list[i],"ProdukDetailSatuanText")),
-                "ProdukDetailHargaJual": (get_arr_val_old(arr_varian_list[i],"ProdukDetailHargaJual") == "" ? "0" : get_arr_val_old(arr_varian_list[i],"ProdukDetailHargaJual")),
-                "ProdukDetailHargaBeli": (get_arr_val_old(arr_varian_list[i],"ProdukDetailHargaBeli") == "" ? "0" : get_arr_val_old(arr_varian_list[i],"ProdukDetailHargaBeli")),
+        arr_varian_produk_detail_old = arr_varian_produk_detail; 
+        arr_varian_produk_detail = [];
+        for(var i = 0; i < arr_varian_produk_list.length;i++){    
+            arr_varian_produk_detail.push({ 
+                "ProdukDetailImage": (get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailImage") == "" ? "" : get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailImage")),
+                "ProdukDetailVarian": arr_varian_produk_list[i],
+                "ProdukDetailPcsM2":  (get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailPcsM2") == "" ? "-" : get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailPcsM2")),
+                "ProdukDetailBerat": (get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailBerat") == "" ? "0" : get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailBerat")),
+                "ProdukDetailSatuanId": (get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailSatuanId") == "" ? "1" : get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailSatuanId")),
+                "ProdukDetailSatuanText": (get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailSatuanText") == "" ? "Pcs" : get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailSatuanText")),
+                "ProdukDetailHargaJual": (get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailHargaJual") == "" ? "0" : get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailHargaJual")),
+                "ProdukDetailHargaBeli": (get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailHargaBeli") == "" ? "0" : get_arr_val_old(arr_varian_produk_list[i],"ProdukDetailHargaBeli")),
             })
         }     
 
@@ -804,11 +804,11 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         var headerVarian = ``; 
         var detailhtml = ``;
         var modalhtmlitem = ``;
-        for(var i = 0; i < arr_varian_detail.length;i++){  
+        for(var i = 0; i < arr_varian_produk_detail.length;i++){  
             headerVarian ="";
             var image = `<input type="file" id="image-input-${i}" style="display: none;" accept="image/*">
-                        <div class="image-detail-produk border  ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? "no-image": "" }"  data-id="${i}">
-                            ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_detail[i]["ProdukDetailImage"] + '" id="img-detail-'+ i +'"/> <div class="action"> <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(' + i + ')"><i class="fas fa-crop-alt"></i></a>  <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(' + i + ')"><i class="fas fa-trash"></i></a>  </div>'}   
+                        <div class="image-detail-produk border  ${arr_varian_produk_detail[i]["ProdukDetailImage"] == "" ? "no-image": "" }"  data-id="${i}">
+                            ${arr_varian_produk_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_produk_detail[i]["ProdukDetailImage"] + '" id="img-detail-'+ i +'"/> <div class="action"> <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(' + i + ')"><i class="fas fa-crop-alt"></i></a>  <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(' + i + ')"><i class="fas fa-trash"></i></a>  </div>'}   
                         </div>`;
             detailhtml += `<div class="row m-2 border-bottom align-items-center varian-item" data-id="${i}">
                                 <div class="col-2 col-md-1 my-2">  
@@ -816,7 +816,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                 </div> 
                                 <div class="col-8 col-md-3 my-2"> 
                                     <div class="row  mb-3">`; 
-            $.each(arr_varian_detail[i]["ProdukDetailVarian"], function(key, value) {   
+            $.each(arr_varian_produk_detail[i]["ProdukDetailVarian"], function(key, value) {   
                     headerVarian += `<div class="col"><span class="label-head-dialog text-capitalize">${key}</span></div>`;  
                     detailhtml +=  `<div class="col-12 col-md"> 
                                         <span class="label-head-dialog ">
@@ -837,7 +837,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                         <div class="mb-3">
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Berat</span>
                                             <div class="input-group mb-3"> 
-                                                <input type="text" class="form-control form-control-sm input-form ProdukDetailBerat" value="${arr_varian_detail[i]["ProdukDetailBerat"]}" data-id="${i}">
+                                                <input type="text" class="form-control form-control-sm input-form ProdukDetailBerat" value="${arr_varian_produk_detail[i]["ProdukDetailBerat"]}" data-id="${i}">
                                                 <span class="input-group-text font-std">(g)</span>
                                             </div> 
                                         </div>
@@ -854,7 +854,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                         <div class="mb-3">
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Isi M/<sup>2</sup></span>
                                             <div class="input-group"> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block ProdukDetailPcsM2" data-id="${i}" value="${arr_varian_detail[i]["ProdukDetailPcsM2"]}">
+                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block ProdukDetailPcsM2" data-id="${i}" value="${arr_varian_produk_detail[i]["ProdukDetailPcsM2"]}">
                                             </div>   
                                         </div>  
                                     </div> 
@@ -863,7 +863,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga Beli</span>
                                             <div class="input-group">  
                                                 <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block ProdukDetailHargaBeli" data-id="${i}" value="${arr_varian_detail[i]["ProdukDetailHargaBeli"]}">
+                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block ProdukDetailHargaBeli" data-id="${i}" value="${arr_varian_produk_detail[i]["ProdukDetailHargaBeli"]}">
                                             </div>   
                                         </div>  
                                     </div> 
@@ -872,7 +872,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga Jual</span>
                                             <div class="input-group"> 
                                                 <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block ProdukDetailHargaJual" data-id="${i}" value="${arr_varian_detail[i]["ProdukDetailHargaJual"]}">
+                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block ProdukDetailHargaJual" data-id="${i}" value="${arr_varian_produk_detail[i]["ProdukDetailHargaJual"]}">
                                             </div>   
                                         </div>      
                                     </div> 
@@ -934,7 +934,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     numeralThousandGroupStyle:"thousand"
                 });
                 $(elHargajual).change(function(){  
-                    arr_varian_detail[$(elHargajual).data("id")]["ProdukDetailHargaJual"] = clHargaJual.getRawValue(); 
+                    arr_varian_produk_detail[$(elHargajual).data("id")]["ProdukDetailHargaJual"] = clHargaJual.getRawValue(); 
                 }); 
 
                 //  Harga Beli 
@@ -946,7 +946,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     numeralThousandGroupStyle:"thousand"
                 });
                 $(elHargabeli).change(function(){  
-                    arr_varian_detail[$(elHargabeli).data("id")]["ProdukDetailHargaBeli"] = clHargabeli.getRawValue(); 
+                    arr_varian_produk_detail[$(elHargabeli).data("id")]["ProdukDetailHargaBeli"] = clHargabeli.getRawValue(); 
                 });
 
                 //  ProdukDetailBerat 
@@ -958,13 +958,13 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     numeralThousandGroupStyle:"thousand"
                 });
                 $(elBerat).change(function(){  
-                    arr_varian_detail[$(elBerat).data("id")]["ProdukDetailBerat"] = clBerat.getRawValue(); 
+                    arr_varian_produk_detail[$(elBerat).data("id")]["ProdukDetailBerat"] = clBerat.getRawValue(); 
                 });
 
                 //  ProdukDetailPcsM2 
                 var elProdukDetailPcsM2= $(element).find(".ProdukDetailPcsM2"); 
                 $(elProdukDetailPcsM2).change(function(){  
-                    arr_varian_detail[$(elProdukDetailPcsM2).data("id")]["ProdukDetailPcsM2"] = $(this).val(); 
+                    arr_varian_produk_detail[$(elProdukDetailPcsM2).data("id")]["ProdukDetailPcsM2"] = $(this).val(); 
                 });
 
                 //  Satuan 
@@ -1006,10 +1006,10 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 })
                 .on("select2:select", function(e) {    
                     var data = e.params.data;  
-                    arr_varian_detail[$(elsatuan).data("id")]["ProdukDetailSatuanId"] = data.id; 
-                    arr_varian_detail[$(elsatuan).data("id")]["ProdukDetailSatuanText"] = data.text; 
+                    arr_varian_produk_detail[$(elsatuan).data("id")]["ProdukDetailSatuanId"] = data.id; 
+                    arr_varian_produk_detail[$(elsatuan).data("id")]["ProdukDetailSatuanText"] = data.text; 
                 });   
-                var newOption = new Option(arr_varian_detail[$(elsatuan).data("id")]["ProdukDetailSatuanText"],arr_varian_detail[$(elsatuan).data("id")]["ProdukDetailSatuanId"], true, true);
+                var newOption = new Option(arr_varian_produk_detail[$(elsatuan).data("id")]["ProdukDetailSatuanText"],arr_varian_produk_detail[$(elsatuan).data("id")]["ProdukDetailSatuanId"], true, true);
                 $(elsatuan).append(newOption).trigger('change'); 
                 $(elsatuan).select2("close");
  
@@ -1018,7 +1018,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     const file = e.target.files[0];
                     const reader = new FileReader();
                     reader.onload = () => {
-                        arr_varian_detail[data_index]["ProdukDetailImage"] = reader.result;
+                        arr_varian_produk_detail[data_index]["ProdukDetailImage"] = reader.result;
                         $(".image-detail-produk[data-id='" + data_index + "']").removeClass("no-image");
                         $(".image-detail-produk[data-id='" + data_index + "']").html(`<img src="${reader.result}" id="img-detail-${data_index}"/>
                         <div class="action">
@@ -1033,9 +1033,9 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             });    
 
             $("#input-search-data-varian").keyup(function(){ 
-                for(var i = 0; i < arr_varian_detail.length;i++){ 
+                for(var i = 0; i < arr_varian_produk_detail.length;i++){ 
                     let hide = true;
-                    $.each(arr_varian_detail[i]["ProdukDetailVarian"], function(key, value) { 
+                    $.each(arr_varian_produk_detail[i]["ProdukDetailVarian"], function(key, value) { 
                         if(value.toLowerCase().includes($("#input-search-data-varian").val().toLowerCase()) == true) hide = false; 
                     });   
                     (hide == true ? $('.varian-item[data-id="'+ i + '"]').hide() : $('.varian-item[data-id="'+ i + '"]').show());
@@ -1108,7 +1108,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     $uploadCropDetail.croppie('result', { type: 'base64', format: 'png', size: {width: 400, height: 400} }).then(function (resp) {
                     $(image_crop).attr('src',resp)
                     $('#modal-frame-image-detail-' + id).modal('hide');
-                    arr_varian_detail[id]["ProdukDetailImage"] = resp;
+                    arr_varian_produk_detail[id]["ProdukDetailImage"] = resp;
                     }).catch(function(error){
                     console.error(error);
                     });
@@ -1130,7 +1130,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         }
     }  
 
-    load_data_varian();
+    load_data_varian_produk();
     var isProcessingSaveProduk 
     $("#btn-add-produk").click(async function(){  
      
@@ -1182,7 +1182,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                 return; 
             }
         }
-        if(arr_varian_detail.length == 0){
+        if(arr_varian_produk_detail.length == 0){
             Swal.fire({
                 icon: 'error',
                 text: 'lengkapi list varian terlebih dahulu...!!!', 
@@ -1194,12 +1194,12 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         } 
         
         var arr_var = [];
-        for(var i = 0 ; i < data_varian.length;i++){    
-            let arr = {"varian": data_varian[i]["varian"],"value":[]}; 
-            for(var j = 0; j < data_varian[i]["value"].length;j++){ 
+        for(var i = 0 ; i < data_varian_produk.length;i++){    
+            let arr = {"varian": data_varian_produk[i]["varian"],"value":[]}; 
+            for(var j = 0; j < data_varian_produk[i]["value"].length;j++){ 
                 let value = { 
-                    "id" : data_varian[i]["value"][j]["id"],
-                    "text" : data_varian[i]["value"][j]["text"],
+                    "id" : data_varian_produk[i]["value"][j]["id"],
+                    "text" : data_varian_produk[i]["value"][j]["text"],
                 };
                 arr["value"].push(value);
             }   
@@ -1215,8 +1215,8 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             });
         });
 
-        const hargaTerendah = arr_varian_detail.reduce((min, current) => Math.min(min, current.ProdukDetailHargaJual), Infinity);
-        const hargaTertinggi = arr_varian_detail.reduce((max, current) => Math.max(max, current.ProdukDetailHargaJual), -Infinity);
+        const hargaTerendah = arr_varian_produk_detail.reduce((min, current) => Math.min(min, current.ProdukDetailHargaJual), Infinity);
+        const hargaTertinggi = arr_varian_produk_detail.reduce((max, current) => Math.max(max, current.ProdukDetailHargaJual), -Infinity);
         var data_produk = {
             "ProdukCategoryId" : $("#produk-kategori").val(),
             "ProdukName" : $("#produk-name").val(),
@@ -1225,7 +1225,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             "ProdukVarian" : JSON.stringify(arr_var), 
             "ProdukPrice" : (hargaTerendah == hargaTertinggi ? hargaTerendah : hargaTerendah + " - " + hargaTertinggi),
         }
-        var data_produk_detail = arr_varian_detail;
+        var data_produk_detail = arr_varian_produk_detail;
         var data_produk_image = image_list;
  
         

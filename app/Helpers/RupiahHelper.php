@@ -8,6 +8,6 @@ function rupiah($angka)
         list($min, $max) = explode(' - ', $angka);
         return "Rp. " . number_format($min, 0, ',', '.') . " - Rp. " . number_format($max, 0, ',', '.');
     } else {
-        return "Rp. " . number_format($angka, 0, ',', '.');
+        return "Rp. " . number_format($angka, 0);
     }
-}
+} 

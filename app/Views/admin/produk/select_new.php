@@ -104,7 +104,7 @@
                             </div>  
                         </div>
                     </div> 
-                    <div class="input-group-custom flex-fill w-100">  
+                    <div class="input-group-custom flex-fill w-75">  
                         <input class="form-control form-control-sm input-form" id="searchdataprodukselect" placeholder="Cari nama produk" value="" type="text">
                         <i class="fa-solid fa-magnifying-glass"></i> 
                     </div>  
@@ -224,24 +224,35 @@
             });
         }
     })
-    $(".filter-data .list-group-item.utama").hover(function(){ 
-        $(".filter-list[data-value='" +  $(this).find("span").html() + "'").show();
-        $(".filter-list[data-value='" +  $(this).find("span").html() + "'").css("top",$(this).position()["top"] + 30)  
-    }, function () {  
-        if (!$(".filter-list[data-value='" +  $(this).find("span").html() + "'").is(':hover')) { 
-            
-            $(".filter-list[data-value='" +  $(this).find("span").html() + "'").hide();
-        }else{
-            var ele = $(this);
-            $(".filter-list[data-value='" +  $(this).find("span").html() + "'").hover(function() { 
-                $(this).show();
-            }, function() { 
-                if (!$(ele).is(':hover') && !$(this).is(':hover')) {
-                    $(this).hide();
+    var timeoutIds = {};
+    $(".filter-data .list-group-item.utama").hover(function(){
+        var value = $(this).find("span").html();
+        clearTimeout(timeoutIds[value]);
+        $(".filter-list[data-value='" + value + "']").show();
+        $(".filter-list[data-value='" + value + "']").css("top", $(this).position()["top"] + 30);
+    }, function () {
+        var ele = $(this);
+        var value = $(this).find("span").html();
+        var filterList = $(".filter-list[data-value='" + value + "']");
+        timeoutIds[value] = setTimeout(function() {
+            if (!filterList.is(':hover')) {
+                filterList.hide();
+            }
+        }, 100); // delay 500ms
+
+        filterList.hover(function() {
+            clearTimeout(timeoutIds[value]);
+            $(this).show();
+        }, function() {
+            timeoutIds[value] = setTimeout(function() {
+                if (!ele.is(':hover') && !filterList.is(':hover')) {
+                    filterList.hide();
                 }
-            }); 
-        }
-    });  
+            }, 100); // delay 500ms
+        });
+    });
+
+
     $("input[name='filter-list']").keyup(function(){
         var filter = $(this).val().toLowerCase();
         $(".filter-list[data-value='" + $(this).data("name") + "'] li").each(function(el) {
@@ -343,7 +354,7 @@
                     html += ` 
                         <div class="d-flex flex-row align-items-start gap-2 my-2">
                             <div class="d-flex">
-                                <img src="${data[i]["image"]}" alt="Gambar" class="image-produk"> 
+                                <img src="${data[i]["image"]}" alt="Gambar" class="produk"> 
                             </div> 
                             <div class="flex-fill"> 
                                 <div class="d-flex flex-column flex-md-row gap-1"> 
@@ -358,7 +369,7 @@
                                     <div class="d-flex flex-md-row">   
                                         <div class="d-flex flex-column">
                                             <span class="text-detail-2">Harga</span>
-                                            <span class="text-head-2 text-truncate">${rupiah($("#modal-select-item").data("type") == "buy" ?  data[i]["price_buy"] :  data[i]["price_sell"])}</span> 
+                                            <span class="text-head-2 text-truncate">${ rupiah(($("#modal-select-item").data("type") == "buy" ?  data[i]["price_buy"] :  data[i]["price_sell"]))}</span> 
                                         </div>   
                                     </div>
                                     <button type="button" class="btn btn-sm btn-primary py-2 my-1" onclick="select_produk_new('${i}')">Pilih Produk</button>

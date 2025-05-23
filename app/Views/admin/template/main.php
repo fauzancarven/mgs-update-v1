@@ -1566,9 +1566,9 @@
         font-weight: bold;
     } 
 
-    .icon-project.selected,.icon-project.selected::after{
+    .icon-project.selected,.icon-project.selected i,.icon-project.selected::after{
         font-weight: bold;
-        color: #003e9d !important;
+        color: #002247 !important;
         /* background: #afcbff; */
     } 
     .icon-project:hover,.icon-project:hover::after{
