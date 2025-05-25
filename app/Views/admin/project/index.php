@@ -608,6 +608,91 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-print-payment" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Payment</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="PaymentPrintFormat" class="col-sm-4 col-form-label">Ukuran Kertas</label>
+                    <div class="col-sm-8">
+                        <select class="form-select form-select-sm" id="PaymentPrintFormat" name="PaymentPrintFormat" placeholder="Pilih Admin" style="width:100%">
+                            <option id="1" selected>A4</option>
+                            <option id="2">A5</option>
+                        </select>  
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="PaymentPrintImage" class="col-sm-4 col-form-label">gunakan gambar item</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintImage" id="PaymentPrintImage1" value="0">
+                            <label class="text-detail" for="PaymentPrintImage1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintImage" id="PaymentPrintImage2" value="1" checked>
+                            <label class="text-detail" for="PaymentPrintImage2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2 d-none">
+                    <label for="PaymentPrintPrice" class="col-sm-4 col-form-label">gunakan harga</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintPrice" id="PaymentPrintPrice1" value="0">
+                            <label class="text-detail" for="PaymentPrintPrice1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintPrice" id="PaymentPrintPrice2" value="1" checked>
+                            <label class="text-detail" for="PaymentPrintPrice2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2 d-none">
+                    <label for="PaymentPrintTotal" class="col-sm-4 col-form-label">gunakan grand total</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintTotal" id="PaymentPrintTotal1" value="0">
+                            <label class="text-detail" for="PaymentPrintTotal1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintTotal" id="PaymentPrintTotal2" value="1" checked>
+                            <label class="text-detail" for="PaymentPrintTotal2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <script>
+                   $('input[name="PaymentPrintPrice"]').change(function() {
+                        if($(this).val() == 0){
+                            $('input[name="PaymentPrintTotal"]').prop("disabled",true)
+                        }else{
+
+                            $('input[name="PaymentPrintTotal"]').prop("disabled",false)
+                        }
+                    });
+                    // $("#POPrintFormat").change(function(){
+                    //     if($(this).val() == "A5"){
+                    //         $('input[name="POPrintTotal"]').prop("disabled",true)
+                    //         $('input[name="POPrintPrice"]').prop("disabled",true)
+                    //         $('input[name="POPrintImage"]').prop("disabled",true)
+                    //     } else{ 
+                    //         $('input[name="POPrintTotal"]').prop("disabled",false)
+                    //         $('input[name="POPrintPrice"]').prop("disabled",false)
+                    //         $('input[name="POPrintImage"]').prop("disabled",false)
+                    //     }
+                    // })
+                </script>
+            </div>
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btn-print-payment">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
  
 <script>
     togglecustom = function(cls,el){
@@ -1815,9 +1900,21 @@
     };
 
     print_project_payment = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/paymentA5/") ?>' + id, '_blank');
+        //window.open('<?= base_url("print/project/paymentA5/") ?>' + id, '_blank');
+        $("#modal-print-payment").modal("show");
+        $("#modal-print-payment").data("id",id) 
     }
-    
+     
+    $("#btn-print-payment").click(function(i){ 
+        $.redirect('<?= base_url("print/project/payment/") ?>' +  $("#modal-print-payment").data("id"),  {
+            kertas: $("#PaymentPrintFormat").val(),
+            image: $('input[name="PaymentPrintImage"]:checked').val(),
+            total: $('input[name="PaymentPrintTotal"]:checked').val(),
+        },
+        "GET",'_blank');
+        $("#modal-print-payment").modal("hide");
+        
+    })
     var isProcessingInvoiceProforma = [];
     proforma_project_invoice  = function(ref,id,el){
         // INSERT LOADER BUTTON

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'INV_'.$inv->InvCustName.'_'.$inv->InvDate ?></title>
+    <title><?= 'INV '.$inv->InvCustName.' '.$inv->InvDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css">   
     <link rel="icon" type="image/png" href="assets/images/logo/logo.png">

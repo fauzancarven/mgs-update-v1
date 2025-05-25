@@ -57,6 +57,14 @@
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
+                                <label for="SampleRef" class="col-sm-2 col-form-label">Ref</label>
+                                <div class="col-sm-10"> 
+                                    <select class="form-select form-select-sm" id="SampleRef" name="SampleRef"  style="width:100%" >
+                                        <option value="0" selected data-type="-">No Data Selected</option>
+                                    </select>  
+                                </div> 
+                            </div>  
+                            <div class="row mb-1 align-items-center">
                                 <label for="SampleDate" class="col-sm-2 col-form-label">Tanggal</label>
                                 <div class="col-sm-10">
                                     <input id="SampleDate" name="SampleDate" type="text" class="form-control form-control-sm input-form" value="">
@@ -66,6 +74,19 @@
                                 <label for="SampleAdmin" class="col-sm-2 col-form-label">Admin</label>
                                 <div class="col-sm-10">
                                     <select class="form-select form-select-sm" id="SampleAdmin" name="SampleAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="SampleDelivery" class="col-sm-2 col-form-label">Pengiriman</label>
+                                <div class="col-sm-10">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="SampleDelivery" id="SampleDelivery1" value="0">
+                                    <label class="text-detail" for="SampleDelivery1">Tidak</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="SampleDelivery" id="SampleDelivery2" value="1" checked>
+                                    <label class="text-detail" for="SampleDelivery2">Ya</label>
+                                </div>
                                 </div>
                             </div>  
                         </div> 
@@ -368,6 +389,17 @@
                         </div> 
                         <div class="row align-items-center py-1">
                             <div class="col-4">
+                                <span class="label-head-dialog">Pengiriman</span>   
+                            </div>
+                            <div class="col-8"> 
+                                <div class="input-group"> 
+                                    <span class="input-group-text font-std">Rp.</span>
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SampleDeliveryTotal" value="0">
+                                </div>     
+                            </div>
+                        </div> 
+                        <div class="row align-items-center py-1">
+                            <div class="col-4">
                                 <span class="label-head-dialog">Grand Total</span>   
                             </div>
                             <div class="col-8"> 
@@ -389,7 +421,16 @@
 </div>  
 
 <div id="modal-optional"></div>
-<script>     
+<script>    
+    $('input[name="SampleDelivery"]').change(function() {
+        if($(this).val() == 0){
+            $('#SampleDeliveryTotal').prop("disabled",true)
+            $('#SampleDeliveryTotal').val("0")
+        }else{
+
+            $('#SampleDeliveryTotal').prop("disabled",false)
+        }
+    }); 
     $('#SampleDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment('<?= $project->SampleDate ?>'),
@@ -399,6 +440,51 @@
         }
     });
     
+    $("#SampleRef").select2({
+        dropdownParent: $('#modal-edit-sample .modal-content'),
+        placeholder: "Pilih Toko",
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
+            dataType: 'json',
+            type:"POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash // CSRF Token
+                };
+            },
+            processResults: function (response) {
+    
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        },  
+        escapeMarkup: function(m) {
+            return m;
+        },
+        templateResult: function template(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return $(data.html);
+        },
+        templateSelection: function templateSelect(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return data['text'];
+        }
+    });
     
     $("#SampleAdmin").select2({
         dropdownParent: $('#modal-edit-sample .modal-content'),
@@ -678,16 +764,17 @@
         load_produk() 
     }
 
-    
+     
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.price * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#SampleDiscTotal").val().replace(/[^0-9-]/g, ''); 
-
+        //var grandtotal =  total - discitem - $("#SampleDiscTotal").val().replace(/[^0-9-]/g, ''); 
+        var grandtotal =  total - discitem - $("#SampleDiscTotal").val().replace(/[^0-9-]/g, '') + parseInt($("#SampleDeliveryTotal").val().replace(/[^0-9-]/g, '')); 
+        console.log(grandtotal)
         $("#SampleSubTotal").val(total.toLocaleString('en-US')) 
-        $("#SampleDiscItemTotal").val(discitem.toLocaleString('en-US')) 
+        $("#SampleDiscItemTotal").val(discitem.toLocaleString('en-US'))  
         $("#SampleGrandTotal").val(grandtotal.toLocaleString('en-US')) 
-    }
+    } 
     
     load_produk = function(){
         var html = '';
@@ -961,6 +1048,12 @@
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
+    var Sample_delivery = new Cleave(`#SampleDeliveryTotal`, {
+            numeral: true,
+            delimeter: ",",
+            numeralDecimalScale:0,
+            numeralThousandGroupStyle:"thousand"
+    }); 
     $("#SampleDiscTotal").on("keyup",function(){ 
         grand_total_harga();
         if(parseInt($("#SampleGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
@@ -969,6 +1062,9 @@
         }
     });
  
+    $("#SampleDeliveryTotal").on("keyup",function(){ 
+        grand_total_harga(); 
+    });
     var mode_edit = false;
     var quill = [];  
     $(".template-footer").each(function(index, el){
@@ -1256,6 +1352,8 @@
             SampleAddress: $("#SampleAddress").val(), 
             SampleCustName: $("#SampleCustName").val(), 
             SampleCustTelp: $("#SampleCustTelp").val(), 
+            SampleDelivery:  $('input[name="SampleDelivery"]:checked').val(),  
+            SampleDeliveryTotal: $("#SampleDeliveryTotal").val().replace(/[^0-9]/g, ''), 
             TemplateId: $($(".template-footer").find("select")[0]).val(), 
             SampleSubTotal: $("#SampleSubTotal").val().replace(/[^0-9]/g, ''), 
             SampleDiscItemTotal: $("#SampleDiscItemTotal").val().replace(/[^0-9]/g, ''), 

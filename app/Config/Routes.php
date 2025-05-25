@@ -235,6 +235,7 @@ $routes->get('/print/project/po/(:num)', 'PrintController::project_po/$1');
 $routes->get('/print/project/poA5/(:num)', 'PrintController::project_po_a5/$1');  
 
 $routes->get('/print/project/proformaA5/(:num)', 'PrintController::project_proforma_a5/$1'); 
+$routes->get('/print/project/payment/(:num)', 'PrintController::project_payment/$1'); 
 $routes->get('/print/project/paymentA5/(:num)', 'PrintController::project_payment_a5/$1'); 
 $routes->get('/print/project/paymentA4/(:num)', 'PrintController::project_payment_a4/$1'); 
 

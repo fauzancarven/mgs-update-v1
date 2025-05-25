@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'PRO_INV_'.$project->CustomerName.'_'.$payment->PaymentDate ?></title>
+    <title><?= 'PRO_INV_'.$customer['CustomerName'].'_'.$payment->PaymentDate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
+	<link rel="shortcut icon" href="assets/image/mgs-erp/logo.ico">
 </head>
 <style>  
     body {
@@ -290,9 +291,9 @@
                 <tr>
                     <td style="width: 75%;"> 
                         <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $project->CustomerName.($project->CustomerCompany == "" ? : " (".$project->CustomerCompany.")") ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
-                        <span class="text-bold"><?= $project->CustomerTelp1.($project->CustomerTelp2 == "" ? : " / ".$project->CustomerTelp2) ?></span><br>
-                        <span class="text-bold"><?= $project->InvAddress ?></span><br> 
+                        <span class="text-bold"><?= $customer["CustomerName"] ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
+                        <span class="text-bold"><?= $customer["CustomerTelp"] ?></span><br>
+                        <span class="text-bold"><?= $customer["CustomerAddress"] ?></span><br> 
                     </td> 
                     <td style="align-items: start;justify-content: center"> 
                         <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $payment->PaymentCode ?></div><br>

@@ -199,7 +199,7 @@ class PrintController extends BaseController
 
                 
 	}
-	public function project_payment_a4($id)
+	public function project_payment($id)
 	{
                 $request = Services::request();
                 $postData = $request->getGet();
@@ -271,15 +271,21 @@ class PrintController extends BaseController
                 
               
                 $data["postdata"] = $postData; 
-                $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
                 if(isset($postData["custom"])){ 
                         $data["header_footer"]["detail"] = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0895-3529-92663<br>MAHIERA GLOBAL SOLUTION';
                 }
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
-
-                $html = view('admin/project/payment/print_payment_a4',$data); 
+ 
                 //return $html;
+                if($data["postdata"]["kertas"] == "A5"){ 
+                        $dompdf->set_paper(array(0,0,420, 620), 'landscape'); 
+                        $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);  
+                        $html = view('admin/project/payment/print_payment_a5',$data); 
+                }else{ 
+                        $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);     
+                        $html = view('admin/project/payment/print_payment_a4',$data); 
+                }
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'PAY_'.$data["ref"]["CustomerName"].'_'.$data["ref"]["Date"].'.pdf', [ 'Attachment' => false ]);
@@ -297,6 +303,16 @@ class PrintController extends BaseController
                 $models = new ProjectModel();   
                 $modelheader = new HeaderModel();  
                 $data["payment"] = $models->getdataProforma($id); 
+                if($data["payment"]->PaymentRefType=="Invoice"){ 
+                        $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->PaymentRef); 
+                        $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef); 
+                        $data["detail"] = $models->getdataDetailInvoice($data["payment"]->PaymentRef); 
+                        $data["customer"] = array(
+                                "CustomerName" => $data["project"]->InvCustName,
+                                "CustomerTelp" => $data["project"]->InvCustTelp,
+                                "CustomerAddress" => $data["project"]->InvAddress,
+                        ) ;
+                }  
                 $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef); 
                 $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef); 
                 $data["detail"] = $models->getdataDetailInvoice($data["payment"]->PaymentRef);  
@@ -309,9 +325,10 @@ class PrintController extends BaseController
 
                 $html = view('admin/project/payment/print_proforma_a5',$data); 
                 $dompdf->loadHtml($html);
-                $dompdf->render();
+                $dompdf->render(); 
                 $dompdf->stream( 'PRO_INV_'.$data["project"]->CustomerName.'_'.$data["payment"]->PaymentDate.'.pdf', [ 'Attachment' => false ]);
 	}
+
         public function project_delivery_a5($id)
 	{
                 $options = new Options(); 

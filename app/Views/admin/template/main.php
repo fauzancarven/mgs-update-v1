@@ -1638,6 +1638,15 @@
     .pointer{
         cursor: pointer;
     }
+    .pointer i { 
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+    }
+    .pointer:hover i {
+        background: #e9e9e987;
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+    }
 </style>
  
 

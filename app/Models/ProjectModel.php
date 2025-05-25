@@ -2221,6 +2221,9 @@ class ProjectModel extends Model
                     <span class="text-detail-2">Disc Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->SampleDiscTotal, 0, ',', '.').'</span>   
                     <div class="vr"></div>
+                    <span class="text-detail-2">pengiriman:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->SampleDeliveryTotal, 0, ',', '.').'</span>   
+                    <div class="vr"></div>
                     <span class="text-detail-2">Grand Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->SampleGrandTotal, 0, ',', '.').'</span> 
                 </div>
@@ -5223,6 +5226,8 @@ class ProjectModel extends Model
             "SampleCustName"=>$header["SampleCustName"],
             "SampleCustTelp"=>$header["SampleCustTelp"],
             "SampleAddress"=>$header["SampleAddress"],
+            "SampleDelivery"=>$header["SampleDelivery"],
+            "SampleDeliveryTotal"=>$header["SampleDeliveryTotal"],
             "SampleAdmin"=>$header["SampleAdmin"], 
             "TemplateId"=>$header["TemplateId"],
             "SampleSubTotal"=>$header["SampleSubTotal"],
@@ -5283,6 +5288,8 @@ class ProjectModel extends Model
         $builder->set('SampleCustName', $header["SampleCustName"]);
         $builder->set('SampleCustTelp', $header["SampleCustTelp"]);
         $builder->set('SampleAddress', $header["SampleAddress"]); 
+        $builder->set('SampleDeliveryTotal', $header["SampleDeliveryTotal"]); 
+        $builder->set('SampleDelivery', $header["SampleDelivery"]);  
         $builder->set('TemplateId', $header["TemplateId"]); 
         $builder->set('SampleSubTotal', $header["SampleSubTotal"]); 
         $builder->set('SampleDiscItemTotal', $header["SampleDiscItemTotal"]); 
@@ -5885,7 +5892,8 @@ class ProjectModel extends Model
         return $builder->get()->getResult();  
     }
     public function getdataPayment($id){
-        $builder = $this->db->table("payment"); 
+        $builder = $this->db->table("payment");  
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('PaymentId',$id); 
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getRow();  

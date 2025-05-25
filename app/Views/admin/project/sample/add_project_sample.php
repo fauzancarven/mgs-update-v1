@@ -76,6 +76,19 @@
                                 <div class="col-sm-10">
                                     <select class="form-select form-select-sm" id="SampleAdmin" name="SampleAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
                                 </div>
+                            </div>   
+                            <div class="row mb-1 align-items-center">
+                                <label for="SampleDelivery" class="col-sm-2 col-form-label">Pengiriman</label>
+                                <div class="col-sm-10">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="SampleDelivery" id="SampleDelivery1" value="0">
+                                    <label class="text-detail" for="SampleDelivery1">Tidak</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="SampleDelivery" id="SampleDelivery2" value="1" checked>
+                                    <label class="text-detail" for="SampleDelivery2">Ya</label>
+                                </div>
+                                </div>
                             </div>  
                         </div> 
                     </div>   
@@ -123,188 +136,7 @@
                             <div class="d-flex justify-content-center flex-column align-items-center d-none"> 
                                 <img src="https://localhost/mahiera/assets/images/empty.png" alt="" style="width:150px;height:150px;">
                                 <span class="text-head-1">Item belum ditambahkan</span>
-                            </div> 
-                            <div class="row align-items-center">
-                                <div class="col-12 col-md-12 my-1 group text-start"> 
-                                    <span class="text-head-3">A. Barang</span>
-                                </div>   
-                                <div class="col-12 col-md-4 my-1 varian">   
-                                    <div class="d-flex">
-                                        <span class="no-urut text-head-3">1.</span> 
-                                        <div class="d-flex flex-column text-start">
-                                            <span class="text-head-3">Bata Expose MRC KD</span>
-                                            <span class="text-detail-2 text-truncate">RST00001 - Roster</span> 
-                                            <div class="d-flex gap-1">
-                                                <span class="badge badge-0 rounded">vendor : MGS</span>
-                                                <span class="badge badge-1 rounded">ukuran : 12 x 12 x 0.5 cm</span>
-                                            </div>
-                                        </div> 
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" value="" data-id="">
-                                                <span class="input-group-text font-std">Pcs</span>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="" value="">
-                                            </div>    
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
-                                            <div class="input-group">  
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="" value="">
-                                            </div>   
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="" value="">
-                                            </div>     
-                                        </div> 
-                                    </div>    
-                                </div> 
-                                <div class="col-12 col-md-4 my-1 varian">   
-                                    <div class="d-flex"> 
-                                        <span class="no-urut text-head-3">2.</span> 
-                                        <div class="d-flex flex-column text-start">
-                                            <span class="text-head-3">Bata Expose MRC KD</span>
-                                            <span class="text-detail-2 text-truncate">RST00001 - Roster</span> 
-                                            <div class="d-flex gap-1">
-                                                <span class="badge badge-1 rounded">vendor : MGS</span>
-                                                <span class="badge badge-2 rounded">ukuran : 12 x 12 x 0.5 cm</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" value="" data-id="">
-                                                <span class="input-group-text font-std">Pcs</span>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="" value="">
-                                            </div>    
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
-                                            <div class="input-group">  
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="" value="">
-                                            </div>   
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="" value="">
-                                            </div>     
-                                        </div> 
-                                    </div>    
-                                </div> 
-                                <div class="col-12 col-md-12 my-1 group text-start"> 
-                                    <span class="text-head-3">B. Jasa</span>
-                                </div>  
-                                <div class="col-12 col-md-4 my-1 varian">    
-                                    <div class="d-flex "> 
-                                        <span class="no-urut text-head-3">1.</span>
-                                        <div class="flex-grow-1 text-start">
-                                            <span class="text-head-3">Instalasi Kabel CCTV Kabel RG 59 Belden (Coax+Power) incl. Conduit dan connector BNC</span> 
-                                        </div>  
-                                    </div> 
-                                </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" value="" data-id="">
-                                                <span class="input-group-text font-std">Pcs</span>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="" value="">
-                                            </div>    
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
-                                            <div class="input-group">  
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="" value="">
-                                            </div>   
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="" value="">
-                                            </div>     
-                                        </div> 
-                                    </div>    
-                                </div> 
-                                <div class="col-12 col-md-12 my-1 group text-start"> 
-                                    <span class="text-head-3">C. Lain - Lain</span>
-                                </div>  
-                                <div class="col-12 col-md-4 my-1 varian">    
-                                    <div class="d-flex "> 
-                                        <span class="no-urut text-head-3">1.</span>
-                                        <div class="flex-grow-1 text-start">
-                                            <span class="text-head-3">Perapihan Bekas Jalur Pipa</span> 
-                                        </div>  
-                                    </div> 
-                                </div>
-                                <div class="col-12 col-md-8 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-2 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Unit</span>
-                                            <div class="input-group"> 
-                                                <input type="text" class="form-control form-control-sm input-form berat" value="" data-id="">
-                                                <span class="input-group-text font-std">Pcs</span>
-                                            </div>  
-                                        </div>  
-                                        <div class="col-12 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Harga</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block pcsM2" data-id="" value="">
-                                            </div>    
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Diskon</span>
-                                            <div class="input-group">  
-                                                <span class="input-group-text font-std">Rp.</span> 
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" data-id="" value="">
-                                            </div>   
-                                        </div> 
-                                        <div class="col-6 col-md-3 px-1">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Total</span>
-                                            <div class="input-group"> 
-                                                <span class="input-group-text font-std">Rp.</span>
-                                                <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" data-id="" value="">
-                                            </div>     
-                                        </div> 
-                                    </div>    
-                                </div> 
-                            </div> 
+                            </div>  
                         </div> 
                         <div class="d-flex justify-content-center flex-column align-items-center"> 
                             <div class="d-flex px-3 gap-1">
@@ -378,6 +210,17 @@
                         </div> 
                         <div class="row align-items-center py-1">
                             <div class="col-4">
+                                <span class="label-head-dialog">Pengiriman</span>   
+                            </div>
+                            <div class="col-8"> 
+                                <div class="input-group"> 
+                                    <span class="input-group-text font-std">Rp.</span>
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SampleDeliveryTotal" value="0">
+                                </div>     
+                            </div>
+                        </div> 
+                        <div class="row align-items-center py-1">
+                            <div class="col-4">
                                 <span class="label-head-dialog">Grand Total</span>   
                             </div>
                             <div class="col-8"> 
@@ -400,6 +243,16 @@
 
 <div id="modal-optional"></div>
 <script>     
+
+    $('input[name="SampleDelivery"]').change(function() {
+        if($(this).val() == 0){
+            $('#SampleDeliveryTotal').prop("disabled",true)
+            $('#SampleDeliveryTotal').val("0")
+        }else{
+
+            $('#SampleDeliveryTotal').prop("disabled",false)
+        }
+    });
     $('#SampleDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
@@ -410,7 +263,7 @@
     });
 
     $("#SampleRef").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-add-sample .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
@@ -747,10 +600,11 @@
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.price * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#SampleDiscTotal").val().replace(/[^0-9-]/g, ''); 
-
+        //var grandtotal =  total - discitem - $("#SampleDiscTotal").val().replace(/[^0-9-]/g, ''); 
+        var grandtotal =  total - discitem - $("#SampleDiscTotal").val().replace(/[^0-9-]/g, '') + parseInt($("#SampleDeliveryTotal").val().replace(/[^0-9-]/g, '')); 
+        console.log(grandtotal)
         $("#SampleSubTotal").val(total.toLocaleString('en-US')) 
-        $("#SampleDiscItemTotal").val(discitem.toLocaleString('en-US')) 
+        $("#SampleDiscItemTotal").val(discitem.toLocaleString('en-US'))  
         $("#SampleGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     }
     load_produk = function(){
@@ -1025,12 +879,21 @@
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
+    var Sample_delivery = new Cleave(`#SampleDeliveryTotal`, {
+            numeral: true,
+            delimeter: ",",
+            numeralDecimalScale:0,
+            numeralThousandGroupStyle:"thousand"
+    }); 
     $("#SampleDiscTotal").on("keyup",function(){ 
         grand_total_harga();
         if(parseInt($("#SampleGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
             $("#SampleDiscTotal").val(0)
             grand_total_harga();
         }
+    });
+    $("#SampleDeliveryTotal").on("keyup",function(){ 
+        grand_total_harga(); 
     });
     var mode_edit = false;
     var quill = [];  
@@ -1312,7 +1175,7 @@
             }) ;
             return; 
         }
-
+       
         var header = {  
             SampleDate: $("#SampleDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
             ProjectId: <?= $project->ProjectId ?>, 
@@ -1322,6 +1185,8 @@
             SampleCustName: $("#SampleCustName").val(), 
             SampleCustTelp: $("#SampleCustTelp").val(), 
             SampleAddress: $("#SampleAddress").val(), 
+            SampleDelivery:  $('input[name="SampleDelivery"]:checked').val(),  
+            SampleDeliveryTotal: $("#SampleDeliveryTotal").val().replace(/[^0-9]/g, ''),  
             TemplateId: $($(".template-footer").find("select")[0]).val(),  
             SampleSubTotal: $("#SampleSubTotal").val().replace(/[^0-9]/g, ''), 
             SampleDiscItemTotal: $("#SampleDiscItemTotal").val().replace(/[^0-9]/g, ''), 
