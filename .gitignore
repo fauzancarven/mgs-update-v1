@@ -4,6 +4,7 @@
 vendor/*
 writable/*
 tests/* 
+system/* 
 assets/images/produk/*
 assets/images/profile/*
 assets/images/payment/*
