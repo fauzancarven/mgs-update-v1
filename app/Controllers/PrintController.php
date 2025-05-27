@@ -49,8 +49,8 @@ class PrintController extends BaseController
                 $models = new ProjectModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
-                $data["sph"] = $models->getdataSPH($id); 
-                $arr_detail = $models->getdataDetailSPH($id);
+                $data["sph"] = $models->get_data_sph($id); 
+                $arr_detail = $models->get_data_sph_detail($id);
                 $detail = array();
                 foreach($arr_detail as $row){
                         $detail[] = array(

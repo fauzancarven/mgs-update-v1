@@ -266,7 +266,7 @@
         dropdownParent: $('#modal-add-sample .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
-            url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
+            url: "<?= base_url()?>select2/get-data-ref-sample/<?= $project->ProjectId?>",
             dataType: 'json',
             type:"POST",
             delay: 250,
@@ -300,13 +300,14 @@
             }
             return $(data.html);
         },
-        templateSelection: function templateSelect(data) {
+        templateSelection: function templateSelect(data) { 
+            $(data.element).attr('data-type', data.type);
             if ($(data.html).length === 0) {
                 return data.text;
             }
             return data['text'];
         }
-    });
+    }) 
     var header_ref = '<?= is_null($ref_header) ? false : true ?>'; 
     if(header_ref){ 
         var option = new Option(
@@ -319,7 +320,6 @@
         $('#SampleRef').append(option).trigger('change.select2');
         $('#SampleRef').attr("disabled",true);
     }
-
     $("#SampleAdmin").select2({
         dropdownParent: $('#modal-add-sample .modal-content'),
         placeholder: "Pilih Admin",

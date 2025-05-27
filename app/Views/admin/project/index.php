@@ -208,13 +208,13 @@
             <div class="row g-2 p-2 date-select" style="display: none;">
                 <div class="col-6">
                     <div class="form-floating">
-                        <input type="date" class="form-control bg-white" id="floatingInputGrid" placeholder="3 Maret 2019" value="3 Maret 2019">
+                        <input type="date" class="form-control bg-white" id="floatingInputGrid" placeholder="3 Maret 2019" value="2025-03-03">
                         <label for="floatingInputGrid">Mulai Dari</label>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-floating">
-                        <input type="date" class="form-control bg-white" id="floatingInputGrid" placeholder="3 Maret 2019" value="3 Maret 2019">
+                        <input type="date" class="form-control bg-white" id="floatingInputGrid" placeholder="3 Maret 2019" value="2025-03-03">
                         <label for="floatingInputGrid">Sampai</label>
                     </div>
                 </div>
@@ -1320,8 +1320,8 @@
 
     var isProcessingSampleEdit = [];
     edit_project_sample  = function(ref,id,el){ 
-          // INSERT LOADER BUTTON
-          if (isProcessingSampleEdit[id]) {
+        // INSERT LOADER BUTTON
+        if (isProcessingSampleEdit[id]) {
             console.log("project sph cancel load");
             return;
         }  
@@ -1353,8 +1353,7 @@
         });
     }; 
 
-    var isProcessingSampleDelete = [];
-    
+    var isProcessingSampleDelete = []; 
     delete_project_sample = function(ref,id,el){ 
          // INSERT LOADER BUTTON
         if (isProcessingSampleDelete[id]) {
@@ -1394,7 +1393,54 @@
         });
     };
 
+    var isProcessingSampleUpdate = [];
+    sample_project_update_delivery =function(ref,id,el,status){
+         // INSERT LOADER BUTTON
+         if (isProcessingSampleUpdate[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingSampleUpdate[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
+        $.ajax({  
+            method: "POST",
+            data:{
+                status : status,
+            },
+            url: "<?= base_url() ?>action/update-data-sample-delivery/" + id, 
+            success: function(data) {  
+                if(status == 1){ 
+                    Swal.fire({
+                        title: "Active!",
+                        text: "Mode pengiriman berhasil diaktifkan",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    });  
+                }else{
+                    Swal.fire({
+                        title: "Deactive!",
+                        text: "Mode pengiriman berhasil dinonaktifkan",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    });  
+                }
+                loader_data_project(ref,"sample"); 
+                isProcessingSampleUpdate[id] = false;
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSampleUpdate[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
 
     // ***************** SPH / PENAWARAN PROJECT ***************** 
     var isProcessingSph = [];

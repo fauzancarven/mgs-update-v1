@@ -24,7 +24,7 @@ class ActionController extends BaseController
     }
     public function test(){
         $models = new ProjectModel(); 
-        echo $models->update_data_invoice_status(49);
+        echo $models->update_data_sample_status(4);
     }
     public function store_add(){   
         $request = Services::request();
@@ -293,13 +293,20 @@ class ActionController extends BaseController
             echo $models->delete_data_sample($id);  
         }
     }
-
+    public function sample_update_delivery($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->update_data_sample_delivery($postData,$id);  
+        }
+    }
     public function penawaran_add(){
         $request = Services::request();
         $models = new ProjectModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
-            $models->insert_data_penawaran($postData); 
+            $models->insert_data_sph($postData); 
             echo json_encode(array("status"=>true));
         }
     }
@@ -308,7 +315,7 @@ class ActionController extends BaseController
         $models = new ProjectModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
-            $models->update_data_penawaran($postData,$id); 
+            $models->update_data_sph($postData,$id); 
             echo json_encode(array("status"=>true));
         }
     }
@@ -317,7 +324,7 @@ class ActionController extends BaseController
         $models = new ProjectModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
-            echo $models->delete_data_penawaran($id);  
+            echo $models->delete_data_sph($id);  
         }
     }
     public function invoice_add(){

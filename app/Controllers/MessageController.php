@@ -175,8 +175,8 @@ class MessageController extends BaseController
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
  
-        $data["project"] = $models->getdataSurvey($id);
-        $data["staff"] = $models->getdataSurveyStaff($data["project"]->SurveyStaff);
+        $data["project"] = $models->get_data_survey($id);
+        $data["staff"] = $models->get_data_survey_staff($data["project"]->SurveyStaff);
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $data["project"]->CustomerId], 1)->getRow();
         $data["store"] = $modelsstore->getWhere(['StoreId' => $data["project"]->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
@@ -188,7 +188,7 @@ class MessageController extends BaseController
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
  
-        $data["project"] = $models->getdataSurvey($id);
+        $data["project"] = $models->get_data_survey($id);
         return $this->response->setBody(view('admin/project/survey/add_project_survey_finish.php',$data)); 
     }
     public function project_survey_finish_edit($id)
@@ -197,7 +197,7 @@ class MessageController extends BaseController
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
  
-        $data["project"] = $models->getdataSurveyFinish($id);
+        $data["project"] = $models->get_data_survey_finish($id);
         return $this->response->setBody(view('admin/project/survey/edit_project_survey_finish.php',$data)); 
     }
 
@@ -227,7 +227,7 @@ class MessageController extends BaseController
         if(isset($postData['RefId']) && $postData['RefId'] > 0 ){   
             $data["ref_type"] = $postData['Type'];
             if($postData['Type'] == "Survey") {  
-                $ref = $models->getdataSurvey($postData['RefId']); 
+                $ref = $models->get_data_survey($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
                 $data["ref_detail"] = [];  
                 $data["customer"] = array(
@@ -247,8 +247,8 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
 
-        $project = $models->getdataSample($id); 
-        $arr_detail = $models->getdataDetailSample($id);
+        $project = $models->get_data_sample($id); 
+        $arr_detail = $models->get_data_sample_detail($id);
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(
@@ -298,9 +298,9 @@ class MessageController extends BaseController
         if(isset($postData['RefId']) && $postData['RefId'] > 0 ){   
             $data["ref_type"] = $postData['Type']; 
             if($postData['Type'] == "Sample") {  
-                $ref = $models->getdataSample($postData['RefId']); 
+                $ref = $models->get_data_sample($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SampleCode,"id"=>$ref->SampleId,"type"=>"Sample");
-                $arr_detail = $models->getdataDetailSample($postData['RefId']);
+                $arr_detail = $models->get_data_sample_detail($postData['RefId']);
                 $detail = array();
                 foreach($arr_detail as $row){
                     $detail[] = array(
@@ -328,7 +328,7 @@ class MessageController extends BaseController
             }
             
             if($postData['Type'] == "Survey") {  
-                $ref = $models->getdataSurvey($postData['RefId']); 
+                $ref = $models->get_data_survey($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
                 $data["ref_detail"] = array(array(
                     "id" => 0, 
@@ -363,8 +363,8 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
 
-        $project = $models->getdataSPH($id); 
-        $arr_detail = $models->getdataDetailSPH($id); 
+        $project = $models->get_data_sph($id); 
+        $arr_detail = $models->get_data_sph_detail($id); 
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(
@@ -386,7 +386,7 @@ class MessageController extends BaseController
         };
         $data["project"] = $project; 
         $data["detail"] =  $detail;
-        $data["sample"] = $models->getdataSample($project->SampleId); 
+        $data["sample"] = $models->get_data_sample($project->SampleId); 
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/sph/edit_project_sph.php',$data)); 
@@ -510,9 +510,9 @@ class MessageController extends BaseController
         if(isset($postData['RefId']) && $postData['RefId'] > 0 ){  
             $data["ref_type"] = $postData['Type']; 
             if($postData['Type'] == "penawaran") {   
-                $ref = $models->getdataSPH($postData['RefId']); 
+                $ref = $models->get_data_sph($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SphCode,"id"=>$ref->SphId,"type"=>"Penawaran");  
-                $arr_detail = $models->getdataDetailSPH($postData['RefId']);
+                $arr_detail = $models->get_data_sph_detail($postData['RefId']);
                 $detail = array();
                 foreach($arr_detail as $row){
                     $detail[] = array(
@@ -540,9 +540,9 @@ class MessageController extends BaseController
                 ) ;
             } 
             if($postData['Type'] == "Sample") {  
-                $ref = $models->getdataSample($postData['RefId']); 
+                $ref = $models->get_data_sample($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SampleCode,"id"=>$ref->SampleId,"type"=>"Sample");
-                $arr_detail = $models->getdataDetailSample($postData['RefId']);
+                $arr_detail = $models->get_data_sample_detail($postData['RefId']);
                 $detail = array();
                 foreach($arr_detail as $row){
                     $detail[] = array(
@@ -570,7 +570,7 @@ class MessageController extends BaseController
                 ) ;
             }  
             if($postData['Type'] == "Survey") {  
-                $ref = $models->getdataSurvey($postData['RefId']); 
+                $ref = $models->get_data_survey($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
                 $data["ref_detail"] = array(array(
                     "id" => 0, 
@@ -631,13 +631,13 @@ class MessageController extends BaseController
 
         $data["project"] = $project; 
         if($project->InvRefType  == "Sample"){
-            $sample = $models->getdataSample($project->InvRef); 
+            $sample = $models->get_data_sample($project->InvRef); 
             $data["ref"] = $sample->SampleCode;
         }else if($project->InvRefType ==  "Penawaran"){
-            $sph = $models->getdataSPH($project->InvRef); 
+            $sph = $models->get_data_sph($project->InvRef); 
             $data["ref"] = $sph->SphCode; 
         }else if($project->InvRefType ==  "Survey"){
-            $sph = $models->getdataSurvey($project->InvRef); 
+            $sph = $models->get_data_survey($project->InvRef); 
             $data["ref"] = $sph->SurveyCode; 
         }else{ 
             $data["ref"] = "-"; 
@@ -657,7 +657,7 @@ class MessageController extends BaseController
         $request = Services::request();
         $postData = $request->getPost(); 
         if($postData['type'] == "sample"){
-            $datasample = $models->getdataSample($id); 
+            $datasample = $models->get_data_sample($id); 
             $project = array(
                 "ProjectId"=>$datasample->ProjectId,
                 "PaymentRef"=>$datasample->SampleId, 
@@ -707,7 +707,7 @@ class MessageController extends BaseController
         $postData = $request->getPost(); 
         $data["payment"] = $models->getdataPayment($id);   
         if($postData['type'] == "sample"){
-            $datasample = $models->getdataSample($data["payment"]->PaymentRef); 
+            $datasample = $models->get_data_sample($data["payment"]->PaymentRef); 
             $project = array(
                 "ProjectId"=>$datasample->ProjectId,
                 "PaymentRef"=>$datasample->SampleId, 
@@ -782,7 +782,7 @@ class MessageController extends BaseController
         $postData = $request->getPost(); 
         $detail = array();
         if($postData['type'] == "sample"){ 
-            $datasample = $models->getdataSample($id);  
+            $datasample = $models->get_data_sample($id);  
             $project = array(
                 "code"=>$datasample->SampleCode,
                 "project_id"=>$datasample->ProjectId,
@@ -792,7 +792,7 @@ class MessageController extends BaseController
                 "CustomerTelp"=>$datasample->SampleCustTelp,
                 "CustomerAddress"=>$datasample->SampleAddress
             );
-            $arr_detail = $models->getdataDetailSample($id);
+            $arr_detail = $models->get_data_sample_detail($id);
             foreach($arr_detail as $row){
                 $detail[] = array( 
                             "id" => $row->ProdukId, 

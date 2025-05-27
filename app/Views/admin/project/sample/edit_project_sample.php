@@ -80,11 +80,11 @@
                                 <label for="SampleDelivery" class="col-sm-2 col-form-label">Pengiriman</label>
                                 <div class="col-sm-10">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="SampleDelivery" id="SampleDelivery1" value="0">
+                                    <input class="form-check-input" type="radio" name="SampleDelivery" id="SampleDelivery1" value="0" <?= $project->SampleDelivery == 0 ? "checked" : "" ?>>
                                     <label class="text-detail" for="SampleDelivery1">Tidak</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="SampleDelivery" id="SampleDelivery2" value="1" checked>
+                                    <input class="form-check-input" type="radio" name="SampleDelivery" id="SampleDelivery2" value="1" <?= $project->SampleDelivery == 1 ? "checked" : "" ?>>
                                     <label class="text-detail" for="SampleDelivery2">Ya</label>
                                 </div>
                                 </div>
@@ -442,9 +442,9 @@
     
     $("#SampleRef").select2({
         dropdownParent: $('#modal-edit-sample .modal-content'),
-        placeholder: "Pilih Toko",
+        placeholder: "Pilih referensi",
         ajax: {
-            url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
+            url: "<?= base_url()?>select2/get-data-ref-sample/<?= $project->ProjectId?>",
             dataType: 'json',
             type:"POST",
             delay: 250,
@@ -479,13 +479,22 @@
             return $(data.html);
         },
         templateSelection: function templateSelect(data) {
+            $(data.element).attr('data-type', data.type);
             if ($(data.html).length === 0) {
                 return data.text;
             }
             return data['text'];
         }
     });
-    
+    var option = new Option(
+        '<?=  $project->SampleRefCode ?>', 
+        '<?= $project->SampleRef ?>', 
+        false, 
+        true
+    );
+    $(option).attr('data-type', '<?= $project->SampleRefType ?>'); 
+    $('#SampleRef').append(option).trigger('change.select2'); 
+
     $("#SampleAdmin").select2({
         dropdownParent: $('#modal-edit-sample .modal-content'),
         placeholder: "Pilih Admin",
@@ -1349,6 +1358,8 @@
         var header = {  
             SampleDate: $("#SampleDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
             SampleAdmin: $("#SampleAdmin").val(),  
+            SampleRef: $("#SampleRef").val(), 
+            SampleRefType: $('#SampleRef option:selected').data('type'),
             SampleAddress: $("#SampleAddress").val(), 
             SampleCustName: $("#SampleCustName").val(), 
             SampleCustTelp: $("#SampleCustTelp").val(), 

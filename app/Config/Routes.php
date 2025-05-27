@@ -14,6 +14,7 @@ $routes->get('/admin/customer', 'AdminController::customer', ['filter' => 'login
 $routes->get('/admin/produk', 'AdminController::produk', ['filter' => 'login']);
 $routes->get('/admin/vendor', 'AdminController::vendor', ['filter' => 'login']);
 $routes->get('/admin/accounting', 'AdminController::accounting', ['filter' => 'login']);
+
 $routes->get('/admin/project/survey', 'AdminController::survey', ['filter' => 'login']);
 $routes->get('/admin/project/sample', 'AdminController::sample', ['filter' => 'login']);
 $routes->get('/admin/project/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
@@ -77,6 +78,7 @@ $routes->post('/action/edit-data-survey-finish/(:num)', 'ActionController::surve
 $routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-sample/(:num)', 'ActionController::sample_delete/$1', ['filter' => 'login']);
+$routes->post('/action/update-data-sample-delivery/(:num)', 'ActionController::sample_update_delivery/$1', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 
@@ -159,6 +161,7 @@ $routes->post('/select2/get-data-users', 'SelectController::users', ['filter' =>
 $routes->post('/select2/get-data-template-footer/(:any)', 'SelectController::template_footer/$1', ['filter' => 'login']); 
 $routes->post('/select2/get-data-ref-vendor/(:num)', 'SelectController::ref_project_vendor/$1', ['filter' => 'login']);
 $routes->post('/select2/get-data-ref-invoice/(:num)', 'SelectController::ref_project_invoice/$1', ['filter' => 'login']);
+$routes->post('/select2/get-data-ref-sample/(:num)', 'SelectController::ref_project_sample/$1', ['filter' => 'login']);
 
 /**
  *  MODAL MESSAGE

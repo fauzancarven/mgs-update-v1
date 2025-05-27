@@ -637,7 +637,7 @@ class SelectController extends BaseController
                         );
                     } 
                 }else{      
-                    $detail_item =  $models->getdataDetailSPH($row['refid']); 
+                    $detail_item =  $models->get_data_sph_detail($row['refid']); 
                     $vendor_array = array();
                     $detail = array();
                     foreach($detail_item as $row_item){ 
@@ -726,7 +726,7 @@ class SelectController extends BaseController
                    <span style="font-size:0.6rem">' . $customertelp . '</span>
                    <span style="font-size:0.6rem">' .  $row['CustomerAddress'] . '</span> 
                 </div>';
-                $detail_item =  $models->getdataDetailSPH($row['SphId']); 
+                $detail_item =  $models->get_data_sph_detail($row['SphId']); 
                 $vendor_array = array();
                 $detail = array();
                 foreach($detail_item as $row_item){ 
@@ -766,6 +766,135 @@ class SelectController extends BaseController
                     "penawaran" => $row,  
                 );
             }
+            $response['data'] = $data; 
+            return $this->response->setJSON($response); 
+        }
+    }
+    public function ref_project_sample($id){
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array();  
+
+            $modelsitem = new ProdukModel();  
+            if(!isset($postData['searchTerm'])){
+                $models = new ProjectModel();
+                $Project = $models->get_data_ref_sample($id);
+
+            }else{
+                $searchTerm = $postData['searchTerm']; 
+                $models = new ProjectModel();
+                $Project = $models->get_data_ref_sample($id,$searchTerm);
+            }  
+            $data = array();
+            $data[] = array(
+                "id" => 0,
+                "text" => "-", 
+                "html" => '<span style="font-size:0.75rem" class="fw-bold">Tidak ada yang dipilih</span>',  
+                "detail_item" => [],      
+                "type" => "",  
+            );
+
+            foreach($Project as $row){
+                $htmlItem = '
+                            <div class="d-flex flex-column" >
+                                <span style="font-size:0.75rem" class="fw-bold">' . $row['type'] . ' - ' . $row['code'] . '</span>
+                                <span style="font-size:0.6rem">' . $row['CustomerName'] . '</span>
+                                <span style="font-size:0.6rem">' . $row['CustomerTelp'] . '</span>
+                                <span style="font-size:0.6rem">' .  $row['CustomerAddress'] . '</span> 
+                            </div>';
+                $detail = array();
+                // if($row['type'] == "INV"){
+                //     $detail_item =   $models->getdataDetailInvoice($row['refid']); 
+                //     $vendor_array = array();
+                //     $detail = array();
+                //     foreach($detail_item as $row_item){ 
+                //         $varian =  json_decode($row_item->InvDetailVarian, true); 
+                //         if (!empty($varian)) {
+                //             foreach ($varian as $v) { 
+                //                 if ($v['varian'] == 'vendor'){
+                //                     $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                //                     if ( !in_array($data_arr, $vendor_array)) {
+                //                         $vendor_array[] = $data_arr;
+                //                     }
+                //                 }
+                //             }
+                //         }
+                        
+                //         $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->InvDetailVarian,true),$row_item->ProdukId); 
+                //         if($data_total){ 
+                //             $harga = $data_total["ProdukDetailHargaBeli"];
+                //         }else{
+                //             $harga = 0;
+                //         }
+                //         $detail[] = array(
+                //             "id" => $row_item->ProdukId, 
+                //             "produkid" => $row_item->ProdukId, 
+                //             "satuan_id"=> ($row_item->InvDetailSatuanId == 0 ? "" : $row_item->InvDetailSatuanId),
+                //             "satuan_text"=>$row_item->InvDetailSatuanText, 
+                //             "varian"=> JSON_DECODE($row_item->InvDetailVarian,true), 
+                //             "text"=> $row_item->InvDetailText,
+                //             "group"=> $row_item->InvDetailGroup,
+                //             "type"=> $row_item->InvDetailType,
+                //             "ref"=>  $row_item->InvDetailQty,
+                //             "qty"=>  $row_item->InvDetailQty,
+                //             "hargajual"=>  $row_item->InvDetailPrice,
+                //             "disc"=>  $row_item->InvDetailDisc,
+                //             "harga"=>  $harga, 
+                //             "data"=>  $data_total, 
+                //             "total"=>  $row_item->InvDetailQty * $harga,
+                //         );
+                //     } 
+                // }else{      
+                //     $detail_item =  $models->get_data_sph_detail($row['refid']); 
+                //     $vendor_array = array();
+                //     $detail = array();
+                //     foreach($detail_item as $row_item){ 
+                //         $varian =  json_decode($row_item->SphDetailVarian, true); 
+                //         if (!empty($varian)) {
+                //             foreach ($varian as $v) { 
+                //                 if ($v['varian'] == 'vendor'){
+                //                     $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                //                     if ( !in_array($data_arr, $vendor_array)) {
+                //                         $vendor_array[] = $data_arr;
+                //                     }
+                //                 }
+                //             }
+                //         }
+                        
+                //         $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->SphDetailVarian,true),$row_item->ProdukId); 
+                //         if($data_total){ 
+                //             $harga = $data_total["ProdukDetailHargaBeli"];
+                //         }else{
+                //             $harga = 0;
+                //         }
+                //         $detail[] = array(
+                //             "id" => $row_item->ProdukId, 
+                //             "produkid" => $row_item->ProdukId, 
+                //             "satuan_id"=> ($row_item->SphDetailSatuanId == 0 ? "" : $row_item->SphDetailSatuanId),
+                //             "satuan_text"=>$row_item->SphDetailSatuanText, 
+                //             "varian"=> JSON_DECODE($row_item->SphDetailVarian,true), 
+                //             "text"=> $row_item->SphDetailText,
+                //             "group"=> $row_item->SphDetailGroup,
+                //             "type"=> $row_item->SphDetailType,
+                //             "ref"=>  $row_item->SphDetailQty,
+                //             "qty"=>  $row_item->SphDetailQty,
+                //             "hargajual"=>  $row_item->SphDetailPrice,
+                //             "disc"=>  $row_item->SphDetailDisc,
+                //             "harga"=>  $harga,
+                //             "data"=>  $data_total, 
+                //             "total"=>  $row_item->SphDetailQty * $harga,
+                //         );
+                //     } 
+                // }
+                $data[] = array(
+                    "id" => $row['refid'],
+                    "text" => $row['code'], 
+                    "html" => $htmlItem,    
+                    "type" => $row['type'],       
+                    "detail_item" => $detail,   
+                );
+            } 
             $response['data'] = $data; 
             return $this->response->setJSON($response); 
         }
