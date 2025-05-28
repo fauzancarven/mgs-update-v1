@@ -364,7 +364,7 @@ class MessageController extends BaseController
         $modelsproduk = new ProdukModel();
 
         $project = $models->get_data_sph($id); 
-        $arr_detail = $models->get_data_sph_detail($id); 
+        $arr_detail = $models->get_data_sph_detail($id);  
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(
@@ -443,7 +443,7 @@ class MessageController extends BaseController
             };
         }else{
             $reference = $project->InvCode;
-            $arr_detail_ref = $models->getdataDetailInvoice($project->InvId);
+            $arr_detail_ref = $models->get_data_invoice_detail($project->InvId);
             foreach($arr_detail_ref as $row){
                 $detailref[] = array(
                     "id" => $row->ProdukId, 
@@ -606,8 +606,8 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
 
-        $project = $models->getdataInvoice($id); 
-        $arr_detail = $models->getdataDetailInvoice($id);
+        $project = $models->get_data_invoice($id); 
+        $arr_detail = $models->get_data_invoice_detail($id);
         $detail = array();
         foreach($arr_detail as $row){
             $detail[] = array(
@@ -667,7 +667,7 @@ class MessageController extends BaseController
             $data["payment"] = $models->getdataPaymentBySample($id);  
         }
         if($postData['type'] == "invoice"){
-            $datainvoice = $models->getdataInvoice($id); 
+            $datainvoice = $models->get_data_invoice($id); 
             $project = array(
                 "ProjectId"=>$datainvoice->ProjectId, 
                 "PaymentRef"=>$datainvoice->InvId, 
@@ -717,7 +717,7 @@ class MessageController extends BaseController
             $data["payments"] = $models->getdataPaymentBySample($data["payment"]->PaymentRef);  
         }
         if($postData['type'] == "invoice"){
-            $datainvoice = $models->getdataInvoice($id); 
+            $datainvoice = $models->get_data_invoice($id); 
             $project = array(
                 "ProjectId"=>$datainvoice->ProjectId, 
                 "PaymentRef"=>$datainvoice->InvId, 
@@ -756,7 +756,7 @@ class MessageController extends BaseController
     public function project_proforma_add($id)
     {     
         $models = new ProjectModel();  
-        $project = $models->getdataInvoice($id);  
+        $project = $models->get_data_invoice($id);  
         $data["project"] = $project; 
         $data["payment"] = $models->getdataProformaByRef($id);  
         $data["user"] = User(); //mengambil session dari mythauth
@@ -767,7 +767,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();      
         $data["payment"] = $models->getdataProforma($id);  
         $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
-        $data["project"] = $models->getdataInvoice($data["payment"]->PaymentRef);      
+        $data["project"] = $models->get_data_invoice($data["payment"]->PaymentRef);      
         $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef);   
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/edit_proforma.php',$data)); 
@@ -815,7 +815,7 @@ class MessageController extends BaseController
                         );
             };
         }else{
-            $datainvoice = $models->getdataInvoice($id);  
+            $datainvoice = $models->get_data_invoice($id);  
             $project = array(
                 "code"=>$datainvoice->InvCode,
                 "project_id"=>$datainvoice->ProjectId, 
@@ -825,7 +825,7 @@ class MessageController extends BaseController
                 "CustomerTelp"=>$datainvoice->InvCustTelp,
                 "CustomerAddress"=>$datainvoice->InvAddress, 
             );
-            $arr_detail = $models->getdataDetailInvoice($id);
+            $arr_detail = $models->get_data_invoice_detail($id);
             foreach($arr_detail as $row){
                 $detail[] = array( 
                             "id" => $row->ProdukId, 
@@ -870,7 +870,7 @@ class MessageController extends BaseController
         $detail = array();
         foreach($arr_detail as $row){
             if($delivery->InvId > 0){ 
-                $qty_ref = $models->getdataInvoiceByDelivery($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText);
+                $qty_ref = $models->get_data_invoiceByDelivery($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText);
                 $qty_success = $models->getQtyDeliveryByRef($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText) - $row->DeliveryDetailQty;
             }else if($delivery->POId > 0){
                 $qty_ref = 0;

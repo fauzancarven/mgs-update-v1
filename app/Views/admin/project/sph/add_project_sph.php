@@ -416,8 +416,8 @@
         dropdownParent: $('#modal-add-sph .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
-            url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
-            dataType: 'json',
+            url: "<?= base_url()?>select2/get-data-ref-sph/<?= $project->ProjectId?>",
+            dataType: 'json', 
             type:"POST",
             delay: 250,
             data: function (params) {
@@ -450,7 +450,8 @@
             }
             return $(data.html);
         },
-        templateSelection: function templateSelect(data) {
+        templateSelection: function templateSelect(data) { 
+            $(data.element).attr('data-type', data.type);
             if ($(data.html).length === 0) {
                 return data.text;
             }

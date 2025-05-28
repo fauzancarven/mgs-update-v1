@@ -1,9 +1,9 @@
  
-<div class="modal fade" id="modal-add-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-sph-label" style="overflow-y:auto;" data-menu="project">
+<div class="modal fade" id="modal-edit-sph" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-sph-label" style="overflow-y:auto;" data-menu="project">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-sph-label">Ubah Penawaran</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-edit-sph-label">Ubah Penawaran</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-3 py-3"> 
@@ -59,9 +59,11 @@
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphRef1" class="col-sm-2 col-form-label">Ref</label>
+                                <label for="SphRef" class="col-sm-2 col-form-label">Ref</label>
                                 <div class="col-sm-10"> 
-                                <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="<?= (isset($sample->SampleCode) ? $sample->SampleCode : "-" )?>" disabled>
+                                    <select class="form-select form-select-sm" id="SphRef" name="SphRef"  style="width:100%" >
+                                        <option value="0" selected data-type="-">No Data Selected</option>
+                                    </select>  
                                 </div> 
                             </div>  
                             <div class="row mb-1 align-items-center">
@@ -414,9 +416,66 @@
         }
     });
     
+    $("#SphRef").select2({
+        dropdownParent: $('#modal-edit-sph .modal-content'),
+        placeholder: "Pilih Toko",
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-ref-sph/<?= $project->ProjectId?>",
+            dataType: 'json', 
+            type:"POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash, // CSRF Token
+                    
+                    ref: "<?= $project->SphRef ?>",
+                    type: "<?= $project->SphRefType ?>",
+                };
+            },
+            processResults: function (response) {
     
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        },  
+        escapeMarkup: function(m) {
+            return m;
+        },
+        templateResult: function template(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return $(data.html);
+        },
+        templateSelection: function templateSelect(data) {
+            $(data.element).attr('data-type', data.type);
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return data['text'];
+        }
+    });
+    var option = new Option(
+        '<?=  $project->SphRefCode ?>', 
+        '<?= $project->SphRef ?>', 
+        false, 
+        true
+    );
+    $(option).attr('data-type', '<?= $project->SphRefType ?>'); 
+    $('#SphRef').append(option).trigger('change.select2'); 
+
     $("#SphAdmin").select2({
-        dropdownParent: $('#modal-add-sph .modal-content'),
+        dropdownParent: $('#modal-edit-sph .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
             url: "<?= base_url()?>select2/get-data-users",
@@ -468,7 +527,7 @@
         // let old_text = $(el).html();
         // $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-        // $("#modal-add-sph").modal("hide"); 
+        // $("#modal-edit-sph").modal("hide"); 
         // Swal.fire({
         //     title: 'Tambah Kategori',
         //     input: 'text',
@@ -504,7 +563,7 @@
         // }).then((result) => {  
         //     isProcessingSphAddCategory = false;
         //     $(el).html(old_text); 
-        //     $("#modal-add-sph").modal("show");
+        //     $("#modal-edit-sph").modal("show");
         // }); 
     }
  
@@ -533,7 +592,7 @@
                 
                 $("#modal-optional").html(data);
                 
-                $("#modal-add-sph").modal("hide");  
+                $("#modal-edit-sph").modal("hide");  
 
                 $("#modal-select-item").modal("show"); 
 
@@ -542,7 +601,7 @@
                     if (document.activeElement) {
                         document.activeElement.blur();
                     }
-                    $("#modal-add-sph").modal("show");  
+                    $("#modal-edit-sph").modal("show");  
                     
                 });
 
@@ -824,7 +883,7 @@
  
                 //event satuan
                 $(`#select-satuan-${i}`).select2({
-                    dropdownParent: $('#modal-add-sph .modal-content'), 
+                    dropdownParent: $('#modal-edit-sph .modal-content'), 
                     placeholder: "pilih",
                     width: 'auto',
                     adaptContainerWidth: true,
@@ -973,7 +1032,7 @@
         $(btnedit).hide();
  
         $(selectoption).select2({
-            dropdownParent: $('#modal-add-sph .modal-content'),
+            dropdownParent: $('#modal-edit-sph .modal-content'),
             placeholder: "Pilih Template",
             tags:true,
             ajax: {
@@ -1114,7 +1173,7 @@
             }
         }) 
         $(btnsaveas).click(function(){
-            $("#modal-add-sph").modal("hide"); 
+            $("#modal-edit-sph").modal("hide"); 
             Swal.fire({
                 title: 'Simpan Template',
                 input: 'text',
@@ -1175,7 +1234,7 @@
 
                 quill[type].enable(false);
                 quill[type].root.style.background = '#F7F7F7'; // warna disable    
-                $("#modal-add-sph").modal("show");
+                $("#modal-edit-sph").modal("show");
             }); 
         })
         $(btnedit).click(function(){
@@ -1225,6 +1284,8 @@
         var header = {  
             SphDate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
             SphAdmin: $("#SphAdmin").val(),  
+            SphRef: $("#SphRef").val(), 
+            SphRefType: $('#SphRef option:selected').data('type'), 
             SphCustName: $("#SphCustName").val(), 
             SphCustTelp: $("#SphCustTelp").val(), 
             SphAddress: $("#SphAddress").val(), 
@@ -1282,10 +1343,14 @@
                         icon: 'success',
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
-                    }).then((result) => {   
-                        $("#modal-add-sph").modal("hide");   
-                        
-                        $(".icon-project[data-menu='penawaran'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
+                    }).then((result) => {    
+                        $("#modal-edit-sph").modal("hide");      
+                        if($("#modal-edit-sph").data("menu") =="penawaran"){
+                            loader_datatable(); 
+                        }else{ 
+                            loader_data_project(<?= $project->ProjectId ?>,"penawaran"); 
+                            // $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                        }  
                     });
                   
                 }else{

@@ -24,7 +24,7 @@ class ActionController extends BaseController
     }
     public function test(){
         $models = new ProjectModel(); 
-        echo $models->update_data_sample_status(4);
+        echo $models->update_data_survey_status(8);
     }
     public function store_add(){   
         $request = Services::request();

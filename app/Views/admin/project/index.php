@@ -1505,7 +1505,7 @@
             url: "<?= base_url() ?>message/edit-project-sph/" + id, 
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-add-sph").modal("show"); 
+                $("#modal-edit-sph").modal("show"); 
                 $(".tooltip").remove(); 
 
                 isProcessingSphEdit[id] = false;

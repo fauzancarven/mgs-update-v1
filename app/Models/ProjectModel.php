@@ -43,7 +43,13 @@ class ProjectModel extends Model
     protected $afterFind = [];
     protected $beforeDelete = [];
     protected $afterDelete = [];
-    function getTerbilang($number) {
+
+
+
+    /*********************************************************** */
+    /** FUNCTION PROJECT */  
+    /*********************************************************** */
+    private function getTerbilang($number) {
         $terbilang = array(
             1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
             6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
@@ -113,7 +119,7 @@ class ProjectModel extends Model
             }
         }
     }
-    function format_filesize($bytes) {
+    private function format_filesize($bytes) {
         if ($bytes >= 1073741824) {
             $bytes = number_format($bytes / 1073741824, 2) . ' GB';
         } elseif ($bytes >= 1048576) {
@@ -167,10 +173,11 @@ class ProjectModel extends Model
         WHERE ProjectId = '.$refid.'  ORDER BY SphDate asc');
         return $builder->getResultArray();  
     }
-
-    /**
-     * FUNCTION UNTUK DATATABLE
-     */ 
+ 
+    
+    /*********************************************************** */
+    /** FUNCTION UNTUK DATATABLE dan LOAD DATA DETAIL BY PROJECT */  
+    /*********************************************************** */
     public function blog_json($search){
         $db  = \Config\Database::connect();
 
@@ -775,7 +782,6 @@ class ProjectModel extends Model
         ); 
 
     }
-
     public function load_project_status($id){
         $builder = $this->db->table($this->table);  
         $builder->join("customer","customer.CustomerId = project.CustomerId ","left");
@@ -983,7 +989,6 @@ class ProjectModel extends Model
         );
 
     }
-
     public function load_data_project($id){
         $builder = $this->db->table($this->table); 
         $builder->join('customer', 'customer.id = customerid', 'left'); 
@@ -991,7 +996,6 @@ class ProjectModel extends Model
         $builder->where("project.id",$id);
         return $builder->get()->getRow();
     }
-
     public function load_data_project_tab($data){
         switch ($data["type"]) {
             case "sample":
@@ -1057,6 +1061,9 @@ class ProjectModel extends Model
     }
 
 
+    /********************************************** */
+    /** FUNCTION UNTUK MENU PROJECT TEMPLATE FOOTER */  
+    /********************************************** */
     public function insert_data_template_footer($data){  
 
         $builder = $this->db->table("template_footer");
@@ -1389,8 +1396,8 @@ class ProjectModel extends Model
                             <div class="col-8">
                                 <span class="text-head-3">'.$row->SurveyCode.'</span>
                                 <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Print Form Survey" onclick="print_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-print"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Survey" onclick="edit_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
                                 <div class="d-inline '.($row->SurveyStatus > 1 ? "d-none" : "").'">
-                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Survey" onclick="edit_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
                                     <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Survey"  onclick="delete_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
                                 </div>
                             </div>
@@ -1714,6 +1721,80 @@ class ProjectModel extends Model
         }
         return JSON_ENCODE(array("status"=>true)); 
     }
+    public function update_data_survey_status($id){ 
+        $builder = $this->db->table("survey");  
+        $builder->where('SurveyId',$id);
+        $result = $builder->get()->getRow();  
+        //status direct
+  
+        // Penawaran 
+        $surveydirect = 0; 
+        $builder = $this->db->table("penawaran");
+        $builder->select('*');
+        $builder->where('SphRef',$result->SurveyId); 
+        $builder->where('SphRefType',"Survey"); 
+        $builder->where('SphStatus <',"2"); 
+        $builder->orderBy('SphStatus', 'ASC');
+        $builder->orderBy('SphDate', 'ASC');
+        $queryref = $builder->get()->getRow();  
+        if($queryref){ 
+            $surveydirect = 1;   
+        }else{ 
+            // SAMPLE
+            $builder = $this->db->table("sample");
+            $builder->select('*');
+            $builder->where('SampleRef',$result->SurveyId); 
+            $builder->where('SampleRefType',"Survey"); 
+            $builder->orderby('SampleId', 'DESC'); 
+            $queryref = $builder->get()->getRow();   
+            if($queryref){ 
+                $surveydirect = 1;   
+            }else{  
+                // INVOICE
+                $builder = $this->db->table("invoice");
+                $builder->select('*');
+                $builder->where('InvRef',$result->SurveyId); 
+                $builder->where('InvRefType',"Survey");  
+                $builder->orderby('InvId', 'DESC'); 
+                $queryref = $builder->get()->getRow();   
+                if($queryref){
+                    $surveydirect = 1;    
+                }
+            }
+        }  
+
+        //status Hasil
+        $surveyfinish = 0; 
+        $builder = $this->db->table("survey_finish");  
+        $builder->where('SurveyId',$id); 
+        $results = $builder->get()->getRow();  
+        if($results) $surveyfinish = 1;  
+         
+        if(($surveydirect == 1 && $surveyfinish == 1 )){
+            $builder = $this->db->table("survey"); 
+            $builder->set('surveyStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SurveyId', $id); 
+            $builder->update();  
+        } else if(($surveydirect == 1 || $surveyfinish == 1 )){ 
+            $builder = $this->db->table("survey"); 
+            $builder->set('surveyStatus', 1); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SurveyId', $id); 
+            $builder->update();   
+        }else{
+            $builder = $this->db->table("survey"); 
+            $builder->set('surveyStatus', 0); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SurveyId', $id); 
+            $builder->update();  
+        }  
+
+        return $surveydirect. " | ".$surveyfinish; 
+    }
 
     /************************************* */
     /** FUNCTION UNTUK MENU PROJECT SAMPLE */  
@@ -1860,7 +1941,38 @@ class ProjectModel extends Model
                     </script> 
                     <span class="text-head-3">Survey </span><span class="text-head-3 pointer text-decoration-underline" onclick="sample_ref_click_'.$project_id.'_'.$queryref->SurveyId.'()">('.$queryref->SurveyCode.')
                     </span>  '; 
-                } 
+                }
+            } 
+            if($row->SampleRefType == "Penawaran"){
+                $builder = $this->db->table("penawaran");
+                $builder->where('SphId',$row->SampleRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $SampleRef = ' 
+                    <script>
+                        function sample_ref_click_'.$project_id.'_'.$queryref->SphId.'(){
+                            $(".icon-project[data-menu=\'survey\'][data-id=\''.$project_id.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <span class="text-head-3">Penawaran </span><span class="text-head-3 pointer text-decoration-underline" onclick="sample_ref_click_'.$project_id.'_'.$queryref->SphId.'()">('.$queryref->SphCode.')
+                    </span>  '; 
+                }
             }
 
             // MENGAMBIL DATA DITERUSKAN
@@ -2051,7 +2163,7 @@ class ProjectModel extends Model
                 <span class="text-head-3 ps-4">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
                     Mode pengriman tidak diaktifkan untuk transaksi ini, 
-                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery('.$project_id.','.$row->SampleId.',this,1)">aktifkan data Pengiriman</a>
+                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery('.$project_id.','.$row->SampleId.',this,1)">aktifkan mode Pengiriman</a>
                 </span> ';
             }else{
                 $builder = $this->db->table("delivery");
@@ -2298,7 +2410,7 @@ class ProjectModel extends Model
                             <span class="text-head-3">
                                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                                 Belum ada data pengiriman, 
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->SampleId.',this,\'sample\')">Buat Data Pengiriman</a> atau <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery('.$project_id.','.$row->SampleId.',this,0)">nonaktifkan data Pengiriman</a>
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->SampleId.',this,\'sample\')">Buat Data Pengiriman</a> atau <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery('.$project_id.','.$row->SampleId.',this,0)">nonaktifkan mode Pengiriman</a>
                             </span>
                         </div>';
                 }
@@ -2630,19 +2742,14 @@ class ProjectModel extends Model
             $builder->where('SphId', $header["SampleRef"]); 
             $builder->update(); 
         }  
+
         //update status Survey
-        if( $header["SampleRefType"] == "Survey"){ 
-            $builder = $this->db->table("survey"); 
-            $builder->set('SurveyStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SurveyId', $header["SampleRef"]); 
-            $builder->update(); 
-        }  
+        if( $header["SampleRefType"] == "Survey") $this->update_data_survey_status($header["SampleRef"]);
+        
 
         
         //update status Sample
-        $this->update_data_sample_status($id);
+        $this->update_data_sample_status($query->SampleId);
 
         //update status project
         $builder = $this->db->table("project"); 
@@ -2677,6 +2784,9 @@ class ProjectModel extends Model
         $builder->where('SampleDetailRef',$id);
         $builder->delete(); 
 
+        //update status Survey
+        if( $header["SampleRefType"] == "Survey") $this->update_data_survey_status($header["SampleRef"]); 
+
          //update status Penawaran
          if( $header["SampleRefType"] == "Penawaran"){ 
             $builder = $this->db->table("penawaran"); 
@@ -2686,15 +2796,6 @@ class ProjectModel extends Model
             $builder->where('SphId', $header["SampleRef"]); 
             $builder->update(); 
         }  
-        //update status Survey
-        if( $header["SampleRefType"] == "Survey"){ 
-            $builder = $this->db->table("survey"); 
-            $builder->set('SurveyStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SurveyId', $header["SampleRef"]); 
-            $builder->update(); 
-        }   
         
         //update status Sample
         $this->update_data_sample_status($id);
@@ -2718,11 +2819,33 @@ class ProjectModel extends Model
         //update status Sample
         $this->update_data_sample_status($id); 
     } 
-    public function update_data_sample_status($id){
-        
+    public function update_data_sample_status($id){ 
         $builder = $this->db->table("sample");  
         $builder->where('SampleId',$id);
         $result = $builder->get()->getRow(); 
+ 
+        // MENGAMBIL DATA DITERUSKAN
+        $sampledirect = 0;
+        $builder = $this->db->table("penawaran");
+        $builder->select('*');
+        $builder->where('SphRef',$result->SampleId); 
+        $builder->where('SphRefType',"Sample"); 
+        $builder->where('SphStatus <',"2"); 
+        $builder->orderby('SphId', 'DESC'); 
+        $queryref = $builder->get()->getRow();  
+        if($queryref){ 
+            $sampledirect = 1;
+        }else{
+            $builder = $this->db->table("invoice");
+            $builder->select('*');
+            $builder->where('InvRef',$result->SampleId); 
+            $builder->where('InvRefType',"Sample");  
+            $builder->orderby('InvId', 'DESC'); 
+            $queryref = $builder->get()->getRow();   
+            if($queryref){ 
+                $sampledirect = 1; 
+            }
+        }
 
         //status payment
         $paymentstatus = 1;
@@ -2735,7 +2858,7 @@ class ProjectModel extends Model
             if($result->SampleGrandTotal > $hasil ){
                 $paymentstatus = 0;
             }
-        }
+        } 
 
         //status delivery
         $deliverystatus = 1; 
@@ -2755,27 +2878,32 @@ class ProjectModel extends Model
             if($hasilsample < $hasildelivery ){
                 $deliverystatus = 0;
             } 
-        }
-
-        if($result->SampleStatus < 2){ 
-            if(($paymentstatus == 1 || $deliverystatus == 1 )){ 
-                $builder = $this->db->table("sample"); 
-                $builder->set('SampleStatus', 1); 
-                $builder->set('updated_user', user()->id); 
-                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-                $builder->where('SampleId', $id); 
-                $builder->update();   
-            }else{
-                $builder = $this->db->table("sample"); 
-                $builder->set('SampleStatus', 0); 
-                $builder->set('updated_user', user()->id); 
-                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-                $builder->where('SampleId', $id); 
-                $builder->update();  
-            } 
         } 
+        
+        if(($paymentstatus == 1 && $deliverystatus == 1 && $sampledirect == 1 )){
+            $builder = $this->db->table("sample"); 
+            $builder->set('SampleStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SampleId', $id); 
+            $builder->update();  
+        } else if(($paymentstatus == 1 || $deliverystatus == 1 || $sampledirect == 1 )){
+            $builder = $this->db->table("sample"); 
+            $builder->set('SampleStatus', 1); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SampleId', $id); 
+            $builder->update();   
+        }else{
+            $builder = $this->db->table("sample"); 
+            $builder->set('SampleStatus', 0); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SampleId', $id); 
+            $builder->update();  
+        }  
 
-        return $paymentstatus. " | ".$deliverystatus; 
+        return $paymentstatus. " | ".$deliverystatus. " | ".$sampledirect; 
     }
     public function delete_data_sample($id){   
         $builder = $this->db->table("sample"); 
@@ -2828,8 +2956,7 @@ class ProjectModel extends Model
         ORDER BY ref_join.date asc'); 
         return $builder->getResultArray();  
     }
- 
-
+  
     /************************************* */
     /** FUNCTION UNTUK MENU PROJECT PENAWARAN */  
     /************************************* */
@@ -3266,28 +3393,13 @@ class ProjectModel extends Model
             $row["SphDetailVarian"] = (isset($row["SphDetailVarian"]) ? json_encode($row["SphDetailVarian"]) : "[]");  
             $builder = $this->db->table("penawaran_detail");
             $builder->insert($row); 
-        }
-
+        } 
+ 
         //update status sample
-        if( $header["SphRefType"] == "Sample"){ 
-            $builder = $this->db->table("sample"); 
-            $builder->set('SampleStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SampleId', $header["SphRef"]); 
-            $builder->update(); 
-        }  
+        if( $header["SphRefType"] == "Sample") $this->update_data_sample_status($header["SphRef"]);  
         //update status Survey
-        if( $header["SphRefType"] == "Survey"){ 
-            $builder = $this->db->table("survey"); 
-            $builder->set('SurveyStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SurveyId', $header["SphRef"]); 
-            $builder->update(); 
-        }  
-
-        
+        if( $header["SphRefType"] == "Survey") $this->update_data_survey_status($header["SphRef"]);  
+ 
         //update status project
         $builder = $this->db->table("project"); 
         $builder->set('ProjectStatus', 3);  
@@ -3301,6 +3413,8 @@ class ProjectModel extends Model
         $builder = $this->db->table("penawaran"); 
         $builder->set('SphDate', $header["SphDate"]);   
         $builder->set('SphAdmin', $header["SphAdmin"]);  
+        $builder->set('SphRef', $header["SphRef"]);  
+        $builder->set('SphRefType', $header["SphRefType"]);  
         $builder->set('SphCustName', $header["SphCustName"]); 
         $builder->set('SphCustTelp', $header["SphCustTelp"]); 
         $builder->set('SphAddress', $header["SphAddress"]); 
@@ -3323,7 +3437,12 @@ class ProjectModel extends Model
             $row["SphDetailVarian"] = (isset($row["SphDetailVarian"]) ? json_encode($row["SphDetailVarian"]) : "[]");  
             $builder = $this->db->table("penawaran_detail");
             $builder->insert($row); 
-        } 
+        }  
+        //update status sample
+        if( $header["SphRefType"] == "Sample") $this->update_data_sample_status($header["SphRef"]);  
+        //update status Survey
+        if( $header["SphRefType"] == "Survey") $this->update_data_survey_status($header["SphRef"]);  
+ 
     }
     public function delete_data_sph($id){
         $builder = $this->db->table("penawaran");
@@ -3337,6 +3456,11 @@ class ProjectModel extends Model
     }  
     public function get_data_sph($id){  
         $builder = $this->db->table("penawaran");  
+        $builder->select("*, CASE 
+        WHEN SphRefType = '-' THEN 'No data Selected'
+        WHEN SphRefType = 'Survey' THEN (select SurveyCode from survey where SurveyId = SphRef)
+        WHEN SphRefType = 'Sample' THEN (select SampleCode from sample where SampleId = SphRef)
+        END AS 'SphRefCode'"); 
         $builder->join("project","project.ProjectId = penawaran.ProjectId","left"); 
         $builder->join("customer","project.CustomerId = customer.CustomerId","left");
         $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId","left");
@@ -3349,9 +3473,84 @@ class ProjectModel extends Model
         $builder->where('SphDetailRef',$id); 
         return $builder->get()->getResult();  
     }
-
-    
-    private function data_project_invoice($project_id){
+    public function get_data_ref_sph($refid,$data = null){ 
+        if(isset($data["searchTerm"])){
+            $querywhere  = "and (
+                code like '%".$data["searchTerm"]."%' or 
+                CustomerTelp like '%".$data["searchTerm"]."%' or 
+                CustomerName like '%".$data["searchTerm"]."%' or 
+                CustomerAddress like '%".$data["searchTerm"]."%' 
+            ) ";
+        }else{
+            $querywhere = "";
+        }  
+        $querysample = "";
+        $querysurvey = "";
+        if(isset($data["ref"])){
+            if($data["type"]=="Sample"){
+                $querysample  = "or SampleId = ".$data["ref"];
+            } 
+            if($data["type"]=="Survey"){
+                $querysurvey  = "or SurveyId = ".$data["ref"];
+            }  
+        }
+        $builder = $this->db->query('SELECT * FROM 
+        (
+            SELECT 
+                SampleId refid, 
+                SampleCode as code,
+                ProjectId ref,
+                SampleDate date,
+                "Sample" AS type,
+                SampleCustName as CustomerName,
+                SampleCustTelp as CustomerTelp,
+                SampleAddress as CustomerAddress
+                FROM sample where SampleStatus < 2 '.$querysample.'
+            UNION 
+            SELECT 
+                SurveyId refid,
+                SurveyCode,
+                ProjectId ref,
+                SurveyDate date, 
+                "Survey",
+                SurveyCustName,
+                SurveyCustTelp,
+                SurveyAddress
+                FROM survey where SurveyStatus < 2 '.$querysurvey.'
+        ) AS ref_join
+        LEFT JOIN project ON project.ProjectId = ref_join.ref 
+        WHERE ref_join.ref = '.$refid.' 
+        '. $querywhere.'
+        ORDER BY ref_join.date asc'); 
+        return $builder->getResultArray();  
+    }
+ 
+    /************************************** */
+    /** FUNCTION UNTUK MENU PROJECT INVOICE */  
+    /************************************** */
+    public function get_next_code_invoice($date){ 
+        $arr_date = explode("-", $date);
+        $builder = $this->db->table("invoice");  
+        $builder->select("ifnull(max(SUBSTRING(InvCode,5,3)),0) + 1 as nextcode"); 
+        $builder->where("month(InvDate2)",$arr_date[1]);
+        $builder->where("year(InvDate2)",$arr_date[0]);
+        $data = $builder->get()->getRow(); 
+        switch (strlen($data->nextcode)) {
+            case 1:
+                $nextid = "INV/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 2:
+                $nextid = "INV/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 3:
+                $nextid = "INV/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+            default:
+                $nextid = "INV/000/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+        } 
+    }
+    public function data_project_invoice($project_id){
         $html = ''; 
 
         $builder = $this->db->table("invoice");
@@ -3915,7 +4114,7 @@ class ProjectModel extends Model
             )
         );
     }
-    private function data_project_invoice_notif($project_id){
+    public function data_project_invoice_notif($project_id){
         $alert = array();
 
         $builder = $this->db->table("invoice");
@@ -3975,14 +4174,227 @@ class ProjectModel extends Model
         }
         return $alert;
     } 
-    private function data_project_invoice_count($project_id){ 
+    public function data_project_invoice_count($project_id){ 
         $builder = $this->db->table("invoice");
         $builder->select('*');
         $builder->where('InvStatus !=',3);
         $builder->where('ProjectId',$project_id); 
         $builder->orderby('InvId', 'DESC'); 
         return  $builder->countAllResults();
+    } 
+    public function insert_data_invoice($data){ 
+        $header = $data["header"]; 
+
+        $builder = $this->db->table("invoice");
+        $builder->insert(array(
+            "InvCode"=>$this->get_next_code_invoice($header["InvDate"]),
+            "InvDate"=>$header["InvDate"], 
+            "InvDate2"=>$header["InvDate"],  
+            "ProjectId"=>$header["ProjectId"],
+            "InvRef"=>$header["InvRef"],
+            "InvRefType"=>$header["InvRefType"],
+            "InvAdmin"=>$header["InvAdmin"], 
+            "InvCustName"=>$header["InvCustName"],
+            "InvCustTelp"=>$header["InvCustTelp"],
+            "InvAddress"=>$header["InvAddress"], 
+            "TemplateId"=>$header["TemplateId"],
+            "InvSubTotal"=>$header["InvSubTotal"],
+            "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
+            "InvDiscTotal"=>$header["InvDiscTotal"], 
+            "InvGrandTotal"=>$header["InvGrandTotal"], 
+            "InvImageList"=> (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"),
+            "InvKtp"=>$header["InvKtp"], 
+            "InvNpwp"=>$header["InvNpwp"],  
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+        ));
+
+        $builder = $this->db->table("invoice");
+        $builder->select('*');
+        $builder->orderby('InvId', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();  
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["InvDetailRef"] = $query->InvId;
+            $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
+            $builder = $this->db->table("invoice_detail");
+            $builder->insert($row); 
+        }
+
+        
+        
+        //update status sample
+        if( $header["InvRefType"] == "Penawaran"){ 
+            $builder = $this->db->table("penawaran"); 
+            $builder->set('SphStatus', 1); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SphId', $header["InvRef"]); 
+            $builder->update(); 
+        }  
+        //update status Survey
+        if( $header["InvRefType"] == "Survey"){ 
+            $builder = $this->db->table("survey"); 
+            $builder->set('SurveyStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SurveyId', $header["InvRef"]); 
+            $builder->update(); 
+        }  
+        //update status Survey
+        if( $header["InvRefType"] == "Sample"){ 
+            $builder = $this->db->table("sample"); 
+            $builder->set('SampleStatus', 2); 
+            $builder->set('updated_user', user()->id); 
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+            $builder->where('SampleId', $header["InvRef"]); 
+            $builder->update(); 
+        }  
+
+        
+        //update status project
+        $builder = $this->db->table("project"); 
+        $builder->set('ProjectStatus', 6);  
+        $builder->where('ProjectId', $header["ProjectId"]); 
+        $builder->update();     
+    } 
+    public function update_data_invoice($data,$id){ 
+        $header = $data["header"]; 
+
+        $builder = $this->db->table("invoice"); 
+        $builder->set('InvDate', $header["InvDate"]);   
+        $builder->set('InvAdmin', $header["InvAdmin"]); 
+        $builder->set('InvCustName', $header["InvCustName"]);
+        $builder->set('InvCustTelp', $header["InvCustTelp"]);
+        $builder->set('InvAddress', $header["InvAddress"]); 
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('InvSubTotal', $header["InvSubTotal"]); 
+        $builder->set('InvDiscItemTotal', $header["InvDiscItemTotal"]); 
+        $builder->set('InvDiscTotal', $header["InvDiscTotal"]); 
+        $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
+        $builder->set('InvNpwp', $header["InvNpwp"]);  
+        $builder->set('InvKtp', $header["InvKtp"]);  
+        $builder->set('InvImageList', (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"));
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId', $id); 
+        $builder->update(); 
+
+        $builder = $this->db->table("invoice_detail");
+        $builder->where('InvDetailRef',$id);
+        $builder->delete(); 
+
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["InvDetailRef"] = $id;
+            $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
+            $builder = $this->db->table("invoice_detail");
+            $builder->insert($row); 
+        } 
+
+        $this->update_data_invoice_status($id);
     }
+    public function delete_data_invoice($id){
+        $builder = $this->db->table("invoice");
+        $builder->set('InvStatus','3'); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId',$id);
+        $builder->update();  
+
+        return JSON_ENCODE(array("status"=>true));
+    }
+    public function get_data_invoice($id){
+        $builder = $this->db->table("invoice");
+        $builder->select("*,InvNpwp NpwpId,b.Name NpwpName,b.Image NpwpImage, InvKtp KtpId,a.Name KtpName,a.Image KtpImage");
+        $builder->join("customer","invoice.CustomerId = customer.CustomerId","left");
+        $builder->join("users","id = InvAdmin","left");
+        $builder->join("project","project.ProjectId = invoice.ProjectId","left");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
+        $builder->join("lampiran a","a.Id = invoice.InvKtp","left");
+        $builder->join("lampiran b","b.Id = invoice.InvNpwp","left");
+        $builder->where('InvId',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
+    }
+    public function get_data_invoice_detail($id){
+        $builder = $this->db->table("invoice_detail");
+        $builder->where('InvDetailRef',$id); 
+        return $builder->get()->getResult();  
+    } 
+    public function update_data_invoice_status($id){
+        
+        $builder = $this->db->table("invoice");  
+        $builder->where('InvId',$id);
+        $result = $builder->get()->getRow(); 
+
+        //status payment
+        $paymentstatus = 1;
+        if($result->InvGrandTotal > 0){
+            $builder = $this->db->table("payment");  
+            $builder->where('PaymentDoc',1);
+            $builder->where('PaymentRef',$id);
+            $builder->where('PaymentRefType','Invoice');
+            $results = $builder->get()->getResult(); 
+            $hasil = array_sum(array_column($results, 'PaymentTotal')); 
+            if($result->InvGrandTotal > $hasil ){
+                $paymentstatus = 0;
+            }
+        }
+
+        //status delivery
+        $deliverystatus = 0; 
+        $builder = $this->db->table("delivery"); 
+        $builder->join('delivery_detail',"DeliveryDetailRef=DeliveryId","left"); 
+        $builder->where('DeliveryRef',$id); 
+        $builder->where('DeliveryRefType',"Invoice"); 
+        $results = $builder->get()->getResult(); 
+        $hasildelivery = array_sum(array_column($results, 'DeliveryDetailQty')); 
+ 
+        $builder = $this->db->table("invoice_detail");  
+        $builder->join('invoice',"InvDetailRef=InvId","left"); 
+        $builder->where('InvId',$id);
+        $builder->where('ProdukId >',0);
+        $results = $builder->get()->getResult(); 
+        $hasilsample = array_sum(array_column($results, 'InvDetailQty')); 
+
+        if($hasilsample <= $hasildelivery ){
+            $deliverystatus = 1;
+        } 
+ 
+        if($result->InvStatus < 2){ 
+            if($paymentstatus == 1 && $deliverystatus == 1 ){ 
+                $builder = $this->db->table("invoice"); 
+                $builder->set('InvStatus', 2); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('InvId', $id); 
+                $builder->update();   
+                
+            }elseif($paymentstatus == 1 || $deliverystatus == 1 ){ 
+                $builder = $this->db->table("invoice"); 
+                $builder->set('InvStatus', 1); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('InvId', $id); 
+                $builder->update();   
+
+            }else{
+                $builder = $this->db->table("invoice"); 
+                $builder->set('InvStatus', 0); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('InvId', $id); 
+                $builder->update();  
+            }
+        }
+
+        return $paymentstatus. " | ".$deliverystatus;
+    }
+
+ 
+
     private function data_project_delivery($project_id){ 
         $builder = $this->db->table("delivery");
         $builder->select('*');   
@@ -5407,29 +5819,6 @@ class ProjectModel extends Model
     /**
      * FUNCTION UNTUK Function
      */ 
-    private function get_next_code_invoice($date){
-        //sample INV/001/01/2024
-        $arr_date = explode("-", $date);
-        $builder = $this->db->table("invoice");  
-        $builder->select("ifnull(max(SUBSTRING(InvCode,5,3)),0) + 1 as nextcode"); 
-        $builder->where("month(InvDate2)",$arr_date[1]);
-        $builder->where("year(InvDate2)",$arr_date[0]);
-        $data = $builder->get()->getRow(); 
-        switch (strlen($data->nextcode)) {
-            case 1:
-                $nextid = "INV/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 2:
-                $nextid = "INV/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 3:
-                $nextid = "INV/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-            default:
-                $nextid = "INV/000/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-        } 
-    }
     private function get_next_code_payment($date){
         //sample INV/001/01/2024
         $arr_date = explode("-", $date);
@@ -5613,217 +6002,7 @@ class ProjectModel extends Model
     /**
      * FUNCTION UNTUK INVOICE / FAKTUR
      */ 
- 
-    public function insert_data_invoice($data){ 
-        $header = $data["header"]; 
 
-        $builder = $this->db->table("invoice");
-        $builder->insert(array(
-            "InvCode"=>$this->get_next_code_invoice($header["InvDate"]),
-            "InvDate"=>$header["InvDate"], 
-            "InvDate2"=>$header["InvDate"],  
-            "ProjectId"=>$header["ProjectId"],
-            "InvRef"=>$header["InvRef"],
-            "InvRefType"=>$header["InvRefType"],
-            "InvAdmin"=>$header["InvAdmin"], 
-            "InvCustName"=>$header["InvCustName"],
-            "InvCustTelp"=>$header["InvCustTelp"],
-            "InvAddress"=>$header["InvAddress"], 
-            "TemplateId"=>$header["TemplateId"],
-            "InvSubTotal"=>$header["InvSubTotal"],
-            "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
-            "InvDiscTotal"=>$header["InvDiscTotal"], 
-            "InvGrandTotal"=>$header["InvGrandTotal"], 
-            "InvImageList"=> (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"),
-            "InvKtp"=>$header["InvKtp"], 
-            "InvNpwp"=>$header["InvNpwp"],  
-            "created_user"=>user()->id, 
-            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
-        ));
-
-        $builder = $this->db->table("invoice");
-        $builder->select('*');
-        $builder->orderby('InvId', 'DESC');
-        $builder->limit(1);
-        $query = $builder->get()->getRow();  
-        // ADD DETAIL PRODUK 
-        foreach($data["detail"] as $row){ 
-            $row["InvDetailRef"] = $query->InvId;
-            $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
-            $builder = $this->db->table("invoice_detail");
-            $builder->insert($row); 
-        }
-
-        
-        
-        //update status sample
-        if( $header["InvRefType"] == "Penawaran"){ 
-            $builder = $this->db->table("penawaran"); 
-            $builder->set('SphStatus', 1); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SphId', $header["InvRef"]); 
-            $builder->update(); 
-        }  
-        //update status Survey
-        if( $header["InvRefType"] == "Survey"){ 
-            $builder = $this->db->table("survey"); 
-            $builder->set('SurveyStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SurveyId', $header["InvRef"]); 
-            $builder->update(); 
-        }  
-        //update status Survey
-        if( $header["InvRefType"] == "Sample"){ 
-            $builder = $this->db->table("sample"); 
-            $builder->set('SampleStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SampleId', $header["InvRef"]); 
-            $builder->update(); 
-        }  
-
-        
-        //update status project
-        $builder = $this->db->table("project"); 
-        $builder->set('ProjectStatus', 6);  
-        $builder->where('ProjectId', $header["ProjectId"]); 
-        $builder->update();     
-    } 
-    public function update_data_invoice($data,$id){ 
-        $header = $data["header"]; 
-
-        $builder = $this->db->table("invoice"); 
-        $builder->set('InvDate', $header["InvDate"]);   
-        $builder->set('InvAdmin', $header["InvAdmin"]); 
-        $builder->set('InvCustName', $header["InvCustName"]);
-        $builder->set('InvCustTelp', $header["InvCustTelp"]);
-        $builder->set('InvAddress', $header["InvAddress"]); 
-        $builder->set('TemplateId', $header["TemplateId"]); 
-        $builder->set('InvSubTotal', $header["InvSubTotal"]); 
-        $builder->set('InvDiscItemTotal', $header["InvDiscItemTotal"]); 
-        $builder->set('InvDiscTotal', $header["InvDiscTotal"]); 
-        $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
-        $builder->set('InvNpwp', $header["InvNpwp"]);  
-        $builder->set('InvKtp', $header["InvKtp"]);  
-        $builder->set('InvImageList', (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"));
-        $builder->set('updated_user',user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('InvId', $id); 
-        $builder->update(); 
-
-        $builder = $this->db->table("invoice_detail");
-        $builder->where('InvDetailRef',$id);
-        $builder->delete(); 
-
-        // ADD DETAIL PRODUK 
-        foreach($data["detail"] as $row){ 
-            $row["InvDetailRef"] = $id;
-            $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
-            $builder = $this->db->table("invoice_detail");
-            $builder->insert($row); 
-        } 
-
-        $this->update_data_invoice_status($id);
-    }
-    public function delete_data_invoice($id){
-        $builder = $this->db->table("invoice");
-        $builder->set('InvStatus','3'); 
-        $builder->set('updated_user',user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('InvId',$id);
-        $builder->update();  
-
-        return JSON_ENCODE(array("status"=>true));
-    }
-    public function getdataInvoice($id){
-        $builder = $this->db->table("invoice");
-        $builder->select("*,InvNpwp NpwpId,b.Name NpwpName,b.Image NpwpImage, InvKtp KtpId,a.Name KtpName,a.Image KtpImage");
-        $builder->join("customer","invoice.CustomerId = customer.CustomerId","left");
-        $builder->join("users","id = InvAdmin","left");
-        $builder->join("project","project.ProjectId = invoice.ProjectId","left");
-        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
-        $builder->join("lampiran a","a.Id = invoice.InvKtp","left");
-        $builder->join("lampiran b","b.Id = invoice.InvNpwp","left");
-        $builder->where('InvId',$id);
-        $builder->limit(1);
-        return $builder->get()->getRow();  
-    }
-    public function getdataDetailInvoice($id){
-        $builder = $this->db->table("invoice_detail");
-        $builder->where('InvDetailRef',$id); 
-        return $builder->get()->getResult();  
-    } 
-    public function update_data_invoice_status($id){
-        
-        $builder = $this->db->table("invoice");  
-        $builder->where('InvId',$id);
-        $result = $builder->get()->getRow(); 
-
-        //status payment
-        $paymentstatus = 1;
-        if($result->InvGrandTotal > 0){
-            $builder = $this->db->table("payment");  
-            $builder->where('PaymentDoc',1);
-            $builder->where('PaymentRef',$id);
-            $builder->where('PaymentRefType','Invoice');
-            $results = $builder->get()->getResult(); 
-            $hasil = array_sum(array_column($results, 'PaymentTotal')); 
-            if($result->InvGrandTotal > $hasil ){
-                $paymentstatus = 0;
-            }
-        }
-
-        //status delivery
-        $deliverystatus = 0; 
-        $builder = $this->db->table("delivery"); 
-        $builder->join('delivery_detail',"DeliveryDetailRef=DeliveryId","left"); 
-        $builder->where('DeliveryRef',$id); 
-        $builder->where('DeliveryRefType',"Invoice"); 
-        $results = $builder->get()->getResult(); 
-        $hasildelivery = array_sum(array_column($results, 'DeliveryDetailQty')); 
- 
-        $builder = $this->db->table("invoice_detail");  
-        $builder->join('invoice',"InvDetailRef=InvId","left"); 
-        $builder->where('InvId',$id);
-        $builder->where('ProdukId >',0);
-        $results = $builder->get()->getResult(); 
-        $hasilsample = array_sum(array_column($results, 'InvDetailQty')); 
-
-        if($hasilsample <= $hasildelivery ){
-            $deliverystatus = 1;
-        } 
- 
-        if($result->InvStatus < 2){ 
-            if($paymentstatus == 1 && $deliverystatus == 1 ){ 
-                $builder = $this->db->table("invoice"); 
-                $builder->set('InvStatus', 2); 
-                $builder->set('updated_user', user()->id); 
-                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-                $builder->where('InvId', $id); 
-                $builder->update();   
-                
-            }elseif($paymentstatus == 1 || $deliverystatus == 1 ){ 
-                $builder = $this->db->table("invoice"); 
-                $builder->set('InvStatus', 1); 
-                $builder->set('updated_user', user()->id); 
-                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-                $builder->where('InvId', $id); 
-                $builder->update();   
-
-            }else{
-                $builder = $this->db->table("invoice"); 
-                $builder->set('InvStatus', 0); 
-                $builder->set('updated_user', user()->id); 
-                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-                $builder->where('InvId', $id); 
-                $builder->update();  
-            }
-        }
-
-        return $paymentstatus. " | ".$deliverystatus;
-    }
  
     /**
      * FUNCTION UNTUK PAYMENT
@@ -6338,8 +6517,8 @@ class ProjectModel extends Model
         $builder->where('DeliveryDetailRef',$id);  
         return $builder->get()->getResult();  
     }
-    public function getdataInvoiceByDelivery($ref,$produkid,$varian,$text){
-        $arr_detail_invoice = $this->getdataDetailInvoice($ref);
+    public function get_data_invoiceByDelivery($ref,$produkid,$varian,$text){
+        $arr_detail_invoice = $this->get_data_invoice_detail($ref);
         foreach($arr_detail_invoice as $row){
             if($row->ProdukId == $produkid && $row->InvDetailVarian == $varian && $row->InvDetailText == $text){
                 return $row->InvDetailQty;
