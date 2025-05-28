@@ -3227,8 +3227,8 @@ class ProjectModel extends Model
                             <div class="col-8">
                                 <span class="text-head-3">'.$row->SphCode.'</span>
                                 <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Penawaran" onclick="print_project_sph('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-print"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_sph('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
                                 <div class="d-inline '.($row->SphStatus > 0 ? "d-none" : "").'">
-                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_sph('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
                                     <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran"  onclick="delete_project_sph('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
                                 </div>
                             </div>
