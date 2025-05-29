@@ -6680,7 +6680,8 @@ class ProjectModel extends Model
             $htmlpayment = "";
             $builder = $this->db->table("payment");
             $builder->select('*'); 
-            $builder->where('InvId',$row->InvId);
+            $builder->where('PaymentRef',$row->InvId);
+            $builder->where('PaymentRefType',"Invoice");
             $builder->where('PaymentDoc',1);
             $builder->where('PaymentStatus <',2);
             $builder->orderby('PaymentId', 'ASC'); 
