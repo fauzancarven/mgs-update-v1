@@ -939,6 +939,10 @@
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").removeClass("active")
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").removeClass("notif")
                 $(".icon-project[data-id='"+ ProjectId+"'][data-menu='pembelian']").addClass(data["project"]["pembelian"]);
+                //update notif pembelian
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='keuangan']").removeClass("active")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='keuangan']").removeClass("notif")
+                $(".icon-project[data-id='"+ ProjectId+"'][data-menu='keuangan']").addClass(data["project"]["keuangan"]);
 
                 // Hapus tooltip sebelumnya
                 var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -1997,7 +2001,7 @@
     }
 
     add_payment_delivery = function(ref,id,el,menu){
-        
+
     }
      
     $("#btn-print-payment").click(function(i){ 

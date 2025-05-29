@@ -414,8 +414,8 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel();
         $modelsvendor = new VendorModel();
 
-        $project = $models->getdataPO($id); 
-        $arr_detail = $models->getdataDetailPO($id);
+        $project = $models->get_data_pembelian($id); 
+        $arr_detail = $models->get_data_pembelian_detail($id);
         $detail = array();
         $detailref = array();
         $ref = JSON_DECODE($project->PORef2,true);
@@ -804,8 +804,8 @@ class MessageController extends BaseController
                             "total"=> $row->SampleDetailTotal,
                             "disc"=> $row->SampleDetailDisc,
                             "qty_ref"=> $row->SampleDetailQty,
-                            "qty_success"=>$models->getQtyDeliveryBySample($id,$row->ProdukId,$row->SampleDetailVarian,$row->SampleDetailText), 
-                            "qty"=> $row->SampleDetailQty - $models->getQtyDeliveryBySample($id,$row->ProdukId,$row->SampleDetailVarian,$row->SampleDetailText),
+                            "qty_success"=>$models->get_data_delivery_detail_by_sample($id,$row->ProdukId,$row->SampleDetailVarian,$row->SampleDetailText), 
+                            "qty"=> $row->SampleDetailQty - $models->get_data_delivery_detail_by_sample($id,$row->ProdukId,$row->SampleDetailVarian,$row->SampleDetailText),
                             "qty_spare"=> 0,
                             "text"=> $row->SampleDetailText,
                             "group"=> $row->SampleDetailGroup,
@@ -837,8 +837,8 @@ class MessageController extends BaseController
                             "total"=> $row->InvDetailTotal,
                             "disc"=> $row->InvDetailDisc,
                             "qty_ref"=> $row->InvDetailQty,
-                            "qty_success"=>$models->getQtyDeliveryByRef($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText), 
-                            "qty"=> $row->InvDetailQty - $models->getQtyDeliveryByRef($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText),
+                            "qty_success"=>$models->get_data_delivery_detail_by_ref($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText), 
+                            "qty"=> $row->InvDetailQty - $models->get_data_delivery_detail_by_ref($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText),
                             "qty_spare"=> 0,
                             "text"=> $row->InvDetailText,
                             "group"=> $row->InvDetailGroup,
@@ -863,15 +863,15 @@ class MessageController extends BaseController
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
 
-        $delivery = $models->getdataDelivery($id); 
-        $arr_detail = $models->getdataDetailDelivery($id); 
+        $delivery = $models->get_data_delivery($id); 
+        $arr_detail = $models->get_data_delivery_detail($id); 
          
 
         $detail = array();
         foreach($arr_detail as $row){
             if($delivery->InvId > 0){ 
-                $qty_ref = $models->get_data_invoiceByDelivery($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText);
-                $qty_success = $models->getQtyDeliveryByRef($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText) - $row->DeliveryDetailQty;
+                $qty_ref = $models->get_data_invoice_by_delivery($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText);
+                $qty_success = $models->get_data_delivery_detail_by_ref($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText) - $row->DeliveryDetailQty;
             }else if($delivery->POId > 0){
                 $qty_ref = 0;
                 $qty_success = 0;
@@ -910,13 +910,13 @@ class MessageController extends BaseController
     public function project_delivery_proses($id)
     {       
         $models = new ProjectModel();
-        $data["delivery"] = $models->getdataDelivery($id); 
+        $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/add_proses_delivery',$data)); 
     } 
     public function project_delivery_proses_edit($id) {  
         $models = new ProjectModel();
-        $data["delivery"] = $models->getdataDelivery($id); 
+        $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth
  
         $folder_utama = 'assets/images/delivery';  
@@ -930,10 +930,10 @@ class MessageController extends BaseController
     public function project_delivery_finish($id)
     {       
         $models = new ProjectModel();
-        $data["delivery"] = $models->getdataDelivery($id); 
+        $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth 
 
-        $arr_detail = $models->getdataDetailDelivery($id);
+        $arr_detail = $models->get_data_delivery_detail($id);
         foreach($arr_detail as $row){
             $detail[] = array( 
                 "id" => $row->ProdukId, 
@@ -955,10 +955,10 @@ class MessageController extends BaseController
     public function project_delivery_finish_edit($id)
     {       
         $models = new ProjectModel();
-        $data["delivery"] = $models->getdataDelivery($id); 
+        $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth 
 
-        $arr_detail = $models->getdataDetailDelivery($id);
+        $arr_detail = $models->get_data_delivery_detail($id);
         foreach($arr_detail as $row){
             $detail[] = array( 
                 "id" => $row->ProdukId, 
@@ -1008,7 +1008,7 @@ class MessageController extends BaseController
     public function project_accounting_edit($id,$group)
     {       
         $models = new ProjectModel(); 
-        $data["project"] = $models->getdataAccounting($id); 
+        $data["project"] = $models->get_data_accounting($id); 
         $data["user"] = User();
         if($group==2){ 
             return $this->response->setBody(view('admin/project/accounting/edit_lain_lain.php',$data)); 

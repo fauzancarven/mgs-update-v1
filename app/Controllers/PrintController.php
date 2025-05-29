@@ -340,8 +340,8 @@ class PrintController extends BaseController
 
                 $models = new ProjectModel();   
                 $modelheader = new HeaderModel();  
-                $data["delivery"] = $models->getdataDelivery($id);   
-                $data["detail"] = $models->getdataDetailDelivery($id);  
+                $data["delivery"] = $models->get_data_delivery($id);   
+                $data["detail"] = $models->get_data_delivery_detail($id);  
                 $data["header_footer"] = $modelheader->get_header_a5($data["delivery"]->StoreId);  
                 
                 $dompdf = new Dompdf($options);  
@@ -366,8 +366,8 @@ class PrintController extends BaseController
                 $options->set('orientation', 'potrait');
 
                 $models = new ProjectModel();  
-                $data["po"] = $models->getdataPO($id);  
-                $data["detail"] = $models->getdataDetailPO($id); 
+                $data["po"] = $models->get_data_pembelian($id);  
+                $data["detail"] = $models->get_data_pembelian_detail($id); 
                 
                 $dompdf = new Dompdf($options);  
                 
@@ -397,8 +397,8 @@ class PrintController extends BaseController
                 $models = new ProjectModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
-                $data["po"] = $models->getdataPO($id); 
-                $arr_detail = $models->getdataDetailPO($id);
+                $data["po"] = $models->get_data_pembelian($id); 
+                $arr_detail = $models->get_data_pembelian_detail($id);
                 $detail = array();
                 foreach($arr_detail as $row){
                         $detail[] = array(
