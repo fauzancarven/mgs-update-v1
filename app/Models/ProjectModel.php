@@ -6664,44 +6664,83 @@ class ProjectModel extends Model
                 </div> ';
 
 
+        //survey
+        $listsurvey = "";
+        $builder = $this->db->table("survey");
+        $builder->select('*');
+        $builder->where('ProjectId',$project_id);
+        $builder->where('SurveyStatus !=',3);
+        $builder->orderby('SurveyId', 'DESC'); 
+        $query = $builder->get()->getResult();  
+        $totalsurvey = 0;
+        foreach($query as $row){
+            $listsurvey .= ' 
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">Survey dari No. Dokumen '.$row->SurveyCode.' tgl. '. date_format(date_create($row->SurveyDate) ,"d M Y").'</span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">-</span>
+                <span class="text-detail-3 fw-bold" style="width:10rem;">Rp. '.number_format($row->SurveyTotal,0).'</span>
+                <span class="text-detail-3 fw-bold" style="width:10rem;">(-) Rp. '.number_format($row->SurveyTotal,0).'</span>
+            </div> ';
+            $totalsurvey += $row->SurveyTotal;
+        }
+        if($listsurvey == ""){
+            $listsurvey = '<div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+                <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+                <span class="text-detail-3 fw-bold flex-fill">Tidak ada data survey yang dibuat</span>
+            </div>';
+        }
+        $html .= '
+        <div class="list-group list-group-flush collapsed" data-bs-toggle="collapse" data-bs-target="#survey-'.$project_id.'" aria-expanded="false">
+            <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+                <span class="text-head-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-chevron-down"></i></span>
+                <span class="text-head-3 fw-bold flex-fill">Survey</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">-</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totalsurvey,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">(-) Rp. '.number_format($totalsurvey,0).'</span>
+            </div> 
+        </div> 
+        <div class="list-group list-group-flush collapse" id="survey-'.$project_id.'"> '.$listsurvey.'</div>';
+
         //INVOICE
         $builder = $this->db->table("invoice");
         $builder->select('*');
         $builder->where('ProjectId',$project_id);
         $builder->where('InvStatus !=',3);
         $builder->orderby('InvId', 'DESC'); 
-        $query = $builder->get()->getResult();  
-        
+        $query = $builder->get()->getResult();   
         $totalinvoice = 0;
         $realpayinvoice = 0;
         $listinvoice = "";
         foreach($query as $row){
 
             $htmlpayment = "";
-            $builder = $this->db->table("payment");
-            $builder->select('*'); 
-            $builder->where('PaymentRef',$row->InvId);
-            $builder->where('PaymentRefType',"Invoice");
-            $builder->where('PaymentDoc',1);
-            $builder->where('PaymentStatus <',2);
-            $builder->orderby('PaymentId', 'ASC'); 
-            $payment = $builder->get()->getResult(); 
-
             $iconexpand = '<i class="fa-solid fa-minus"></i>';
-            foreach($payment as $row_payment){  
-                $iconexpand = '<i class="fa-solid fa-chevron-down"></i>';
-                $realpayinvoice += $row_payment->PaymentTotal; 
-                $htmlpayment .= '  
-                <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
-                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
-                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
-                    <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
-                    <span class="text-detail-3 fw-bold flex-fill">Pembayaran dari No. Dokumen '.$row_payment->PaymentCode .' Tgl. '.date_format(date_create($row_payment->PaymentDate) ,"d M Y").'</span>
-                    <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
-                    <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
-                    <span class="text-detail-3 fw-bold" style="width:10rem;">(+) Rp. '.number_format($row_payment->PaymentTotal,0).' </span>
-                </div>';
-            }
+            // $builder = $this->db->table("payment");
+            // $builder->select('*'); 
+            // $builder->where('PaymentRef',$row->InvId);
+            // $builder->where('PaymentRefType',"Invoice");
+            // $builder->where('PaymentDoc',1);
+            // $builder->where('PaymentStatus <',2);
+            // $builder->orderby('PaymentId', 'ASC'); 
+            // $payment = $builder->get()->getResult(); 
+
+            // foreach($payment as $row_payment){  
+            //     $iconexpand = '<i class="fa-solid fa-chevron-down"></i>';
+            //     $realpayinvoice += $row_payment->PaymentTotal; 
+            //     $htmlpayment .= '  
+            //     <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
+            //         <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+            //         <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"></span>
+            //         <span class="text-detail-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-minus"></i></span>
+            //         <span class="text-detail-3 fw-bold flex-fill">Pembayaran dari No. Dokumen '.$row_payment->PaymentCode .' Tgl. '.date_format(date_create($row_payment->PaymentDate) ,"d M Y").'</span>
+            //         <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
+            //         <span class="text-detail-3 fw-bold" style="width:10rem;">-</span>
+            //         <span class="text-detail-3 fw-bold" style="width:10rem;">(+) Rp. '.number_format($row_payment->PaymentTotal,0).' </span>
+            //     </div>';
+            // }
 
             $totalinvoice += $row->InvGrandTotal; 
             $listinvoice .= ' 
@@ -6907,8 +6946,8 @@ class ProjectModel extends Model
                     <a class="btn btn-sm btn-primary p-1 me-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="edit_project_accounting('.$project_id.','.$row->AccId.',this,\'1\')">Edit</a>
                     <a class="btn btn-sm btn-danger p-1 me-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="delete_project_accounting('.$project_id.','.$row->AccId.',this,\'1\')">Delete</a> 
                 </span>
-                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==1 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
-                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('Rp. '.number_format($row->AccTotal,0)) : "-").'</span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">-</span>
+                <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">-</span>
                 <span class="text-detail-3 fw-bold ps-2" style="width:10rem;">'.($row->AccType==2 ? ('(-) Rp. '.number_format($row->AccTotal,0)) : ('(+) Rp. '.number_format($row->AccTotal,0))).'</span>
             </div> ';
             if($row->AccType==1){ 
@@ -6931,8 +6970,8 @@ class ProjectModel extends Model
             <div class="d-flex p-2 align-items-center list-group-item list-group-item-action">
                 <span class="text-head-3 fw-bold pe-1" style="width:1rem;"><i class="fa-solid fa-chevron-down"></i></span>
                 <span class="text-head-3 fw-bold flex-fill">Modal <a class="btn btn-sm btn-primary p-1 m-1" style="font-size: 0.65rem; padding: 0.25rem 0.5rem !important; line-height: 1; border-radius: 0.3rem;" onclick="add_project_accounting('.$project_id.',this,\'1\')">Tambah Data</a></span>
-                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totalmodal_debt,0).'</span>
-                <span class="text-head-2 fw-bold" style="width:10rem;">Rp. '.number_format($totalmodal_crt,0).'</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">-</span>
+                <span class="text-head-2 fw-bold" style="width:10rem;">-</span>
                 <span class="text-head-2 fw-bold" style="width:10rem;">(+) Rp. '.number_format($realpaymodal,0).'</span> 
             </div> 
         </div>
@@ -6991,9 +7030,9 @@ class ProjectModel extends Model
 
  
 
-        $grandtotal_debt = $totalinvoice + $totalmodal_debt + $totaldll_debt;
-        $grandtotal_crd = $totalpengiriman + $totalpo + $totalmodal_crt + $totaldll_crt;
-        $grandtotal_real = $realpayinvoice - $realpaypo - $realpaypengiriman + $realpaymodal + $realpaydll;
+        $grandtotal_debt = $totalinvoice  + $totaldll_debt;
+        $grandtotal_crd = $totalsurvey + $totalpengiriman + $totalpo  + $totaldll_crt;
+        $grandtotal_real =  $totalsurvey - $realpaypo - $realpaypengiriman + $realpaymodal + $realpaydll ;
         $html .= ' 
             <div class="d-flex border-top p-2 bg-light border-primary-subtle"> 
                 <span class="text-head-2 fw-bold flex-fill">Sub Total</span>
