@@ -75,7 +75,20 @@
                                 <div class="col-sm-10">
                                     <select class="form-select form-select-sm" id="InvAdmin" name="InvAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
                                 </div>
-                            </div>    
+                            </div>   
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvDelivery" class="col-sm-2 col-form-label">Pengiriman</label>
+                                <div class="col-sm-10">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="InvDelivery" id="InvDelivery1" value="0" checked>
+                                    <label class="text-detail" for="InvDelivery1" >Tidak</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="InvDelivery" id="InvDelivery2" value="1" >
+                                    <label class="text-detail" for="InvDelivery2">Ya</label>
+                                </div>
+                                </div>
+                            </div>   
                         </div>   
                     </div>   
                 </div>
@@ -382,6 +395,17 @@
                         </div> 
                         <div class="row align-items-center py-1">
                             <div class="col-4">
+                                <span class="label-head-dialog">Pengiriman</span>   
+                            </div>
+                            <div class="col-8"> 
+                                <div class="input-group"> 
+                                    <span class="input-group-text font-std">Rp.</span>
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="InvDeliveryTotal" value="0" disabled>
+                                </div>     
+                            </div>
+                        </div> 
+                        <div class="row align-items-center py-1">
+                            <div class="col-4">
                                 <span class="label-head-dialog">Grand Total</span>   
                             </div>
                             <div class="col-8"> 
@@ -554,6 +578,16 @@
 <div id="modal-optional"></div>
 <script>    
 
+    $('input[name="InvDelivery"]').change(function() {
+        if($(this).val() == 0){
+            $('#InvDeliveryTotal').prop("disabled",true)
+            $('#InvDeliveryTotal').val("0")
+        }else{
+
+            $('#InvDeliveryTotal').prop("disabled",false)
+        }
+    }); 
+
     $('#InvDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
@@ -602,11 +636,18 @@
             return $(data.html);
         },
         templateSelection: function templateSelect(data) {
+            $(data.element).attr('data-type', data.type);
+            console.log(data.type);
             if ($(data.html).length === 0) {
                 return data.text;
             }
             return data['text'];
         }
+    }).on('select2:select', function (e) {
+        var data = e.params.data;
+        console.log(data); 
+        data_detail_item = data["detail_item"];
+        load_produk();
     });
     var header_ref = '<?= is_null($ref_header) ? false : true ?>'; 
     if(header_ref){ 
@@ -653,9 +694,8 @@
     });
     $('#InvAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
       
-     
-    var detail_item_ref = '<?= json_encode($ref_detail) ?>';  
-    var data_detail_item = JSON.parse(detail_item_ref);
+      
+    var data_detail_item = JSON.parse('<?= json_encode($ref_detail) ?>');
 
     var isProcessingInvAddCategory = false;
     add_detail_category = function(el){
@@ -837,7 +877,7 @@
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.price * current.qty, 0);
         var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#InvDiscTotal").val().replace(/[^0-9-]/g, ''); 
+        var grandtotal =  total - discitem - $("#InvDiscTotal").val().replace(/[^0-9-]/g, '') + parseInt($("#InvDeliveryTotal").val().replace(/[^0-9-]/g, '')); 
 
         $("#InvSubTotal").val(total.toLocaleString('en-US')) 
         $("#InvDiscItemTotal").val(discitem.toLocaleString('en-US')) 
@@ -1103,12 +1143,21 @@
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
+    var Sample_delivery = new Cleave(`#InvDeliveryTotal`, {
+            numeral: true,
+            delimeter: ",",
+            numeralDecimalScale:0,
+            numeralThousandGroupStyle:"thousand"
+    }); 
     $("#InvDiscTotal").on("keyup",function(){ 
         grand_total_harga();
         if(parseInt($("#InvGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
             $("#InvDiscTotal").val(0)
             grand_total_harga();
         }
+    });
+    $("#InvDeliveryTotal").on("keyup",function(){ 
+        grand_total_harga(); 
     });
     
     $("#img-produk").on('click',function(){
@@ -1769,6 +1818,8 @@
             InvRef: $("#InvRef").val(), 
             InvRefType: $('#InvRef option:selected').data('type'), 
             InvAdmin: $("#InvAdmin").val(),  
+            InvDelivery:$('input[name="InvDelivery"]:checked').val(),  
+            InvDeliveryTotal: $("#InvDeliveryTotal").val().replace(/[^0-9]/g, ''), 
             InvCustName: $("#InvCustName").val(),
             InvCustTelp: $("#InvCustTelp").val(),
             InvAddress: $("#InvAddress").val(), 

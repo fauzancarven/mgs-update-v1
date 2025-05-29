@@ -1813,10 +1813,8 @@
     print_project_invoice = function(ref,id,el){  
         $("#modal-print-invoice").modal("show");
         $("#modal-print-invoice").data("id",id) 
-    }; 
-    // print_project_invoice_a5 = function(ref,id,el){ 
-    //     window.open('<?= base_url("print/project/invoiceA5/") ?>' + id, '_blank');
-    // }; 
+    };  
+
     $("#btn-print-invoice").click(function(i){ 
         $.redirect('<?= base_url("print/project/invoice/") ?>' +  $("#modal-print-invoice").data("id"),  {
             kertas: $("#InvPrintFormat").val(),
@@ -1828,6 +1826,54 @@
         
     })
  
+    var isProcessingInvoiceUpdate = [];
+    invoice_project_update_delivery =function(ref,id,el,status){
+         // INSERT LOADER BUTTON
+         if (isProcessingInvoiceUpdate[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingInvoiceUpdate[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            data:{
+                status : status,
+            },
+            url: "<?= base_url() ?>action/update-data-invoice-delivery/" + id, 
+            success: function(data) {  
+                if(status == 1){ 
+                    Swal.fire({
+                        title: "Active!",
+                        text: "Mode pengiriman berhasil diaktifkan",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    });  
+                }else{
+                    Swal.fire({
+                        title: "Deactive!",
+                        text: "Mode pengiriman berhasil dinonaktifkan",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    });  
+                }
+                loader_data_project(ref,"invoice"); 
+                isProcessingInvoiceUpdate[id] = false;
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingInvoiceUpdate[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
     var isProcessingInvoicePayment = [];
     add_project_payment = function(ref,id,el,type){
         // INSERT LOADER BUTTON
@@ -1903,8 +1949,7 @@
             }
         });
     };
-    
-
+     
     var isProcessingPaymentDelete = [];
     delete_project_payment  = function(ref,id,el,type){ 
          // INSERT LOADER BUTTON
@@ -1949,6 +1994,10 @@
         //window.open('<?= base_url("print/project/paymentA5/") ?>' + id, '_blank');
         $("#modal-print-payment").modal("show");
         $("#modal-print-payment").data("id",id) 
+    }
+
+    add_payment_delivery = function(ref,id,el,menu){
+        
     }
      
     $("#btn-print-payment").click(function(i){ 

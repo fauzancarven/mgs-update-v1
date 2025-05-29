@@ -51,15 +51,17 @@
                         </div>  
                         <div class="document-display card bg-light show mt-4 m-1 p-2">
                             <div class="row mb-1 align-items-center">
-                                <label for="InvRef1" class="col-sm-2 col-form-label">No. Invoice</label>
+                                <label for="InvCode" class="col-sm-2 col-form-label">No. Invoice</label>
                                 <div class="col-sm-10"> 
                                     <input id="InvCode" name="InvCode" type="text" class="form-control form-control-sm input-form" value="<?= $project->InvCode ?>" disabled>
                                 </div> 
                             </div>  
                             <div class="row mb-1 align-items-center">
-                                <label for="InvRef1" class="col-sm-2 col-form-label">Ref</label>
+                                <label for="InvRef" class="col-sm-2 col-form-label">Ref</label>
                                 <div class="col-sm-10"> 
-                                    <input id="InvCode" name="InvCode" type="text" class="form-control form-control-sm input-form" value="<?= $ref ?>" disabled>
+                                    <select class="form-select form-select-sm" id="InvRef" name="InvRef"  style="width:100%" >
+                                        <option value="0" selected data-type="-">No Data Selected</option>
+                                    </select>  
                                 </div> 
                             </div>  
                             <div class="row mb-1 align-items-center">
@@ -72,6 +74,19 @@
                                 <label for="InvAdmin" class="col-sm-2 col-form-label">Admin</label>
                                 <div class="col-sm-10">
                                     <select class="form-select form-select-sm" id="InvAdmin" name="InvAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="InvDelivery" class="col-sm-2 col-form-label">Pengiriman</label>
+                                <div class="col-sm-10">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="InvDelivery" id="InvDelivery1" value="0" <?= $project->InvDelivery == 0 ? "checked" : "" ?>>
+                                    <label class="text-detail" for="InvDelivery1">Tidak</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="InvDelivery" id="InvDelivery2" value="1"  <?= $project->InvDelivery == 1 ? "checked" : "" ?>>
+                                    <label class="text-detail" for="InvDelivery2">Ya</label>
+                                </div>
                                 </div>
                             </div>  
                         </div>   
@@ -380,6 +395,17 @@
                         </div> 
                         <div class="row align-items-center py-1">
                             <div class="col-4">
+                                <span class="label-head-dialog">Pengiriman</span>   
+                            </div>
+                            <div class="col-8"> 
+                                <div class="input-group"> 
+                                    <span class="input-group-text font-std">Rp.</span>
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="InvDeliveryTotal" value="0" <?= ($project->InvDelivery == 0 ? "disabled" : "" )?>>
+                                </div>     
+                            </div>
+                        </div> 
+                        <div class="row align-items-center py-1">
+                            <div class="col-4">
                                 <span class="label-head-dialog">Grand Total</span>   
                             </div>
                             <div class="col-8"> 
@@ -552,6 +578,15 @@
 <div id="modal-optional"></div> 
 <script>    
 
+    $('input[name="InvDelivery"]').change(function() {
+        if($(this).val() == 0){
+            $('#InvDeliveryTotal').prop("disabled",true)
+            $('#InvDeliveryTotal').val("0")
+        }else{
+
+            $('#InvDeliveryTotal').prop("disabled",false)
+        }
+    }); 
     var image_list = JSON.parse(`<?= $project->InvImageList ?>`); 
     $('#InvDate').daterangepicker({
         "singleDatePicker": true,
@@ -562,6 +597,74 @@
         }
     });
      
+    $("#InvRef").select2({
+        dropdownParent: $('#modal-edit-invoice .modal-content'),
+        placeholder: "Pilih Referensi dokumen",
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-ref-invoice/<?= $project->ProjectId?>",
+            dataType: 'json',
+            type:"POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash, // CSRF Token
+                    
+                    ref: "<?= $project->InvRef ?>",
+                    type: "<?= $project->InvRefType ?>",
+                };
+            },
+            processResults: function (response) {
+    
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        },  
+        escapeMarkup: function(m) {
+            return m;
+        },
+        templateResult: function template(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return $(data.html);
+        },
+        templateSelection: function templateSelect(data) {
+            if(data.type){ 
+                $(data.element).attr('data-type', data.type);
+            }else{ 
+                $(data.element).attr('data-type', "-");
+            } 
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return data['text'];
+        }
+    }).on('select2:select', function (e) {
+        var data = e.params.data;
+        console.log(data); 
+        data_detail_item = data["detail_item"];
+        load_produk();
+    }); 
+   
+    var option = new Option(
+        '<?=  $project->InvRefCode ?>', 
+        '<?= $project->InvRef ?>', 
+        false, 
+        true
+    );
+    $(option).attr('data-type', '<?= $project->InvRefType ?>'); 
+    $('#InvRef').append(option).trigger('change.select2');  
+
     $("#InvAdmin").select2({
         dropdownParent: $('#modal-edit-invoice .modal-content'),
         placeholder: "Pilih Admin",
@@ -776,8 +879,8 @@
     
     function grand_total_harga(){
         var total = data_detail_item.reduce((acc, current) => acc + current.price * current.qty, 0);
-        var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var grandtotal =  total - discitem - $("#InvDiscTotal").val().replace(/[^0-9-]/g, ''); 
+        var discitem = data_detail_item.reduce((acc, current) => acc + current.disc * current.qty , 0);  
+        var grandtotal =  total - discitem - $("#InvDiscTotal").val().replace(/[^0-9-]/g, '') + parseInt($("#InvDeliveryTotal").val().replace(/[^0-9-]/g, '')); 
 
         $("#InvSubTotal").val(total.toLocaleString('en-US')) 
         $("#InvDiscItemTotal").val(discitem.toLocaleString('en-US')) 
@@ -1045,12 +1148,21 @@
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
+    var Sample_delivery = new Cleave(`#InvDeliveryTotal`, {
+            numeral: true,
+            delimeter: ",",
+            numeralDecimalScale:0,
+            numeralThousandGroupStyle:"thousand"
+    }); 
     $("#InvDiscTotal").on("keyup",function(){ 
         grand_total_harga();
         if(parseInt($("#InvGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
             $("#InvDiscTotal").val(0)
             grand_total_harga();
         }
+    });
+    $("#InvDeliveryTotal").on("keyup",function(){ 
+        grand_total_harga(); 
     });
     var options = {
         debug: 'false', 
@@ -1733,6 +1845,8 @@
         var header = {  
             InvDate: $("#InvDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
             InvAdmin: $("#InvAdmin").val(),  
+            InvRef: $("#InvRef").val(), 
+            InvRefType: $('#InvRef option:selected').data('type'), 
             InvCustName: $("#InvCustName").val(),
             InvCustTelp: $("#InvCustTelp").val(),
             InvAddress: $("#InvAddress").val(), 
@@ -1740,6 +1854,8 @@
             InvSubTotal: $("#InvSubTotal").val().replace(/[^0-9]/g, ''), 
             InvDiscItemTotal: $("#InvDiscItemTotal").val().replace(/[^0-9]/g, ''), 
             InvDiscTotal: $("#InvDiscTotal").val().replace(/[^0-9]/g, ''), 
+            InvDelivery:$('input[name="InvDelivery"]:checked').val(),  
+            InvDeliveryTotal: $("#InvDeliveryTotal").val().replace(/[^0-9]/g, ''), 
             InvGrandTotal: $("#InvGrandTotal").val().replace(/[^0-9]/g, ''),  
             InvImageList: $("#list-produk img").map(function(){ return $(this).attr("src")}).get(),  
             InvKtp: $("#select-ktp").val(), 

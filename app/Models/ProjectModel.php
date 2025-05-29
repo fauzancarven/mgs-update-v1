@@ -171,6 +171,7 @@ class ProjectModel extends Model
     public function getSelectRefInvoice($refid,$search = null){
         $builder = $this->db->query('SELECT *  FROM penawaran left join customer ON customer.CustomerId = penawaran.CustomerId
         WHERE ProjectId = '.$refid.'  ORDER BY SphDate asc');
+ 
         return $builder->getResultArray();  
     }
  
@@ -562,6 +563,8 @@ class ProjectModel extends Model
             $builder->orLike("ProjectComment",$filter["search"]);
             $builder->orLike("ProjectName",$filter["search"]);
             $builder->orLike("ProjectCategory",$filter["search"]);
+            $builder->orLike("CustomerName",$filter["search"]);
+            $builder->orLike("CustomerCompany",$filter["search"]);
             $builder->groupEnd(); 
         }
         $listid = null;
@@ -1951,7 +1954,7 @@ class ProjectModel extends Model
                     $SampleRef = ' 
                     <script>
                         function sample_ref_click_'.$project_id.'_'.$queryref->SphId.'(){
-                            $(".icon-project[data-menu=\'survey\'][data-id=\''.$project_id.'\']").trigger("click");
+                            $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$project_id.'\']").trigger("click");
                             setTimeout(function() {
                                 var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SphId.'\']");
                                 var contentData = $(".content-data[data-id=\''.$project_id.'\']");
@@ -3137,6 +3140,7 @@ class ProjectModel extends Model
             $builder->select('*');
             $builder->where('InvRef',$row->SphId); 
             $builder->where('InvRefType',"Penawaran");  
+            $builder->where('InvStatus <',2);  
             $builder->orderby('InvId', 'DESC'); 
             $queryref = $builder->get()->getRow();   
             if($queryref){
@@ -3167,7 +3171,45 @@ class ProjectModel extends Model
                     </span> 
                 ';
             }else{
-                $SampleForward = '<span class="text-head-3"><a class="text-detail-2" onclick="add_project_invoice('.$project_id.',this,'.$row->SphId.',\'penawaran\')">Invoice</a></span>'; 
+                 // Mengambil data diteruskan
+                $builder = $this->db->table("sample");
+                $builder->select('*');
+                $builder->where('SampleRef',$row->SphId); 
+                $builder->where('SampleRefType',"Penawaran");  
+                $builder->where('SampleStatus <',2);  
+                $builder->orderby('SampleId', 'DESC'); 
+                $queryref = $builder->get()->getRow();   
+                if($queryref){
+                    $SampleForward = ' 
+                        <script>
+                            function penawaran_return_click_'.$project_id.'_'.$queryref->SampleId.'(){
+                                $(".icon-project[data-menu=\'sample\'][data-id=\''.$project_id.'\'").trigger("click");
+                                setTimeout(function() {
+                                    var targetElement = $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\']");
+                                    var contentData = $(".content-data[data-id=\''.$project_id.'\']");
+                                    if (targetElement.length > 0 && contentData.length > 0) {
+                                        var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                        contentData.scrollTop(targetOffset);
+                                    }
+                                    
+                                    $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
+                                    $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
+                                        setTimeout(function() {
+                                                $(".list-project[data-project=\''.$project_id.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
+                                        }, 2000); // delay 1 detik
+                                    })
+
+                                }, 1000); // delay 1 detik
+                            }
+                        </script>
+                        
+                        <span class="text-head-3">Sample </span><span class="text-head-3 pointer text-decoration-underline" onclick="penawaran_return_click_'.$project_id.'_'.$queryref->SampleId.'()">('.$queryref->SampleCode.')
+                        </span> 
+                    ';
+                }else{
+                    $SampleForward = '<span class="text-head-3"><a class="text-detail-2" onclick="add_project_invoice('.$project_id.',this,'.$row->SphId.',\'penawaran\')">Invoice</a></span>'; 
+                }
+            
             }
 
             $status = "";
@@ -3408,8 +3450,7 @@ class ProjectModel extends Model
 
     }
     public function update_data_sph($data,$id){ 
-        $header = $data["header"]; 
-
+        $header = $data["header"];  
         $builder = $this->db->table("penawaran"); 
         $builder->set('SphDate', $header["SphDate"]);   
         $builder->set('SphAdmin', $header["SphAdmin"]);  
@@ -3438,6 +3479,9 @@ class ProjectModel extends Model
             $builder = $this->db->table("penawaran_detail");
             $builder->insert($row); 
         }  
+
+
+
         //update status sample
         if( $header["SphRefType"] == "Sample") $this->update_data_sample_status($header["SphRef"]);  
         //update status Survey
@@ -3523,6 +3567,53 @@ class ProjectModel extends Model
         '. $querywhere.'
         ORDER BY ref_join.date asc'); 
         return $builder->getResultArray();  
+    }
+    public function update_data_sph_status($id){ 
+        $builder = $this->db->table("penawaran");  
+        $builder->where('SphId',$id);
+        $result = $builder->get()->getRow(); 
+        
+        // Mengambil data diteruskan
+        $sphdirect =  0;
+        $builder = $this->db->table("invoice");
+        $builder->select('*');
+        $builder->where('InvRef',$result->SphId); 
+        $builder->where('InvRefType',"Penawaran");  
+        $builder->where('InvStatus <',2);  
+        $builder->orderby('InvId', 'DESC'); 
+        $queryref = $builder->get()->getRow();   
+        if($queryref){
+            $sphdirect =  1; 
+        }else{
+            $builder = $this->db->table("sample");
+            $builder->select('*');
+            $builder->where('SampleRef',$result->SphId); 
+            $builder->where('SampleRefType',"Penawaran");  
+            $builder->where('SampleStatus <',2);  
+            $builder->orderby('SampleId', 'DESC'); 
+            $queryref = $builder->get()->getRow();   
+            if($queryref){
+                $sphdirect =  1; 
+            }
+        } 
+        
+        if($result->SphStatus < 3){  
+            if( $sphdirect == 1  ){
+                    $builder = $this->db->table("penawaran"); 
+                    $builder->set('SphStatus', 1); 
+                    $builder->set('updated_user', user()->id); 
+                    $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                    $builder->where('SphId', $id); 
+                    $builder->update();  
+            }  else{
+                $builder = $this->db->table("penawaran"); 
+                $builder->set('SphStatus', 0); 
+                $builder->set('updated_user', user()->id); 
+                $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+                $builder->where('SphId', $id); 
+                $builder->update();   
+            }
+        } 
     }
  
     /************************************** */
@@ -3878,7 +3969,7 @@ class ProjectModel extends Model
                                 <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')">Pembayaran</a>
                             </span> 
                         </div>';
-                } else if($payment_total < $row->InvGrandTotal){   
+                }else if($payment_total < $row->InvGrandTotal){   
                     $html_payment .= '
                     <div class="alert alert-warning p-2 m-1" role="alert"> 
                         <span class="text-head-3">
@@ -3895,42 +3986,265 @@ class ProjectModel extends Model
             
             // MENGAMBIL Data Pengiriman
             $html_delivery = "";
-            if($produkjasa == 1){ 
+            if($row->InvDelivery == 1){ 
                 $builder = $this->db->table("delivery");
-                $builder->select('*');   
-                $builder->where("DeliveryRef",$row->InvId);
-                $builder->where("DeliveryRefType","Invoice");
-                $builder->where("ProjectId",$project_id);
+                $builder->select('*');    
+                $builder->where('DeliveryRef',$row->InvId); 
+                $builder->where('DeliveryRefType',"Invoice");  
+                $builder->where('DeliveryStatus <',"3"); 
                 $builder->orderby('DeliveryId', 'ASC'); 
-                $delivery = $builder->countAllResults();
-                if($delivery == 0){
+                $delivery = $builder->get()->getResult();
+                
+                foreach($delivery as $row_delivery){
+
+                    $builder = $this->db->table("delivery_detail");
+                    $builder->select('*'); 
+                    $builder->where('DeliveryDetailRef',$row_delivery->DeliveryId);
+                    $builder->orderby('DeliveryDetailId', 'ASC'); 
+                    $items = $builder->get()->getResult(); 
+                    $html_items_delivery = "";
+                    $no = 1;
+                    $huruf  = "A";
+                    foreach($items as $item){  
+                        $arr_varian = json_decode($item->DeliveryDetailVarian);
+                        $arr_badge = "";
+                        $arr_no = 0;
+                        foreach($arr_varian as $varian){
+                            $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                            $arr_no++;
+                        }
+
+                        $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->DeliveryDetailVarian,true) ; 
+                        $html_items_delivery .= '
+                        <div class="row">
+                            <div class="col-12 col-md-5 my-1 varian">   
+                                <div class="d-flex gap-2">
+                                ' . ($item->DeliveryDetailType == "product" ? ($gambar ? "<img src='". $gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url("assets/images/produk/default.png").'?date='.date("Y-m-dH:i:s")."' alt='Gambar Default' >") : "").'  
+                                    <div class="d-flex flex-column text-start">
+                                        <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
+                                        <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
+                                        <div class="d-flex flex-wrap gap-1">
+                                            '.$arr_badge.'
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>'; 
+                        $html_items_delivery .= '<div class="col-12 col-md-7 my-1 detail">
+                                            <div class="row"> 
+                                                <div class="col-6 col-md-3">   
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-detail-2">Dikirim:</span>
+                                                        <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                    </div>
+                                                </div>  
+                                                <div class="col-6 col-md-2">   
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-detail-2">Spare:</span>
+                                                        <span class="text-head-2">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                    </div>
+                                                </div>  
+                                                <div class="col-4 col-md-3 px-1 border-left">   
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-detail-2">Diterima:</span>
+                                                        <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceive, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                    </div>
+                                                </div>  
+                                                <div class="col-4 col-md-2 px-1">   
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-detail-2">Spare:</span>
+                                                        <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceiveSpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                    </div>
+                                                </div>  
+                                                <div class="col-4 col-md-2 px-1">   
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-detail-2">Rusak:</span>
+                                                        <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceiveWaste, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
+                                                    </div>
+                                                </div>  
+                                            </div>   
+                                        </div> 
+                                    </div>';
+                        $no++; 
+                            
+                        
+                    } 
+                    $delivery_status = "";
+                    $delivery_date = "";
+                    if($row_delivery->DeliveryStatus == 0){ 
+                        $delivery_status = '<span class="text-head-3">
+                            <span class="badge text-bg-primary me-1">Dijadwalkan</span> 
+                        </span>';
+                        $delivery_date = '
+                                        <div class="row">
+                                            <div class="col-4"> 
+                                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                                            </div>
+                                            <div class="col-8">
+                                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                                            </div>
+                                        </div>  <div class="row">
+                                            <div class="col-4"> 
+                                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                                            </div>
+                                            <div class="col-8">
+                                                <span class="text-head-3"><a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_project_proses('.$project_id.','.$row_delivery->DeliveryId.',this)">Proses Pengiriman</a></span>
+                                            </div>
+                                        </div> ';
+                    }elseif($row_delivery->DeliveryStatus == 1){
+                        $delivery_status = '<span class="text-head-3">
+                            <span class="badge text-bg-info me-1">Dikirim</span> 
+                        </span>'; 
+                        $delivery_date = '
+                            <div class="row">
+                                <div class="col-4"> 
+                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                                </div>
+                                <div class="col-8">
+                                    <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                                </div>
+                            </div>  <div class="row">
+                                <div class="col-4"> 
+                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                                </div>
+                                <div class="col-8">
+                                    <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateProses),"d M Y").' </span>
+                                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Proses Pengiriman" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Proses Pengiriman" onclick="delivery_proses_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                </div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-4"> 
+                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Diterima</span>
+                                </div>
+                                <div class="col-8">
+                                    <span class="text-head-3"><a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_project_finish('.$project_id.','.$row_delivery->DeliveryId.',this)">Terima Pengiriman</a></span>
+                                </div>
+                            </div> ';
+                    }elseif($row_delivery->DeliveryStatus == 2){
+                        $delivery_status = '<span class="text-head-3">
+                            <span class="badge text-bg-success me-1">Selesai</span> 
+                        </span>'; 
+                        $delivery_date = '
+                            <div class="row">
+                                <div class="col-4"> 
+                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                                </div>
+                                <div class="col-8">
+                                    <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                                </div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-4"> 
+                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                                </div>
+                                <div class="col-8">   
+                                    <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateProses),"d M Y").' </span>
+                                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Proses Pengiriman" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Proses Pengiriman" onclick="delivery_proses_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                </div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-4"> 
+                                    <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Diterima</span>
+                                </div>
+                                <div class="col-8">
+                                    <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateFinish),"d M Y").'</span>
+                                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Terima Pengiriman" onclick="delivery_finish_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Terima Pengiriman" onclick="delivery_finish_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                
+                                </div>
+                            </div>';
+                    }
+                    $html_delivery .= '
+                        <div class="list-project mb-4 p-2 project-hide">  
+                            <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">
+                                <div class="col-12  col-md-4 order-1 order-sm-0"> 
+                                    <div class="row">
+                                        <div class="col-4"> 
+                                            <span class="text-detail-2"><i class="fa-solid fa-bookmark pe-1"></i>No. Pengiriman</span>
+                                        </div>
+                                        <div class="col-8">
+                                            <span class="text-head-3">'.$row_delivery->DeliveryCode.'</span>
+                                            <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Pengiriman" onclick="print_project_delivery('.$project_id.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-print"></i></span>
+                                            <span class="text-warning pointer text-head-3 '.($row_delivery->DeliveryStatus > 1 ? "d-none" : "").'" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Pengiriman" onclick="edit_project_delivery('.$project_id.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                                            <span class="text-danger pointer text-head-3 '.($row_delivery->DeliveryStatus > 0 ? "d-none" : "").'" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Pengiriman"  onclick="delete_project_delivery('.$project_id.','.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                                                
+                                        </div>
+                                    </div> 
+                                    
+                                    <div class="row">
+                                        <div class="col-4"> 
+                                            <span class="text-detail-2"><i class="fa-solid fa-hourglass-start pe-1"></i>Status</span>
+                                        </div>
+                                        <div class="col-8">
+                                            <span class="text-head-3">'.$delivery_status.'</span>
+                                        </div>
+                                    </div>     
+                                    <div class="row">
+                                        <div class="col-4"> 
+                                            <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
+                                        </div>
+                                        <div class="col-8">
+                                            <span class="text-head-3">'.$row_delivery->DeliveryRitase.' ('.$this->getTerbilang($row_delivery->DeliveryRitase).')</span>
+                                        </div>
+                                    </div>   
+                                    <div class="row">
+                                        <div class="col-4"> 
+                                            <span class="text-detail-2"><i class="fa-solid fa-truck pe-1"></i>Armada</span>
+                                        </div>
+                                        <div class="col-8">
+                                            <span class="text-head-3">'.$row_delivery->DeliveryArmada.'</span>
+                                        </div>
+                                    </div>    
+                                    '.$delivery_date .'   
+                                </div>   
+                                <div class="col-12  col-md-8 order-1 order-sm-1">  
+                                    <div class="d-flex mt-2 p-2 gap-4 align-items-center">   
+                                        <div class="d-flex flex-row flex-md-column align-self-start">
+                                            <span class="text-detail-2"><i class="fa-solid fa-plane-departure pe-1"></i></i>Dari</span>
+                                            <span class="text-head-2">'.$row_delivery->DeliveryFromName.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryFromTelp.'</span>
+                                            <span class="text-detail-2">'.$row_delivery->DeliveryFromAddress.'</span>
+                                        </div>    
+                                        <div class="d-flex text-primary align-items-center">
+                                            <i class="fa-solid fa-truck pe-1"></i>
+                                            <div class="line-dot"></div>
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
+                                        <div class="d-flex flex-row flex-md-column align-self-start">
+                                            <span class="text-detail-2"><i class="fa-solid fa-plane-arrival pe-1"></i>Tujuan</span>
+                                            <span class="text-head-2">'.$row_delivery->DeliveryToName.'</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryToTelp.'</span>
+                                            <span class="text-detail-2">'.$row_delivery->DeliveryToAddress.'</span>
+                                        </div>   
+                                    </div>   
+                                </div>  
+                            </div>   
+                            <div class="detail-item mt-1 p-2 border-top">
+                                '.$html_items_delivery.' 
+                            </div>  
+                        </div>';
+                }
+                if($html_delivery == ""){
                     $html_delivery = ' 
                         <div class="alert alert-warning p-2 m-1" role="alert">
                             <span class="text-head-3">
                                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                                Tidak ada data pengiriman yang dibuat dari invoice ini, 
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> 
+                                Belum ada data pengiriman, 
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> atau <a class="text-head-3 text-primary" style="cursor:pointer" onclick="invoice_project_update_delivery('.$project_id.','.$row->InvId.',this,0)">nonaktifkan mode Pengiriman</a>
                             </span>
                         </div>';
-                }else{
-                    $html_delivery = ' 
-                    <div class="alert alert-success p-2 m-1" role="alert">
-                        <span class="text-head-3">
-                            <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
-                            Ada '.$delivery .' data pengiriman yang dibuat dari invoice ini, 
-                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick=\'$(".icon-project[data-menu=\"pengiriman\"][data-id=\"'.$project_id.'\"]").trigger("click")\'>Lihat Selengkapnya</a> atau
-                            <a class="text-head-32 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Tambah Data Pengiriman</a> 
-                        </span>
-                    </div>';
                 }
             }else{
                 $html_delivery = ' 
                 <span class="text-head-3 ps-4">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
-                    Tidak ada pengiriman yang harus diselesaikan untuk transaksi ini 
+                    Mode pengriman tidak diaktifkan untuk transaksi ini, 
+                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="invoice_project_update_delivery('.$project_id.','.$row->InvId.',this,1)">aktifkan mode Pengiriman</a>
                 </span> ';
             }
             
+
             $status = "";
             if($row->InvStatus==0){
                 $status .= '
@@ -3992,8 +4306,8 @@ class ProjectModel extends Model
                             <div class="col-8">
                                 <span class="text-head-3">'.$row->InvCode.'</span>
                                 <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Invoice" onclick="print_project_invoice('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-print"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Invoice" onclick="edit_project_invoice('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
                                 <div class="d-inline '.($row->InvStatus > 1 ? "d-none" : "").'">
-                                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Invoice" onclick="edit_project_invoice('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
                                     <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Invoice"  onclick="delete_project_invoice('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
                                 </div>
                             </div>
@@ -4068,6 +4382,9 @@ class ProjectModel extends Model
                     <span class="text-detail-2">Disc Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->InvDiscTotal, 0, ',', '.').'</span> 
                     <div class="divider-horizontal"></div>
+                    <span class="text-detail-2">Delivery Total:</span>
+                    <span class="text-head-2">Rp. '.number_format($row->InvDeliveryTotal, 0, ',', '.').'</span> 
+                    <div class="divider-horizontal"></div>
                     <span class="text-detail-2">Grand Total:</span>
                     <span class="text-head-2">Rp. '.number_format($row->InvGrandTotal, 0, ',', '.').'</span> 
                     <div class="divider-horizontal"></div>
@@ -4081,7 +4398,7 @@ class ProjectModel extends Model
                     <span class="text-head-2"><i class="fa-solid fa-money-bill pe-2"></i>Rincian Pembayaran</span>
                     <div class="action">
                         <a class="btn btn-sm btn-primary btn-action rounded" onclick="proforma_project_invoice('.$project_id.','.$row->InvId.',this)"><i class="fa-solid fa-circle-plus pe-2"></i>Buat Data Proforma</a> 
-                        <a class="btn btn-sm btn-primary btn-action rounded" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')"><i class="fa-solid fa-circle-plus pe-2"></i>Buat Data Payment</a>
+                        <a class="btn btn-sm btn-primary btn-action rounded" onclick="add_project_payment('.$project_id.','.$row->InvId.',this,\'invoice\')"><i class="fa-solid fa-circle-plus pe-2"></i>Buat Data Pembayaran</a>
                     </div>
                 </div>
                 '.$html_proforma.' 
@@ -4194,6 +4511,8 @@ class ProjectModel extends Model
             "InvRef"=>$header["InvRef"],
             "InvRefType"=>$header["InvRefType"],
             "InvAdmin"=>$header["InvAdmin"], 
+            "InvDelivery"=>$header["InvDelivery"], 
+            "InvDeliveryTotal"=>$header["InvDeliveryTotal"], 
             "InvCustName"=>$header["InvCustName"],
             "InvCustTelp"=>$header["InvCustTelp"],
             "InvAddress"=>$header["InvAddress"], 
@@ -4221,38 +4540,14 @@ class ProjectModel extends Model
             $builder = $this->db->table("invoice_detail");
             $builder->insert($row); 
         }
-
-        
-        
-        //update status sample
-        if( $header["InvRefType"] == "Penawaran"){ 
-            $builder = $this->db->table("penawaran"); 
-            $builder->set('SphStatus', 1); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SphId', $header["InvRef"]); 
-            $builder->update(); 
-        }  
+ 
+        //update status Penawaran
+        if( $header["InvRefType"] == "Penawaran") $this->update_data_sph_status($header["InvRef"]);
         //update status Survey
-        if( $header["InvRefType"] == "Survey"){ 
-            $builder = $this->db->table("survey"); 
-            $builder->set('SurveyStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SurveyId', $header["InvRef"]); 
-            $builder->update(); 
-        }  
-        //update status Survey
-        if( $header["InvRefType"] == "Sample"){ 
-            $builder = $this->db->table("sample"); 
-            $builder->set('SampleStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SampleId', $header["InvRef"]); 
-            $builder->update(); 
-        }  
-
-        
+        if( $header["InvRefType"] == "Survey") $this->update_data_survey_status($header["InvRef"]);
+        //update status Sample
+        if( $header["InvRefType"] == "Sample") $this->update_data_sample_status($header["InvRef"]); 
+ 
         //update status project
         $builder = $this->db->table("project"); 
         $builder->set('ProjectStatus', 6);  
@@ -4260,17 +4555,26 @@ class ProjectModel extends Model
         $builder->update();     
     } 
     public function update_data_invoice($data,$id){ 
-        $header = $data["header"]; 
+        $builder = $this->db->table("invoice");
+        $builder->select('*'); 
+        $builder->where("InvId",$id);
+        $data_old = $builder->get()->getRow();  
+        
 
+        $header = $data["header"];  
         $builder = $this->db->table("invoice"); 
         $builder->set('InvDate', $header["InvDate"]);   
         $builder->set('InvAdmin', $header["InvAdmin"]); 
+        $builder->set('InvRef', $header["InvRef"]); 
+        $builder->set('InvRefType', $header["InvRefType"]); 
         $builder->set('InvCustName', $header["InvCustName"]);
         $builder->set('InvCustTelp', $header["InvCustTelp"]);
         $builder->set('InvAddress', $header["InvAddress"]); 
+        $builder->set('InvDelivery', $header["InvDelivery"]); 
         $builder->set('TemplateId', $header["TemplateId"]); 
         $builder->set('InvSubTotal', $header["InvSubTotal"]); 
         $builder->set('InvDiscItemTotal', $header["InvDiscItemTotal"]); 
+        $builder->set('InvDeliveryTotal', $header["InvDeliveryTotal"]); 
         $builder->set('InvDiscTotal', $header["InvDiscTotal"]); 
         $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
         $builder->set('InvNpwp', $header["InvNpwp"]);  
@@ -4292,6 +4596,24 @@ class ProjectModel extends Model
             $builder = $this->db->table("invoice_detail");
             $builder->insert($row); 
         } 
+        
+        //NEW
+        //update status Penawaran 
+        if( $header["InvRefType"] == "Penawaran") $this->update_data_sph_status($header["InvRef"]);
+        //update status Survey
+        if( $header["InvRefType"] == "Survey") $this->update_data_survey_status($header["InvRef"]);
+        //update status Sample
+        if( $header["InvRefType"] == "Sample") $this->update_data_sample_status($header["InvRef"]); 
+
+
+        //OLD 
+        //update status Penawaran
+        if( $data_old->InvRefType == "Penawaran") $this->update_data_sph_status($data_old->InvRef);
+        //update status Survey
+        if( $data_old->InvRefType == "Survey") $this->update_data_survey_status($data_old->InvRef);
+        //update status Sample
+        if( $data_old->InvRefType== "Sample") $this->update_data_sample_status($data_old->InvRef); 
+
 
         $this->update_data_invoice_status($id);
     }
@@ -4303,14 +4625,30 @@ class ProjectModel extends Model
         $builder->where('InvId',$id);
         $builder->update();  
 
+        $builder = $this->db->table("invoice");  
+        $builder->where('InvId',$id);
+        $result = $builder->get()->getRow(); 
+        
+        //update status Penawaran
+        if( $result->InvRefType == "Penawaran") $this->update_data_sph_status($result->InvRef);
+        //update status Survey
+        if( $result->InvRefType == "Survey") $this->update_data_survey_status($result->InvRef);
+        //update status Sample
+        if( $result->InvRefType == "Sample") $this->update_data_sample_status($result->InvRef);
+
         return JSON_ENCODE(array("status"=>true));
     }
     public function get_data_invoice($id){
         $builder = $this->db->table("invoice");
-        $builder->select("*,InvNpwp NpwpId,b.Name NpwpName,b.Image NpwpImage, InvKtp KtpId,a.Name KtpName,a.Image KtpImage");
-        $builder->join("customer","invoice.CustomerId = customer.CustomerId","left");
+        $builder->select("*,  CASE 
+        WHEN InvRefType = '-' THEN 'No data Selected'
+        WHEN InvRefType = 'Survey' THEN (select SurveyCode from survey where SurveyId = InvRef)
+        WHEN InvRefType = 'Sample' THEN (select SampleCode from sample where SampleId = InvRef)
+        WHEN InvRefType = 'Penawaran' THEN (select SphCode from penawaran where SphId = InvRef)
+        END AS 'InvRefCode',InvNpwp NpwpId,b.Name NpwpName,b.Image NpwpImage, InvKtp KtpId,a.Name KtpName,a.Image KtpImage"); 
         $builder->join("users","id = InvAdmin","left");
         $builder->join("project","project.ProjectId = invoice.ProjectId","left");
+        $builder->join("customer","project.CustomerId = customer.CustomerId","left");
         $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
         $builder->join("lampiran a","a.Id = invoice.InvKtp","left");
         $builder->join("lampiran b","b.Id = invoice.InvNpwp","left");
@@ -4345,25 +4683,29 @@ class ProjectModel extends Model
 
         //status delivery
         $deliverystatus = 0; 
-        $builder = $this->db->table("delivery"); 
-        $builder->join('delivery_detail',"DeliveryDetailRef=DeliveryId","left"); 
-        $builder->where('DeliveryRef',$id); 
-        $builder->where('DeliveryRefType',"Invoice"); 
-        $results = $builder->get()->getResult(); 
-        $hasildelivery = array_sum(array_column($results, 'DeliveryDetailQty')); 
- 
-        $builder = $this->db->table("invoice_detail");  
-        $builder->join('invoice',"InvDetailRef=InvId","left"); 
-        $builder->where('InvId',$id);
-        $builder->where('ProdukId >',0);
-        $results = $builder->get()->getResult(); 
-        $hasilsample = array_sum(array_column($results, 'InvDetailQty')); 
-
-        if($hasilsample <= $hasildelivery ){
+        if($result->InvDelivery > 0){
+            $builder = $this->db->table("delivery"); 
+            $builder->join('delivery_detail',"DeliveryDetailRef=DeliveryId","left"); 
+            $builder->where('DeliveryRef',$id); 
+            $builder->where('DeliveryRefType',"Invoice"); 
+            $results = $builder->get()->getResult(); 
+            $hasildelivery = array_sum(array_column($results, 'DeliveryDetailQty')); 
+    
+            $builder = $this->db->table("invoice_detail");  
+            $builder->join('invoice',"InvDetailRef=InvId","left"); 
+            $builder->where('InvId',$id);
+            $builder->where('ProdukId >',0);
+            $results = $builder->get()->getResult(); 
+            $hasilsample = array_sum(array_column($results, 'InvDetailQty')); 
+            if($hasilsample <= $hasildelivery ){
+                $deliverystatus = 1;
+            } 
+        }else{
             $deliverystatus = 1;
-        } 
+        }
+
  
-        if($result->InvStatus < 2){ 
+        if($result->InvStatus < 3){ 
             if($paymentstatus == 1 && $deliverystatus == 1 ){ 
                 $builder = $this->db->table("invoice"); 
                 $builder->set('InvStatus', 2); 
@@ -4391,6 +4733,79 @@ class ProjectModel extends Model
         }
 
         return $paymentstatus. " | ".$deliverystatus;
+    }
+    public function update_data_invoice_delivery($data,$id){  
+        $builder = $this->db->table("invoice");  
+        $builder->set('InvDelivery', $data["status"]);   
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId', $id); 
+        $builder->update();   
+
+        //update status Sample
+        $this->update_data_invoice_status($id); 
+    } 
+    public function get_data_ref_invoice($refid,$search = null){
+        if(isset($data["searchTerm"])){
+            $querywhere  = "and (
+                code like '%".$data["searchTerm"]."%' or 
+                CustomerTelp like '%".$data["searchTerm"]."%' or 
+                CustomerName like '%".$data["searchTerm"]."%' or 
+                CustomerAddress like '%".$data["searchTerm"]."%' 
+            ) ";
+        }else{
+            $querywhere = "";
+        }  
+        $querysample = "";
+        $querysurvey = "";
+        if(isset($data["ref"])){
+            if($data["type"]=="Sample"){
+                $querysample  = "or SampleId = ".$data["ref"];
+            } 
+            if($data["type"]=="Survey"){
+                $querysurvey  = "or SurveyId = ".$data["ref"];
+            }  
+        }
+        $builder = $this->db->query('SELECT * FROM 
+        (
+            SELECT 
+                SampleId refid, 
+                SampleCode as code,
+                ProjectId ref,
+                SampleDate date,
+                "Sample" AS type,
+                SampleCustName as CustomerName,
+                SampleCustTelp as CustomerTelp,
+                SampleAddress as CustomerAddress
+                FROM sample where SampleStatus < 2 '.$querysample.'
+            UNION 
+            SELECT 
+                SurveyId refid,
+                SurveyCode,
+                ProjectId ref,
+                SurveyDate date, 
+                "Survey",
+                SurveyCustName,
+                SurveyCustTelp,
+                SurveyAddress
+                FROM survey where SurveyStatus < 2 '.$querysurvey.'
+            UNION 
+            SELECT 
+                SphId refid,
+                SphCode,
+                ProjectId ref,
+                SphDate date, 
+                "Penawaran",
+                SphCustName,
+                SphCustTelp,
+                SphAddress
+                FROM penawaran where SphStatus < 1 '.$querysurvey.'
+        ) AS ref_join
+        LEFT JOIN project ON project.ProjectId = ref_join.ref 
+        WHERE ref_join.ref = '.$refid.' 
+        '. $querywhere.'
+        ORDER BY ref_join.date asc'); 
+        return $builder->getResultArray();  
     }
 
  
@@ -5989,25 +6404,10 @@ class ProjectModel extends Model
         $query = $builder->get()->getRow();
         echo json_encode(array("status"=>true,"data"=>$query)); 
     }
-
-    /**
-     * FUNCTION UNTUK SURVEY
-     */  
-
-    /**
-     * FUNCTION UNTUK SPH / PENAWARAN
-     */ 
-
-
-    /**
-     * FUNCTION UNTUK INVOICE / FAKTUR
-     */ 
-
  
     /**
      * FUNCTION UNTUK PAYMENT
-     */ 
-
+     */  
      
     public function insert_data_payment($data){
         $builder = $this->db->table("payment");
@@ -6054,13 +6454,9 @@ class ProjectModel extends Model
         } 
 
 
-        if($data["PaymentRefType"] == "Sample"){
-            $this->update_data_sample_status($data["PaymentRef"]);
-        }
+        if($data["PaymentRefType"] == "Sample") $this->update_data_sample_status($data["PaymentRef"]);
 
-        if($data["PaymentRefType"] == "Invoice"){ 
-            $this->update_data_invoice_status($data["PaymentRef"]);
-        }
+        if($data["PaymentRefType"] == "Invoice") $this->update_data_invoice_status($data["PaymentRef"]); 
     }
     public function update_data_payment($data,$id){
         $builder = $this->db->table("payment"); 

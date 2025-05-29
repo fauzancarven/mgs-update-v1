@@ -361,6 +361,14 @@ class ActionController extends BaseController
             echo $models->delete_data_payment($id);  
         }
     }
+    public function invoice_update_delivery($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->update_data_invoice_delivery($postData,$id);  
+        }
+    }
     public function payment_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

@@ -414,7 +414,7 @@
     });
     $("#SphRef").select2({
         dropdownParent: $('#modal-add-sph .modal-content'),
-        placeholder: "Pilih Toko",
+        placeholder: "Pilih dokument referensi",
         ajax: {
             url: "<?= base_url()?>select2/get-data-ref-sph/<?= $project->ProjectId?>",
             dataType: 'json', 
@@ -468,7 +468,7 @@
         );
         $(option).attr('data-type', '<?= is_null($ref_header) ? "" : $ref_header["type"] ?>'); 
         $('#SphRef').append(option).trigger('change.select2');
-        $('#SphRef').attr("disabled",true);
+        $('#SphRef').attr("disabled",true); 
     }
 
      

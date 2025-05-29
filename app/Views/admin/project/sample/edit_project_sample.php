@@ -394,7 +394,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SampleDeliveryTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SampleDeliveryTotal" value="0" <?= ($project->SampleDelivery == 0 ? "disabled" : "" )?>>
                                 </div>     
                             </div>
                         </div> 

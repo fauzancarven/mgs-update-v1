@@ -443,6 +443,10 @@
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Disc</td>
                     <td class="td-center text-bold">Rp. <?= number_format($inv->InvDiscTotal, 0, ',', '.') ?></td>
                 </tr>
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>" style="<?= $inv->InvDeliveryTotal > 0 ? "" : "display:none;" ?>">
+                    <td class="td-footer text-bold" colspan="<?= $col ?>">Biaya Pengiriman</td>
+                    <td class="td-center text-bold">Rp. <?= number_format($inv->InvDeliveryTotal, 0, ',', '.') ?></td>
+                </tr>
                 <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Grand Total</td>
                     <td class="td-center text-bold">Rp. <?= number_format($inv->InvGrandTotal, 0, ',', '.') ?></td>

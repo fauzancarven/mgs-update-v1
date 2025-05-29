@@ -79,6 +79,7 @@ $routes->post('/action/add-data-sample', 'ActionController::sample_add', ['filte
 $routes->post('/action/edit-data-sample/(:num)', 'ActionController::sample_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-sample/(:num)', 'ActionController::sample_delete/$1', ['filter' => 'login']);
 $routes->post('/action/update-data-sample-delivery/(:num)', 'ActionController::sample_update_delivery/$1', ['filter' => 'login']); 
+$routes->post('/action/update-data-invoice-delivery/(:num)', 'ActionController::invoice_update_delivery/$1', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 

@@ -302,9 +302,9 @@
             </tbody>
         </table> 
         <?php
-            $col = 1;
+            $col = 2;
             if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++;
-            if($postdata["image"]==1) $col++;
+            // if($postdata["image"]==1) $col++;
         ?>
         <table class="item">
             <thead>
@@ -421,6 +421,14 @@
                         <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($inv->InvDiscTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>  
+                <tr style="<?= $inv->InvDeliveryTotal > 0 ? "" : "display:none;" ?>">
+                    <td colspan="2" style="border-left:none;line-height:1;"></td>
+                    <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Pengiriman</th>
+                    <th class="td-center text-bold">
+                        <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
+                        <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($inv->InvDeliveryTotal, 0, ',', '.') ?></div>
+                    </th>
+                </tr> 
                 <tr>
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
                     <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Grand Total</th>

@@ -418,7 +418,7 @@
     
     $("#SphRef").select2({
         dropdownParent: $('#modal-edit-sph .modal-content'),
-        placeholder: "Pilih Toko",
+        placeholder: "Pilih dokument referensi",
         ajax: {
             url: "<?= base_url()?>select2/get-data-ref-sph/<?= $project->ProjectId?>",
             dataType: 'json', 
