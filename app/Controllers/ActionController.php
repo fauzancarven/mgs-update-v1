@@ -387,6 +387,15 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+    public function payment_request(){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->insert_data_payment_request($postData); 
+            echo json_encode(array("status"=>true));
+        }
+    }
     public function proforma_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

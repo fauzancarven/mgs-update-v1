@@ -5288,12 +5288,42 @@ class ProjectModel extends Model
                                 </div>
                                 ';
                 } 
+                
+                if( $payment_total == 0 ){
+                    $builder = $this->db->table("payment_request");
+                    $builder->select('*'); 
+                    $builder->where('PaymentRequestRef',$row_delivery->DeliveryId);
+                    $builder->where('PaymentRequestRefType',"Delivery");
+                    $builder->orderby('PaymentRequestId', 'ASC'); 
+                    $paymentrequest = $builder->get()->getRow(); 
+                    if($paymentrequest){ 
+                        $payment_total += $paymentrequest->PaymentRequestTotal;
+                        $html_payment = '
+                        <div class="alert alert-success p-2 m-1" role="alert"> 
+                            <span class="text-head-3">
+                                <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
+                                Data pembayaran berhasil direquest, menunggu approval dari accounting
+                            </span> 
+                            <br>
+                            <span class="text-head-3 ps-5 pt-2">Nama Bank     : '.$paymentrequest->PaymentRequestBank.'</span>
+                            <br>
+                            <span class="text-head-3 ps-5">No. Rekening  : '.$paymentrequest->PaymentRequestRek.'</span>
+                            <br>
+                            <span class="text-head-3 ps-5">Nama Rekening : '.$paymentrequest->PaymentRequestName.'</span>
+                            <br>
+                            <span class="text-head-3 ps-5 pb-2">Total : '.number_format($paymentrequest->PaymentRequestTotal).'</span>
+                            <br>
+                        </div>';
+                    }
+                  
+                }
+
                 if($html_payment == ""){
                     $html_payment = '<div class="alert alert-warning p-2 m-1" role="alert"> 
                             <span class="text-head-3">
                                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                                 Belum ada data pembayaran yang dibuat, Silahkan  
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_project_payment('.$project_id.','.$row_delivery->DeliveryId.',this,\'delivery\')">ajukan pembayaran</a>
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_project_payment('.$project_id.','.$row_delivery->DeliveryId.',this,\'delivery\')">buat permohonan pembayaran</a>
                             </span> 
                         </div>';
                 }elseif($payment_total < $row_delivery->DeliveryTotal){
@@ -5302,7 +5332,7 @@ class ProjectModel extends Model
                         <span class="text-head-3">
                             <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                             Masih ada sisa pembayaran yang belum diselesaikan, Silahkan  
-                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_payment_delivery('.$project_id.','.$row_delivery->DeliveryId.',this,\'delivery\')">buat permohonan pembayaran</a>
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_project_payment('.$project_id.','.$row_delivery->DeliveryId.',this,\'delivery\')">buat permohonan pembayaran</a>
                         </span> 
                     </div>';
                 }
@@ -5445,7 +5475,7 @@ class ProjectModel extends Model
             </script>
             <div class="p-2 pb-0 text-center"><h5 class="fw-bold" style="color: #032e7c !important; ">Pengiriman</h5></div>
             <div class="d-flex justify-content-center flex-column align-items-center">
-                <span class="text-detail-2">Pengiriman dibuat berdasarkan data invoice dan sample ataupun pembelian.</span><span class="text-detail-2"> masuk ke menu tersebut klik tambah pengiriman dari list tersebut</span> 
+                <span class="text-detail-2">Pengiriman dibuat berdasarkan data invoice dan sample.</span><span class="text-detail-2"> masuk ke menu tersebut klik tambah pengiriman dari list tersebut</span> 
             </div>
             <div class="group-delivery">
             '. $html_delivery.'
@@ -6046,16 +6076,43 @@ class ProjectModel extends Model
                 
                 } 
                  
-                if($html_payment !== ""){
-                    $html_payment = '<span class="ps-2 text-head-3">DATA PAYMENT</span>'.$html_payment;
+                if( $payment_total == 0 ){
+                    $builder = $this->db->table("payment_request");
+                    $builder->select('*'); 
+                    $builder->where('PaymentRequestRef',$row->POId);
+                    $builder->where('PaymentRequestRefType',"Pembelian");
+                    $builder->orderby('PaymentRequestId', 'ASC'); 
+                    $paymentrequest = $builder->get()->getRow(); 
+                    if($paymentrequest){ 
+                        $payment_total += $paymentrequest->PaymentRequestTotal;
+                        $html_payment = '
+                        <div class="alert alert-success p-2 m-1" role="alert"> 
+                            <span class="text-head-3">
+                                <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
+                                Data pembayaran berhasil direquest, menunggu approval dari accounting
+                            </span> 
+                            <br>
+                            <span class="text-head-3 ps-5 pt-2">Nama Bank     : '.$paymentrequest->PaymentRequestBank.'</span>
+                            <br>
+                            <span class="text-head-3 ps-5">No. Rekening  : '.$paymentrequest->PaymentRequestRek.'</span>
+                            <br>
+                            <span class="text-head-3 ps-5">Nama Rekening : '.$paymentrequest->PaymentRequestName.'</span>
+                            <br>
+                            <span class="text-head-3 ps-5 pb-2">Total : '.number_format($paymentrequest->PaymentRequestTotal).'</span>
+                            <br>
+                        </div>';
+                    }
+                  
                 }
+                // if($html_payment !== ""){
+                //     $html_payment = '<span class="ps-2 text-head-3">DATA PAYMENT</span>'.$html_payment;
+                //}
                 if($payment_total == 0){
                     $html_payment .= '<div class="alert alert-warning p-2 m-1" role="alert"> 
-                            <span class="text-head-3">
+                            <span class="text-head-3"> 
                                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                                Belum ada data pembayaran, silahkan tambahkan data   
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->POId.',this,\'pembelian\')">Pembayaran</a> atau 
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_project_payment('.$project_id.','.$row->POId.',this,\'pembelian\')">ajukan pembayaran</a>
+                                Belum ada data pembayaran yang dibuat, Silahkan  
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_project_payment('.$project_id.','.$row->POId.',this,\'pembelian\')">buat permohonan pembayaran</a> 
                             </span> 
                         </div>';
                 } else if($payment_total < $row->POGrandTotal){   
@@ -6443,6 +6500,41 @@ class ProjectModel extends Model
         if($data["PaymentRefType"] == "Sample") $this->update_data_sample_status($data["PaymentRef"]);
 
         if($data["PaymentRefType"] == "Invoice") $this->update_data_invoice_status($data["PaymentRef"]); 
+    }
+    public function insert_data_payment_request($data){
+        $builder = $this->db->table("payment_request");
+        $builder->insert(array(  
+            "PaymentRequestRef"=>$data["PaymentRequestRef"],
+            "PaymentRequestRefType"=>$data["PaymentRequestRefType"], 
+            "ProjectId"=>$data["ProjectId"],
+            "PaymentRequestBank"=>$data["PaymentRequestBank"],
+            "PaymentRequestRek"=>$data["PaymentRequestRek"],
+            "PaymentRequestName"=>$data["PaymentRequestName"],
+            "PaymentRequestTotal"=>$data["PaymentRequestTotal"],
+            "PaymentRequestStatus"=>$data["PaymentRequestStatus"], 
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+        ));  
+
+        $curl = curl_init();
+        $data = "*PENGAJUAN PEMBAYARAN* \nada request pembayaran dari dokumen ".$data["PaymentRequestRefType"]." yang dibuat oleh ".user()->username." ditransfer ke \n\tBank \t\t: ".$data["PaymentRequestBank"]."\n\tNo. Rekening \t: ".$data["PaymentRequestRek"]."\n\tNama \t\t: ".$data["PaymentRequestName"]."\n\tTotal \t\t: Rp. ".number_format($data["PaymentRequestTotal"]);
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://wa.mahieraglobalsolution.com/send-message',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => 'sender=089676143063&number=0895352992663&message='.urlencode($data),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/x-www-form-urlencoded'
+            ),
+        ));
+
+        $response = curl_exec($curl); 
+        curl_close($curl); 
     }
     public function update_data_payment($data,$id){
         $builder = $this->db->table("payment"); 

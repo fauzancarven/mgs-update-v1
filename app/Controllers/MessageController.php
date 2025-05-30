@@ -762,14 +762,16 @@ class MessageController extends BaseController
             $req = $models->get_data_delivery($id);
             $data["total"] = $req->DeliveryTotal;
             $data["ref"] = $req->DeliveryId;
-            $data["refType"] = "delivery";
+            $data["refType"] = "Delivery";
+            $data["project"] = $req->ProjectId;
             return $this->response->setBody(view('admin/project/payment/request_payment.php',$data));  
         }   
         if($postData['type'] == "pembelian"){
             $req = $models->get_data_pembelian($id);
             $data["total"] = $req->POGrandTotal;
             $data["ref"] = $req->POId;
-            $data["refType"] = "pembelian";
+            $data["refType"] = "Pembelian";
+            $data["project"] = $req->ProjectId;
             return $this->response->setBody(view('admin/project/payment/request_payment.php',$data)); 
             
         }

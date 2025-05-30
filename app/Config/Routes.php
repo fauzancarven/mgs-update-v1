@@ -92,6 +92,7 @@ $routes->post('/action/delete-data-invoice/(:num)', 'ActionController::invoice_d
 $routes->post('/action/add-data-payment', 'ActionController::payment_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-payment/(:num)', 'ActionController::payment_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project-payment/(:num)', 'ActionController::payment_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/request-data-payment', 'ActionController::payment_request', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-proforma', 'ActionController::proforma_add', ['filter' => 'login']);    
 $routes->post('/action/edit-data-proforma/(:num)', 'ActionController::proforma_edit/$1', ['filter' => 'login']);
