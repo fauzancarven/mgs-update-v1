@@ -173,9 +173,9 @@ class PrintController extends BaseController
 
                 $models = new ProjectModel();   
                 $modelheader = new HeaderModel(); 
-                $data["payment"] = $models->getdataPayment($id); 
+                $data["payment"] = $models->get_data_payment($id); 
                 if($data["payment"]->PaymentRefType=="Invoice"){ 
-                        $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->PaymentRef); 
+                        $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef); 
                         $data["project"] = $models->get_data_invoice($data["payment"]->PaymentRef); 
                         $data["detail"] = $models->get_data_invoice_detail($data["payment"]->PaymentRef); 
                         $data["customer"] = array(
@@ -212,9 +212,9 @@ class PrintController extends BaseController
                 $models = new ProjectModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
-                $data["payment"] = $models->getdataPayment($id); 
+                $data["payment"] = $models->get_data_payment($id); 
                 if($data["payment"]->PaymentRefType == "Invoice"){
-                        $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->PaymentRef); 
+                        $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef); 
 
                         $data["inv"] = $models->get_data_invoice($data["payment"]->PaymentRef);
                         $dataref = "";
@@ -302,9 +302,9 @@ class PrintController extends BaseController
 
                 $models = new ProjectModel();   
                 $modelheader = new HeaderModel();  
-                $data["payment"] = $models->getdataProforma($id); 
+                $data["payment"] = $models->get_data_proforma($id); 
                 if($data["payment"]->PaymentRefType=="Invoice"){ 
-                        $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->PaymentRef); 
+                        $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef); 
                         $data["project"] = $models->get_data_invoice($data["payment"]->PaymentRef); 
                         $data["detail"] = $models->get_data_invoice_detail($data["payment"]->PaymentRef); 
                         $data["customer"] = array(
@@ -313,7 +313,7 @@ class PrintController extends BaseController
                                 "CustomerAddress" => $data["project"]->InvAddress,
                         ) ;
                 }  
-                $data["payments"] = $models->getdataProformaByRef($data["payment"]->PaymentRef); 
+                $data["payments"] = $models->get_data_proforma_by_ref($data["payment"]->PaymentRef); 
                 $data["project"] = $models->get_data_invoice($data["payment"]->PaymentRef); 
                 $data["detail"] = $models->get_data_invoice_detail($data["payment"]->PaymentRef);  
                 $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  

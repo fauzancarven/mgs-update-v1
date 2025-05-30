@@ -396,6 +396,23 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+    public function payment_request_edit($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->update_data_payment_request($postData,$id); 
+            echo json_encode(array("status"=>true));
+        }
+    }
+    public function payment_request_delete($id){
+        $request = Services::request();
+        $models = new ProjectModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_payment_request($id);  
+        }
+    }
     public function proforma_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

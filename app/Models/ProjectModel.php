@@ -159,15 +159,7 @@ class ProjectModel extends Model
         file_put_contents($lokasi ."/". $nama_file, $biner); 
         return $lokasi ."/". $nama_file;
     }
-    public function getSelectRefVendor($refid,$search = null){
-        $builder = $this->db->query('SELECT * FROM 
-        (SELECT SphId refid, SphCode as code,ProjectId ref,SphDate date,"SPH" AS type FROM penawaran UNION SELECT InvId refid,InvCode,ProjectId ref,InvDate date, "INV" FROM invoice) AS ref_join
-        LEFT JOIN project ON project.ProjectId = ref_join.ref
-        LEFT JOIN customer ON customer.CustomerId = project.CustomerId
-        WHERE ref_join.ref = '.$refid.'
-        ORDER BY ref_join.date asc');
-        return $builder->getResultArray();  
-    }
+  
     public function getSelectRefInvoice($refid,$search = null){
         $builder = $this->db->query('SELECT *  FROM penawaran left join customer ON customer.CustomerId = penawaran.CustomerId
         WHERE ProjectId = '.$refid.'  ORDER BY SphDate asc');
@@ -3036,6 +3028,50 @@ class ProjectModel extends Model
         ORDER BY ref_join.date asc'); 
         return $builder->getResultArray();  
     }
+
+    public function get_data_ref_pembelian($refid,$search = null){
+
+        if($search){
+            $querywhere  = "and (
+                code like '%".$search."%' or 
+                CustomerTelp like '%".$search."%' or 
+                CustomerName like '%".$search."%' or 
+                CustomerAddress like '%".$search."%' 
+            ) ";
+        }else{
+            $querywhere = "";
+        }
+
+        $builder = $this->db->query('SELECT * FROM 
+        (
+            SELECT 
+                SphId refid, 
+                SphCode as code,
+                ProjectId ref,
+                SphDate date,
+                "Penawaran" AS type,
+                SphCustName as CustomerName,
+                SphCustTelp as CustomerTelp,
+                SphAddress as CustomerAddress
+                FROM penawaran where SphStatus < 1 
+            UNION 
+            SELECT 
+                InvId refid,
+                InvCode,
+                ProjectId ref,
+                InvDate date, 
+                "Invoice",
+                InvCustName,
+                InvCustTelp,
+                InvAddress
+                FROM invoice where InvoiceStatus < 2
+        ) AS ref_join
+        LEFT JOIN project ON project.ProjectId = ref_join.ref 
+        WHERE ref_join.ref = '.$refid.' 
+        '. $querywhere.'
+        ORDER BY ref_join.date asc'); 
+        return $builder->getResultArray();   
+    }
   
     /************************************* */
     /** FUNCTION UNTUK MENU PROJECT PENAWARAN */  
@@ -5300,20 +5336,21 @@ class ProjectModel extends Model
                         $payment_total += $paymentrequest->PaymentRequestTotal;
                         $html_payment = '
                         <div class="alert alert-success p-2 m-1" role="alert"> 
-                            <span class="text-head-3">
-                                <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
-                                Data pembayaran berhasil direquest, menunggu approval dari accounting
-                            </span> 
-                            <br>
-                            <span class="text-head-3 ps-5 pt-2">Nama Bank     : '.$paymentrequest->PaymentRequestBank.'</span>
-                            <br>
-                            <span class="text-head-3 ps-5">No. Rekening  : '.$paymentrequest->PaymentRequestRek.'</span>
-                            <br>
-                            <span class="text-head-3 ps-5">Nama Rekening : '.$paymentrequest->PaymentRequestName.'</span>
-                            <br>
-                            <span class="text-head-3 ps-5 pb-2">Total : '.number_format($paymentrequest->PaymentRequestTotal).'</span>
-                            <br>
-                        </div>';
+                        <span class="text-head-3">
+                            <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
+                            Data pembayaran berhasil direquest, menunggu approval pembayaran
+                        </span> 
+                        <br>
+                        <span class="text-head-3 ps-2 pt-2">Nama Bank     : '.$paymentrequest->PaymentRequestBank.'</span>
+                        <br>
+                        <span class="text-head-3 ps-2">No. Rekening  : '.$paymentrequest->PaymentRequestRek.'</span>
+                        <br>
+                        <span class="text-head-3 ps-2">Nama Rekening : '.$paymentrequest->PaymentRequestName.'</span>
+                        <br>
+                        <span class="text-head-3 ps-2 pb-2">Total : '.number_format($paymentrequest->PaymentRequestTotal).'</span>
+                        <br>
+                        <a class="text-head-3 text-primary px-2" style="cursor:pointer" onclick="request_project_payment_edit('.$project_id.','.$paymentrequest->PaymentRequestId.',this,\'delivery\')">Ubah permohonan pembayaran</a>|<a class="text-head-3 text-primary ps-2" style="cursor:pointer" onclick="request_project_payment_delete('.$project_id.','.$paymentrequest->PaymentRequestId.',this,\'delivery\')">hapus permohonan pembayaran</a>
+                    </div>';
                     }
                   
                 }
@@ -5854,8 +5891,7 @@ class ProjectModel extends Model
         } 
     } 
     private function data_project_pembelian($project_id){
-        $html = "";
-
+        $html = ""; 
         $builder = $this->db->table("pembelian");
         $builder->select('*,pembelian.VendorName VendorName'); 
         $builder->join('users',"id=POAdmin","left"); 
@@ -5865,9 +5901,7 @@ class ProjectModel extends Model
         $query = $builder->get()->getResult();  
 
        
-        foreach($query as $row){
-            
-
+        foreach($query as $row){ 
             $builder = $this->db->table("pembelian_detail");
             $builder->select('*'); 
             $builder->where('PODetailRef',$row->POId);
@@ -5875,56 +5909,115 @@ class ProjectModel extends Model
             $items = $builder->get()->getResult(); 
             $html_items = "";
             $no = 1; 
+            $huruf  = "A"; 
             foreach($items as $item){ 
+                // $arr_varian = json_decode($item->PODetailVarian);
+                // $arr_badge = "";
+                // $arr_no = 0;
+                // foreach($arr_varian as $varian){
+                //     $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                //     $arr_no++;
+                // }
+
+                // $models = new ProdukModel();
+                // $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->PODetailVarian,true) ;
+
+                // $html_items .= '
+                // <div class="row">
+                //     <div class="col-12 col-md-6 my-1 varian">   
+                //         <div class="d-flex gap-2 align-items-center">
+                //             ' . ($gambar ? "<img src='".$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url("assets/images/produk/default.png").'?date='.date("Y-m-dH:i:s")."' alt='Gambar Default' >").'  
+                //             <div class="d-flex flex-column text-start">
+                //                 <span class="text-head-3 text-uppercase">'.$item->PODetailText.'</span>
+                //                 <span class="text-detail-2 text-truncate">'.$item->PODetailGroup.'</span> 
+                //                 <div class="d-flex flex-wrap gap-1">
+                //                     '.$arr_badge.'
+                //                 </div>
+                //             </div> 
+                //         </div>
+                //     </div>'; 
+                // $html_items .= '<div class="col-12 col-md-6 my-1 detail">
+                //                     <div class="row"> 
+                //                         <div class="col-6 col-md-3 px-1">   
+                //                             <div class="d-flex flex-column">
+                //                                 <span class="text-detail-2">Qty:</span>
+                //                                 <span class="text-head-2">'.number_format($item->PODetailQty, 2, ',', '.').' '.$item->PODetailSatuanText.'</span>
+                //                             </div>
+                //                         </div>  
+                //                         <div class="col-6 col-md-4 px-1">   
+                //                             <div class="d-flex flex-column">
+                //                                 <span class="text-detail-2">Harga:</span>
+                //                                 <span class="text-head-2">Rp. '.number_format($item->PODetailPrice, 0, ',', '.').'</span>
+                //                             </div>
+                //                         </div>  
+                //                         <div class="col-12 col-md-4 px-1">   
+                //                             <div class="d-flex flex-column">
+                //                                 <span class="text-detail-2">Total:</span>
+                //                                 <span class="text-head-2">Rp. '.number_format($item->PODetailTotal, 0, ',', '.').'</span>
+                //                             </div>
+                //                         </div> 
+                //                     </div>   
+                //                 </div> 
+                //             </div>';
+                // $no++;  
+                
                 $arr_varian = json_decode($item->PODetailVarian);
                 $arr_badge = "";
-                $arr_no = 0;
+                $arr_no = 0; 
                 foreach($arr_varian as $varian){
-                    $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                    $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>'; 
                     $arr_no++;
                 }
-
                 $models = new ProdukModel();
                 $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->PODetailVarian,true) ;
 
                 $html_items .= '
                 <div class="row">
-                    <div class="col-12 col-md-6 my-1 varian">   
-                        <div class="d-flex gap-2 align-items-center">
-                            ' . ($gambar ? "<img src='".$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url("assets/images/produk/default.png").'?date='.date("Y-m-dH:i:s")."' alt='Gambar Default' >").'  
+                    <div class="col-12 col-md-4 my-1 varian">   
+                        <div class="d-flex gap-2 align-items-center"> 
+                            ' . ($item->PODetailType == "product" ? ($gambar ? "<img src='".$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url("assets/images/produk/default.png").'?date='.date("Y-m-dH:i:s")."' alt='Gambar Default' >") : "").'  
                             <div class="d-flex flex-column text-start">
-                                <span class="text-head-3 text-uppercase">'.$item->PODetailText.'</span>
-                                <span class="text-detail-2 text-truncate">'.$item->PODetailGroup.'</span> 
+                                <span class="text-head-3 text-uppercase"  '.($item->PODetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->PODetailText.'</span>
+                                <span class="text-detail-2 text-truncate"  '.($item->PODetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->PODetailGroup.'</span> 
                                 <div class="d-flex flex-wrap gap-1">
                                     '.$arr_badge.'
                                 </div>
                             </div> 
                         </div>
-                    </div>'; 
-                $html_items .= '<div class="col-12 col-md-6 my-1 detail">
-                                    <div class="row"> 
-                                        <div class="col-6 col-md-3 px-1">   
-                                            <div class="d-flex flex-column">
-                                                <span class="text-detail-2">Qty:</span>
-                                                <span class="text-head-2">'.number_format($item->PODetailQty, 2, ',', '.').' '.$item->PODetailSatuanText.'</span>
-                                            </div>
-                                        </div>  
-                                        <div class="col-6 col-md-4 px-1">   
-                                            <div class="d-flex flex-column">
-                                                <span class="text-detail-2">Harga:</span>
-                                                <span class="text-head-2">Rp. '.number_format($item->PODetailPrice, 0, ',', '.').'</span>
-                                            </div>
-                                        </div>  
-                                        <div class="col-12 col-md-4 px-1">   
-                                            <div class="d-flex flex-column">
-                                                <span class="text-detail-2">Total:</span>
-                                                <span class="text-head-2">Rp. '.number_format($item->PODetailTotal, 0, ',', '.').'</span>
-                                            </div>
-                                        </div> 
-                                    </div>   
-                                </div> 
-                            </div>';
-                $no++;  
+                    </div>';
+
+                    
+                if($item->PODetailType == "product"){
+                    $html_items .= '<div class="col-12 col-md-8 my-1 detail">
+                                        <div class="row"> 
+                                            <div class="col-6 col-md-3">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Qty:</span>
+                                                    <span class="text-head-2">'.number_format($item->PODetailQty, 2, ',', '.').' '.$item->PODetailSatuanText.'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-6 col-md-4">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Harga Satuan:</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->PODetailPrice, 0, ',', '.').'</span>
+                                                </div>
+                                            </div>  
+                                            <div class="col-6 col-md-4">   
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-detail-2">Total:</span>
+                                                    <span class="text-head-2">Rp. '.number_format($item->PODetailTotal, 0, ',', '.').'</span>
+                                                </div>
+                                            </div> 
+                                        </div>   
+                                    </div> 
+                                </div>';
+                    $no++;
+                }else{
+                    $html_items .= '<div class="col-12 col-md-8 my-1 detail"></div></div>';
+                    $huruf++;
+                    $no = 1;
+                } 
+                
             } 
  
             $PORef = "-"; 
@@ -6089,17 +6182,18 @@ class ProjectModel extends Model
                         <div class="alert alert-success p-2 m-1" role="alert"> 
                             <span class="text-head-3">
                                 <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
-                                Data pembayaran berhasil direquest, menunggu approval dari accounting
+                                Data pembayaran berhasil direquest, menunggu approval pembayaran
                             </span> 
                             <br>
-                            <span class="text-head-3 ps-5 pt-2">Nama Bank     : '.$paymentrequest->PaymentRequestBank.'</span>
+                            <span class="text-head-3 ps-2 pt-2">Nama Bank     : '.$paymentrequest->PaymentRequestBank.'</span>
                             <br>
-                            <span class="text-head-3 ps-5">No. Rekening  : '.$paymentrequest->PaymentRequestRek.'</span>
+                            <span class="text-head-3 ps-2">No. Rekening  : '.$paymentrequest->PaymentRequestRek.'</span>
                             <br>
-                            <span class="text-head-3 ps-5">Nama Rekening : '.$paymentrequest->PaymentRequestName.'</span>
+                            <span class="text-head-3 ps-2">Nama Rekening : '.$paymentrequest->PaymentRequestName.'</span>
                             <br>
-                            <span class="text-head-3 ps-5 pb-2">Total : '.number_format($paymentrequest->PaymentRequestTotal).'</span>
+                            <span class="text-head-3 ps-2 pb-2">Total : '.number_format($paymentrequest->PaymentRequestTotal).'</span>
                             <br>
+                            <a class="text-head-3 text-primary px-2" style="cursor:pointer" onclick="request_project_payment_edit('.$project_id.','.$paymentrequest->PaymentRequestId.',this,\'pembelian\')">Ubah permohonan pembayaran</a>|<a class="text-head-3 text-primary ps-2" style="cursor:pointer" onclick="request_project_payment_delete('.$project_id.','.$paymentrequest->PaymentRequestId.',this,\'pembelian\')">hapus permohonan pembayaran</a>
                         </div>';
                     }
                   
@@ -6128,15 +6222,7 @@ class ProjectModel extends Model
                 }
                 
             } 
-            // $reference = "-";
-            // if($row->InvId == 0 && $row->SphId ==0){
-            //     $reference = "-";
-            // }else if($row->InvId == 0){
-            //     $reference = $row->SphCode ;
-            // }else{
-            //     //$reference = $row->POCode;
-            // }
-
+            
             $status = "";
 
             $html .= '
@@ -6304,8 +6390,8 @@ class ProjectModel extends Model
             "PODate"=>$header["PODate"],  
             "PODate2"=>$header["PODate"],  
             "ProjectId"=>$header["ProjectId"],
-            "SphId"=>$header["SphId"],
-            "InvId"=>$header["InvId"], 
+            "PORef"=>$header["PORef"],
+            "PORefType"=>$header["PORefType"], 
             "POAdmin"=>$header["POAdmin"], 
             "VendorId"=>$header["VendorId"], 
             "VendorName"=>$header["VendorName"], 
@@ -6335,6 +6421,13 @@ class ProjectModel extends Model
         }
 
         
+        if($header["PORefType"] == "Penawaran"){
+            $this->update_data_sph_status($header["PORef"]);
+        }
+        if($header["PORefType"] == "Invoice"){
+            $this->update_data_invoice_status($header["PORef"]);
+        }
+
         //update status project
         $builder = $this->db->table("project"); 
         $builder->set('ProjectStatus', 4);  
@@ -6383,8 +6476,12 @@ class ProjectModel extends Model
         return JSON_ENCODE(array("status"=>true));
     }
     public function get_data_pembelian($id){
-        $builder = $this->db->table("pembelian"); 
-        $builder->select("*,pembelian.VendorName VendorName,pembelian.ProjectId ProjectId"); 
+        $builder = $this->db->table("pembelian");   
+        $builder->select("*,  CASE 
+        WHEN PORefType = '-' THEN 'No data Selected'
+        WHEN PORefType = 'Invoice' THEN (select InvCode from invoice where InvId = PORef) 
+        WHEN PORefType = 'Penawaran' THEN (select SphCode from penawaran where SphId = PORef)
+        END AS 'PORefCode',pembelian.VendorName VendorName,pembelian.ProjectId ProjectId"); 
         $builder->join("vendor","vendor.VendorId = pembelian.VendorId","left");
         $builder->join("invoice",'invoice.InvId=pembelian.InvId',"left"); 
         $builder->join("penawaran",'penawaran.SphId=pembelian.SphId',"left"); 
@@ -6590,9 +6687,19 @@ class ProjectModel extends Model
         }
 
     }
+    public function update_data_payment_request($data,$id){ 
+        $builder = $this->db->table("payment_request"); 
+        $builder->set('PaymentRequestBank', $data["PaymentRequestBank"]);
+        $builder->set('PaymentRequestRek', $data["PaymentRequestRek"]); 
+        $builder->set('PaymentRequestName', $data["PaymentRequestName"]);  
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
+        $builder->where('PaymentRequestId', $id); 
+        $builder->update(); 
+    }
     public function delete_data_payment($id){ 
          
-        $data_payment = $this->getdataPayment($id); 
+        $data_payment = $this->get_data_payment($id); 
  
         $builder = $this->db->table("payment");
         $builder->where('PaymentId',$id);
@@ -6608,42 +6715,49 @@ class ProjectModel extends Model
 
         return JSON_ENCODE(array("status"=>true));
     }
-    public function getdataPaymentByInvoice($id){
+    public function delete_data_payment_request($id){  
+        $builder = $this->db->table("payment_request");
+        $builder->where('PaymentRequestId',$id);
+        $builder->delete();   
+ 
+        return JSON_ENCODE(array("status"=>true));
+    }
+    public function get_data_payment_by_invoice($id){
         $builder = $this->db->table("payment");  
         $builder->where('PaymentRef',$id); 
         $builder->where('PaymentRefType',"Invoice"); 
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
-    public function getdataPaymentBySample($id){
+    public function get_data_payment_by_sample($id){
         $builder = $this->db->table("payment"); 
         $builder->where('PaymentRef',$id); 
         $builder->where('PaymentRefType',"Sample"); 
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
-    public function getdataPaymentByPO($id){
+    public function get_data_payment_by_pembelian($id){
         $builder = $this->db->table("payment"); 
         $builder->where('PaymentRef',$id); 
         $builder->where('PaymentRefType',"Pembelian");  
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
-    public function getdataPaymentByDelivery($id){
+    public function get_data_payment_by_delivery($id){
         $builder = $this->db->table("payment"); 
         $builder->where('PaymentRef',$id); 
         $builder->where('PaymentRefType',"Pengiriman");  
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
-    public function getdataPayment($id){
+    public function get_data_payment($id){
         $builder = $this->db->table("payment");  
         $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('PaymentId',$id); 
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getRow();  
     }
-    public function getdataImagePayment($project_id,$ref,$type,$id){
+    public function get_data_payment_image($project_id,$ref,$type,$id){
 
         // Cek apakah file gambar ada  
         $path_gambar = 'assets/images/payment/'.$project_id.'/.'.$type.'/'.$id.'.*';   
@@ -6722,17 +6836,22 @@ class ProjectModel extends Model
             $this->update_data_invoice_status($data["PaymentRef"]);
         }
     }
-    public function getdataProformaByRef($id){
+    public function get_data_proforma_by_ref($id){
         $builder = $this->db->table("payment"); 
         $builder->where('PaymentRef',$id); 
         $builder->where('PaymentRefType',"Invoice"); 
         $builder->where('PaymentDoc',2); 
         return $builder->get()->getResult();  
     }
-    public function getdataProforma($id){
+    public function get_data_proforma($id){
         $builder = $this->db->table("payment"); 
         $builder->where('PaymentId',$id); 
         $builder->where('PaymentDoc',2); 
+        return $builder->get()->getRow();  
+    }
+    public function get_data_request_payment($id){
+        $builder = $this->db->table("payment_request"); 
+        $builder->where('PaymentRequestId',$id);  
         return $builder->get()->getRow();  
     }
 

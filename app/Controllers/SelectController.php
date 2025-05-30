@@ -567,17 +567,10 @@ class SelectController extends BaseController
             $response = array(); 
 
             $modelsvendor = new VendorModel();
-            $modelsitem = new ProdukModel();
-            if(!isset($postData['searchTerm'])){
-                 // Fetch record
-                $models = new ProjectModel();
-                $Project = $models->getSelectRefVendor($id);
-            }else{
-                $searchTerm = $postData['searchTerm']; 
-                // Fetch record
-                $models = new ProjectModel();
-                $Project = $models->getSelectRefVendor($id,$searchTerm);
-            }  
+            $modelsitem = new ProdukModel(); 
+            $models = new ProjectModel();
+            $Project = $models->get_data_ref_invoice($id,$postData);
+ 
             $data = array();
             $data[] = array(
                 "id" => 0,
@@ -585,75 +578,28 @@ class SelectController extends BaseController
                 "html" => '<span style="font-size:0.75rem" class="fw-bold">Tidak ada yang dipilih</span>', 
                 "vendor" => $modelsvendor->get()->getResult(),   
                 "detail_item" => [],      
-                "type" => "",  
+                "type" => "-",  
             );
             foreach($Project as $row){
-                $customername = $row['CustomerCode'] . " - " . ($row['CustomerCompany']== "" ? $row['CustomerName'] : $row['CustomerName'] . ' (' . $row['CustomerCompany'] . ')');
-                $customertelp = (($row['CustomerTelp2'] == "" || $row['CustomerTelp2'] == "-") ? $row['CustomerTelp1'] : $row['CustomerTelp1'] . " / " . $row['CustomerTelp2']);
                 $htmlItem = '
-                               <div class="d-flex flex-column" >
-                                  <span style="font-size:0.75rem" class="fw-bold">' . $row['type'] . ' - ' . $row['code'] . '</span>
-                                  <span style="font-size:0.6rem">' . $customername . '</span>
-                                  <span style="font-size:0.6rem">' . $customertelp . '</span>
-                                  <span style="font-size:0.6rem">' .  $row['CustomerAddress'] . '</span> 
-                               </div>';
-                if($row['type'] == "INV"){
-                    $detail_item =   $models->get_data_invoice_detail($row['refid']); 
-                    $vendor_array = array();
-                    $detail = array();
-                    foreach($detail_item as $row_item){ 
-                        $varian =  json_decode($row_item->InvDetailVarian, true); 
-                        if (!empty($varian)) {
-                            foreach ($varian as $v) { 
-                                if ($v['varian'] == 'vendor'){
-                                    $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
-                                    if ( !in_array($data_arr, $vendor_array)) {
-                                        $vendor_array[] = $data_arr;
-                                    }
-                                }
-                            }
-                        }
-                        
-                        $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->InvDetailVarian,true),$row_item->ProdukId); 
-                        if($data_total){ 
-                            $harga = $data_total["ProdukDetailHargaBeli"];
-                        }else{
-                            $harga = 0;
-                        }
-                        $detail[] = array(
-                            "id" => $row_item->ProdukId, 
-                            "produkid" => $row_item->ProdukId, 
-                            "satuan_id"=> ($row_item->InvDetailSatuanId == 0 ? "" : $row_item->InvDetailSatuanId),
-                            "satuan_text"=>$row_item->InvDetailSatuanText, 
-                            "varian"=> JSON_DECODE($row_item->InvDetailVarian,true), 
-                            "text"=> $row_item->InvDetailText,
-                            "group"=> $row_item->InvDetailGroup,
-                            "type"=> $row_item->InvDetailType,
-                            "ref"=>  $row_item->InvDetailQty,
-                            "qty"=>  $row_item->InvDetailQty,
-                            "hargajual"=>  $row_item->InvDetailPrice,
-                            "disc"=>  $row_item->InvDetailDisc,
-                            "harga"=>  $harga, 
-                            "data"=>  $data_total, 
-                            "total"=>  $row_item->InvDetailQty * $harga,
-                        );
-                    } 
-                }else{      
+                <div class="d-flex flex-column" >
+                    <span style="font-size:0.75rem" class="fw-bold">' . $row['type'] . ' - ' . $row['code'] . '</span>
+                    <span style="font-size:0.6rem">' . $row['CustomerName'] . '</span>
+                    <span style="font-size:0.6rem">' . $row['CustomerTelp'] . '</span>
+                    <span style="font-size:0.6rem">' .  $row['CustomerAddress'] . '</span> 
+                </div>';
+                $detail = array();
+                if($row['type'] == "Penawaran"){
                     $detail_item =  $models->get_data_sph_detail($row['refid']); 
-                    $vendor_array = array();
-                    $detail = array();
+                    $vendor_array = array(); 
                     foreach($detail_item as $row_item){ 
-                        $varian =  json_decode($row_item->SphDetailVarian, true); 
-                        if (!empty($varian)) {
-                            foreach ($varian as $v) { 
-                                if ($v['varian'] == 'vendor'){
-                                    $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
-                                    if ( !in_array($data_arr, $vendor_array)) {
-                                        $vendor_array[] = $data_arr;
-                                    }
-                                }
-                            }
-                        }
+                        $varian =  json_decode($row_item->SphDetailVarian, true);  
+                        foreach ($varian as $v) {  
+                            $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                            if ( !in_array($data_arr, $vendor_array)) {
+                                $vendor_array[] = $data_arr;
+                            } 
+                        }   
                         
                         $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->SphDetailVarian,true),$row_item->ProdukId); 
                         if($data_total){ 
@@ -661,30 +607,152 @@ class SelectController extends BaseController
                         }else{
                             $harga = 0;
                         }
-                        $detail[] = array(
-                            "id" => $row_item->ProdukId, 
+                        $detail[] = array(  
+                            "id" => $row_item->ProdukId,  
                             "produkid" => $row_item->ProdukId, 
                             "satuan_id"=> ($row_item->SphDetailSatuanId == 0 ? "" : $row_item->SphDetailSatuanId),
-                            "satuan_text"=>$row_item->SphDetailSatuanText, 
-                            "varian"=> JSON_DECODE($row_item->SphDetailVarian,true), 
+                            "satuan_text"=>$row_item->SphDetailSatuanText,  
+                            "varian"=> JSON_DECODE($row_item->SphDetailVarian,true),
                             "text"=> $row_item->SphDetailText,
                             "group"=> $row_item->SphDetailGroup,
                             "type"=> $row_item->SphDetailType,
-                            "ref"=>  $row_item->SphDetailQty,
-                            "qty"=>  $row_item->SphDetailQty,
-                            "hargajual"=>  $row_item->SphDetailPrice,
-                            "disc"=>  $row_item->SphDetailDisc,
-                            "harga"=>  $harga,
-                            "data"=>  $data_total, 
-                            "total"=>  $row_item->SphDetailQty * $harga,
+                            "image_url"=> $modelsitem->getproductimagedatavarian(  $row_item->ProdukId,$row_item->SphDetailVarian,true),
+                            "priceref"=>$row_item->SphDetailPrice,  
+                            "totalref"=> $row_item->SphDetailTotal,
+                            "discref"=> $row_item->SphDetailDisc,
+                            "price"=> $harga, 
+                            "total"=>  $harga * $row_item->SphDetailQty,
+                            "disc"=> 0,
+                            "qty"=> $row_item->SphDetailQty
                         );
+                        
                     } 
                 }
+                if($row['type'] == "Invoice"){
+                    $detail_item =  $models->get_data_invoice_detail($row['refid']); 
+                    $vendor_array = array(); 
+                    foreach($detail_item as $row_item){ 
+                        $varian =  json_decode($row_item->InvDetailVarian, true);  
+                        foreach ($varian as $v) {  
+                            $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                            if ( !in_array($data_arr, $vendor_array)) {
+                                $vendor_array[] = $data_arr;
+                            } 
+                        }   
+                        $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->InvDetailVarian,true),$row_item->ProdukId); 
+                        if($data_total){ 
+                            $harga = $data_total["ProdukDetailHargaBeli"];
+                        }else{
+                            $harga = 0;
+                        }
+                        $detail[] = array(  
+                            "id" => $row_item->ProdukId,  
+                            "produkid" => $row_item->ProdukId, 
+                            "satuan_id"=> ($row_item->InvDetailSatuanId == 0 ? "" : $row_item->InvDetailSatuanId),
+                            "satuan_text"=>$row_item->InvDetailSatuanText,
+                            "text"=> $row_item->InvDetailText,
+                            "group"=> $row_item->InvDetailGroup,
+                            "type"=> $row_item->InvDetailType,
+                            "image_url"=> $modelsitem->getproductimagedatavarian(  $row_item->ProdukId,$row_item->InvDetailVarian,true),  
+                            "varian"=> JSON_DECODE($row_item->InvDetailVarian,true),
+                            "priceref"=> $row_item->InvDetailPrice, 
+                            "totalref"=> $row_item->InvDetailQtyTotal,
+                            "discref"=> $row_item->InvDetailDisc, 
+                            "price"=> $harga, 
+                            "disc"=> 0,
+                            "total"=>$harga * $row_item->InvDetailQty,
+                            "qty"=> $row_item->InvDetailQty
+                        );
+                        
+                    } 
+                }
+
+                // if($row['type'] == "INV"){
+                //     $detail_item =   $models->get_data_invoice_detail($row['refid']); 
+                //     $vendor_array = array();
+                //     $detail = array();
+                //     foreach($detail_item as $row_item){ 
+                //         $varian =  json_decode($row_item->InvDetailVarian, true); 
+                //         if (!empty($varian)) {
+                //             foreach ($varian as $v) { 
+                //                 if ($v['varian'] == 'vendor'){
+                //                     $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                //                     if ( !in_array($data_arr, $vendor_array)) {
+                //                         $vendor_array[] = $data_arr;
+                //                     }
+                //                 }
+                //             }
+                //         }
+                        
+                //         $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->InvDetailVarian,true),$row_item->ProdukId); 
+                //         if($data_total){ 
+                //             $harga = $data_total["ProdukDetailHargaBeli"];
+                //         }else{
+                //             $harga = 0;
+                //         }
+                //         $detail[] = array(  
+                //             "id" => $row_item->ProdukId,  
+                //             "produkid" => $row_item->ProdukId, 
+                //             "satuan_id"=> ($row_item->InvDetailSatuanId == 0 ? "" : $row_item->InvDetailSatuanId),
+                //             "satuan_text"=>$row_item->InvDetailSatuanText,  
+                //             "price"=> $InvDetailPrice, 
+                //             "buy"=> $harga, 
+                //             "varian"=> JSON_DECODE($row_item->InvDetailVarian,true),
+                //             "total"=> $row_item->InvDetailQtyTotal,
+                //             "disc"=> $row_item->InvDetailDisc,
+                //             "qty"=> $row_item->InvDetailQty,
+                //             "text"=> $row_item->InvDetailText,
+                //             "group"=> $row_item->InvDetailGroup,
+                //             "type"=> $row_item->InvDetailType,
+                //             "image_url"=> $modelsitem->getproductimagedatavarian(  $row_item->ProdukId,$row_item->InvDetailVarian,true)
+                //         );
+                //     } 
+                // }else{      
+                //     $detail_item =  $models->get_data_sph_detail($row['refid']); 
+                //     $vendor_array = array();
+                //     $detail = array();
+                //     foreach($detail_item as $row_item){ 
+                //         $varian =  json_decode($row_item->SphDetailVarian, true); 
+                //         if (!empty($varian)) {
+                //             foreach ($varian as $v) { 
+                //                 if ($v['varian'] == 'vendor'){
+                //                     $data_arr =  ($v['value'] == "" ? []: ($modelsvendor->where("VendorCode",$v['value'])->get()->getRow()));
+                //                     if ( !in_array($data_arr, $vendor_array)) {
+                //                         $vendor_array[] = $data_arr;
+                //                     }
+                //                 }
+                //             }
+                //         }
+                        
+                //         $data_total = $modelsitem->getDetailProduk(JSON_DECODE($row_item->SphDetailVarian,true),$row_item->ProdukId); 
+                //         if($data_total){ 
+                //             $harga = $data_total["ProdukDetailHargaBeli"];
+                //         }else{
+                //             $harga = 0;
+                //         }
+                //         $detail[] = array( 
+                //             "id" => $row_item->ProdukId,  
+                //             "produkid" => $row_item->ProdukId, 
+                //             "satuan_id"=> ($row_item->SphDetailSatuanId == 0 ? "" : $row_item->SphDetailSatuanId),
+                //             "satuan_text"=>$row_item->SphDetailSatuanText,  
+                //             "price"=>$row_item->SphDetailPrice,
+                //             "buy"=>$harga,
+                //             "varian"=> JSON_DECODE($row_item->SphDetailVarian,true),
+                //             "total"=> $row_item->SphDetailTotal,
+                //             "disc"=> $row_item->SphDetailDisc,
+                //             "qty"=> $row_item->SphDetailQty,
+                //             "text"=> $row_item->SphDetailText,
+                //             "group"=> $row_item->SphDetailGroup,
+                //             "type"=> $row_item->SphDetailType,
+                //             "image_url"=> $modelsitem->getproductimagedatavarian(  $row_item->ProdukId,$row_item->SphDetailVarian,true) 
+                //         );
+                //     } 
+                // }
                 $data[] = array(
                     "id" => $row['refid'],
                     "text" => $row['code'], 
-                    "html" => $htmlItem,    
-                    "type" => $row['type'],    
+                    "html" => $htmlItem,     
+                    "type" => $row['type'],   
                     "vendor" => $vendor_array,   
                     "detail_item" => $detail,   
                 );
@@ -772,8 +840,7 @@ class SelectController extends BaseController
 
             $modelsitem = new ProdukModel();   
             $models = new ProjectModel();
-            $Project = $models->get_data_ref_sample($id,$searchTerm);
-            
+            $Project = $models->get_data_ref_sample($id,$postData);
             
             $data = array();
             $data[] = array(

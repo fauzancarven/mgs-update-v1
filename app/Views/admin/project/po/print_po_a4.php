@@ -330,22 +330,22 @@
                             <tbody> 
                                 <tr>
                                     <td style="border:none;vertical-align:start;padding:left:3px;">
-                                        <div class="width-label label-color d-inline-block">Kepada Yth.:</div>
+                                        <div class="width-label label-color d-inline-block">Customer :</div>
                                     </td> 
                                 </tr> 
                                 <tr>
                                     <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
-                                        <span class="text-bold"><?= $po->VendorName ?></span>
+                                        <span class="text-bold"><?= $po->POCustName ?></span>
                                     </td> 
                                 </tr> 
                                 <tr> 
                                     <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
-                                        <span class="text-bold"><?= $po->VendorTelp1 ?></span>
+                                        <span class="text-bold"><?= $po->POCustTelp ?></span>
                                     </td> 
                                 </tr> 
                                 <tr> 
                                     <td style="border:none;vertical-align:start;padding:left:3px;"><div class="label-color d-inline-block">
-                                        <span class="text-bold"><?= $po->VendorAddress ?></span>
+                                        <span class="text-bold"><?= $po->POAddress ?></span>
                                     </td> 
                                 </tr> 
                             </tbody>
@@ -359,11 +359,16 @@
                                     <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
                                     <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $po->POCode ?></div></td>
                                 </tr>
-                                <tr style="margin:12px;">
+                                <tr style="border-bottom:1px solid;margin:12px;">
                                     <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">Tgl. Pembuatan.</div></td>
                                     <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
                                     <td style="border:none;width: auto;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($po->PODate),"d F Y") ?></div></td>
                                 </tr>  
+                                <tr style="margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;width:30px;"><div class="width-label label-color d-inline-block">Vendor.</div></td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
+                                    <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $po->VendorName ?></div></td>
+                                </tr>
                             </tbody>
                         </table> 
                     </td>

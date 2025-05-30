@@ -2037,6 +2037,88 @@
             }
         });
     }
+    var isProcessingPaymentRequestEdit = [];
+    request_project_payment_edit = function(ref,id,el,menu){
+        // INSERT LOADER BUTTON
+        if (isProcessingPaymentRequestEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingPaymentRequestEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/request-project-payment-edit/" + id,  
+            data:{
+                type:menu
+            },
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-request-payment-edit").modal("show"); 
+                $(".tooltip").remove(); 
+
+                isProcessingPaymentRequestEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingPaymentRequestEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    var isProcessingPaymentRequestDelete = [];
+    request_project_payment_delete = function(ref,id,el,type){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingPaymentRequestDelete[id]) {
+            return;
+        }  
+        isProcessingPaymentRequestDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus permohonan ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-project-request-payment/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });    
+                        if(type == "delivery") { 
+                            loader_data_project(ref,"pengiriman")  
+                        }else{
+
+                            loader_data_project(ref,type)  
+                        }
+                    }, 
+                });
+            }
+            isProcessingPaymentRequestDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
      
     $("#btn-print-payment").click(function(i){ 
         $.redirect('<?= base_url("print/project/payment/") ?>' +  $("#modal-print-payment").data("id"),  {
