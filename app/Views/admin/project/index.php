@@ -2000,8 +2000,42 @@
         $("#modal-print-payment").data("id",id) 
     }
 
-    add_payment_delivery = function(ref,id,el,menu){
+    var isProcessingPaymentRequest = [];
+    request_project_payment = function(ref,id,el,menu){
+        // INSERT LOADER BUTTON
+        if (isProcessingPaymentRequest[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingPaymentRequest[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/request-project-payment/" + id,  
+            data:{
+                type:menu
+            },
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-request-payment").modal("show"); 
+                $(".tooltip").remove(); 
+
+                isProcessingPaymentRequest[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingPaymentRequest[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
     }
      
     $("#btn-print-payment").click(function(i){ 

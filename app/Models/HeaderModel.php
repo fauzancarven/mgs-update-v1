@@ -212,6 +212,90 @@ class HeaderModel extends Model
                 ;
                 $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0852-1795-2625<br>PAVING REGULER JAKARTA';
                 break;
+            case 5:
+                $html = '<div class="fixed">
+                    <div class="header"> 
+                        <div class="logo">  
+                            <img class="mgs" src="assets/images/logo/brand/mgs.png" alt=""> 
+                        </div>
+                        <div class="deskripsi">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span>Jasa Renovasi Rumah</span><br>
+                                            <span>Custom Furniture</span><br>
+                                            <span>Jasa Design Interior & Arsitektur</span>
+                                            
+                                        </td>
+                                        <td>
+                                            <div class="divider"></div>
+                                        </td>
+                                        <td>
+                                            <span>Jasa Pasang Bata Tempel & Bata Expose</span><br>
+                                            <span>Jasa Pasang Roster Dinding</span><br>
+                                            <span>Jasa Pasang Paving & Grass Block</span>
+                                        </td>
+                                        <td>
+                                            <div class="divider"></div>
+                                        </td>
+                                        <td>
+                                            <span>Jasa Pasang CCTV</span><br>
+                                            <span>Jasa Pasang & Maintenance AC</span><br>
+                                            <span>Jasa Instalasi Listrik (ME)</span> 
+                                        </td> 
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>   
+                        <div class="slogan"><span class="text-slogan">GENERAL CONTRACTOR & SUPPLIER</span></div>   
+                    </div>    
+                    </div>  
+                    <div class="footer mgs"> 
+                        <table>
+                            <tr>
+                                <td>
+                                    <div class="icon">
+                                        <img src="assets/images/icon/maps.svg" alt="">
+                                    </div>
+                                    
+                                </td>
+                                <td style="padding-left:20px;padding-right:20px;">
+                                    <span >Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
+                                </td>
+                                <td>
+                                    <div class="icon">
+                                        <img src="assets/images/icon/email.svg" alt="">
+                                    </div>
+                                    
+                                </td>
+                                <td style="padding-left:20px;padding-right:20px;">
+                                    <span>info.mahieraglobalsolution@gmail.com</span>
+                                </td>
+                                <td>
+                                    <div class="icon">
+                                        <img src="assets/images/icon/phone.svg" alt=""> 
+                                    </div>
+                                    
+                                </td>
+                                <td style="padding-left:20px;padding-right:20px;">0812-1262-9997
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="line"> 
+                            <div class="line1"></div> 
+                        </div>
+                        <div class="line-1"> 
+                            <div class="line1"></div> 
+                        </div>
+                        <div class="line-2"> 
+                            <div class="line1"></div> 
+                        </div>
+                    </div>'
+                ;
+            
+                $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0812-1262-9997<br>MAHIERA GLOBAL SOLUTION';
+                break;
             default: 
                 $html = '<div class="fixed">
                         <div class="header"> 

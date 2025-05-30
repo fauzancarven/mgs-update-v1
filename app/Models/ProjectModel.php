@@ -690,11 +690,11 @@ class ProjectModel extends Model
                                     <i class="fa-solid fa-dollar header p-1"></i>
                                     <span>Keuangan</span>
                                 </div>
-                                <div class="icon-project text-nowrap '.$notif['documentasi'].' '.(strlen($notif['documentasi_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'"  data-menu="documentasi">
+                                <div class="d-none icon-project text-nowrap '.$notif['documentasi'].' '.(strlen($notif['documentasi_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'"  data-menu="documentasi">
                                     <i class="fa-solid fa-folder-open header p-1"></i>
                                     <span>Dokumentasi</span>
                                 </div>
-                                <div class="icon-project text-nowrap '.$notif['diskusi'].' '.(strlen($notif['diskusi_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'"  data-menu="diskusi">
+                                <div class="d-none icon-project text-nowrap '.$notif['diskusi'].' '.(strlen($notif['diskusi_message']) > 0 ? "notif" : "").'" data-id="'.$row->ProjectId.'"  data-menu="diskusi">
                                     <i class="fa-solid fa-comments header p-1"></i>
                                     <span>Diskusi</span>
                                 </div>
@@ -2194,7 +2194,7 @@ class ProjectModel extends Model
                                     <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
                                 </div>   
                                 <div class="d-flex flex-row flex-md-column justify-content-between">
-                                    <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i></span>
+                                    <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Total</span>
                                     <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</span>
                                 </div>   
                                 <div class="flex-fill text-end">  
@@ -3967,7 +3967,7 @@ class ProjectModel extends Model
                                             <span class="text-head-3">'.$row_payment->PaymentMethod.'</span>
                                         </div>   
                                         <div class="d-flex flex-row flex-md-column justify-content-between">
-                                            <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i></span>
+                                            <span class="text-detail-2"><i class="fa-solid fa-money-bill pe-1"></i>Total</span>
                                             <span class="text-head-3">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</span>
                                         </div>   
                                         <div class="flex-fill text-end">  
@@ -4949,7 +4949,7 @@ class ProjectModel extends Model
                 $html_items .= '
                 <div class="row">
                     <div class="col-12 col-md-5 my-1 varian">   
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2 align-items-center">
                             ' . ($item->DeliveryDetailType == "product" ? ($gambar ? "<img src='".$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url("assets/images/produk/default.png").'?date='.date("Y-m-dH:i:s")."' alt='Gambar Default' >") : "").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
@@ -5293,7 +5293,7 @@ class ProjectModel extends Model
                             <span class="text-head-3">
                                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
                                 Belum ada data pembayaran yang dibuat, Silahkan  
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_payment_delivery('.$project_id.','.$row_delivery->DeliveryId.',this,\'delivery\')">buat permohonan pembayaran</a>
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_project_payment('.$project_id.','.$row_delivery->DeliveryId.',this,\'delivery\')">ajukan pembayaran</a>
                             </span> 
                         </div>';
                 }elseif($payment_total < $row_delivery->DeliveryTotal){
@@ -5860,7 +5860,7 @@ class ProjectModel extends Model
                 $html_items .= '
                 <div class="row">
                     <div class="col-12 col-md-6 my-1 varian">   
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2 align-items-center">
                             ' . ($gambar ? "<img src='".$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url("assets/images/produk/default.png").'?date='.date("Y-m-dH:i:s")."' alt='Gambar Default' >").'  
                             <div class="d-flex flex-column text-start">
                                 <span class="text-head-3 text-uppercase">'.$item->PODetailText.'</span>
@@ -6053,9 +6053,9 @@ class ProjectModel extends Model
                     $html_payment .= '<div class="alert alert-warning p-2 m-1" role="alert"> 
                             <span class="text-head-3">
                                 <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
-                                Belum ada data pembayaran, silahkan tambahkan data  
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="proforma_project_invoice('.$project_id.','.$row->POId.',this)">Proforma</a> atau 
-                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->POId.',this,\'pembelian\')">Pembayaran</a>
+                                Belum ada data pembayaran, silahkan tambahkan data   
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_payment('.$project_id.','.$row->POId.',this,\'pembelian\')">Pembayaran</a> atau 
+                                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_project_payment('.$project_id.','.$row->POId.',this,\'pembelian\')">ajukan pembayaran</a>
                             </span> 
                         </div>';
                 } else if($payment_total < $row->POGrandTotal){   

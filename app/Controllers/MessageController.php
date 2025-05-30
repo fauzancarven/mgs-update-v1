@@ -676,8 +676,8 @@ class MessageController extends BaseController
             );
             $data["payment"] = $models->getdataPaymentByInvoice($id);  
         }
-        if($postData['type'] == "po"){
-            $datapo = $models->getDataPO($id); 
+        if($postData['type'] == "pembelian"){
+            $datapo = $models->get_data_pembelian($id); 
             $project = array(
                 "ProjectId"=>$datapo->ProjectId, 
                 "PaymentRef"=>$datapo->POId,
@@ -726,7 +726,7 @@ class MessageController extends BaseController
             );
             $data["payments"] = $models->getdataPaymentByInvoice($data["payment"]->PaymentRef);  
         }
-        if($postData['type'] == "po"){
+        if($postData['type'] == "pembelian"){
             $datapo = $models->getDataPO($id); 
             $project = array(
                 "ProjectId"=>$datapo->ProjectId, 
@@ -752,6 +752,27 @@ class MessageController extends BaseController
         $data["image"] = $models->getdataImagePayment($data["payment"]->ProjectId,$data["payment"]->PaymentRef,$data["payment"]->PaymentRefType,$id);    
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
+    }
+
+    public function project_payment_request($id){
+        $models = new ProjectModel();      
+        $request = Services::request();
+        $postData = $request->getPost();  
+        if($postData['type'] == "delivery"){
+            $req = $models->get_data_delivery($id);
+            $data["total"] = $req->DeliveryTotal;
+            $data["ref"] = $req->DeliveryId;
+            $data["refType"] = "delivery";
+            return $this->response->setBody(view('admin/project/payment/request_payment.php',$data));  
+        }   
+        if($postData['type'] == "pembelian"){
+            $req = $models->get_data_pembelian($id);
+            $data["total"] = $req->POGrandTotal;
+            $data["ref"] = $req->POId;
+            $data["refType"] = "pembelian";
+            return $this->response->setBody(view('admin/project/payment/request_payment.php',$data)); 
+            
+        }
     }
     public function project_proforma_add($id)
     {     
@@ -1008,7 +1029,7 @@ class MessageController extends BaseController
     public function project_accounting_edit($id,$group)
     {       
         $models = new ProjectModel(); 
-        $data["project"] = $models->get_data_accounting($id); 
+        $data["project"] = $models->getdataAccounting($id); 
         $data["user"] = User();
         if($group==2){ 
             return $this->response->setBody(view('admin/project/accounting/edit_lain_lain.php',$data)); 
