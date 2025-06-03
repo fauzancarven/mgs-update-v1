@@ -90,6 +90,17 @@ class TableController extends BaseController
         }    
         
     } 
+    
+    public function produk_datatable()
+    {   
+        $request = Services::request();
+        $datatable = new ProdukModel(); 
+        if ($request->getMethod(true) === 'POST') {  
+            echo $datatable->load_datatable_produk($request->getPost()); 
+        }    
+        
+    } 
+
     public function vendor()
     {   
         $request = Services::request();

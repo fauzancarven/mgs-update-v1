@@ -650,8 +650,6 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
-    
-
     public function item_unit_add(){ 
         $request = Services::request();
         $models = new ProdukunitModel(); 

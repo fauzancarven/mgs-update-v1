@@ -33,6 +33,7 @@ $routes->post('/datatables/get-data-project/sample', 'TableController::project_s
 $routes->post('/datatables/get-data-project/sph', 'TableController::project_penawaran', ['filter' => 'login']);
 $routes->post('/datatables/get-data-customer', 'TableController::customer', ['filter' => 'login']);
 $routes->post('/datatables/get-data-produk', 'TableController::produk', ['filter' => 'login']);
+$routes->post('/datatables/get-datatable-produk', 'TableController::produk_datatable', ['filter' => 'login']);
 $routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter' => 'login']);
 
 

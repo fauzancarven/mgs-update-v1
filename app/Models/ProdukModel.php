@@ -152,7 +152,147 @@ class ProdukModel extends Model
         });
         return $dt->generate();
     }
-    
+    public function load_datatable_produk($filter = null){
+        $querytext = "";
+        $builder = $this->db->table($this->table);
+        $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");   
+
+        //mengambil total semua data
+        $builder1 = clone $builder; 
+        $countTotal = $builder1->get()->getNumRows();
+
+
+        $filterdata = 0;
+        if(isset($filter["filter"])){ 
+            $builder->groupStart(); 
+            foreach($filter["filter"] as $key => $value){
+                if($key == "Vendor"){ 
+                    foreach($filter["filter"]["Vendor"] as $row){
+                        $builder->orLike("ProdukVendor",$row);  
+                    }
+                } else{
+                    foreach($filter["filter"][$key] as $row){
+                        $builder->orLike("ProdukVarian",$row);  
+                    } 
+                }
+            }  
+            $builder->groupEnd(); 
+            $filterdata = 1;
+        } 
+        if(isset($filter["search"]["value"])){
+            $builder->groupStart(); 
+            $builder->like("ProdukCode",$filter["search"]["value"]);
+            $builder->orLike("ProdukName",$filter["search"]["value"]);  
+            $builder->groupEnd(); 
+            $filterdata = 1;
+        }
+        if(isset($filter["category"])){  
+            $builder->whereIn("ProdukCategoryCode",$filter["category"]);
+            $filterdata = 1;
+        } 
+ 
+        // $builder->groupEnd(); 
+  
+        $columns = array(
+            0 => null, // kolom action tidak dapat diurutkan
+            1 => null, // kolom name
+            2 => "ProdukCategoryName", // kolom action tidak dapat diurutkan
+            3 => "ProdukName", // kolom image tidak dapat diurutkan
+            4 => "ProdukPrice", // kolom action tidak dapat diurutkan
+            5 => null, // kolom action tidak dapat diurutkan
+        );
+        if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
+            $orderColumn = $columns[$filter['order'][0]['column']];
+            $orderDir = $filter['order'][0]['dir'];
+        
+            if ($orderDir != 'asc' && $orderDir != 'desc') {
+                $orderDir = 'asc';
+            }
+         
+            $builder->orderby($orderColumn,$orderDir);   
+        }
+        $datafilter = clone $builder;  
+        $count = $datafilter->get()->getNumRows();
+        
+        $draw = $filter['draw'];  
+        $start = $filter['start'];
+        $length = $filter['length']; 
+        $builder->limit($length,$start); 
+        $query = $builder->get(); 
+        $datatable = array(); 
+        foreach($query->getResult() as $row){    
+
+            // VENDOR AND VARIAN PRODUK
+            $vendorhtml="";
+            $datavendor = json_decode($row->ProdukVendor); 
+            foreach ($datavendor as $varian) {  
+                $vendorhtml .= '<span class="badge badge-3">'.$varian->text.'</span>';  
+            } 
+            $vendorhtml = '<div><span class="fw-bold font-std">Vendor</span><div class="d-flex gap-1 pb-2 flex-wrap overflow-x-auto">'.$vendorhtml.'</div></div>';
+            $split_varian = json_decode($row->ProdukVarian); 
+            $html_varian = "";
+            $data = $split_varian;
+            $i = 0;
+            foreach ($data as $varian) { 
+                $html_varian = "";
+                foreach ($varian->value as $value) {
+                    $html_varian .= '<span class="badge badge-'.fmod($i, 5).'">'.$value->text.'</span>';  
+                }
+                $i++;
+                $vendorhtml .= '<div><span class="fw-bold font-std">'.$varian->varian.'</span><div class="d-flex gap-1 pb-2 flex-wrap overflow-x-auto">'.$html_varian.'</div></div>';
+            }  
+
+            // PRICE PRODUK 
+            if (strpos($row->ProdukPrice, '-') !== false) {
+                list($min, $max) = explode(' - ', $row->ProdukPrice); 
+                $price = "<span class='text-head-2'>Rp. " . number_format($min, 0, ',', '.') . " - Rp. " . number_format($max, 0, ',', '.')."</span>";
+            } else { 
+                $price =  "<span class='text-head-2'>Rp. " . number_format($row->ProdukPrice, 0, ',', '.')."</span>";
+            }   
+
+ 
+
+
+            $builder = $this->db->table("produk_detail");  
+            $builder->join("produk_satuan","produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId"); 
+            $builder->select('*'); 
+            $builder->where("ProdukDetailRef",$row->ProdukId); 
+            $builder->orderby('produk_detail.ProdukDetailId', 'asc'); 
+            $variandetail = $builder->get()->getResult(); 
+            
+            $data_row = array(
+                "image" => "<img src='".$this->getproductimageUrl($row->ProdukId)."?".date("Y-m-dH:i:s")."' alt='Gambar' class='image-produk'>",
+                "code" => $row->ProdukCode,
+                "name" => $row->ProdukName,
+                "kategori" => $row->ProdukCategoryName,
+                "harga" => $price,
+                "varian" => '<a class="pointer text-decoration-underline text-head-3 btn-detail">Lihat Detail</a>',
+                "variandetail" => $this->getproductdetail($row->ProdukId),
+                "action" =>'  
+                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click('.$row->ProdukId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                        <div class="d-inline ">
+                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_click('.$row->ProdukId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                        </div>',
+            );
+            array_push($datatable, $data_row);
+        }
+
+
+
+
+
+
+        return json_encode(
+            array(
+                "draw"=>$draw,
+                "recordsTotal"=>$countTotal,
+                "recordsFiltered"=>($filterdata == 0 ? $countTotal : $count ),
+                "data"=>$datatable, 
+            )
+        );
+
+    }
+
     public function load_table_produk($filter = null){
         $querytext = "";
         $builder = $this->db->table($this->table);
@@ -181,12 +321,8 @@ class ProdukModel extends Model
         if(isset($filter["category"])){  
             $builder->whereIn("ProdukCategoryCode",$filter["category"]);
         } 
-
-
-        // $builder->groupEnd(); 
-
-        $builder->orderby('produk.ProdukCategoryId ASC, ProdukName ASC');   
-
+ 
+        // $builder->groupEnd();   
         $perPage = 10;
         $page = $filter["paging"]; // atau dapatkan dari parameter GET 
         $offset = ($page - 1) * $perPage; 
@@ -666,7 +802,7 @@ class ProdukModel extends Model
     }
 
 
-    public function getproductdetail($id){
+    public function getproductdetail($id,$url = true){
         $builder = $this->db->table("produk_detail");
         $builder->join("produk_satuan","produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId"); 
         $builder->where('ProdukDetailRef', $id);  
@@ -681,7 +817,7 @@ class ProdukModel extends Model
                 'ProdukDetailPcsM2' => $row->ProdukDetailPcsM2,
                 'ProdukDetailHargaBeli' => $row->ProdukDetailHargaBeli,
                 'ProdukDetailHargaJual' => $row->ProdukDetailHargaJual,
-                'ProdukDetailImage' => $row->ProdukDetailImage,
+                'ProdukDetailImage' => ($row->ProdukDetailImage == "" ? ($url == true ? $this->getproductimageUrl($id) : $this->getproductimage($id)): $row->ProdukDetailImage),
                 'ProdukDetailVarian' =>  json_decode($row->ProdukDetailVarian),
             );
         } 

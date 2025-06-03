@@ -13,7 +13,7 @@
                     </div>
                 </div> 
                 <div class="row p-2"> 
-                    <input type="file" class="d-none" accept="image/*" id="upload-produk"> 
+                    <input type="file" class="d-none" accept="image/*" id="uploadCropDetail"> 
                     <div class="col-sm-12 d-flex flex-wrap">
                         <div class="d-flex flex-wrap">
                             <div class="d-flex flex-wrap" id="list-produk"></div>
@@ -110,47 +110,50 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
  
 <div id="message-vendor"></div>
 <div id="message-crop-item"></div>
+<div class="modal fade" id="modal-frame-image"  data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">  
+        <div class="modal-content" name="form-action">
+            <div class="modal-header">
+                <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="crop-image" style="height:500px;"></div>
+                <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
+                    <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
+                    <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
+                    <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
+                    <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
+                </div>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary" id="submit-crop" >Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- SCRIPT ITEM -->
-<script>  
-
+<script>    
+               
     var image_index = 0;
-    /** BAGIAN IMAGE UPLOAD */
-    var image_list = JSON.parse(`<?= json_encode($_produkimage) ?>`); 
+    // /** BAGIAN IMAGE UPLOAD */
+    var image_list = JSON.parse(`<?= json_encode($_produkimage) ?>`);  
+    var html_image = "";
     for(var i=0; image_list.length > i; i++){
         image_index++;
-        $("#list-produk").append(`<div class="image-default-obi border">
-                <img src="${image_list[i]}" draggable="true"> 
+        html_image +=`<div class="image-default-obi border" id="image-frame-${image_index}" >
+                <img src="${image_list[i]}" draggable="true" id="img-${image_index}" >
                 <div class="action">
-                    <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
-                    <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
+                    <a class="btn btn-sm btn-white p-1" onclick="crop_image('${image_index}')"><i class="fas fa-crop-alt"></i></a>
+                    <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><i class="fas fa-trash"></i></a>
                 </div>
                 <span class="badge text-bg-primary">Utama</span>
-        </div>
+        </div>`;
+          
         
-        <div class="modal fade" id="modal-frame-image-${image_index}"  data-bs-keyboard="false" data-bs-backdrop="static">
-                        <div class="modal-dialog modal-dialog-centered">  
-                            <div class="modal-content" name="form-action">
-                                <div class="modal-header">
-                                    <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
-                                    <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body p-0">
-                                    <div id="crop-image-${image_index}" style="height:500px;"></div>
-                                    <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
-                                        <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
-                                        <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
-                                        <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
-                                        <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
-                                    </div>
-                                </div>
-                                <div class="modal-footer"> 
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-primary" id="submit-crop-${image_index}" >Simpan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div> `);
     }
+    $("#list-produk").html(html_image);
     function render_image(){
         var draggedImage = null;
 
@@ -190,10 +193,10 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         }); 
     }
     $("#img-produk").on('click',function(){
-        $("#upload-produk").trigger("click");
-    })  
-    var $uploadCrop = [];
-    $("#upload-produk").on('change', function() {
+        $("#uploadCropDetail").trigger("click");
+    })   
+    var $uploadCrop = null;
+    $("#uploadCropDetail").on('change', function() {
         const file = this.files[0];
         if (file) {
             const reader = new FileReader();
@@ -208,29 +211,6 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                             <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><i class="fas fa-trash"></i></a>
                         </div>
                         <span class="badge text-bg-primary">Utama</span>
-                    </div>
-                    <div class="modal fade" id="modal-frame-image-${image_index}"  data-bs-keyboard="false" data-bs-backdrop="static">
-                        <div class="modal-dialog modal-dialog-centered">  
-                            <div class="modal-content" name="form-action">
-                                <div class="modal-header">
-                                    <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
-                                    <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body p-0">
-                                    <div id="crop-image-${image_index}" style="height:500px;"></div>
-                                    <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
-                                        <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
-                                        <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
-                                        <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
-                                        <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
-                                    </div>
-                                </div>
-                                <div class="modal-footer"> 
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-primary" id="submit-crop-${image_index}" >Simpan</button>
-                                </div>
-                            </div>
-                        </div>
                     </div> 
                 `);
                 var draggedImage = null;
@@ -269,48 +249,59 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                         $(this).prepend(draggedImage);
                     }
                 }); 
-                $uploadCrop[image_index]  = $('#crop-image-' + image_index).croppie({
-                    viewport: {
-                        width: 400,
-                        height: 400,
-                    },
-                    showZoomer: false,
-                    enforceBoundary: false,
-                    enableExif: true,
-                    enableOrientation: true, 
-                });
-                crop_image(image_index);
+                // if($uploadCrop)
+                // $uploadCrop  = $('#crop-image').croppie({
+                //     viewport: {
+                //         width: 400,
+                //         height: 400,
+                //     },
+                //     showZoomer: false,
+                //     enforceBoundary: false,
+                //     enableExif: true,
+                //     enableOrientation: true, 
+                // });
+                // crop_image(image_index);
             }
         }
     }); 
-    
     crop_image = function(id){   
         var image_crop = $("#img-" +id);
-        var flip = 0;
-        $('#modal-frame-image-' +id).modal('show'); 
-        $('#modal-frame-image-' +id).on('shown.bs.modal', function(){ 
-            $uploadCrop[id].croppie('bind', {
-                url: $(image_crop).attr('src')
+        var flip = 0; 
+        if($uploadCrop !== null) $uploadCrop.croppie('destroy');
+        $uploadCrop = $('#crop-image').croppie({
+            viewport: {
+                width: 400,
+                height: 400,
+            }, 
+            showZoomer: false,
+            enforceBoundary: false,
+            enableExif: true,
+            enableOrientation: true, 
+        }); 
+        $('#modal-frame-image').modal('show'); 
+        $('#modal-frame-image').on('shown.bs.modal', function(){ 
+            $uploadCrop.croppie('bind', {
+                url: $(image_crop).attr('src'), 
             }).then(function(){
                 console.log('jQuery bind complete');
             });
         });
-        $('#submit-crop-' +id).unbind().click(function (ev) {
-            $uploadCrop[id].croppie('result', {
+        $('#submit-crop').unbind().click(function (ev) {
+            $uploadCrop.croppie('result', {
                 type: 'base64',
                 format: 'png',
                 size: {width: 400, height: 400}
             }).then(function (resp) { 
                 $(image_crop).attr('src',resp) 
-                $('#modal-frame-image-' +id).modal('hide');
+                $('#modal-frame-image').modal('hide');
             });
         });
         rotate_image = function(val){
-            $uploadCrop[id].croppie('rotate',parseInt(val));
+            $uploadCrop.croppie('rotate',parseInt(val));
         }
         flip_image = function(val){
             flip = flip == 0 ? val : 0;
-            $uploadCrop[id].croppie('bind', { 
+            $uploadCrop.croppie('bind', { 
                 url: $(image_crop).attr('src'),
                 orientation: flip
             });
@@ -321,7 +312,8 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         $("#modal-frame-image-" + id).remove();
     }   
     render_image();
-   
+
+
     /** BAGIAN DESKRIPSI */
     $("#produk-kategori").select2({
         dropdownParent: $('#modal-edit-produk .modal-content'), 
@@ -463,10 +455,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         });
     }
 
-    
-
-   
-
+     
     /* BAGIAN VARIAN */
     var activeSelect2Varian = null; 
     var activeSelect2VarianValue = null; 
@@ -1392,4 +1381,6 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             }
         }); 
     });
+
+
 </script>
