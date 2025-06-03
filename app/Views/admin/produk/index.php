@@ -465,10 +465,7 @@
             trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaBeli"]));
             trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaJual"]));
             trcustom.append($("<td class='detail'>").html(`
-            <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-pen-to-square"></i></span>
-                        <div class="d-inline ">
-                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-circle-xmark"></i></span>
-                        </div>`));
+            <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-pen-to-square"></i></span>`));
             tbodycustom.append(trcustom);
         }
 
