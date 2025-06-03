@@ -1,0 +1,85 @@
+table.dataTable thead>tr>th.dt-orderable-asc span.dt-column-order:before, table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order:before, table.dataTable thead>tr>td.dt-orderable-asc span.dt-column-order:before, table.dataTable thead>tr>td.dt-ordering-asc span.dt-column-order:before{
+    position: absolute;
+    font-family: 'Font Awesome 6 Free';
+    display: block;
+    bottom: 45%;
+    content: "\f0d8"; 
+}
+table.dataTable thead>tr>th.dt-orderable-desc span.dt-column-order:after, table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order:after, table.dataTable thead>tr>td.dt-orderable-desc span.dt-column-order:after, table.dataTable thead>tr>td.dt-ordering-desc span.dt-column-order:after {
+    position: absolute;
+    font-family: 'Font Awesome 6 Free';
+    display: block;
+    top: 45%;
+    content: "\f0d7"; 
+}
+.table thead th, .jsgrid .jsgrid-table thead th {
+    vertical-align: bottom;
+    border-bottom: none;
+}
+thead>tr>th.dt-orderable-asc:hover, table.dataTable thead>tr>th.dt-orderable-desc:hover, table.dataTable thead>tr>td.dt-orderable-asc:hover, table.dataTable thead>tr>td.dt-orderable-desc:hover {
+    outline: none;
+    outline-offset: -2px;
+}
+span.dt-column-title {
+    padding-right: 15px;
+}
+.dt-info, .dt-paging{
+    padding-top: 0;
+}
+.table th, .jsgrid .jsgrid-table th, .table td, .jsgrid .jsgrid-table td{
+    border-top:none;
+}
+/* table.dataTable tbody tr:first-child td:first-child {
+    border-top-left-radius: 0;
+}
+
+table.dataTable tbody tr:first-child td:last-child {
+    border-top-right-radius: 0;
+}
+
+table.dataTable tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 0;
+}
+
+table.dataTable tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 0;
+} */
+
+th.detail {
+    padding:0.5rem 0.25rem !important;
+    background: #f3f3f354 !important;;
+}
+#data-table-item tr th {
+    background: #f3f5f9;
+    padding: 1rem;
+    color: black !important;
+}
+table.dataTable tbody tr {
+    background-color: transparent;
+} 
+/* #data-table-item tr th:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+#data-table-item tr th:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px; 
+}*/
+.table td img.image-produk, .jsgrid .jsgrid-table td img.image-produk{
+    width: 35px;
+    height: 35px;
+    border-radius: 0.25rem;
+    object-fit: cover; 
+
+}
+table.dataTable.table.table-hover>tbody>tr:hover>* {
+    background: #f3f3f354;
+    box-shadow: none;
+} 
+
+td.no-border {
+    border: none;
+}
+td.detail {
+    padding:0.5rem 0.25rem !important;
+}
