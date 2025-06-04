@@ -49,7 +49,7 @@ th.detail {
     padding:0.5rem 0.25rem !important;
     background: #f3f3f354 !important;;
 }
-#data-table-item tr th {
+.table-nested tr th {
     background: #f3f5f9;
     padding: 1rem;
     color: black !important;

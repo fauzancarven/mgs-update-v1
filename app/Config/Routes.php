@@ -18,6 +18,7 @@ $routes->get('/admin/accounting', 'AdminController::accounting', ['filter' => 'l
 $routes->get('/admin/project/survey', 'AdminController::survey', ['filter' => 'login']);
 $routes->get('/admin/project/sample', 'AdminController::sample', ['filter' => 'login']);
 $routes->get('/admin/project/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
+$routes->get('/admin/project/invoice', 'AdminController::invoice', ['filter' => 'login']);
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
 
@@ -34,6 +35,10 @@ $routes->post('/datatables/get-data-project/sph', 'TableController::project_pena
 $routes->post('/datatables/get-data-customer', 'TableController::customer', ['filter' => 'login']);
 $routes->post('/datatables/get-data-produk', 'TableController::produk', ['filter' => 'login']);
 $routes->post('/datatables/get-datatable-produk', 'TableController::produk_datatable', ['filter' => 'login']);
+$routes->post('/datatables/get-datatable-survey', 'TableController::project_survey_datatable', ['filter' => 'login']);
+$routes->post('/datatables/get-datatable-sample', 'TableController::project_sample_datatable', ['filter' => 'login']);
+$routes->post('/datatables/get-datatable-penawaran', 'TableController::project_penawaran_datatable', ['filter' => 'login']);
+$routes->post('/datatables/get-datatable-invoice', 'TableController::project_invoice_datatable', ['filter' => 'login']);
 $routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter' => 'login']);
 
 

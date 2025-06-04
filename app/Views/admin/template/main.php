@@ -486,28 +486,28 @@
                                         <span class="menu-title">Penawaran</span> 
                                     </a>
                                 </li>
-                                <li class="nav-item <?= ($title === 'Vendor' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/vendor">
-                                        <i class="ti-dropbox menu-icon"></i>
-                                        <span class="menu-title">Pembelian</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item <?= ($title === 'Produk' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/produk">
-                                        <i class="ti-package menu-icon"></i>
-                                        <span class="menu-title">Perintah Kerja (SPK)</span>
-                                    </a>
-                                </li> 
-                                <li class="nav-item <?= ($title === 'Produk' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/produk">
+                                <li class="nav-item <?= ($title === 'Invoice' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/invoice">
                                         <i class="ti-package menu-icon"></i>
                                         <span class="menu-title">Invoice</span>
                                     </a>
                                 </li> 
-                                <li class="nav-item <?= ($title === 'Produk' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/produk">
+                                <li class="nav-item <?= ($title === 'Pembelian' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/pembelian">
+                                        <i class="ti-dropbox menu-icon"></i>
+                                        <span class="menu-title">Pembelian</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item <?= ($title === 'Pengiriman' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/pengiriman">
                                         <i class="ti-package menu-icon"></i>
                                         <span class="menu-title">Pengiriman</span>
+                                    </a>
+                                </li> 
+                                <li class="nav-item <?= ($title === 'Spk' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/spk">
+                                        <i class="ti-package menu-icon"></i>
+                                        <span class="menu-title">Perintah Kerja (SPK)</span>
                                     </a>
                                 </li> 
                             </ul>

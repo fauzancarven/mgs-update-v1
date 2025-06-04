@@ -196,6 +196,22 @@ class AdminController extends BaseController
         ]; 
         return view('admin/project/sph/index', $data); 
     }
+    public function invoice()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Invoice',
+            'menu' => "Project",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/project/invoice/index', $data); 
+    }
     public function accounting(){    
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();

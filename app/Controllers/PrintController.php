@@ -21,8 +21,8 @@ class PrintController extends BaseController
 
                 $models = new ProjectModel();
                 $modelheader = new HeaderModel();
-                $data["survey"] = $models->getDataSurvey($id); 
-                $data["staff"] = $models->getDataSurveyStaff($data["survey"]->SurveyStaff); 
+                $data["survey"] = $models->get_data_survey($id); 
+                $data["staff"] = $models->get_data_survey_staff($data["survey"]->SurveyStaff); 
                 $data["header_footer"] = $modelheader->get_header_a4($data["survey"]->StoreId);  
 
                 $dompdf = new Dompdf($options);  

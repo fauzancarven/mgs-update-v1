@@ -6,7 +6,7 @@
     <div class="card-header border-bottom-0 px-4 pt-4 pb-0 bg-white mb-lg-0 mb-2">  
         <div class="d-flex align-items-center mb-4 "> 
             <div class="p-1 flex-fill" > 
-                <h4 class="mb-0">LIST PENAWARAN</h4> 
+                <h4 class="mb-0">LIST INVOICE</h4> 
             </div>     
         </div>
         <!-- BAGIAN FILTER -->
@@ -30,20 +30,26 @@
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
                                 <input class="form-check-input select category" type="checkbox" data-group="category" data-value="1" value="Proses" id="status-1">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Selesai</label>
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Proses</label>
                             </div> 
                         </li>   
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
-                                <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Finish" id="status-2">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Batal</label>
+                                <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Proses" id="status-2">
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Selesai</label>
+                            </div> 
+                        </li>   
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
+                            <div class="form-check w-100">
+                                <input class="form-check-input select category" type="checkbox" data-group="category" data-value="3" value="Finish" id="status-3">
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-3">Batal</label>
                             </div> 
                         </li>   
                     </ul>
                 </div>
             </div>  
             <div class="input-group flex-fill">  
-                <input class="form-control form-control-sm input-form" id="searchdatasph" placeholder="Cari nama project, catatan, lokasi ataupun nomer dokumen" value="" type="text">
+                <input class="form-control form-control-sm input-form" id="searchdatainvoice" placeholder="Cari nama project, catatan, lokasi ataupun nomer dokumen" value="" type="text">
                 <i class="fa-solid fa-magnifying-glass"></i>   
                 <div class="d-sm-none d-block ps-2">
                     <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop"><i class="fa-solid fa-filter"></i></button>
@@ -55,7 +61,7 @@
         </div> 
     </div>
     <div class="card-body py-0 px-4 pb-4" id="table"> 
-        <table id="data-table-sph" class="table table-hover table-nested">
+        <table id="data-table-invoice" class="table table-hover table-nested">
             <thead>
                 <tr> 
                     <th></th>
@@ -106,9 +112,9 @@
         // xhr_load_project = $.ajax({ 
         //     dataType: "json",
         //     method: "POST",
-        //     url: "<?= base_url()?>datatables/get-data-project/sph", 
+        //     url: "<?= base_url()?>datatables/get-data-project/invoice", 
         //     data:{  
-        //         "search" : $("#searchdatasph").val(), 
+        //         "search" : $("#searchdatainvoice").val(), 
         //         "status" : filter_status_select, 
         //         "datestart" : $("#searchdatadate").data("start"),
         //         "dateend" : $("#searchdatadate").data("end"),
@@ -215,7 +221,7 @@
     });
     
     // FILTER SEARCH
-    $("#searchdatasph").keyup(function(){
+    $("#searchdatainvoice").keyup(function(){
         //loader_datatable(); 
         table.ajax.reload(null, false);
     })
@@ -265,7 +271,7 @@
     // }
     
     //loader_datatable();
-    table = $('#data-table-sph').DataTable({ 
+    table = $('#data-table-invoice').DataTable({ 
         "searching": false,
         "lengthChange": false, 
         "pageLength": parseInt(10),
@@ -275,14 +281,14 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[2, "asc"]],
+        "order": [[2, "desc"]],
         "processing": true,
         "serverSide": true, 
         "ajax": {
-            "url": "<?= base_url()?>datatables/get-datatable-penawaran",
+            "url": "<?= base_url()?>datatables/get-datatable-invoice",
             "type": "POST", 
             "data": function(data){ 
-                data["search"] =  $("#searchdatasph").val();
+                data["search"] =  $("#searchdatainvoice").val();
                 data["filter"] = filter_status_select;
                 data["datestart"] = $("#searchdatadate").data("start");
                 data["dateend"] = $("#searchdatadate").data("end");
@@ -383,7 +389,7 @@
     edit_project_Survey = function(ref,id,el){ 
           // INSERT LOADER BUTTON
           if (isProcessingSurveyEdit[id]) {
-            console.log("project sph cancel load");
+            console.log("project invoice cancel load");
             return;
         }  
         isProcessingSurveyEdit[id] = true; 

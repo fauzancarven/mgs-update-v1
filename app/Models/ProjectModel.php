@@ -2486,9 +2486,7 @@ class ProjectModel extends Model
                             </span>
                         </div>';
                 }
-            }
-                // else{
-             
+            } 
             
             $status = "";
             if($row->SampleStatus==0){

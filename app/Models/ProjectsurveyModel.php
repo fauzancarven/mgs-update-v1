@@ -23,6 +23,174 @@ class ProjectsurveyModel extends Model
     
         return $bytes;
     }
+    function load_datatable_project_survey($filter = null){
+        $filterdata = 0;
+        $countTotal = 0;
+        $count = 0;
+        $draw = $filter['draw'];  
+        $start = $filter['start'];
+        $length = $filter['length']; 
+        $datatable = array();
+        
+        $builder = $this->db->table("survey");
+        $builder->join("project","project.ProjectId = survey.ProjectId ","left");  
+        $builder->join("users","users.id = survey.SurveyAdmin ","left"); 
+        $builder->join("store","store.StoreId = project.StoreId","left");  
+        if($filter["datestart"]){
+            $builder->where("SurveyDate >=",$filter["datestart"]);
+            $builder->where("SurveyDate <=",$filter["dateend"]); 
+        } 
+        //mengambil total semua data
+        $builder1 = clone $builder; 
+        $countTotal = $builder1->get()->getNumRows();
+
+
+        if(isset($filter["filter"])){ 
+            $builder->whereIn("SurveyStatus",$filter["filter"]); 
+        } 
+        if($filter["search"]){ 
+            $builder->groupStart(); 
+            $builder->like("ProjectName",$filter["search"]);
+            $builder->orLike("ProjectComment",$filter["search"]);
+            $builder->orLike("SurveyAddress",$filter["search"]);
+            $builder->orLike("SurveyCode",$filter["search"]);
+            $builder->orLike("username",$filter["search"]);
+            $builder->orLike("SurveyCustName",$filter["search"]);
+            $builder->groupEnd();  
+        }
+        
+        // Order TAble
+        $columns = array(
+            0 => null, // kolom action tidak dapat diurutkan
+            1 => "SurveyCode", // kolom name
+            2 => "SurveyDate", // kolom action tidak dapat diurutkan
+            3 => "SurveyStatus", // kolom image tidak dapat diurutkan
+            4 => "SurveyAdmin", // kolom action tidak dapat diurutkan
+            5 => "SurveyStaff", // kolom action tidak dapat diurutkan
+            6 => "SurveyTotal", // kolom action tidak dapat diurutkan
+            7 => "SurveyCustName", // kolom action tidak dapat diurutkan
+            8 => null, // kolom action tidak dapat diurutkan
+        );
+        if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
+            $orderColumn = $columns[$filter['order'][0]['column']];
+            $orderDir = $filter['order'][0]['dir'];
+        
+            if ($orderDir != 'asc' && $orderDir != 'desc') {
+                $orderDir = 'asc';
+            } 
+            $builder->orderby($orderColumn,$orderDir);   
+        }
+        
+        $datafilter = clone $builder;  
+        $count = $datafilter->get()->getNumRows();
+
+        $builder->limit($length,$start); 
+        $query = $builder->get();  
+        foreach($query->getResult() as $row){
+            $staffArray = explode('|', $row->SurveyStaff);
+            $query =  $this->db->table('users');
+            $query->whereIn('id', $staffArray);
+            $result = $query->get()->getResult();
+            $staffname = implode(', ', array_column($result, 'username'));
+
+            $status = "";
+            if($row->SurveyStatus==0){
+                $status .= '<span class="text-head-3"><span class="badge text-bg-primary me-1 pointer" onclick="update_status_survey(0,'.$row->SurveyId.')">NEW</span></span> ';
+            }
+            if($row->SurveyStatus==1){
+                $status .= '<span class="text-head-3"><span class="badge text-bg-info me-1 pointer" onclick="update_status_survey(1,'.$row->SurveyId.')">PROGRESS</span></span>';
+            }
+            if($row->SurveyStatus==2){
+                $status .= '  <span class="text-head-3"><span class="badge text-bg-success me-1 pointer" onclick="update_status_survey(2,'.$row->SurveyId.')">FINISH</span></span> ';
+            }
+            if($row->SurveyStatus==3){
+                $status .= '<span class="text-head-3"><span class="badge text-bg-danger me-1 pointer" onclick="update_status_survey(3,'.$row->SurveyId.')">CANCEL</span></span>  '; 
+            }
+
+            //load data hasil survey
+            $builders = $this->db->table("survey_finish");
+            $builders->select('*');
+            $builders->where('SurveyId',$row->SurveyId); 
+            $row_finish = $builders->get()->getRow();   
+            $html_Survey = "";
+            if($row_finish){ 
+                $html_Survey .= '<div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
+                                    
+                                    <div class="col bg-light ms-4 me-2 py-2"> 
+                                        <div class="text-head-2">Hasil Survey <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Hasil Survey" onclick="edit_project_Survey_finish('.$row->ProjectId.','.$row_finish->SurveyFinishId.',this)"><i class="fa-solid fa-pen-to-square"></i></span></div> 
+                                        '.$row_finish->SurveyFinishDetail.' 
+                                    <div class="list-group"> ';
+                                
+                $folder_utama = 'assets/images/project'; 
+                $files = scandir($folder_utama."/".$row->SurveyId);
+                foreach ($files as $file) {
+                    if ($file != '.' && $file != '..') {
+
+                        $filesize = filesize($folder_utama."/".$row->SurveyId . '/' . $file); 
+                        $html_Survey .= ' <li class="list-group-item list-group-item-action align-items-center d-flex view-document file pb-2" > 
+                                            <i class="fa-solid fa-file fa-2x me-2"></i>
+                                            <div class="d-flex flex-column flex-fill ms-2">
+                                                <span class="fs-6">'.$file.'</span>
+                                                <span class="text-muted">'.$this->format_filesize($filesize).'</span>
+                                            </div>  
+                                                
+                                            <button class="btn btn-sm float-end" onclick="download_file(this)" data-file="'.$folder_utama."/".$row->SurveyId . '/' . $file.'">
+                                                <i class="fa-solid fa-download"></i>
+                                            </button>
+                                            
+                                        </li>';
+                    }
+                }  
+                $html_Survey .= ' </div></div></div> ';   
+            }
+            if($html_Survey == ""){
+                if($row->SurveyStatus<3){
+                    $html_Survey = '  
+                    <div class="alert alert-warning p-2 m-1" role="alert">
+                        <span class="text-head-3">
+                            <i class="fa-solid fa-triangle-exclamation text-danger me-2" style="font-size:0.75rem"></i>
+                            Belum ada hasil survey yang dibuat dari dokumen ini, 
+                            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_survey_finish('.$row->ProjectId.','.$row->SurveyId.',this)">Buat hasil survey</a> 
+                        </span>
+                    </div>'; 
+                }else{
+                    $html_Survey = '<div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
+                    <div class="col bg-light ms-4 me-2 py-2"> 
+                    <span class="text-head-3">Tidak Ada hasil survey yang dibuat</span>
+                    </div></div>';
+                }
+            }
+
+
+            $data_row = array( 
+                "code" => $row->SurveyCode,
+                "date" => $row->SurveyDate,
+                "status" => $status,
+                "admin" => $row->username,
+                "staff" => $staffname,
+                "biaya" => number_format($row->SurveyTotal,0),
+                "customer" => $row->SurveyCustName,
+                "detail" =>$html_Survey,
+                "action" =>'  
+                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-print"></i></span>  
+                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                        <div class="d-inline ">
+                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                        </div>',
+            );
+            array_push($datatable, $data_row);
+        }
+
+        return json_encode(
+            array(
+                "draw"=>$draw,
+                "recordsTotal"=>$countTotal,
+                "recordsFiltered"=>($filterdata == 0 ? $countTotal : $count ),
+                "data"=>$datatable, 
+            )
+        );
+
+    }
     function load_table_project_survey($filter = null){
         $builder = $this->db->table("survey");
         $builder->join("project","project.ProjectId = survey.ProjectId ","left");  
@@ -412,6 +580,7 @@ class ProjectsurveyModel extends Model
             )
         ); 
     }
+
 
     // function load_table_project_survey($filter = null){
     //     $builder = $this->db->table("survey");

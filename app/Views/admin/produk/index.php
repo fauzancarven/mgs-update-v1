@@ -1,19 +1,6 @@
 <?php $this->extend('admin/template/main'); ?>
 
-<?php $this->section('content'); ?>
- 
-
-<?php if (session()->getFlashdata('error')) : ?>
-    <div class="alert alert-danger" role="alert">
-        <?= session()->getFlashdata('error'); ?>
-    </div>
-<?php endif; ?>
-
-<?php if (session()->getFlashdata('pesan')) : ?>
-    <div class="alert alert-success" role="alert">
-        <?= session()->getFlashdata('pesan'); ?>
-    </div>
-<?php endif; ?> 
+<?php $this->section('content'); ?> 
 <div class="card radius-15 overflow-hidden mb-3 border-0 shadow-sm">
     <div class="card-header border-bottom-0 px-4 pt-4 pb-0 bg-white mb-lg-0 mb-2"> 
         <div class="d-flex align-items-center mb-4"> 
@@ -211,14 +198,14 @@
                     <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop"><i class="fa-solid fa-filter"></i></button>
                 </div>
             </div>  
-        </div>
-    </div> 
-    <div class="card-body py-0 px-4" id="table" style="min-height:100vh;"> 
-        <table id="data-table-item" class="display table table-hover">
+        </div> 
+     </div> 
+    <div class="card-body py-0 px-4 pb-4" id="table"> 
+        <table id="data-table-item" class="table table-hover table-nested pb-2">
             <thead>
                 <tr> 
                     <th></th>
-                    <th class="text-center">Gambar</th>
+                    <th class="text-center">Kode</th>
                     <th>Kategori</th>
                     <th>Nama Produk</th>
                     <th>Harga</th>
@@ -378,7 +365,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[1, "asc"]],
+        "order": [[1, "desc"]],
         "processing": true,
         "serverSide": true, 
         "ajax": {

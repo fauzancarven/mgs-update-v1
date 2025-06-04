@@ -17,10 +17,9 @@
 <div class="px-2">
 <div class="d-flex align-items-center mb-4 "> 
     <div class="p-1 flex-fill" > 
-        <h4 class="mb-0">LIST PROJECT</h4> 
+        <h4 class="mb-0">LIST PROJECT</h4>  
     </div>     
-    <div class="justify-content-end d-flex gap-1">
-        <button class="btn btn-sm btn-secondary px-3 rounded" onclick="produk_click(this)"><i class="fa-solid fa-magnifying-glass"></i><span class="d-none d-md-inline-block ps-2">List Produk<span></button>
+    <div class="justify-content-end d-flex gap-1"> 
         <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Project<span></button>
     </div>
 </div>
@@ -172,7 +171,7 @@
         <div class="d-sm-none d-block ps-1">
             <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop-date" aria-controls="staticBackdrop"><i class="fa-solid fa-calendar-days"></i></button>
         </div>
-    </div>  
+    </div>   
 </div>
 <div class="offcanvas offcanvas-bottom" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop-date" aria-labelledby="staticBackdropLabel">
     <div class="offcanvas-header">

@@ -7,6 +7,7 @@ use App\Models\ProjectModel;
 use App\Models\ProjectsurveyModel;
 use App\Models\ProjectsampleModel;
 use App\Models\ProjectsphModel;
+use App\Models\ProjectinvoiceModel;
 use App\Models\CustomerModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
@@ -54,6 +55,14 @@ class TableController extends BaseController
         }    
         
     } 
+    public function project_survey_datatable()
+    {   
+        $request = Services::request();
+        $datatable = new ProjectsurveyModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_datatable_project_survey($request->getPost());
+        }     
+    } 
     public function project_sample()
     {   
         $request = Services::request();
@@ -63,12 +72,39 @@ class TableController extends BaseController
         }    
         
     } 
+    public function project_sample_datatable()
+    {   
+        $request = Services::request();
+        $datatable = new ProjectsampleModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_datatable_project_sample($request->getPost());
+        }    
+        
+    } 
     public function project_penawaran()
     {   
         $request = Services::request();
         $datatable = new ProjectsphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_table_project_penawaran($request->getPost());
+        }    
+        
+    } 
+    public function project_penawaran_datatable()
+    {   
+        $request = Services::request();
+        $datatable = new ProjectsphModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_datatable_project_penawaran($request->getPost());
+        }    
+        
+    } 
+    public function project_invoice_datatable()
+    {   
+        $request = Services::request();
+        $datatable = new ProjectinvoiceModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_datatable_project_invoice($request->getPost());
         }    
         
     } 

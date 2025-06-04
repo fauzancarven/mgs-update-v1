@@ -191,8 +191,7 @@ class ProdukModel extends Model
             $filterdata = 1;
         } 
  
-        // $builder->groupEnd(); 
-  
+        // $builder->groupEnd();  
         $columns = array(
             0 => null, // kolom action tidak dapat diurutkan
             1 => null, // kolom name
