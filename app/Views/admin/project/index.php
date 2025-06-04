@@ -1019,7 +1019,7 @@
 
         IsUpdateStatus[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1050,7 +1050,7 @@
         }  
         isProcessingDelete = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",
@@ -1109,7 +1109,7 @@
 
         isProcessingSurvey[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1143,7 +1143,7 @@
         }  
         isProcessingSurveyEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1181,7 +1181,7 @@
         }  
         isProcessingSurveyDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",
@@ -1221,7 +1221,7 @@
 
         isProcessingSurveyFinish[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1254,7 +1254,7 @@
         }  
         isProcessingSurveyFinishEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1291,7 +1291,7 @@
         }  
         isProcessingSample[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1330,7 +1330,7 @@
         }  
         isProcessingSampleEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1364,7 +1364,7 @@
         }  
         isProcessingSampleDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",
@@ -1405,7 +1405,7 @@
         }  
         isProcessingSampleUpdate[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1455,7 +1455,7 @@
         }  
         isProcessingSph[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1501,7 +1501,7 @@
         }  
         isProcessingSphEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1535,7 +1535,7 @@
         }  
         isProcessingSphDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",
@@ -1589,7 +1589,7 @@
         }  
         isProcessingPo[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1624,7 +1624,7 @@
         }  
         isProcessingPOEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1708,7 +1708,7 @@
         }  
         isProcessingPo[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1747,7 +1747,7 @@
         }  
         isProcessingInvoiceEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1782,7 +1782,7 @@
         }  
         isProcessingInvoiceDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",
@@ -1838,7 +1838,7 @@
         }  
         isProcessingInvoiceUpdate[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1886,7 +1886,7 @@
         }  
         isProcessingInvoicePayment[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1924,7 +1924,7 @@
         }  
         isProcessingPaymentEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -1961,7 +1961,7 @@
         }  
         isProcessingInvoiceDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",
@@ -2008,7 +2008,7 @@
         }  
         isProcessingPaymentRequest[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2045,7 +2045,7 @@
         }  
         isProcessingPaymentRequestEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2082,7 +2082,7 @@
         }  
         isProcessingPaymentRequestDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",
@@ -2138,7 +2138,7 @@
         }  
         isProcessingInvoiceProforma[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2173,7 +2173,7 @@
         }  
         isProcessingProformaEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2210,7 +2210,7 @@
         }  
         isProcessingInvoicePayment[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2290,7 +2290,7 @@
         }  
         isProcessingDelivery[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2328,7 +2328,7 @@
         }  
         isProcessingDeliveryEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2394,7 +2394,7 @@
         }  
         isProcessingDeliveryProses[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2456,7 +2456,7 @@
         }  
         isProcessingDeliveryProses[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2492,7 +2492,7 @@
         }  
         isProcessingDeliveryEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2556,7 +2556,7 @@
         }  
         isProcessingDeliveryProses[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2594,7 +2594,7 @@
 
         isProcessingDelivery[id] = true;
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({
             method: "POST",
@@ -2632,7 +2632,7 @@
 
         isProcessingAccountingEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -2668,7 +2668,7 @@
         }  
         isProcessingAccountingDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",

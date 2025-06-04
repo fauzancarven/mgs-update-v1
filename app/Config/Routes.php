@@ -19,6 +19,7 @@ $routes->get('/admin/project/survey', 'AdminController::survey', ['filter' => 'l
 $routes->get('/admin/project/sample', 'AdminController::sample', ['filter' => 'login']);
 $routes->get('/admin/project/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
 $routes->get('/admin/project/invoice', 'AdminController::invoice', ['filter' => 'login']);
+$routes->get('/admin/project/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
 

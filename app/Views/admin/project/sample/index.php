@@ -279,6 +279,7 @@
         "searching": false,
         "lengthChange": false, 
         "pageLength": parseInt(10),
+        scrollX: true,
         "language": {
             "emptyTable": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
             "zeroRecords": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,

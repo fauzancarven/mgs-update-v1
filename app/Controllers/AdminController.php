@@ -212,6 +212,22 @@ class AdminController extends BaseController
         ]; 
         return view('admin/project/invoice/index', $data); 
     }
+    public function pembelian()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Pembelian',
+            'menu' => "Project",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/project/po/index', $data); 
+    }
     public function accounting(){    
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();

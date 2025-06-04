@@ -67,13 +67,13 @@
                 <tr> 
                     <th></th>
                     <th class="text-center">Kode</th>
+                    <th>Action</th>
                     <th>Tanggal</th>
                     <th>Status</th>
                     <th>Admin</th>
                     <th>Staff</th>
                     <th>Biaya</th>
                     <th>Customer</th>
-                    <th>Action</th>
                 </tr>
             </thead> 
             <tbody> 
@@ -283,13 +283,14 @@
         "searching": false,
         "lengthChange": false, 
         "pageLength": parseInt(10),
+        scrollX: true,
         "language": {
             "emptyTable": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
             "zeroRecords": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[2, "desc"]],
+        "order": [[3, "desc"]],
         "processing": true,
         "serverSide": true, 
         "ajax": {
@@ -308,6 +309,7 @@
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
             }, 
+            { data: "action" ,orderable: false , className:"action-td",width: "100px"}, 
             { data: "code",orderable: false , className:"text-center"},  
             { data: "date", className:"text-center"}, 
             { data: "status" , className:"text-center"}, 
@@ -315,7 +317,6 @@
             { data: "staff" , className:"text-center"}, 
             { data: "biaya"}, 
             { data: "customer" }, 
-            { data: "action" ,orderable: false , className:"action-td",width: "100px"}, 
         ] 
     }); 
 
@@ -402,7 +403,7 @@
         }  
         isProcessingSurveyEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -440,7 +441,7 @@
         }  
         isProcessingSurveyDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         Swal.fire({
             title: "Are you sure?",
@@ -479,7 +480,7 @@
 
         isProcessingSurveyFinish[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
@@ -513,7 +514,7 @@
         }  
         isProcessingSurveyFinishEdit[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",

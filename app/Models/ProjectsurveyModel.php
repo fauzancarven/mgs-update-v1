@@ -62,14 +62,14 @@ class ProjectsurveyModel extends Model
         // Order TAble
         $columns = array(
             0 => null, // kolom action tidak dapat diurutkan
-            1 => "SurveyCode", // kolom name
-            2 => "SurveyDate", // kolom action tidak dapat diurutkan
-            3 => "SurveyStatus", // kolom image tidak dapat diurutkan
-            4 => "SurveyAdmin", // kolom action tidak dapat diurutkan
-            5 => "SurveyStaff", // kolom action tidak dapat diurutkan
-            6 => "SurveyTotal", // kolom action tidak dapat diurutkan
-            7 => "SurveyCustName", // kolom action tidak dapat diurutkan
-            8 => null, // kolom action tidak dapat diurutkan
+            2 => "SurveyCode", // kolom name
+            3 => "SurveyDate", // kolom action tidak dapat diurutkan
+            4 => "SurveyStatus", // kolom image tidak dapat diurutkan
+            5 => "SurveyAdmin", // kolom action tidak dapat diurutkan
+            6 => "SurveyStaff", // kolom action tidak dapat diurutkan
+            7 => "SurveyTotal", // kolom action tidak dapat diurutkan
+            8 => "SurveyCustName", // kolom action tidak dapat diurutkan
+            1 => null, // kolom action tidak dapat diurutkan
         );
         if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
             $orderColumn = $columns[$filter['order'][0]['column']];
@@ -80,7 +80,7 @@ class ProjectsurveyModel extends Model
             } 
             $builder->orderby($orderColumn,$orderDir);   
         }
-        
+
         $datafilter = clone $builder;  
         $count = $datafilter->get()->getNumRows();
 
@@ -90,8 +90,9 @@ class ProjectsurveyModel extends Model
             $staffArray = explode('|', $row->SurveyStaff);
             $query =  $this->db->table('users');
             $query->whereIn('id', $staffArray);
-            $result = $query->get()->getResult();
-            $staffname = implode(', ', array_column($result, 'username'));
+            $result = $query->get()->getResult();   
+            $staffname = $staffname = implode(', ', array_map('ucwords', array_column($result, 'username')));
+
 
             $status = "";
             if($row->SurveyStatus==0){
@@ -170,6 +171,8 @@ class ProjectsurveyModel extends Model
                 "staff" => $staffname,
                 "biaya" => number_format($row->SurveyTotal,0),
                 "customer" => $row->SurveyCustName,
+                "customerTelp" => $row->SurveyCustTelp,
+                "customerAddress" => $row->SurveyAddress,
                 "detail" =>$html_Survey,
                 "action" =>'  
                         <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-print"></i></span>  

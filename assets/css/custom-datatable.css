@@ -2,14 +2,14 @@ table.dataTable thead>tr>th.dt-orderable-asc span.dt-column-order:before, table.
     position: absolute;
     font-family: 'Font Awesome 6 Free';
     display: block;
-    bottom: 45%;
+    bottom: 40%;
     content: "\f0d8"; 
 }
 table.dataTable thead>tr>th.dt-orderable-desc span.dt-column-order:after, table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order:after, table.dataTable thead>tr>td.dt-orderable-desc span.dt-column-order:after, table.dataTable thead>tr>td.dt-ordering-desc span.dt-column-order:after {
     position: absolute;
     font-family: 'Font Awesome 6 Free';
     display: block;
-    top: 45%;
+    top: 40%;
     content: "\f0d7"; 
 }
 .table thead th, .jsgrid .jsgrid-table thead th {
@@ -51,8 +51,13 @@ th.detail {
 }
 .table-nested tr th {
     background: #f3f5f9;
-    padding: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     color: black !important;
+}
+.table-nested tr td { 
+    padding-top: 1rem;
+    padding-bottom: 1rem; 
 }
 table.dataTable tbody tr {
     background-color: transparent;
@@ -72,8 +77,8 @@ table.dataTable tbody tr {
     object-fit: cover; 
 
 }
-table.dataTable.table.table-hover>tbody>tr:hover>* {
-    background: #f3f3f354;
+table.dataTable.table.table-hover>tbody>tr.child-row:hover>* {
+    background: #ffffff54;
     box-shadow: none;
 } 
 
@@ -82,4 +87,31 @@ td.no-border {
 }
 td.detail {
     padding:0.5rem 0.25rem !important;
+}
+.table>:not(caption)>*>*{
+    border-bottom-width: 0;
+}
+
+.dt-scroll-body {
+    overflow-y: auto !important;
+    /* scrollbar-width: thin;
+    scrollbar-color: #ccc #f0f0f0; */
+}
+
+.dt-scroll-body::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dt-scroll-body::-webkit-scrollbar-thumb {
+    background: #cad3e6;
+    border-radius: 10px;
+}
+
+.dt-scroll-body::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #f4f6ff;
+    border-radius: 10px;
+}
+div.dt-container div.dt-scroll-body {
+    border-bottom: 0 solid #dee2e6;
 }

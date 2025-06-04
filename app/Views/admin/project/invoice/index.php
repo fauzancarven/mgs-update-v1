@@ -282,6 +282,7 @@
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
         "order": [[2, "desc"]],
+        scrollX: true,
         "processing": true,
         "serverSide": true, 
         "ajax": {
