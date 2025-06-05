@@ -126,7 +126,7 @@ table.detail-item{
 table.detail-item td.detail {
     padding: 0.2rem !important;
     border-bottom: 1px solid #e1e1e1;
-    
+    font-size: 0.7rem !important; 
 }
 table.detail-item thead th.detail {    
     padding: 0.5rem 0.2rem !important;
