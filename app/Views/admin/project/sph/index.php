@@ -24,19 +24,19 @@
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
                                 <input class="form-check-input select category" type="checkbox" data-group="category" data-value="0" value="New" id="status-0">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-0">Baru</label>
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-0">New</label>
                             </div> 
                         </li>   
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
                                 <input class="form-check-input select category" type="checkbox" data-group="category" data-value="1" value="Proses" id="status-1">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Selesai</label>
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Completed</label>
                             </div> 
                         </li>   
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
                                 <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Finish" id="status-2">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Batal</label>
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Cancel</label>
                             </div> 
                         </li>   
                     </ul>
@@ -59,13 +59,13 @@
             <thead>
                 <tr> 
                     <th></th>
-                    <th class="text-center">Kode</th>
+                    <th>Action</th>
+                    <th>Nomor</th>
                     <th>Tanggal</th>
                     <th>Status</th>
                     <th>Admin</th>
                     <th>Customer</th>
-                    <th>Total</th> 
-                    <th>Action</th>
+                    <th>Grand Total</th> 
                 </tr>
             </thead> 
             <tbody> 
@@ -276,7 +276,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[2, "asc"]],
+        "order": [[3, "asc"]],
         "processing": true,
         "serverSide": true, 
         "ajax": {
@@ -289,19 +289,31 @@
                 data["dateend"] = $("#searchdatadate").data("end");
             }
         }, 
+        "initComplete": function(settings, json) {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        },
         "columns": [ 
             { data: null ,orderable: false,width: "20px",className:"p-0 ps-2",
                 render: function(data, type, row) {
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
             }, 
-            { data: "code",orderable: false , className:"text-center", width: "150px"},
-            { data: "date", className:"text-center"}, 
-            { data: "status" , className:"text-center"}, 
-            { data: "admin" , className:"text-center"}, 
-            { data: "customer"}, 
-            { data: "total", className:"text-center",width: "150px"},   
-            { data: "action" ,orderable: false , className:"action-td",width: "100px"}, 
+            { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
+            { data: "code",orderable: false , className:"align-top", width: "150px"},
+            { data: "date", className:"align-top"}, 
+            { data: "status" , className:"align-top"}, 
+            { data: "admin" , className:"align-top"}, 
+            { data: "customer",  className:"align-top",
+                render: function(data, type, row) { 
+                    var html = ` 
+                        <div class="text-head-2 pb-2">${row.customer}</div>
+                        ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-2"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
+                        <div class="text-detail-3 text-truncate" style="width: 20rem;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
+
+                    return html;
+                }
+            }, 
+            { data: "total", className:"align-top",width: "150px"},    
         ] 
     }); 
 
@@ -322,16 +334,101 @@
         // Tampilkan data nested
         if (row.child.isShown()) {
             row.child.hide(); 
-            $(this).find('i').removeClass('fa-rotate-270');  
+            $(this).find('i').removeClass('fa-rotate-90');  
         } else {  
-            $(this).find('i').addClass('fa-rotate-270');  
-            var childRow = row.child(format(data)).show(); 
+            $(this).find('i').addClass('fa-rotate-90');  
+            var childRow = row.child(format_item(data)).show(); 
             $(tr).next().addClass('child-row');
             $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
             $(tr).find('td').addClass('no-border');
         } 
     });
 
+    function format_item(data) {
+        var detailitem = data.detail; 
+        
+        var tr = $(this).closest('tr'); 
+        var tablecustom = $("<table class='table detail-item'>");
+        var theadcustom = $("<thead>");
+        var tbodycustom = $("<tbody>");
+        var tfootcustom = $("<tfoot>");
+
+        // Buat header tabel
+        var headercustom = $("<tr>"); 
+        headercustom.append($("<th class='detail'>").text("Gambar")); 
+        headercustom.append($("<th class='detail'>").text("Nama")); 
+        headercustom.append($("<th class='detail'>").text("Qty"));
+        headercustom.append($("<th class='detail'>").text("Harga"));
+        headercustom.append($("<th class='detail'>").text("Disc"));
+        headercustom.append($("<th class='detail'>").text("Total"));  
+        theadcustom.append(headercustom);
+        // Buat baris tabel  
+        let last_group_abjad = 65;
+        let last_group_no = 1;
+        for(var i = 0; i < detailitem.length;i++){  
+            if(detailitem[i]["type"] == "category"){ 
+                var trcustom = $("<tr>");  
+                trcustom.append($("<td class='detail' colspan='6'>").html(`<span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${detailitem[i]["text"]}</span>`));
+                tbodycustom.append(trcustom);
+            }
+            if(detailitem[i]["type"] == "product"){ 
+                var trcustom = $("<tr>");  
+                trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["image_url"]  + "' alt='Gambar' class='image-produk'>"));
+
+                var varian = `<span class="text-head-3">${detailitem[i]["text"]}</span><br>
+                            <span class="text-detail-2 text-truncate">${detailitem[i]["group"]}</span> 
+                            <div class="d-flex gap-1 flex-wrap">`;
+                for(var j = 0; detailitem[i]["varian"].length > j;j++){
+                    varian += `<span class="badge badge-${j % 5}">${detailitem[i]["varian"][j]["varian"] + ": " + detailitem[i]["varian"][j]["value"]}</span>`; 
+                }
+                varian +=  '</div>'; 
+                trcustom.append($("<td class='detail'>").html(varian));
+                trcustom.append($("<td class='detail'>").text(detailitem[i]["qty"] + " " + detailitem[i]["satuan_text"]));
+                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["price"])));
+                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["disc"])));
+                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["total"])));  
+                tbodycustom.append(trcustom);
+            }
+        }
+
+        // Buat footer tabel
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail px-2'>").text("Sub Total")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphSubTotal"]))); 
+        tfootcustom.append(footercustom);
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail'>").text("Disc Item")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphDiscItemTotal"]))); 
+        tfootcustom.append(footercustom);
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail'>").text("Disc Total")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphDiscTotal"]))); 
+        tfootcustom.append(footercustom);
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail'>").text("Pengiriman")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphDeliveryTotal"]))); 
+        tfootcustom.append(footercustom);
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail'>").text("Grand Total")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphGrandTotal"]))); 
+        tfootcustom.append(footercustom);
+
+        // Gabungkan tabel
+        tablecustom.append(theadcustom);
+        tablecustom.append(tbodycustom);
+        tablecustom.append(tfootcustom);
+
+        
+        var viewcustom = $("<div class='view-detail'>");
+        viewcustom.append('<div class="text-head-2 py-2"><i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</div>');
+        viewcustom.append(tablecustom);
+        return viewcustom; 
+    }
     function format(data) {
         var detailitem = data.detail;
         

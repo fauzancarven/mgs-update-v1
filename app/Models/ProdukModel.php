@@ -909,13 +909,12 @@ class ProdukModel extends Model
                 $gambar = array(); 
                 foreach ($files as $file) {
                     if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
-                        return $this->ambil_gambar_base64($folder . $file); 
+                        return ($url == true ? base_url($folder . $file) : $this->ambil_gambar_base64($folder . $file)); 
                     }
                 } 
             }
         }
-        return null;
-        //return $this->ambil_gambar_base64('assets/images/produk/default.png'); 
+        return ($url == true ? base_url('assets/images/produk/default.png') : $this->ambil_gambar_base64('assets/images/produk/default.png'));  
     }
 
 }

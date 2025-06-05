@@ -66,9 +66,9 @@ class ProjectsurveyModel extends Model
             3 => "SurveyDate", // kolom action tidak dapat diurutkan
             4 => "SurveyStatus", // kolom image tidak dapat diurutkan
             5 => "SurveyAdmin", // kolom action tidak dapat diurutkan
-            6 => "SurveyStaff", // kolom action tidak dapat diurutkan
-            7 => "SurveyTotal", // kolom action tidak dapat diurutkan
-            8 => "SurveyCustName", // kolom action tidak dapat diurutkan
+            6 => "SurveyCustName", // kolom action tidak dapat diurutkan
+            7 => "SurveyStaff", // kolom action tidak dapat diurutkan
+            8 => "SurveyTotal", // kolom action tidak dapat diurutkan
             1 => null, // kolom action tidak dapat diurutkan
         );
         if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
@@ -93,20 +93,149 @@ class ProjectsurveyModel extends Model
             $result = $query->get()->getResult();   
             $staffname = $staffname = implode(', ', array_map('ucwords', array_column($result, 'username')));
 
+            // MENGAMBIL DATA DITERUSKAN
+            $SurveyForward = ""; 
+            $builder = $this->db->table("penawaran");
+            $builder->select('*');
+            $builder->where('SphRef',$row->SurveyId); 
+            $builder->where('SphRefType',"Survey"); 
+            $builder->where('SphStatus <',"2"); 
+            $builder->orderBy('SphStatus', 'ASC');
+            $builder->orderBy('SphDate', 'ASC');
+            $queryref = $builder->get()->getRow();  
+            if($queryref){
+                $SurveyForward = ' 
+                    <script>
+                        function survey_return_click_'.$queryref->ProjectId.'_'.$queryref->SphId.'(){
+                            $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$queryref->ProjectId.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SphId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SphId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SphId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SphId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                     
+                    <div class="text-detail-3  pt-1" data-bs-toggle="tooltip" data-bs-title="Diterukan ke penawaran"><i class="fa-solid fa-share-from-square pe-1"></i><span class="text-detail-3 pointer" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SphId.'()">'.$queryref->SphCode.'</span></div>'; 
+            }else{
+                
+                // SAMPLE
+                $builder = $this->db->table("sample");
+                $builder->select('*');
+                $builder->where('SampleRef',$row->SurveyId); 
+                $builder->where('SampleRefType',"Survey"); 
+                $builder->orderby('SampleId', 'DESC'); 
+                $queryref = $builder->get()->getRow();   
+                if($queryref){
+                    $SurveyForward = ' 
+                        <script>
+                            function survey_return_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'(){
+                                $(".icon-project[data-menu=\'sample\'][data-id=\''.$queryref->ProjectId.'\'").trigger("click");
+                                setTimeout(function() {
+                                    var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\']");
+                                    var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
+                                    if (targetElement.length > 0 && contentData.length > 0) {
+                                        var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                        contentData.scrollTop(targetOffset);
+                                    }
+                                   
+                                    $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
+                                    $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
+                                        setTimeout(function() {
+                                             $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
+                                        }, 2000); // delay 1 detik
+                                    })
+
+                                }, 1000); // delay 1 detik
+                            }
+                        </script>
+                        <div class="text-head-3 pt-1">
+                            <i class="fa-solid fa-share-from-square pe-1"></i>
+                            <span class="text-head-3 pointer text-decoration-underline" onclick="survey_return_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">('.$queryref->SampleCode.')</span>
+                        </div>  
+                    ';
+                }else{ 
+                    
+                    // INVOICE
+                    $builder = $this->db->table("invoice");
+                    $builder->select('*');
+                    $builder->where('InvRef',$row->SurveyId); 
+                    $builder->where('InvRefType',"Survey");  
+                    $builder->orderby('InvId', 'DESC'); 
+                    $queryref = $builder->get()->getRow();   
+                    if($queryref){
+                        $SurveyForward = ' 
+                            <script>
+                                function survey_return_click_'.$queryref->ProjectId.'_'.$queryref->InvId.'(){
+                                    $(".icon-project[data-menu=\'invoice\'][data-id=\''.$queryref->ProjectId.'\'").trigger("click");
+                                    setTimeout(function() {
+                                        var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\']");
+                                        var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
+                                        if (targetElement.length > 0 && contentData.length > 0) {
+                                            var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                            contentData.scrollTop(targetOffset);
+                                        }
+                                       
+                                        $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
+                                        $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
+                                            setTimeout(function() {
+                                                 $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
+                                            }, 2000); // delay 1 detik
+                                        })
+
+                                    }, 1000); // delay 1 detik
+                                }
+                            </script>
+                            
+                            <div class="text-head-3 pt-1">
+                                <i class="fa-solid fa-share-from-square pe-1"></i>
+                                <span class="text-head-3 pointer text-decoration-underline" onclick="survey_return_click_'.$queryref->ProjectId.'_'.$queryref->InvId.'()">('.$queryref->InvCode.')</span>
+                            </div> 
+                        ';
+                    }else{
+                        
+                        if($row->SurveyStatus==3){
+                            $SurveyForward = '
+                            <div class="text-detail-3 pt-1"><i class="fa-regular fa-share-from-square pe-1"></i>-
+                            </div>';
+                        }else{
+                            $SurveyForward = ' 
+                            <div class="text-detail-3 pt-1">
+                                <i class="fa-regular fa-share-from-square pe-1"></i>
+                                <a class="text-detail-2" data-bs-toggle="tooltip" data-bs-title="teruskan ke Sample" onclick="add_project_sample('.$row->ProjectId.',this,'.$row->SurveyId.',\'Sample\')">Sample</a> | 
+                                <a class="text-detail-2" data-bs-toggle="tooltip" data-bs-title="teruskan ke penawaran" onclick="add_project_sph('.$row->ProjectId.',this,'.$row->SurveyId.',\'Sample\')">Penawaran</a> |  
+                                <a class="text-detail-2" data-bs-toggle="tooltip" data-bs-title="teruskan ke invoice"  onclick="add_project_invoice('.$row->ProjectId.',this,'.$row->SurveyId.',\'Sample\')">Invoice</a>
+                            </div>'; 
+                        }
+                    }
+                }
+            }  
 
             $status = "";
             if($row->SurveyStatus==0){
-                $status .= '<span class="text-head-3"><span class="badge text-bg-primary me-1 pointer" onclick="update_status_survey(0,'.$row->SurveyId.')">NEW</span></span> ';
+                $status .= '<span class="text-head-3"><span class="badge text-bg-primary me-1 pointer" onclick="update_status_survey(0,'.$row->SurveyId.')">New</span></span> ';
             }
             if($row->SurveyStatus==1){
-                $status .= '<span class="text-head-3"><span class="badge text-bg-info me-1 pointer" onclick="update_status_survey(1,'.$row->SurveyId.')">PROGRESS</span></span>';
+                $status .= '<span class="text-head-3"><span class="badge text-bg-info me-1 pointer" onclick="update_status_survey(1,'.$row->SurveyId.')">Proses</span></span>';
             }
             if($row->SurveyStatus==2){
-                $status .= '  <span class="text-head-3"><span class="badge text-bg-success me-1 pointer" onclick="update_status_survey(2,'.$row->SurveyId.')">FINISH</span></span> ';
+                $status .= '  <span class="text-head-3"><span class="badge text-bg-success me-1 pointer" onclick="update_status_survey(2,'.$row->SurveyId.')">Completed</span></span> ';
             }
             if($row->SurveyStatus==3){
-                $status .= '<span class="text-head-3"><span class="badge text-bg-danger me-1 pointer" onclick="update_status_survey(3,'.$row->SurveyId.')">CANCEL</span></span>  '; 
+                $status .= '<span class="text-head-3"><span class="badge text-bg-danger me-1 pointer" onclick="update_status_survey(3,'.$row->SurveyId.')">Cancel</span></span>  '; 
             }
+
 
             //load data hasil survey
             $builders = $this->db->table("survey_finish");
@@ -115,9 +244,9 @@ class ProjectsurveyModel extends Model
             $row_finish = $builders->get()->getRow();   
             $html_Survey = "";
             if($row_finish){ 
-                $html_Survey .= '<div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
+                $html_Survey .= '<div class="fw-normal row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
                                     
-                                    <div class="col bg-light ms-4 me-2 py-2"> 
+                                    <div class="col bg-light py-2"> 
                                         <div class="text-head-2">Hasil Survey <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Hasil Survey" onclick="edit_project_Survey_finish('.$row->ProjectId.','.$row_finish->SurveyFinishId.',this)"><i class="fa-solid fa-pen-to-square"></i></span></div> 
                                         '.$row_finish->SurveyFinishDetail.' 
                                     <div class="list-group"> ';
@@ -164,15 +293,16 @@ class ProjectsurveyModel extends Model
 
 
             $data_row = array( 
-                "code" => $row->SurveyCode,
-                "date" => $row->SurveyDate,
+                "survey" => $row,
+                "code" => $row->SurveyCode.$SurveyForward ,
+                "date" =>date_format(date_create($row->SurveyDate),"d M Y"),
                 "status" => $status,
-                "admin" => $row->username,
+                "admin" => ucwords($row->username),
                 "staff" => $staffname,
-                "biaya" => number_format($row->SurveyTotal,0),
+                "biaya" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->SurveyTotal,0)."</span></div>", 
                 "customer" => $row->SurveyCustName,
-                "customerTelp" => $row->SurveyCustTelp,
-                "customerAddress" => $row->SurveyAddress,
+                "customertelp" => ($row->SurveyCustTelp ? $row->SurveyCustTelp : ""),
+                "customeraddress" => $row->SurveyAddress,
                 "detail" =>$html_Survey,
                 "action" =>'  
                         <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey('.$row->ProjectId.','.$row->SurveyId.',this)"><i class="fa-solid fa-print"></i></span>  

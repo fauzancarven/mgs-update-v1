@@ -182,7 +182,8 @@
                         $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
                         
                         if($("#modal-finish-survey").data("menu") =="survey"){
-                            loader_datatable(); 
+                            //loader_datatable(); 
+                            table.ajax.reload(null, false);
                         }else{
                             
                             loader_data_project(<?= $project->ProjectId ?>,"survey"); 

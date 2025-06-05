@@ -174,7 +174,8 @@
                         $("#modal-edit-survey").modal("hide");   
                          
                         if($("#modal-edit-survey").data("menu") =="survey"){
-                            loader_datatable(); 
+                            //loader_datatable()
+                            table.ajax.reload(null, false);; 
                         }else{
                             
                             loader_data_project(<?= $project->ProjectId ?>,'survey');

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use CodeIgniter\Model;  
 use CodeIgniter\Database\RawSql;
+use App\Models\ProjectModel; 
+use App\Models\ProdukModel; 
 
 class ProjectsphModel extends Model
 {  
@@ -36,9 +38,10 @@ class ProjectsphModel extends Model
         } 
         if($filter["search"]){ 
             $builder->groupStart(); 
-            $builder->like("ProjectName",$filter["search"]);
-            $builder->orLike("ProjectComment",$filter["search"]);
+            $builder->like("username",$filter["search"]); 
             $builder->orLike("SphAddress",$filter["search"]);
+            $builder->orLike("SphCustName",$filter["search"]);
+            $builder->orLike("SphCustTelp",$filter["search"]);
             $builder->orLike("SphCode",$filter["search"]);
             $builder->groupEnd();  
             $filterdata = 1;
@@ -47,13 +50,13 @@ class ProjectsphModel extends Model
         // Order TAble
         $columns = array(
             0 => null, // kolom action tidak dapat diurutkan
-            1 => "SphCode", // kolom name
-            2 => "SphDate", // kolom action tidak dapat diurutkan
-            3 => "SphStatus", // kolom image tidak dapat diurutkan
-            4 => "SphAdmin", // kolom action tidak dapat diurutkan
-            5 => "SphCustName", // kolom action tidak dapat diurutkan
-            6 => null, // kolom action tidak dapat diurutkan
-            7 => null, // kolom action tidak dapat diurutkan 
+            1 => null, // kolom action tidak dapat diurutkan 
+            2 => "SphCode", // kolom name
+            3 => "SphDate", // kolom action tidak dapat diurutkan
+            4 => "SphStatus", // kolom image tidak dapat diurutkan
+            5 => "SphAdmin", // kolom action tidak dapat diurutkan
+            6 => "SphCustName", // kolom action tidak dapat diurutkan
+            7 => "SphGrandTotal", // kolom action tidak dapat diurutkan
         );
         if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
             $orderColumn = $columns[$filter['order'][0]['column']];
@@ -139,35 +142,209 @@ class ProjectsphModel extends Model
                     $no = 1;
                 } 
             }
-
+            // Mengambil detail item
+            $detail = array();
+            $models = new ProjectModel();
+            $modelsproduk = new ProdukModel();
+            $arr_detail = $models->get_data_sph_detail($row->SphId);
+            foreach($arr_detail as $row_data){
+                $detail[] = array(
+                            "id" => $row_data->ProdukId,  
+                            "produkid" => $row_data->ProdukId, 
+                            "satuan_id"=> ($row_data->SphDetailSatuanId == 0 ? "" : $row_data->SphDetailSatuanId),
+                            "satuan_text"=>$row_data->SphDetailSatuanText,  
+                            "price"=>$row_data->SphDetailPrice,
+                            "varian"=> JSON_DECODE($row_data->SphDetailVarian,true),
+                            "total"=> $row_data->SphDetailTotal,
+                            "disc"=> $row_data->SphDetailDisc,
+                            "qty"=> $row_data->SphDetailQty,
+                            "text"=> $row_data->SphDetailText,
+                            "group"=> $row_data->SphDetailGroup,
+                            "type"=> $row_data->SphDetailType,
+                            "image_url"=> $modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,true)
+                        );
+            };
             
+
+            // MENGAMBIL DATA REFERENSI
+            $SphRef = '<div class="text-detail-3  pt-2" data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran"><i class="fa-solid fa-flag pe-1"></i> - </div>';
+            if($row->SphRefType == "Survey"){
+                $builder = $this->db->table("survey");
+                $builder->where('SurveyId',$row->SphRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $SphRef = ' 
+                    <script>
+                        function sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SurveyId.'(){
+                            $(".icon-project[data-menu=\'survey\'][data-id=\''.$queryref->ProjectId.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <div class="text-detail-3 pt-2"  data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran"><span class="text-detail-3 text-decoration-underline" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SurveyId.'()">'.$queryref->SurveyCode.'</span></div>  '; 
+                }
+            } 
+            if($row->SphRefType == "Sample"){
+                $builder = $this->db->table("sample");
+                $builder->where('SampleId',$row->SphRef); 
+                $queryref = $builder->get()->getRow();  
+                if($queryref){
+                    $SphRef = ' 
+                    <script>
+                        function sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'(){
+                            $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$queryref->ProjectId.'\']").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                               
+                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                         $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+    
+                            }, 500); // delay 1 detik
+                        }
+                    </script> 
+                    <div class="text-detail-3  pt-2" data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran">
+                        <i class="fa-solid fa-flag pe-1"></i>
+                        <span class="text-detail-3" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">'.$queryref->SampleCode.'</span>
+                    </div>'; 
+                }
+            }
+
+            // Mengambil data diteruskan
+            $builder = $this->db->table("invoice");
+            $builder->select('*');
+            $builder->where('InvRef',$row->SphId); 
+            $builder->where('InvRefType',"Penawaran");  
+            $builder->where('InvStatus <',2);  
+            $builder->orderby('InvId', 'DESC'); 
+            $queryref = $builder->get()->getRow();   
+            if($queryref){
+                $sphforward = ' 
+                    <script>
+                        function penawaran_return_click_'.$queryref->ProjectId.'_'.$queryref->InvId.'(){
+                            $(".icon-project[data-menu=\'invoice\'][data-id=\''.$queryref->ProjectId.'\'").trigger("click");
+                            setTimeout(function() {
+                                var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\']");
+                                var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
+                                if (targetElement.length > 0 && contentData.length > 0) {
+                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                    contentData.scrollTop(targetOffset);
+                                }
+                                
+                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
+                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
+                                    setTimeout(function() {
+                                            $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
+                                    }, 2000); // delay 1 detik
+                                })
+
+                            }, 1000); // delay 1 detik
+                        }
+                    </script>
+                    <div class="text-detail-3  pt-1" data-bs-toggle="tooltip" data-bs-title="Diterukan ke Sampel">
+                    <i class="fa-solid fa-share-from-square pe-1"></i>
+                    <span class="text-detail-3 pointer" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->InvId.'()">'.$queryref->InvCode.'</span>
+                </div>';  
+            }else{
+                    // Mengambil data diteruskan
+                $builder = $this->db->table("sample");
+                $builder->select('*');
+                $builder->where('SampleRef',$row->SphId); 
+                $builder->where('SampleRefType',"Penawaran");  
+                $builder->where('SampleStatus <',2);  
+                $builder->orderby('SampleId', 'DESC'); 
+                $queryref = $builder->get()->getRow();   
+                if($queryref){
+                    $sphforward = ' 
+                        <script>
+                            function penawaran_return_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'(){
+                                $(".icon-project[data-menu=\'sample\'][data-id=\''.$queryref->ProjectId.'\'").trigger("click");
+                                setTimeout(function() {
+                                    var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\']");
+                                    var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
+                                    if (targetElement.length > 0 && contentData.length > 0) {
+                                        var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
+                                        contentData.scrollTop(targetOffset);
+                                    }
+                                    
+                                    $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
+                                    $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
+                                        setTimeout(function() {
+                                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
+                                        }, 2000); // delay 1 detik
+                                    })
+
+                                }, 1000); // delay 1 detik
+                            }
+                        </script>
+                        
+                        <div class="text-detail-3  pt-1" data-bs-toggle="tooltip" data-bs-title="Diterukan ke Sampel">
+                            <i class="fa-solid fa-share-from-square pe-1"></i>
+                            <span class="text-detail-3 pointer" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">'.$queryref->SampleCode.'</span>
+                        </div>'; 
+                }else{
+                    $sphforward = '
+                    <div class="text-detail-3 pt-1">
+                        <i class="fa-regular fa-share-from-square pe-1"></i>
+                        <a class="text-detail-2" onclick="add_project_invoice('.$row->ProjectId.',this,'.$row->SphId.',\'penawaran\')">Invoice</a>
+                    </div>'; 
+                }
+            
+            }
 
             $status = "";
             if($row->SphStatus==0){
                 $status .= ' 
                         <span class="text-head-3">
-                            <span class="badge text-bg-primary me-1">Baru</span> 
+                            <span class="badge text-bg-primary me-1">New</span> 
                         </span>  ';
             }
             if($row->SphStatus==1){
                 $status .= '  
                         <span class="text-head-3">
-                            <span class="badge text-bg-success me-1">Selesai</span>
+                            <span class="badge text-bg-success me-1">Completed</span>
                             <span class="text-primary pointer d-none" onclick="update_status_survey(1,'.$row->SphId.')"><i class="fa-solid fa-pen-to-square"></i></span>
                         </span> ';
             }
             if($row->SphStatus==2){
-                $status .= '   <span class="badge text-bg-danger me-1">Batal</span>  '; 
+                $status .= '   <span class="badge text-bg-danger me-1">Cancel</span>  '; 
             } 
             
             $data_row = array( 
-                "code" => $row->SphCode,
-                "date" => $row->SphDate,
+                "penawaran" => $row,
+                "code" => $row->SphCode.$SphRef.$sphforward, 
+                "date" => date_format(date_create($row->SphDate),"d M Y"),
                 "status" => $status,
-                "admin" => $row->username, 
-                "total" => number_format($row->SphGrandTotal,0),
-                "customer" => $row->SphCustName,
-                "detail" => '  <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1"><div class="col bg-light ms-4 me-2 py-2">'.$html_items.'</div></div>',
+                "admin" => ucwords($row->username),
+                "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->SphGrandTotal,0)."</span></div>",
+                "customer" => ucwords($row->SphCustName),
+                "customertelp" => ($row->SphCustTelp ? $row->SphCustTelp : ""), 
+                "customeraddress" => $row->SphAddress, 
+                
+                "detail" => $detail,
+                // "detail" => '  <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1"><div class="col bg-light ms-4 me-2 py-2">'.$html_items.'</div></div>',
                 "action" =>'  
                         <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-print"></i></span>  
                         <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_Survey('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>

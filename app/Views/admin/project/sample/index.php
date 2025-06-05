@@ -66,42 +66,20 @@
             <thead>
                 <tr> 
                     <th></th>
-                    <th class="text-center">Kode</th>
+                    <th>Action</th>
+                    <th>Nomor</th>
                     <th>Tanggal</th>
                     <th>Status</th>
                     <th>Admin</th>
                     <th>Customer</th>
                     <th>Pembayaran</th>
                     <th>Pengiriman</th>
-                    <th>Action</th>
                 </tr>
             </thead> 
             <tbody> 
             </tbody>
         </table>
-    </div> 
-<!--     
-    <div id="data-project"> 
-    </div>
-
-    <div class="row justify-content-between">
-        <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto mr-auto">
-            <div class="dt-info pt-1" aria-live="polite" id="table-toko_info" role="status">Showing 1 to 10 of 10 entries</div>
-        </div>
-        <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ml-auto">
-            <div class="dt-paging pt-1">
-                <nav aria-label="pagination">
-                    <ul class="pagination" id="paging-data">
-                        <li class="dt-paging-button page-item disabled"><a class="page-link first" aria-controls="table-toko" aria-disabled="true" aria-label="First" data-dt-idx="first" tabindex="-1">«</a></li>
-                        <li class="dt-paging-button page-item disabled"><a class="page-link previous" aria-controls="table-toko" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">‹</a></li>
-                        <li class="dt-paging-button page-item active"><a href="#" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">1</a></li>
-                        <li class="dt-paging-button page-item disabled"><a class="page-link next" aria-controls="table-toko" aria-disabled="true" aria-label="Next" data-dt-idx="next" tabindex="-1">›</a></li>
-                        <li class="dt-paging-button page-item disabled"><a class="page-link last" aria-controls="table-toko" aria-disabled="true" aria-label="Last" data-dt-idx="last" tabindex="-1">»</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div> -->
+    </div>  
 </div>   
 
 <script>
@@ -286,7 +264,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[2, "desc"]],
+        "order": [[3, "desc"]],
         "processing": true,
         "serverSide": true, 
         "ajax": {
@@ -299,25 +277,47 @@
                 data["dateend"] = $("#searchdatadate").data("end");
             }
         }, 
+        "initComplete": function(settings, json) {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        },
         "columns": [ 
             { data: null ,orderable: false,width: "20px",className:"p-0 ps-2",
                 render: function(data, type, row) {
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
+            },  
+            { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
+            { data: "code",orderable: false , width: "150px"},
+            { data: "date", className:"align-top"}, 
+            { data: "status" , className:"align-top"}, 
+            { data: "admin" , className:"align-top"}, 
+            { data: "customer",  className:"align-top",
+                render: function(data, type, row) { 
+                    var html = ` 
+                        <div class="text-head-2 pb-2">${row.customer}</div>
+                        ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-2"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
+                        <div class="text-detail-3 text-truncate" style="width: 20rem;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
+
+                    return html;
+                }
             }, 
-            { data: "code",orderable: false , className:"text-center", width: "150px"},
-            { data: "date", className:"text-center"}, 
-            { data: "status" , className:"text-center"}, 
-            { data: "admin" , className:"text-center"}, 
-            { data: "customer"}, 
-            { data: "payment", orderable: false , className:"text-center",width: "150px"}, 
-            { data: "delivery", orderable: false , className:"text-center",width: "150px"},   
-            { data: "action" ,orderable: false , className:"action-td",width: "100px"}, 
+            { data: "payment", orderable: false , className:"align-top",width: "150px"}, 
+            { data: "delivery", orderable: false , className:"align-top",width: "150px"},  
         ] 
     }); 
 
-    table.on('draw.dt', function() { 
-        var info = table.page.info();
+    table.on('draw', function() { 
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+            if (tooltipTriggerEl.innerText?.includes('top')) {
+                tooltip.enable();
+            }
+            return tooltip;
+        });
+    });
+    table.on('draw.dt', function() {   
+        var info = table.page.info(); 
         if (info.page + 1 > info.pages && info.pages > 0) {
             table.page('last').draw('page');
         }
@@ -331,61 +331,141 @@
         // Tampilkan data nested
         if (row.child.isShown()) {
             row.child.hide(); 
-            $(this).find('i').removeClass('fa-rotate-270');  
+            $(this).find('i').removeClass('fa-rotate-90');  
         } else {  
-            $(this).find('i').addClass('fa-rotate-270');  
-            var childRow = row.child(format(data)).show(); 
+            $(this).find('i').addClass('fa-rotate-90');  
+            var childRow = row.child(format_item(data)).show(); 
+            $(tr).next().addClass('child-row');
+            $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
+            $(tr).find('td').addClass('no-border');
+        } 
+    }); 
+    table.on('click', '.payment', function() {
+        var tr = $(this).closest('tr');
+        tr.toggleClass('tr-payment');
+        var row = table.row(tr);
+        var data = row.data();
+
+        // Tampilkan data nested
+        if (row.child.isShown()) {
+            row.child.hide(); 
+            $(tr).find('i.fa-chevron-right').removeClass('fa-rotate-90');  
+        } else {  
+            $(tr).find('i.fa-chevron-right').addClass('fa-rotate-90');  
+            var childRow = row.child(format_payment(data)).show(); 
             $(tr).next().addClass('child-row');
             $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
             $(tr).find('td').addClass('no-border');
         } 
     });
+    table.on('click', '.delivery', function() {
+        var tr = $(this).closest('tr');
+        tr.toggleClass('tr-delivery');
+        var row = table.row(tr);
+        var data = row.data();
 
-    function format(data) {
-        var detailitem = data.detail;
+        // Tampilkan data nested
+        if (row.child.isShown()) {
+            row.child.hide(); 
+            $(tr).find('i.fa-chevron-right').removeClass('fa-rotate-90');  
+        } else {  
+            $(tr).find('i.fa-chevron-right').addClass('fa-rotate-90');  
+            var childRow = row.child(format_delivery(data)).show(); 
+            $(tr).next().addClass('child-row');
+            $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
+            $(tr).find('td').addClass('no-border');
+        } 
+    });
+    function format_payment(data){
+        return data.paymentdetail;
+    }
+    function format_delivery(data){
+        return data.deliverydetail;
+    }
+    function format_item(data) {
+        var detailitem = data.detail; 
         
-        // var tr = $(this).closest('tr');
+        var tr = $(this).closest('tr'); 
+        var tablecustom = $("<table class='table detail-item'>");
+        var theadcustom = $("<thead>");
+        var tbodycustom = $("<tbody>");
+        var tfootcustom = $("<tfoot>");
 
-        // var tablecustom = $("<table class='table'>");
-        // var theadcustom = $("<thead>");
-        // var tbodycustom = $("<tbody>");
+        // Buat header tabel
+        var headercustom = $("<tr>"); 
+        headercustom.append($("<th class='detail'>").text("Gambar")); 
+        headercustom.append($("<th class='detail'>").text("Nama")); 
+        headercustom.append($("<th class='detail'>").text("Qty"));
+        headercustom.append($("<th class='detail'>").text("Harga"));
+        headercustom.append($("<th class='detail'>").text("Disc"));
+        headercustom.append($("<th class='detail'>").text("Total"));  
+        theadcustom.append(headercustom);
+        // Buat baris tabel  
+        let last_group_abjad = 65;
+        let last_group_no = 1;
+        for(var i = 0; i < detailitem.length;i++){  
+            if(detailitem[i]["type"] == "category"){ 
+                var trcustom = $("<tr>");  
+                trcustom.append($("<td class='detail' colspan='6'>").html(`<span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${detailitem[i]["text"]}</span>`));
+                tbodycustom.append(trcustom);
+            }
+            if(detailitem[i]["type"] == "product"){ 
+                var trcustom = $("<tr>");  
+                trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["image_url"]  + "' alt='Gambar' class='image-produk'>"));
 
-        // // Buat header tabel
-        // var headercustom = $("<tr>"); 
-        // headercustom.append($("<th class='detail'>").text("Gambar"));
-        // $.each(detailitem[0]["ProdukDetailVarian"], function(key, value) {   
-        //     headercustom.append($("<th class='detail'>").text(key)); 
-        // });    
-        // headercustom.append($("<th class='detail'>").text("Berat"));
-        // headercustom.append($("<th class='detail'>").text("Satuan"));
-        // headercustom.append($("<th class='detail'>").text("isi /M2"));
-        // headercustom.append($("<th class='detail'>").text("Harga Beli"));
-        // headercustom.append($("<th class='detail'>").text("Harga Jual")); 
-        // headercustom.append($("<th class='detail'>").text("Action").attr("width","100px")); 
-        // theadcustom.append(headercustom);
-        // // Buat baris tabel 
-        // for(var i = 0; i < detailitem.length;i++){ 
-        //     var trcustom = $("<tr>"); 
-            
-        //     trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["ProdukDetailImage"]  + "' alt='Gambar' class='image-produk'>"));
-        //     $.each(detailitem[i]["ProdukDetailVarian"], function(key, value) {  
-        //         trcustom.append($("<td class='detail'>").text(value));
-        //     });     
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailBerat"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailSatuanText"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailPcsM2"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaBeli"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaJual"]));
-        //     trcustom.append($("<td class='detail'>").html(`
-        //     <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-pen-to-square"></i></span>`));
-        //     tbodycustom.append(trcustom);
-        // }
+                var varian = `<span class="text-head-3">${detailitem[i]["text"]}</span><br>
+                            <span class="text-detail-2 text-truncate">${detailitem[i]["group"]}</span> 
+                            <div class="d-flex gap-1 flex-wrap">`;
+                for(var j = 0; detailitem[i]["varian"].length > j;j++){
+                    varian += `<span class="badge badge-${j % 5}">${detailitem[i]["varian"][j]["varian"] + ": " + detailitem[i]["varian"][j]["value"]}</span>`; 
+                }
+                varian +=  '</div>'; 
+                trcustom.append($("<td class='detail'>").html(varian));
+                trcustom.append($("<td class='detail'>").text(detailitem[i]["qty"] + " " + detailitem[i]["satuan_text"]));
+                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["price"])));
+                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["disc"])));
+                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["total"])));  
+                tbodycustom.append(trcustom);
+            }
+        }
 
-        // // Gabungkan tabel
-        // tablecustom.append(theadcustom);
-        // tablecustom.append(tbodycustom);
+        // Buat footer tabel
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail px-2'>").text("Sub Total")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.sample["SampleSubTotal"]))); 
+        tfootcustom.append(footercustom);
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail'>").text("Disc Item")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.sample["SampleDiscItemTotal"]))); 
+        tfootcustom.append(footercustom);
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail'>").text("Disc Total")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.sample["SampleDiscTotal"]))); 
+        tfootcustom.append(footercustom);
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail'>").text("Pengiriman")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.sample["SampleDeliveryTotal"]))); 
+        tfootcustom.append(footercustom);
+        var footercustom = $("<tr>"); 
+        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
+        footercustom.append($("<th class='detail'>").text("Grand Total")); 
+        footercustom.append($("<th class='detail'>").text(rupiah(data.sample["SampleGrandTotal"]))); 
+        tfootcustom.append(footercustom);
 
-        return detailitem; 
+        // Gabungkan tabel
+        tablecustom.append(theadcustom);
+        tablecustom.append(tbodycustom);
+        tablecustom.append(tfootcustom);
+
+        
+        var viewcustom = $("<div class='view-detail'>");
+        viewcustom.append('<div class="text-head-2 py-2"><i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</div>');
+        viewcustom.append(tablecustom);
+        return viewcustom; 
     }
  
 </script>

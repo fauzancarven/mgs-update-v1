@@ -787,7 +787,7 @@ class ProjectModel extends Model
         //status
         $actionstatus = '
         <a type="button d-inline " data-bs-toggle="dropdown" aria-expanded="false" >
-            <i class="fa-solid fa-pen-to-square ps-2 text-white" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status"></i>
+            <i class="fa-solid fa-pen-to-square ps-2  " data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status"></i>
         </a>
         <ul class="dropdown-menu shadow drop-status ">
             <li>
@@ -838,43 +838,43 @@ class ProjectModel extends Model
         </ul>';
         switch ($row->ProjectStatus ) {
             case 0:
-                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-star text-white  pe-1'></i>New".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-star    pe-1'></i>New".$actionstatus."</div>";
                 break;
 
             case 1:
-                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-street-view text-white  pe-1'></i>Survey Lokasi".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-street-view    pe-1'></i>Survey Lokasi".$actionstatus."</div>";
                 break;
 
             case 2:
-                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-truck-ramp-box text-white  pe-1'></i>Sampel Barang".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-truck-ramp-box    pe-1'></i>Sampel Barang".$actionstatus."</div>";
                 break;
 
             case 3:
-                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-hand-holding-droplet text-white  pe-1'></i>Penawaran".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-hand-holding-droplet    pe-1'></i>Penawaran".$actionstatus."</div>";
                 break;
 
             case 4:
-                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-cart-shopping text-white  pe-1'></i>Pembelian".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-cart-shopping    pe-1'></i>Pembelian".$actionstatus."</div>";
                 break;
 
             case 5:
-                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-briefcase  text-white  pe-1'></i>Perintah Kerja (WO)".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-briefcase     pe-1'></i>Perintah Kerja (WO)".$actionstatus."</div>";
                 break;
 
             case 6:
-                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-money-bill pe-1 text-white'></i>Invoice".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-money-bill pe-1  '></i>Invoice".$actionstatus."</div>";
                 break;
 
             case 7:
-                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-truck  text-white  pe-1'></i>Pengiriman".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-primary fs-7'><i class='fa-solid fa-truck     pe-1'></i>Pengiriman".$actionstatus."</div>";
                 break;
 
             case 8: 
-                $status = "<div class='badge text-bg-success fs-7'><i class='fa-solid fa-flag-checkered text-white  pe-1'></i>Selesai".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-success fs-7'><i class='fa-solid fa-flag-checkered    pe-1'></i>Selesai".$actionstatus."</div>";
                 break;
             
             default:
-                $status = "<div class='badge text-bg-danger fs-7'><i class='fa-solid fa-close pe-1 text-white'></i>Close".$actionstatus."</div>";
+                $status = "<div class='badge text-bg-danger fs-7'><i class='fa-solid fa-close pe-1  '></i>Close".$actionstatus."</div>";
                 # code...
                 break;
         }
@@ -1222,8 +1222,7 @@ class ProjectModel extends Model
 
             
             // MENGAMBIL DATA DITERUSKAN
-            $SurveyForward = "";
-            // Penawaran
+            $SurveyForward = ""; 
             $builder = $this->db->table("penawaran");
             $builder->select('*');
             $builder->where('SphRef',$row->SurveyId); 
@@ -1338,8 +1337,7 @@ class ProjectModel extends Model
                 }
             }  
 
-
-
+ 
              //load data hasil survey
             $builders = $this->db->table("survey_finish");
             $builders->select('*');
@@ -2487,7 +2485,7 @@ class ProjectModel extends Model
                         </div>';
                 }
             } 
-            
+
             $status = "";
             if($row->SampleStatus==0){
                 $status .= '

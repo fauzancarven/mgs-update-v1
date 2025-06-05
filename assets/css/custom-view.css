@@ -116,7 +116,7 @@
 }
 .text-detail-3 { 
     color: #537cab;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     width: auto; 
 }
 .divider {
@@ -1602,4 +1602,32 @@ i.notif.active .icon-notif {
     background: #e9e9e987;
     padding: 0.25rem;
     border-radius: 0.25rem;
+}
+.text-bg-primary{
+    background-color: #eaeaf3 !important;
+    color: #7065c2 !important;
+}
+.text-bg-primary i {
+    color: #7065c2 !important;
+}
+.text-bg-info {
+    background-color: #e7f0ff !important;
+    color: #8080ff  !important;
+}
+.text-bg-info i {
+    color: #8080ff !important;
+}
+.text-bg-success {
+    background-color: #cbf1e7 !important;
+    color: #009f00  !important;
+}
+.text-bg-success i {
+    color: green !important;
+}
+.text-bg-danger {
+    background-color: #f1dede !important;
+    color: #ff2b2b !important;
+}
+.text-bg-danger i {
+    color: #ff2b2b !important;
 }

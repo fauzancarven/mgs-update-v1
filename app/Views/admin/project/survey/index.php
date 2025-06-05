@@ -37,7 +37,7 @@
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
                                 <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Finish" id="status-2">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Finish</label>
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Completed</label>
                             </div> 
                         </li>  
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
@@ -66,14 +66,14 @@
             <thead>
                 <tr> 
                     <th></th>
-                    <th class="text-center">Kode</th>
                     <th>Action</th>
+                    <th>Nomor</th>
                     <th>Tanggal</th>
                     <th>Status</th>
                     <th>Admin</th>
+                    <th>Customer</th>
                     <th>Staff</th>
                     <th>Biaya</th>
-                    <th>Customer</th>
                 </tr>
             </thead> 
             <tbody> 
@@ -309,14 +309,23 @@
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
             }, 
-            { data: "action" ,orderable: false , className:"action-td",width: "100px"}, 
-            { data: "code",orderable: false , className:"text-center"},  
-            { data: "date", className:"text-center"}, 
-            { data: "status" , className:"text-center"}, 
-            { data: "admin" , className:"text-center"}, 
-            { data: "staff" , className:"text-center"}, 
-            { data: "biaya"}, 
-            { data: "customer" }, 
+            { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
+            { data: "code", className:"align-top",orderable: false , width: "150px"}, 
+            { data: "date", className:"align-top"}, 
+            { data: "status" , className:"align-top"}, 
+            { data: "admin" , className:"align-top"}, 
+            { data: "customer", className:"align-top",
+                render: function(data, type, row) { 
+                    var html = ` 
+                        <div class="text-head-2 pb-2">${row.customer}</div> 
+                        ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-2"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
+                        <div class="text-detail-3 text-truncate" style="width: 20rem;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
+
+                    return html;
+                }
+            }, 
+            { data: "staff" , className:"align-top"}, 
+            { data: "biaya", className:"align-top"}, 
         ] 
     }); 
 
