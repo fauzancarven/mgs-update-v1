@@ -74,74 +74,7 @@ class ProjectsphModel extends Model
         $builder->limit($length,$start); 
         $query = $builder->get();  
         
-        foreach($query->getResult() as $row){
-            $builder = $this->db->table("penawaran_detail");
-            $builder->select('*'); 
-            $builder->where('SphDetailRef',$row->SphId);
-            $builder->orderby('SphDetailId', 'ASC'); 
-            $items = $builder->get()->getResult(); 
-            $html_items = "";
-            $no = 1;
-            $huruf  = "A"; 
-            foreach($items as $item){ 
-                $arr_varian = json_decode($item->SphDetailVarian);
-                $arr_badge = "";
-                $arr_no = 0;
-                foreach($arr_varian as $varian){
-                    $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
-                    $arr_no++;
-                }
-                $models = new ProdukModel();
-                $gambar = $models->getproductimagedatavarian($item->ProdukId,$item->SphDetailVarian,true) ;
-                $html_items .= '
-                <div class="row">
-                    <div class="col-12 col-md-4 my-1 varian">   
-                        <div class="d-flex gap-2 align-items-center"> 
-                            ' . ($item->SphDetailType == "product" ? ($gambar ? "<img src='".$gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url("assets/images/produk/default.png").'?date='.date("Y-m-dH:i:s")."' alt='Gambar Default'>") : "").'  
-                            <div class="d-flex flex-column text-start">
-                                <span class="text-head-3 text-uppercase"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailText.'</span>
-                                '.($item->SphDetailGroup == "" ? "" : '<span class="text-detail-2 text-truncate"  '.($item->SphDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->SphDetailGroup.'</span>').'
-                                '.($arr_badge == "" ? "" : '<div class="d-flex flex-wrap gap-1"> '.$arr_badge.'</div>').' 
-                            </div> 
-                        </div>
-                    </div>';
-                if($item->SphDetailType == "product"){
-                    $html_items .= '<div class="col-12 col-md-8 my-1 detail">
-                                        <div class="row"> 
-                                            <div class="col-6 col-md-2">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Qty:</span>
-                                                    <span class="text-head-2">'.number_format($item->SphDetailQty, 2, ',', '.').' '.$item->SphDetailSatuanText.'</span>
-                                                </div>
-                                            </div>  
-                                            <div class="col-6 col-md-3">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Harga Satuan:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->SphDetailPrice, 0, ',', '.').'</span>
-                                                </div>
-                                            </div> 
-                                            <div class="col-6 col-md-3">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Disc Satuan:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->SphDetailDisc, 0, ',', '.').'</span>
-                                                </div>
-                                            </div> 
-                                            <div class="col-6 col-md-3">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Total:</span>
-                                                    <span class="text-head-2">Rp. '.number_format($item->SphDetailTotal, 0, ',', '.').'</span>
-                                                </div>
-                                            </div> 
-                                        </div>   
-                                    </div> 
-                                </div>';
-                    $no++;
-                }else{
-                    $html_items .= '<div class="col-12 col-md-8 my-1 detail"></div></div>';
-                    $huruf++;
-                    $no = 1;
-                } 
-            }
+        foreach($query->getResult() as $row){ 
             // Mengambil detail item
             $detail = array();
             $models = new ProjectModel();

@@ -87,11 +87,16 @@ class ProjectsurveyModel extends Model
         $builder->limit($length,$start); 
         $query = $builder->get();  
         foreach($query->getResult() as $row){
+          
+            // MENGAMBIL DATA STAFF
             $staffArray = explode('|', $row->SurveyStaff);
             $query =  $this->db->table('users');
             $query->whereIn('id', $staffArray);
-            $result = $query->get()->getResult();   
-            $staffname = $staffname = implode(', ', array_map('ucwords', array_column($result, 'username')));
+            $result = $query->get()->getResult();
+            $staffnames = array_column($result, 'username'); 
+            $staffname = implode('', array_map(function($value, $key) {
+                return "<span>".($key + 1) . '. ' . ucwords($value)."</span>";
+            }, $staffnames, array_keys($staffnames))); 
 
             // MENGAMBIL DATA DITERUSKAN
             $SurveyForward = ""; 
@@ -298,7 +303,7 @@ class ProjectsurveyModel extends Model
                 "date" =>date_format(date_create($row->SurveyDate),"d M Y"),
                 "status" => $status,
                 "admin" => ucwords($row->username),
-                "staff" => $staffname,
+                "staff" => "<div class='d-flex flex-column gap-1 text-head-3'>".$staffname."</div>",
                 "biaya" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->SurveyTotal,0)."</span></div>", 
                 "customer" => $row->SurveyCustName,
                 "customertelp" => ($row->SurveyCustTelp ? $row->SurveyCustTelp : ""),

@@ -225,14 +225,14 @@ class PrintController extends BaseController
                                         $dataref .=  "<img src='".$row."' width='130px' style='padding:5px'>";
                                 } 
                                 $dataref .=  '</div>';
-                                $dataref .=  '<table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
-                                        <tbody>
-                                            <tr> 
-                                                <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$data["inv"]->InvKtpImage.'" style="width:100%"></td>
-                                                <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$data["inv"]->InvNpwpImage.'" style="width:100%"></td>
-                                            </tr> 
-                                        </tbody>
-                                    </table>'; 
+                                // $dataref .=  '<table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
+                                //         <tbody>
+                                //             <tr> 
+                                //                 <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$data["inv"]->InvKtpImage.'" style="width:100%"></td>
+                                //                 <td style="width:50%;text-align:center;vertical-align:top;"><img src="'.$data["inv"]->InvNpwpImage.'" style="width:100%"></td>
+                                //             </tr> 
+                                //         </tbody>
+                                //     </table>'; 
                         }
                         $data["ref"] = array(
                                 "SubTotal" =>  $data["inv"]->InvSubTotal,

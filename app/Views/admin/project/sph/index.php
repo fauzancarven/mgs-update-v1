@@ -370,6 +370,7 @@
                 var trcustom = $("<tr>");  
                 trcustom.append($("<td class='detail' colspan='6'>").html(`<span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${detailitem[i]["text"]}</span>`));
                 tbodycustom.append(trcustom);
+                last_group_abjad++;
             }
             if(detailitem[i]["type"] == "product"){ 
                 var trcustom = $("<tr>");  

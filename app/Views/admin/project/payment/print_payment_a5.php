@@ -303,7 +303,7 @@
         </table> 
         
         <?php
-            $col = 1;
+            $col = 2;
             if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++;
             if($postdata["image"]==1) $col++;
         ?>

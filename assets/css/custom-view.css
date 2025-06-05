@@ -136,7 +136,7 @@
 .badge{ 
     font-size: 0.6rem;
     padding: 0.25rem 0.5rem;
-    border-radius: 1rem;
+    border-radius: 0.25rem;
 }
 
 .badge-rounded{  
@@ -1602,18 +1602,18 @@ i.notif.active .icon-notif {
     border-radius: 0.25rem;
 }
 .text-bg-primary{
-    background-color: #eaeaf3 !important;
-    color: #7065c2 !important;
+    background-color: #d2d2ff !important;
+    color: #527dff !important;
 }
 .text-bg-primary i {
-    color: #7065c2 !important;
+    color: #527dff !important;
 }
 .text-bg-info {
-    background-color: #e7f0ff !important;
-    color: #8080ff  !important;
+    background-color: #ffe381 !important;
+    color: #573900 !important;
 }
 .text-bg-info i {
-    color: #8080ff !important;
+    color: #573900 !important;
 }
 .text-bg-success {
     background-color: #cbf1e7 !important;

@@ -243,28 +243,50 @@ class ProjectsampleModel extends Model
                 }
             }
             
+            $payment = '';
             $payment_detail = "";
             if($row->SampleGrandTotal == 0){
                 $payment = ' 
                         <span class="text-head-3 pointer payment">
-                            <span class="badge text-bg-success me-1">Tidak ada Pembayaran</span>
+                            <span class="badge text-bg-success me-1">Tidak ada</span>
                         </span> ';
                 $payment_detail = '<div class="text-head-3 p-2">
-                    <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                    <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
                     Tidak ada pembayaran yang harus diselesaikan untuk transaksi ini 
                 </div>';
+            }else{
+                $payment = ' 
+                        <span class="text-head-3 pointer payment">
+                            <span class="badge text-bg-danger me-1">Belum Lengkap</span>
+                        </span> ';
+                $payment_detail = '<div class="text-head-3 p-2">
+                    <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                    Belum ada data pembayaran
+                </div>';
+
             }
+            $delivery = '';
             $delivery_detail = "";
             if($row->SampleDelivery == 0){
                 $delivery = ' 
                         <span class="text-head-3 pointer delivery">
-                            <span class="badge text-bg-success me-1">Tidak ada Pengiriman</span>
+                            <span class="badge text-bg-success me-1">Tidak ada</span>
                         </span>';
                 $delivery_detail = '<div class="text-head-3 p-2">
                         <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
                         Mode pengriman tidak diaktifkan untuk transaksi ini, 
                         <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery(21,1,this,1)">aktifkan mode Pengiriman</a>
                     </div>';
+            }else{
+                $delivery = ' 
+                        <span class="text-head-3 pointer delivery">
+                            <span class="badge text-bg-danger me-1">Belum Lengkap</span>
+                        </span> ';
+                $delivery_detail = '<div class="text-head-3 p-2">
+                    <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                    Belum ada data pengiriman
+                </div>';
+
             }
 
 
