@@ -528,10 +528,7 @@ span.label-dialog {
     color: white;
     padding: 0.2rem 0.5rem;
     border-radius: 0.25rem;
-} 
-.nav-item.sub {
-
-}
+}  
 .sidebar .nav.sub-menu {
     background: #f5faff;
 } 
@@ -633,6 +630,7 @@ span.label-dialog {
     display: block;
     font-size: 0.687rem;
     line-height: 10px;
+    transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
 }
 .sidebar .nav .nav-item .nav-link[aria-expanded="true"] i.fa-solid:before {
