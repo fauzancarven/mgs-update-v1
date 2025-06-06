@@ -14,7 +14,9 @@
     right: 20px;
     z-index: 9999999999;
 }
-
+.content-wrapper {
+    padding:1rem;
+}
 #main {
     bottom: 20px;
     z-index: 9999999999;
