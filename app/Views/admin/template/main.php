@@ -491,25 +491,7 @@
                                         <i class="ti-package menu-icon"></i>
                                         <span class="menu-title">Invoice</span>
                                     </a>
-                                </li> 
-                                <li class="nav-item <?= ($title === 'Pembelian' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/pembelian">
-                                        <i class="ti-dropbox menu-icon"></i>
-                                        <span class="menu-title">Pembelian</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item <?= ($title === 'Pengiriman' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/pengiriman">
-                                        <i class="ti-package menu-icon"></i>
-                                        <span class="menu-title">Pengiriman</span>
-                                    </a>
-                                </li> 
-                                <li class="nav-item <?= ($title === 'Spk' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/spk">
-                                        <i class="ti-package menu-icon"></i>
-                                        <span class="menu-title">Perintah Kerja (SPK)</span>
-                                    </a>
-                                </li> 
+                                </li>   
                             </ul>
                         </div> 
                     </li>  
@@ -531,17 +513,53 @@
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/stock">
                                         <i class="ti-view-list-alt menu-icon"></i>
-                                        <span class="menu-title">Stock Barang</span>
+                                        <span class="menu-title">Stock Produk</span>
+                                    </a>
+                                </li> 
+                                <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <span class="menu-title">Pembelian</span>
                                     </a>
                                 </li> 
                             </ul>
-                        </div> 
-                    </li>  
-                    <li class="nav-item <?= ($title === 'Accounting' ? "active" : "") ?>">
-                        <a class="nav-link" href="<?= base_url(); ?>admin/accounting">
+                        </div>  
+                    </li>
+                    
+                    <li class="nav-item <?= ($title === 'Delivery' ? "active" : "") ?>">
+                        <a class="nav-link" href="<?= base_url(); ?>admin/delivery">
+                            <i class="ti-truck menu-icon"></i>
+                            <span class="menu-title">Pengiriman</span>
+                        </a> 
+                    </li>   
+                    <li class="nav-item <?= ($menu === 'Accounting' ? "active" : "") ?>">
+                        <a class="nav-link menu-header" data-toggle="collapse" href="#ui-Accounting" aria-expanded="<?= ($menu === 'Accounting' ? "true" : "false") ?>">
                             <i class="ti-money menu-icon"></i>
                             <span class="menu-title">Accounting</span>
+                            <i class="fa-solid fa-chevron-right"></i>
                         </a> 
+                        <div class="collapse <?= ($menu === 'Accounting' ? "show" : "") ?>" id="ui-Accounting">
+                            <ul class="nav flex-column sub-menu"> 
+                                <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <span class="menu-title">Petty Cash</span>
+                                    </a>
+                                </li> 
+                                <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <span class="menu-title">Payment Request</span>
+                                    </a>
+                                </li> 
+                                <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <span class="menu-title">Buku Besar</span>
+                                    </a>
+                                </li> 
+                            </ul>
+                        </div>  
                     </li>   
                 </ul>
             </nav>
