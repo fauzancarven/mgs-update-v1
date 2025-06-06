@@ -139,8 +139,8 @@ class AdminController extends BaseController
         $data = [
             'notif' => [],
             'session' => $this->session,
-            'title' => 'List Project',
-            'menu' => "Project",
+            'title' => 'Project',
+            'menu' => "Sales",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
@@ -157,7 +157,7 @@ class AdminController extends BaseController
             'notif' => [],
             'session' => $this->session,
             'title' => 'Survey',
-            'menu' => "Project",
+            'menu' => "Sales",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
@@ -173,7 +173,7 @@ class AdminController extends BaseController
             'notif' => [],
             'session' => $this->session,
             'title' => 'Sample',
-            'menu' => "Project",
+            'menu' => "Sales",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
@@ -189,7 +189,7 @@ class AdminController extends BaseController
             'notif' => [],
             'session' => $this->session,
             'title' => 'Penawaran',
-            'menu' => "Project",
+            'menu' => "Sales",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
@@ -205,7 +205,7 @@ class AdminController extends BaseController
             'notif' => [],
             'session' => $this->session,
             'title' => 'Invoice',
-            'menu' => "Project",
+            'menu' => "Sales",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
@@ -221,7 +221,7 @@ class AdminController extends BaseController
             'notif' => [],
             'session' => $this->session,
             'title' => 'Pembelian',
-            'menu' => "Project",
+            'menu' => "Sales",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()

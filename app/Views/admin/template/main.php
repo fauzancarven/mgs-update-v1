@@ -454,18 +454,18 @@
                             </ul>
                         </div> 
                     </li>  
-                    <li class="nav-item <?= ($menu === 'Project' ? "active" : "") ?>">
-                        <a class="nav-link menu-header" data-toggle="collapse" href="#ui-basic-1" aria-expanded="<?= ($menu === 'Project' ? "true" : "false") ?>">
-                            <i class="ti-blackboard menu-icon"></i>
-                            <span class="menu-title">Project</span>
+                    <li class="nav-item <?= ($menu === 'Sales' ? "active" : "") ?>">
+                        <a class="nav-link menu-header" data-toggle="collapse" href="#ui-basic-1" aria-expanded="<?= ($menu === 'Sales' ? "true" : "false") ?>">
+                            <i class="ti-shopping-cart menu-icon"></i>
+                            <span class="menu-title">Sales</span>
                             <i class="fa-solid fa-chevron-right"></i>
                         </a> 
-                        <div class="collapse <?= ($menu === 'Project' ? "show" : "") ?>" id="ui-basic-1">
+                        <div class="collapse <?= ($menu === 'Sales' ? "show" : "") ?>" id="ui-basic-1">
                             <ul class="nav flex-column sub-menu"> 
-                                <li class="nav-item <?= ($title === 'List Project' ? "active" : "") ?>"> 
+                                <li class="nav-item <?= ($title === 'Project' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/project">
                                         <i class="ti-home menu-icon"></i>
-                                        <span class="menu-title">List Project</span>
+                                        <span class="menu-title">Project</span>
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Survey' ? "active" : "") ?>"> 
