@@ -137,6 +137,10 @@ class ProjectsurveyModel extends Model
                                 
                 $htmlfile = "";
                 $folder_utama = 'assets/images/project'; 
+                 //Buat folder berdasarkan id
+                if (!file_exists($folder_utama."/".$row->SurveyId)) {
+                    mkdir($folder_utama."/".$row->SurveyId, 0777, true);  
+                } 
                 $files = scandir($folder_utama."/".$row->SurveyId);
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..') {
