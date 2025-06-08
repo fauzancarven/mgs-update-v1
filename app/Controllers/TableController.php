@@ -68,7 +68,7 @@ class TableController extends BaseController
         $request = Services::request();
         $datatable = new ProjectsampleModel(); 
         if ($request->getMethod(true) === 'POST') {   
-            echo $datatable->load_table_project_sample($request->getPost());
+            //echo $datatable->load_table_project_sample($request->getPost());
         }    
         
     } 

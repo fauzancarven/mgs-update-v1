@@ -101,6 +101,7 @@
             </div>
         </div>
     </div> -->
+    <div id='view-container'></div>
 </div>   
 
 <script>
@@ -303,6 +304,9 @@
                 data["dateend"] = $("#searchdatadate").data("end");
             }
         }, 
+        "initComplete": function(settings, json) {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        },
         "columns": [ 
             { data: null ,orderable: false,width: "20px",className:"p-0 ps-2",
                 render: function(data, type, row) {
@@ -317,14 +321,14 @@
             { data: "customer", className:"align-top",
                 render: function(data, type, row) { 
                     var html = ` 
-                        <div class="text-head-2 pb-2">${row.customer}</div> 
-                        ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-2"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
+                        <div class="text-head-3 pb-2">${row.customer}</div> 
+                        ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-1"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
                         <div class="text-detail-3 text-truncate" style="width: 20rem;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
 
                     return html;
                 }
             }, 
-            { data: "staff" , className:"align-top"}, 
+            { data: "staff"  ,orderable: false, className:"align-top"}, 
             { data: "biaya", className:"align-top"}, 
         ] 
     }); 
@@ -344,64 +348,52 @@
         // Tampilkan data nested
         if (row.child.isShown()) {
             row.child.hide(); 
-            $(this).find('i').removeClass('fa-rotate-270');  
+            $(this).find('i').removeClass('fa-rotate-90');  
         } else {  
-            $(this).find('i').addClass('fa-rotate-270');  
-            var childRow = row.child(format(data)).show(); 
+            $(this).find('i').addClass('fa-rotate-90');  
+            var childRow = row.child(format(data)).show();  
             $(tr).next().addClass('child-row');
             $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
             $(tr).find('td').addClass('no-border');
         } 
     });
 
-    function format(data) {
-        var detailitem = data.detail;
-        
-        // var tr = $(this).closest('tr');
-
-        // var tablecustom = $("<table class='table'>");
-        // var theadcustom = $("<thead>");
-        // var tbodycustom = $("<tbody>");
-
-        // // Buat header tabel
-        // var headercustom = $("<tr>"); 
-        // headercustom.append($("<th class='detail'>").text("Gambar"));
-        // $.each(detailitem[0]["ProdukDetailVarian"], function(key, value) {   
-        //     headercustom.append($("<th class='detail'>").text(key)); 
-        // });    
-        // headercustom.append($("<th class='detail'>").text("Berat"));
-        // headercustom.append($("<th class='detail'>").text("Satuan"));
-        // headercustom.append($("<th class='detail'>").text("isi /M2"));
-        // headercustom.append($("<th class='detail'>").text("Harga Beli"));
-        // headercustom.append($("<th class='detail'>").text("Harga Jual")); 
-        // headercustom.append($("<th class='detail'>").text("Action").attr("width","100px")); 
-        // theadcustom.append(headercustom);
-        // // Buat baris tabel 
-        // for(var i = 0; i < detailitem.length;i++){ 
-        //     var trcustom = $("<tr>"); 
-            
-        //     trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["ProdukDetailImage"]  + "' alt='Gambar' class='image-produk'>"));
-        //     $.each(detailitem[i]["ProdukDetailVarian"], function(key, value) {  
-        //         trcustom.append($("<td class='detail'>").text(value));
-        //     });     
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailBerat"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailSatuanText"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailPcsM2"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaBeli"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaJual"]));
-        //     trcustom.append($("<td class='detail'>").html(`
-        //     <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-pen-to-square"></i></span>`));
-        //     tbodycustom.append(trcustom);
-        // }
-
-        // // Gabungkan tabel
-        // tablecustom.append(theadcustom);
-        // tablecustom.append(tbodycustom);
-
-        return detailitem; 
+    function format(data) {  
+        return data.detail; 
     }
 
-
+    view_file = function(el){ 
+        filetype = $(el).data("type");
+        switch (filetype) {
+            case 'application/msword':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 
+                var viewerUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent($(el).data("file")) + '&embedded=true'; 
+                $('#view-container').html('<iframe src="' + viewerUrl + '" frameborder="0" width="100%" height="500px"></iframe>');
+                break;  
+            case 'application/pdf':
+                console.log(filetype);
+                // Tampilkan view untuk PDF
+                $('#view-container').html('<embed src="'+ $(el).data("file") + '" type="'+filetype +'">');
+                break; 
+            case 'image/jpeg':
+            case 'image/png':
+                
+                console.log(filetype);
+                // Tampilkan view untuk gambar
+                $('#view-container').html('<img src="'+ $(el).data("file") + '">');
+                break;
+            case 'text/plain':
+                 
+                // Tampilkan view untuk teks
+                $('#view-container').html('<pre>File teks</pre>');
+                break;
+            default: 
+                // Tampilkan view untuk tipe file lain
+                $('#view-container').html('<p>File tidak didukung</p>');
+                break;
+        }
+    }
 
     var isProcessingSurveyEdit = [];
     edit_project_Survey = function(ref,id,el){ 

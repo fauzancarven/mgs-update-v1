@@ -1,0 +1,6 @@
+ALTER TABLE `survey`
+	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `ProjectId`;
+update survey 
+LEFT JOIN project ON project.ProjectId = survey.ProjectId 
+SET 
+survey.StoreId =  project.StoreId

@@ -7,6 +7,7 @@ use App\Models\ProvinceModel;
 use App\Models\StoreModel;
 use App\Models\UserModel;
 use App\Models\ProjectModel;
+use App\Models\ProjectsampleModel;
 use App\Models\ProjectcategoryModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
@@ -840,7 +841,8 @@ class SelectController extends BaseController
 
             $modelsitem = new ProdukModel();   
             $models = new ProjectModel();
-            $Project = $models->get_data_ref_sample($id,$postData);
+            $modelssample = new ProjectsampleModel();
+            $Project = $modelssample->get_list_ref_sample($id,$postData);
             
             $data = array();
             $data[] = array(

@@ -17,10 +17,12 @@ use Config\Services;
 
 class ActionController extends BaseController
 {  
-   
+    protected $modelproduk;
+    protected $modelproject;
     public function __construct()
     { 
-        $this->helpers = ['form', 'url'];  
+        $this->helpers = ['form', 'url'];   
+
     }
     public function test(){
         $models = new ProjectModel(); 
