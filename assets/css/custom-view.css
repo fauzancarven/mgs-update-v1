@@ -140,7 +140,10 @@
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
 }
-
+.badge-sm{ 
+    font-size: 0.5rem;
+    padding: 0.15rem 0.25rem;  
+}
 .badge-rounded{  
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
@@ -1365,7 +1368,17 @@ a{
 }
 .input-group .filter-data .list-group{
     box-shadow: 0 0 5px 0 #00224745;
+    max-height: 11rem;
+    overflow: auto;
 }
+.input-group .filter-data .list-group::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .input-group .filter-data .list-group::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+  }
 .input-group .filter-list {
     display: none;
     position: absolute;
@@ -1630,4 +1643,31 @@ i.notif.active .icon-notif {
 }
 .text-bg-danger i {
     color: #ff2b2b !important;
+}
+.bar-action {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 50px;
+    background: #000000c7;
+    width: 100%;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    color:white;
+    gap: 1rem ;
+}
+.text-default {
+    color: #3e82cd;
+}
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-left: 0em;
+    vertical-align: 0.1em;
+    content: "";
+    border-top: .5em solid;
+    border-right: .5em solid transparent;
+    border-bottom: 0;
+    border-left: .5em solid transparent;
 }

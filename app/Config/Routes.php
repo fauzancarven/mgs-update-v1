@@ -15,13 +15,12 @@ $routes->get('/admin/produk', 'AdminController::produk', ['filter' => 'login']);
 $routes->get('/admin/vendor', 'AdminController::vendor', ['filter' => 'login']);
 $routes->get('/admin/accounting', 'AdminController::accounting', ['filter' => 'login']);
 
-$routes->get('/admin/project/survey', 'AdminController::survey', ['filter' => 'login']);
-$routes->get('/admin/project/sample', 'AdminController::sample', ['filter' => 'login']);
-$routes->get('/admin/project/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
-$routes->get('/admin/project/invoice', 'AdminController::invoice', ['filter' => 'login']);
-$routes->get('/admin/project/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
+$routes->get('/admin/sales/survey', 'AdminController::survey', ['filter' => 'login']);
+$routes->get('/admin/sales/sample', 'AdminController::sample', ['filter' => 'login']);
+$routes->get('/admin/sales/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
+$routes->get('/admin/sales/invoice', 'AdminController::invoice', ['filter' => 'login']);
+$routes->get('/admin/sales/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
-
 
 
 /**
@@ -78,6 +77,7 @@ $routes->post('/action/add-data-project-category', 'ActionController::project_ad
 
 $routes->post('/action/add-data-survey', 'ActionController::survey_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-survey/(:num)', 'ActionController::survey_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/update-survey/(:num)/(:num)', 'ActionController::survey_status/$1/$2', ['filter' => 'login']); 
 $routes->post('/action/delete-data-survey/(:num)', 'ActionController::survey_delete/$1', ['filter' => 'login']); 
 $routes->post('/action/add-data-survey-finish/(:num)', 'ActionController::survey_finish/$1', ['filter' => 'login']); 
 $routes->post('/action/edit-data-survey-finish/(:num)', 'ActionController::survey_finish_edit/$1', ['filter' => 'login']); 
@@ -100,8 +100,11 @@ $routes->post('/action/add-data-payment', 'ActionController::payment_add', ['fil
 $routes->post('/action/edit-data-payment/(:num)', 'ActionController::payment_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project-payment/(:num)', 'ActionController::payment_delete/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project-request-payment/(:num)', 'ActionController::payment_request_delete/$1', ['filter' => 'login']); 
-$routes->post('/action/request-data-payment', 'ActionController::payment_request', ['filter' => 'login']); 
+
+
+$routes->post('/action/request-data-payment-delete/(:num)', 'ActionController::payment_request_delete/$1', ['filter' => 'login']); 
 $routes->post('/action/request-data-payment-edit/(:num)', 'ActionController::payment_request_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/request-data-payment', 'ActionController::payment_request', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-proforma', 'ActionController::proforma_add', ['filter' => 'login']);    
 $routes->post('/action/edit-data-proforma/(:num)', 'ActionController::proforma_edit/$1', ['filter' => 'login']);
@@ -152,6 +155,7 @@ $routes->post('/action/rename-data-produk/(:num)', 'ActionController::produk_ren
 /**
  * SELECT2
  */  
+$routes->post('/select2/get-data-project', 'SelectController::project', ['filter' => 'login']);
 $routes->post('/select2/get-data-customer', 'SelectController::customer', ['filter' => 'login']);
 $routes->post('/select2/get-data-npwp', 'SelectController::lampiran/npwp', ['filter' => 'login']);
 $routes->post('/select2/get-data-ktp', 'SelectController::lampiran/ktp', ['filter' => 'login']);
@@ -202,6 +206,8 @@ $routes->post('/message/edit-project/(:num)', 'MessageController::project_edit/$
 $routes->post('/message/add-item-select', 'MessageController::produk_select_new', ['filter' => 'login']);  
 
 
+$routes->post('/message/add-survey', 'MessageController::survey_add', ['filter' => 'login']);  
+$routes->post('/message/edit-survey/(:num)', 'MessageController::survey_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-survey/(:num)', 'MessageController::project_survey_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-survey/(:num)', 'MessageController::project_survey_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-survey-finish/(:num)', 'MessageController::project_survey_finish/$1', ['filter' => 'login']);  
@@ -224,6 +230,9 @@ $routes->post('/message/edit-project-payment/(:num)', 'MessageController::projec
 $routes->post('/message/request-project-payment/(:num)', 'MessageController::project_payment_request/$1', ['filter' => 'login']);  
 $routes->post('/message/request-project-payment-edit/(:num)', 'MessageController::project_payment_request_edit/$1', ['filter' => 'login']);  
 
+$routes->post('/message/request-payment/(:num)', 'MessageController::payment_request/$1', ['filter' => 'login']); 
+$routes->post('/message/request-payment-edit/(:num)', 'MessageController::payment_request_edit/$1', ['filter' => 'login']);  
+
 $routes->post('/message/add-project-proforma/(:num)', 'MessageController::project_proforma_add/$1', ['filter' => 'login']); 
 $routes->post('/message/edit-project-proforma/(:num)', 'MessageController::project_proforma_edit/$1', ['filter' => 'login']);  
 
@@ -243,6 +252,7 @@ $routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageControll
 /**
  *  MODAL print
  */ 
+$routes->get('/print/survey/(:num)', 'PrintController::survey/$1');  
 $routes->get('/print/project/survey/(:num)', 'PrintController::project_survey/$1');  
 $routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1');   
 $routes->get('/print/project/invoice/(:num)', 'PrintController::project_invoice/$1');  

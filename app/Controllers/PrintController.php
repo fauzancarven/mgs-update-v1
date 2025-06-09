@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Models\ProjectsurveyModel;
 use App\Models\ProjectModel;
 use App\Models\ProdukModel;
 use App\Models\HeaderModel;
@@ -11,6 +12,31 @@ use Config\Services;
 define("DOMPDF_ENABLE_REMOTE", false);
 class PrintController extends BaseController
 {
+        public function survey($id){
+                 
+                $options = new Options(); 
+                $options->set('isHtml5ParserEnabled', true);
+                $options->set('enable_remote', true);
+                $options->set('paper', 'A4');
+                $options->set('orientation', 'potrait');
+
+                $modelsurvey = new ProjectsurveyModel();
+                $modelheader = new HeaderModel();
+                $data["survey"] = $modelsurvey->get_data_survey($id); 
+                $data["staff"] = $modelsurvey->get_data_survey_staff($data["survey"]->SurveyStaff); 
+                $data["header_footer"] = $modelheader->get_header_a4($data["survey"]->StoreId);  
+
+                $dompdf = new Dompdf($options);  
+                $dompdf->getOptions()->setChroot('assets');   
+                
+
+                $html = view('admin/project/survey/printa4',$data);  
+                //return $html;
+                $dompdf->loadHtml($html);
+                $dompdf->render();
+                $dompdf->stream( 'SVY_'.$data["survey"]->SurveyCustName.'_'.$data["survey"]->SurveyDate.'.pdf', [ 'Attachment' => false ]);
+        }
+        
         public function project_survey($id){
                  
                 $options = new Options(); 
@@ -19,10 +45,10 @@ class PrintController extends BaseController
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectModel();
+                $modelsurvey = new ProjectsurveyModel();
                 $modelheader = new HeaderModel();
-                $data["survey"] = $models->get_data_survey($id); 
-                $data["staff"] = $models->get_data_survey_staff($data["survey"]->SurveyStaff); 
+                $data["survey"] = $modelsurvey->get_data_survey($id); 
+                $data["staff"] = $modelsurvey->get_data_survey_staff($data["survey"]->SurveyStaff); 
                 $data["header_footer"] = $modelheader->get_header_a4($data["survey"]->StoreId);  
 
                 $dompdf = new Dompdf($options);  

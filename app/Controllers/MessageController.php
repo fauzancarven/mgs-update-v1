@@ -12,6 +12,8 @@ use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukvarianModel;
 use App\Models\ProjectModel;
+use App\Models\PaymentModel;
+use App\Models\ProjectsurveyModel;
 use Myth\Auth\Entities\User;  
 
 use Config\Services; 
@@ -156,6 +158,24 @@ class MessageController extends BaseController
         return $this->response->setBody(view('admin/project/edit_project.php',$data)); 
     }
 
+    public function survey_add()
+    {      
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/survey/add_survey.php',$data)); 
+    }
+    public function survey_edit($id)
+    {     
+        $models = new ProjectsurveyModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+ 
+        $data["project"] = $models->get_data_survey($id);
+        $data["staff"] = $models->get_data_survey_staff($data["project"]->SurveyStaff); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/survey/edit_survey.php',$data)); 
+    }
     public function project_survey_add($id)
     {     
         $models = new ProjectModel();
@@ -171,7 +191,7 @@ class MessageController extends BaseController
     }
     public function project_survey_edit($id)
     {     
-        $models = new ProjectModel();
+        $models = new ProjectsurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
  
@@ -184,19 +204,13 @@ class MessageController extends BaseController
     }
     public function project_survey_finish($id)
     {     
-        $models = new ProjectModel();
-        $modelscustomer = new CustomerModel();
-        $modelsstore = new StoreModel();
- 
+        $models = new ProjectsurveyModel();  
         $data["project"] = $models->get_data_survey($id);
         return $this->response->setBody(view('admin/project/survey/add_project_survey_finish.php',$data)); 
     }
     public function project_survey_finish_edit($id)
     {     
-        $models = new ProjectModel();
-        $modelscustomer = new CustomerModel();
-        $modelsstore = new StoreModel();
- 
+        $models = new ProjectsurveyModel();  
         $data["project"] = $models->get_data_survey_finish($id);
         return $this->response->setBody(view('admin/project/survey/edit_project_survey_finish.php',$data)); 
     }
@@ -206,6 +220,7 @@ class MessageController extends BaseController
     public function project_sample_add($id)
     {     
         $models = new ProjectModel();
+        $modelsurvey = new ProjectsurveyModel();
         $modelscustomer = new CustomerModel(); 
         $request = Services::request();
         $postData = $request->getPost(); 
@@ -227,7 +242,7 @@ class MessageController extends BaseController
         if(isset($postData['RefId']) && $postData['RefId'] > 0 ){   
             $data["ref_type"] = $postData['Type'];
             if($postData['Type'] == "Survey") {  
-                $ref = $models->get_data_survey($postData['RefId']); 
+                $ref = $modelsurvey->get_data_survey($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
                 $data["ref_detail"] = [];  
                 $data["customer"] = array(
@@ -278,6 +293,7 @@ class MessageController extends BaseController
     public function project_sph_add($id)
     {     
         $models = new ProjectModel();
+        $modelsurvey = new ProjectsurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
@@ -328,7 +344,7 @@ class MessageController extends BaseController
             }
             
             if($postData['Type'] == "Survey") {  
-                $ref = $models->get_data_survey($postData['RefId']); 
+                $ref = $modelsurvey->get_data_survey($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
                 $data["ref_detail"] = array(array(
                     "id" => 0, 
@@ -494,6 +510,7 @@ class MessageController extends BaseController
     public function project_invoice_add($id)
     {     
         $models = new ProjectModel();
+        $modelsurvey = new ProjectsurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel(); 
         $modelsproduk = new ProdukModel();
@@ -575,7 +592,7 @@ class MessageController extends BaseController
                 ) ;
             }  
             if($postData['Type'] == "Survey") {  
-                $ref = $models->get_data_survey($postData['RefId']); 
+                $ref = $modelsurvey->get_data_survey($postData['RefId']); 
                 $data["ref_header"] = array("code"=>$ref->SurveyCode,"id"=>$ref->SurveyId,"type"=>"Survey");
                 $data["ref_detail"] = array(array(
                     "id" => 0, 
@@ -607,6 +624,7 @@ class MessageController extends BaseController
     public function project_invoice_edit($id)
     {     
         $models = new ProjectModel();
+        $modelsurvey = new ProjectsurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
@@ -642,7 +660,7 @@ class MessageController extends BaseController
             $sph = $models->get_data_sph($project->InvRef); 
             $data["ref"] = $sph->SphCode; 
         }else if($project->InvRefType ==  "Survey"){
-            $sph = $models->get_data_survey($project->InvRef); 
+            $sph = $modelsurvey->get_data_survey($project->InvRef); 
             $data["ref"] = $sph->SurveyCode; 
         }else{ 
             $data["ref"] = "-"; 
@@ -759,12 +777,53 @@ class MessageController extends BaseController
         return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
     }
 
+    public function payment_request($id){    
+        $request = Services::request();
+        $postData = $request->getPost();  
+        $models = new ProjectModel();  
+
+        if($postData['type'] == "Survey"){
+            $models = new ProjectsurveyModel();  
+            $req = $models->get_data_survey($id); 
+            $data["total"] = $req->SurveyTotal;
+            $data["ref"] = $req->SurveyId;
+            $data["refType"] = "Survey";
+            $data["project"] = $req->ProjectId;
+            return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data));  
+        }
+        if($postData['type'] == "delivery"){
+            $req = $models->get_data_delivery($id);
+            $data["total"] = $req->DeliveryTotal;
+            $data["ref"] = $req->DeliveryId;
+            $data["refType"] = "Delivery";
+            $data["project"] = $req->ProjectId;
+            return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data));  
+        }   
+        if($postData['type'] == "pembelian"){
+            $req = $models->get_data_pembelian($id);
+            $data["total"] = $req->POGrandTotal;
+            $data["ref"] = $req->POId;
+            $data["refType"] = "Pembelian";
+            $data["project"] = $req->ProjectId;
+            return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data)); 
+            
+        }
+    }
+    public function payment_request_edit($id){  
+        $request = Services::request();
+        $postData = $request->getPost();  
+        $models = new PaymentModel();   
+        $data["payment"] = $models->get_data_request_payment($id);  
+        return $this->response->setBody(view('admin/project/payment/edit_request_payment.php',$data));  
+     
+    }
     public function project_payment_request($id){
         $models = new ProjectModel();      
         $request = Services::request();
         $postData = $request->getPost();  
         if($postData['type'] == "delivery"){
             $req = $models->get_data_delivery($id);
+            $data["payment"] = $req;
             $data["total"] = $req->DeliveryTotal;
             $data["ref"] = $req->DeliveryId;
             $data["refType"] = "Delivery";

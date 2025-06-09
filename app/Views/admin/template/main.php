@@ -469,25 +469,25 @@
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Survey' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/survey">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/sales/survey">
                                         <i class="ti-home menu-icon"></i>
                                         <span class="menu-title">Survey</span>
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Sample' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/sample">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/sales/sample">
                                         <i class="ti-user menu-icon"></i>
                                         <span class="menu-title">Sample</span>
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Penawaran' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/penawaran">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/sales/penawaran">
                                         <i class="ti-id-badge menu-icon"></i>
                                         <span class="menu-title">Penawaran</span> 
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Invoice' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/project/invoice">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/sales/invoice">
                                         <i class="ti-package menu-icon"></i>
                                         <span class="menu-title">Invoice</span>
                                     </a>

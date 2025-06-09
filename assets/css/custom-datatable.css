@@ -50,7 +50,8 @@ th.detail {
     background: #f3f3f354 !important;;
 }
 .table-nested tr th {
-    background: #f3f5f9;
+    background: #3051764f;    
+    border-bottom: 1px solid #334a9d;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     color: black !important; 
@@ -62,6 +63,13 @@ th.detail {
     font-weight: bold;
     color: #003571 !important;
     font-size: 0.7rem;
+    border-bottom: 1px solid #334a9d38;
+}
+.table-nested tr.dt-hasChild td { 
+    border-bottom: none;
+}
+.table-nested tr.dt-hasChild:hover>* {
+    box-shadow: inset 0 0 0 9999px rgb(255 255 255 / 8%) !important;
 }
 table.dataTable tbody tr {
     background-color: transparent;
@@ -81,6 +89,11 @@ table.dataTable tbody tr {
     object-fit: cover; 
 
 }
+.table td img.logo {
+    width: 15px !important;
+    height: 15px !important;
+}
+
 table.dataTable.table.table-hover>tbody>tr.child-row:hover>* {
     background: #ffffff54;
     box-shadow: none;
@@ -123,6 +136,7 @@ div.dt-container div.dt-scroll-body {
 table.detail-item{
     box-shadow: -1px 1px 4px 0 #d9d9d9;
 }
+
 table.detail-item td.detail {
     padding: 0.2rem !important;
     border-bottom: 1px solid #e1e1e1;
@@ -143,6 +157,28 @@ table.detail-item tfoot th.detail {
     font-size: 0.7rem !important;
 }
  
+table.detail-payment{ 
+    box-shadow: -1px 1px 4px 0 #334a9d52;
+}
+table.detail-payment td.detail {
+    padding: 0.5rem !important;
+    border-bottom: 1px solid #e1e1e1;
+    font-size: 0.7rem !important; 
+}
+table.detail-payment thead th.detail {    
+    padding: 0.5rem 0.2rem !important;
+    border-bottom: 1px solid #e1e1e1;
+    background: #f3f5f9 !important;
+}
+table.detail-payment tfoot th.detail {    
+    padding: 0.5rem 0.2rem !important;
+    border-bottom: 1px solid #e3e3e3 !important;
+    border-top: 1px solid #e3e3e3 !important;
+    background: #fbfbfb !important;
+    font-weight: bold !important;
+    color: #003571 !important;
+    font-size: 0.7rem !important;
+}
 
 .dt-hasChild {
     position: relative;
@@ -191,8 +227,12 @@ table.detail-item tfoot th.detail {
 .list-detail:not(:last-child)::after {
     content: '';
     position: absolute;
-    left: -20px;
+    left: -21px;
     top: calc(100% + 13px);
     width: 19px;
     border: 1px solid #ccc;
+}
+
+.action-td .pointer i{
+    padding: 0.1rem;
 }

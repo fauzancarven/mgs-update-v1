@@ -31,8 +31,7 @@
 </div> 
 
 <div id="modal-optional"></div>
-<script>   
-    console.log(<?= JSON_ENCODE($project->SurveyFinishDelta)?>)
+<script>    
     var quill = new Quill('#SurveyHasil',  { 
         placeholder: 'Tulis teks Anda di sini...',
         debug: 'false',
@@ -110,20 +109,18 @@
     });
     var data_file_old = [];
     <?php
-        $files = scandir('assets/images/project/'.$project->SurveyId);
+        $files = scandir('assets/images/survey/'.$project->SurveyId);
         $data = array();
         
         foreach ($files as $file) {
             if ($file != '.' && $file != '..') {
-                $filePath = 'assets/images/project/' .$project->SurveyId.'/'. $file;
+                $filePath = 'assets/images/survey/' .$project->SurveyId.'/'. $file;
                 $data[] = array(
                     'name' => $file,
                     'size' => filesize($filePath)
                 );
             }
-        }
-        
-        echo 'console.log(`'.json_encode($data).'`);';
+        } 
         echo 'data_file_old = '.json_encode($data).';';
     ?>
 
@@ -141,14 +138,15 @@
                 </button>
             </li>
         `;
+        console.log(fileItem);
         listFile.innerHTML += fileItem;
     });
+
     $('#btn-finsih-project').on('click', function() {
         
         const fileItems = listFile.children;
         Array.from(fileItems).forEach(fileItem => {
             const fileName = fileItem.querySelector('.fs-6').textContent;
-            console.log(fileName);
             data_file_old = data_file_old.filter(file => file.name !== fileName);
         }); 
 
@@ -178,16 +176,9 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {    
-                        $("#modal-finish-survey").modal("hide");    
-                        $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click");   
-                        
-                        if($("#modal-finish-survey").data("menu") =="survey"){
-                            //loader_datatable(); 
-                            table.ajax.reload(null, false);
-                        }else{
-                            
-                            loader_data_project(<?= $project->ProjectId ?>,"survey"); 
-                            // $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                        $("#modal-finish-survey").modal("hide");     
+                        if($("#modal-finish-survey").data("menu") =="Survey"){ 
+                            table.ajax.reload(null, false); 
                         }
                     });
                   

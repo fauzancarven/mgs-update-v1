@@ -7,21 +7,45 @@
         <div class="d-flex align-items-center mb-4 "> 
             <div class="p-1 flex-fill" > 
                 <h4 class="mb-0">LIST SURVEY</h4> 
-            </div>     
+            </div>    
+            <div class="justify-content-end d-flex gap-1"> 
+                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Survey<span></button>
+            </div> 
         </div>
         <!-- BAGIAN FILTER -->
         <div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">   
+            <div class="input-group">  
+                <input class="form-control form-control-sm input-form combo" id="storedatafilter" placeholder="Toko" value="" type="text" data-start="" data-end="" readonly style="background: white;">
+                <i class="fa-solid fa-store"></i> 
+                <i class="fa-solid fa-caret-down"></i>
+                <div class="filter-data left" style="width: 18rem;" for="storedatafilter">
+                    <ul class="list-group w-75" > 
+                        <?php
+                        foreach($store as $row){
+                            echo '
+                            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input select store" type="checkbox" data-group="store" data-value="'.$row->StoreId.'" value="'.$row->StoreId.'" id="store-'.$row->StoreId.'">
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="store-'.$row->StoreId.'">'.$row->StoreCode.'</label>
+                                </div> 
+                            </li>';
+                        }
+                        ?> 
+                       
+                    </ul>
+                </div>
+            </div>  
             <div class="input-group d-sm-flex d-none">  
                 <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="" readonly style="background: white;">
                 <i class="fa-solid fa-calendar-days"></i> 
             </div> 
         
             <div class="input-group">  
-                <input class="form-control form-control-sm input-form combo" id="searchdatafilter" placeholder="Status" value="" type="text" data-start="" data-end="" readonly style="background: white;">
+                <input class="form-control form-control-sm input-form combo" id="statusdatafilter" placeholder="Status" value="" type="text" data-start="" data-end="" readonly style="background: white;">
                 <i class="fa-solid fa-filter"></i>
                 <i class="fa-solid fa-caret-down"></i>
-                <div class="filter-data left" style="width: 18rem;" for="searchdatafilter">
-                    <ul class="list-group w-75" > 
+                <div class="filter-data left" style="width: 18rem;" for="statusdatafilter">
+                    <ul class="list-group w-75" >  
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
                                 <input class="form-check-input select category" type="checkbox" data-group="category" data-value="0" value="New" id="status-0">
@@ -67,6 +91,7 @@
                 <tr> 
                     <th></th>
                     <th>Action</th>
+                    <th>Toko</th>
                     <th>Nomor</th>
                     <th>Tanggal</th>
                     <th>Status</th>
@@ -103,12 +128,13 @@
     </div> -->
     <div id='view-container'></div>
 </div>   
-
+<script src="https://unpkg.com/@panzoom/panzoom@4.6.0/dist/panzoom.min.js"></script>
 <script>
 
 
     var xhr_load_project; 
     var filter_status_select = []
+    var filter_store_select = []
     function loader_datatable(){
         // if (xhr_load_project) {
         //     xhr_load_project.abort();
@@ -231,17 +257,7 @@
         // loader_datatable();
     })
     
-    // FILTER Status
-    $('#filterdatastatus').select2({
-        multiple: true,
-        templateSelection: function(selection) {
-            var selected = $('#filterdatastatus').val().length;
-            return selected + " item dipilih";
-        }
-    });
-    $('#filterdatastatus').on('select2:select', function(e) {
-        $('.select2-selection__choice').remove();
-    }); 
+    // FILTER Status  
     $(".input-group .combo").click(function(){
         if($(this).parent().hasClass("active")){
             $(this).parent().removeClass("active");
@@ -264,7 +280,21 @@
                 filter_status_select.splice(index, 1);
             } 
         } 
-        (filter_status_select.length === 0 ?  $("#searchdatafilter").val("") : $("#searchdatafilter").val(String(filter_status_select.length) + " status dipilih")); 
+        (filter_status_select.length === 0 ?  $("#statusdatafilter").val("") : $("#statusdatafilter").val(String(filter_status_select.length) + " status dipilih")); 
+        //loader_datatable(); 
+        table.ajax.reload(null, false);
+    }) 
+    
+    $('.form-check-input.select.store').change(function() { 
+        if ($(this).is(':checked')) {
+            filter_store_select.push($(this).data("value")) 
+        }else{  
+            var index = filter_store_select.indexOf($(this).data("value"));
+            if (index !== -1) {
+                filter_store_select.splice(index, 1);
+            } 
+        } 
+        (filter_store_select.length === 0 ?  $("#storedatafilter").val("") : $("#storedatafilter").val(String(filter_store_select.length) + " status dipilih")); 
         //loader_datatable(); 
         table.ajax.reload(null, false);
     }) 
@@ -291,7 +321,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[3, "desc"]],
+        "order": [[4, "desc"]],
         "processing": true,
         "serverSide": true, 
         "ajax": {
@@ -300,6 +330,7 @@
             "data": function(data){ 
                 data["search"] =  $("#searchdatasurvey").val();
                 data["filter"] = filter_status_select;
+                data["store"] = filter_store_select;
                 data["datestart"] = $("#searchdatadate").data("start");
                 data["dateend"] = $("#searchdatadate").data("end");
             }
@@ -314,7 +345,8 @@
                 }
             }, 
             { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
-            { data: "code", className:"align-top",orderable: false , width: "150px"}, 
+            { data: "store", className:"align-top" , width: "100px"}, 
+            { data: "code", className:"align-top", width: "100px"}, 
             { data: "date", className:"align-top"}, 
             { data: "status" , className:"align-top"}, 
             { data: "admin" , className:"align-top"}, 
@@ -331,9 +363,9 @@
             { data: "staff"  ,orderable: false, className:"align-top"}, 
             { data: "biaya", className:"align-top"}, 
         ] 
-    }); 
-
+    });  
     table.on('draw.dt', function() { 
+        $('[data-bs-toggle="tooltip"]').tooltip();
         var info = table.page.info();
         if (info.page + 1 > info.pages && info.pages > 0) {
             table.page('last').draw('page');
@@ -341,64 +373,166 @@
     });
     table.on('click', '.btn-detail-item', function() {
         var tr = $(this).closest('tr');
-        tr.toggleClass('tr-child');
+        tr.toggleClass('tr-child'); 
         var row = table.row(tr);
         var data = row.data();
 
         // Tampilkan data nested
         if (row.child.isShown()) {
-            row.child.hide(); 
+            $(tr).next().find('.view-detail').slideUp(500, function() {
+                row.child.hide();
+            });  
             $(this).find('i').removeClass('fa-rotate-90');  
         } else {  
             $(this).find('i').addClass('fa-rotate-90');  
             var childRow = row.child(format(data)).show();  
             $(tr).next().addClass('child-row');
             $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
-            $(tr).find('td').addClass('no-border');
+            $(tr).next().find('.view-detail').slideDown(500);
+            $(tr).next().find('td').addClass('no-border');
+            
         } 
+        
+        tooltiprenew();
     });
 
     function format(data) {  
         return data.detail; 
     }
-
+    closeIframe = function(){
+        document.querySelector('div[style*="position: fixed"]').remove();
+        
+        $("html, body").css("overflow","auto");
+    }
+    
+    tooltiprenew = function(){
+         // Hapus tooltip sebelumnya
+        var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerListOld.map(function (tooltipTriggerEl) {
+            var tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+            if (tooltip) {
+                tooltip.dispose();
+            }
+        });
+        $(".tooltip").remove(); 
+        // Buat tooltip baru
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+            if (tooltipTriggerEl.innerText?.includes('top')) {
+                tooltip.enable();
+            }
+            return tooltip;
+        });
+    }
+    
     view_file = function(el){ 
         filetype = $(el).data("type");
-        switch (filetype) {
+        switch (filetype) { 
+            case 'text/plain':
+            case 'application/pdf':
             case 'application/msword':
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 
-                var viewerUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent($(el).data("file")) + '&embedded=true'; 
-                $('#view-container').html('<iframe src="' + viewerUrl + '" frameborder="0" width="100%" height="500px"></iframe>');
-                break;  
-            case 'application/pdf':
-                console.log(filetype);
-                // Tampilkan view untuk PDF
-                $('#view-container').html('<embed src="'+ $(el).data("file") + '" type="'+filetype +'">');
-                break; 
+                var viewerUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent('<?=base_url()?>'+$(el).data("file")) + '&embedded=true'; 
+                $('#view-container').html(`<div style="position: fixed;padding: 0;margin: 0;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);display: flex;justify-content: center;align-items: end;z-index: 2000;">
+                    <iframe src="${viewerUrl}" frameborder="0" style="width: 100vw;height: calc(100vh - 50px);"></iframe>
+                    <div class="bar-action">
+                        <span class="flex-fill">${$(el).data("name")}</span>  
+                        <i class="fa-solid fa-xmark" onclick="closeIframe()"></i>
+                    </div>
+                    
+                </div> `);
+                break;    
             case 'image/jpeg':
-            case 'image/png':
+            case 'image/png': 
+                var viewerUrl = $(el).data("file"); 
+                $('#view-container').html(`<div style="position: fixed;padding: 0;margin: 0;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);display: flex;justify-content: center;align-items: end;z-index: 2000;">
+                    <div id="panzoom-container" style="width: 100vw;height: 100vh">
+                        <img id="gambar" src="<?=base_url()?>${viewerUrl}"> 
+                    </div>
+                    <div class="bar-action">
+                        <span class="flex-fill">${$(el).data("name")}</span>  
+                        <i class="fa-solid fa-xmark" onclick="closeIframe()"></i>
+                    </div> 
+                    
+                </div> `);
+                //scrool('gambar'); 
+                $("html, body").css("overflow","hidden");
+                var elem = document.getElementById('panzoom-container');
+                var panzoom = Panzoom(elem, {
+                    maxScale: 5,
+                    cursor: 'grab',
+                    wheel: true, 
+                    zoomSpeed: 0.1,
+                    startScale: 0.5
+                }); 
                 
-                console.log(filetype);
-                // Tampilkan view untuk gambar
-                $('#view-container').html('<img src="'+ $(el).data("file") + '">');
-                break;
-            case 'text/plain':
+                var parent = elem.parentElement
                  
-                // Tampilkan view untuk teks
-                $('#view-container').html('<pre>File teks</pre>');
-                break;
+
+                // Panning and pinch zooming are bound automatically (unless disablePan is true).
+                // There are several available methods for zooming
+                // that can be bound on button clicks or mousewheel.
+                parent.addEventListener('wheel', panzoom.zoomWithWheel)
+
+                // This demo binds to shift + wheel
+                parent.addEventListener('wheel', function(event) {
+                    if (!event.shiftKey) return
+                    panzoom.zoomWithWheel(event)
+                })
+                panzoom.reset();
+                break;    
+                 
             default: 
-                // Tampilkan view untuk tipe file lain
-                $('#view-container').html('<p>File tidak didukung</p>');
+                // Tampilkan view untuk tipe file lain 
                 break;
         }
     }
+    download_file = function(el){
+        var file = $(el).data('file'); 
+        window.open('<?= base_url("project/surveyfinish?file=") ?>' + encodeURIComponent(file), '_blank');
+    }
+    var isProcessingSurvey;
+    add_click = function(el){
+        if (isProcessingSurvey) {
+            console.log("project survey cancel load");
+            return;
+        }   
+        isProcessingSurvey = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-survey", 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-survey").modal("show"); 
+                $("#modal-add-survey").data("menu","Survey");  
+
+                isProcessingSurvey = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSurvey = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                }); 
+                tooltiprenew();
+            }
+        });
+    }
 
     var isProcessingSurveyEdit = [];
-    edit_project_Survey = function(ref,id,el){ 
+    edit_survey = function(id,el,ref){ 
           // INSERT LOADER BUTTON
-          if (isProcessingSurveyEdit[id]) {
+        if (isProcessingSurveyEdit[id]) {
             console.log("project sph cancel load");
             return;
         }  
@@ -408,18 +542,20 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/edit-project-survey/" + id, 
+            url: "<?= base_url() ?>message/edit-survey/" + id, 
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-edit-survey").modal("show"); 
-                $("#modal-edit-survey").data("menu","survey"); 
-
+                $("#modal-edit-survey").modal("show");  
+                $("#modal-edit-survey").data("menu","Survey");   
+                
+                tooltiprenew();
                 isProcessingSurveyEdit[id] = false;
                 $(el).html(old_text); 
             },
             error: function(xhr, textStatus, errorThrown){ 
                 isProcessingSurveyEdit[id] = false;
                 $(el).html(old_text); 
+                tooltiprenew();
 
                 Swal.fire({
                     icon: 'error',
@@ -429,13 +565,9 @@
             }
         });
     };  
-    print_project_Survey = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/survey/") ?>' + id, '_blank');
-    };
-    var isProcessingSurveyFinish = [];
-    
+ 
     var isProcessingSurveyDelete = [];
-    delete_project_Survey = function(ref,id,el){ 
+    delete_survey = function(id,el,ref){ 
          // INSERT LOADER BUTTON
         if (isProcessingSurveyDelete[id]) {
             return;
@@ -444,9 +576,10 @@
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
+        tooltiprenew();
         Swal.fire({
             title: "Are you sure?",
-            text: "Anda yakin ingin menghapus survey ini...???",
+            text: "Anda yakin ingin membatalkan survey ini.",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -460,12 +593,12 @@
                     url: "<?= base_url() ?>action/delete-data-survey/" + id, 
                     success: function(data) { 
                         Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
+                            title: "Success!",
+                            text: "Data survey berhasil di cancel.",
                             icon: "success",
                             confirmButtonColor: "#3085d6",
                         });  
-                        loader_datatable()
+                        table.ajax.reload(null, false);
                     }, 
                 });
             }
@@ -473,7 +606,14 @@
             $(el).html(old_text); 
         });
     };
-    add_project_survey_finish = function(ref,id,el){
+    
+    print_survey = function(id,el,ref){  
+        tooltiprenew();
+        window.open('<?= base_url("print/survey/") ?>' + id, '_blank');
+    };
+
+    var isProcessingSurveyFinish = [];
+    add_survey_finish = function(id,el,ref){
         if (isProcessingSurveyFinish[id]) {
             console.log("project survey cancel load");
             return;
@@ -487,16 +627,19 @@
             method: "POST",
             url: "<?= base_url() ?>message/add-project-survey-finish/" + id, 
             success: function(data) {  
+                
                 $("#modal-message").html(data);
                 $("#modal-finish-survey").modal("show"); 
                 $("#modal-finish-survey").data("menu","survey"); 
 
                 isProcessingSurveyFinish[id] = false;
                 $(el).html(old_text); 
+                tooltiprenew();
             },
             error: function(xhr, textStatus, errorThrown){ 
                 isProcessingSurveyFinish[id] = false;
                 $(el).html(old_text); 
+                tooltiprenew();
 
                 Swal.fire({
                     icon: 'error',
@@ -508,7 +651,7 @@
     }
 
     var isProcessingSurveyFinishEdit = [];
-    edit_project_Survey_finish = function(ref,id,el){
+    edit_survey_finish = function(id,el,ref){
         if (isProcessingSurveyFinishEdit[id]) {
             console.log("project survey cancel load");
             return;
@@ -521,16 +664,20 @@
             method: "POST",
             url: "<?= base_url() ?>message/edit-project-survey-finish/" + id, 
             success: function(data) {  
+                
                 $("#modal-message").html(data);
                 $("#modal-finish-survey").modal("show"); 
-                $("#modal-finish-survey").data("menu","survey"); 
+                $("#modal-finish-survey").data("menu","Survey"); 
 
                 isProcessingSurveyFinishEdit[id] = false;
                 $(el).html(old_text); 
+                tooltiprenew();
             },
             error: function(xhr, textStatus, errorThrown){ 
+
                 isProcessingSurveyFinishEdit[id] = false;
                 $(el).html(old_text); 
+                tooltiprenew();
 
                 Swal.fire({
                     icon: 'error',
@@ -540,6 +687,163 @@
             }
         });
     }
+    
+    var IsUpdateStatus = [];
+    update_status = function(status,id,el){ 
+        if (IsUpdateStatus[id]) {
+            console.log("project survey cancel load");
+            return;
+        }  
+
+        IsUpdateStatus[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>action/update-survey/" + id +  "/" + status, 
+            success: function(data) {     
+                IsUpdateStatus[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+
+                table.ajax.reload(null, false);
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                IsUpdateStatus[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };  
+
+    var isProcessingPaymentRequest = [];
+    request_payment = function(id,el,menu){
+        // INSERT LOADER BUTTON
+        if (isProcessingPaymentRequest[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingPaymentRequest[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/request-payment/" + id,  
+            data:{
+                type:menu
+            },
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-request-payment").modal("show"); 
+                $(".tooltip").remove(); 
+
+                isProcessingPaymentRequest[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingPaymentRequest[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+ 
+    var isProcessingPaymentRequestEdit = [];
+    request_payment_edit = function(id,el,menu){
+        // INSERT LOADER BUTTON
+        if (isProcessingPaymentRequestEdit[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingPaymentRequestEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/request-payment-edit/" + id,  
+            data:{
+                type:menu
+            },
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-request-payment-edit").modal("show"); 
+                $(".tooltip").remove(); 
+
+                isProcessingPaymentRequestEdit[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingPaymentRequestEdit[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+    
+    var isProcessingPaymentRequestDelete = [];
+    request_payment_delete  = function(id,el,menu){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingPaymentRequestDelete[id]) {
+            return;
+        }  
+        isProcessingPaymentRequestDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus pembayaran ini.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/request-data-payment-delete/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Pembayaran berhasil dihapus.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });    
+                        table.ajax.reload(null, false);
+                    }, 
+                });
+            }
+            isProcessingPaymentRequestDelete[id] = false;
+            $(el).html(old_text); 
+            tooltiprenew();
+        });
+    };
+
 </script>
 
 

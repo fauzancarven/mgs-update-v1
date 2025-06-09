@@ -28,6 +28,93 @@ class SelectController extends BaseController
         $this->helpers = ['form', 'url'];  
     }
     
+    public function project()
+    {   
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array();
+       
+      
+            if(!isset($postData['searchTerm'])){
+                 // Fetch record 
+                $models = new ProjectModel();
+                $projectlist = $models->select("*")
+                    ->join("customer","customer.CustomerId = project.CustomerId ","left")
+                    ->join("store","store.StoreId = project.StoreId","left")
+                    ->orderBy('ProjectDate',"DESC")
+                    ->findAll();
+            }else{
+                $searchTerm = $postData['searchTerm'];
+    
+                // Fetch record
+                $models = new ProjectModel();
+                $projectlist = $models->select("*")
+                    ->join("customer","customer.CustomerId = project.CustomerId ","left")
+                    ->join("store","store.StoreId = project.StoreId","left")
+                    ->like('ProjectName',$searchTerm)
+                    ->orLike('ProjectCategory',$searchTerm)
+                    ->orLike('ProjectComment',$searchTerm)
+                    ->orLike('CustomerCode',$searchTerm)
+                    ->orLike('CustomerName',$searchTerm)
+                    ->orLike('CustomerCompany',$searchTerm)
+                    ->orLike('CustomerTelp1',$searchTerm)
+                    ->orLike('CustomerTelp2',$searchTerm)
+                    ->orLike('CustomerAddress',$searchTerm)
+                    ->orderBy('ProjectDate',"DESC")
+                    ->findAll();
+            } 
+      
+            $data = array(); 
+            $data[] = array(
+                "id" => 0,
+                "text" => "Tidak ada yang dipilih",
+                "html" => "Tidak ada yang dipilih",  
+            );
+
+            foreach($projectlist as $project){
+                $customername = $project['CustomerCode'] . " - " . ($project['CustomerCompany']== "" ? $project['CustomerName'] : $project['CustomerName'] . ' (' . $project['CustomerCompany'] . ')');
+                $customertelp = (($project['CustomerTelp2'] == "" || $project['CustomerTelp2'] == "-") ? $project['CustomerTelp1'] : $project['CustomerTelp1'] . " / " . $project['CustomerTelp2']);
+
+                $category = "";
+                foreach (explode("|",$project['ProjectCategory']) as $index=>$x) {
+                    $category .= '<span class="badge badge-'.fmod($index, 5).' me-1">'.$x.'</span>';
+                }  
+
+                $htmlItem = '  <div class="d-flex flex-column" >
+                                    <div class="d-flex align-items-center gap-1" style="font-size:0.75rem">  
+                                        <img src="'.$project['StoreLogo'].'" alt="Gambar" class="logo" width="18" height="18"> 
+                                        <span class="fw-bold align-items-center">'.$project['StoreCode'].' - '.$project['StoreName'].'</span>
+                                        <span class="text-wrap overflow-x-auto">'.$category.'</span>     
+                                    </div> 
+                                    <span style="font-size:0.75rem" class="fw-bold">' . $project['ProjectName'] . '</span>
+                                    <span style="font-size:0.6rem">Catatan : ' . $project['ProjectComment'] . '</span>
+                                    <span style="font-size:0.6rem" class="fw-bold">' . $customername . '</span>
+                                    <span style="font-size:0.6rem">' . $customertelp . '</span>
+                                    <span style="font-size:0.6rem">' .  $project['CustomerAddress'] . '</span>
+                                    <span style="font-size:0.6rem">Note : ' .  $project['CustomerComment'] . '</span>
+                                </div>';
+                $data[] = array(
+                    "id" => $project['ProjectId'],
+                    "text" => $project['StoreCode'] . " | " . $project['ProjectName'] ." | " . $customername,
+                    "html" => $htmlItem,  
+                    "storeid" => $project['StoreId'],
+                    "store" => $project['StoreCode'] .  " - " . $project['StoreName'],
+                    "customerid" => $project['CustomerId'],
+                    "customer" => $customername,
+                    "customername" => $project['ProjectCustName'],
+                    "customertelp" => $project['ProjectCustTelp'],
+                    "customeraddress" => $project['ProjectCustAddress'],
+                );
+            }
+      
+            $response['data'] = $data;
+      
+            return $this->response->setJSON($response);
+        }
+        
+    } 
+
     public function customer()
     {   
         $request = Services::request();
@@ -49,6 +136,12 @@ class SelectController extends BaseController
                 $models = new CustomerModel();
                 $customerList = $models->select("*")
                     ->like('CustomerName',$searchTerm)
+                    ->orLike('CustomerCode',$searchTerm)
+                    ->orLike('CustomerName',$searchTerm)
+                    ->orLike('CustomerCompany',$searchTerm)
+                    ->orLike('CustomerTelp1',$searchTerm)
+                    ->orLike('CustomerTelp2',$searchTerm)
+                    ->orLike('CustomerAddress',$searchTerm)
                     ->orderBy('CustomerCode',"DESC")
                     ->findAll();
             } 
@@ -66,8 +159,11 @@ class SelectController extends BaseController
                                </div>';
                 $data[] = array(
                     "id" => $customer['CustomerId'],
-                    "text" => $customer['CustomerCode'] . " - " . $customer['CustomerName'],
+                    "text" => $customername,
                     "html" => $htmlItem,  
+                    "customername" =>($customer['CustomerCompany']== "" ? $customer['CustomerName'] : $customer['CustomerName'] . ' (' . $customer['CustomerCompany'] . ')'),
+                    "customertelp" => $customertelp,
+                    "customeraddress" => $customer['CustomerAddress'],
                 );
             }
       

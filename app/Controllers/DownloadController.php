@@ -8,7 +8,7 @@ class DownloadController extends BaseController
         if (isset($_GET['file'])) {
             $filename = $_GET['file'];
         
-            if (file_exists($filename)) {
+            if (file_exists(urldecode($filename))) {
                 header('Content-Description: File Transfer');
                 header('Content-Type: application/octet-stream');
                 header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
@@ -17,7 +17,7 @@ class DownloadController extends BaseController
                 header('Pragma: public');
                 header('Content-Length: ' . filesize($filename));
         
-                readfile($filename);
+                readfile(urldecode($filename));
                 exit;
             } else {
                 echo "File tidak ditemukan!";

@@ -6,6 +6,8 @@ use App\Models\UserModel;
 use App\Models\CustomerModel;
 use App\Models\CustomercategoryModel;
 use App\Models\ProjectModel;
+use App\Models\ProjectsurveyModel;
+use App\Models\PaymentModel;
 use App\Models\ProdukunitModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianModel;
@@ -225,9 +227,10 @@ class ActionController extends BaseController
         }
     }
 
+
     public function survey_add(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectsurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_survey($postData); 
@@ -236,7 +239,7 @@ class ActionController extends BaseController
     }
     public function survey_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectsurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_survey($id,$postData); 
@@ -245,24 +248,32 @@ class ActionController extends BaseController
     }
     public function survey_delete($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectsurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->delete_data_survey($id);  
         }
     }
+    public function survey_status($id,$status){
+        $request = Services::request();
+        $models = new ProjectsurveyModel(); 
+        if ($request->getMethod(true) === 'POST') {    
+            echo $models->update_status_survey($id,$status);  
+        }
+    } 
+
     public function survey_finish($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectsurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $files = $request->getFiles(); 
             $data = $request->getPost(); 
-            echo $models->insert_data_survey_finish_file($id,$files,$data);  
+            echo $models->insert_data_survey_finish($id,$files,$data);  
         }
     }
     public function survey_finish_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectsurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $files = $request->getFiles(); 
             $data = $request->getPost(); 
@@ -391,7 +402,7 @@ class ActionController extends BaseController
     }
     public function payment_request(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PaymentModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_payment_request($postData); 
@@ -400,7 +411,7 @@ class ActionController extends BaseController
     }
     public function payment_request_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PaymentModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_payment_request($postData,$id); 
@@ -409,7 +420,7 @@ class ActionController extends BaseController
     }
     public function payment_request_delete($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PaymentModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->delete_data_payment_request($id);  

@@ -15,7 +15,7 @@
                 <div class="mb-1">
                     <label for="SurveyAddress" class="col-form-label">Upload File Pendukung</label> 
                     <div class="drop-box">
-                        <span class="fs-4 fw-bold ms-auto me-auto">Drop &amp; drag Files or click for uploads</span>
+                        <span class="fs-4 fw-bold ms-auto me-auto">Drop &amp; drag file or click for uploads</span>
                     </div>    
                     <input type="file" id="file-input" multiple style="display: none;">
                     <ul class="list-group mt-2" id="listfile"> 
@@ -42,67 +42,6 @@
         //theme: 'snow'
     }); 
     quill.enable(true); 
-    quill.setContents({
-        "ops": [
-            {
-                "insert": "Lokasi survey terletak di daerah pedesaan dengan akses jalan yang kurang baik."
-            },
-            {
-                "attributes": {
-                    "list": "ordered"
-                },
-                "insert": "\n"
-            },
-            {
-                "insert": "Masyarakat setempat memiliki mata pencaharian utama sebagai petani dan nelayan."
-            },
-            {
-                "attributes": {
-                    "list": "ordered"
-                },
-                "insert": "\n"
-            },
-            {
-                "insert": "Fasilitas umum seperti air bersih dan listrik masih terbatas."
-            },
-            {
-                "attributes": {
-                    "list": "ordered"
-                },
-                "insert": "\n"
-            },
-            {
-                "insert": "Masyarakat memiliki persepsi positif tentang program pemerintah untuk meningkatkan kualitas hidup."
-            },
-            {
-                "attributes": {
-                    "list": "ordered"
-                },
-                "insert": "\n"
-            },
-            {
-                "insert": "Masalah utama yang dihadapi masyarakat adalah kurangnya akses ke layanan kesehatan dan pendidikan."
-            },
-            {
-                "attributes": {
-                    "list": "ordered"
-                },
-                "insert": "\n"
-            },
-            {
-                "insert": "Masyarakat berharap adanya peningkatan infrastruktur dan fasilitas umum untuk meningkatkan kualitas hidup."
-            },
-            {
-                "attributes": {
-                    "list": "ordered"
-                },
-                "insert": "\n"
-            },
-            {
-                "insert": "\nDengan hasil survey lapangan ini, Anda dapat memahami kondisi di lokasi dan membuat rekomendasi yang tepat untuk perbaikan.\n"
-            }
-        ] 
-    });
 
     var dropBox = document.querySelector('.drop-box');
     var fileInput = document.getElementById('file-input');
@@ -168,6 +107,17 @@
         }
     });
     $('#btn-finsih-project').on('click', function() {
+        if(quill.getLength() < 2){
+            Swal.fire({
+                icon: 'error',
+                text: 'Catatan Harus dimasukan !!!', 
+                confirmButtonColor: "#3085d6", 
+            }).then(function(){ 
+                swal.close();
+                setTimeout(() => quill.focus(), 300);  
+            });
+            return  false;
+        }  
         const formData = new FormData();
         const fileInputs = document.getElementById('file-input');
         const uploadedFiles = fileInputs.files;
@@ -193,14 +143,9 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {    
-                        $("#modal-finish-survey").modal("hide");   
-                        
-                        if($("#modal-finish-survey").data("menu") =="survey"){
-                            loader_datatable(); 
-                        }else{
-                            
-                            loader_data_project(<?= $project->ProjectId ?>,"survey"); 
-                            // $(".icon-project[data-menu='survey'][data-id='<?= $project->ProjectId ?>']").trigger("click"); 
+                        $("#modal-finish-survey").modal("hide");    
+                        if($("#modal-finish-survey").data("menu") =="Survey"){ 
+                            table.ajax.reload(null, false); 
                         }
                          
                     });
@@ -222,5 +167,6 @@
             },
         });
     });
+    
 
 </script>

@@ -1216,28 +1216,7 @@ class ProjectModel extends Model
     /************************************* */
     /** FUNCTION UNTUK MENU PROJECT SURVEY */  
     /************************************* */
-    public function get_next_code_survey($date){
-        $arr_date = explode("-", $date);
-        $builder = $this->db->table("survey");  
-        $builder->select("ifnull(max(SUBSTRING(SurveyCode,5,3)),0) + 1 as nextcode");
-        $builder->where("month(SurveyDate2)",$arr_date[1]);
-        $builder->where("year(SurveyDate2)",$arr_date[0]);
-        $data = $builder->get()->getRow(); 
-        switch (strlen($data->nextcode)) {
-            case 1:
-                $nextid = "SVY/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 2:
-                $nextid = "SVY/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 3:
-                $nextid = "SVY/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-            default:
-                $nextid = "SVY/000/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-        } 
-    } 
+   
     public function data_project_survey($project_id){
         $html = ""; 
         $builder = $this->db->table("survey");
@@ -1394,7 +1373,7 @@ class ProjectModel extends Model
                                         '.$row_finish->SurveyFinishDetail.' 
                                     <div class="list-group  "> ';
                                 
-                $folder_utama = 'assets/images/project'; 
+                $folder_utama = 'assets/images/survey'; 
                 $files = scandir($folder_utama."/".$row->SurveyId);
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..') {
@@ -1673,240 +1652,8 @@ class ProjectModel extends Model
         $builder->where('SurveyStatus <',3);
         $builder->orderby('SurveyId', 'DESC'); 
         return  $builder->countAllResults();
-    } 
-    public function insert_data_survey($data){  
-        $builder = $this->db->table("survey");
-        $builder->insert(array(
-            "SurveyCode"=>$this->get_next_code_survey($data["SurveyDate"]),
-            "SurveyDate"=>$data["SurveyDate"],
-            "SurveyDate2"=>$data["SurveyDate"],  
-            "ProjectId"=>$data["ProjectId"],
-            "SurveyAdmin"=>$data["SurveyAdmin"], 
-            "SurveyCustName"=>$data["SurveyCustName"], 
-            "SurveyCustTelp"=>$data["SurveyCustTelp"], 
-            "SurveyAddress"=>$data["SurveyAddress"], 
-            "SurveyTotal"=>$data["SurveyTotal"], 
-            "SurveyStaff"=>$data["SurveyStaff"],  
-            "SurveyStatus"=>0,
-            "created_user"=>user()->id, 
-            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
-        )); 
-        
-        $builder = $this->db->table("project"); 
-        $builder->set('ProjectStatus', 1);  
-        $builder->where('ProjectId', $data["ProjectId"]); 
-        $builder->update();  
-    }
-    public function update_data_survey($id,$data){ 
-        $builder = $this->db->table("survey"); 
-        $builder->set('SurveyDate', $data["SurveyDate"]);   
-        $builder->set('ProjectId', $data["ProjectId"]);  
-        $builder->set('SurveyAdmin', $data["SurveyAdmin"]);  
-        $builder->set('SurveyCustName', $data["SurveyCustName"]);  
-        $builder->set('SurveyCustTelp', $data["SurveyCustTelp"]);  
-        $builder->set('SurveyAddress', $data["SurveyAddress"]);  
-        $builder->set('SurveyTotal', $data["SurveyTotal"]);  
-        $builder->set('SurveyStaff', $data["SurveyStaff"]);   
-        $builder->set('updated_user', user()->id);  
-        $builder->set('updated_at', new RawSql('CURRENT_TIMESTAMP()'));   
-        $builder->where('SurveyId', $id); 
-        $builder->update();  
-    }
-    public function get_data_survey($id){
-        $builder = $this->db->table("survey"); 
-        $builder->join("project","project.ProjectId = survey.ProjectId","left");
-        $builder->join("customer","project.CustomerId = customer.CustomerId","left"); 
-        $builder->where('SurveyId',$id);
-        $builder->limit(1);
-        return $builder->get()->getRow();  
-    }
-    public function get_data_survey_finish($id){
-        $builder = $this->db->table("survey_finish"); 
-        $builder->join("survey","survey.SurveyId = survey_finish.SurveyId","left");
-        $builder->join("project","project.ProjectId = survey.ProjectId","left");
-        $builder->join("customer","project.CustomerId = customer.CustomerId","left"); 
-        $builder->where('SurveyFinishId',$id);
-        $builder->limit(1);
-        return $builder->get()->getRow();  
-    }
-    public function get_data_survey_staff($staff){ 
-        $arrayData = explode("|", $staff);
-        $builder = $this->db->table("users");  
-        $builder->whereIn('id',$arrayData); 
-        return $builder->get()->getResult();  
-    } 
-    public function delete_data_survey($id){   
-        $builder = $this->db->table("survey"); 
-        $builder->set('SurveyStatus', 3);    
-        $builder->set('updated_user', user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('SurveyId', $id); 
-        $builder->update();   
-
-        return JSON_ENCODE(array("status"=>true));
     }  
-    public function insert_data_survey_finish_file($id,$data,$data1){  
-        
-        $builder = $this->db->table("survey_finish");
-        $builder->insert(array(
-            "SurveyFinishDelta"=>$data1["delta"],
-            "SurveyFinishDetail"=>$data1["html"],
-            "SurveyId"=>$id,  
-        )); 
 
-
-        $builder = $this->db->table("survey");  
-        $builder->where('SurveyId', $id); 
-        $status = $builder->get()->getRow();
-        if($status->SurveyStatus < 2){ 
-            $builder = $this->db->table("survey");  
-            $builder->set('SurveyStatus', 1); 
-            $builder->where('SurveyId', $id); 
-            $builder->update();  
-        }
-        
-        $folder_utama = 'assets/images/project'; 
-        if (!file_exists($folder_utama)) {
-            mkdir($folder_utama, 0777, true);  
-        } 
-        
-        $folder_utama = 'assets/images/project/'.$id; 
-        if (!file_exists($folder_utama)) {
-            mkdir($folder_utama, 0777, true);  
-        } 
-
-        //hapus semua file di folder id tersebut
-        if (is_dir($folder_utama)) {
-            $files = scandir($folder_utama);
-            foreach ($files as $file) {
-                if ($file != '.' && $file != '..') {
-                    unlink($folder_utama."/" . $file);
-                }
-            }  
-        }
-        if ($data) { 
-            foreach ($data['files'] as $file) {
-                if ($file->isValid() && !$file->hasMoved()) {
-                    $newName = time() . '_' . $file->getName();
-                    $file->move($folder_utama, $newName); 
-                } else { 
-
-                }
-            } 
-
-        }
-        return JSON_ENCODE(array("status"=>true)); 
-    } 
-    public function update_data_survey_finish_file($id,$data,$data1){   
-
-        $builder = $this->db->table("survey_finish");
-        $builder->set('SurveyFinishDelta', $data1["delta"]);   
-        $builder->set('SurveyFinishDetail', $data1["html"]);    
-        $builder->where('SurveyId', $id);    
-        $builder->update();   
-
-        $folder_utama = 'assets/images/project'; 
-        if (!file_exists($folder_utama)) {
-            mkdir($folder_utama, 0777, true);  
-        } 
-        
-        $folder_utama = 'assets/images/project/'.$id; 
-        if (!file_exists($folder_utama)) {
-            mkdir($folder_utama, 0777, true);  
-        }  ;
-        //hapus file yang eksis
-        $array = json_decode($data1["remove_file"], true);
-        $datasdas = [];
-        foreach ( $array  as $file) { 
-            unlink($folder_utama.'/' .$file['name']);
-        }
-        if ($data) { 
-            foreach ($data['files'] as $file) {
-                if ($file->isValid() && !$file->hasMoved()) {
-                    $newName = time() . '_' . $file->getName();
-                    $file->move($folder_utama, $newName); 
-                } else { 
-
-                }
-            } 
-
-        }
-        return JSON_ENCODE(array("status"=>true)); 
-    }
-    public function update_data_survey_status($id){ 
-        $builder = $this->db->table("survey");  
-        $builder->where('SurveyId',$id);
-        $result = $builder->get()->getRow();  
-        //status direct
-  
-        // Penawaran 
-        $surveydirect = 0; 
-        $builder = $this->db->table("penawaran");
-        $builder->select('*');
-        $builder->where('SphRef',$result->SurveyId); 
-        $builder->where('SphRefType',"Survey"); 
-        $builder->where('SphStatus <',"2"); 
-        $builder->orderBy('SphStatus', 'ASC');
-        $builder->orderBy('SphDate', 'ASC');
-        $queryref = $builder->get()->getRow();  
-        if($queryref){ 
-            $surveydirect = 1;   
-        }else{ 
-            // SAMPLE
-            $builder = $this->db->table("sample");
-            $builder->select('*');
-            $builder->where('SampleRef',$result->SurveyId); 
-            $builder->where('SampleRefType',"Survey"); 
-            $builder->orderby('SampleId', 'DESC'); 
-            $queryref = $builder->get()->getRow();   
-            if($queryref){ 
-                $surveydirect = 1;   
-            }else{  
-                // INVOICE
-                $builder = $this->db->table("invoice");
-                $builder->select('*');
-                $builder->where('InvRef',$result->SurveyId); 
-                $builder->where('InvRefType',"Survey");  
-                $builder->orderby('InvId', 'DESC'); 
-                $queryref = $builder->get()->getRow();   
-                if($queryref){
-                    $surveydirect = 1;    
-                }
-            }
-        }  
-
-        //status Hasil
-        $surveyfinish = 0; 
-        $builder = $this->db->table("survey_finish");  
-        $builder->where('SurveyId',$id); 
-        $results = $builder->get()->getRow();  
-        if($results) $surveyfinish = 1;  
-         
-        if(($surveydirect == 1 && $surveyfinish == 1 )){
-            $builder = $this->db->table("survey"); 
-            $builder->set('surveyStatus', 2); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SurveyId', $id); 
-            $builder->update();  
-        } else if(($surveydirect == 1 || $surveyfinish == 1 )){ 
-            $builder = $this->db->table("survey"); 
-            $builder->set('surveyStatus', 1); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SurveyId', $id); 
-            $builder->update();   
-        }else{
-            $builder = $this->db->table("survey"); 
-            $builder->set('surveyStatus', 0); 
-            $builder->set('updated_user', user()->id); 
-            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-            $builder->where('SurveyId', $id); 
-            $builder->update();  
-        }  
-
-        return $surveydirect. " | ".$surveyfinish; 
-    }
 
     /************************************* */
     /** FUNCTION UNTUK MENU PROJECT SAMPLE */  
@@ -5349,139 +5096,7 @@ class ProjectModel extends Model
     /****************************************** */
     /** FUNCTION UNTUK MENU PROJECT PAYMENT     */  
     /****************************************** */ 
-    private function get_next_code_payment($date){
-        //sample INV/001/01/2024
-        $arr_date = explode("-", $date);
-        $builder = $this->db->table("payment");  
-        $builder->select("ifnull(max(SUBSTRING(PaymentCode,5,3)),0) + 1 as nextcode"); 
-        $builder->where("month(PaymentDate2)",$arr_date[1]);
-        $builder->where("year(PaymentDate2)",$arr_date[0]);
-        $builder->where("PaymentDoc",1);
-        $data = $builder->get()->getRow(); 
-        switch (strlen($data->nextcode)) {
-            case 1:
-                $nextid = "PAY/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 2:
-                $nextid = "PAY/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 3:
-                $nextid = "PAY/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-            default:
-                $nextid = "PAY/000/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-        } 
-    }
-    private function get_next_code_proforma($date){
-        //sample INV/001/01/2024
-        $arr_date = explode("-", $date);
-        $builder = $this->db->table("payment");  
-        $builder->select("ifnull(max(SUBSTRING(PaymentCode,5,3)),0) + 1 as nextcode");
-        $builder->where("month(PaymentDate2)",$arr_date[1]);
-        $builder->where("year(PaymentDate2)",$arr_date[0]); 
-        $builder->where("PaymentDoc",2);
-        $data = $builder->get()->getRow(); 
-        switch (strlen($data->nextcode)) {
-            case 1:
-                $nextid = "PRO/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 2:
-                $nextid = "PRO/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 3:
-                $nextid = "PRO/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-            default:
-                $nextid = "PRO/000/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-        } 
-    } 
-    public function insert_data_payment($data){
-        $builder = $this->db->table("payment");
-        $builder->insert(array( 
-            "PaymentCode"=>$this->get_next_code_payment($data["PaymentDate"]),
-            "PaymentRef"=>$data["PaymentRef"],
-            "PaymentRefType"=>$data["PaymentRefType"], 
-            "ProjectId"=>$data["ProjectId"],
-            "PaymentDate"=>$data["PaymentDate"],
-            "PaymentDate2"=>$data["PaymentDate"],
-            "PaymentType"=>$data["PaymentType"],
-            "PaymentMethod"=>$data["PaymentMethod"],
-            "PaymentTotal"=>$data["PaymentTotal"],
-            "PaymentNote"=>$data["PaymentNote"], 
-            "PaymentDoc"=>1,  
-            "TemplateId"=>$data["TemplateId"],  
-            "created_user"=>user()->id, 
-            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
-        ));
-
-        $builder = $this->db->table("payment");
-        $builder->select('*');
-        $builder->orderby('PaymentId', 'DESC');
-        $builder->limit(1);
-        $query = $builder->get()->getRow();  
-
-        //Buat folder utama
-        $folder_utama = 'assets/images/payment'; 
-        if (!file_exists($folder_utama)) {
-            mkdir($folder_utama, 0777, true);  
-        } 
-
-        //Buat folder berdasarkan id
-        if (!file_exists($folder_utama."/".$data["ProjectId"])) {
-            mkdir($folder_utama."/".$data["ProjectId"], 0777, true);  
-        }
-
-        if (!file_exists($folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"])) {
-            mkdir($folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"], 0777, true);  
-        }
-        $folder_utama = $folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"];  
-        if (isset($data['image'])) {  
-            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama, $query->PaymentId);  
-        } 
-
-
-        $modelssample = new ProjectsampleModel;
-        if($data["PaymentRefType"] == "Sample") $modelssample->update_data_sample_status($data["PaymentRef"]);
-
-        if($data["PaymentRefType"] == "Invoice") $this->update_data_invoice_status($data["PaymentRef"]); 
-    }
-    public function insert_data_payment_request($data){
-        $builder = $this->db->table("payment_request");
-        $builder->insert(array(  
-            "PaymentRequestRef"=>$data["PaymentRequestRef"],
-            "PaymentRequestRefType"=>$data["PaymentRequestRefType"], 
-            "ProjectId"=>$data["ProjectId"],
-            "PaymentRequestBank"=>$data["PaymentRequestBank"],
-            "PaymentRequestRek"=>$data["PaymentRequestRek"],
-            "PaymentRequestName"=>$data["PaymentRequestName"],
-            "PaymentRequestTotal"=>$data["PaymentRequestTotal"],
-            "PaymentRequestStatus"=>$data["PaymentRequestStatus"], 
-            "created_user"=>user()->id, 
-            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
-        ));  
-
-        $curl = curl_init();
-        $data = "*PENGAJUAN PEMBAYARAN* \nada request pembayaran dari dokumen ".$data["PaymentRequestRefType"]." yang dibuat oleh ".user()->username." ditransfer ke \n\tBank \t\t: ".$data["PaymentRequestBank"]."\n\tNo. Rekening \t: ".$data["PaymentRequestRek"]."\n\tNama \t\t: ".$data["PaymentRequestName"]."\n\tTotal \t\t: Rp. ".number_format($data["PaymentRequestTotal"]);
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://wa.mahieraglobalsolution.com/send-message',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => 'sender=089676143063&number=0895352992663&message='.urlencode($data),
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/x-www-form-urlencoded'
-            ),
-        ));
-
-        $response = curl_exec($curl); 
-        curl_close($curl); 
-    }
+  
     public function update_data_payment($data,$id){
         $builder = $this->db->table("payment"); 
         $builder->set('PaymentDate', $data["PaymentDate"]);
@@ -5537,16 +5152,6 @@ class ProjectModel extends Model
         }
 
     }
-    public function update_data_payment_request($data,$id){ 
-        $builder = $this->db->table("payment_request"); 
-        $builder->set('PaymentRequestBank', $data["PaymentRequestBank"]);
-        $builder->set('PaymentRequestRek', $data["PaymentRequestRek"]); 
-        $builder->set('PaymentRequestName', $data["PaymentRequestName"]);  
-        $builder->set('updated_user',user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
-        $builder->where('PaymentRequestId', $id); 
-        $builder->update(); 
-    }
     public function delete_data_payment($id){ 
          
         $data_payment = $this->get_data_payment($id); 
@@ -5564,13 +5169,6 @@ class ProjectModel extends Model
             $this->update_data_invoice_status($data_payment->PaymentRef);
         }
 
-        return JSON_ENCODE(array("status"=>true));
-    }
-    public function delete_data_payment_request($id){  
-        $builder = $this->db->table("payment_request");
-        $builder->where('PaymentRequestId',$id);
-        $builder->delete();   
- 
         return JSON_ENCODE(array("status"=>true));
     }
     public function get_data_payment_by_invoice($id){
@@ -5700,11 +5298,6 @@ class ProjectModel extends Model
         $builder = $this->db->table("payment"); 
         $builder->where('PaymentId',$id); 
         $builder->where('PaymentDoc',2); 
-        return $builder->get()->getRow();  
-    }
-    public function get_data_request_payment($id){
-        $builder = $this->db->table("payment_request"); 
-        $builder->where('PaymentRequestId',$id);  
         return $builder->get()->getRow();  
     }
 
