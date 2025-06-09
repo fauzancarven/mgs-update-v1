@@ -14,3 +14,19 @@ ProjectCustAddress = CustomerAddress;
   
   
   
+ALTER TABLE `sample`
+	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `CustomerId`;
+
+update sample 
+LEFT JOIN project ON project.ProjectId = sample.ProjectId 
+SET 
+SampleCustName = ProjectCustName,
+SampleCustTelp = ProjectCustTelp,
+SampleAddress = ProjectCustAddress
+WHERE SampleCustName = ""; 
+
+update sample 
+LEFT JOIN project ON project.ProjectId = sample.ProjectId 
+SET 
+sample.CustomerId = project.CustomerId,
+sample.StoreId = project.StoreId; 

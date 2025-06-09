@@ -213,6 +213,7 @@ $routes->post('/message/edit-project-survey/(:num)', 'MessageController::project
 $routes->post('/message/add-project-survey-finish/(:num)', 'MessageController::project_survey_finish/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-survey-finish/(:num)', 'MessageController::project_survey_finish_edit/$1', ['filter' => 'login']);  
 
+$routes->post('/message/add-sample', 'MessageController::sample_add/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-sample/(:num)', 'MessageController::project_sample_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sample/(:num)', 'MessageController::project_sample_edit/$1', ['filter' => 'login']); 
 

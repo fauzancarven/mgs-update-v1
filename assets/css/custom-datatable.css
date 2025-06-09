@@ -71,6 +71,7 @@ th.detail {
 .table-nested tr.dt-hasChild:hover>* {
     box-shadow: inset 0 0 0 9999px rgb(255 255 255 / 8%) !important;
 }
+
 table.dataTable tbody tr {
     background-color: transparent;
 } 
@@ -134,7 +135,7 @@ div.dt-container div.dt-scroll-body {
 }
 
 table.detail-item{
-    box-shadow: -1px 1px 4px 0 #d9d9d9;
+    box-shadow: -1px 1px 4px 0 #334a9d52;
 }
 
 table.detail-item td.detail {
@@ -178,8 +179,7 @@ table.detail-payment tfoot th.detail {
     font-weight: bold !important;
     color: #003571 !important;
     font-size: 0.7rem !important;
-}
-
+} 
 .dt-hasChild {
     position: relative;
 }

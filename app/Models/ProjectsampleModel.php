@@ -25,8 +25,7 @@ class ProjectsampleModel extends Model
         $builder = $this->db->table($this->table);
         $builder->join("project","project.ProjectId = sample.ProjectId ","left");   
         $builder->join("store","store.StoreId = project.StoreId","left");  
-        $builder->join("users","users.id = sample.SampleAdmin ","left"); 
-        $builder->where('SampleStatus <',2);
+        $builder->join("users","users.id = sample.SampleAdmin ","left");  
 
         if($filter["datestart"]){
             $builder->where("SampleDate >=",$filter["datestart"]);
@@ -42,7 +41,7 @@ class ProjectsampleModel extends Model
             $filterdata = 1;
         } 
         if(isset($filter["store"])){ 
-            $builder->whereIn("survey.StoreId",$filter["store"]); 
+            $builder->whereIn("sample.StoreId",$filter["store"]); 
             $filterdata = 1;
         } 
         if($filter["search"]){ 
@@ -60,13 +59,14 @@ class ProjectsampleModel extends Model
         $columns = array(
             0 => null, // kolom action tidak dapat diurutkan
             1 => null, // kolom action tidak dapat diurutkan
-            2 => "SampleCode", // kolom name
-            3 => "SampleDate", // kolom action tidak dapat diurutkan
-            4 => "SampleStatus", // kolom image tidak dapat diurutkan
-            5 => "SampleAdmin", // kolom action tidak dapat diurutkan
-            6 => "SampleCustName", // kolom action tidak dapat diurutkan
-            7 => null, // kolom action tidak dapat diurutkan
+            2 => "StoreCode", // kolom name
+            3 => "SampleCode", // kolom name
+            4 => "SampleDate", // kolom action tidak dapat diurutkan
+            5 => "SampleStatus", // kolom image tidak dapat diurutkan
+            6 => "SampleAdmin", // kolom action tidak dapat diurutkan
+            7 => "SampleCustName", // kolom action tidak dapat diurutkan
             8 => null, // kolom action tidak dapat diurutkan
+            9 => null, // kolom action tidak dapat diurutkan
         );
         if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
             $orderColumn = $columns[$filter['order'][0]['column']];
@@ -154,7 +154,7 @@ class ProjectsampleModel extends Model
                     </div> 
                     '.$this->get_data_payment_sample($row).'
                 </div> 
-                <div class="list-detail">
+                <div class="list-detail pb-3">
                     <div class="text-head-2 py-2">
                         <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pengiriman</span>
                     </div> 
@@ -291,7 +291,7 @@ class ProjectsampleModel extends Model
     function get_data_detail_sample($row){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-payment m-0">
+        $detailhtml = ' <table class="table detail-item m-0">
                             <thead>
                                 <tr>
                                     <th class="detail text-center" style="width:50px">Gambar</th>
@@ -347,7 +347,7 @@ class ProjectsampleModel extends Model
         </tbody>
         <tfoot>
             <tr>
-                <th class="detail" colspan="6">
+                <th class="bg-light" colspan="6">
                     <div class="d-flex m-1 gap-2 align-items-center justify-content-end pe-4"> 
                         <span class="text-detail-2">Sub Total:</span>
                         <span class="text-head-2">Rp. '.number_format($row->SampleSubTotal,0,',','.').'</span>  
@@ -645,8 +645,7 @@ class ProjectsampleModel extends Model
                     <th class="detail" style="width:70px">Action</th>
                     <th class="detail">Toko</th>
                     <th class="detail">Nomor</th>
-                    <th class="detail">Tanggal</th>
-                    <th class="detail">Status</th> 
+                    <th class="detail">Tanggal</th> 
                     <th class="detail">Ritase</th>
                     <th class="detail">Armada</th>
                     <th class="detail">Dari</th> 
@@ -655,9 +654,9 @@ class ProjectsampleModel extends Model
                 </tr>
             </thead>
             <tbody> 
-                <tr>
-                    <td class="detail">
-                        <a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>
+                <tr class="dt-hasChild">
+                    <td class="detail ">
+                        <a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right fa-rotate-90"></i></a>
                     </td> 
                     <td class="detail action-td" style="width:70px"> 
                         <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Data Sampel Barang" onclick="print_project_Sample(114,3,this)"><i class="fa-solid fa-print"></i></span>  
@@ -672,7 +671,9 @@ class ProjectsampleModel extends Model
                                 <div class="d-flex flex-column"> 
                                     <span class="text-head-3 d-flex gap-0 align-items-center"><img src="data:image/png;base64,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" alt="Gambar" class="logo">MGS</span>
                                     <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">Mahiera Global Solution</span>  
-                                    <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1 text-default "><i class="fa-solid fa-diagram-project pe-1 "></i>Document Project</span>  
+                                    <span class="pointer text-head-3 pt-1">
+                                        <span class="me-1 badge text-bg-info text-head-3">Proses</span>
+                                    </span>
                                 </div>   
                             </div>
                         </div>
@@ -684,17 +685,76 @@ class ProjectsampleModel extends Model
                             <a class="text-detail-3 pointer text-decoration-underline text-success">SPH/001/02/2025</a>
                         </div>  
                     </td>
-                    <td class="detail">21 Feb 2025</td> 
-                    <td class="detail">
-                        <span class="pointer text-head-3 badge text-bg-info text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                            <span class="me-1 ">Proses</span>
-                        </span>
-                    </td>
+                    <td class="detail">21 Feb 2025</td>  
                     <td class="detail">1 (Satu)</td> 
-                    <td class="detail">B 1605 SSS LALAMOVE</td>
-                    <td class="detail">MGS</td>
-                    <td class="detail">MGS</td>
+                    <td class="detail">B 1605 SSS LALAMOVE</td> 
+                    <td class="detail"> 
+                        <div class="text-head-3 pb-2">Vendor BBG</div> 
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-phone pe-1"></i>1231456456</div>
+                        <div class="text-detail-3 text-truncate" style="max-width: 10rem;line-height: 1.2;" data-bs-toggle="tooltip" data-bs-title="Cimone Mas Permai 1, Jl. Kalimantan No.40, Cimone Jaya, Kota Tangerang, Banten 15114"><i class="fa-solid fa-location-dot pe-1"></i>Citeko, Purwakarta</div>
+                    </td>
+                    <td class="detail"> 
+                        <div class="text-head-3 pb-2">Bpk Hartanto</div> 
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-phone pe-1"></i>1231456456</div>
+                        <div class="text-detail-3 text-truncate" style="max-width: 10rem;line-height: 1.2;" data-bs-toggle="tooltip" data-bs-title="Cimone Mas Permai 1, Jl. Kalimantan No.40, Cimone Jaya, Kota Tangerang, Banten 15114"><i class="fa-solid fa-location-dot pe-1"></i>Cimone Mas Permai 1, Jl. Kalimantan No.40, Cimone Jaya, Kota Tangerang, Banten 15114</div>
+                    </td>
                     <td class="detail">Rp. 100.000</td>
+                </tr>
+                <tr class="child-row">
+                    <td class="detail" colspan="10">
+                        <div class="view-detail" style="">
+                            <div class="list-detail pb-3">
+                                <div class="text-head-2 py-2">
+                                    <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk
+                                </div> 
+                                <table class="table detail-payment m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="detail text-center" style="width:50px">Gambar</th>
+                                            <th class="detail">Nama</th>
+                                            <th class="detail">Qty</th>
+                                            <th class="detail">Harga</th>
+                                            <th class="detail">Disc</th>
+                                            <th class="detail">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody> 
+                                        <tr>
+                                            <td class="detail no-border">
+                                                <img src="https://192.168.100.52/mahiera/assets/images/produk/21/1.png?2025-06-0912:58:43" alt="Gambar" class="image-produk">
+                                            </td>
+                                            <td class="detail no-border">
+                                                <span class="text-head-3">Bata Expose MRC Solid</span><br>
+                                                <span class="text-detail-2 text-truncate">Bata Tempel dan Bata Expose</span> 
+                                                <div class="d-flex gap-1 flex-wrap"><span class="badge badge-sm badge-0 rounded">vendor : MGS</span><span class="badge badge-sm badge-1 rounded">ukuran : 22 x 10 x 5 cm</span></div>
+                                            </td>
+                                            <td class="detail no-border">1,00 Pcs</td>
+                                            <td class="detail no-border">Rp. 3.200</td>
+                                            <td class="detail no-border">Rp. 3.200</td>
+                                            <td class="detail no-border">Rp. 0</td>
+                                        </tr> 
+                                    </tbody> 
+                                </table>
+                            </div> 
+                            <div class="list-detail pb-3">
+                                <div class="text-head-2 py-2">
+                                    <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pembayaran
+                                </div> 
+                                <div class="alert alert-warning p-2 m-0" role="alert">
+                                <span class="text-head-3">
+                                    <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                                    Belum ada pembayaran yang dibuat dari dokumen ini, 
+                                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment()">Ajukan pembayaran</a> 
+                                </span>
+                            </div> 
+                            </div> 
+                            <div class="list-detail">
+                                <div class="text-head-2 py-2">
+                                    <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pengiriman
+                                </div>  
+                            </div> 
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table> ';

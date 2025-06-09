@@ -8,9 +8,33 @@
             <div class="p-1 flex-fill" > 
                 <h4 class="mb-0">LIST PENAWARAN</h4> 
             </div>     
+            <div class="justify-content-end d-flex gap-1"> 
+                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Penawaran<span></button>
+            </div> 
         </div>
         <!-- BAGIAN FILTER -->
         <div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">   
+            <div class="input-group">  
+                <input class="form-control form-control-sm input-form combo" id="storedatafilter" placeholder="Toko" value="" type="text" data-start="" data-end="" readonly style="background: white;">
+                <i class="fa-solid fa-store"></i> 
+                <i class="fa-solid fa-caret-down"></i>
+                <div class="filter-data left" style="width: 18rem;" for="storedatafilter">
+                    <ul class="list-group w-75" > 
+                        <?php
+                        foreach($store as $row){
+                            echo '
+                            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input select store" type="checkbox" data-group="store" data-value="'.$row->StoreId.'" value="'.$row->StoreId.'" id="store-'.$row->StoreId.'">
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="store-'.$row->StoreId.'">'.$row->StoreCode.'</label>
+                                </div> 
+                            </li>';
+                        }
+                        ?> 
+                       
+                    </ul>
+                </div>
+            </div>   
             <div class="input-group d-sm-flex d-none">  
                 <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="" readonly style="background: white;">
                 <i class="fa-solid fa-calendar-days"></i> 
@@ -30,13 +54,19 @@
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
                                 <input class="form-check-input select category" type="checkbox" data-group="category" data-value="1" value="Proses" id="status-1">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Completed</label>
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-1">Proses</label>
                             </div> 
                         </li>   
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
-                                <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Finish" id="status-2">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Cancel</label>
+                                <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Completed" id="status-2">
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Completed</label>
+                            </div> 
+                        </li>    
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
+                            <div class="form-check w-100">
+                                <input class="form-check-input select category" type="checkbox" data-group="category" data-value="3" value="Cancel" id="status-3">
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-3">Cancel</label>
                             </div> 
                         </li>   
                     </ul>
@@ -98,6 +128,7 @@
 <script>
     var xhr_load_project; 
     var filter_status_select = []
+    var filter_store_select = []
     function loader_datatable(){
         // if (xhr_load_project) {
         //     xhr_load_project.abort();
@@ -255,6 +286,19 @@
         //loader_datatable(); 
         table.ajax.reload(null, false); 
     }) 
+    $('.form-check-input.select.store').change(function() { 
+        if ($(this).is(':checked')) {
+            filter_store_select.push($(this).data("value")) 
+        }else{  
+            var index = filter_store_select.indexOf($(this).data("value"));
+            if (index !== -1) {
+                filter_store_select.splice(index, 1);
+            } 
+        } 
+        (filter_store_select.length === 0 ?  $("#storedatafilter").val("") : $("#storedatafilter").val(String(filter_store_select.length) + " toko dipilih")); 
+        //loader_datatable(); 
+        table.ajax.reload(null, false);
+    }) 
     var paging = 1;
     var table; 
     
@@ -306,9 +350,9 @@
             { data: "customer",  className:"align-top",
                 render: function(data, type, row) { 
                     var html = ` 
-                        <div class="text-head-2 pb-2">${row.customer}</div>
-                        ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-2"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
-                        <div class="text-detail-3 text-truncate" style="width: 20rem;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
+                        <div class="text-head-3 pb-2">${row.customer}</div>
+                        ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-1"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
+                        <div class="text-detail-3 text-truncate" style="max-width: 15rem;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
 
                     return html;
                 }

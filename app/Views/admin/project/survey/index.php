@@ -280,7 +280,7 @@
                 filter_status_select.splice(index, 1);
             } 
         } 
-        (filter_status_select.length === 0 ?  $("#statusdatafilter").val("") : $("#statusdatafilter").val(String(filter_status_select.length) + " status dipilih")); 
+        (filter_status_select.length === 0 ?  $("#statusdatafilter").val("") : $("#statusdatafilter").val(String(filter_status_select.length) + " toko dipilih")); 
         //loader_datatable(); 
         table.ajax.reload(null, false);
     }) 
@@ -493,6 +493,7 @@
         var file = $(el).data('file'); 
         window.open('<?= base_url("project/surveyfinish?file=") ?>' + encodeURIComponent(file), '_blank');
     }
+    
     var isProcessingSurvey;
     add_click = function(el){
         if (isProcessingSurvey) {

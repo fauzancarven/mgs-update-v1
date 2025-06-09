@@ -217,6 +217,12 @@ class MessageController extends BaseController
 
 
     
+    public function sample_add($id)
+    {     
+
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/sample/add_sample.php',$data)); 
+    }
     public function project_sample_add($id)
     {     
         $models = new ProjectModel();
@@ -252,9 +258,11 @@ class MessageController extends BaseController
                 ) ;
             } 
         }
+
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/sample/add_project_sample.php',$data)); 
     }
+
     public function project_sample_edit($id)
     {     
         $models = new ProjectModel();

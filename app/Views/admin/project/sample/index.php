@@ -8,6 +8,9 @@
             <div class="p-1 flex-fill" > 
                 <h4 class="mb-0">LIST SAMPLE</h4> 
             </div>     
+            <div class="justify-content-end d-flex gap-1"> 
+                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Sample<span></button>
+            </div> 
         </div>
         
         <!-- BAGIAN FILTER -->
@@ -58,7 +61,7 @@
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
                             <div class="form-check w-100">
                                 <input class="form-check-input select category" type="checkbox" data-group="category" data-value="2" value="Finish" id="status-2">
-                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Finish</label>
+                                <label class="form-check-label ps-0 ms-0 stretched-link" for="status-2">Completed</label>
                             </div> 
                         </li>  
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
@@ -276,7 +279,7 @@
                 filter_store_select.splice(index, 1);
             } 
         } 
-        (filter_store_select.length === 0 ?  $("#storedatafilter").val("") : $("#storedatafilter").val(String(filter_store_select.length) + " status dipilih")); 
+        (filter_store_select.length === 0 ?  $("#storedatafilter").val("") : $("#storedatafilter").val(String(filter_store_select.length) + " toko dipilih")); 
         //loader_datatable(); 
         table.ajax.reload(null, false);
     }) 
@@ -386,6 +389,44 @@
     function format(data){
         return data.detail;
     }  
+
+
+    
+    var isProcessingSample;
+    add_click = function(el){
+        if (isProcessingSample) {
+            console.log("project Sample cancel load");
+            return;
+        }   
+        isProcessingSample = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-sample", 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-sample").modal("show"); 
+                $("#modal-add-sample").data("menu","Sample");  
+
+                isProcessingSample = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSample = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                }); 
+                tooltiprenew();
+            }
+        });
+    }
  
 </script>
 
