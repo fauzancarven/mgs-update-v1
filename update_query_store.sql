@@ -1,22 +1,28 @@
-ALTER TABLE `survey`
+ ALTER TABLE `survey`
 	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `ProjectId`;
-update survey 
+/*update survey  */
 LEFT JOIN project ON project.ProjectId = survey.ProjectId 
 SET 
 survey.StoreId =  project.StoreId
 
--- ## mengaupdate data project
+## -- ## mengaupdate data project
+
+ALTER TABLE `project`
+	ADD COLUMN `ProjectCustName` VARCHAR(100) NULL DEFAULT NULL AFTER `StoreId`,
+	ADD COLUMN `ProjectCustTelp` VARCHAR(100) NULL DEFAULT NULL AFTER `ProjectCustName`,
+	ADD COLUMN `ProjectCustAddress` VARCHAR(200) NULL DEFAULT NULL AFTER `ProjectCustTelp`;
+ 
 UPDATE project LEFT JOIN customer ON customer.CustomerId = project.CustomerId
 SET 
 ProjectCustName = if(CustomerCompany = '-' or CustomerCompany = '',Customername,CONCAT(Customername," (",CustomerCompany, ")")),
 ProjectCustTelp = if(CustomerTelp2 = '-' or CustomerTelp2 = '',CustomerTelp1, CONCAT(CustomerTelp1,"/",CustomerTelp2)),
 ProjectCustAddress = CustomerAddress;
   
-  
+
   
 ALTER TABLE `sample`
 	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `CustomerId`;
-
+ 
 update sample 
 LEFT JOIN project ON project.ProjectId = sample.ProjectId 
 SET 
@@ -29,4 +35,4 @@ update sample
 LEFT JOIN project ON project.ProjectId = sample.ProjectId 
 SET 
 sample.CustomerId = project.CustomerId,
-sample.StoreId = project.StoreId; 
+sample.StoreId = project.StoreId;  

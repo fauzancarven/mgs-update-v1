@@ -184,22 +184,31 @@ table.detail-payment tfoot th.detail {
     position: relative;
 }
 
-.dt-hasChild::after {
+/* .dt-hasChild::after {
     content: '';
     position: absolute;
-    /* top: 60%; */
     left: 15px;
     bottom: -15px;
     width: 2px;
     height: 50%;
     background-color: #ccc;
+} */
+.child-row  .view-detail::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% - 1rem);
+    left: 14px;
+    width: 2px;
+    height: 3rem;
+    background-color: #ccc;
 }
-
 .child-row {
     position: relative;
+} 
+.view-detail{
+    padding-left: 1.7rem;
 }
-
-.child-row::before {
+.child-row  .view-detail::before {
     content: '';
     position: absolute;
     left: 15px;
