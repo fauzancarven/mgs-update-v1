@@ -1663,29 +1663,7 @@ class ProjectModel extends Model
     /************************************* */
     /** FUNCTION UNTUK MENU PROJECT PENAWARAN */  
     /************************************* */
-    public function get_next_code_sph($date){
-        //sample SPH/001/01/2024
-        $arr_date = explode("-", $date);
-        $builder = $this->db->table("penawaran");  
-        $builder->select("ifnull(max(SUBSTRING(SphCode,5,3)),0) + 1 as nextcode"); 
-        $builder->where("month(SphDate2)",$arr_date[1]);
-        $builder->where("year(SphDate2)",$arr_date[0]);
-        $data = $builder->get()->getRow(); 
-        switch (strlen($data->nextcode)) {
-            case 1:
-                $nextid = "SPH/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 2:
-                $nextid = "SPH/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 3:
-                $nextid = "SPH/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-            default:
-                $nextid = "SPH/000/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-        } 
-    }
+    
     public function data_project_sph($project_id){
         $html = ""; 
         $builder = $this->db->table("penawaran");
@@ -2100,57 +2078,6 @@ class ProjectModel extends Model
         $builder->orderby('SphId', 'DESC'); 
         return  $builder->countAllResults();
     }
-    public function insert_data_sph($data){ 
-        $header = $data["header"]; 
-
-        $builder = $this->db->table("penawaran");
-        $builder->insert(array(
-            "SphCode"=>$this->get_next_code_sph($header["SphDate"]),
-            "SphDate"=>$header["SphDate"],
-            "SphDate2"=>$header["SphDate"],  
-            "ProjectId"=>$header["ProjectId"], 
-            "SphRef"=>$header["SphRef"],
-            "SphRefType"=>$header["SphRefType"],
-            "SphAdmin"=>$header["SphAdmin"],
-            "SphCustName"=>$header["SphCustName"],
-            "SphCustTelp"=>$header["SphCustTelp"], 
-            "SphAddress"=>$header["SphAddress"],
-            "TemplateId"=>$header["TemplateId"],
-            "SphSubTotal"=>$header["SphSubTotal"],
-            "SphDiscItemTotal"=>$header["SphDiscItemTotal"],
-            "SphDiscTotal"=>$header["SphDiscTotal"],
-            "SphGrandTotal"=>$header["SphGrandTotal"],
-            "created_user"=>user()->id, 
-            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
-        ));
-
-        $builder = $this->db->table("penawaran");
-        $builder->select('*');
-        $builder->orderby('SphId', 'DESC');
-        $builder->limit(1);
-        $query = $builder->get()->getRow();  
-        // ADD DETAIL PRODUK 
-        foreach($data["detail"] as $row){ 
-            $row["SphDetailRef"] = $query->SphId;
-            $row["SphDetailVarian"] = (isset($row["SphDetailVarian"]) ? json_encode($row["SphDetailVarian"]) : "[]");  
-            $builder = $this->db->table("penawaran_detail");
-            $builder->insert($row); 
-        } 
- 
-        //update status sample
-        
-        $modelssample = new ProjectsampleModel;
-        if( $header["SphRefType"] == "Sample") $modelssample->update_data_sample_status($header["SphRef"]);  
-        //update status Survey
-        if( $header["SphRefType"] == "Survey") $this->update_data_survey_status($header["SphRef"]);  
- 
-        //update status project
-        $builder = $this->db->table("project"); 
-        $builder->set('ProjectStatus', 3);  
-        $builder->where('ProjectId', $header["ProjectId"]); 
-        $builder->update();  
-
-    }
     public function update_data_sph($data,$id){ 
         $header = $data["header"];  
         $builder = $this->db->table("penawaran"); 
@@ -2200,25 +2127,6 @@ class ProjectModel extends Model
 
         return JSON_ENCODE(array("status"=>true));
     }  
-    public function get_data_sph($id){  
-        $builder = $this->db->table("penawaran");  
-        $builder->select("*, CASE 
-        WHEN SphRefType = '-' THEN 'No data Selected'
-        WHEN SphRefType = 'Survey' THEN (select SurveyCode from survey where SurveyId = SphRef)
-        WHEN SphRefType = 'Sample' THEN (select SampleCode from sample where SampleId = SphRef)
-        END AS 'SphRefCode'"); 
-        $builder->join("project","project.ProjectId = penawaran.ProjectId","left"); 
-        $builder->join("customer","project.CustomerId = customer.CustomerId","left");
-        $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId","left");
-        $builder->where('penawaran.SphId',$id); 
-        $builder->limit(1);
-        return $builder->get()->getRow();   
-    }
-    public function get_data_sph_detail($id){
-        $builder = $this->db->table("penawaran_detail");
-        $builder->where('SphDetailRef',$id); 
-        return $builder->get()->getResult();  
-    }
     public function get_data_ref_sph($refid,$data = null){ 
         if(isset($data["searchTerm"])){
             $querywhere  = "and (
@@ -2316,8 +2224,7 @@ class ProjectModel extends Model
                 $builder->update();   
             }
         } 
-    }
- 
+    } 
     /************************************** */
     /** FUNCTION UNTUK MENU PROJECT INVOICE */  
     /************************************** */

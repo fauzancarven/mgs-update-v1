@@ -1574,8 +1574,7 @@
             total: $('input[name="SphPrintTotal"]:checked').val(),
         },
         "GET",'_blank');
-        $("#modal-print-penawaran").modal("hide");
-        
+        $("#modal-print-penawaran").modal("hide"); 
     })
      
    

@@ -9,6 +9,7 @@ use App\Models\UserModel;
 use App\Models\ProjectModel;
 use App\Models\ProjectsampleModel;
 use App\Models\ProjectcategoryModel;
+use App\Models\ProjectsphModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianModel;
@@ -1165,6 +1166,46 @@ class SelectController extends BaseController
                 //         );
                 //     } 
                 // }
+                $data[] = array(
+                    "id" => $row['refid'],
+                    "text" => $row['code'], 
+                    "html" => $htmlItem,    
+                    "type" => $row['type'],       
+                    "detail_item" => $detail,   
+                );
+            } 
+            $response['data'] = $data; 
+            return $this->response->setJSON($response); 
+        }
+    }
+    public function ref_sph(){
+        $request = Services::request();
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $response = array();  
+
+            $modelsitem = new ProdukModel();   
+            $models = new ProjectsphModel();
+            $Project = $models->get_data_sph_ref(null,$postData); 
+
+            $data = array();
+            $data[] = array(
+                "id" => 0,
+                "text" => "-", 
+                "html" => '<span style="font-size:0.75rem" class="fw-bold">Tidak ada yang dipilih</span>',  
+                "detail_item" => [],      
+                "type" => "",  
+            );
+
+            foreach($Project as $row){
+                $htmlItem = '
+                            <div class="d-flex flex-column" >
+                                <span style="font-size:0.75rem" class="fw-bold">' . $row['type'] . ' - ' . $row['code'] . '</span>
+                                <span style="font-size:0.6rem">' . $row['CustomerName'] . '</span>
+                                <span style="font-size:0.6rem">' . $row['CustomerTelp'] . '</span>
+                                <span style="font-size:0.6rem">' .  $row['CustomerAddress'] . '</span> 
+                            </div>';
+                $detail = array(); 
                 $data[] = array(
                     "id" => $row['refid'],
                     "text" => $row['code'], 

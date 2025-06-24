@@ -4,6 +4,7 @@ namespace App\Controllers;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\ProjectsurveyModel;
+use App\Models\ProjectsphModel;
 use App\Models\ProjectModel;
 use App\Models\ProdukModel;
 use App\Models\HeaderModel;
@@ -72,7 +73,7 @@ class PrintController extends BaseController
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectModel();
+                $models = new ProjectsphModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
                 $data["sph"] = $models->get_data_sph($id); 

@@ -1,6 +1,6 @@
- ALTER TABLE `survey`
+ALTER TABLE `survey`
 	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `ProjectId`;
-/*update survey  */
+update survey 
 LEFT JOIN project ON project.ProjectId = survey.ProjectId 
 SET 
 survey.StoreId =  project.StoreId
@@ -36,3 +36,15 @@ LEFT JOIN project ON project.ProjectId = sample.ProjectId
 SET 
 sample.CustomerId = project.CustomerId,
 sample.StoreId = project.StoreId;  
+
+
+
+ALTER TABLE `penawaran`
+	ADD COLUMN `CustomerId` INT(11) NULL DEFAULT NULL AFTER `ProjectId`,  
+	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `ProjectId`;
+update penawaran 
+LEFT JOIN project ON project.ProjectId = penawaran.ProjectId 
+SET 
+penawaran.StoreId =  project.StoreId,
+penawaran.CustomerId =  project.CustomerId;
+

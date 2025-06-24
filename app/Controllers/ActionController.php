@@ -7,6 +7,7 @@ use App\Models\CustomerModel;
 use App\Models\CustomercategoryModel;
 use App\Models\ProjectModel;
 use App\Models\ProjectsurveyModel;
+use App\Models\ProjectsphModel;
 use App\Models\PaymentModel;
 use App\Models\ProdukunitModel;
 use App\Models\ProdukcategoryModel;
@@ -316,7 +317,7 @@ class ActionController extends BaseController
     }
     public function penawaran_add(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectsphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_sph($postData); 

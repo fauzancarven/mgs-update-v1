@@ -6,6 +6,7 @@ use CodeIgniter\Model;
 use CodeIgniter\Database\RawSql;
 use App\Models\ProjectModel; 
 use App\Models\ProdukModel; 
+use App\Models\ActivityModel;
 
 class ProjectsphModel extends Model
 {  
@@ -23,7 +24,7 @@ class ProjectsphModel extends Model
         $builder = $this->db->table("penawaran");
         $builder->join("project","project.ProjectId = penawaran.ProjectId ","left");  
         $builder->join("users","users.id = penawaran.SphAdmin ","left"); 
-        $builder->join("store","store.StoreId = project.StoreId","left");  
+        $builder->join("store","store.StoreId = penawaran.StoreId","left");  
         if($filter["datestart"]){
             $builder->where("SphDate >=",$filter["datestart"]);
             $builder->where("SphDate <=",$filter["dateend"]); 
@@ -51,12 +52,13 @@ class ProjectsphModel extends Model
         $columns = array(
             0 => null, // kolom action tidak dapat diurutkan
             1 => null, // kolom action tidak dapat diurutkan 
-            2 => "SphCode", // kolom name
-            3 => "SphDate", // kolom action tidak dapat diurutkan
-            4 => "SphStatus", // kolom image tidak dapat diurutkan
-            5 => "SphAdmin", // kolom action tidak dapat diurutkan
-            6 => "SphCustName", // kolom action tidak dapat diurutkan
-            7 => "SphGrandTotal", // kolom action tidak dapat diurutkan
+            2 => "StoreCode", // kolom name
+            3 => "SphCode", // kolom name
+            4 => "SphDate", // kolom action tidak dapat diurutkan
+            5 => "SphStatus", // kolom image tidak dapat diurutkan
+            6 => "SphAdmin", // kolom action tidak dapat diurutkan
+            7 => "SphCustName", // kolom action tidak dapat diurutkan
+            8 => "SphGrandTotal", // kolom action tidak dapat diurutkan
         );
         if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
             $orderColumn = $columns[$filter['order'][0]['column']];
@@ -75,29 +77,7 @@ class ProjectsphModel extends Model
         $query = $builder->get();  
         
         foreach($query->getResult() as $row){ 
-            // Mengambil detail item
-            $detail = array();
-            $models = new ProjectModel();
-            $modelsproduk = new ProdukModel();
-            $arr_detail = $models->get_data_sph_detail($row->SphId);
-            foreach($arr_detail as $row_data){
-                $detail[] = array(
-                            "id" => $row_data->ProdukId,  
-                            "produkid" => $row_data->ProdukId, 
-                            "satuan_id"=> ($row_data->SphDetailSatuanId == 0 ? "" : $row_data->SphDetailSatuanId),
-                            "satuan_text"=>$row_data->SphDetailSatuanText,  
-                            "price"=>$row_data->SphDetailPrice,
-                            "varian"=> JSON_DECODE($row_data->SphDetailVarian,true),
-                            "total"=> $row_data->SphDetailTotal,
-                            "disc"=> $row_data->SphDetailDisc,
-                            "qty"=> $row_data->SphDetailQty,
-                            "text"=> $row_data->SphDetailText,
-                            "group"=> $row_data->SphDetailGroup,
-                            "type"=> $row_data->SphDetailType,
-                            "image_url"=> $modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,true)
-                        );
-            };
-            
+           
 
             // MENGAMBIL DATA REFERENSI
             $SphRef = '<div class="text-detail-3  pt-2" data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran"><i class="fa-solid fa-flag pe-1"></i> - </div>';
@@ -108,7 +88,7 @@ class ProjectsphModel extends Model
                 if($queryref){
                     $SphRef = ' 
                     <script>
-                        function sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SurveyId.'(){
+                        function penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SurveyId.'(){
                             $(".icon-project[data-menu=\'survey\'][data-id=\''.$queryref->ProjectId.'\']").trigger("click");
                             setTimeout(function() {
                                 var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\']");
@@ -128,17 +108,17 @@ class ProjectsphModel extends Model
                             }, 500); // delay 1 detik
                         }
                     </script> 
-                    <div class="text-detail-3 pt-2"  data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran"><span class="text-detail-3 text-decoration-underline" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SurveyId.'()">'.$queryref->SurveyCode.'</span></div>  '; 
+                    <div class="text-detail-3 pt-2"  data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran"><span class="text-detail-3 text-decoration-underline" onclick="penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SurveyId.'()">'.$queryref->SurveyCode.'</span></div>  '; 
                 }
             } 
             if($row->SphRefType == "Sample"){
-                $builder = $this->db->table("sample");
+                $builder = $this->db->table("penawaran");
                 $builder->where('SampleId',$row->SphRef); 
                 $queryref = $builder->get()->getRow();  
                 if($queryref){
                     $SphRef = ' 
                     <script>
-                        function sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'(){
+                        function penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'(){
                             $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$queryref->ProjectId.'\']").trigger("click");
                             setTimeout(function() {
                                 var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\']");
@@ -160,7 +140,7 @@ class ProjectsphModel extends Model
                     </script> 
                     <div class="text-detail-3  pt-2" data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran">
                         <i class="fa-solid fa-flag pe-1"></i>
-                        <span class="text-detail-3" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">'.$queryref->SampleCode.'</span>
+                        <span class="text-detail-3" onclick="penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">'.$queryref->SampleCode.'</span>
                     </div>'; 
                 }
             }
@@ -198,7 +178,7 @@ class ProjectsphModel extends Model
                     </script>
                     <div class="text-detail-3  pt-1" data-bs-toggle="tooltip" data-bs-title="Diterukan ke Sampel">
                     <i class="fa-solid fa-share-from-square pe-1"></i>
-                    <span class="text-detail-3 pointer" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->InvId.'()">'.$queryref->InvCode.'</span>
+                    <span class="text-detail-3 pointer" onclick="penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->InvId.'()">'.$queryref->InvCode.'</span>
                 </div>';  
             }else{
                     // Mengambil data diteruskan
@@ -213,7 +193,7 @@ class ProjectsphModel extends Model
                     $sphforward = ' 
                         <script>
                             function penawaran_return_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'(){
-                                $(".icon-project[data-menu=\'sample\'][data-id=\''.$queryref->ProjectId.'\'").trigger("click");
+                                $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$queryref->ProjectId.'\'").trigger("click");
                                 setTimeout(function() {
                                     var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\']");
                                     var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
@@ -235,7 +215,7 @@ class ProjectsphModel extends Model
                         
                         <div class="text-detail-3  pt-1" data-bs-toggle="tooltip" data-bs-title="Diterukan ke Sampel">
                             <i class="fa-solid fa-share-from-square pe-1"></i>
-                            <span class="text-detail-3 pointer" onclick="sample_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">'.$queryref->SampleCode.'</span>
+                            <span class="text-detail-3 pointer" onclick="penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">'.$queryref->SampleCode.'</span>
                         </div>'; 
                 }else{
                     $sphforward = '
@@ -249,25 +229,78 @@ class ProjectsphModel extends Model
 
             $status = "";
             if($row->SphStatus==0){
-                $status .= ' 
-                        <span class="text-head-3">
-                            <span class="badge text-bg-primary me-1">New</span> 
-                        </span>  ';
+                $status .= '
+                    <span class="pointer text-head-3 badge text-bg-primary text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >New</span>
+                    </span> '; 
             }
             if($row->SphStatus==1){
-                $status .= '  
-                        <span class="text-head-3">
-                            <span class="badge text-bg-success me-1">Completed</span>
-                            <span class="text-primary pointer d-none" onclick="update_status_survey(1,'.$row->SphId.')"><i class="fa-solid fa-pen-to-square"></i></span>
-                        </span> ';
+                $status .= '
+                    <span class="pointer text-head-3 badge text-bg-info text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Proses</span>
+                    </span> '; 
             }
             if($row->SphStatus==2){
-                $status .= '   <span class="badge text-bg-danger me-1">Cancel</span>  '; 
-            } 
+                $status .= '
+                    <span class=" pointertext-head-3 badge text-bg-success text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Completed</span>
+                    </span> ';  
+            }
+            if($row->SphStatus==3){
+                $status .=  '
+                    <span class="pointer text-head-3 badge text-bg-danger text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Cancel</span>
+                    </span> ';  
+            }
+            $status .= '  
+            <ul class="dropdown-menu shadow drop-status ">
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(0,'.$row->SphId.',this)">
+                        New
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(1,'.$row->SphId.',this)">
+                        </i>Proses
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(2,'.$row->SphId.',this)">
+                        Completed
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(3,'.$row->SphId.',this)">
+                        Cancel
+                    </a>
+                </li>  
+            </ul>';
             
+            // MENGAMBIL DATA Detail  
+            $htmldetail = '      
+            <div class="view-detail" style="display:none">
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-2">
+                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</span>
+                    </div> 
+                    '.$this->get_data_detail_penawaran($row).'
+                </div>
+            </div>
+            ';
+            // MENGAMBIL DATA Toko 
+            $store = '
+                    <div class="d-flex align-items-center ">  
+                        <div class="flex-grow-1 ms-1">
+                            <div class="d-flex flex-column"> 
+                                <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>
+                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">'.$row->StoreName.'</span>  
+                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><i class="fa-solid fa-diagram-project pe-1 "></i>Document Project</span>  
+                            </div>   
+                        </div>
+                    </div>';
             $data_row = array( 
                 "penawaran" => $row,
-                "code" => $row->SphCode.$SphRef.$sphforward, 
+                "code" => $row->SphCode.$this->get_data_forward_penawaran($row->SphRefType,$row->SphRef).$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
                 "date" => date_format(date_create($row->SphDate),"d M Y"),
                 "status" => $status,
                 "admin" => ucwords($row->username),
@@ -275,14 +308,13 @@ class ProjectsphModel extends Model
                 "customer" => ucwords($row->SphCustName),
                 "customertelp" => ($row->SphCustTelp ? $row->SphCustTelp : ""), 
                 "customeraddress" => $row->SphAddress, 
-                
-                "detail" => $detail,
-                // "detail" => '  <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1"><div class="col bg-light ms-4 me-2 py-2">'.$html_items.'</div></div>',
+                "store"=>$store,
+                "detail" => $htmldetail, 
                 "action" =>'  
-                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-print"></i></span>  
-                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_Survey('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Data Penawaran" onclick="print_sph('.$row->SphId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-print"></i></span>  
+                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_sph('.$row->SphId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-pen-to-square"></i></span>
                         <div class="d-inline ">
-                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_project_Survey('.$row->ProjectId.','.$row->SphId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_sph('.$row->SphId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-circle-xmark"></i></span>
                         </div>',
             );
             array_push($datatable, $data_row);
@@ -667,6 +699,339 @@ class ProjectsphModel extends Model
                 "total"=>$countTotal,
                 "totalresult"=>$count,
                 "paging"=>$offset, 
+            )
+        ); 
+    }
+
+    
+    function get_data_detail_penawaran($row){ 
+        $modelsproduk = new ProdukModel();
+        $detail = array(); 
+        $detailhtml = ' <table class="table detail-item m-0">
+                            <thead>
+                                <tr>
+                                    <th class="detail text-center" style="width:50px">Gambar</th>
+                                    <th class="detail">Nama</th>
+                                    <th class="detail">Qty</th>
+                                    <th class="detail">Harga</th>
+                                    <th class="detail">Disc</th>
+                                    <th class="detail">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+        $arr_detail = $this->get_data_sph_detail($row->SphId);
+        foreach($arr_detail as $row_data){
+            $arr_varian = json_decode($row_data->SphDetailVarian);
+            $arr_badge = "";
+            $arr_no = 0;
+            foreach($arr_varian as $varian){
+                $arr_badge .= '<span class="badge badge-sm badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                $arr_no++;
+            }
+            $detail[] = array(
+                        "id" => $row_data->ProdukId,  
+                        "produkid" => $row_data->ProdukId, 
+                        "satuan_id"=> ($row_data->SphDetailSatuanId == 0 ? "" : $row_data->SphDetailSatuanId),
+                        "satuan_text"=>$row_data->SphDetailSatuanText,  
+                        "price"=>$row_data->SphDetailPrice,
+                        "varian"=> JSON_DECODE($row_data->SphDetailVarian,true),
+                        "total"=> $row_data->SphDetailTotal,
+                        "disc"=> $row_data->SphDetailDisc,
+                        "qty"=> $row_data->SphDetailQty,
+                        "text"=> $row_data->SphDetailText,
+                        "group"=> $row_data->SphDetailGroup,
+                        "type"=> $row_data->SphDetailType,
+                        "image_url"=> $modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,true)
+                    );
+
+            $detailhtml .= ' <tr>
+                    <td class="detail">
+                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,true).'" alt="Gambar" class="image-produk">
+                    </td>
+                    <td class="detail">
+                        <span class="text-head-3">'.$row_data->SphDetailText.'</span><br>
+                        <span class="text-detail-2 text-truncate">'.$row_data->SphDetailGroup.'</span> 
+                        <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
+                    </td>
+                    <td class="detail">'.number_format($row_data->SphDetailQty, 2, ',', '.').' '.$row_data->SphDetailSatuanText.'</td>
+                    <td class="detail">Rp. '.number_format($row_data->SphDetailPrice, 0, ',', '.').'</td>
+                    <td class="detail">Rp. '.number_format($row_data->SphDetailDisc, 0, ',', '.').'</td>
+                    <td class="detail">Rp. '.number_format($row_data->SphDetailTotal, 0, ',', '.').'</td>
+                </tr> ';
+        };
+        $detailhtml .= '
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="bg-light" colspan="6">
+                    <div class="d-flex m-1 gap-2 align-items-center justify-content-end pe-4"> 
+                        <span class="text-detail-2">Sub Total:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->SphSubTotal,0,',','.').'</span>  
+                        <div class="divider-horizontal"></div>
+                        <span class="text-detail-2">Disc Item:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->SphDiscItemTotal,0,',','.').'</span>   
+                        <div class="divider-horizontal"></div>
+                        <span class="text-detail-2">Disc Total:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->SphDiscTotal,0,',','.').'</span>   
+                        <div class="divider-horizontal"></div>
+                        <span class="text-detail-2">Pengiriman:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->SphDeliveryTotal,0,',','.').'</span> 
+                        <div class="divider-horizontal"></div>
+                        <span class="text-detail-2">Grand Total:</span>
+                        <span class="text-head-2">Rp.'.number_format($row->SphGrandTotal,0,',','.').'</span> 
+                    </div>
+                </th>
+            </tr> 
+        </tfoot>
+        </table>';
+
+        return $detailhtml;
+
+    } 
+    function get_data_forward_penawaran($type = 0,$ref = 0){ 
+ 
+        if($type == "Survey"){
+            $builder = $this->db->table("survey");
+            $builder->where('SurveyId',$ref); 
+            $queryref = $builder->get()->getRow();  
+            if($queryref){
+                return ' <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari survey">
+                            <i class="fa-solid fa-street-view text-success"></i>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="penawaran_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SurveyId.'\',\'Penawaran\')">'.$queryref->SurveyCode.'</a>
+                        </div>';  
+            }
+        } 
+        if($type == "Sample"){
+            $builder = $this->db->table("sample");
+            $builder->where('SampleId',$ref); 
+            $queryref = $builder->get()->getRow();  
+            if($queryref){
+                return ' <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Survey">
+                            <i class="fa-solid fa-hand-holding-droplet text-success"></i>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="penawaran_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SampleId.'\',\'Penawaran\')">'.$queryref->SampleCode.'</a>
+                        </div>'; 
+            }
+        } 
+        return '<div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Tidak ada referensi"> 
+            <a class="text-detail-3 pointer text-decoration-underline text-secondary">Tidak ada referensi</a>
+        </div>'; 
+    }
+    function get_data_return_penawaran($id,$project = 0,$status = 0){ 
+        //check Sample
+        $builder = $this->db->table("sample");
+        $builder->select('*');
+        $builder->where('SampleRef',$id); 
+        $builder->where('SampleRefType',"Penawaran");  
+        $builder->orderBy('SampleId', 'DESC'); 
+        $queryref = $builder->get()->getRow();  
+        if($queryref){
+            return '  
+                    <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data diteruskan ke sample barang">
+                        <i class="fa-solid fa-share-from-square text-success"></i>
+                        <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="survey_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SampleId.'\',\'Penawaran\')">'.$queryref->SampleCode.'</a>
+                    </div> 
+                '; 
+        }else{   
+            // INVOICE
+            $builder = $this->db->table("invoice");
+            $builder->select('*');
+            $builder->where('InvRef',$id); 
+            $builder->where('InvRefType',"Sample");  
+            $builder->orderby('SurveyId', 'DESC'); 
+            $queryref = $builder->get()->getRow();   
+            if($queryref){
+                return '   
+                    <div class="text-head-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data diteruskan ke invoice">
+                        <i class="fa-solid fa-share-from-square text-success"></i>
+                        <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="survey_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->InvId.'\',\'Invoice\')">'.$queryref->InvCode.'</a>
+                    </div> 
+                ';
+            }else{ 
+                if($status == 3){
+                    return ' 
+                    <div class="text-detail-3 pt-2">
+                        <i class="fa-solid fa-share-from-square"></i> 
+                        <span class="text-detail-3 text-decoration-none">Data tidak diteruskan</span> 
+                    </div>';  
+                }else{ 
+                    return ' 
+                    <div class="text-detail-3 pt-2">
+                        <i class="fa-solid fa-share-from-square text-primary"></i> 
+                        <a class="text-detail-3 pointer text-decoration-underline text-primary" data-bs-toggle="dropdown" aria-expanded="false">Teruskan data</a>
+                        <ul class="dropdown-menu shadow drop-status "  data-bs-toggle="tooltip" data-bs-title="teruskan data" > 
+                            <li>
+                                <a class="text-detail-3 dropdown-item m-0 px-2" onclick="survey_return_add_click(\''.$project.'\',this,\''.$id.'\',\'Sample\')">Sample</a>
+                            </li> 
+                            <li>
+                                <a class="text-detail-3 dropdown-item m-0 px-2" onclick="survey_return_add_click(\''.$project.'\',this,\''.$id.'\',\'Invoice\')">Invoice</a>
+                            </li>  
+                        </ul> 
+                    </div>';  
+                }
+            } 
+        }  
+    }
+    
+    function get_data_sph($id){  
+        $builder = $this->db->table("penawaran");  
+        $builder->select("*, CASE 
+        WHEN SphRefType = '-' THEN 'No data Selected'
+        WHEN SphRefType = 'Survey' THEN (select SurveyCode from survey where SurveyId = SphRef)
+        WHEN SphRefType = 'Sample' THEN (select SampleCode from sample where SampleId = SphRef)
+        END AS 'SphRefCode'"); 
+        $builder->join("project","project.ProjectId = penawaran.ProjectId","left"); 
+        $builder->join("customer","penawaran.CustomerId = customer.CustomerId","left");
+        $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId","left");
+        $builder->where('penawaran.SphId',$id); 
+        $builder->limit(1);
+        return $builder->get()->getRow();   
+    }  
+    function get_data_sph_detail($id){
+        $builder = $this->db->table("penawaran_detail");
+        $builder->where('SphDetailRef',$id); 
+        return $builder->get()->getResult();  
+    }
+    function get_data_sph_ref($refid = null,$data = null){ 
+        if(isset($data["searchTerm"])){
+            $querywhere  = " WHERE (
+                code like '%".$data["searchTerm"]."%' or 
+                CustomerTelp like '%".$data["searchTerm"]."%' or 
+                CustomerName like '%".$data["searchTerm"]."%' or 
+                CustomerAddress like '%".$data["searchTerm"]."%' 
+            ) ";
+        }else{
+            $querywhere = "";
+        }  
+        $querysample = "";
+        $querysurvey = "";
+        if(isset($data["ref"])){
+            if($data["type"]=="Sample"){
+                $querysample  = "or SampleId = ".$data["ref"];
+            } 
+            if($data["type"]=="Survey"){
+                $querysurvey  = "or SurveyId = ".$data["ref"];
+            }  
+        }
+        $builder = $this->db->query('SELECT * FROM 
+        (
+            SELECT 
+                SampleId refid, 
+                SampleCode as code,
+                ProjectId ref,
+                SampleDate date,
+                "Sample" AS type,
+                SampleCustName as CustomerName,
+                SampleCustTelp as CustomerTelp,
+                SampleAddress as CustomerAddress
+                FROM sample where SampleStatus < 2 '.$querysample.'
+            UNION 
+            SELECT 
+                SurveyId refid,
+                SurveyCode,
+                ProjectId ref,
+                SurveyDate date, 
+                "Survey",
+                SurveyCustName,
+                SurveyCustTelp,
+                SurveyAddress
+                FROM survey where SurveyStatus < 2 '.$querysurvey.'
+        ) AS ref_join
+        LEFT JOIN project ON project.ProjectId = ref_join.ref  
+        '. $querywhere ); 
+        return $builder->getResultArray();  
+    }
+
+
+    public function get_next_code_sph($date){
+        //sample SPH/001/01/2024
+        $arr_date = explode("-", $date);
+        $builder = $this->db->table("penawaran");  
+        $builder->select("ifnull(max(SUBSTRING(SphCode,5,3)),0) + 1 as nextcode"); 
+        $builder->where("month(SphDate2)",$arr_date[1]);
+        $builder->where("year(SphDate2)",$arr_date[0]);
+        $data = $builder->get()->getRow(); 
+        switch (strlen($data->nextcode)) {
+            case 1:
+                $nextid = "SPH/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 2:
+                $nextid = "SPH/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 3:
+                $nextid = "SPH/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+            default:
+                $nextid = "SPH/000/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+        } 
+    }
+
+    public function insert_data_sph($data){ 
+        $header = $data["header"]; 
+        $getnextcode = $this->get_next_code_sph($header["SphDate"]);
+        $builder = $this->db->table("penawaran");
+        $builder->insert(array(
+            "SphCode"=>$getnextcode,
+            "SphDate"=>$header["SphDate"],
+            "SphDate2"=>$header["SphDate"],  
+            "ProjectId"=>$header["ProjectId"], 
+            "CustomerId"=>$header["CustomerId"], 
+            "StoreId"=>$header["StoreId"], 
+            "SphRef"=>$header["SphRef"],
+            "SphRefType"=>$header["SphRefType"],
+            "SphAdmin"=>$header["SphAdmin"],
+            "SphCustName"=>$header["SphCustName"],
+            "SphCustTelp"=>$header["SphCustTelp"], 
+            "SphAddress"=>$header["SphAddress"],
+            "TemplateId"=>$header["TemplateId"],
+            "SphDelivery"=>$header["SphDelivery"],
+            "SphSubTotal"=>$header["SphSubTotal"],
+            "SphDiscItemTotal"=>$header["SphDiscItemTotal"],
+            "SphDiscTotal"=>$header["SphDiscTotal"],
+            "SphDeliveryTotal"=>$header["SphDeliveryTotal"],
+            "SphGrandTotal"=>$header["SphGrandTotal"],
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+        ));
+
+        $builder = $this->db->table("penawaran");
+        $builder->select('*');
+        $builder->orderby('SphId', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();  
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["SphDetailRef"] = $query->SphId;
+            $row["SphDetailVarian"] = (isset($row["SphDetailVarian"]) ? json_encode($row["SphDetailVarian"]) : "[]");  
+            $builder = $this->db->table("penawaran_detail");
+            $builder->insert($row); 
+        } 
+ 
+        //update status sample
+        
+        $modelssample = new ProjectsampleModel;
+        if( $header["SphRefType"] == "Sample") $modelssample->update_data_sample_status($header["SphRef"]);  
+        //update status Survey
+        
+        $modelssurvey = new ProjectsurveyModel;
+        if( $header["SphRefType"] == "Survey") $modelssurvey->update_data_survey_status($header["SphRef"]);  
+ 
+        //update status project
+        $builder = $this->db->table("project"); 
+        $builder->set('ProjectStatus', 3);  
+        $builder->where('ProjectId', $header["ProjectId"]); 
+        $builder->update();  
+
+         //create Log action 
+        $activityModel = new ActivityModel();
+        $activityModel->insert(
+            array( 
+                "menu"=>"Penawaran",
+                "type"=>"Add",
+                "name"=>"Data penawaran baru ditambahkan dengan nomor ".$getnextcode,
+                "desc"=> json_encode($data ?? []),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
             )
         ); 
     }

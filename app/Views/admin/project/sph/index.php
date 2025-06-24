@@ -90,6 +90,7 @@
                 <tr> 
                     <th></th>
                     <th>Action</th>
+                    <th>Store</th>
                     <th>Nomor</th>
                     <th>Tanggal</th>
                     <th>Status</th>
@@ -124,7 +125,58 @@
         </div>
     </div> -->
 </div>   
-
+ 
+<!-- Modal PRINT -->
+<div class="modal fade" id="modal-print-penawaran" tabindex="-1" data-id="0" aria-labelledby="modal-print-penawaranLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-print-penawaranLabel">Print Penawaran</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="SphPrintFormat" class="col-sm-4 col-form-label">Ukuran Kertas</label>
+                    <div class="col-sm-8">
+                        <select class="form-select form-select-sm" id="SphPrintFormat" name="SphPrintFormat" placeholder="Pilih Admin" style="width:100%">
+                            <option id="1" selected>A4</option>
+                        </select>  
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="SphPrintImage" class="col-sm-4 col-form-label">gunakan gambar item</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="SphPrintImage" id="SphPrintImage1" value="0">
+                            <label class="text-detail" for="SphPrintImage1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="SphPrintImage" id="SphPrintImage2" value="1" checked>
+                            <label class="text-detail" for="SphPrintImage2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="SphPrintTotal" class="col-sm-4 col-form-label">gunakan grand total</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="SphPrintTotal" id="SphPrintTotal1" value="0">
+                            <label class="text-detail" for="SphPrintTotal1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="SphPrintTotal" id="SphPrintTotal2" value="1" checked>
+                            <label class="text-detail" for="SphPrintTotal2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btn-print-sph">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var xhr_load_project; 
     var filter_status_select = []
@@ -320,7 +372,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[3, "asc"]],
+        "order": [[4, "asc"]],
         "processing": true,
         "serverSide": true, 
         "ajax": {
@@ -334,16 +386,17 @@
             }
         }, 
         "initComplete": function(settings, json) {
-            $('[data-bs-toggle="tooltip"]').tooltip();
+            tooltiprenew();
         },
         "columns": [ 
             { data: null ,orderable: false,width: "20px",className:"p-0 ps-2",
                 render: function(data, type, row) {
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
-            }, 
+            },  
             { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
-            { data: "code",orderable: false , className:"align-top", width: "150px"},
+            { data: "store", className:"align-top" , width: "100px"}, 
+            { data: "code", className:"align-top", width: "100px"}, 
             { data: "date", className:"align-top"}, 
             { data: "status" , className:"align-top"}, 
             { data: "admin" , className:"align-top"}, 
@@ -362,311 +415,109 @@
     }); 
 
     table.on('draw.dt', function() { 
-        var info = table.page.info();
-        console.log(info);
-       
+        var info = table.page.info(); 
         if (info.page + 1 > info.pages && info.pages > 0) {
             table.page('last').draw('page');
         }
     });
     table.on('click', '.btn-detail-item', function() {
         var tr = $(this).closest('tr');
-        tr.toggleClass('tr-child');
+        tr.toggleClass('tr-child'); 
         var row = table.row(tr);
         var data = row.data();
 
         // Tampilkan data nested
         if (row.child.isShown()) {
-            row.child.hide(); 
+            $(tr).next().find('.view-detail').slideUp(500, function() {
+                row.child.hide();
+            });  
             $(this).find('i').removeClass('fa-rotate-90');  
         } else {  
             $(this).find('i').addClass('fa-rotate-90');  
-            var childRow = row.child(format_item(data)).show(); 
+            var childRow = row.child(format(data)).show();  
             $(tr).next().addClass('child-row');
             $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
-            $(tr).find('td').addClass('no-border');
+            $(tr).next().find('.view-detail').slideDown(500);
+            $(tr).next().find('td').addClass('no-border');
+            
         } 
     });
 
-    function format_item(data) {
-        var detailitem = data.detail; 
-        
-        var tr = $(this).closest('tr'); 
-        var tablecustom = $("<table class='table detail-item'>");
-        var theadcustom = $("<thead>");
-        var tbodycustom = $("<tbody>");
-        var tfootcustom = $("<tfoot>");
-
-        // Buat header tabel
-        var headercustom = $("<tr>"); 
-        headercustom.append($("<th class='detail'>").text("Gambar")); 
-        headercustom.append($("<th class='detail'>").text("Nama")); 
-        headercustom.append($("<th class='detail'>").text("Qty"));
-        headercustom.append($("<th class='detail'>").text("Harga"));
-        headercustom.append($("<th class='detail'>").text("Disc"));
-        headercustom.append($("<th class='detail'>").text("Total"));  
-        theadcustom.append(headercustom);
-        // Buat baris tabel  
-        let last_group_abjad = 65;
-        let last_group_no = 1;
-        for(var i = 0; i < detailitem.length;i++){  
-            if(detailitem[i]["type"] == "category"){ 
-                var trcustom = $("<tr>");  
-                trcustom.append($("<td class='detail' colspan='6'>").html(`<span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${detailitem[i]["text"]}</span>`));
-                tbodycustom.append(trcustom);
-                last_group_abjad++;
-            }
-            if(detailitem[i]["type"] == "product"){ 
-                var trcustom = $("<tr>");  
-                trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["image_url"]  + "' alt='Gambar' class='image-produk'>"));
-
-                var varian = `<span class="text-head-3">${detailitem[i]["text"]}</span><br>
-                            <span class="text-detail-2 text-truncate">${detailitem[i]["group"]}</span> 
-                            <div class="d-flex gap-1 flex-wrap">`;
-                for(var j = 0; detailitem[i]["varian"].length > j;j++){
-                    varian += `<span class="badge badge-${j % 5}">${detailitem[i]["varian"][j]["varian"] + ": " + detailitem[i]["varian"][j]["value"]}</span>`; 
-                }
-                varian +=  '</div>'; 
-                trcustom.append($("<td class='detail'>").html(varian));
-                trcustom.append($("<td class='detail'>").text(detailitem[i]["qty"] + " " + detailitem[i]["satuan_text"]));
-                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["price"])));
-                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["disc"])));
-                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["total"])));  
-                tbodycustom.append(trcustom);
-            }
-        }
-
-        // Buat footer tabel
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail px-2'>").text("Sub Total")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphSubTotal"]))); 
-        tfootcustom.append(footercustom);
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail'>").text("Disc Item")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphDiscItemTotal"]))); 
-        tfootcustom.append(footercustom);
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail'>").text("Disc Total")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphDiscTotal"]))); 
-        tfootcustom.append(footercustom);
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail'>").text("Pengiriman")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphDeliveryTotal"]))); 
-        tfootcustom.append(footercustom);
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail'>").text("Grand Total")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.penawaran["SphGrandTotal"]))); 
-        tfootcustom.append(footercustom);
-
-        // Gabungkan tabel
-        tablecustom.append(theadcustom);
-        tablecustom.append(tbodycustom);
-        tablecustom.append(tfootcustom);
-
-        
-        var viewcustom = $("<div class='view-detail'>");
-        viewcustom.append('<div class="text-head-2 py-2"><i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</div>');
-        viewcustom.append(tablecustom);
-        return viewcustom; 
-    }
     function format(data) {
-        var detailitem = data.detail;
-        
-        // var tr = $(this).closest('tr');
-
-        // var tablecustom = $("<table class='table'>");
-        // var theadcustom = $("<thead>");
-        // var tbodycustom = $("<tbody>");
-
-        // // Buat header tabel
-        // var headercustom = $("<tr>"); 
-        // headercustom.append($("<th class='detail'>").text("Gambar"));
-        // $.each(detailitem[0]["ProdukDetailVarian"], function(key, value) {   
-        //     headercustom.append($("<th class='detail'>").text(key)); 
-        // });    
-        // headercustom.append($("<th class='detail'>").text("Berat"));
-        // headercustom.append($("<th class='detail'>").text("Satuan"));
-        // headercustom.append($("<th class='detail'>").text("isi /M2"));
-        // headercustom.append($("<th class='detail'>").text("Harga Beli"));
-        // headercustom.append($("<th class='detail'>").text("Harga Jual")); 
-        // headercustom.append($("<th class='detail'>").text("Action").attr("width","100px")); 
-        // theadcustom.append(headercustom);
-        // // Buat baris tabel 
-        // for(var i = 0; i < detailitem.length;i++){ 
-        //     var trcustom = $("<tr>"); 
-            
-        //     trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["ProdukDetailImage"]  + "' alt='Gambar' class='image-produk'>"));
-        //     $.each(detailitem[i]["ProdukDetailVarian"], function(key, value) {  
-        //         trcustom.append($("<td class='detail'>").text(value));
-        //     });     
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailBerat"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailSatuanText"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailPcsM2"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaBeli"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaJual"]));
-        //     trcustom.append($("<td class='detail'>").html(`
-        //     <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-pen-to-square"></i></span>`));
-        //     tbodycustom.append(trcustom);
-        // }
-
-        // // Gabungkan tabel
-        // tablecustom.append(theadcustom);
-        // tablecustom.append(tbodycustom);
-
-        return detailitem; 
+        return data.detail;  
+    } 
+ 
+    tooltiprenew = function(){
+         // Hapus tooltip sebelumnya
+        var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerListOld.map(function (tooltipTriggerEl) {
+            var tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+            if (tooltip) {
+                tooltip.dispose();
+            }
+        });
+        $(".tooltip").remove(); 
+        // Buat tooltip baru
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+            if (tooltipTriggerEl.innerText?.includes('top')) {
+                tooltip.enable();
+            }
+            return tooltip;
+        });
     }
 
-
-    var isProcessingSurveyEdit = [];
-    edit_project_Survey = function(ref,id,el){ 
-          // INSERT LOADER BUTTON
-          if (isProcessingSurveyEdit[id]) {
-            console.log("project sph cancel load");
+    var isProcessingSph;
+    add_click = function(el){
+        if (isProcessingSph) {
+            console.log("project survey cancel load");
             return;
-        }  
-        isProcessingSurveyEdit[id] = true; 
+        }   
+        isProcessingSph = true; 
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/edit-project-survey/" + id, 
+            url: "<?= base_url() ?>message/add-penawaran", 
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-edit-survey").modal("show"); 
-                $("#modal-edit-survey").data("menu","survey"); 
+                $("#modal-add-penawaran").modal("show"); 
+                $("#modal-add-penawaran").data("menu","Penawaran");  
 
-                isProcessingSurveyEdit[id] = false;
+                isProcessingSph = false;
                 $(el).html(old_text); 
+                tooltiprenew();
             },
             error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyEdit[id] = false;
+                isProcessingSph = false;
                 $(el).html(old_text); 
 
                 Swal.fire({
                     icon: 'error',
                     text: xhr["responseJSON"]['message'], 
                     confirmButtonColor: "#3085d6", 
-                });
+                }); 
+                tooltiprenew();
             }
         });
-    };  
-    print_project_Survey = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/survey/") ?>' + id, '_blank');
-    };
-    var isProcessingSurveyFinish = [];
+    }
+    print_sph = function(id,el,ref,type = 1){  
+        $("#modal-print-penawaran").modal("show");
+        $("#modal-print-penawaran").data("id",id)
+       // window.open('<?= base_url("print/project/sph/") ?>' + id + "/" + type, '_blank'); 
+    }
+    $("#btn-print-sph").click(function(i){ 
+        $.redirect('<?= base_url("print/project/sph/") ?>' +  $("#modal-print-penawaran").data("id"),  {
+            kertas: $("#SphPrintFormat").val(),
+            image: $('input[name="SphPrintImage"]:checked').val(),
+            total: $('input[name="SphPrintTotal"]:checked').val(),
+        },
+        "GET",'_blank');
+        $("#modal-print-penawaran").modal("hide"); 
+    }); 
     
-    var isProcessingSurveyDelete = [];
-    delete_project_Survey = function(ref,id,el){ 
-         // INSERT LOADER BUTTON
-        if (isProcessingSurveyDelete[id]) {
-            return;
-        }  
-        isProcessingSurveyDelete[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: "Anda yakin ingin menghapus survey ini...???",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Yakin Hapus!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    dataType: "json",
-                    method: "POST",
-                    url: "<?= base_url() ?>action/delete-data-survey/" + id, 
-                    success: function(data) { 
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
-                            icon: "success",
-                            confirmButtonColor: "#3085d6",
-                        });  
-                        loader_datatable()
-                    }, 
-                });
-            }
-            isProcessingSurveyDelete[id] = false;
-            $(el).html(old_text); 
-        });
-    };
-    add_project_survey_finish = function(ref,id,el){
-        if (isProcessingSurveyFinish[id]) {
-            console.log("project survey cancel load");
-            return;
-        }  
-
-        isProcessingSurveyFinish[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        $.ajax({  
-            method: "POST",
-            url: "<?= base_url() ?>message/add-project-survey-finish/" + id, 
-            success: function(data) {  
-                $("#modal-message").html(data);
-                $("#modal-finish-survey").modal("show"); 
-                $("#modal-finish-survey").data("menu","survey"); 
-
-                isProcessingSurveyFinish[id] = false;
-                $(el).html(old_text); 
-            },
-            error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyFinish[id] = false;
-                $(el).html(old_text); 
-
-                Swal.fire({
-                    icon: 'error',
-                    text: xhr["responseJSON"]['message'], 
-                    confirmButtonColor: "#3085d6", 
-                });
-            }
-        });
-    }
-
-    var isProcessingSurveyFinishEdit = [];
-    edit_project_Survey_finish = function(ref,id,el){
-        if (isProcessingSurveyFinishEdit[id]) {
-            console.log("project survey cancel load");
-            return;
-        }  
-        isProcessingSurveyFinishEdit[id] = true; 
-        let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
-
-        $.ajax({  
-            method: "POST",
-            url: "<?= base_url() ?>message/edit-project-survey-finish/" + id, 
-            success: function(data) {  
-                $("#modal-message").html(data);
-                $("#modal-finish-survey").modal("show"); 
-                $("#modal-finish-survey").data("menu","survey"); 
-
-                isProcessingSurveyFinishEdit[id] = false;
-                $(el).html(old_text); 
-            },
-            error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyFinishEdit[id] = false;
-                $(el).html(old_text); 
-
-                Swal.fire({
-                    icon: 'error',
-                    text: xhr["responseJSON"]['message'], 
-                    confirmButtonColor: "#3085d6", 
-                });
-            }
-        });
-    }
 </script>
 
 

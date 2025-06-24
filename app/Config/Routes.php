@@ -174,6 +174,7 @@ $routes->post('/select2/get-data-produk-satuan', 'SelectController::produk_satua
 $routes->post('/select2/get-data-vendor-kategori', 'SelectController::vendor_category', ['filter' => 'login']); 
 $routes->post('/select2/get-data-users', 'SelectController::users', ['filter' => 'login']);
 $routes->post('/select2/get-data-template-footer/(:any)', 'SelectController::template_footer/$1', ['filter' => 'login']); 
+$routes->post('/select2/get-data-ref-sph', 'SelectController::ref_sph', ['filter' => 'login']);
 $routes->post('/select2/get-data-ref-vendor/(:num)', 'SelectController::ref_project_vendor/$1', ['filter' => 'login']);
 $routes->post('/select2/get-data-ref-sph/(:num)', 'SelectController::ref_project_sph/$1', ['filter' => 'login']);
 $routes->post('/select2/get-data-ref-invoice/(:num)', 'SelectController::ref_project_invoice/$1', ['filter' => 'login']);
@@ -218,6 +219,7 @@ $routes->post('/message/add-project-sample/(:num)', 'MessageController::project_
 $routes->post('/message/edit-project-sample/(:num)', 'MessageController::project_sample_edit/$1', ['filter' => 'login']); 
 
 $routes->post('/message/add-project-sph/(:num)', 'MessageController::project_sph_add/$1', ['filter' => 'login']);  
+$routes->post('/message/add-penawaran', 'MessageController::penawaran_add', ['filter' => 'login']);  
 $routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);  
 
 $routes->post('/message/add-project-invoice/(:num)', 'MessageController::project_invoice_add/$1', ['filter' => 'login']);  

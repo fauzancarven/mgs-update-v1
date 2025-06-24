@@ -415,6 +415,10 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/sph/edit_project_sph.php',$data)); 
     }
+    public function penawaran_add(){ 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/sph/add_sph.php',$data)); 
+    }
     
     public function project_po_add($id)
     {     
