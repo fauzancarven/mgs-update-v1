@@ -12,6 +12,7 @@ use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukvarianModel;
 use App\Models\ProjectModel;
+use App\Models\ProjectsphModel;
 use App\Models\PaymentModel;
 use App\Models\ProjectsurveyModel;
 use Myth\Auth\Entities\User;  
@@ -418,6 +419,40 @@ class MessageController extends BaseController
     public function penawaran_add(){ 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/sph/add_sph.php',$data)); 
+    }
+    public function penawaran_edit($id)
+    {     
+        $models = new ProjectsphModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
+
+        $project = $models->get_data_sph($id); 
+        $arr_detail = $models->get_data_sph_detail($id);  
+        $detail = array();
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                        "satuan_text"=>$row->SphDetailSatuanText,  
+                        "price"=>$row->SphDetailPrice,
+                        "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                        "total"=> $row->SphDetailTotal,
+                        "disc"=> $row->SphDetailDisc,
+                        "qty"=> $row->SphDetailQty,
+                        "text"=> $row->SphDetailText,
+                        "group"=> $row->SphDetailGroup,
+                        "type"=> $row->SphDetailType,
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->SphDetailVarian,true)
+                    );
+        };
+        $data["project"] = $project; 
+        $data["detail"] =  $detail; 
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/sph/edit_sph.php',$data)); 
     }
     
     public function project_po_add($id)

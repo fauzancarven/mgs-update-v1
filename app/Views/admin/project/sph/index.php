@@ -372,7 +372,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[4, "asc"]],
+        "order": [[4, "desc"]],
         "processing": true,
         "serverSide": true, 
         "ajax": {
@@ -380,6 +380,7 @@
             "type": "POST", 
             "data": function(data){ 
                 data["search"] =  $("#searchdatasph").val();
+                data["store"] = filter_store_select;
                 data["filter"] = filter_status_select;
                 data["datestart"] = $("#searchdatadate").data("start");
                 data["dateend"] = $("#searchdatadate").data("end");
@@ -471,7 +472,7 @@
     var isProcessingSph;
     add_click = function(el){
         if (isProcessingSph) {
-            console.log("project survey cancel load");
+            console.log("project Penawaran cancel load");
             return;
         }   
         isProcessingSph = true; 
@@ -517,6 +518,84 @@
         "GET",'_blank');
         $("#modal-print-penawaran").modal("hide"); 
     }); 
+
+    var isProcessingSphDelete = [];
+    delete_sph = function(id,el,ref){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingSphDelete[id]) {
+            return;
+        }  
+        isProcessingSphDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        tooltiprenew();
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin membatalkan penawaran ini.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-penawaran/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Success!",
+                            text: "Data penawaran berhasil di batalkan.",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });  
+                        table.ajax.reload(null, false);
+                    }, 
+                });
+            }
+            isProcessingSphDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
+
+    var isProcessingSphEdit = [];
+    edit_sph = function(id,el,ref){
+        if (isProcessingSphEdit[id]) {
+            console.log("project Penawaran cancel load");
+            return;
+        }   
+        isProcessingSphEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-penawaran/" + id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-penawaran").modal("show"); 
+                $("#modal-edit-penawaran").data("menu","Penawaran");  
+
+                isProcessingSphEdit[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingSphEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                }); 
+                tooltiprenew();
+            }
+        });
+    }
+    
     
 </script>
 

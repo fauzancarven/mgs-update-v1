@@ -37,6 +37,10 @@ class ProjectsphModel extends Model
             $builder->whereIn("SphStatus",$filter["filter"]); 
             $filterdata = 1;
         } 
+        if(isset($filter["store"])){ 
+            $builder->whereIn("penawaran.StoreId",$filter["store"]); 
+            $filterdata = 1;
+        } 
         if($filter["search"]){ 
             $builder->groupStart(); 
             $builder->like("username",$filter["search"]); 
@@ -880,6 +884,7 @@ class ProjectsphModel extends Model
         WHEN SphRefType = 'Sample' THEN (select SampleCode from sample where SampleId = SphRef)
         END AS 'SphRefCode'"); 
         $builder->join("project","project.ProjectId = penawaran.ProjectId","left"); 
+        $builder->join("store","store.StoreId = penawaran.StoreId","left"); 
         $builder->join("customer","penawaran.CustomerId = customer.CustomerId","left");
         $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('penawaran.SphId',$id); 
@@ -939,10 +944,8 @@ class ProjectsphModel extends Model
         LEFT JOIN project ON project.ProjectId = ref_join.ref  
         '. $querywhere ); 
         return $builder->getResultArray();  
-    }
-
-
-    public function get_next_code_sph($date){
+    } 
+    function get_next_code_sph($date){
         //sample SPH/001/01/2024
         $arr_date = explode("-", $date);
         $builder = $this->db->table("penawaran");  
@@ -964,9 +967,8 @@ class ProjectsphModel extends Model
                 $nextid = "SPH/000/".$arr_date[1]."/".$arr_date[0];
                 return $nextid;  
         } 
-    }
-
-    public function insert_data_sph($data){ 
+    } 
+    function insert_data_sph($data){ 
         $header = $data["header"]; 
         $getnextcode = $this->get_next_code_sph($header["SphDate"]);
         $builder = $this->db->table("penawaran");
@@ -1034,5 +1036,16 @@ class ProjectsphModel extends Model
                 "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
             )
         ); 
+
     }
+    function delete_data_sph($id){
+        $builder = $this->db->table("penawaran");
+        $builder->set('SphStatus', 3); 
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
+        $builder->where('SphId',$id);  
+        $builder->update();  
+
+        return JSON_ENCODE(array("status"=>true));
+    }  
 }

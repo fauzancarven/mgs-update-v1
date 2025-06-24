@@ -220,7 +220,8 @@ $routes->post('/message/edit-project-sample/(:num)', 'MessageController::project
 
 $routes->post('/message/add-project-sph/(:num)', 'MessageController::project_sph_add/$1', ['filter' => 'login']);  
 $routes->post('/message/add-penawaran', 'MessageController::penawaran_add', ['filter' => 'login']);  
-$routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);
+$routes->post('/message/edit-penawaran/(:num)', 'MessageController::penawaran_edit/$1', ['filter' => 'login']);   
 
 $routes->post('/message/add-project-invoice/(:num)', 'MessageController::project_invoice_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-invoice/(:num)', 'MessageController::project_invoice_edit/$1', ['filter' => 'login']);

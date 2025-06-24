@@ -333,9 +333,10 @@ class ActionController extends BaseController
             echo json_encode(array("status"=>true));
         }
     }
+     
     public function penawaran_delete($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectsphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->delete_data_sph($id);  

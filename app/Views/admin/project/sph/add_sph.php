@@ -446,6 +446,19 @@
 
 <div id="modal-optional"></div>
 <script>    
+    togglecustom = function(cls,el){
+        if($("." + cls).hasClass("show")){
+            $("." + cls).removeClass("show")
+            $("." + cls).slideUp()
+            $(el).find("i").addClass("fa-rotate-180")
+            $(el).find("span").html("Tampilkan")
+        }else{
+            $("." + cls).addClass("show")
+            $("." + cls).slideDown()
+            $(el).find("i").removeClass("fa-rotate-180")
+            $(el).find("span").html("Sembunyikan")
+        }
+    }
     $('#SphDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
