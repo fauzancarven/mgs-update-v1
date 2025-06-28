@@ -225,8 +225,8 @@
     <!-- <script src=" https://cdnjs.cloudflare.com/ajax/libs/quill/1.2.2/quill.min.js"></script>  -->
     <script src="<?= base_url(); ?>assets/js/quill.js">  </script>  
     <!-- <script src="<?= base_url(); ?>assets/quill-image-resize-module-master/image-resize.min.js">  </script>   -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script> 
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>  
+    <script src="<?= base_url()?>assets/js/tableCustom.js?v=1.1"></script> 
 
     <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 
     
@@ -264,7 +264,24 @@
             
             toast.toast('show');
         }
+
+        const BASEURL =  "<?= base_url() ?>";
+        function select2OptionFormat(option) {
+            var originalOption = option.element;
+            if ($(originalOption).data('html')) {
+                return $(originalOption).data('html');
+            }          
+            return option.text;
+        }
+        const rupiah = (number)=>{
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                maximumFractionDigits: 0
+            }).format(number);
+        }
     </script> 
+
     <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container"></div>
     <div class="container-scroller" style="background: #f5f7ff;">  
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-lg-flex d-none flex-row">
@@ -591,14 +608,7 @@
         </div> 
     </div>
 
-    <script>
-        function select2OptionFormat(option) {
-            var originalOption = option.element;
-            if ($(originalOption).data('html')) {
-                return $(originalOption).data('html');
-            }          
-            return option.text;
-        }
+    <script> 
         $(".navbar-toggler").click(function(){ 
             $.ajax({ 
                 method: "POST",
@@ -612,13 +622,6 @@
                 }
             }); 
         });
-        const rupiah = (number)=>{
-            return new Intl.NumberFormat("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                maximumFractionDigits: 0
-            }).format(number);
-        }
     </script>
 
 

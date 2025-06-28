@@ -11,6 +11,28 @@
         </div>
         <!-- BAGIAN FILTER -->
         <div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">   
+            
+            <div class="input-group">  
+                <input class="form-control form-control-sm input-form combo" id="storedatafilter" placeholder="Toko" value="" type="text" data-start="" data-end="" readonly style="background: white;">
+                <i class="fa-solid fa-store"></i> 
+                <i class="fa-solid fa-caret-down"></i>
+                <div class="filter-data left" style="width: 18rem;" for="storedatafilter">
+                    <ul class="list-group w-75" > 
+                        <?php
+                        foreach($store as $row){
+                            echo '
+                            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input select store" type="checkbox" data-group="store" data-value="'.$row->StoreId.'" value="'.$row->StoreId.'" id="store-'.$row->StoreId.'">
+                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="store-'.$row->StoreId.'">'.$row->StoreCode.'</label>
+                                </div> 
+                            </li>';
+                        }
+                        ?> 
+                       
+                    </ul>
+                </div>
+            </div>   
             <div class="input-group d-sm-flex d-none">  
                 <input class="form-control form-control-sm input-form" id="searchdatadate" placeholder="Tanggal" value="" type="text" data-start="" data-end="" readonly style="background: white;">
                 <i class="fa-solid fa-calendar-days"></i> 
@@ -66,6 +88,7 @@
                 <tr> 
                     <th></th>
                     <th>Action</th>
+                    <th>Store</th>
                     <th>Kode</th>
                     <th>Tanggal</th>
                     <th>Status</th>
@@ -106,6 +129,7 @@
 <script>
     var xhr_load_project; 
     var filter_status_select = []
+    var filter_store_select = []
     function loader_datatable(){
         // if (xhr_load_project) {
         //     xhr_load_project.abort();
@@ -263,6 +287,19 @@
         //loader_datatable(); 
         table.ajax.reload(null, false); 
     }) 
+    $('.form-check-input.select.store').change(function() { 
+        if ($(this).is(':checked')) {
+            filter_store_select.push($(this).data("value")) 
+        }else{  
+            var index = filter_store_select.indexOf($(this).data("value"));
+            if (index !== -1) {
+                filter_store_select.splice(index, 1);
+            } 
+        } 
+        (filter_store_select.length === 0 ?  $("#storedatafilter").val("") : $("#storedatafilter").val(String(filter_store_select.length) + " toko dipilih")); 
+        //loader_datatable(); 
+        table.ajax.reload(null, false);
+    }) 
     var paging = 1;
     var table; 
     
@@ -283,7 +320,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
-        "order": [[3, "desc"]],
+        "order": [[4, "desc"]],
         scrollX: true,
         "processing": true,
         "serverSide": true, 
@@ -292,6 +329,7 @@
             "type": "POST", 
             "data": function(data){ 
                 data["search"] =  $("#searchdatainvoice").val();
+                data["store"] = filter_store_select;
                 data["filter"] = filter_status_select;
                 data["datestart"] = $("#searchdatadate").data("start");
                 data["dateend"] = $("#searchdatadate").data("end");
@@ -306,8 +344,9 @@
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
             }, 
-            { data: "action" ,orderable: false , className:"action-td",width: "100px"}, 
-            { data: "code",orderable: false , className:"align-top", width: "150px"},
+            { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
+            { data: "store", className:"align-top" , width: "150px"}, 
+            { data: "code",orderable: false , className:"align-top", width: "100px"},
             { data: "date", className:"align-top"}, 
             { data: "status" , className:"align-top"}, 
             { data: "admin" , className:"align-top"},  
@@ -328,32 +367,36 @@
     }); 
 
     table.on('draw.dt', function() { 
-        var info = table.page.info();
-        console.log(info);
-       
+        var info = table.page.info(); 
         if (info.page + 1 > info.pages && info.pages > 0) {
             table.page('last').draw('page');
         }
     });
     table.on('click', '.btn-detail-item', function() {
         var tr = $(this).closest('tr');
-        tr.toggleClass('tr-child');
+        tr.toggleClass('tr-child'); 
         var row = table.row(tr);
         var data = row.data();
 
         // Tampilkan data nested
         if (row.child.isShown()) {
-            row.child.hide(); 
+            $(tr).next().find('.view-detail').slideUp(500, function() {
+                row.child.hide();
+            });  
             $(this).find('i').removeClass('fa-rotate-90');  
         } else {  
             $(this).find('i').addClass('fa-rotate-90');  
-            var childRow = row.child(format_item(data)).show(); 
+            var childRow = row.child(format(data)).show();  
             $(tr).next().addClass('child-row');
             $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
-            $(tr).find('td').addClass('no-border');
+            $(tr).next().find('.view-detail').slideDown(500);
+            $(tr).next().find('td').addClass('no-border');
+            
         } 
     });
-
+    function format(data) {
+        return data.detail;  
+    } 
     function format_item(data) {
         var detailitem = data.detail; 
         
@@ -439,54 +482,28 @@
         viewcustom.append('<div class="text-head-2 py-2"><i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</div>');
         viewcustom.append(tablecustom);
         return viewcustom; 
+    } 
+
+    tooltiprenew = function(){
+         // Hapus tooltip sebelumnya
+        var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerListOld.map(function (tooltipTriggerEl) {
+            var tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+            if (tooltip) {
+                tooltip.dispose();
+            }
+        });
+        $(".tooltip").remove(); 
+        // Buat tooltip baru
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+            if (tooltipTriggerEl.innerText?.includes('top')) {
+                tooltip.enable();
+            }
+            return tooltip;
+        });
     }
-    function format(data) {
-        var detailitem = data.detail;
-        
-        // var tr = $(this).closest('tr');
-
-        // var tablecustom = $("<table class='table'>");
-        // var theadcustom = $("<thead>");
-        // var tbodycustom = $("<tbody>");
-
-        // // Buat header tabel
-        // var headercustom = $("<tr>"); 
-        // headercustom.append($("<th class='detail'>").text("Gambar"));
-        // $.each(detailitem[0]["ProdukDetailVarian"], function(key, value) {   
-        //     headercustom.append($("<th class='detail'>").text(key)); 
-        // });    
-        // headercustom.append($("<th class='detail'>").text("Berat"));
-        // headercustom.append($("<th class='detail'>").text("Satuan"));
-        // headercustom.append($("<th class='detail'>").text("isi /M2"));
-        // headercustom.append($("<th class='detail'>").text("Harga Beli"));
-        // headercustom.append($("<th class='detail'>").text("Harga Jual")); 
-        // headercustom.append($("<th class='detail'>").text("Action").attr("width","100px")); 
-        // theadcustom.append(headercustom);
-        // // Buat baris tabel 
-        // for(var i = 0; i < detailitem.length;i++){ 
-        //     var trcustom = $("<tr>"); 
-            
-        //     trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["ProdukDetailImage"]  + "' alt='Gambar' class='image-produk'>"));
-        //     $.each(detailitem[i]["ProdukDetailVarian"], function(key, value) {  
-        //         trcustom.append($("<td class='detail'>").text(value));
-        //     });     
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailBerat"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailSatuanText"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailPcsM2"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaBeli"]));
-        //     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaJual"]));
-        //     trcustom.append($("<td class='detail'>").html(`
-        //     <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-pen-to-square"></i></span>`));
-        //     tbodycustom.append(trcustom);
-        // }
-
-        // // Gabungkan tabel
-        // tablecustom.append(theadcustom);
-        // tablecustom.append(tbodycustom);
-
-        return detailitem; 
-    }
-
 
     var isProcessingSurveyEdit = [];
     edit_project_Survey = function(ref,id,el){ 

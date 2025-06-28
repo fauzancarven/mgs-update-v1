@@ -91,6 +91,7 @@ $routes->post('/action/update-data-invoice-delivery/(:num)', 'ActionController::
 $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-penawaran/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']);
+$routes->post('/action/update-penawaran/(:num)/(:num)', 'ActionController::penawaran_status/$1/$2', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-invoice', 'ActionController::invoice_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-invoice/(:num)', 'ActionController::invoice_edit/$1', ['filter' => 'login']); 
@@ -151,6 +152,8 @@ $routes->post('/action/edit-data-produk/(:any)', 'ActionController::produk_edit/
 $routes->post('/action/delete-data-produk/(:num)', 'ActionController::produk_delete/$1', ['filter' => 'login']); 
 $routes->post('/action/get-data-produk-new', 'ActionController::produk_get', ['filter' => 'login']);   
 $routes->post('/action/rename-data-produk/(:num)', 'ActionController::produk_rename/$1', ['filter' => 'login']);   
+
+
 
 /**
  * SELECT2

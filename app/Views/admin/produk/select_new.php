@@ -372,7 +372,7 @@
                                             <span class="text-head-2 text-truncate">${ rupiah(($("#modal-select-item").data("type") == "buy" ?  data[i]["price_buy"] :  data[i]["price_sell"]))}</span> 
                                         </div>   
                                     </div>
-                                    <button type="button" class="btn btn-sm btn-primary py-2 my-1" onclick="select_produk_new('${i}')">Pilih Produk</button>
+                                    <button type="button" class="btn btn-sm btn-primary py-2 my-1 btn-select-produk" data-id="${i}" onclick="select_produk_new('${i}')">Pilih Produk</button>
                                 </div> 
                             </div> 
                         </div>   `; 
@@ -420,7 +420,8 @@
             "total": data_item[index]["total"],
             "image_url": data_item[index]["image"],
         }   
-        select_produk(data_select_produk);  
+        //select_produk(data_select_produk);  
+        $(document).trigger("select_produk", data_select_produk);
     }
 
     var isProcessingAdd;

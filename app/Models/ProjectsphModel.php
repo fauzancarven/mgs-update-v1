@@ -80,157 +80,7 @@ class ProjectsphModel extends Model
         $builder->limit($length,$start); 
         $query = $builder->get();  
         
-        foreach($query->getResult() as $row){ 
-           
-
-            // MENGAMBIL DATA REFERENSI
-            $SphRef = '<div class="text-detail-3  pt-2" data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran"><i class="fa-solid fa-flag pe-1"></i> - </div>';
-            if($row->SphRefType == "Survey"){
-                $builder = $this->db->table("survey");
-                $builder->where('SurveyId',$row->SphRef); 
-                $queryref = $builder->get()->getRow();  
-                if($queryref){
-                    $SphRef = ' 
-                    <script>
-                        function penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SurveyId.'(){
-                            $(".icon-project[data-menu=\'survey\'][data-id=\''.$queryref->ProjectId.'\']").trigger("click");
-                            setTimeout(function() {
-                                var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\']");
-                                var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
-                                if (targetElement.length > 0 && contentData.length > 0) {
-                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
-                                    contentData.scrollTop(targetOffset);
-                                }
-                               
-                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\'").addClass("show");
-                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\'").hover(function() {
-                                    setTimeout(function() {
-                                         $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SurveyId.'\'").removeClass("show"); 
-                                    }, 2000); // delay 1 detik
-                                })
-    
-                            }, 500); // delay 1 detik
-                        }
-                    </script> 
-                    <div class="text-detail-3 pt-2"  data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran"><span class="text-detail-3 text-decoration-underline" onclick="penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SurveyId.'()">'.$queryref->SurveyCode.'</span></div>  '; 
-                }
-            } 
-            if($row->SphRefType == "Sample"){
-                $builder = $this->db->table("penawaran");
-                $builder->where('SampleId',$row->SphRef); 
-                $queryref = $builder->get()->getRow();  
-                if($queryref){
-                    $SphRef = ' 
-                    <script>
-                        function penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'(){
-                            $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$queryref->ProjectId.'\']").trigger("click");
-                            setTimeout(function() {
-                                var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\']");
-                                var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
-                                if (targetElement.length > 0 && contentData.length > 0) {
-                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
-                                    contentData.scrollTop(targetOffset);
-                                }
-                               
-                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
-                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
-                                    setTimeout(function() {
-                                         $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
-                                    }, 2000); // delay 1 detik
-                                })
-    
-                            }, 500); // delay 1 detik
-                        }
-                    </script> 
-                    <div class="text-detail-3  pt-2" data-bs-toggle="tooltip" data-bs-title="Referensi dari penawaran">
-                        <i class="fa-solid fa-flag pe-1"></i>
-                        <span class="text-detail-3" onclick="penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">'.$queryref->SampleCode.'</span>
-                    </div>'; 
-                }
-            }
-
-            // Mengambil data diteruskan
-            $builder = $this->db->table("invoice");
-            $builder->select('*');
-            $builder->where('InvRef',$row->SphId); 
-            $builder->where('InvRefType',"Penawaran");  
-            $builder->where('InvStatus <',2);  
-            $builder->orderby('InvId', 'DESC'); 
-            $queryref = $builder->get()->getRow();   
-            if($queryref){
-                $sphforward = ' 
-                    <script>
-                        function penawaran_return_click_'.$queryref->ProjectId.'_'.$queryref->InvId.'(){
-                            $(".icon-project[data-menu=\'invoice\'][data-id=\''.$queryref->ProjectId.'\'").trigger("click");
-                            setTimeout(function() {
-                                var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\']");
-                                var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
-                                if (targetElement.length > 0 && contentData.length > 0) {
-                                    var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
-                                    contentData.scrollTop(targetOffset);
-                                }
-                                
-                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").addClass("show");
-                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").hover(function() {
-                                    setTimeout(function() {
-                                            $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->InvId.'\'").removeClass("show"); 
-                                    }, 2000); // delay 1 detik
-                                })
-
-                            }, 1000); // delay 1 detik
-                        }
-                    </script>
-                    <div class="text-detail-3  pt-1" data-bs-toggle="tooltip" data-bs-title="Diterukan ke Sampel">
-                    <i class="fa-solid fa-share-from-square pe-1"></i>
-                    <span class="text-detail-3 pointer" onclick="penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->InvId.'()">'.$queryref->InvCode.'</span>
-                </div>';  
-            }else{
-                    // Mengambil data diteruskan
-                $builder = $this->db->table("sample");
-                $builder->select('*');
-                $builder->where('SampleRef',$row->SphId); 
-                $builder->where('SampleRefType',"Penawaran");  
-                $builder->where('SampleStatus <',2);  
-                $builder->orderby('SampleId', 'DESC'); 
-                $queryref = $builder->get()->getRow();   
-                if($queryref){
-                    $sphforward = ' 
-                        <script>
-                            function penawaran_return_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'(){
-                                $(".icon-project[data-menu=\'penawaran\'][data-id=\''.$queryref->ProjectId.'\'").trigger("click");
-                                setTimeout(function() {
-                                    var targetElement = $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\']");
-                                    var contentData = $(".content-data[data-id=\''.$queryref->ProjectId.'\']");
-                                    if (targetElement.length > 0 && contentData.length > 0) {
-                                        var targetOffset = targetElement.offset().top - contentData.offset().top + contentData.scrollTop() - 200;
-                                        contentData.scrollTop(targetOffset);
-                                    }
-                                    
-                                    $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").addClass("show");
-                                    $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").hover(function() {
-                                        setTimeout(function() {
-                                                $(".list-project[data-project=\''.$queryref->ProjectId.'\'][data-id=\''.$queryref->SampleId.'\'").removeClass("show"); 
-                                        }, 2000); // delay 1 detik
-                                    })
-
-                                }, 1000); // delay 1 detik
-                            }
-                        </script>
-                        
-                        <div class="text-detail-3  pt-1" data-bs-toggle="tooltip" data-bs-title="Diterukan ke Sampel">
-                            <i class="fa-solid fa-share-from-square pe-1"></i>
-                            <span class="text-detail-3 pointer" onclick="penawaran_ref_click_'.$queryref->ProjectId.'_'.$queryref->SampleId.'()">'.$queryref->SampleCode.'</span>
-                        </div>'; 
-                }else{
-                    $sphforward = '
-                    <div class="text-detail-3 pt-1">
-                        <i class="fa-regular fa-share-from-square pe-1"></i>
-                        <a class="text-detail-2" onclick="add_project_invoice('.$row->ProjectId.',this,'.$row->SphId.',\'penawaran\')">Invoice</a>
-                    </div>'; 
-                }
-            
-            }
-
+        foreach($query->getResult() as $row){  
             $status = "";
             if($row->SphStatus==0){
                 $status .= '
@@ -1024,7 +874,7 @@ class ProjectsphModel extends Model
         $builder->where('ProjectId', $header["ProjectId"]); 
         $builder->update();  
 
-         //create Log action 
+        //create Log action 
         $activityModel = new ActivityModel();
         $activityModel->insert(
             array( 
@@ -1037,6 +887,65 @@ class ProjectsphModel extends Model
             )
         ); 
 
+    } 
+    function update_data_sph($data,$id){ 
+        
+        $dataold = $builder = $this->getWhere(['SphId' => $id], 1)->getRow(); 
+
+
+        $header = $data["header"];  
+        $builder = $this->db->table("penawaran"); 
+        $builder->set('SphDate', $header["SphDate"]);   
+        $builder->set('SphAdmin', $header["SphAdmin"]);  
+        $builder->set('SphRef', $header["SphRef"]);  
+        $builder->set('SphRefType', $header["SphRefType"]);   
+        $builder->set('ProjectId', $header["ProjectId"]); 
+        $builder->set('StoreId', $header["StoreId"]);
+        $builder->set('CustomerId', $header["CustomerId"]); 
+        $builder->set('SphCustName', $header["SphCustName"]); 
+        $builder->set('SphCustTelp', $header["SphCustTelp"]); 
+        $builder->set('SphAddress', $header["SphAddress"]); 
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('SphSubTotal', $header["SphSubTotal"]); 
+        $builder->set('SphDiscItemTotal', $header["SphDiscItemTotal"]); 
+        $builder->set('SphDiscTotal', $header["SphDiscTotal"]); 
+        $builder->set('SphDeliveryTotal', $header["SphDeliveryTotal"]);  
+        $builder->set('SphGrandTotal', $header["SphGrandTotal"]);  
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SphId', $id); 
+        $builder->update(); 
+
+        $builder = $this->db->table("penawaran_detail");
+        $builder->where('SphDetailRef',$id);
+        $builder->delete(); 
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["SphDetailRef"] = $id;
+            $row["SphDetailVarian"] = (isset($row["SphDetailVarian"]) ? json_encode($row["SphDetailVarian"]) : "[]");  
+            $builder = $this->db->table("penawaran_detail");
+            $builder->insert($row); 
+        }   
+        //update status sample 
+        $modelssample = new ProjectsampleModel;
+        if( $header["SphRefType"] == "Sample") $modelssample->update_data_sample_status($header["SphRef"]);  
+        //update status Survey
+        if( $header["SphRefType"] == "Survey") $this->update_data_survey_status($header["SphRef"]);   
+
+        
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Penawaran",
+                "type"=>"Edit",
+                "name"=>"Data Penawaran diubah dengan nomor ".$header["SphCode"],
+                "desc"=> json_encode(array("new"=>$data,"old" => $dataold) ?? []),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+
+            )
+        ); 
     }
     function delete_data_sph($id){
         $builder = $this->db->table("penawaran");
@@ -1045,6 +954,38 @@ class ProjectsphModel extends Model
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
         $builder->where('SphId',$id);  
         $builder->update();  
+
+        return JSON_ENCODE(array("status"=>true));
+    }  
+    function update_status_sph($id,$status){   
+        $dataold = $builder = $this->getWhere(['SphId' => $id], 1)->getRow();  
+
+        $builder = $this->db->table("penawaran"); 
+        $builder->set('SphStatus', $status);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SphId', $id); 
+        $builder->update();   
+
+        $statuslist = array(
+            0 => "New", // kolom action tidak dapat diurutkan
+            1 => "Proses", // kolom action tidak dapat diurutkan
+            2 => "Finish", // kolom name
+            3 => "Cancel", // kolom name 
+        );
+
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"penawaran",
+                "type"=>"Status",
+                "name"=> "Status Data Penawaran diubah dari ".$statuslist[$dataold->SphStatus]." menjadi ".$statuslist[$status] . " dengan nomor ".$dataold->SphCode,
+                "desc"=> json_encode([]),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+            )
+        ); 
 
         return JSON_ENCODE(array("status"=>true));
     }  

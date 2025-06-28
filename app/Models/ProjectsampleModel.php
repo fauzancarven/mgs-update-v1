@@ -84,12 +84,7 @@ class ProjectsampleModel extends Model
         
         $builder->limit($length,$start); 
         $query = $builder->get();  
-        foreach($query->getResult() as $row){ 
-           
-
-            
-
-
+        foreach($query->getResult() as $row){  
             $status = "";
             if($row->SampleStatus==0){
                 $status .= '

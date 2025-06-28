@@ -396,7 +396,7 @@
                 }
             },  
             { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
-            { data: "store", className:"align-top" , width: "100px"}, 
+            { data: "store", className:"align-top" , width: "150px"}, 
             { data: "code", className:"align-top", width: "100px"}, 
             { data: "date", className:"align-top"}, 
             { data: "status" , className:"align-top"}, 
@@ -596,7 +596,40 @@
         });
     }
     
-    
+    var IsUpdateStatus = [];
+    update_status = function(status,id,el){ 
+        if (IsUpdateStatus[id]) {
+            console.log("project penawaran cancel load");
+            return;
+        }  
+
+        IsUpdateStatus[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>action/update-penawaran/" + id +  "/" + status, 
+            success: function(data) {     
+                IsUpdateStatus[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+
+                table.ajax.reload(null, false);
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                IsUpdateStatus[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };  
 </script>
 
 

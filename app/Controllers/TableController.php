@@ -99,6 +99,15 @@ class TableController extends BaseController
         }    
         
     } 
+    public function project_invoice()
+    {   
+        $request = Services::request();
+        $datatable = new ProjectsphModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_table_project_invoice($request->getPost());
+        }    
+        
+    } 
     public function project_invoice_datatable()
     {   
         $request = Services::request();

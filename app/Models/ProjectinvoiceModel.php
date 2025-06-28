@@ -22,7 +22,7 @@ class ProjectinvoiceModel extends Model
         $builder = $this->db->table("invoice");
         $builder->join("project","project.ProjectId = invoice.ProjectId ","left");  
         $builder->join("users","users.id = invoice.InvAdmin ","left"); 
-        $builder->join("store","store.StoreId = project.StoreId","left");  
+        $builder->join("store","store.StoreId = invoice.StoreId","left");  
         if($filter["datestart"]){
             $builder->where("InvDate >=",$filter["datestart"]);
             $builder->where("InvDate <=",$filter["dateend"]); 
@@ -30,9 +30,14 @@ class ProjectinvoiceModel extends Model
 
         //mengambil total semua data
         $builder1 = clone $builder; 
-        $countTotal = $builder1->get()->getNumRows();
+        $countTotal = $builder1->get()->getNumRows(); 
+
         if(isset($filter["filter"])){ 
-            $builder->whereIn("InvStatus",$filter["filter"]); 
+            $builder->whereIn("SphStatus",$filter["filter"]); 
+            $filterdata = 1;
+        } 
+        if(isset($filter["store"])){ 
+            $builder->whereIn("invoice.StoreId",$filter["store"]); 
             $filterdata = 1;
         } 
         if($filter["search"]){ 
@@ -49,14 +54,15 @@ class ProjectinvoiceModel extends Model
         $columns = array(
             0 => null, // kolom action tidak dapat diurutkan
             1 => null, // kolom action tidak dapat diurutkan
-            2 => "InvCode", // kolom name
-            3 => "InvDate", // kolom action tidak dapat diurutkan
-            4 => "InvStatus", // kolom image tidak dapat diurutkan
-            5 => "InvAdmin", // kolom action tidak dapat diurutkan
-            6 => "InvCustName", // kolom action tidak dapat diurutkan
-            7 => null, // kolom action tidak dapat diurutkan
+            2 => "StoreCode", // kolom name
+            3 => "InvCode", // kolom name
+            4 => "InvDate", // kolom action tidak dapat diurutkan
+            5 => "InvStatus", // kolom image tidak dapat diurutkan
+            6 => "InvAdmin", // kolom action tidak dapat diurutkan
+            7 => "InvCustName", // kolom action tidak dapat diurutkan
             8 => null, // kolom action tidak dapat diurutkan
-            9 => "InvGrandTotal", // kolom action tidak dapat diurutkan 
+            9 => null, // kolom action tidak dapat diurutkan
+            10 => "InvGrandTotal", // kolom action tidak dapat diurutkan 
         );
         if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
             $orderColumn = $columns[$filter['order'][0]['column']];
@@ -74,96 +80,107 @@ class ProjectinvoiceModel extends Model
         $builder->limit($length,$start); 
         $query = $builder->get();  
         
-        foreach($query->getResult() as $row){ 
-            // Mengambil detail item
-            $detail = array();
-            $models = new ProjectModel();
-            $modelsproduk = new ProdukModel();
-            $arr_detail = $models->get_data_invoice_detail($row->InvId);
-            foreach($arr_detail as $row_data){
-                $detail[] = array(
-                            "id" => $row_data->ProdukId,  
-                            "produkid" => $row_data->ProdukId, 
-                            "satuan_id"=> ($row_data->InvDetailSatuanId == 0 ? "" : $row_data->InvDetailSatuanId),
-                            "satuan_text"=>$row_data->InvDetailSatuanText,  
-                            "price"=>$row_data->InvDetailPrice,
-                            "varian"=> JSON_DECODE($row_data->InvDetailVarian,true),
-                            "total"=> $row_data->InvDetailTotal,
-                            "disc"=> $row_data->InvDetailDisc,
-                            "qty"=> $row_data->InvDetailQty,
-                            "text"=> $row_data->InvDetailText,
-                            "group"=> $row_data->InvDetailGroup,
-                            "type"=> $row_data->InvDetailType,
-                            "image_url"=> $modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->InvDetailVarian,true)
-                        );
-            };
-
-            $payment = '';
-            $payment_detail = "";
-            if($row->InvGrandTotal == 0){
-                $payment = ' 
-                        <span class="text-head-3 pointer payment">
-                            <span class="badge text-bg-success me-1">Tidak ada</span>
-                        </span> ';
-                $payment_detail = '<div class="text-head-3 p-2">
-                    <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
-                    Tidak ada pembayaran yang harus diselesaikan untuk transaksi ini 
-                </div>';
-            }
-            $delivery = '';
-            $delivery_detail = "";
-            if($row->InvDelivery == 0){
-                $delivery = ' 
-                        <span class="text-head-3 pointer delivery">
-                            <span class="badge text-bg-success me-1">Tidak ada</span>
-                        </span>';
-                $delivery_detail = '<div class="text-head-3 p-2">
-                        <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
-                        Mode pengriman tidak diaktifkan untuk transaksi ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery(21,1,this,1)">aktifkan mode Pengiriman</a>
-                    </div>';
-            }
-            
+        foreach($query->getResult() as $row){  
             $status = "";
             if($row->InvStatus==0){
-                $status .= ' 
-                        <span class="text-head-3">
-                            <span class="badge text-bg-primary me-1">New</span> 
-                        </span>  ';
+                $status .= '
+                    <span class="pointer text-head-3 badge text-bg-primary text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >New</span>
+                    </span> '; 
             }
             if($row->InvStatus==1){
-                $status .= ' 
-                        <span class="text-head-3">
-                            <span class="badge text-bg-info me-1">Proses</span> 
-                        </span>  ';
+                $status .= '
+                    <span class="pointer text-head-3 badge text-bg-info text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Proses</span>
+                    </span> '; 
             }
             if($row->InvStatus==2){
-                $status .= '  
-                        <span class="text-head-3">
-                            <span class="badge text-bg-success me-1">Completed</span>
-                            <span class="text-primary pointer d-none" onclick="update_status_survey(1,'.$row->InvId.')"><i class="fa-solid fa-pen-to-square"></i></span>
-                        </span> ';
+                $status .= '
+                    <span class=" pointertext-head-3 badge text-bg-success text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Completed</span>
+                    </span> ';  
             }
             if($row->InvStatus==3){
-                $status .= '   <span class="badge text-bg-danger me-1">Cancel</span>  '; 
-            } 
+                $status .=  '
+                    <span class="pointer text-head-3 badge text-bg-danger text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Cancel</span>
+                    </span> ';  
+            }
+            $status .= '  
+            <ul class="dropdown-menu shadow drop-status ">
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(0,'.$row->InvId.',this)">
+                        New
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(1,'.$row->InvId.',this)">
+                        </i>Proses
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(2,'.$row->InvId.',this)">
+                        Completed
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(3,'.$row->InvId.',this)">
+                        Cancel
+                    </a>
+                </li>  
+            </ul>';
+
+            // MENGAMBIL DATA Detail  
+            $htmldetail = '      
+            <div class="view-detail" style="display:none">
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-2">
+                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</span>
+                    </div> 
+                    '.$this->get_data_detail_invoice($row).'
+                </div>
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-2">
+                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pembayaran</span>
+                    </div> 
+                    '.$this->get_data_payment_invoice($row).'
+                </div> 
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-2">
+                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pengiriman</span>
+                    </div> 
+                    '.$this->get_data_delivery_invoice($row).'
+                </div> 
+            </div>
+            ';
+
+            // MENGAMBIL DATA Toko 
+            $store = '
+                    <div class="d-flex align-items-center ">  
+                        <div class="flex-grow-1 ms-1">
+                            <div class="d-flex flex-column"> 
+                                <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>
+                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">'.$row->StoreName.'</span>  
+                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><i class="fa-solid fa-diagram-project pe-1 "></i>Document Project</span>  
+                            </div>   
+                        </div>
+                    </div>';
 
             $data_row = array( 
                 "invoice" => $row,
-                "code" => $row->InvCode,
+                "code" => $row->InvCode.$this->get_data_forward_invoice($row->InvRefType,$row->InvRef),
                 "date" => date_format(date_create($row->InvDate),"d M Y"), 
                 "status" => $status,
                 "admin" => ucwords($row->username), 
                 "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->InvGrandTotal,0)."</span></div>", 
-                "delivery" => $delivery,
-                "deliverydetail" => $delivery_detail,
-                "payment" => $payment,
-                "paymentdetail" => $payment_detail,
+                "delivery" => $this->get_data_delivery_invoice($row,true), 
+                "payment" => $this->get_data_payment_invoice($row,true), 
                 "customer" => $row->InvCustName,
                 "customer" => $row->InvCustName,
                 "customertelp" => ($row->InvCustTelp ? $row->InvCustTelp : ""),
-                "customeraddress" => $row->InvAddress,
-                "detail" => $detail,
+                "customeraddress" => $row->InvAddress, 
+                "store"=>$store,
+                "detail" => $htmldetail,
                 // "detail" => '  <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1"><div class="col bg-light ms-4 me-2 py-2">'.$html_items.'</div></div>',
                 "action" =>'  
                         <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-print"></i></span>  
@@ -183,4 +200,344 @@ class ProjectinvoiceModel extends Model
             )
         );
     }
+
+    
+    function get_data_forward_invoice($type = 0,$ref = 0){  
+        if($type == "Survey"){
+            $builder = $this->db->table("survey");
+            $builder->where('SurveyId',$ref); 
+            $queryref = $builder->get()->getRow();  
+            if($queryref){
+                return ' <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari survey">
+                            <i class="fa-solid fa-street-view text-success"></i>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="invoice_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SurveyId.'\',\'Penawaran\')">'.$queryref->SurveyCode.'</a>
+                        </div>';  
+            }
+        }  
+        if($type == "Penawaran"){
+            $builder = $this->db->table("penawaran");
+            $builder->where('SphId',$ref); 
+            $queryref = $builder->get()->getRow();  
+            if($queryref){
+                return ' <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Survey">
+                            <i class="fa-solid fa-hand-holding-droplet text-success"></i>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="invoice_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SphId.'\',\'Penawaran\')">'.$queryref->SphCode.'</a>
+                        </div>'; 
+            }
+        } 
+        if($type == "Sample"){
+            $builder = $this->db->table("sample");
+            $builder->where('SampleId',$ref); 
+            $queryref = $builder->get()->getRow();  
+            if($queryref){
+                return ' <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Survey">
+                            <i class="fa-solid fa-hand-holding-droplet text-success"></i>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="invoice_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SampleId.'\',\'Penawaran\')">'.$queryref->SampleCode.'</a>
+                        </div>'; 
+            }
+        } 
+        return '<div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Tidak ada referensi"> 
+            <a class="text-detail-3 pointer text-decoration-underline text-secondary">Tidak ada referensi</a>
+        </div>'; 
+    }
+    function get_data_detail_invoice($row){ 
+        $modelsproduk = new ProdukModel();
+        $detail = array(); 
+        $detailhtml = ' <table class="table detail-item m-0">
+                            <thead>
+                                <tr>
+                                    <th class="detail text-center" style="width:50px">Gambar</th>
+                                    <th class="detail">Nama</th>
+                                    <th class="detail">Qty</th>
+                                    <th class="detail">Harga</th>
+                                    <th class="detail">Disc</th>
+                                    <th class="detail">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+        $arr_detail = $this->get_data_invoice_detail($row->InvId);
+        foreach($arr_detail as $row_data){
+            $arr_varian = json_decode($row_data->InvDetailVarian);
+            $arr_badge = "";
+            $arr_no = 0;
+            foreach($arr_varian as $varian){
+                $arr_badge .= '<span class="badge badge-sm badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                $arr_no++;
+            }
+            $detail[] = array(
+                        "id" => $row_data->ProdukId,  
+                        "produkid" => $row_data->ProdukId, 
+                        "satuan_id"=> ($row_data->InvDetailSatuanId == 0 ? "" : $row_data->InvDetailSatuanId),
+                        "satuan_text"=>$row_data->InvDetailSatuanText,  
+                        "price"=>$row_data->InvDetailPrice,
+                        "varian"=> JSON_DECODE($row_data->InvDetailVarian,true),
+                        "total"=> $row_data->InvDetailTotal,
+                        "disc"=> $row_data->InvDetailDisc,
+                        "qty"=> $row_data->InvDetailQty,
+                        "text"=> $row_data->InvDetailText,
+                        "group"=> $row_data->InvDetailGroup,
+                        "type"=> $row_data->InvDetailType,
+                        "image_url"=> $modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->InvDetailVarian,true)
+                    );
+
+            $detailhtml .= ' <tr>
+                    <td class="detail">
+                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->InvDetailVarian,true).'" alt="Gambar" class="image-produk">
+                    </td>
+                    <td class="detail">
+                        <span class="text-head-3">'.$row_data->InvDetailText.'</span><br>
+                        <span class="text-detail-2 text-truncate">'.$row_data->InvDetailGroup.'</span> 
+                        <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
+                    </td>
+                    <td class="detail">'.number_format($row_data->InvDetailQty, 2, ',', '.').' '.$row_data->InvDetailSatuanText.'</td>
+                    <td class="detail">Rp. '.number_format($row_data->InvDetailPrice, 0, ',', '.').'</td>
+                    <td class="detail">Rp. '.number_format($row_data->InvDetailDisc, 0, ',', '.').'</td>
+                    <td class="detail">Rp. '.number_format($row_data->InvDetailTotal, 0, ',', '.').'</td>
+                </tr> ';
+        };
+        $detailhtml .= '
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="bg-light" colspan="6">
+                    <div class="d-flex m-1 gap-2 align-items-center justify-content-end pe-4"> 
+                        <span class="text-detail-2">Sub Total:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->InvSubTotal,0,',','.').'</span>  
+                        <div class="divider-horizontal"></div>
+                        <span class="text-detail-2">Disc Item:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->InvDiscItemTotal,0,',','.').'</span>   
+                        <div class="divider-horizontal"></div>
+                        <span class="text-detail-2">Disc Total:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->InvDiscTotal,0,',','.').'</span>   
+                        <div class="divider-horizontal"></div>
+                        <span class="text-detail-2">Pengiriman:</span>
+                        <span class="text-head-2">Rp. '.number_format($row->InvDeliveryTotal,0,',','.').'</span> 
+                        <div class="divider-horizontal"></div>
+                        <span class="text-detail-2">Grand Total:</span>
+                        <span class="text-head-2">Rp.'.number_format($row->InvGrandTotal,0,',','.').'</span> 
+                    </div>
+                </th>
+            </tr> 
+        </tfoot>
+        </table>';
+
+        return $detailhtml;
+
+    } 
+    function get_data_delivery_invoice($row,$header = false){
+        $delivery = "";
+        $delivery_detail = "";
+        if($row->InvDelivery == 0){
+            $delivery = ' 
+                    <span class="text-head-3 delivery">
+                        <span class="badge text-bg-success me-1">Tidak ada</span>
+                    </span>';
+            $delivery_detail = '<div class="text-head-3 p-2">
+                    <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                    Mode pengriman tidak diaktifkan untuk transaksi ini, 
+                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery(21,1,this,1)">aktifkan mode Pengiriman</a>
+                </div>';
+        }
+
+        if($header){
+            return  $delivery;
+        }else{
+            return  $delivery_detail;
+
+        }
+    }
+    function get_data_payment_invoice($row,$header = false){
+        $html_payment = "";
+        $html_payment_detail = "";
+        if($row->InvGrandTotal == 0){
+            $html_payment = ' 
+                    <span class="text-head-3 payment">
+                        <span class="badge text-bg-success me-1">Tidak ada</span>
+                    </span>';
+            $html_payment_detail = '<div class="text-head-3 p-2">
+                    <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                    Mode pengriman tidak diaktifkan untuk transaksi ini, 
+                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery(21,1,this,1)">aktifkan mode Pengiriman</a>
+                </div>';
+        }else{
+            $html_payment_detail = ""; 
+            $payment_total = 0; 
+            $builder = $this->db->table("payment");
+            $builder->select('*'); 
+            $builder->join("users","users.id = payment.created_user ","left"); 
+            $builder->where('PaymentRef',$row->InvId); 
+            $builder->where('PaymentRefType',"Invoice");
+            $builder->orderby('PaymentDoc', '1'); 
+            $builder->orderby('PaymentId', 'ASC'); 
+            $payment = $builder->get()->getResult();  
+            $payment_total = 0;
+            $performa_total = 0; 
+            foreach($payment as $row_payment){  
+                if($row_payment->PaymentStatus == "0"){ 
+                    $action = '
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-circle-xmark"></i></span>';
+                    $transfer_from = '<td class="detail">-</td>';
+                    $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Request by '.ucwords($row_payment->username).'</span>'; 
+                    $bukti = '';
+                }else{ 
+                    $action = '
+                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-print"></i></span>';
+                    $transfer_from = '<td class="detail">  
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentFromBank.'</div>
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentFromRek.'</div>
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentFromName.'</div>
+                    </td> ';
+                    $status = '<span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Aproved">Aproved by '.$row_payment->PaymentApproved.'</span>'; 
+
+                    $folder_utama = 'assets/images/payment'; 
+                    //Buat folder berdasarkan id
+                    if (!file_exists($folder_utama."/".$row_payment->PaymentId)) {
+                        mkdir($folder_utama."/".$row_payment->PaymentId, 0777, true);  
+                    } 
+                    $files = scandir($folder_utama."/".$row_payment->PaymentId);
+                    foreach ($files as $file) {
+                        if ($file != '.' && $file != '..') {
+                            $filepath = $folder_utama."/".$row_payment->PaymentId . '/' . $file;
+                            $filesize = filesize($folder_utama."/".$row_payment->PaymentId . '/' . $file); 
+                            $filetype = mime_content_type($folder_utama."/".$row_payment->PaymentId . '/' . $file);
+                            $bukti = '  
+                                                    <a onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
+                                                        <i class="fa-solid fa-eye"></i> Lihat bukti
+                                                    </a>  ';
+                        }
+                    }   
+                }  
+
+                if($row_payment->PaymentMethod == "Cash"){
+                    $transfer_to = ' 
+                    <td class="detail">  
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
+                    </td>';
+                }else{ 
+                    $transfer_to = ' 
+                    <td class="detail">  
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentToBank.'</div>
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentToRek.'</div>
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
+                    </td>';
+                }
+                $payment_total += $row_payment->PaymentTotal; 
+                $html_payment_detail .= '
+                    <tr>
+                        <td class="action-td no-border">'.$action.'</td>
+                        <td class="detail">'.$row_payment->PaymentCode.'</td>
+                        <td class="detail">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</td>
+                        <td class="detail">'.$status.'</td>  
+                        <td class="detail">'.$row_payment->PaymentMethod.'</td>
+                    '. $transfer_to.'
+                    '. $transfer_from.' 
+                        <td class="detail">'.$bukti.'</td> 
+                        <td class="detail">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</td>
+                    </tr>';
+                
+            
+            }  
+            
+            if($payment_total == 0){
+                $html_payment = ' 
+                        <span class="text-head-3 payment">
+                            <span class="badge text-bg-warning me-1">Belum Ada</span>
+                        </span>';
+                $html_payment_detail .= ' <div class="alert alert-warning p-2 m-0" role="alert">
+                    <span class="text-head-3">
+                        <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                        Belum ada pembayaran yang dibuat dari dokumen ini, 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->InvId.',this,\'Survey\')">Ajukan pembayaran</a> 
+                    </span>
+                </div> '; 
+            }else if($payment_total < $row->InvGrandTotal){  
+                
+                $html_payment = ' 
+                        <span class="text-head-3 payment">
+                            <span class="badge text-bg-warning me-1">Belum Selesai</span>
+                        </span>';
+                $html_payment_detail = '
+                <table class="table detail-payment">
+                    <thead>
+                        <tr>
+                            <th class="detail" style="width:70px">Action</th>
+                            <th class="detail">No. Pembayaran</th>
+                            <th class="detail">Tanggal</th>
+                            <th class="detail">Status</th> 
+                            <th class="detail">Metode</th>
+                            <th class="detail">Tujuan</th> 
+                            <th class="detail">Sumber</th>
+                            <th class="detail">Bukti Transaksi</th>
+                            <th class="detail">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>'.$html_payment_detail.'
+                    </tbody>
+                </table> 
+                <div class="alert alert-warning p-2 m-0" role="alert">
+                    <span class="text-head-3">
+                        <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini, 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->InvId.',this,\'Survey\')">Ajukan pembayaran</a> 
+                    </span>
+                </div> ';
+            } else{   
+                
+                $html_payment = ' 
+                        <span class="text-head-3 payment">
+                            <span class="badge text-bg-success me-1">Selesai</span>
+                        </span>';
+                $html_payment_detail = '
+                    <table class="table detail-payment">
+                        <thead>
+                            <tr>
+                                <th class="detail" style="width:70px">Action</th>
+                                <th class="detail">No. Pembayaran</th>
+                                <th class="detail">Tanggal</th>
+                                <th class="detail">Status</th> 
+                                <th class="detail">Metode</th>
+                                <th class="detail">Tujuan</th> 
+                                <th class="detail">Sumber</th>
+                                <th class="detail">Bukti Transaksi</th>
+                                <th class="detail">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>'.$html_payment_detail.'
+                        </tbody>
+                    </table>';
+            } 
+        }
+
+        if($header){
+            return  $html_payment;
+        }else{
+            return  $html_payment_detail;
+
+        }
+    }
+    function get_data_invoice($id){
+        $builder = $this->db->table("invoice");
+        $builder->select("*,  CASE 
+        WHEN InvRefType = '-' THEN 'No data Selected'
+        WHEN InvRefType = 'Survey' THEN (select SurveyCode from survey where SurveyId = InvRef)
+        WHEN InvRefType = 'Sample' THEN (select SampleCode from sample where SampleId = InvRef)
+        WHEN InvRefType = 'Penawaran' THEN (select SphCode from penawaran where SphId = InvRef)
+        END AS 'InvRefCode',InvNpwp NpwpId,b.Name NpwpName,b.Image NpwpImage, InvKtp KtpId,a.Name KtpName,a.Image KtpImage"); 
+        $builder->join("users","id = InvAdmin","left");
+        $builder->join("project","project.ProjectId = invoice.ProjectId","left");
+        $builder->join("customer","project.CustomerId = customer.CustomerId","left");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
+        $builder->join("lampiran a","a.Id = invoice.InvKtp","left");
+        $builder->join("lampiran b","b.Id = invoice.InvNpwp","left");
+        $builder->where('InvId',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
+    }
+    
+    public function get_data_invoice_detail($id){
+        $builder = $this->db->table("invoice_detail");
+        $builder->where('InvDetailRef',$id); 
+        return $builder->get()->getResult();  
+    } 
 }

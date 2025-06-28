@@ -29,7 +29,7 @@ class ActionController extends BaseController
     }
     public function test(){
         $models = new ProjectModel(); 
-        echo $models->update_data_survey_status(8);
+        return view('admin/test');
     }
     public function store_add(){   
         $request = Services::request();
@@ -326,14 +326,13 @@ class ActionController extends BaseController
     }
     public function penawaran_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectsphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_sph($postData,$id); 
             echo json_encode(array("status"=>true));
         }
-    }
-     
+    } 
     public function penawaran_delete($id){
         $request = Services::request();
         $models = new ProjectsphModel(); 
@@ -342,6 +341,14 @@ class ActionController extends BaseController
             echo $models->delete_data_sph($id);  
         }
     }
+    public function penawaran_status($id,$status){
+        $request = Services::request();
+        $models = new ProjectsphModel(); 
+        if ($request->getMethod(true) === 'POST') {    
+            echo $models->update_status_sph($id,$status);  
+        }
+    } 
+
     public function invoice_add(){
         $request = Services::request();
         $models = new ProjectModel(); 

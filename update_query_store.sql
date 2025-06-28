@@ -48,3 +48,9 @@ SET
 penawaran.StoreId =  project.StoreId,
 penawaran.CustomerId =  project.CustomerId;
 
+update invoice 
+LEFT JOIN project ON project.ProjectId = invoice.ProjectId 
+SET 
+invoice.StoreId =  project.StoreId,
+invoice.CustomerId =  project.CustomerId;
+
