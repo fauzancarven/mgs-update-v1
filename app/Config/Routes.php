@@ -96,6 +96,7 @@ $routes->post('/action/update-penawaran/(:num)/(:num)', 'ActionController::penaw
 $routes->post('/action/add-data-invoice', 'ActionController::invoice_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-invoice/(:num)', 'ActionController::invoice_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-invoice/(:num)', 'ActionController::invoice_delete/$1', ['filter' => 'login']); 
+$routes->post('/action/update-invoice/(:num)/(:num)', 'ActionController::invoice_status/$1/$2', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-payment', 'ActionController::payment_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-payment/(:num)', 'ActionController::payment_edit/$1', ['filter' => 'login']); 
@@ -211,7 +212,8 @@ $routes->post('/message/add-item-select', 'MessageController::produk_select_new'
 
 
 $routes->post('/message/add-survey', 'MessageController::survey_add', ['filter' => 'login']);  
-$routes->post('/message/edit-survey/(:num)', 'MessageController::survey_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/edit-survey/(:num)', 'MessageController::survey_edit/$1', ['filter' => 'login']); 
+
 $routes->post('/message/add-project-survey/(:num)', 'MessageController::project_survey_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-survey/(:num)', 'MessageController::project_survey_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-survey-finish/(:num)', 'MessageController::project_survey_finish/$1', ['filter' => 'login']);  
@@ -226,6 +228,8 @@ $routes->post('/message/add-penawaran', 'MessageController::penawaran_add', ['fi
 $routes->post('/message/edit-project-sph/(:num)', 'MessageController::project_sph_edit/$1', ['filter' => 'login']);
 $routes->post('/message/edit-penawaran/(:num)', 'MessageController::penawaran_edit/$1', ['filter' => 'login']);   
 
+$routes->post('/message/add-invoice', 'MessageController::invoice_add', ['filter' => 'login']); 
+$routes->post('/message/edit-invoice/(:num)', 'MessageController::invoice_edit/$1', ['filter' => 'login']);   
 $routes->post('/message/add-project-invoice/(:num)', 'MessageController::project_invoice_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-invoice/(:num)', 'MessageController::project_invoice_edit/$1', ['filter' => 'login']);
 

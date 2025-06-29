@@ -4,6 +4,8 @@ namespace App\Models;
 
 use CodeIgniter\Model;  
 use CodeIgniter\Database\RawSql;
+use App\Models\ProdukModel; 
+use App\Models\ActivityModel;
 
 class ProjectinvoiceModel extends Model
 {  
@@ -183,10 +185,10 @@ class ProjectinvoiceModel extends Model
                 "detail" => $htmldetail,
                 // "detail" => '  <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1"><div class="col bg-light ms-4 me-2 py-2">'.$html_items.'</div></div>',
                 "action" =>'  
-                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-print"></i></span>  
-                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_Survey('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Data Invoice" onclick="print_invoice('.$row->InvId.',this,'.$row->ProjectId.')"><i class="fa-solid fa-print"></i></span>  
+                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Invoice" onclick="edit_invoice('.$row->InvId.',this,'.$row->ProjectId.')"><i class="fa-solid fa-pen-to-square"></i></span>
                         <div class="d-inline ">
-                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_project_Survey('.$row->ProjectId.','.$row->InvId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Invoice" onclick="delete_invoice('.$row->InvId.',this,'.$row->ProjectId.')"><i class="fa-solid fa-circle-xmark"></i></span>
                         </div>',
             );
             array_push($datatable, $data_row);
@@ -243,7 +245,7 @@ class ProjectinvoiceModel extends Model
     function get_data_detail_invoice($row){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-item m-0">
+        $detailhtml = ' <table class="table detail-item m-0 w-auto">
                             <thead>
                                 <tr>
                                     <th class="detail text-center" style="width:50px">Gambar</th>
@@ -448,7 +450,7 @@ class ProjectinvoiceModel extends Model
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
                         Belum ada pembayaran yang dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->InvId.',this,\'Survey\')">Ajukan pembayaran</a> 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_payment('.$row->InvId.',this,\'Invoice\')">Buat Pembayaran</a> 
                     </span>
                 </div> '; 
             }else if($payment_total < $row->InvGrandTotal){  
@@ -458,7 +460,7 @@ class ProjectinvoiceModel extends Model
                             <span class="badge text-bg-warning me-1">Belum Selesai</span>
                         </span>';
                 $html_payment_detail = '
-                <table class="table detail-payment">
+                <table class="table detail-payment w-auto">
                     <thead>
                         <tr>
                             <th class="detail" style="width:70px">Action</th>
@@ -489,7 +491,7 @@ class ProjectinvoiceModel extends Model
                             <span class="badge text-bg-success me-1">Selesai</span>
                         </span>';
                 $html_payment_detail = '
-                    <table class="table detail-payment">
+                    <table class="table detail-payment w-auto">
                         <thead>
                             <tr>
                                 <th class="detail" style="width:70px">Action</th>
@@ -526,7 +528,8 @@ class ProjectinvoiceModel extends Model
         END AS 'InvRefCode',InvNpwp NpwpId,b.Name NpwpName,b.Image NpwpImage, InvKtp KtpId,a.Name KtpName,a.Image KtpImage"); 
         $builder->join("users","id = InvAdmin","left");
         $builder->join("project","project.ProjectId = invoice.ProjectId","left");
-        $builder->join("customer","project.CustomerId = customer.CustomerId","left");
+        $builder->join("store","store.StoreId = invoice.StoreId","left"); 
+        $builder->join("customer","invoice.CustomerId = customer.CustomerId","left");
         $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
         $builder->join("lampiran a","a.Id = invoice.InvKtp","left");
         $builder->join("lampiran b","b.Id = invoice.InvNpwp","left");
@@ -535,9 +538,247 @@ class ProjectinvoiceModel extends Model
         return $builder->get()->getRow();  
     }
     
-    public function get_data_invoice_detail($id){
+    function get_data_invoice_detail($id){
         $builder = $this->db->table("invoice_detail");
         $builder->where('InvDetailRef',$id); 
         return $builder->get()->getResult();  
     } 
+
+    function get_next_code_invoice($date){ 
+        $arr_date = explode("-", $date);
+        $builder = $this->db->table("invoice");  
+        $builder->select("ifnull(max(SUBSTRING(InvCode,5,3)),0) + 1 as nextcode"); 
+        $builder->where("month(InvDate2)",$arr_date[1]);
+        $builder->where("year(InvDate2)",$arr_date[0]);
+        $data = $builder->get()->getRow(); 
+        switch (strlen($data->nextcode)) {
+            case 1:
+                $nextid = "INV/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 2:
+                $nextid = "INV/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 3:
+                $nextid = "INV/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+            default:
+                $nextid = "INV/000/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+        } 
+    }
+    
+    function insert_data_invoice($data){ 
+        $header = $data["header"]; 
+        $getnextcode = $this->get_next_code_invoice($header["InvDate"]);
+        $builder = $this->db->table("invoice");
+        $builder->insert(array(
+            "InvCode"=>$getnextcode,
+            "InvDate"=>$header["InvDate"], 
+            "InvDate2"=>$header["InvDate"],  
+            "ProjectId"=>$header["ProjectId"],
+            "CustomerId"=>$header["CustomerId"],
+            "StoreId"=>$header["StoreId"],
+            "InvRef"=>$header["InvRef"],
+            "InvRefType"=>$header["InvRefType"],
+            "InvAdmin"=>$header["InvAdmin"], 
+            "InvDelivery"=>$header["InvDelivery"], 
+            "InvDeliveryTotal"=>$header["InvDeliveryTotal"], 
+            "InvCustName"=>$header["InvCustName"],
+            "InvCustTelp"=>$header["InvCustTelp"],
+            "InvAddress"=>$header["InvAddress"], 
+            "TemplateId"=>$header["TemplateId"],
+            "InvSubTotal"=>$header["InvSubTotal"],
+            "InvDiscItemTotal"=>$header["InvDiscItemTotal"],
+            "InvDiscTotal"=>$header["InvDiscTotal"], 
+            "InvGrandTotal"=>$header["InvGrandTotal"], 
+            "InvImageList"=> (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"),
+            "InvKtp"=>$header["InvKtp"], 
+            "InvNpwp"=>$header["InvNpwp"],  
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+        ));
+
+        $builder = $this->db->table("invoice");
+        $builder->select('*');
+        $builder->orderby('InvId', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();  
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["InvDetailRef"] = $query->InvId;
+            $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
+            $builder = $this->db->table("invoice_detail");
+            $builder->insert($row); 
+        }
+ 
+        // //update status Penawaran
+        // if( $header["InvRefType"] == "Penawaran") $this->update_data_sph_status($header["InvRef"]);
+        // //update status Survey
+        // if( $header["InvRefType"] == "Survey") $this->update_data_survey_status($header["InvRef"]);
+        // //update status Sample
+        // $modelssample = new ProjectsampleModel;
+        // if( $header["InvRefType"] == "Sample") $modelssample->update_data_sample_status($header["InvRef"]); 
+ 
+        //update status project
+        $builder = $this->db->table("project"); 
+        $builder->set('ProjectStatus', 6);  
+        $builder->where('ProjectId', $header["ProjectId"]); 
+        $builder->update();  
+
+        //create Log action 
+        $activityModel = new ActivityModel();
+        $activityModel->insert(
+            array( 
+                "menu"=>"Invoice",
+                "type"=>"Add",
+                "name"=>"Data invoice baru ditambahkan dengan nomor ".$getnextcode,
+                "desc"=> json_encode($data ?? []),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+            )
+        );    
+    } 
+    
+    public function update_data_invoice($data,$id){ 
+        $dataold = $builder = $this->getWhere(['InvId' => $id], 1)->getRow(); 
+ 
+        $header = $data["header"];  
+        $builder = $this->db->table("invoice"); 
+        $builder->set('InvDate', $header["InvDate"]);   
+        $builder->set('InvAdmin', $header["InvAdmin"]); 
+        $builder->set('InvRef', $header["InvRef"]); 
+        $builder->set('InvRefType', $header["InvRefType"]); 
+        $builder->set('InvCustName', $header["InvCustName"]);
+        $builder->set('InvCustTelp', $header["InvCustTelp"]);
+        $builder->set('InvAddress', $header["InvAddress"]); 
+        $builder->set('InvDelivery', $header["InvDelivery"]); 
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('InvSubTotal', $header["InvSubTotal"]); 
+        $builder->set('InvDiscItemTotal', $header["InvDiscItemTotal"]); 
+        $builder->set('InvDeliveryTotal', $header["InvDeliveryTotal"]); 
+        $builder->set('InvDiscTotal', $header["InvDiscTotal"]); 
+        $builder->set('InvGrandTotal', $header["InvGrandTotal"]);  
+        $builder->set('InvNpwp', $header["InvNpwp"]);  
+        $builder->set('InvKtp', $header["InvKtp"]);  
+        $builder->set('InvImageList', (isset($header["InvImageList"]) ? json_encode($header["InvImageList"]) : "[]"));
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId', $id); 
+        $builder->update(); 
+
+        $builder = $this->db->table("invoice_detail");
+        $builder->where('InvDetailRef',$id);
+        $builder->delete(); 
+
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["InvDetailRef"] = $id;
+            $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
+            $builder = $this->db->table("invoice_detail");
+            $builder->insert($row); 
+        } 
+         
+
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Invoice",
+                "type"=>"Edit",
+                "name"=>"Data Invoice diubah dengan nomor ".$header["InvCode"],
+                "desc"=> json_encode(array("new"=>$data,"old" => $dataold) ?? []),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+            )
+        ); 
+        // //update status Penawaran 
+        // if( $header["InvRefType"] == "Penawaran") $this->update_data_sph_status($header["InvRef"]);
+        // //update status Survey
+        // if( $header["InvRefType"] == "Survey") $this->update_data_survey_status($header["InvRef"]);
+        // //update status Sample
+        
+        // $modelssample = new ProjectsampleModel;
+        // if( $header["InvRefType"] == "Sample") $modelssample->update_data_sample_status($header["InvRef"]); 
+
+ 
+        // //update status Penawaran
+        // if( $data_old->InvRefType == "Penawaran") $this->update_data_sph_status($data_old->InvRef);
+        // //update status Survey
+        // if( $data_old->InvRefType == "Survey") $this->update_data_survey_status($data_old->InvRef);
+        // //update status Sample
+        // if( $data_old->InvRefType== "Sample") $modelssample->update_data_sample_status($data_old->InvRef); 
+
+
+        //$this->update_data_invoice_status($id);
+    }
+
+    
+    public function delete_data_invoice($id){ 
+        $builder = $this->db->table("invoice");
+        $builder->set('InvStatus','3'); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId',$id);
+        $builder->update();  
+
+        $builder = $this->db->table("invoice");  
+        $builder->where('InvId',$id);
+        $result = $builder->get()->getRow(); 
+        
+        // //update status Penawaran
+        // if( $result->InvRefType == "Penawaran") $this->update_data_sph_status($result->InvRef);
+        // //update status Survey
+        // if( $result->InvRefType == "Survey") $this->update_data_survey_status($result->InvRef);
+        // //update status Sample
+        // $modelssample = new ProjectsampleModel;
+        // if( $result->InvRefType == "Sample") $modelssample->update_data_sample_status($result->InvRef);
+        
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Invoice",
+                "type"=>"Delete",
+                "name"=>"Data Invoice dibatalkan dengan nomor ".$result->InvCode,
+                "desc"=> json_encode([]),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+
+            )
+        ); 
+        return JSON_ENCODE(array("status"=>true));
+    }
+
+    function update_status_invoice($id,$status){   
+        $dataold = $builder = $this->getWhere(['InvId' => $id], 1)->getRow();  
+
+        $builder = $this->db->table("invoice"); 
+        $builder->set('InvStatus', $status);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId', $id); 
+        $builder->update();   
+
+        $statuslist = array(
+            0 => "New", // kolom action tidak dapat diurutkan
+            1 => "Proses", // kolom action tidak dapat diurutkan
+            2 => "Finish", // kolom name
+            3 => "Cancel", // kolom name 
+        );
+
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Invoice",
+                "type"=>"Status",
+                "name"=> "Status Data Invoice diubah dari ".$statuslist[$dataold->InvStatus]." menjadi ".$statuslist[$status] . " dengan nomor ".$dataold->InvCode,
+                "desc"=> json_encode([]),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+            )
+        ); 
+
+        return JSON_ENCODE(array("status"=>true));
+    }  
 }

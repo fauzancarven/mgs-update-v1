@@ -207,12 +207,11 @@
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="btn-add-penawaran">Simpan</button>
+                <button type="button" class="btn btn-primary" id="btn-edit-penawaran">Simpan</button>
             </div>
         </div>
     </div>
 </div>  
-
 <div id="modal-optional"></div>
 <script>      
 $(document).ready(function() {
@@ -536,23 +535,11 @@ $(document).ready(function() {
     $("#SphDeliveryTotal").val("<?= $project->SphDeliveryTotal ?>"); 
 
 
-    var table_sph_item = new tableItem("table-list",{
-        dataitem : JSON.parse('<?= JSON_ENCODE($detail,true) ?>'.replace(/\n/g, '\\n')),
-        dropdownParent: $('#modal-edit-penawaran .modal-content'),
-        baseUrl : "<?= base_url() ?>",
-        modal : $('#modal-edit-penawaran')
-    }); 
-    if (table_sph_item && typeof table_sph_item.on === 'function') { 
-        table_sph_item.on("subtotal",function(data){ 
-            var grandtotal =  data.totalitem - data.totaldiscitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, '') + parseInt($("#SphDeliveryTotal").val().replace(/[^0-9-]/g, ''));  
-            $("#SphSubTotal").val(data.totalitem.toLocaleString('en-US')) 
-            $("#SphDiscItemTotal").val(data.totaldiscitem.toLocaleString('en-US')) 
-            $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
-        });
-        table_sph_item.getSubTotal()
-    } else {
-        console.error("table_sph_item tidak terdefinisi atau method on() tidak ada");
-    }
+    $("#SphSubTotal").val("<?= $project->SphSubTotal ?>");
+    $("#SphDiscItemTotal").val("<?= $project->SphDiscItemTotal ?>");
+    $("#SphDiscTotal").val("<?= $project->SphDiscTotal ?>");
+    $("#SphGrandTotal").val("<?= $project->SphGrandTotal ?>");
+    $("#SphDeliveryTotal").val("<?= $project->SphDeliveryTotal ?>");
 
     var sph_sub_total = new Cleave(`#SphSubTotal`, {
             numeral: true,
@@ -590,11 +577,25 @@ $(document).ready(function() {
         $("#SphDiscItemTotal").val(data.totaldiscitem.toLocaleString('en-US')) 
         $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     };
+    var table_sph_item = new tableItem("table-list",{
+        dataitem : JSON.parse('<?= JSON_ENCODE($detail,true) ?>'.replace(/\n/g, '\\n')),
+        dropdownParent: $('#modal-edit-penawaran .modal-content'),
+        baseUrl : "<?= base_url() ?>",
+        modal : $('#modal-edit-penawaran')
+    }); 
+    if (table_sph_item && typeof table_sph_item.on === 'function') { 
+        table_sph_item.on("subtotal",function(data){ 
+            grand_total_harga(data); 
+        });
+        table_sph_item.getSubTotal()
+    } else {
+        console.error("table_sph_item tidak terdefinisi atau method on() tidak ada");
+    }
     $("#SphDiscTotal").on("keyup",function(){ 
         grand_total_harga(table_sph_item.getSubTotal()); 
         if(parseInt($("#SphGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
             $("#SphDiscTotal").val(0)
-            grand_total_harga();
+            grand_total_harga(table_sph_item.getSubTotal());
         }
     });
     
@@ -875,7 +876,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#btn-add-penawaran").click(function(){
+    $("#btn-edit-penawaran").click(function(){
         var data_detail_item = table_sph_item.getDataRow(); 
         if($("#CustomerId").val() == null){
             Swal.fire({

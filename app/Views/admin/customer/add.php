@@ -355,7 +355,7 @@
         $("#MsCustomerCity").val(selectcity["prov"]["value"] + ", " + selectcity["kota"]["value"] + ", " + selectcity["kec"]["value"] + ", " + selectcity["poscode"]["value"]+ ", " + selectcity["poscode"]["kode"]);
     }
     // END CUSTOM VILLAGE
-
+    var isProcessingSave = false;
     $("#btn-add-customer").click(function(e){ 
          
         if($("#MsCustomerCategory").val() == null){

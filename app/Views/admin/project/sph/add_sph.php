@@ -493,24 +493,7 @@
       
  
      
-    var table_sph_item = new tableItem("table-list",{
-        dataitem : [],
-        dropdownParent: $('#modal-add-penawaran .modal-content'),
-        baseUrl : "<?= base_url() ?>",
-        modal : $('#modal-add-penawaran')
-    }); 
-
-    if (table_sph_item && typeof table_sph_item.on === 'function') { 
-        table_sph_item.on("subtotal",function(data){ 
-            var grandtotal =  data.totalitem - data.totaldiscitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, '') + parseInt($("#SphDeliveryTotal").val().replace(/[^0-9-]/g, ''));  
-            $("#SphSubTotal").val(data.totalitem.toLocaleString('en-US')) 
-            $("#SphDiscItemTotal").val(data.totaldiscitem.toLocaleString('en-US')) 
-            $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
-        });
-        table_sph_item.getSubTotal()
-    } else {
-        console.error("table_sph_item tidak terdefinisi atau method on() tidak ada");
-    }
+    
 
     var sph_sub_total = new Cleave(`#SphSubTotal`, {
             numeral: true,
@@ -543,16 +526,38 @@
             numeralThousandGroupStyle:"thousand"
     });
 
-    $("#SphDiscTotal").on("keyup",function(){ 
-        grand_total_harga();
+    var table_sph_item = new tableItem("table-list",{
+        dataitem : [],
+        dropdownParent: $('#modal-add-penawaran .modal-content'),
+        baseUrl : "<?= base_url() ?>",
+        modal : $('#modal-add-penawaran')
+    }); 
+
+    grand_total_harga = function(data){
+        var grandtotal =  data.totalitem - data.totaldiscitem - $("#SphDiscTotal").val().replace(/[^0-9-]/g, '') + parseInt($("#SphDeliveryTotal").val().replace(/[^0-9-]/g, ''));  
+        $("#SphSubTotal").val(data.totalitem.toLocaleString('en-US')) 
+        $("#SphDiscItemTotal").val(data.totaldiscitem.toLocaleString('en-US')) 
+        $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
+    };
+    
+    if (table_sph_item && typeof table_sph_item.on === 'function') { 
+        table_sph_item.on("subtotal",function(data){ 
+            grand_total_harga(data);
+        });
+        table_sph_item.getSubTotal()
+    } else {
+        console.error("table_sph_item tidak terdefinisi atau method on() tidak ada");
+    }
+    $("#SphDiscTotal").on("keyup",function(){
+            grand_total_harga(table_sph_item.getSubTotal());
         if(parseInt($("#SphGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
             $("#SphDiscTotal").val(0)
-            grand_total_harga();
+            grand_total_harga(table_sph_item.getSubTotal());
         }
     });
     
     $("#SphDeliveryTotal").on("keyup",function(){ 
-        grand_total_harga(); 
+        grand_total_harga(table_sph_item.getSubTotal());
     });
     
  
@@ -829,7 +834,7 @@
 
     $("#btn-add-penawaran").click(function(){ 
         var data_detail_item = table_sph_item.getDataRow(); 
-        if($("#CustomerId").val() == nul)l{
+        if($("#CustomerId").val() == null){
             Swal.fire({
                 icon: 'error',
                 text: 'Pelanggan harus dipilih...!!!', 
@@ -869,7 +874,7 @@
                 confirmButtonColor: "#3085d6", 
             }).then(function(){ 
                 swal.close();
-                setTimeout(() => $("#btn-add-product").trigger("click"), 300); 
+                // setTimeout(() => $("#btn-add-product").trigger("click"), 300); 
             }) ;
             return; 
         }

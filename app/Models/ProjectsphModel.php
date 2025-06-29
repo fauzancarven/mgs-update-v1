@@ -3,8 +3,7 @@
 namespace App\Models; 
 
 use CodeIgniter\Model;  
-use CodeIgniter\Database\RawSql;
-use App\Models\ProjectModel; 
+use CodeIgniter\Database\RawSql; 
 use App\Models\ProdukModel; 
 use App\Models\ActivityModel;
 
@@ -892,7 +891,6 @@ class ProjectsphModel extends Model
         
         $dataold = $builder = $this->getWhere(['SphId' => $id], 1)->getRow(); 
 
-
         $header = $data["header"];  
         $builder = $this->db->table("penawaran"); 
         $builder->set('SphDate', $header["SphDate"]);   
@@ -926,6 +924,7 @@ class ProjectsphModel extends Model
             $builder = $this->db->table("penawaran_detail");
             $builder->insert($row); 
         }   
+
         //update status sample 
         $modelssample = new ProjectsampleModel;
         if( $header["SphRefType"] == "Sample") $modelssample->update_data_sample_status($header["SphRef"]);  
@@ -948,12 +947,28 @@ class ProjectsphModel extends Model
         ); 
     }
     function delete_data_sph($id){
+        $dataold = $builder = $this->getWhere(['SphId' => $id], 1)->getRow(); 
+
         $builder = $this->db->table("penawaran");
         $builder->set('SphStatus', 3); 
         $builder->set('updated_user', user()->id); 
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
         $builder->where('SphId',$id);  
         $builder->update();  
+
+         //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Penawaran",
+                "type"=>"Delete",
+                "name"=>"Data Penawaran dibatalkan dengan nomor ".$dataold->SphCode,
+                "desc"=> json_encode([]),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+
+            )
+        ); 
 
         return JSON_ENCODE(array("status"=>true));
     }  

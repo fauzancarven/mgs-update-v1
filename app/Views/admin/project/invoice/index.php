@@ -8,6 +8,9 @@
             <div class="p-1 flex-fill" > 
                 <h4 class="mb-0">LIST INVOICE</h4> 
             </div>     
+            <div class="justify-content-end d-flex gap-1"> 
+                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Invoice<span></button>
+            </div>  
         </div>
         <!-- BAGIAN FILTER -->
         <div class="d-flex align-items-center justify-content-end mb-2 g-2 row search-data">   
@@ -102,30 +105,72 @@
             <tbody> 
             </tbody>
         </table>
-    </div> 
-    <!-- <div id="data-project"> 
-    </div>
-
-    <div class="row justify-content-between">
-        <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto mr-auto">
-            <div class="dt-info pt-1" aria-live="polite" id="table-toko_info" role="status">Showing 1 to 10 of 10 entries</div>
-        </div>
-        <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ml-auto">
-            <div class="dt-paging pt-1">
-                <nav aria-label="pagination">
-                    <ul class="pagination" id="paging-data">
-                        <li class="dt-paging-button page-item disabled"><a class="page-link first" aria-controls="table-toko" aria-disabled="true" aria-label="First" data-dt-idx="first" tabindex="-1">«</a></li>
-                        <li class="dt-paging-button page-item disabled"><a class="page-link previous" aria-controls="table-toko" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1">‹</a></li>
-                        <li class="dt-paging-button page-item active"><a href="#" class="page-link" aria-controls="table-toko" aria-current="page" data-dt-idx="0">1</a></li>
-                        <li class="dt-paging-button page-item disabled"><a class="page-link next" aria-controls="table-toko" aria-disabled="true" aria-label="Next" data-dt-idx="next" tabindex="-1">›</a></li>
-                        <li class="dt-paging-button page-item disabled"><a class="page-link last" aria-controls="table-toko" aria-disabled="true" aria-label="Last" data-dt-idx="last" tabindex="-1">»</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div> -->
+    </div>  
 </div>   
 
+<div class="modal fade" id="modal-print-invoice" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-print-invoiceLabel">Print Invoice</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="InvPrintFormat" class="col-sm-4 col-form-label">Ukuran Kertas</label>
+                    <div class="col-sm-8">
+                        <select class="form-select form-select-sm" id="InvPrintFormat" name="InvPrintFormat" placeholder="Pilih Admin" style="width:100%">
+                            <option id="A4" selected>A4</option>
+                            <option id="A5" >A5</option>
+                        </select>  
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="InvPrintImage" class="col-sm-4 col-form-label">gunakan gambar item</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="InvPrintImage" id="InvPrintImage1" value="0">
+                            <label class="text-detail" for="InvPrintImage1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="InvPrintImage" id="InvPrintImage2" value="1" checked>
+                            <label class="text-detail" for="InvPrintImage2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2 d-none">
+                    <label for="InvPrintTotal" class="col-sm-4 col-form-label">gunakan grand total</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="InvPrintTotal" id="InvPrintTotal1" value="0">
+                            <label class="text-detail" for="InvPrintTotal1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="InvPrintTotal" id="InvPrintTotal2" value="1" checked>
+                            <label class="text-detail" for="InvPrintTotal2">Ya</label>
+                        </div>
+                    </div>
+                </div>
+                <script> 
+                   $('#InvPrintFormat').change(function() {
+                        if($(this).val() == "A5"){
+                            $('input[name="InvPrintImage"]').prop("disabled",true)
+                            $('input[name="InvPrintTotal"]').prop("disabled",true)
+                        }else{
+
+                            $('input[name="InvPrintImage"]').prop("disabled",false)
+                            $('input[name="InvPrintTotal"]').prop("disabled",false)
+                        }
+                    });
+                </script>   
+            </div>
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btn-print-invoice">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var xhr_load_project; 
     var filter_status_select = []
@@ -320,6 +365,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
+        "autoWidth": false,
         "order": [[4, "desc"]],
         scrollX: true,
         "processing": true,
@@ -344,13 +390,13 @@
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
             }, 
-            { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
+            { data: "action" ,orderable: false , className:"action-td",width: "60px"}, 
             { data: "store", className:"align-top" , width: "150px"}, 
-            { data: "code",orderable: false , className:"align-top", width: "100px"},
-            { data: "date", className:"align-top"}, 
-            { data: "status" , className:"align-top"}, 
-            { data: "admin" , className:"align-top"},  
-            { data: "customer",  className:"align-top",
+            { data: "code",orderable: false , className:"align-top", width: "120px"},
+            { data: "date",width: "100px", className:"align-top"}, 
+            { data: "status" ,width: "100px", className:"align-top"}, 
+            { data: "admin" ,width: "100px", className:"align-top"},  
+            { data: "customer",width: "250px",  className:"align-top",
                 render: function(data, type, row) { 
                     var html = ` 
                         <div class="text-head-2 pb-2 text-truncate" style="width: 15rem;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
@@ -360,9 +406,9 @@
                     return html;
                 }
             }, 
-            { data: "payment" ,orderable: false , className:"align-top"}, 
-            { data: "delivery" ,orderable: false , className:"align-top"},  
-            { data: "total", className:"align-top",width: "150px"},  
+            { data: "payment" ,orderable: false , width: "90px",className:"align-top"}, 
+            { data: "delivery" ,orderable: false ,width: "90px", className:"align-top"},  
+            { data: "total", className:"align-top",width: "auto"},  
         ] 
     }); 
 
@@ -396,94 +442,7 @@
     });
     function format(data) {
         return data.detail;  
-    } 
-    function format_item(data) {
-        var detailitem = data.detail; 
-        
-        var tr = $(this).closest('tr'); 
-        var tablecustom = $("<table class='table detail-item'>");
-        var theadcustom = $("<thead>");
-        var tbodycustom = $("<tbody>");
-        var tfootcustom = $("<tfoot>");
-
-        // Buat header tabel
-        var headercustom = $("<tr>"); 
-        headercustom.append($("<th class='detail'>").text("Gambar")); 
-        headercustom.append($("<th class='detail'>").text("Nama")); 
-        headercustom.append($("<th class='detail'>").text("Qty"));
-        headercustom.append($("<th class='detail'>").text("Harga"));
-        headercustom.append($("<th class='detail'>").text("Disc"));
-        headercustom.append($("<th class='detail'>").text("Total"));  
-        theadcustom.append(headercustom);
-        // Buat baris tabel  
-        let last_group_abjad = 65;
-        let last_group_no = 1;
-        for(var i = 0; i < detailitem.length;i++){  
-            if(detailitem[i]["type"] == "category"){ 
-                var trcustom = $("<tr>");  
-                trcustom.append($("<td class='detail' colspan='6'>").html(`<span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${detailitem[i]["text"]}</span>`));
-                tbodycustom.append(trcustom);
-                last_group_abjad++;
-            }
-            if(detailitem[i]["type"] == "product"){ 
-                var trcustom = $("<tr>");  
-                trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["image_url"]  + "' alt='Gambar' class='image-produk'>"));
-
-                var varian = `<span class="text-head-3">${detailitem[i]["text"]}</span><br>
-                            <span class="text-detail-2 text-truncate">${detailitem[i]["group"]}</span> 
-                            <div class="d-flex gap-1 flex-wrap">`;
-                for(var j = 0; detailitem[i]["varian"].length > j;j++){
-                    varian += `<span class="badge badge-${j % 5}">${detailitem[i]["varian"][j]["varian"] + ": " + detailitem[i]["varian"][j]["value"]}</span>`; 
-                }
-                varian +=  '</div>'; 
-                trcustom.append($("<td class='detail'>").html(varian));
-                trcustom.append($("<td class='detail'>").text(detailitem[i]["qty"] + " " + detailitem[i]["satuan_text"]));
-                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["price"])));
-                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["disc"])));
-                trcustom.append($("<td class='detail'>").text(rupiah(detailitem[i]["total"])));  
-                tbodycustom.append(trcustom);
-            }
-        }
-
-        // Buat footer tabel
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail px-2'>").text("Sub Total")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.invoice["InvSubTotal"]))); 
-        tfootcustom.append(footercustom);
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail'>").text("Disc Item")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.invoice["InvDiscItemTotal"]))); 
-        tfootcustom.append(footercustom);
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail'>").text("Disc Total")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.invoice["InvDiscTotal"]))); 
-        tfootcustom.append(footercustom);
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail'>").text("Pengiriman")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.invoice["InvDeliveryTotal"]))); 
-        tfootcustom.append(footercustom);
-        var footercustom = $("<tr>"); 
-        footercustom.append($("<th class='detail text-end' colspan='4'>").text("")); 
-        footercustom.append($("<th class='detail'>").text("Grand Total")); 
-        footercustom.append($("<th class='detail'>").text(rupiah(data.invoice["InvGrandTotal"]))); 
-        tfootcustom.append(footercustom);
-
-        // Gabungkan tabel
-        tablecustom.append(theadcustom);
-        tablecustom.append(tbodycustom);
-        tablecustom.append(tfootcustom);
-
-        
-        var viewcustom = $("<div class='view-detail'>");
-        viewcustom.append('<div class="text-head-2 py-2"><i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</div>');
-        viewcustom.append(tablecustom);
-        return viewcustom; 
-    } 
-
+    }   
     tooltiprenew = function(){
          // Hapus tooltip sebelumnya
         var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -504,59 +463,107 @@
             return tooltip;
         });
     }
-
-    var isProcessingSurveyEdit = [];
-    edit_project_Survey = function(ref,id,el){ 
-          // INSERT LOADER BUTTON
-          if (isProcessingSurveyEdit[id]) {
-            console.log("project invoice cancel load");
+    var isProcessingInvoice;
+    add_click = function(el){
+        if (isProcessingInvoice) {
+            console.log("add Invoice cancel load");
             return;
-        }  
-        isProcessingSurveyEdit[id] = true; 
+        }   
+        isProcessingInvoice = true; 
         let old_text = $(el).html();
         $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/edit-project-survey/" + id, 
+            url: "<?= base_url() ?>message/add-invoice", 
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-edit-survey").modal("show"); 
-                $("#modal-edit-survey").data("menu","survey"); 
+                $("#modal-add-invoice").modal("show"); 
+                $("#modal-add-invoice").data("menu","Invoice");  
 
-                isProcessingSurveyEdit[id] = false;
+                isProcessingInvoice = false;
                 $(el).html(old_text); 
+                tooltiprenew();
             },
             error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyEdit[id] = false;
+                isProcessingInvoice = false;
                 $(el).html(old_text); 
 
                 Swal.fire({
                     icon: 'error',
                     text: xhr["responseJSON"]['message'], 
                     confirmButtonColor: "#3085d6", 
-                });
+                }); 
+                tooltiprenew();
             }
         });
-    };  
-    print_project_Survey = function(ref,id,el){ 
-        window.open('<?= base_url("print/project/survey/") ?>' + id, '_blank');
-    };
-    var isProcessingSurveyFinish = [];
-    
-    var isProcessingSurveyDelete = [];
-    delete_project_Survey = function(ref,id,el){ 
+    }
+
+    print_invoice = function(id,el,ref){  
+        $("#modal-print-invoice").modal("show");
+        $("#modal-print-invoice").data("id",id) 
+    };   
+    $("#btn-print-invoice").click(function(i){ 
+        $.redirect('<?= base_url("print/project/invoice/") ?>' +  $("#modal-print-invoice").data("id"),  {
+            kertas: $("#InvPrintFormat").val(),
+            image: $('input[name="InvPrintImage"]:checked').val(),
+            total: $('input[name="InvPrintTotal"]:checked').val(),
+        },
+        "GET",'_blank');
+        $("#modal-print-invoice").modal("hide");
+        
+    })
+
+    var isProcessingInvoiceEdit;
+    edit_invoice = function(id,el,ref){
+        if (isProcessingInvoiceEdit) {
+            console.log("edit Invoice cancel load");
+            return;
+        }   
+        isProcessingInvoiceEdit = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-invoice/"+id, 
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-invoice").modal("show"); 
+                $("#modal-edit-invoice").data("menu","Invoice");  
+
+                isProcessingInvoiceEdit = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingInvoiceEdit = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                }); 
+                tooltiprenew();
+            }
+        });
+    }
+
+    var isProcessingInvDelete = [];
+    delete_invoice = function(id,el,ref){ 
          // INSERT LOADER BUTTON
-        if (isProcessingSurveyDelete[id]) {
+        if (isProcessingInvDelete[id]) {
             return;
         }  
-        isProcessingSurveyDelete[id] = true; 
+        isProcessingInvDelete[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
+        tooltiprenew();
         Swal.fire({
             title: "Are you sure?",
-            text: "Anda yakin ingin menghapus survey ini...???",
+            text: "Anda yakin ingin membatalkan invoice ini.",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -567,46 +574,48 @@
                 $.ajax({
                     dataType: "json",
                     method: "POST",
-                    url: "<?= base_url() ?>action/delete-data-survey/" + id, 
+                    url: "<?= base_url() ?>action/delete-data-invoice/" + id, 
                     success: function(data) { 
                         Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
+                            title: "Success!",
+                            text: "Data invoice berhasil di batalkan.",
                             icon: "success",
                             confirmButtonColor: "#3085d6",
                         });  
-                        loader_datatable()
+                        table.ajax.reload(null, false);
                     }, 
                 });
             }
-            isProcessingSurveyDelete[id] = false;
+            isProcessingInvDelete[id] = false;
             $(el).html(old_text); 
         });
     };
-    add_project_survey_finish = function(ref,id,el){
-        if (isProcessingSurveyFinish[id]) {
-            console.log("project survey cancel load");
+
+    var IsUpdateStatus = [];
+    update_status = function(status,id,el){ 
+        if (IsUpdateStatus[id]) {
+            console.log("project invoice cancel load");
             return;
         }  
 
-        isProcessingSurveyFinish[id] = true; 
+        IsUpdateStatus[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/add-project-survey-finish/" + id, 
-            success: function(data) {  
-                $("#modal-message").html(data);
-                $("#modal-finish-survey").modal("show"); 
-                $("#modal-finish-survey").data("menu","survey"); 
-
-                isProcessingSurveyFinish[id] = false;
+            url: "<?= base_url() ?>action/update-invoice/" + id +  "/" + status, 
+            success: function(data) {     
+                IsUpdateStatus[id] = false;
                 $(el).html(old_text); 
+                tooltiprenew();
+
+                table.ajax.reload(null, false);
             },
             error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyFinish[id] = false;
+                IsUpdateStatus[id] = false;
                 $(el).html(old_text); 
+                tooltiprenew();
 
                 Swal.fire({
                     icon: 'error',
@@ -615,31 +624,37 @@
                 });
             }
         });
-    }
+    };  
 
-    var isProcessingSurveyFinishEdit = [];
-    edit_project_Survey_finish = function(ref,id,el){
-        if (isProcessingSurveyFinishEdit[id]) {
-            console.log("project survey cancel load");
+
+
+    var isProcessingInvoicePayment = [];
+    add_payment = function(id,el,type){
+        // INSERT LOADER BUTTON
+        if (isProcessingInvoicePayment[id]) {
+            console.log("project invoice cancel load");
             return;
         }  
-        isProcessingSurveyFinishEdit[id] = true; 
+        isProcessingInvoicePayment[id] = true; 
         let old_text = $(el).html();
-        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/edit-project-survey-finish/" + id, 
+            url: "<?= base_url() ?>message/add-project-payment/" + id, 
+            data:{
+                type:type
+            },
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-finish-survey").modal("show"); 
-                $("#modal-finish-survey").data("menu","survey"); 
+                $("#modal-add-payment").modal("show");  
+                $(".tooltip").remove(); 
 
-                isProcessingSurveyFinishEdit[id] = false;
+                isProcessingInvoicePayment[id] = false;
                 $(el).html(old_text); 
             },
             error: function(xhr, textStatus, errorThrown){ 
-                isProcessingSurveyFinishEdit[id] = false;
+                isProcessingInvoicePayment[id] = false;
                 $(el).html(old_text); 
 
                 Swal.fire({

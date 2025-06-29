@@ -49,6 +49,10 @@ th.detail {
     padding:0.5rem 0.25rem !important;
     background: #f3f3f354 !important;;
 }
+.table-nested{
+    /* table-layout: fixed; // ***********add this */
+    word-wrap:break-word; /*// ***********and this */
+}
 .table-nested tr th {
     background: #3051764f;    
     border-bottom: 1px solid #334a9d;

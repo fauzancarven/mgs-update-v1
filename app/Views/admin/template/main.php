@@ -34,8 +34,8 @@
     <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png" />
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
-    <link rel="stylesheet" 
-	  href="https://static.eu1.mindsphere.io/mdsp-css/v2.7.0/css/mdsp-css.min.css" />
+    <!-- <link rel="stylesheet" 
+	  href="https://static.eu1.mindsphere.io/mdsp-css/v2.7.0/css/mdsp-css.min.css" /> -->
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/custom-view.css">  
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/custom-datatable.css">  
 

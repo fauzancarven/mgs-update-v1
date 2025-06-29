@@ -13,6 +13,7 @@ use App\Models\ProdukunitModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianModel;
 use App\Models\ProdukvarianvalueModel;
+use App\Models\ProjectinvoiceModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
 use App\Models\LampiranModel;
@@ -348,10 +349,10 @@ class ActionController extends BaseController
             echo $models->update_status_sph($id,$status);  
         }
     } 
-
+ 
     public function invoice_add(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectinvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_invoice($postData); 
@@ -360,7 +361,7 @@ class ActionController extends BaseController
     }
     public function invoice_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectinvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_invoice($postData,$id); 
@@ -369,12 +370,20 @@ class ActionController extends BaseController
     }
     public function invoice_delete($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new ProjectinvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->delete_data_invoice($id);  
         }
     }
+    public function invoice_status($id,$status){
+        $request = Services::request();
+        $models = new ProjectinvoiceModel(); 
+        if ($request->getMethod(true) === 'POST') {    
+            echo $models->update_status_invoice($id,$status);  
+        }
+    } 
+
     public function payment_delete($id){
         $request = Services::request();
         $models = new ProjectModel(); 

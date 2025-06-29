@@ -85,7 +85,7 @@
             </div>  
         </div>   
     </div> 
-    <div class="card-body py-0 px-4 pb-4" id="table"> 
+    <div class="card-body py-0 px-4 pb-4" > 
         <table id="data-table-survey" class="table table-hover table-nested">
             <thead>
                 <tr> 
@@ -324,6 +324,7 @@
         "order": [[4, "desc"]],
         "processing": true,
         "serverSide": true, 
+        "autoWidth": false, 
         "ajax": {
             "url": "<?= base_url()?>datatables/get-datatable-survey",
             "type": "POST", 
@@ -344,13 +345,13 @@
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
             }, 
-            { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
-            { data: "store", className:"align-top" , width: "100px"}, 
-            { data: "code", className:"align-top", width: "100px"}, 
-            { data: "date", className:"align-top"}, 
-            { data: "status" , className:"align-top"}, 
-            { data: "admin" , className:"align-top"}, 
-            { data: "customer", className:"align-top",
+            { data: "action" ,orderable: false , className:"action-td",width: "60px"}, 
+            { data: "store", className:"align-top" , width: "150px"}, 
+            { data: "code", className:"align-top", width: "120px"}, 
+            { data: "date", className:"align-top", width: "100px"}, 
+            { data: "status" , className:"align-top", width: "100px"},  
+            { data: "admin" , className:"align-top", width: "100px"},  
+            { data: "customer", className:"align-top", width: "250px",
                 render: function(data, type, row) { 
                     var html = ` 
                         <div class="text-head-3 pb-2">${row.customer}</div> 
@@ -360,8 +361,8 @@
                     return html;
                 }
             }, 
-            { data: "staff"  ,orderable: false, className:"align-top"}, 
-            { data: "biaya", className:"align-top"}, 
+            { data: "staff"  , width: "100px",orderable: false, className:"align-top"}, 
+            { data: "biaya", width: "auto",className:"align-top"}, 
         ] 
     });  
     table.on('draw.dt', function() { 

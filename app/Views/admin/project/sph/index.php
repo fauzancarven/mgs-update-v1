@@ -372,6 +372,7 @@
             "loadingRecords":  `<div class="loading-spinner"></div>`,
             "processing":  `<div class="loading-spinner"></div>`,
         }, 
+        "autoWidth": false,
         "order": [[4, "desc"]],
         "processing": true,
         "serverSide": true, 
@@ -390,18 +391,18 @@
             tooltiprenew();
         },
         "columns": [ 
-            { data: null ,orderable: false,width: "20px",className:"p-0 ps-2",
+            { data: null ,orderable: false,className:"p-0 ps-2",width: "20px",
                 render: function(data, type, row) {
                     return '<a class="pointer text-head-3 btn-detail-item"><i class="fa-solid fa-chevron-right"></i></a>';
                 }
             },  
-            { data: "action" ,orderable: false , className:"action-td",width: "30px"}, 
-            { data: "store", className:"align-top" , width: "150px"}, 
-            { data: "code", className:"align-top", width: "100px"}, 
-            { data: "date", className:"align-top"}, 
-            { data: "status" , className:"align-top"}, 
-            { data: "admin" , className:"align-top"}, 
-            { data: "customer",  className:"align-top",
+            { data: "action" ,orderable: false , className:"action-td",width: "60px"}, 
+            { data: "store", className:"align-top" , width: "100px"}, 
+            { data: "code", className:"align-top", width: "120px"}, 
+            { data: "date", className:"align-top", width: "100px"}, 
+            { data: "status" , className:"align-top", width: "100px"}, 
+            { data: "admin" , className:"align-top", width: "100px"},  
+            { data: "customer",  className:"align-top", width: "250px", 
                 render: function(data, type, row) { 
                     var html = ` 
                         <div class="text-head-3 pb-2">${row.customer}</div>

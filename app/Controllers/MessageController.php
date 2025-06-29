@@ -11,6 +11,7 @@ use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukvarianModel;
+use App\Models\ProjectinvoiceModel;
 use App\Models\ProjectModel;
 use App\Models\ProjectsphModel;
 use App\Models\PaymentModel;
@@ -553,7 +554,44 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/po/edit_project_po',$data)); 
     }
+    public function invoice_add(){
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/invoice/add_invoice.php',$data));  
+    }
+    public function invoice_edit($id)
+    {     
+        $models = new ProjectinvoiceModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
 
+        $project = $models->get_data_invoice($id); 
+        $arr_detail = $models->get_data_invoice_detail($id);   
+        $detail = array();
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                        "satuan_text"=>$row->InvDetailSatuanText,  
+                        "price"=>$row->InvDetailPrice,
+                        "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                        "total"=> $row->InvDetailTotal,
+                        "disc"=> $row->InvDetailDisc,
+                        "qty"=> $row->InvDetailQty,
+                        "text"=> $row->InvDetailText,
+                        "group"=> $row->InvDetailGroup,
+                        "type"=> $row->InvDetailType,
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->InvDetailVarian,true)
+                    );
+        };
+        $data["project"] = $project; 
+        $data["detail"] =  $detail; 
+        $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/invoice/edit_invoice.php',$data)); 
+    }
     public function project_invoice_add($id)
     {     
         $models = new ProjectModel();

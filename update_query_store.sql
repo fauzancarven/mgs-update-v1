@@ -47,10 +47,19 @@ LEFT JOIN project ON project.ProjectId = penawaran.ProjectId
 SET 
 penawaran.StoreId =  project.StoreId,
 penawaran.CustomerId =  project.CustomerId;
-
+ 
+ALTER TABLE `invoice`
+	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `ProjectId`;
 update invoice 
 LEFT JOIN project ON project.ProjectId = invoice.ProjectId 
 SET 
 invoice.StoreId =  project.StoreId,
 invoice.CustomerId =  project.CustomerId;
 
+ALTER TABLE `payment`
+	ADD COLUMN `PaymentFromBank` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentNote`,
+	ADD COLUMN `PaymentFromRek` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentFromBank`,
+	ADD COLUMN `PaymentFromName` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentFromRek`,
+	ADD COLUMN `PaymentToBank` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentFromName`,
+	ADD COLUMN `PaymentToRek` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentToBank`,
+	ADD COLUMN `PaymentToName` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentToRek`;
