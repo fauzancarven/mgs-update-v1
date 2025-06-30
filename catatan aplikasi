@@ -3,3 +3,24 @@ Notifikasi
 * pada saat create sample muncul notif untuk logistik agar mengetahui dibuatkan surat jalan dan pembelian
 * pada saat create Invoice muncul notif untuk logistik agar mengetahui dibuatkan surat jalan dan pembelian
 
+
+
+
+LEVEL USER
+* DIREKTUR
+* MANAGER ACCOUNTING
+* MANAGER OPERASIONAL
+* ADMIN BARANG
+* ADMIN JASA
+* ADMIN ME
+* DIGITAL MARKETING
+* LOGISTIK
+
+
+MENU
+* MASTER DATA
+- Toko (DIREKTUR, MANAGER ACCOUNTING,MANAGER OPERASIONAL)
+- Account (DIREKTUR, MANAGER ACCOUNTING,MANAGER OPERASIONAL)
+- Customer (DIREKTUR, MANAGER ACCOUNTING,MANAGER OPERASIONAL,ADMIN BARANG,ADMIN JASA,ADMIN ME)
+- Produk
+- Vendor

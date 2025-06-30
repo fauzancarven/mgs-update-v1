@@ -479,7 +479,7 @@
                         </a> 
                         <div class="collapse <?= ($menu === 'Sales' ? "show" : "") ?>" id="ui-basic-1">
                             <ul class="nav flex-column sub-menu"> 
-                                <li class="nav-item <?= ($title === 'Project' ? "active" : "") ?>"> 
+                                <li class="nav-item <?= ($title === 'Project' ? "active" : "") ?> d-none"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/project">
                                         <i class="ti-home menu-icon"></i>
                                         <span class="menu-title">Project</span>
@@ -704,7 +704,7 @@
                         <span class="text-dark" style="font-size: 7pt">Produk</span>
                     </span>
                 </a> -->
-                <a href="<?= base_url("/admin/project") ?>" class="col d-flex justify-content-center  text-decoration-none p-1">
+                <a href="<?= base_url("/admin/project") ?>" class="col d-flex justify-content-center  text-decoration-none p-1 d-none">
                     <span class="icon-holder text-center">
                         <i class="ti-blackboard menu-icon text-primary mb-1"></i><br>
                         <span class="text-dark" style="font-size: 7pt">Project</span>
