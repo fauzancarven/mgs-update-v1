@@ -643,7 +643,10 @@ class ProjectinvoiceModel extends Model
         $dataold = $builder = $this->getWhere(['InvId' => $id], 1)->getRow(); 
  
         $header = $data["header"];  
-        $builder = $this->db->table("invoice"); 
+        $builder = $this->db->table("invoice");  
+        $builder->set('ProjectId', $header["ProjectId"]);
+        $builder->set('CustomerId', $header["CustomerId"]);
+        $builder->set('StoreId', $header["StoreId"]);   
         $builder->set('InvDate', $header["InvDate"]);   
         $builder->set('InvAdmin', $header["InvAdmin"]); 
         $builder->set('InvRef', $header["InvRef"]); 

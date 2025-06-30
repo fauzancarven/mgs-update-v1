@@ -1464,6 +1464,7 @@
         }
 
         var header = {  
+            InvCode: $("#InvCode").val(), 
             InvDate: $("#InvDate").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
             ProjectId:$("#ProjectId").val(), 
             CustomerId: $("#CustomerId").val(), 
