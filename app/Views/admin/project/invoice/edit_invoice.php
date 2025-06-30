@@ -650,63 +650,7 @@
     });
     $('#InvAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
       
-    /* EDIT MODE
-    */ 
-    $("#InvCode").val('<?= $project->InvCode ?>');
-
-    // CUSTOMER
-    $("#InvCustName").val('<?= $project->InvCustName ?>');
-    $("#InvCustTelp").val('<?= $project->InvCustTelp ?>');
-    $("#InvAddress").val(`<?= $project->InvAddress ?>`);
-    $('#CustomerId').append(new Option("<?=$project->CustomerCode. " - " . $project->CustomerName . ($project->CustomerCompany == "" ? "" : " (".$project->CustomerName.")")?>" , "<?=$project->CustomerId?>", true, true)).trigger('change');    
-
-    // Project
-    <?php
-        if($project->ProjectId == 0){ 
-            echo "$('#ProjectId').append(new Option('Tidak ada yang dipilih' , 0, true, true)).trigger('change');";  
-            echo '$("#StoreId").attr("disabled",false);';  
-            echo '$("#CustomerId").attr("disabled",false);';   
-        }else{ 
-            echo "$('#ProjectId').append(new Option('".$project->StoreCode." | ".$project->ProjectName." | ".$project->CustomerCode. " - " . $project->CustomerName . ($project->CustomerCompany == '' ? '' : " (".$project->CustomerName.")")."' , ".$project->ProjectId.", true, true)).trigger('change');";   
-            echo '$("#StoreId").attr("disabled",true);';
-            echo '$("#CustomerId").attr("disabled",true); ';
-        }
-    ?>
-    // ref
-    <?php
-        if($project->InvRef == 0){  
-            echo "var optionref = new Option('Tidak ada yang dipilih' , 0, true, true);";
-            echo '$(optionref).data("type","-");'; 
-            echo "$('#InvRef').append(optionref).trigger('change');"; 
-        }else{
-            echo "var optionref = new Option('".$project->InvRefCode."' , ".$project->InvRef.", true, true);";
-            echo '$(optionref).data("type","'.$project->InvRefType.'");'; 
-            echo "$('#InvRef').append(optionref).trigger('change');"; 
-
-        }
-    ?>
-         
-    // StoreId
-    $('#StoreId').append(new Option("<?=$project->StoreCode. " - " . $project->StoreName ?>" , "<?=$project->StoreId?>", true, true)).trigger('change'); 
-     
-
-    // Delivery  
-    $("input[name='InvDelivery'][value='<?= $project->InvDelivery ?>'").prop("checked", true); 
-    $("#InvDeliveryTotal").val("<?= $project->InvDeliveryTotal ?>"); 
-
-
-    $("#InvSubTotal").val("<?= $project->InvSubTotal ?>");
-    $("#InvDiscItemTotal").val("<?= $project->InvDiscItemTotal ?>");
-    $("#InvDiscTotal").val("<?= $project->InvDiscTotal ?>");
-    $("#InvGrandTotal").val("<?= $project->InvGrandTotal ?>");
-    $("#InvDeliveryTotal").val("<?= $project->InvDeliveryTotal ?>");
-
-    var image_list = JSON.parse(`<?= $project->InvImageList ?>`); 
-    $('#select-ktp').append(new Option("<?= $project->KtpName?>" , "<?= $project->KtpId?>" , true, true)).trigger('change'); 
-    $("#preview-ktp").html(`<img src="<?= $project->KtpImage?>">`)
-    
-    $('#select-npwp').append(new Option("<?= $project->NpwpName?>" , "<?= $project->NpwpId?>" , true, true)).trigger('change'); 
-    $("#preview-npwp").html(`<img src="<?= $project->NpwpImage?>">`) 
+ 
 
     var inv_sub_total = new Cleave(`#InvSubTotal`, {
             numeral: true,
@@ -775,15 +719,7 @@
 
 
      /** BAGIAN IMAGE UPLOAD */
-    for(var i=0; image_list.length > i; i++){
-        $("#list-produk").append(`<div class="image-default-obi border">
-                <img src="${image_list[i]}" draggable="true"> 
-                <div class="action">
-                    <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
-                    <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
-                </div> 
-        </div>`);
-    }
+  
     $("#img-produk").on('click',function(){
         $("#upload-produk").trigger("click");
     })  
@@ -1406,6 +1342,74 @@
         }
     }); 
 
+
+       /* EDIT MODE
+    */ 
+    $("#InvCode").val('<?= $project->InvCode ?>');
+
+    // CUSTOMER
+    $("#InvCustName").val('<?= $project->InvCustName ?>');
+    $("#InvCustTelp").val('<?= $project->InvCustTelp ?>');
+    $("#InvAddress").val(`<?= $project->InvAddress ?>`);
+    $('#CustomerId').append(new Option("<?=$project->CustomerCode. " - " . $project->CustomerName . ($project->CustomerCompany == "" ? "" : " (".$project->CustomerName.")")?>" , "<?=$project->CustomerId?>", true, true)).trigger('change');    
+
+    // Project
+    <?php
+        if($project->ProjectId == 0){ 
+            echo "$('#ProjectId').append(new Option('Tidak ada yang dipilih' , 0, true, true)).trigger('change');";  
+            echo '$("#StoreId").attr("disabled",false);';  
+            echo '$("#CustomerId").attr("disabled",false);';   
+        }else{ 
+            echo "$('#ProjectId').append(new Option(`".$project->StoreCode." | ".$project->ProjectName." | ".$project->CustomerCode. " - " . $project->CustomerName . ($project->CustomerCompany == '' ? '' : " (".$project->CustomerName.")")."` , ".$project->ProjectId.", true, true)).trigger('change');";   
+            echo '$("#StoreId").attr("disabled",true);';
+            echo '$("#CustomerId").attr("disabled",true); ';
+        }
+    ?>
+    // ref
+    <?php
+        if($project->InvRef == 0){  
+            echo "var optionref = new Option('Tidak ada yang dipilih' , 0, true, true);";
+            echo '$(optionref).data("type","-");'; 
+            echo "$('#InvRef').append(optionref).trigger('change');"; 
+        }else{
+            echo "var optionref = new Option('".$project->InvRefCode."' , ".$project->InvRef.", true, true);";
+            echo '$(optionref).data("type","'.$project->InvRefType.'");'; 
+            echo "$('#InvRef').append(optionref).trigger('change');"; 
+
+        }
+    ?>
+         
+    // StoreId
+    $('#StoreId').append(new Option("<?=$project->StoreCode. " - " . $project->StoreName ?>" , "<?=$project->StoreId?>", true, true)).trigger('change'); 
+     
+
+    // Delivery  
+    $("input[name='InvDelivery'][value='<?= $project->InvDelivery ?>'").prop("checked", true); 
+    $("#InvDeliveryTotal").val("<?= $project->InvDeliveryTotal ?>"); 
+
+
+    $("#InvSubTotal").val("<?= $project->InvSubTotal ?>");
+    $("#InvDiscItemTotal").val("<?= $project->InvDiscItemTotal ?>");
+    $("#InvDiscTotal").val("<?= $project->InvDiscTotal ?>");
+    $("#InvGrandTotal").val("<?= $project->InvGrandTotal ?>");
+    $("#InvDeliveryTotal").val("<?= $project->InvDeliveryTotal ?>");
+    var image_list = JSON.parse(`<?= $project->InvImageList ?>`); 
+    $('#select-ktp').append(new Option("<?= $project->KtpName?>" , "<?= $project->KtpId?>" , true, true)).trigger('change'); 
+    $("#preview-ktp").html(`<img src="<?= $project->KtpImage?>">`)
+    
+    $('#select-npwp').append(new Option("<?= $project->NpwpName?>" , "<?= $project->NpwpId?>" , true, true)).trigger('change'); 
+    $("#preview-npwp").html(`<img src="<?= $project->NpwpImage?>">`) 
+
+    for(var i=0; image_list.length > i; i++){
+        $("#list-produk").append(`<div class="image-default-obi border">
+                <img src="${image_list[i]}" draggable="true"> 
+                <div class="action">
+                    <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
+                    <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
+                </div> 
+        </div>`);
+    }
+    
     $("#btn-edit-invoice").click(function(){
         var data_detail_item = table_inv_item.getDataRow(); 
         if($("#CustomerId").val() == null){
