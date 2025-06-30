@@ -108,7 +108,7 @@
     </div> 
     <h5 class="font-weight-normal mb-0 p-2 fw-bold">Sales</h5> 
     <div class="d-flex g-2 flex-md-row flex-column">
-        <a class="card card-dark-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/project") ?>">
+        <a class="card card-dark-blue m-2 d-none"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/project") ?>">
             <div class="card-body d-flex flex-column text-center">
                 <i class="ti-blackboard menu-icon fa-4x"></i>
                 <p class="pt-4 fw-bold">PROJECT</p> 
