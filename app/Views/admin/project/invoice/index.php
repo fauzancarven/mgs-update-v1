@@ -270,19 +270,28 @@
         $("#paging-data").html(page_html);
     }
      // FILTER TANGGAL
+    var start = moment().startOf('month');
+    var end = moment().endOf('month');
+    function cb(start, end) { 
+        $("#searchdatadate").val(start.format('DD MMM YYYY') + ' - ' + end.format('DD MMM YYYY')); 
+        $("#searchdatadate").data("start",start.format('YYYY/MM/DD'))
+        $("#searchdatadate").data("end",end.format('YYYY/MM/DD'))
+        table.ajax.reload(null, false);
+    }
     $('#searchdatadate').daterangepicker({  
         autoUpdateInput: false,
+        startDate: start,
+        endDate: end,
         locale: {
             format: 'DD MMMM YYYY',
             cancelLabel: 'Reset'
         }
-    });
+    },cb); 
     $('#searchdatadate').on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format('DD MMM YYYY') + ' - ' + picker.endDate.format('DD MMM YYYY'));
         $(this).data("start",picker.startDate.format('YYYY/MM/DD'))
         $(this).data("end",picker.endDate.format('YYYY/MM/DD'))
         //loader_datatable(); 
-        table.ajax.reload(null, false);
     }).on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');
         $(this).data("start","")
@@ -443,6 +452,8 @@
     function format(data) {
         return data.detail;  
     }   
+    
+    cb(start, end);
     tooltiprenew = function(){
          // Hapus tooltip sebelumnya
         var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
