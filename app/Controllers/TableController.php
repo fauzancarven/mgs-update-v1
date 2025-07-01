@@ -11,6 +11,7 @@ use App\Models\ProjectinvoiceModel;
 use App\Models\CustomerModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
+use App\Models\AccountingModel;
 use Config\Services; 
 
 class TableController extends BaseController
@@ -152,6 +153,17 @@ class TableController extends BaseController
         $datatable = new VendorModel(); 
         if ($request->getMethod(true) === 'POST') {  
             echo $datatable->blog_json($request->getPost()["search"]["value"]); 
+        }    
+        
+    } 
+
+    
+    public function payment_request_datatable()
+    {   
+        $request = Services::request();
+        $datatable = new AccountingModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->get_data_request_payment($request->getPost());
         }    
         
     } 

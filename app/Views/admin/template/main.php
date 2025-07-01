@@ -558,19 +558,19 @@
                         <div class="collapse <?= ($menu === 'Accounting' ? "show" : "") ?>" id="ui-Accounting">
                             <ul class="nav flex-column sub-menu"> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/pettycash">
                                         <i class="ti-view-list-alt menu-icon"></i>
                                         <span class="menu-title">Petty Cash</span>
                                     </a>
                                 </li> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/paymentrequest">
                                         <i class="ti-view-list-alt menu-icon"></i>
                                         <span class="menu-title">Payment Request</span>
                                     </a>
                                 </li> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/bukubesar">
                                         <i class="ti-view-list-alt menu-icon"></i>
                                         <span class="menu-title">Buku Besar</span>
                                     </a>

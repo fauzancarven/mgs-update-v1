@@ -240,4 +240,17 @@ class AdminController extends BaseController
         ]; 
         return view('admin/accounting/index', $data); 
     }
+
+    public function paymentrequest(){    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Payment Request',
+            'menu' => "Accounting", 
+        ]; 
+        return view('admin/accounting/paymentrequest', $data); 
+    }
 }

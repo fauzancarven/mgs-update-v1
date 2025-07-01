@@ -49,77 +49,7 @@ class ProjectModel extends Model
 
     /*********************************************************** */
     /** FUNCTION PROJECT */  
-    /*********************************************************** */
-    private function getTerbilang($number) {
-        $terbilang = array(
-            1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
-            6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
-            11 => 'Sebelas', 12 => 'Dua Belas', 13 => 'Tiga Belas', 14 => 'Empat Belas', 15 => 'Lima Belas',
-            16 => 'Enam Belas', 17 => 'Tujuh Belas', 18 => 'Delapan Belas', 19 => 'Sembilan Belas', 20 => 'Dua Puluh',
-            30 => 'Tiga Puluh', 40 => 'Empat Puluh', 50 => 'Lima Puluh', 60 => 'Enam Puluh',
-            70 => 'Tujuh Puluh', 80 => 'Delapan Puluh', 90 => 'Sembilan Puluh', 100 => 'Seratus'
-        );
-
-        if ($number < 20 || $number == 100) {
-            return $terbilang[$number];
-        } elseif ($number < 100) {
-            $puluh = floor($number / 10) * 10;
-            $sisa = $number % 10;
-            if ($sisa > 0) {
-                return $terbilang[$puluh] . ' ' . $terbilang[$sisa];
-            } else {
-                return $terbilang[$puluh];
-            }
-        } elseif ($number < 1000) {
-            $ratus = floor($number / 100);
-            $sisa = $number % 100;
-            if ($sisa > 0) {
-                if ($ratus == 1) {
-                    return 'Seratus ' . getTerbilang($sisa);
-                } else {
-                    return $terbilang[$ratus] . ' Ratus ' . getTerbilang($sisa);
-                }
-            } else {
-                if ($ratus == 1) {
-                    return 'Seratus';
-                } else {
-                    return $terbilang[$ratus] . ' Ratus';
-                }
-            }
-        } elseif ($number < 1000000) {
-            $ribu = floor($number / 1000);
-            $sisa = $number % 1000;
-            if ($sisa > 0) {
-                if ($ribu == 1) {
-                    return 'Seribu ' . getTerbilang($sisa);
-                } else {
-                    return getTerbilang($ribu) . ' Ribu ' . getTerbilang($sisa);
-                }
-            } else {
-                if ($ribu == 1) {
-                    return 'Seribu';
-                } else {
-                    return getTerbilang($ribu) . ' Ribu';
-                }
-            }
-        } elseif ($number < 1000000000) {
-            $juta = floor($number / 1000000);
-            $sisa = $number % 1000000;
-            if ($sisa > 0) {
-                if ($juta == 1) {
-                    return 'Satu Juta ' . getTerbilang($sisa);
-                } else {
-                    return getTerbilang($juta) . ' Juta ' . getTerbilang($sisa);
-                }
-            } else {
-                if ($juta == 1) {
-                    return 'Satu Juta';
-                } else {
-                    return getTerbilang($juta) . ' Juta';
-                }
-            }
-        }
-    }
+    /*********************************************************** */ 
     private function format_filesize($bytes) {
         if ($bytes >= 1073741824) {
             $bytes = number_format($bytes / 1073741824, 2) . ' GB';
@@ -132,33 +62,6 @@ class ProjectModel extends Model
         }
     
         return $bytes;
-    }
-    private function simpan_gambar_base64($base64, $lokasi,$nama) {
-        $parts = explode(',', $base64);
-        $header = $parts[0];
-        $extension = '';
-        
-        switch ($header) {
-            case 'data:image/jpeg;base64':
-                $extension = '.jpg';
-                break;
-            case 'data:image/png;base64':
-                $extension = '.png';
-                break;
-            case 'data:image/gif;base64':
-                $extension = '.gif';
-                break;
-            case 'data:image/bmp;base64':
-                $extension = '.bmp';
-                break;
-            default:
-                return 'Jenis file tidak didukung';
-        }
-        
-        $nama_file = $nama . $extension;
-        $biner = base64_decode($parts[1]);
-        file_put_contents($lokasi ."/". $nama_file, $biner); 
-        return $lokasi ."/". $nama_file;
     }
   
     public function getSelectRefInvoice($refid,$search = null){
@@ -2822,7 +2725,7 @@ class ProjectModel extends Model
                                 <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> atau <a class="text-head-3 text-primary" style="cursor:pointer" onclick="invoice_project_update_delivery('.$project_id.','.$row->InvId.',this,0)">nonaktifkan mode Pengiriman</a>
                             </span>
                         </div>';
-                }
+                } 
             }else{
                 $html_delivery = ' 
                 <span class="text-head-3 ps-4">

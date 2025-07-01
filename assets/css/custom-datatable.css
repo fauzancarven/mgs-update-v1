@@ -162,20 +162,20 @@ table.detail-item tfoot th.detail {
     font-size: 0.7rem !important;
 }
  
-table.detail-payment{ 
+table.detail-payment, table.detail-delivery{ 
     box-shadow: -1px 1px 4px 0 #334a9d52;
 }
-table.detail-payment td.detail {
+table.detail-payment td.detail , table.detail-delivery td.detail{
     padding: 0.5rem !important;
     border-bottom: 1px solid #e1e1e1;
     font-size: 0.7rem !important; 
 }
-table.detail-payment thead th.detail {    
+table.detail-payment thead th.detail , table.detail-delivery thead th.detail{    
     padding: 0.5rem 0.2rem !important;
     border-bottom: 1px solid #e1e1e1;
     background: #f3f5f9 !important;
 }
-table.detail-payment tfoot th.detail {    
+table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{    
     padding: 0.5rem 0.2rem !important;
     border-bottom: 1px solid #e3e3e3 !important;
     border-top: 1px solid #e3e3e3 !important;

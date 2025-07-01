@@ -63,6 +63,34 @@ class PaymentModel extends Model
     protected $afterDelete = [];
 
 
+    private function simpan_gambar_base64($base64, $lokasi,$nama) {
+        $parts = explode(',', $base64);
+        $header = $parts[0];
+        $extension = '';
+        
+        switch ($header) {
+            case 'data:image/jpeg;base64':
+                $extension = '.jpg';
+                break;
+            case 'data:image/png;base64':
+                $extension = '.png';
+                break;
+            case 'data:image/gif;base64':
+                $extension = '.gif';
+                break;
+            case 'data:image/bmp;base64':
+                $extension = '.bmp';
+                break;
+            default:
+                return 'Jenis file tidak didukung';
+        }
+        
+        $nama_file = $nama . $extension;
+        $biner = base64_decode($parts[1]);
+        file_put_contents($lokasi ."/". $nama_file, $biner); 
+        return $lokasi ."/". $nama_file;
+    }
+    
     private function get_next_code_payment($date){
         //sample INV/001/01/2024
         $arr_date = explode("-", $date);
@@ -131,41 +159,47 @@ class PaymentModel extends Model
             "PaymentMethod"=>$data["PaymentMethod"],
             "PaymentTotal"=>$data["PaymentTotal"],
             "PaymentNote"=>$data["PaymentNote"], 
-            "PaymentDoc"=>1,  
-            "TemplateId"=>$data["TemplateId"],  
+            "PaymentDoc"=>1,   
             "created_user"=>user()->id, 
             "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
         ));
 
-        // $builder = $this->db->table("payment");
-        // $builder->select('*');
-        // $builder->orderby('PaymentId', 'DESC');
-        // $builder->limit(1);
-        // $query = $builder->get()->getRow();  
+        $builder = $this->db->table("payment");
+        $builder->select('*');
+        $builder->orderby('PaymentId', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();  
 
-        // //Buat folder utama
-        // $folder_utama = 'assets/images/payment'; 
-        // if (!file_exists($folder_utama)) {
-        //     mkdir($folder_utama, 0777, true);  
-        // } 
+        //Buat folder utama
+        $folder_utama = 'assets/images/payment'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        }   
+         //Buat folder utama
+        $folder_utama .= '/'.$data["PaymentRefType"]; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
 
-        // //Buat folder berdasarkan id
-        // if (!file_exists($folder_utama."/".$data["ProjectId"])) {
-        //     mkdir($folder_utama."/".$data["ProjectId"], 0777, true);  
-        // }
+        //Buat folder berdasarkan id
+        $folder_utama .= '/'.$data["PaymentRef"]; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        //Buat folder berdasarkan id
+        $folder_utama .= '/sumber'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
 
-        // if (!file_exists($folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"])) {
-        //     mkdir($folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"], 0777, true);  
-        // }
-        // $folder_utama = $folder_utama."/".$data["ProjectId"]."/".$data["PaymentRefType"];  
-        // if (isset($data['image'])) {  
-        //     $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama, $query->PaymentId);  
-        // } 
+        if (isset($data['image'])) {  
+            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama, $query->PaymentId);  
+        } 
  
-        $modelssample = new ProjectsampleModel;
-        if($data["PaymentRefType"] == "Sample") $modelssample->update_data_sample_status($data["PaymentRef"]);
+        // $modelssample = new ProjectsampleModel;
+        // if($data["PaymentRefType"] == "Sample") $modelssample->update_data_sample_status($data["PaymentRef"]);
 
-        if($data["PaymentRefType"] == "Invoice") $this->update_data_invoice_status($data["PaymentRef"]); 
+        // if($data["PaymentRefType"] == "Invoice") $this->update_data_invoice_status($data["PaymentRef"]); 
     } 
     public function insert_data_payment_request($data){
         $nextcode = $this->get_next_code_payment(date("Y-m-d"));
@@ -177,8 +211,8 @@ class PaymentModel extends Model
             "ProjectId"=>$data["ProjectId"],
             "PaymentDate"=>date("Y-m-d"),
             "PaymentDate2"=>date("Y-m-d"),
-            "PaymentType"=>"-",
-            "PaymentMethod"=>$data["PaymentRequestMethod"],
+            "PaymentMethod"=>"0",
+            "PaymentType"=>$data["PaymentRequestMethod"],
             "PaymentToBank"=>$data["PaymentRequestBank"], 
             "PaymentToName"=>$data["PaymentRequestName"], 
             "PaymentToRek"=>$data["PaymentRequestRek"], 
@@ -297,4 +331,37 @@ class PaymentModel extends Model
 
         return JSON_ENCODE(array("status"=>true));
     }
+
+    public function getMethod(){
+       return $this->db->table("method")->get()->getResult();  
+    }
+    public function get_data_payment_by_invoice($id){
+        $builder = $this->db->table("payment");  
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Invoice"); 
+        $builder->where('PaymentDoc',1); 
+        return $builder->get()->getResult();  
+    }
+    public function get_data_payment_by_sample($id){
+        $builder = $this->db->table("payment"); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Sample"); 
+        $builder->where('PaymentDoc',1); 
+        return $builder->get()->getResult();  
+    }
+    public function get_data_payment_by_pembelian($id){
+        $builder = $this->db->table("payment"); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Pembelian");  
+        $builder->where('PaymentDoc',1); 
+        return $builder->get()->getResult();  
+    }
+    public function get_data_payment_by_delivery($id){
+        $builder = $this->db->table("payment"); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Pengiriman");  
+        $builder->where('PaymentDoc',1); 
+        return $builder->get()->getResult();  
+    }
+    
 }

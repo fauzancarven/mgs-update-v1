@@ -808,6 +808,61 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
     }
+    public function payment_add($id)
+    {      
+
+        $modelspayment = new PaymentModel();  
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        if($postData['type'] == "sample"){
+            $models = new ProjectsampleModel();  
+            $datasample = $models->get_data_sample($id); 
+            $project = array(
+                "ProjectId"=>$datasample->ProjectId,
+                "PaymentRef"=>$datasample->SampleId, 
+                "PaymentRefType"=>"Sample",
+                "GrandTotal"=>$datasample->SampleGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_sample($id);  
+        }
+        if($postData['type'] == "Invoice"){
+            $models = new ProjectinvoiceModel();  
+            $datainvoice = $models->get_data_invoice($id); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_invoice($id);  
+        }
+        if($postData['type'] == "pembelian"){
+            $models = new ProjectpembelianModel();  
+            $datapo = $models->get_data_pembelian($id); 
+            $project = array(
+                "ProjectId"=>$datapo->ProjectId, 
+                "PaymentRef"=>$datapo->POId,
+                "PaymentRefType"=>"Pembelian",
+                "GrandTotal"=>$datapo->POGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_pembelian($id);  
+        }
+        if($postData['type'] == "delivery"){
+            $models = new ProjectdeliveryModel();  
+            $datadelivery = $models->getDataDelivery($id); 
+            $project = array(
+                "ProjectId"=>$datadelivery->ProjectId, 
+                "PaymentRef"=>$datadelivery->DeliveryId, 
+                "PaymentRefType"=>"Pengiriman",
+                "GrandTotal"=>$datadelivery->DeliveryTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_delivery($id);  
+        }
+        $data["project"] = $project; 
+        $data["method"] = $modelspayment->getMethod(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
+    }
     public function project_payment_edit($id)
     {     
         $models = new ProjectModel();      

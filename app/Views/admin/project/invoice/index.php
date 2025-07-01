@@ -171,6 +171,94 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal-print-payment" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Payment</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="PaymentPrintFormat" class="col-sm-4 col-form-label">Ukuran Kertas</label>
+                    <div class="col-sm-8">
+                        <select class="form-select form-select-sm" id="PaymentPrintFormat" name="PaymentPrintFormat" placeholder="Pilih Admin" style="width:100%">
+                            <option id="1" selected>A4</option>
+                            <option id="2">A5</option>
+                        </select>  
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2">
+                    <label for="PaymentPrintImage" class="col-sm-4 col-form-label">gunakan gambar item</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintImage" id="PaymentPrintImage1" value="0">
+                            <label class="text-detail" for="PaymentPrintImage1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintImage" id="PaymentPrintImage2" value="1" checked>
+                            <label class="text-detail" for="PaymentPrintImage2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2 d-none">
+                    <label for="PaymentPrintPrice" class="col-sm-4 col-form-label">gunakan harga</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintPrice" id="PaymentPrintPrice1" value="0">
+                            <label class="text-detail" for="PaymentPrintPrice1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintPrice" id="PaymentPrintPrice2" value="1" checked>
+                            <label class="text-detail" for="PaymentPrintPrice2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <div class="row mb-1 align-items-center mt-2 d-none">
+                    <label for="PaymentPrintTotal" class="col-sm-4 col-form-label">gunakan grand total</label>
+                    <div class="col-sm-8">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintTotal" id="PaymentPrintTotal1" value="0">
+                            <label class="text-detail" for="PaymentPrintTotal1">Tidak</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="PaymentPrintTotal" id="PaymentPrintTotal2" value="1" checked>
+                            <label class="text-detail" for="PaymentPrintTotal2">Ya</label>
+                        </div>
+                    </div>
+                </div>   
+                <script>
+                   $('input[name="PaymentPrintPrice"]').change(function() {
+                        if($(this).val() == 0){
+                            $('input[name="PaymentPrintTotal"]').prop("disabled",true)
+                        }else{
+
+                            $('input[name="PaymentPrintTotal"]').prop("disabled",false)
+                        }
+                    });
+                    // $("#POPrintFormat").change(function(){
+                    //     if($(this).val() == "A5"){
+                    //         $('input[name="POPrintTotal"]').prop("disabled",true)
+                    //         $('input[name="POPrintPrice"]').prop("disabled",true)
+                    //         $('input[name="POPrintImage"]').prop("disabled",true)
+                    //     } else{ 
+                    //         $('input[name="POPrintTotal"]').prop("disabled",false)
+                    //         $('input[name="POPrintPrice"]').prop("disabled",false)
+                    //         $('input[name="POPrintImage"]').prop("disabled",false)
+                    //     }
+                    // })
+                </script>
+            </div>
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="btn-print-payment">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id='view-container'></div> 
+<script src="https://unpkg.com/@panzoom/panzoom@4.6.0/dist/panzoom.min.js"></script>
 <script>
     var xhr_load_project; 
     var filter_status_select = []
@@ -652,13 +740,14 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/add-project-payment/" + id, 
+            url: "<?= base_url() ?>message/add-payment/" + id, 
             data:{
                 type:type
             },
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-payment").modal("show");  
+                $("#modal-add-payment").data("menu","Invoice");  
                 $(".tooltip").remove(); 
 
                 isProcessingInvoicePayment[id] = false;
@@ -676,6 +765,94 @@
             }
         });
     }
+    
+    view_file = function(el){ 
+        filetype = $(el).data("type");
+        switch (filetype) { 
+            case 'text/plain':
+            case 'application/pdf':
+            case 'application/msword':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 
+                var viewerUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent('<?=base_url()?>'+$(el).data("file")) + '&embedded=true'; 
+                $('#view-container').html(`<div style="position: fixed;padding: 0;margin: 0;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);display: flex;justify-content: center;align-items: end;z-index: 2000;">
+                    <iframe src="${viewerUrl}" frameborder="0" style="width: 100vw;height: calc(100vh - 50px);"></iframe>
+                    <div class="bar-action">
+                        <span class="flex-fill">${$(el).data("name")}</span>  
+                        <i class="fa-solid fa-xmark" onclick="closeIframe()"></i>
+                    </div>
+                    
+                </div> `);
+                break;    
+            case 'image/jpeg':
+            case 'image/png': 
+                var viewerUrl = $(el).data("file"); 
+                $('#view-container').html(`<div style="position: fixed;padding: 0;margin: 0;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);display: flex;justify-content: center;align-items: end;z-index: 2000;">
+                    <div id="panzoom-container" style="width: 100vw;height: 100vh">
+                        <img id="gambar" src="<?=base_url()?>${viewerUrl}"> 
+                    </div>
+                    <div class="bar-action">
+                        <span class="flex-fill">${$(el).data("name")}</span>  
+                        <i class="fa-solid fa-xmark" onclick="closeIframe()"></i>
+                    </div> 
+                    
+                </div> `);
+                //scrool('gambar'); 
+                $("html, body").css("overflow","hidden");
+                var elem = document.getElementById('panzoom-container');
+                var panzoom = Panzoom(elem, {
+                    maxScale: 5,
+                    cursor: 'grab',
+                    wheel: true, 
+                    zoomSpeed: 0.1,
+                    startScale: 0.5
+                }); 
+                
+                var parent = elem.parentElement
+                 
+
+                // Panning and pinch zooming are bound automatically (unless disablePan is true).
+                // There are several available methods for zooming
+                // that can be bound on button clicks or mousewheel.
+                parent.addEventListener('wheel', panzoom.zoomWithWheel)
+
+                // This demo binds to shift + wheel
+                parent.addEventListener('wheel', function(event) {
+                    if (!event.shiftKey) return
+                    panzoom.zoomWithWheel(event)
+                })
+                panzoom.reset();
+                break;    
+                 
+            default: 
+                // Tampilkan view untuk tipe file lain 
+                break;
+        }
+    }
+
+    closeIframe = function(){
+        document.querySelector('div[style*="position: fixed"]').remove();
+        
+        $("html, body").css("overflow","auto");
+    }
+
+
+    print_payment = function(id,el,ref){ 
+        //window.open('<?= base_url("print/project/paymentA5/") ?>' + id, '_blank');
+        $("#modal-print-payment").modal("show");
+        $("#modal-print-payment").data("id",id) 
+    }
+    
+    $("#btn-print-payment").click(function(i){ 
+        $.redirect('<?= base_url("print/project/payment/") ?>' +  $("#modal-print-payment").data("id"),  {
+            kertas: $("#PaymentPrintFormat").val(),
+            image: $('input[name="PaymentPrintImage"]:checked').val(),
+            total: $('input[name="PaymentPrintTotal"]:checked').val(),
+        },
+        "GET",'_blank');
+        $("#modal-print-payment").modal("hide"); 
+    })
+
 </script>
 
 
