@@ -27,13 +27,19 @@
                             <div class="row mb-1 align-items-center">
                                 <label for="SphRef" class="col-sm-2 col-form-label">No. Ref<sup class="error">&nbsp;*</sup></label>
                                 <div class="col-sm-10">
-                                    <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?= ($delivery->InvId > 0 ? $delivery->InvCode : ($delivery->POId > 0 ? $delivery->POCode : ($delivery->SampleId > 0 ? $delivery->SampleCode : ''))) ?>"isabled>
+                                    <input id="Sphref" name="Sphref" type="text" class="form-control form-control-sm input-form" value="<?=  $delivery->DeliveryRefCode ?>"disabled>
                                 </div>
                             </div>   
                             <div class="row mb-1 align-items-center">
                                 <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
                                 <div class="col-sm-10">
                                     <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
+                                <label for="StoreId" class="col-sm-2 col-form-label">Store</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select form-select-sm" id="StoreId" name="StoreId" placeholder="StoreId" style="width:100%"></select>  
                                 </div>
                             </div>  
                             <div class="row mb-1 align-items-center">
@@ -429,7 +435,8 @@
         }
     });
     
-    $("#SphStore").select2({
+ 
+    $("#StoreId").select2({
         dropdownParent: $('#modal-edit-delivery .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
@@ -459,7 +466,7 @@
             cache: true
         }, 
     });
-    $('#SphStore').append(new Option("<?=$delivery->StoreCode. " - " . $delivery->StoreName ?>" , "<?=$delivery->StoreId?>", true, true)).trigger('change');  
+    $('#StoreId').append(new Option("<?=$delivery->StoreCode. " - " . $delivery->StoreName ?>" , "<?=$delivery->StoreId?>", true, true)).trigger('change');  
 
     $("#SphAdmin").select2({
         dropdownParent: $('#modal-edit-delivery .modal-content'),
@@ -1282,7 +1289,11 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-edit-delivery").modal("hide");
-                        loader_data_project(<?= $delivery->ProjectId?>,"pengiriman");  
+                        if($("#modal-add-delivery").data("menu") =="Invoice"){
+                            table.ajax.reload(); 
+                        }else{ 
+                            loader_data_project(<?= $delivery->ProjectId ?>,"pengiriman");   
+                        }    
                     });
                   
                 }else{

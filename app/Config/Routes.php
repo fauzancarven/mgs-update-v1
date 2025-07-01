@@ -264,6 +264,9 @@ $routes->post('/message/edit-finish-delivery/(:num)', 'MessageController::projec
 $routes->post('/message/add-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_add/$1/$2', ['filter' => 'login']);   
 $routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_edit/$1/$2', ['filter' => 'login']);   
 
+$routes->post('/message/add-delivery-invoice/(:num)', 'MessageController::delivery_add/$1/invoice', ['filter' => 'login']);  
+$routes->post('/message/edit-delivery-invoice/(:num)', 'MessageController::delivery_edit/$1/invoice', ['filter' => 'login']);  
+
 
 /**
  *  MODAL print

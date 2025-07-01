@@ -102,12 +102,13 @@ class AccountingModel extends Model
                                                 </a>  ';
                     }
                 }   
+                $action = '<button class="btn btn-sm btn-success rounded">Approved</button>';
             }else{
                 $tipe = '<i class="fa-solid fa-right-from-bracket text-danger fa-2x"></i>';
                 $status = '<span class="badge text-bg-info me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Pembayaran">Menunggu Pembayaran</span>';
                 
                 $desc = "-";
-                if($row->PaymentMethod == "Cash"){
+                if($row->PaymentType == "Cash"){
                     $desc = ' 
                     <td class="detail">  
                         <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row->PaymentToName.'</div>
@@ -120,6 +121,7 @@ class AccountingModel extends Model
                         <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row->PaymentToName.'</div>
                     </td>';
                 }
+                $action = '<button class="btn btn-sm btn-primary rounded">Payment</button>';
 
             }
             $data_row = array( 
@@ -142,12 +144,7 @@ class AccountingModel extends Model
                 "admin" => ucwords($row->username),  
                 "desc" => $desc,
                 "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->PaymentTotal,0)."</span></div>",
-                "action" =>'  
-                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Form Survey" onclick="print_survey('.$row->PaymentId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-print"></i></span>  
-                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Survey" onclick="edit_survey('.$row->PaymentId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                        <div class="d-inline ">
-                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Survey" onclick="delete_survey('.$row->PaymentId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-circle-xmark"></i></span>
-                        </div>',
+                "action" => $action,
             );
              array_push($datatable, $data_row);
         }

@@ -6,12 +6,13 @@ use CodeIgniter\Model;
 use CodeIgniter\Database\RawSql;
 use App\Models\ProdukModel; 
 use App\Models\ActivityModel;
+use App\Models\DeliveryModel; 
 
 class ProjectinvoiceModel extends Model
 {  
     protected $DBGroup = 'default';
     protected $table = 'invoice';
-    private function getTerbilang($number) {
+    function getTerbilang($number) {
         $terbilang = array(
             1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
             6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
@@ -392,8 +393,7 @@ class ProjectinvoiceModel extends Model
         </tfoot>
         </table>';
 
-        return $detailhtml;
-
+        return $detailhtml; 
     } 
     function get_data_delivery_invoice($row,$header = false){
         $delivery = "";
@@ -406,26 +406,11 @@ class ProjectinvoiceModel extends Model
             $delivery_detail = '<div class="text-head-3 p-2">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
                     Mode pengriman tidak diaktifkan untuk transaksi ini, 
-                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery(21,1,this,1)">aktifkan mode Pengiriman</a>
+                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="update_invoice_delivery('.$row->InvId.',this,1)">aktifkan mode Pengiriman</a>
                 </div>';
         }else{
-            $delivery_detail = '<table class="table detail-delivery w-auto">
-            <thead>
-                <tr>
-                    <th class="detail" style="width:30px"></th>
-                    <th class="detail" style="width:70px">Action</th>
-                    <th class="detail">Toko</th>
-                    <th class="detail">Nomor</th>
-                    <th class="detail">Tanggal</th> 
-                    <th class="detail">Ritase</th>
-                    <th class="detail">Armada</th>
-                    <th class="detail">Dari</th> 
-                    <th class="detail">Tujuan</th> 
-                    <th class="detail">Biaya</th>
-                </tr>
-            </thead>
-            <tbody>';
             $modelsproduk = new ProdukModel();
+            $modelsDelivery = new DeliveryModel();
             $builder = $this->db->table("delivery");
             $builder->select('*');    
             $builder->where('DeliveryRef',$row->InvId); 
@@ -435,13 +420,14 @@ class ProjectinvoiceModel extends Model
             $builder->orderby('DeliveryId', 'ASC'); 
             $delivery = $builder->get()->getResult(); 
             foreach($delivery as $row_delivery){
+                
                 $delivery_detail .= '<tr class="dt-hasChild">
                 <td class="detail ">
                     <a class="pointer text-head-3 btn-detail-delivery"><i class="fa-solid fa-chevron-right"></i></a>
                 </td> 
                 <td class="detail action-td" style="width:70px"> 
                     <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Data pengiriman" onclick="print_delivery('.$row_delivery->DeliveryId.',this,'.$row_delivery->ProjectId.')"><i class="fa-solid fa-print"></i></span>  
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Sampel Barang" onclick="edit_project_Sample(114,3,this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Sampel Barang" onclick="edit_invoice_delivery('.$row_delivery->DeliveryId.',this,'.$row_delivery->ProjectId.')"><i class="fa-solid fa-pen-to-square"></i></span>
                     <div class="d-inline ">
                         <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Sampel Barang" onclick="delete_project_Sample(114,3,this)"><i class="fa-solid fa-circle-xmark"></i></span>
                     </div>
@@ -487,128 +473,12 @@ class ProjectinvoiceModel extends Model
                             <div class="list-detail pb-3">
                                 <div class="text-head-2 py-2">
                                     <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk
-                                </div> 
-                                <table class="table detail-payment m-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="detail text-center" style="width:50px">Gambar</th>
-                                            <th class="detail">Nama</th>
-                                            <th class="detail">Qty</th>
-                                            <th class="detail">Harga</th>
-                                            <th class="detail">Disc</th>
-                                            <th class="detail">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody> 
-                                        <tr>
-                                            <td class="detail no-border">
-                                                <img src="https://192.168.100.52/mahiera/assets/images/produk/21/1.png?2025-06-0912:58:43" alt="Gambar" class="image-produk">
-                                            </td>
-                                            <td class="detail no-border">
-                                                <span class="text-head-3">Bata Expose MRC Solid</span><br>
-                                                <span class="text-detail-2 text-truncate">Bata Tempel dan Bata Expose</span> 
-                                                <div class="d-flex gap-1 flex-wrap"><span class="badge badge-sm badge-0 rounded">vendor : MGS</span><span class="badge badge-sm badge-1 rounded">ukuran : 22 x 10 x 5 cm</span></div>
-                                            </td>
-                                            <td class="detail no-border">1,00 Pcs</td>
-                                            <td class="detail no-border">Rp. 3.200</td>
-                                            <td class="detail no-border">Rp. 3.200</td>
-                                            <td class="detail no-border">Rp. 0</td>
-                                        </tr> 
-                                    </tbody> 
-                                </table>
-                            </div> 
-                            <div class="list-detail pb-3">
-                                <div class="text-head-2 py-2">
-                                    <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pembayaran
-                                </div> 
-                                <div class="alert alert-warning p-2 m-0" role="alert">
-                                <span class="text-head-3">
-                                    <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                                    Belum ada pembayaran yang dibuat dari dokumen ini, 
-                                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment()">Ajukan pembayaran</a> 
-                                </span>
-                            </div> 
-                            </div> 
-                            <div class="list-detail">
-                                <div class="text-head-2 py-2">
-                                    <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pengiriman
                                 </div>  
-                            </div> 
+                                '.$modelsDelivery->get_data_detail_delivery($row_delivery->DeliveryId).'
+                            </div>  
                         </div>
                     </td>
-                </tr>';
-
-                $builder = $this->db->table("delivery_detail");
-                $builder->select('*'); 
-                $builder->where('DeliveryDetailRef',$row_delivery->DeliveryId);
-                $builder->orderby('DeliveryDetailId', 'ASC'); 
-                $items = $builder->get()->getResult(); 
-                $html_items_delivery = "";
-                $no = 1;
-                $huruf  = "A";
-                foreach($items as $item){  
-                    $arr_varian = json_decode($item->DeliveryDetailVarian);
-                    $arr_badge = "";
-                    $arr_no = 0;
-                    foreach($arr_varian as $varian){
-                        $arr_badge .= '<span class="badge badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
-                        $arr_no++;
-                    }
-
-                    $gambar = $modelsproduk->getproductimagedatavarian($item->ProdukId,$item->DeliveryDetailVarian,true) ; 
-                    $html_items_delivery .= '
-                    <div class="row">
-                        <div class="col-12 col-md-5 my-1 varian">   
-                            <div class="d-flex gap-2">
-                            ' . ($item->DeliveryDetailType == "product" ? ($gambar ? "<img src='". $gambar."' alt='Gambar' class='produk'>" : "<img class='produk' src='".base_url("assets/images/produk/default.png").'?date='.date("Y-m-dH:i:s")."' alt='Gambar Default' >") : "").'  
-                                <div class="d-flex flex-column text-start">
-                                    <span class="text-head-3 text-uppercase"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailText.'</span>
-                                    <span class="text-detail-2 text-truncate"  '.($item->DeliveryDetailType == "product" ? "" : "style=\"font-size: 0.75rem;\"").'>'.$item->DeliveryDetailGroup.'</span> 
-                                    <div class="d-flex flex-wrap gap-1">
-                                        '.$arr_badge.'
-                                    </div>
-                                </div> 
-                            </div>
-                        </div>'; 
-                    $html_items_delivery .= '<div class="col-12 col-md-7 my-1 detail">
-                                        <div class="row"> 
-                                            <div class="col-6 col-md-3">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Dikirim:</span>
-                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
-                                                </div>
-                                            </div>  
-                                            <div class="col-6 col-md-2">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Spare:</span>
-                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
-                                                </div>
-                                            </div>  
-                                            <div class="col-4 col-md-3 px-1 border-left">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Diterima:</span>
-                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceive, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
-                                                </div>
-                                            </div>  
-                                            <div class="col-4 col-md-2 px-1">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Spare:</span>
-                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceiveSpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
-                                                </div>
-                                            </div>  
-                                            <div class="col-4 col-md-2 px-1">   
-                                                <div class="d-flex flex-column">
-                                                    <span class="text-detail-2">Rusak:</span>
-                                                    <span class="text-head-2">'.number_format($item->DeliveryDetailQtyReceiveWaste, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</span>
-                                                </div>
-                                            </div>  
-                                        </div>   
-                                    </div> 
-                                </div>';
-                    $no++; 
-                        
-                    
-                } 
+                </tr>'; 
                 $delivery_status = "";
                 $delivery_date = "";
                 if($row_delivery->DeliveryStatus == 0){ 
@@ -697,9 +567,38 @@ class ProjectinvoiceModel extends Model
                         </div>';
                 }
             } 
-            $delivery_detail .= '
-            </tbody>
-        </table>';
+            if($delivery_detail == ""){
+
+                $delivery = ' 
+                <span class="text-head-3 delivery">
+                    <span class="badge text-bg-warning me-1">Belum ada</span>
+                </span>';
+                $delivery_detail = '<div class="text-head-3 p-2">
+                <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                pengriman belum dibuat untuk transaksi ini, 
+                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_invoice_delivery('.$row->InvId.',this)">Buat Pengiriman</a> atau 
+                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="update_invoice_delivery('.$row->InvId.',this,0)">nonaktifkan mode Pengiriman</a>
+            </div>';
+            }else{ 
+                $delivery_detail = '<table class="table detail-delivery w-auto">
+                    <thead>
+                        <tr>
+                            <th class="detail" style="width:30px"></th>
+                            <th class="detail" style="width:70px">Action</th>
+                            <th class="detail">Toko</th>
+                            <th class="detail">Nomor</th>
+                            <th class="detail">Tanggal</th> 
+                            <th class="detail">Ritase</th>
+                            <th class="detail">Armada</th>
+                            <th class="detail">Dari</th> 
+                            <th class="detail">Tujuan</th> 
+                            <th class="detail">Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>'.$delivery_detail.'
+                    </tbody>
+                </table>';
+            }
         }
 
         if($header){

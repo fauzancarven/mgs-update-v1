@@ -59,6 +59,8 @@
     </div>  
 </div>     
 
+<div id='view-container'></div> 
+<script src="https://unpkg.com/@panzoom/panzoom@4.6.0/dist/panzoom.min.js"></script>
 <script> 
     table = $('#data-table-payment-request').DataTable({ 
         "searching": false,
@@ -95,6 +97,78 @@
             { data: "action" ,orderable: false ,width: "90px", className:"align-top"},   
         ] 
     }); 
+
+    
+    
+    view_file = function(el){ 
+        filetype = $(el).data("type");
+        switch (filetype) { 
+            case 'text/plain':
+            case 'application/pdf':
+            case 'application/msword':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 
+                var viewerUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent('<?=base_url()?>'+$(el).data("file")) + '&embedded=true'; 
+                $('#view-container').html(`<div style="position: fixed;padding: 0;margin: 0;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);display: flex;justify-content: center;align-items: end;z-index: 2000;">
+                    <iframe src="${viewerUrl}" frameborder="0" style="width: 100vw;height: calc(100vh - 50px);"></iframe>
+                    <div class="bar-action">
+                        <span class="flex-fill">${$(el).data("name")}</span>  
+                        <i class="fa-solid fa-xmark" onclick="closeIframe()"></i>
+                    </div>
+                    
+                </div> `);
+                break;    
+            case 'image/jpeg':
+            case 'image/png': 
+                var viewerUrl = $(el).data("file"); 
+                $('#view-container').html(`<div style="position: fixed;padding: 0;margin: 0;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);display: flex;justify-content: center;align-items: end;z-index: 2000;">
+                    <div id="panzoom-container" style="width: 100vw;height: 100vh">
+                        <img id="gambar" src="<?=base_url()?>${viewerUrl}"> 
+                    </div>
+                    <div class="bar-action">
+                        <span class="flex-fill">${$(el).data("name")}</span>  
+                        <i class="fa-solid fa-xmark" onclick="closeIframe()"></i>
+                    </div> 
+                    
+                </div> `);
+                //scrool('gambar'); 
+                $("html, body").css("overflow","hidden");
+                var elem = document.getElementById('panzoom-container');
+                var panzoom = Panzoom(elem, {
+                    maxScale: 5,
+                    cursor: 'grab',
+                    wheel: true, 
+                    zoomSpeed: 0.1,
+                    startScale: 0.5
+                }); 
+                
+                var parent = elem.parentElement
+                 
+
+                // Panning and pinch zooming are bound automatically (unless disablePan is true).
+                // There are several available methods for zooming
+                // that can be bound on button clicks or mousewheel.
+                parent.addEventListener('wheel', panzoom.zoomWithWheel)
+
+                // This demo binds to shift + wheel
+                parent.addEventListener('wheel', function(event) {
+                    if (!event.shiftKey) return
+                    panzoom.zoomWithWheel(event)
+                })
+                panzoom.reset();
+                break;    
+                 
+            default: 
+                // Tampilkan view untuk tipe file lain 
+                break;
+        }
+    }
+
+    closeIframe = function(){
+        document.querySelector('div[style*="position: fixed"]').remove();
+        
+        $("html, body").css("overflow","auto");
+    }
 </script>
 
 <?php $this->endSection(); ?>

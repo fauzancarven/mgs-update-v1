@@ -852,7 +852,131 @@
         "GET",'_blank');
         $("#modal-print-payment").modal("hide"); 
     })
+ 
+    var isProcessingInvoiceUpdate = [];
+    update_invoice_delivery =function(id,el,status){
+         // INSERT LOADER BUTTON
+         if (isProcessingInvoiceUpdate[id]) {
+            console.log("project sph cancel load");
+            return;
+        }  
+        isProcessingInvoiceUpdate[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
 
+        $.ajax({  
+            method: "POST",
+            data:{
+                status : status,
+            },
+            url: "<?= base_url() ?>action/update-data-invoice-delivery/" + id, 
+            success: function(data) {  
+                if(status == 1){ 
+                    Swal.fire({
+                        title: "Active!",
+                        text: "Mode pengiriman berhasil diaktifkan",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    });  
+                }else{
+                    Swal.fire({
+                        title: "Deactive!",
+                        text: "Mode pengiriman berhasil dinonaktifkan",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    });  
+                }
+                table.ajax.reload(null, false);
+                isProcessingInvoiceUpdate[id] = false;
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingInvoiceUpdate[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    var isProcessingDeliveryAdd = [];
+    add_invoice_delivery = function(id,el){
+         // INSERT LOADER BUTTON
+         if (isProcessingDeliveryAdd[id]) {
+            console.log("project invoice cancel load");
+            return;
+        }  
+        isProcessingDeliveryAdd[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-delivery-invoice/" + id,  
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-delivery").modal("show");  
+                $("#modal-add-delivery").data("menu","Invoice");  
+                $(".tooltip").remove(); 
+
+                isProcessingDeliveryAdd[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDeliveryAdd[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+    
+    var isProcessingDeliveryEdit = [];
+    edit_invoice_delivery = function(id,el){
+         // INSERT LOADER BUTTON
+         if (isProcessingDeliveryEdit[id]) {
+            console.log("project invoice cancel load");
+            return;
+        }  
+        isProcessingDeliveryEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-delivery-invoice/" + id,  
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-edit-delivery").modal("show");  
+                $("#modal-edit-delivery").data("menu","Invoice");  
+                $(".tooltip").remove(); 
+
+                isProcessingDeliveryEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDeliveryEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    print_delivery = function(id){
+        window.open('<?= base_url("print/project/deliveryA5/") ?>' + id, '_blank');
+    }   
 </script>
 
 

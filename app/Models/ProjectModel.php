@@ -2133,6 +2133,8 @@ class ProjectModel extends Model
     /************************************** */
     
     public function data_project_invoice($project_id){
+        
+        $modelinvoice = new ProjectinvoiceModel();
         $html = ''; 
 
         $builder = $this->db->table("invoice");
@@ -2676,7 +2678,7 @@ class ProjectModel extends Model
                                             <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
                                         </div>
                                         <div class="col-8">
-                                            <span class="text-head-3">'.$row_delivery->DeliveryRitase.' ('.$this->getTerbilang($row_delivery->DeliveryRitase).')</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryRitase.' ('.$modelinvoice->getTerbilang($row_delivery->DeliveryRitase).')</span>
                                         </div>
                                     </div>   
                                     <div class="row">
@@ -4030,13 +4032,14 @@ class ProjectModel extends Model
     } 
     public function get_data_delivery($id){
         $builder = $this->db->table("delivery"); 
-        $builder->select("*,delivery.ProjectId,delivery.InvId,delivery.SampleId,delivery.POId,delivery.TemplateId"); 
-        $builder->join('invoice',"invoice.InvId=delivery.InvId","left"); 
-        $builder->join('sample',"sample.SampleId=delivery.SampleId","left");  
-        $builder->join('pembelian',"pembelian.POId=delivery.POId","left");   
-        $builder->join('project',"project.ProjectId=delivery.ProjectId","left");   
-        $builder->join('customer',"project.CustomerId=customer.CustomerId","left");   
-        $builder->join('store',"store.StoreId=project.StoreId","left"); 
+        $builder->select("*,  CASE 
+        WHEN DeliveryRefType = '-' THEN 'No data Selected'
+        WHEN DeliveryRefType = 'Sample' THEN (select SampleCode from sample where SampleId = DeliveryRef)
+        WHEN DeliveryRefType = 'Pembelian' THEN (select POCode from pembelian where POId = DeliveryRef)
+        WHEN DeliveryRefType = 'Invoice' THEN (select InvCode from invoice where InvId = DeliveryRef)
+        END AS 'DeliveryRefCode'"); 
+        $builder->join('customer',"delivery.CustomerId=customer.CustomerId","left");   
+        $builder->join('store',"store.StoreId=delivery.StoreId","left"); 
         $builder->join("template_footer","delivery.TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('delivery.DeliveryId',$id);  
         return $builder->get()->getRow();  

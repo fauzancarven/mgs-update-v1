@@ -38,6 +38,12 @@
                                 </div>
                             </div>  
                             <div class="row mb-1 align-items-center">
+                                <label for="StoreId" class="col-sm-2 col-form-label">Store</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select form-select-sm" id="StoreId" name="StoreId" placeholder="StoreId" style="width:100%"></select>  
+                                </div>
+                            </div>  
+                            <div class="row mb-1 align-items-center">
                                 <label for="DeliveryAdmin" class="col-sm-2 col-form-label">Admin</label>
                                 <div class="col-sm-10">
                                     <select class="form-select form-select-sm" id="DeliveryAdmin" name="DeliveryAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
@@ -412,6 +418,8 @@
 
 <div id="modal-optional"></div>
 <script>    
+
+console.log(`<?= json_encode($project) ?>`)
     $('#DeliveryDate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
@@ -451,8 +459,41 @@
             cache: true
         }, 
     });
-    $('#DeliveryAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
-        
+    $('#DeliveryAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');
+
+    $("#StoreId").select2({
+        dropdownParent: $('#modal-add-invoice .modal-content'),
+        placeholder: "Pilih Toko",
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-store",
+            dataType: 'json',
+            type:"POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash // CSRF Token
+                };
+            },
+            processResults: function (response) {
+    
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        }, 
+    });
+    
+    $('#StoreId').append(new Option("<?=$project["StoreCode"]. " - " . $project["StoreName"] ?>" , "<?=$project["StoreId"]?>", true, true)).trigger('change'); 
+
     var data_detail_item = JSON.parse('<?= JSON_ENCODE($detail,true) ?>');   
     
     var isProcessingDeliveryAddCategory = false;
@@ -1205,6 +1246,7 @@
             DeliveryRef: '<?= $project["DeliveryRef"] ?>',  
             DeliveryRefType: '<?= $project["DeliveryRefType"] ?>',
             ProjectId: '<?= $project["project_id"] ?>',
+            StoreId: '<?= $project["StoreId"] ?>',
             DeliveryAdmin: $("#DeliveryAdmin").val(), 
             DeliveryArmada: $("#armada").val(), 
             DeliveryRitase: $("#ritase").val(), 
@@ -1251,8 +1293,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-delivery").modal("hide");   
-                        if($("#modal-add-delivery").data("menu") =="delivery"){
-                            loader_datatable(); 
+                        if($("#modal-add-delivery").data("menu") =="Invoice"){
+                            table.ajax.reload(); 
                         }else{ 
                             loader_data_project(<?= $project["project_id"] ?>,"pengiriman");   
                         }   
