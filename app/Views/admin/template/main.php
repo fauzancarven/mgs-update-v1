@@ -226,7 +226,7 @@
     <script src="<?= base_url(); ?>assets/js/quill.js">  </script>  
     <!-- <script src="<?= base_url(); ?>assets/quill-image-resize-module-master/image-resize.min.js">  </script>   -->
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>  
-    <script src="<?= base_url()?>assets/js/tableCustom.js?v=1.1"></script> 
+    <script src="<?= base_url()?>assets/js/tableCustom.js?v=1.2"></script> 
 
     <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 
     

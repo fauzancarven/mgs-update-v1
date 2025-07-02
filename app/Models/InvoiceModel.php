@@ -8,7 +8,7 @@ use App\Models\ProdukModel;
 use App\Models\ActivityModel;
 use App\Models\DeliveryModel; 
 
-class ProjectinvoiceModel extends Model
+class InvoiceModel extends Model
 {  
     protected $DBGroup = 'default';
     protected $table = 'invoice';
@@ -206,22 +206,43 @@ class ProjectinvoiceModel extends Model
             $htmldetail = '      
             <div class="view-detail" style="display:none">
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-2">
-                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</span>
+                    <div class="text-head-2 py-1">  
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Produk</span>
                     </div> 
                     '.$this->get_data_detail_invoice($row).'
                 </div>
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-2">
-                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pembayaran</span>
+                    <div class="text-head-2 py-1"> 
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Pembayaran</span> 
                     </div> 
                     '.$this->get_data_payment_invoice($row).'
                 </div> 
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-2">
-                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pengiriman</span>
+                    <div class="text-head-2 py-1">
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Pengiriman</span> 
                     </div> 
                     '.$this->get_data_delivery_invoice($row).'
+                </div> 
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-1">
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-cart-shopping fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Pembelian</span> 
+                    </div>  
                 </div> 
             </div>
             ';
@@ -315,7 +336,7 @@ class ProjectinvoiceModel extends Model
     function get_data_detail_invoice($row){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-item m-0 w-auto">
+        $detailhtml = ' <table class="table detail-item m-0">
                             <thead>
                                 <tr>
                                     <th class="detail text-center" style="width:50px">Gambar</th>
@@ -413,6 +434,7 @@ class ProjectinvoiceModel extends Model
             $modelsDelivery = new DeliveryModel();
             $builder = $this->db->table("delivery");
             $builder->select('*');    
+            $builder->join("users","users.id = delivery.created_user ","left"); 
             $builder->where('DeliveryRef',$row->InvId); 
             $builder->where('DeliveryRefType',"Invoice");  
             $builder->where('DeliveryStatus <',"3"); 
@@ -423,7 +445,7 @@ class ProjectinvoiceModel extends Model
                 
                 $delivery_detail .= '<tr class="dt-hasChild">
                 <td class="detail ">
-                    <a class="pointer text-head-3 btn-detail-delivery"><i class="fa-solid fa-chevron-right"></i></a>
+                    <a class="pointer text-head-3 btn-detail-delivery" data-id="'.$row_delivery->DeliveryId.'"><i class="fa-solid fa-chevron-right"></i></a>
                 </td> 
                 <td class="detail action-td" style="width:70px"> 
                     <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Data pengiriman" onclick="print_delivery('.$row_delivery->DeliveryId.',this,'.$row_delivery->ProjectId.')"><i class="fa-solid fa-print"></i></span>  
@@ -467,15 +489,39 @@ class ProjectinvoiceModel extends Model
                 </td>
                 <td class="detail">Rp. '.number_format($row_delivery->DeliveryTotal,0).'</td>
                 </tr> 
-                <tr class="child-row">
+                <tr class="child-row delivery d-none" data-id="'.$row_delivery->DeliveryId.'">
                     <td class="detail" colspan="10">
-                        <div class="view-detail" style="">
-                            <div class="list-detail pb-3">
-                                <div class="text-head-2 py-2">
-                                    <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk
+                        <div class="view-detail-1" style="display:none">
+                            <div class="list-detail-1 pb-3">
+                                <div class="text-head-2 py-1"> 
+                                    <span class="fa-stack small">
+                                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                        <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
+                                    </span>
+                                    <span>Produk</span> 
                                 </div>  
                                 '.$modelsDelivery->get_data_detail_delivery($row_delivery->DeliveryId).'
-                            </div>  
+                            </div>   
+                            <div class="list-detail-1 pb-3">
+                                <div class="text-head-2 py-1"> 
+                                    <span class="fa-stack small">
+                                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                        <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                                    </span>
+                                    <span>Pembayaran</span> 
+                                </div>  
+                                '.$modelsDelivery->get_data_payment_delivery($row_delivery).'
+                            </div>
+                            <div class="list-detail-1 pb-3">
+                                <div class="text-head-2 py-1"> 
+                                    <span class="fa-stack small">
+                                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                        <i class="fa-solid fa-timeline fa-stack-1x fa-inverse"></i> 
+                                    </span>
+                                    <span>Progess</span> 
+                                </div>  
+                                '.$modelsDelivery->get_data_status_delivery($row_delivery).'
+                            </div>
                         </div>
                     </td>
                 </tr>'; 
@@ -580,7 +626,11 @@ class ProjectinvoiceModel extends Model
                 <a class="text-head-3 text-primary" style="cursor:pointer" onclick="update_invoice_delivery('.$row->InvId.',this,0)">nonaktifkan mode Pengiriman</a>
             </div>';
             }else{ 
-                $delivery_detail = '<table class="table detail-delivery w-auto">
+                $delivery = ' 
+                <span class="text-head-3 delivery">
+                    <span class="badge text-bg-success me-1">Selesai</span>
+                </span>';
+                $delivery_detail = '<table class="table detail-delivery">
                     <thead>
                         <tr>
                             <th class="detail" style="width:30px"></th>
@@ -655,8 +705,9 @@ class ProjectinvoiceModel extends Model
                 }   
                 if($row_payment->PaymentStatus == "0"){ 
                     $action = '
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-circle-xmark"></i></span>';
+                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-print"></i></span>
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-circle-xmark"></i></span>';
                     $transfer_from = '<td class="detail">-</td>';
                     $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Menunggu Approval</span>';  
                     $buktiterima = "-";
@@ -725,7 +776,7 @@ class ProjectinvoiceModel extends Model
                             <span class="badge text-bg-warning me-1">Belum Selesai</span>
                         </span>';
                 $html_payment_detail = '
-                <table class="table detail-payment w-auto">
+                <table class="table detail-payment">
                     <thead>
                         <tr>
                             <th class="detail" style="width:70px">Action</th>
@@ -756,7 +807,7 @@ class ProjectinvoiceModel extends Model
                             <span class="badge text-bg-success me-1">Selesai</span>
                         </span>';
                 $html_payment_detail = '
-                    <table class="table detail-payment w-auto">
+                    <table class="table detail-payment">
                         <thead>
                             <tr>
                                 <th class="detail" style="width:70px">Action</th>

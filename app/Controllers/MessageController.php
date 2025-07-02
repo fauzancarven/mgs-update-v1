@@ -11,7 +11,7 @@ use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukvarianModel;
-use App\Models\ProjectinvoiceModel;
+use App\Models\InvoiceModel;
 use App\Models\ProjectModel;
 use App\Models\ProjectsphModel;
 use App\Models\PaymentModel;
@@ -560,7 +560,7 @@ class MessageController extends BaseController
     }
     public function invoice_edit($id)
     {     
-        $models = new ProjectinvoiceModel();
+        $models = new InvoiceModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
@@ -826,7 +826,7 @@ class MessageController extends BaseController
             $data["payment"] = $modelspayment->get_data_payment_by_sample($id);  
         }
         if($postData['type'] == "Invoice"){
-            $models = new ProjectinvoiceModel();  
+            $models = new InvoiceModel();  
             $datainvoice = $models->get_data_invoice($id); 
             $project = array(
                 "ProjectId"=>$datainvoice->ProjectId, 
@@ -1250,7 +1250,7 @@ class MessageController extends BaseController
         }
     } 
     public function delivery_add($id,$type){
-        $modelinvoice = new ProjectinvoiceModel();
+        $modelinvoice = new InvoiceModel();
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel(); 
         $modelsproduk = new ProdukModel();
@@ -1350,5 +1350,44 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
     }
+
+    
+    public function delivery_proses($id)
+    {       
+        $models = new ProjectModel();
+        $data["delivery"] = $models->get_data_delivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/delivery/proses_delivery',$data)); 
+    } 
+    public function delivery_finish($id)
+    {       
+        $models = new ProjectModel();
+        $modelsproduk = new ProdukModel();
+        $data["delivery"] = $models->get_data_delivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth 
+
+        $arr_detail = $models->get_data_delivery_detail($id);
+        foreach($arr_detail as $row){
+            $detail[] = array( 
+                "id" => $row->ProdukId, 
+                "produkid" => $row->ProdukId, 
+                "satuan_id"=> ($row->DeliveryDetailSatuanId == 0 ? "" : $row->DeliveryDetailSatuanId),
+                "satuan_text"=>$row->DeliveryDetailSatuanText,   
+                "varian"=> JSON_DECODE($row->DeliveryDetailVarian,true), 
+                "qty_ref"=> $row->DeliveryDetailQty,
+                "qty"=> $row->DeliveryDetailQty,
+                "qty_spare"=> $row->DeliveryDetailQtySpare, 
+                "qty_waste"=> 0, 
+                "text"=> $row->DeliveryDetailText,
+                "group"=> $row->DeliveryDetailGroup,
+                "type"=> $row->DeliveryDetailType,
+                "image_url"=>  
+                $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->DeliveryDetailVarian,true)
+            );
+        }; 
+       
+        $data["detail"] =  $detail; 
+        return $this->response->setBody(view('admin/project/delivery/add_finish_delivery',$data)); 
+    } 
 }
 

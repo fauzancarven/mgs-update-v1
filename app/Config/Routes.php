@@ -266,6 +266,8 @@ $routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageControll
 
 $routes->post('/message/add-delivery-invoice/(:num)', 'MessageController::delivery_add/$1/invoice', ['filter' => 'login']);  
 $routes->post('/message/edit-delivery-invoice/(:num)', 'MessageController::delivery_edit/$1/invoice', ['filter' => 'login']);  
+$routes->post('/message/proses-delivery-invoice/(:num)', 'MessageController::delivery_proses/$1/invoice', ['filter' => 'login']);  
+$routes->post('/message/finish-delivery-invoice/(:num)', 'MessageController::delivery_finish/$1/invoice', ['filter' => 'login']);  
 
 
 /**

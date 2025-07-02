@@ -7,7 +7,7 @@ use App\Models\ProjectModel;
 use App\Models\ProjectsurveyModel;
 use App\Models\ProjectsampleModel;
 use App\Models\ProjectsphModel;
-use App\Models\ProjectinvoiceModel;
+use App\Models\InvoiceModel;
 use App\Models\CustomerModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
@@ -112,7 +112,7 @@ class TableController extends BaseController
     public function project_invoice_datatable()
     {   
         $request = Services::request();
-        $datatable = new ProjectinvoiceModel(); 
+        $datatable = new InvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_datatable_project_invoice($request->getPost());
         }    

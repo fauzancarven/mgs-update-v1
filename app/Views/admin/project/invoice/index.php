@@ -368,6 +368,14 @@
     }
     $('#searchdatadate').daterangepicker({  
         autoUpdateInput: false,
+        ranges: {
+            'Hari Ini': [moment(), moment()],
+            'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '7 Hari Yang lalu': [moment().subtract(6, 'days'), moment()],
+            '30 Hari Yang lalu': [moment().subtract(29, 'days'), moment()],
+            'bulan ini': [moment().startOf('month'), moment().endOf('month')],
+            'bulan kemarin': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
         startDate: start,
         endDate: end,
         locale: {
@@ -479,8 +487,9 @@
             }
         }, 
         "initComplete": function(settings, json) {
+            $("#data-table-invoice").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");        
             $('[data-bs-toggle="tooltip"]').tooltip();
-        },
+        }, 
         "columns": [ 
             { data: null ,orderable: false,width: "20px",className:"p-0 ps-2",
                 render: function(data, type, row) {
@@ -496,7 +505,7 @@
             { data: "customer",width: "250px",  className:"align-top",
                 render: function(data, type, row) { 
                     var html = ` 
-                        <div class="text-head-2 pb-2 text-truncate" style="width: 15rem;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
+                        <div class="text-head-3 pb-2 text-truncate" style="width: 15rem;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
                         ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-2"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
                         <div class="text-detail-3 text-truncate" style="width: 15rem;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
 
@@ -505,8 +514,16 @@
             }, 
             { data: "payment" ,orderable: false , width: "90px",className:"align-top"}, 
             { data: "delivery" ,orderable: false ,width: "90px", className:"align-top"},  
-            { data: "total", className:"align-top",width: "auto"},  
-        ] 
+            { data: "total", className:"align-top",width: "90px"},  
+        ],
+        "footerCallback": function (row, data, start, end, display) {
+            // Tambahkan CSS styling untuk membuat footer tetap terlihat
+            $(row).css({
+            "position": "sticky",
+            "bottom": "0",
+            "background-color": "#fff"
+            });
+        }
     }); 
 
     table.on('draw.dt', function() { 
@@ -534,9 +551,28 @@
             $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2'); 
             $(tr).next().find('.view-detail').slideDown(500);
             $(tr).next().find('td').addClass('no-border');
+
             
+            $(".btn-detail-delivery").click(function(){
+                console.log($(this).data("id"));
+                
+                var tr = $(".child-row.delivery[data-id='"+$(this).data("id")+"'");
+                if($(tr).hasClass("open")){
+                    $(tr).find('.view-detail-1').slideUp(500, function() {
+                        $(tr).addClass("d-none");
+                    });  
+                    $(tr).removeClass("open");
+                    $(this).find('i').removeClass('fa-rotate-90'); 
+                }else{
+                    $(tr).removeClass("d-none");
+                    $(tr).find('.view-detail-1').slideDown(500);
+                    $(tr).addClass("open");
+                    $(this).find('i').addClass('fa-rotate-90');
+                } 
+            }); 
         } 
     });
+   
     function format(data) {
         return data.detail;  
     }   
@@ -977,6 +1013,79 @@
     print_delivery = function(id){
         window.open('<?= base_url("print/project/deliveryA5/") ?>' + id, '_blank');
     }   
+
+    var isProcessingDeliveryProses = [];
+    delivery_proses = function(id,el){
+    // INSERT LOADER BUTTON
+    if (isProcessingDeliveryProses[id]) {
+            console.log("project invoice cancel load");
+            return;
+        }  
+        isProcessingDeliveryProses[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/proses-delivery-invoice/" + id,  
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-proses-delivery").modal("show");  
+                $("#modal-add-proses-delivery").data("menu","Invoice");  
+                $(".tooltip").remove(); 
+
+                isProcessingDeliveryProses[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDeliveryProses[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    
+    var isProcessingDeliveryFinish = [];
+    delivery_finish = function(id,el){
+    // INSERT LOADER BUTTON
+    if (isProcessingDeliveryFinish[id]) {
+            console.log("project invoice cancel load");
+            return;
+        }  
+        isProcessingDeliveryFinish[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/finish-delivery-invoice/" + id,  
+            success: function(data) {  
+                $("#modal-message").html(data);
+                $("#modal-add-finish-delivery").modal("show");  
+                $("#modal-add-finish-delivery").data("menu","Invoice");  
+                $(".tooltip").remove(); 
+
+                isProcessingDeliveryFinish[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingDeliveryFinish[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
 </script>
 
 
