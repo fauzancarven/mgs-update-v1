@@ -36,8 +36,8 @@
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
     <!-- <link rel="stylesheet" 
 	  href="https://static.eu1.mindsphere.io/mdsp-css/v2.7.0/css/mdsp-css.min.css" /> -->
-    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/custom-view.css">  
-    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/custom-datatable.css">  
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/custom-view.css?v=1.0.0">  
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/custom-datatable.css?v=1.0.0">  
 
 </head>
 <!-- sidebar-icon-only hide this-->
@@ -226,7 +226,7 @@
     <script src="<?= base_url(); ?>assets/js/quill.js">  </script>  
     <!-- <script src="<?= base_url(); ?>assets/quill-image-resize-module-master/image-resize.min.js">  </script>   -->
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>  
-    <script src="<?= base_url()?>assets/js/tableCustom.js?v=1.1"></script> 
+    <script src="<?= base_url()?>assets/js/tableCustom.js?v=1.2"></script> 
 
     <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 
     
@@ -558,19 +558,19 @@
                         <div class="collapse <?= ($menu === 'Accounting' ? "show" : "") ?>" id="ui-Accounting">
                             <ul class="nav flex-column sub-menu"> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/pettycash">
                                         <i class="ti-view-list-alt menu-icon"></i>
                                         <span class="menu-title">Petty Cash</span>
                                     </a>
                                 </li> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/paymentrequest">
                                         <i class="ti-view-list-alt menu-icon"></i>
                                         <span class="menu-title">Payment Request</span>
                                     </a>
                                 </li> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/bukubesar">
                                         <i class="ti-view-list-alt menu-icon"></i>
                                         <span class="menu-title">Buku Besar</span>
                                     </a>

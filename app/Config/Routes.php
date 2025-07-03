@@ -14,6 +14,9 @@ $routes->get('/admin/customer', 'AdminController::customer', ['filter' => 'login
 $routes->get('/admin/produk', 'AdminController::produk', ['filter' => 'login']);
 $routes->get('/admin/vendor', 'AdminController::vendor', ['filter' => 'login']);
 $routes->get('/admin/accounting', 'AdminController::accounting', ['filter' => 'login']);
+$routes->get('/admin/pettycash', 'AdminController::pettycash', ['filter' => 'login']);
+$routes->get('/admin/paymentrequest', 'AdminController::paymentrequest', ['filter' => 'login']);
+$routes->get('/admin/bukubesar', 'AdminController::bukubesar', ['filter' => 'login']);
 
 $routes->get('/admin/sales/survey', 'AdminController::survey', ['filter' => 'login']);
 $routes->get('/admin/sales/sample', 'AdminController::sample', ['filter' => 'login']);
@@ -41,6 +44,7 @@ $routes->post('/datatables/get-datatable-penawaran', 'TableController::project_p
 $routes->post('/datatables/get-datatable-invoice', 'TableController::project_invoice_datatable', ['filter' => 'login']);
 $routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter' => 'login']);
 
+$routes->post('/datatables/get-datatable-payment-request', 'TableController::payment_request_datatable', ['filter' => 'login']);
 
 
 /**
@@ -240,6 +244,7 @@ $routes->post('/message/add-project-payment/(:num)', 'MessageController::project
 $routes->post('/message/edit-project-payment/(:num)', 'MessageController::project_payment_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/request-project-payment/(:num)', 'MessageController::project_payment_request/$1', ['filter' => 'login']);  
 $routes->post('/message/request-project-payment-edit/(:num)', 'MessageController::project_payment_request_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/add-payment/(:num)', 'MessageController::payment_add/$1', ['filter' => 'login']); 
 
 $routes->post('/message/request-payment/(:num)', 'MessageController::payment_request/$1', ['filter' => 'login']); 
 $routes->post('/message/request-payment-edit/(:num)', 'MessageController::payment_request_edit/$1', ['filter' => 'login']);  
@@ -258,6 +263,11 @@ $routes->post('/message/edit-finish-delivery/(:num)', 'MessageController::projec
 
 $routes->post('/message/add-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_add/$1/$2', ['filter' => 'login']);   
 $routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageController::project_accounting_edit/$1/$2', ['filter' => 'login']);   
+
+$routes->post('/message/add-delivery-invoice/(:num)', 'MessageController::delivery_add/$1/invoice', ['filter' => 'login']);  
+$routes->post('/message/edit-delivery-invoice/(:num)', 'MessageController::delivery_edit/$1/invoice', ['filter' => 'login']);  
+$routes->post('/message/proses-delivery-invoice/(:num)', 'MessageController::delivery_proses/$1/invoice', ['filter' => 'login']);  
+$routes->post('/message/finish-delivery-invoice/(:num)', 'MessageController::delivery_finish/$1/invoice', ['filter' => 'login']);  
 
 
 /**

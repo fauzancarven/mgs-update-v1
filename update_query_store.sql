@@ -3,7 +3,8 @@ ALTER TABLE `survey`
 update survey 
 LEFT JOIN project ON project.ProjectId = survey.ProjectId 
 SET 
-survey.StoreId =  project.StoreId
+survey.StoreId =  project.StoreId,
+survey.CustomerId =  project.CustomerId
 
 ## -- ## mengaupdate data project
 
@@ -63,3 +64,25 @@ ALTER TABLE `payment`
 	ADD COLUMN `PaymentToBank` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentFromName`,
 	ADD COLUMN `PaymentToRek` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentToBank`,
 	ADD COLUMN `PaymentToName` VARCHAR(200) NULL DEFAULT NULL AFTER `PaymentToRek`;
+
+ALTER TABLE `delivery`
+	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `ProjectId`;
+UPDATE delivery 
+LEFT JOIN project ON project.ProjectId = delivery.ProjectId 
+SET 
+delivery.StoreId =  project.StoreId;
+
+ALTER TABLE `pembelian`
+	ADD COLUMN `StoreId` INT(11) NULL DEFAULT NULL AFTER `ProjectId`;
+UPDATE pembelian 
+LEFT JOIN project ON project.ProjectId = pembelian.ProjectId 
+SET 
+pembelian.StoreId =  project.StoreId;
+
+update payment SET PaymentMethod=1 WHERE PaymentMethod = "TUNAI (CASH)";
+update payment SET PaymentMethod=2 WHERE PaymentMethod = "BCA";
+update payment SET PaymentMethod=2 WHERE PaymentMethod = "BCA TF";
+update payment SET PaymentApproved="Tri Soejatmiko", PaymentStatus=1
+
+
+ 

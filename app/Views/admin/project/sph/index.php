@@ -397,7 +397,7 @@
                 }
             },  
             { data: "action" ,orderable: false , className:"action-td",width: "60px"}, 
-            { data: "store", className:"align-top" , width: "100px"}, 
+            { data: "store", className:"align-top" , width: "150px"}, 
             { data: "code", className:"align-top", width: "120px"}, 
             { data: "date", className:"align-top", width: "100px"}, 
             { data: "status" , className:"align-top", width: "100px"}, 

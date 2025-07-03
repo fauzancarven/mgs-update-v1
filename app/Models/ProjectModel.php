@@ -49,8 +49,49 @@ class ProjectModel extends Model
 
     /*********************************************************** */
     /** FUNCTION PROJECT */  
-    /*********************************************************** */
-    private function getTerbilang($number) {
+    /*********************************************************** */ 
+    private function format_filesize($bytes) {
+        if ($bytes >= 1073741824) {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        } else {
+            $bytes = $bytes . ' byte';
+        }
+    
+        return $bytes;
+    }
+  
+    private function simpan_gambar_base64($base64, $lokasi,$nama) {
+        $parts = explode(',', $base64);
+        $header = $parts[0];
+        $extension = '';
+        
+        switch ($header) {
+            case 'data:image/jpeg;base64':
+                $extension = '.jpg';
+                break;
+            case 'data:image/png;base64':
+                $extension = '.png';
+                break;
+            case 'data:image/gif;base64':
+                $extension = '.gif';
+                break;
+            case 'data:image/bmp;base64':
+                $extension = '.bmp';
+                break;
+            default:
+                return 'Jenis file tidak didukung';
+        }
+        
+        $nama_file = $nama . $extension;
+        $biner = base64_decode($parts[1]);
+        file_put_contents($lokasi ."/". $nama_file, $biner); 
+        return $lokasi ."/". $nama_file;
+    }
+    function getTerbilang($number) {
         $terbilang = array(
             1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
             6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
@@ -120,47 +161,6 @@ class ProjectModel extends Model
             }
         }
     }
-    private function format_filesize($bytes) {
-        if ($bytes >= 1073741824) {
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
-        } elseif ($bytes >= 1048576) {
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
-        } elseif ($bytes >= 1024) {
-            $bytes = number_format($bytes / 1024, 2) . ' KB';
-        } else {
-            $bytes = $bytes . ' byte';
-        }
-    
-        return $bytes;
-    }
-    private function simpan_gambar_base64($base64, $lokasi,$nama) {
-        $parts = explode(',', $base64);
-        $header = $parts[0];
-        $extension = '';
-        
-        switch ($header) {
-            case 'data:image/jpeg;base64':
-                $extension = '.jpg';
-                break;
-            case 'data:image/png;base64':
-                $extension = '.png';
-                break;
-            case 'data:image/gif;base64':
-                $extension = '.gif';
-                break;
-            case 'data:image/bmp;base64':
-                $extension = '.bmp';
-                break;
-            default:
-                return 'Jenis file tidak didukung';
-        }
-        
-        $nama_file = $nama . $extension;
-        $biner = base64_decode($parts[1]);
-        file_put_contents($lokasi ."/". $nama_file, $biner); 
-        return $lokasi ."/". $nama_file;
-    }
-  
     public function getSelectRefInvoice($refid,$search = null){
         $builder = $this->db->query('SELECT *  FROM penawaran left join customer ON customer.CustomerId = penawaran.CustomerId
         WHERE ProjectId = '.$refid.'  ORDER BY SphDate asc');
@@ -2230,6 +2230,8 @@ class ProjectModel extends Model
     /************************************** */
     
     public function data_project_invoice($project_id){
+        
+        $modelinvoice = new InvoiceModel();
         $html = ''; 
 
         $builder = $this->db->table("invoice");
@@ -2773,7 +2775,7 @@ class ProjectModel extends Model
                                             <span class="text-detail-2"><i class="fa-solid fa-flag pe-1"></i>Ritase</span>
                                         </div>
                                         <div class="col-8">
-                                            <span class="text-head-3">'.$row_delivery->DeliveryRitase.' ('.$this->getTerbilang($row_delivery->DeliveryRitase).')</span>
+                                            <span class="text-head-3">'.$row_delivery->DeliveryRitase.' ('.$modelinvoice->getTerbilang($row_delivery->DeliveryRitase).')</span>
                                         </div>
                                     </div>   
                                     <div class="row">
@@ -2822,7 +2824,7 @@ class ProjectModel extends Model
                                 <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_project_delivery('.$project_id.','.$row->InvId.',this,\'invoice\')">Buat Data Pengiriman</a> atau <a class="text-head-3 text-primary" style="cursor:pointer" onclick="invoice_project_update_delivery('.$project_id.','.$row->InvId.',this,0)">nonaktifkan mode Pengiriman</a>
                             </span>
                         </div>';
-                }
+                } 
             }else{
                 $html_delivery = ' 
                 <span class="text-head-3 ps-4">
@@ -4014,12 +4016,16 @@ class ProjectModel extends Model
         if (!file_exists($folder_utama."/".$id)){
             mkdir($folder_utama."/".$id, 0777, true);  
         }
-        $files = glob($folder_utama."/".$id. '/proses.*');
+        $files = glob($folder_utama."/".$id. '/proses_*');
         foreach ($files as $file) {
             unlink($file);
         } 
-        if (isset($data['image'])) {  
-            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama."/".$id, "proses");  
+        if (isset($data['DeliveryImageList'])) {  
+            $no = 0;
+            foreach ($data['DeliveryImageList'] as $image) {
+                $data_image = $this->simpan_gambar_base64($image, $folder_utama."/".$id, "proses_".$no); 
+                $no++;
+            } 
         }
         return JSON_ENCODE(array("status"=>true));
     }
@@ -4127,13 +4133,14 @@ class ProjectModel extends Model
     } 
     public function get_data_delivery($id){
         $builder = $this->db->table("delivery"); 
-        $builder->select("*,delivery.ProjectId,delivery.InvId,delivery.SampleId,delivery.POId,delivery.TemplateId"); 
-        $builder->join('invoice',"invoice.InvId=delivery.InvId","left"); 
-        $builder->join('sample',"sample.SampleId=delivery.SampleId","left");  
-        $builder->join('pembelian',"pembelian.POId=delivery.POId","left");   
-        $builder->join('project',"project.ProjectId=delivery.ProjectId","left");   
-        $builder->join('customer',"project.CustomerId=customer.CustomerId","left");   
-        $builder->join('store',"store.StoreId=project.StoreId","left"); 
+        $builder->select("*,  CASE 
+        WHEN DeliveryRefType = '-' THEN 'No data Selected'
+        WHEN DeliveryRefType = 'Sample' THEN (select SampleCode from sample where SampleId = DeliveryRef)
+        WHEN DeliveryRefType = 'Pembelian' THEN (select POCode from pembelian where POId = DeliveryRef)
+        WHEN DeliveryRefType = 'Invoice' THEN (select InvCode from invoice where InvId = DeliveryRef)
+        END AS 'DeliveryRefCode'"); 
+        $builder->join('customer',"delivery.CustomerId=customer.CustomerId","left");   
+        $builder->join('store',"store.StoreId=delivery.StoreId","left"); 
         $builder->join("template_footer","delivery.TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('delivery.DeliveryId',$id);  
         return $builder->get()->getRow();  

@@ -13,7 +13,7 @@ use App\Models\ProdukunitModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianModel;
 use App\Models\ProdukvarianvalueModel;
-use App\Models\ProjectinvoiceModel;
+use App\Models\InvoiceModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
 use App\Models\LampiranModel;
@@ -352,7 +352,7 @@ class ActionController extends BaseController
  
     public function invoice_add(){
         $request = Services::request();
-        $models = new ProjectinvoiceModel(); 
+        $models = new InvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_invoice($postData); 
@@ -361,7 +361,7 @@ class ActionController extends BaseController
     }
     public function invoice_edit($id){
         $request = Services::request();
-        $models = new ProjectinvoiceModel(); 
+        $models = new InvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_invoice($postData,$id); 
@@ -370,7 +370,7 @@ class ActionController extends BaseController
     }
     public function invoice_delete($id){
         $request = Services::request();
-        $models = new ProjectinvoiceModel(); 
+        $models = new InvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->delete_data_invoice($id);  
@@ -378,7 +378,7 @@ class ActionController extends BaseController
     }
     public function invoice_status($id,$status){
         $request = Services::request();
-        $models = new ProjectinvoiceModel(); 
+        $models = new InvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {    
             echo $models->update_status_invoice($id,$status);  
         }
@@ -402,7 +402,7 @@ class ActionController extends BaseController
     }
     public function payment_add(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PaymentModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_payment($postData); 

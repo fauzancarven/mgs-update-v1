@@ -6,12 +6,82 @@ use CodeIgniter\Model;
 use CodeIgniter\Database\RawSql;
 use App\Models\ProdukModel; 
 use App\Models\ActivityModel;
+use App\Models\DeliveryModel; 
 
-class ProjectinvoiceModel extends Model
+class InvoiceModel extends Model
 {  
     protected $DBGroup = 'default';
     protected $table = 'invoice';
+    function getTerbilang($number) {
+        $terbilang = array(
+            1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
+            6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
+            11 => 'Sebelas', 12 => 'Dua Belas', 13 => 'Tiga Belas', 14 => 'Empat Belas', 15 => 'Lima Belas',
+            16 => 'Enam Belas', 17 => 'Tujuh Belas', 18 => 'Delapan Belas', 19 => 'Sembilan Belas', 20 => 'Dua Puluh',
+            30 => 'Tiga Puluh', 40 => 'Empat Puluh', 50 => 'Lima Puluh', 60 => 'Enam Puluh',
+            70 => 'Tujuh Puluh', 80 => 'Delapan Puluh', 90 => 'Sembilan Puluh', 100 => 'Seratus'
+        );
 
+        if ($number < 20 || $number == 100) {
+            return $terbilang[$number];
+        } elseif ($number < 100) {
+            $puluh = floor($number / 10) * 10;
+            $sisa = $number % 10;
+            if ($sisa > 0) {
+                return $terbilang[$puluh] . ' ' . $terbilang[$sisa];
+            } else {
+                return $terbilang[$puluh];
+            }
+        } elseif ($number < 1000) {
+            $ratus = floor($number / 100);
+            $sisa = $number % 100;
+            if ($sisa > 0) {
+                if ($ratus == 1) {
+                    return 'Seratus ' . getTerbilang($sisa);
+                } else {
+                    return $terbilang[$ratus] . ' Ratus ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($ratus == 1) {
+                    return 'Seratus';
+                } else {
+                    return $terbilang[$ratus] . ' Ratus';
+                }
+            }
+        } elseif ($number < 1000000) {
+            $ribu = floor($number / 1000);
+            $sisa = $number % 1000;
+            if ($sisa > 0) {
+                if ($ribu == 1) {
+                    return 'Seribu ' . getTerbilang($sisa);
+                } else {
+                    return getTerbilang($ribu) . ' Ribu ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($ribu == 1) {
+                    return 'Seribu';
+                } else {
+                    return getTerbilang($ribu) . ' Ribu';
+                }
+            }
+        } elseif ($number < 1000000000) {
+            $juta = floor($number / 1000000);
+            $sisa = $number % 1000000;
+            if ($sisa > 0) {
+                if ($juta == 1) {
+                    return 'Satu Juta ' . getTerbilang($sisa);
+                } else {
+                    return getTerbilang($juta) . ' Juta ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($juta == 1) {
+                    return 'Satu Juta';
+                } else {
+                    return getTerbilang($juta) . ' Juta';
+                }
+            }
+        }
+    }
     function load_datatable_project_invoice($filter = null){
         $filterdata = 0;
         $countTotal = 0;
@@ -136,22 +206,43 @@ class ProjectinvoiceModel extends Model
             $htmldetail = '      
             <div class="view-detail" style="display:none">
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-2">
-                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</span>
+                    <div class="text-head-2 py-1">  
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Produk</span>
                     </div> 
                     '.$this->get_data_detail_invoice($row).'
                 </div>
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-2">
-                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pembayaran</span>
+                    <div class="text-head-2 py-1"> 
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Pembayaran</span> 
                     </div> 
                     '.$this->get_data_payment_invoice($row).'
                 </div> 
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-2">
-                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Pengiriman</span>
+                    <div class="text-head-2 py-1">
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Pengiriman</span> 
                     </div> 
                     '.$this->get_data_delivery_invoice($row).'
+                </div> 
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-1">
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-cart-shopping fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Pembelian</span> 
+                    </div>  
                 </div> 
             </div>
             ';
@@ -245,7 +336,7 @@ class ProjectinvoiceModel extends Model
     function get_data_detail_invoice($row){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-item m-0 w-auto">
+        $detailhtml = ' <table class="table detail-item m-0">
                             <thead>
                                 <tr>
                                     <th class="detail text-center" style="width:50px">Gambar</th>
@@ -323,8 +414,7 @@ class ProjectinvoiceModel extends Model
         </tfoot>
         </table>';
 
-        return $detailhtml;
-
+        return $detailhtml; 
     } 
     function get_data_delivery_invoice($row,$header = false){
         $delivery = "";
@@ -337,8 +427,228 @@ class ProjectinvoiceModel extends Model
             $delivery_detail = '<div class="text-head-3 p-2">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
                     Mode pengriman tidak diaktifkan untuk transaksi ini, 
-                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery(21,1,this,1)">aktifkan mode Pengiriman</a>
+                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="update_invoice_delivery('.$row->InvId.',this,1)">aktifkan mode Pengiriman</a>
                 </div>';
+        }else{
+            $modelsproduk = new ProdukModel();
+            $modelsDelivery = new DeliveryModel();
+            $builder = $this->db->table("delivery");
+            $builder->select('*');    
+            $builder->join("users","users.id = delivery.created_user ","left"); 
+            $builder->where('DeliveryRef',$row->InvId); 
+            $builder->where('DeliveryRefType',"Invoice");  
+            $builder->where('DeliveryStatus <',"3"); 
+           
+            $builder->orderby('DeliveryId', 'ASC'); 
+            $delivery = $builder->get()->getResult(); 
+            foreach($delivery as $row_delivery){
+                
+                $delivery_detail .= '<tr class="dt-hasChild">
+                <td class="detail ">
+                    <a class="pointer text-head-3 btn-detail-delivery" data-id="'.$row_delivery->DeliveryId.'"><i class="fa-solid fa-chevron-right"></i></a>
+                </td> 
+                <td class="detail action-td" style="width:70px"> 
+                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Data pengiriman" onclick="print_delivery('.$row_delivery->DeliveryId.',this,'.$row_delivery->ProjectId.')"><i class="fa-solid fa-print"></i></span>  
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Sampel Barang" onclick="edit_invoice_delivery('.$row_delivery->DeliveryId.',this,'.$row_delivery->ProjectId.')"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <div class="d-inline ">
+                        <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Sampel Barang" onclick="delete_project_Sample(114,3,this)"><i class="fa-solid fa-circle-xmark"></i></span>
+                    </div>
+                </td> 
+                <td class="detail" style="width:125px"> 
+                    <div class="d-flex align-items-center ">  
+                        <div class="flex-grow-1 ms-1">
+                            <div class="d-flex flex-column"> 
+                                <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>
+                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">'.$row->StoreName.'</span>  
+                                <span class="pointer text-head-3 pt-1 d-none">
+                                    <span class="me-1 badge text-bg-info text-head-3">Proses</span>
+                                </span>
+                            </div>   
+                        </div>
+                    </div>
+                </td>
+                <td class="detail" style="width:125px"> 
+                    '.$row_delivery->DeliveryCode.' 
+                    <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Invoice">
+                        <i class="fa-solid fa-money-bill text-success"></i>
+                        <a class="text-detail-3 pointer text-decoration-underline text-success">'.$row->InvCode.'</a>
+                    </div>  
+                </td>
+                <td class="detail">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</td>  
+                <td class="detail">'.$row_delivery->DeliveryRitase.' ('.$this->getTerbilang($row_delivery->DeliveryRitase).')</td> 
+                <td class="detail">'.$row_delivery->DeliveryArmada.'</td> 
+                <td class="detail"> 
+                    <div class="text-head-3 pb-2">'.$row_delivery->DeliveryFromName.'</div> 
+                    <div class="text-detail-3 pb-1"><i class="fa-solid fa-phone pe-1"></i>'.$row_delivery->DeliveryFromTelp.'</div>
+                    <div class="text-detail-3 text-truncate" style="max-width: 10rem;line-height: 1.2;" data-bs-toggle="tooltip" data-bs-title="'.$row_delivery->DeliveryFromAddress.'"><i class="fa-solid fa-location-dot pe-1"></i>'.$row_delivery->DeliveryFromAddress.'</div>
+                </td>
+                <td class="detail">  
+                    <div class="text-head-3 pb-2">'.$row_delivery->DeliveryToName.'</div> 
+                    <div class="text-detail-3 pb-1"><i class="fa-solid fa-phone pe-1"></i>'.$row_delivery->DeliveryToTelp.'</div>
+                    <div class="text-detail-3 text-truncate" style="max-width: 10rem;line-height: 1.2;" data-bs-toggle="tooltip" data-bs-title="'.$row_delivery->DeliveryToAddress.'"><i class="fa-solid fa-location-dot pe-1"></i>'.$row_delivery->DeliveryToAddress.'</div>
+                </td>
+                <td class="detail">Rp. '.number_format($row_delivery->DeliveryTotal,0).'</td>
+                </tr> 
+                <tr class="child-row delivery d-none" data-id="'.$row_delivery->DeliveryId.'">
+                    <td class="detail" colspan="10">
+                        <div class="view-detail-1" style="display:none">
+                            <div class="list-detail-1 pb-3">
+                                <div class="text-head-2 py-1"> 
+                                    <span class="fa-stack small">
+                                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                        <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
+                                    </span>
+                                    <span>Produk</span> 
+                                </div>  
+                                '.$modelsDelivery->get_data_detail_delivery($row_delivery->DeliveryId).'
+                            </div>   
+                            <div class="list-detail-1 pb-3">
+                                <div class="text-head-2 py-1"> 
+                                    <span class="fa-stack small">
+                                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                        <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                                    </span>
+                                    <span>Pembayaran</span> 
+                                </div>  
+                                '.$modelsDelivery->get_data_payment_delivery($row_delivery).'
+                            </div>
+                            <div class="list-detail-1 pb-3">
+                                <div class="text-head-2 py-1"> 
+                                    <span class="fa-stack small">
+                                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                        <i class="fa-solid fa-timeline fa-stack-1x fa-inverse"></i> 
+                                    </span>
+                                    <span>Progess</span> 
+                                </div>  
+                                '.$modelsDelivery->get_data_status_delivery($row_delivery).'
+                            </div>
+                        </div>
+                    </td>
+                </tr>'; 
+                $delivery_status = "";
+                $delivery_date = "";
+                if($row_delivery->DeliveryStatus == 0){ 
+                    $delivery_status = '<span class="text-head-3">
+                        <span class="badge text-bg-primary me-1">Dijadwalkan</span> 
+                    </span>';
+                    $delivery_date = '
+                                    <div class="row">
+                                        <div class="col-4"> 
+                                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                                        </div>
+                                        <div class="col-8">
+                                            <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                                        </div>
+                                    </div>  <div class="row">
+                                        <div class="col-4"> 
+                                            <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                                        </div>
+                                        <div class="col-8">
+                                            <span class="text-head-3"><a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_project_proses('.$row_delivery->DeliveryId.',this,\''.$row->ProjectId.'\')">Proses Pengiriman</a></span>
+                                        </div>
+                                    </div> ';
+                }elseif($row_delivery->DeliveryStatus == 1){
+                    $delivery_status = '<span class="text-head-3">
+                        <span class="badge text-bg-info me-1">Dikirim</span> 
+                    </span>'; 
+                    $delivery_date = '
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                            </div>
+                        </div>  <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateProses),"d M Y").' </span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Proses Pengiriman" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Proses Pengiriman" onclick="delivery_proses_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Diterima</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3"><a class="text-head-3 text-primary" style="cursor:pointer" onclick="delivery_project_finish('.$row_delivery->DeliveryId.',this,\''.$row->ProjectId.'\')">Terima Pengiriman</a></span>
+                            </div>
+                        </div> ';
+                }elseif($row_delivery->DeliveryStatus == 2){
+                    $delivery_status = '<span class="text-head-3">
+                        <span class="badge text-bg-success me-1">Selesai</span> 
+                    </span>'; 
+                    $delivery_date = '
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dijadwalkan</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</span>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Dikirim</span>
+                            </div>
+                            <div class="col-8">   
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateProses),"d M Y").' </span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Proses Pengiriman" onclick="delivery_proses_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Proses Pengiriman" onclick="delivery_proses_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-4"> 
+                                <span class="text-detail-2"><i class="fa-solid fa-calendar-days pe-1"></i>Diterima</span>
+                            </div>
+                            <div class="col-8">
+                                <span class="text-head-3">'.date_format(date_create($row_delivery->DeliveryDateFinish),"d M Y").'</span>
+                                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Lihat Terima Pengiriman" onclick="delivery_finish_show('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-eye"></i></span>
+                                <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Terima Pengiriman" onclick="delivery_finish_edit('.$row_delivery->DeliveryId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
+                            
+                            </div>
+                        </div>';
+                }
+            } 
+            if($delivery_detail == ""){
+
+                $delivery = ' 
+                <span class="text-head-3 delivery">
+                    <span class="badge text-bg-warning me-1">Belum ada</span>
+                </span>';
+                $delivery_detail = '<div class="text-head-3 p-2">
+                <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                pengriman belum dibuat untuk transaksi ini, 
+                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_invoice_delivery('.$row->InvId.',this)">Buat Pengiriman</a> atau 
+                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="update_invoice_delivery('.$row->InvId.',this,0)">nonaktifkan mode Pengiriman</a>
+            </div>';
+            }else{ 
+                $delivery = ' 
+                <span class="text-head-3 delivery">
+                    <span class="badge text-bg-success me-1">Selesai</span>
+                </span>';
+                $delivery_detail = '<table class="table detail-delivery">
+                    <thead>
+                        <tr>
+                            <th class="detail" style="width:30px"></th>
+                            <th class="detail" style="width:70px">Action</th>
+                            <th class="detail">Toko</th>
+                            <th class="detail">Nomor</th>
+                            <th class="detail">Tanggal</th> 
+                            <th class="detail">Ritase</th>
+                            <th class="detail">Armada</th>
+                            <th class="detail">Dari</th> 
+                            <th class="detail">Tujuan</th> 
+                            <th class="detail">Biaya</th>
+                        </tr>
+                    </thead>
+                    <tbody>'.$delivery_detail.'
+                    </tbody>
+                </table>';
+            }
         }
 
         if($header){
@@ -358,8 +668,7 @@ class ProjectinvoiceModel extends Model
                     </span>';
             $html_payment_detail = '<div class="text-head-3 p-2">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
-                    Mode pengriman tidak diaktifkan untuk transaksi ini, 
-                    <a class="text-head-3 text-primary" style="cursor:pointer" onclick="sample_project_update_delivery(21,1,this,1)">aktifkan mode Pengiriman</a>
+                    Tidak ada pembayaran untuk transaksi ini  
                 </div>';
         }else{
             $html_payment_detail = ""; 
@@ -367,6 +676,7 @@ class ProjectinvoiceModel extends Model
             $builder = $this->db->table("payment");
             $builder->select('*'); 
             $builder->join("users","users.id = payment.created_user ","left"); 
+            $builder->join("method","MethodId = PaymentMethod ","left"); 
             $builder->where('PaymentRef',$row->InvId); 
             $builder->where('PaymentRefType',"Invoice");
             $builder->orderby('PaymentDoc', '1'); 
@@ -375,13 +685,32 @@ class ProjectinvoiceModel extends Model
             $payment_total = 0;
             $performa_total = 0; 
             foreach($payment as $row_payment){  
+                $bukti = "-";
+                $folder_utama = 'assets/images/payment/'.$row_payment->PaymentRefType.'/'.$row_payment->PaymentRef.'/sumber'; 
+                //Buat folder berdasarkan id
+                if (!file_exists($folder_utama)) {
+                    mkdir($folder_utama, 0777, true);  
+                }  
+                $files = scandir($folder_utama);
+                foreach ($files as $file) {
+                    if ($file != '.' && $file != '..') {
+                        $filepath = $folder_utama.'/' . $file;
+                        $filesize = filesize($folder_utama. '/' . $file); 
+                        $filetype = mime_content_type($folder_utama. '/' . $file);
+                        $bukti = '  
+                                                <a onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
+                                                    <i class="fa-solid fa-eye"></i> Lihat bukti
+                                                </a>  ';
+                    }
+                }   
                 if($row_payment->PaymentStatus == "0"){ 
                     $action = '
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-circle-xmark"></i></span>';
+                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-print"></i></span>
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-circle-xmark"></i></span>';
                     $transfer_from = '<td class="detail">-</td>';
-                    $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Request by '.ucwords($row_payment->username).'</span>'; 
-                    $bukti = '';
+                    $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Menunggu Approval</span>';  
+                    $buktiterima = "-";
                 }else{ 
                     $action = '
                     <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-print"></i></span>';
@@ -390,40 +719,26 @@ class ProjectinvoiceModel extends Model
                         <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentFromRek.'</div>
                         <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentFromName.'</div>
                     </td> ';
-                    $status = '<span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Aproved">Aproved by '.$row_payment->PaymentApproved.'</span>'; 
-
-                    $folder_utama = 'assets/images/payment'; 
-                    //Buat folder berdasarkan id
-                    if (!file_exists($folder_utama."/".$row_payment->PaymentId)) {
-                        mkdir($folder_utama."/".$row_payment->PaymentId, 0777, true);  
-                    } 
-                    $files = scandir($folder_utama."/".$row_payment->PaymentId);
-                    foreach ($files as $file) {
-                        if ($file != '.' && $file != '..') {
-                            $filepath = $folder_utama."/".$row_payment->PaymentId . '/' . $file;
-                            $filesize = filesize($folder_utama."/".$row_payment->PaymentId . '/' . $file); 
-                            $filetype = mime_content_type($folder_utama."/".$row_payment->PaymentId . '/' . $file);
-                            $bukti = '  
-                                                    <a onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
-                                                        <i class="fa-solid fa-eye"></i> Lihat bukti
-                                                    </a>  ';
-                        }
-                    }   
+                    $status = '<span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Aproved">Aproved by '.$row_payment->PaymentApproved.'</span>';  
+                    
+                    $buktiterima = "-";
                 }  
 
-                if($row_payment->PaymentMethod == "Cash"){
+                if($row_payment->PaymentMethod == "0"){
                     $transfer_to = ' 
                     <td class="detail">  
-                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->MethodName.'</div>
                     </td>';
                 }else{ 
                     $transfer_to = ' 
                     <td class="detail">  
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentToBank.'</div>
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentToRek.'</div>
-                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
+                        <div class="text-detail-3 pb-1">'.$row_payment->MethodName.'</div>
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->MethodRekBank.'</div>
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->MethodRekNumber.'</div>
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->MethodRekName.'</div>
                     </td>';
                 }
+
                 $payment_total += $row_payment->PaymentTotal; 
                 $html_payment_detail .= '
                     <tr>
@@ -431,11 +746,11 @@ class ProjectinvoiceModel extends Model
                         <td class="detail">'.$row_payment->PaymentCode.'</td>
                         <td class="detail">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</td>
                         <td class="detail">'.$status.'</td>  
-                        <td class="detail">'.$row_payment->PaymentMethod.'</td>
-                    '. $transfer_to.'
-                    '. $transfer_from.' 
-                        <td class="detail">'.$bukti.'</td> 
+                        <td class="detail">'.$row_payment->PaymentType.'</td>
+                        '. $transfer_to.'
                         <td class="detail">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</td>
+                        <td class="detail">'.$bukti.'</td> 
+                        <td class="detail">'.$buktiterima.'</td> 
                     </tr>';
                 
             
@@ -446,11 +761,12 @@ class ProjectinvoiceModel extends Model
                         <span class="text-head-3 payment">
                             <span class="badge text-bg-warning me-1">Belum Ada</span>
                         </span>';
-                $html_payment_detail .= ' <div class="alert alert-warning p-2 m-0" role="alert">
+                $html_payment_detail .= ' <div class="d-inline-block alert alert-warning p-2 m-0" role="alert">
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
                         Belum ada pembayaran yang dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_payment('.$row->InvId.',this,\'Invoice\')">Buat Pembayaran</a> 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_payment('.$row->InvId.',this,\'Invoice\')">Buat Pembayaran</a> atau 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_payment('.$row->InvId.',this,\'Proforma\')">Buat Proforma</a> 
                     </span>
                 </div> '; 
             }else if($payment_total < $row->InvGrandTotal){  
@@ -460,7 +776,7 @@ class ProjectinvoiceModel extends Model
                             <span class="badge text-bg-warning me-1">Belum Selesai</span>
                         </span>';
                 $html_payment_detail = '
-                <table class="table detail-payment w-auto">
+                <table class="table detail-payment">
                     <thead>
                         <tr>
                             <th class="detail" style="width:70px">Action</th>
@@ -469,9 +785,9 @@ class ProjectinvoiceModel extends Model
                             <th class="detail">Status</th> 
                             <th class="detail">Metode</th>
                             <th class="detail">Tujuan</th> 
-                            <th class="detail">Sumber</th>
-                            <th class="detail">Bukti Transaksi</th>
                             <th class="detail">Total</th>
+                            <th class="detail">Bukti Sumber</th>
+                            <th class="detail">Bukti Masuk</th>
                         </tr>
                     </thead>
                     <tbody>'.$html_payment_detail.'
@@ -491,7 +807,7 @@ class ProjectinvoiceModel extends Model
                             <span class="badge text-bg-success me-1">Selesai</span>
                         </span>';
                 $html_payment_detail = '
-                    <table class="table detail-payment w-auto">
+                    <table class="table detail-payment">
                         <thead>
                             <tr>
                                 <th class="detail" style="width:70px">Action</th>
@@ -500,9 +816,9 @@ class ProjectinvoiceModel extends Model
                                 <th class="detail">Status</th> 
                                 <th class="detail">Metode</th>
                                 <th class="detail">Tujuan</th> 
-                                <th class="detail">Sumber</th>
-                                <th class="detail">Bukti Transaksi</th>
                                 <th class="detail">Total</th>
+                                <th class="detail">Bukti Sumber</th>
+                                <th class="detail">Bukti Masuk</th>
                             </tr>
                         </thead>
                         <tbody>'.$html_payment_detail.'

@@ -11,7 +11,7 @@ use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukvarianModel;
-use App\Models\ProjectinvoiceModel;
+use App\Models\InvoiceModel;
 use App\Models\ProjectModel;
 use App\Models\ProjectsphModel;
 use App\Models\PaymentModel;
@@ -560,7 +560,7 @@ class MessageController extends BaseController
     }
     public function invoice_edit($id)
     {     
-        $models = new ProjectinvoiceModel();
+        $models = new InvoiceModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
@@ -805,6 +805,61 @@ class MessageController extends BaseController
             $data["payment"] = $models->get_data_payment_by_delivery($id);  
         }
         $data["project"] = $project; 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
+    }
+    public function payment_add($id)
+    {      
+
+        $modelspayment = new PaymentModel();  
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        if($postData['type'] == "sample"){
+            $models = new ProjectsampleModel();  
+            $datasample = $models->get_data_sample($id); 
+            $project = array(
+                "ProjectId"=>$datasample->ProjectId,
+                "PaymentRef"=>$datasample->SampleId, 
+                "PaymentRefType"=>"Sample",
+                "GrandTotal"=>$datasample->SampleGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_sample($id);  
+        }
+        if($postData['type'] == "Invoice"){
+            $models = new InvoiceModel();  
+            $datainvoice = $models->get_data_invoice($id); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_invoice($id);  
+        }
+        if($postData['type'] == "pembelian"){
+            $models = new ProjectpembelianModel();  
+            $datapo = $models->get_data_pembelian($id); 
+            $project = array(
+                "ProjectId"=>$datapo->ProjectId, 
+                "PaymentRef"=>$datapo->POId,
+                "PaymentRefType"=>"Pembelian",
+                "GrandTotal"=>$datapo->POGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_pembelian($id);  
+        }
+        if($postData['type'] == "delivery"){
+            $models = new ProjectdeliveryModel();  
+            $datadelivery = $models->getDataDelivery($id); 
+            $project = array(
+                "ProjectId"=>$datadelivery->ProjectId, 
+                "PaymentRef"=>$datadelivery->DeliveryId, 
+                "PaymentRefType"=>"Pengiriman",
+                "GrandTotal"=>$datadelivery->DeliveryTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_delivery($id);  
+        }
+        $data["project"] = $project; 
+        $data["method"] = $modelspayment->getMethod(); 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
     }
@@ -1193,6 +1248,146 @@ class MessageController extends BaseController
         }else{ 
             return $this->response->setBody(view('admin/project/accounting/edit_modal.php',$data)); 
         }
+    } 
+    public function delivery_add($id,$type){
+        $modelinvoice = new InvoiceModel();
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel(); 
+        $modelsproduk = new ProdukModel();
+         
+        $detail = array();
+        if($type == "invoice"){  
+            $datainvoice = $modelinvoice->get_data_invoice($id);  
+            $project = array(
+                "code"=>$datainvoice->InvCode,
+                "StoreId"=>$datainvoice->StoreId,
+                "StoreCode"=>$datainvoice->StoreCode,
+                "StoreName"=>$datainvoice->StoreName,
+                "project_id"=>$datainvoice->ProjectId, 
+                "DeliveryRef"=>$datainvoice->InvId, 
+                "DeliveryRefType"=>"Invoice",
+                "CustomerName"=>$datainvoice->InvCustName,
+                "CustomerTelp"=>$datainvoice->InvCustTelp,
+                "CustomerAddress"=>$datainvoice->InvAddress, 
+            );
+            $arr_detail = $models->get_data_invoice_detail($id);
+            foreach($arr_detail as $row){
+                $detail[] = array( 
+                            "id" => $row->ProdukId, 
+                            "produkid" => $row->ProdukId, 
+                            "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                            "satuan_text"=>$row->InvDetailSatuanText, 
+                            "price"=>$row->InvDetailPrice,
+                            "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                            "total"=> $row->InvDetailTotal,
+                            "disc"=> $row->InvDetailDisc,
+                            "qty_ref"=> $row->InvDetailQty,
+                            "qty_success"=>$models->get_data_delivery_detail_by_ref($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText), 
+                            "qty"=> $row->InvDetailQty - $models->get_data_delivery_detail_by_ref($id,$row->ProdukId,$row->InvDetailVarian,$row->InvDetailText),
+                            "qty_spare"=> 0,
+                            "text"=> $row->InvDetailText,
+                            "group"=> $row->InvDetailGroup,
+                            "type"=> $row->InvDetailType,
+                            "image_url"=>  
+                            $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->InvDetailVarian,true)
+                        );
+            };
+
+           
+        }  
+       
+        $data["project"] = $project; 
+        $data["detail"] =  $detail;  
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/delivery/add_project_delivery',$data)); 
     }
+    public function delivery_edit($id){
+         
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+        $modelsproduk = new ProdukModel();
+
+        $delivery = $models->get_data_delivery($id); 
+        $arr_detail = $models->get_data_delivery_detail($id);  
+        $detail = array();
+        foreach($arr_detail as $row){
+            if($delivery->DeliveryRefType == "Invoice"){ 
+                $qty_ref = $models->get_data_invoice_by_delivery($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText);
+                $qty_success = $models->get_data_delivery_detail_by_ref($delivery->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$row->DeliveryDetailText) - $row->DeliveryDetailQty;
+            }else if($delivery->DeliveryRefType == "Pembelian"){
+                $qty_ref = 0;
+                $qty_success = 0;
+            }else if($delivery->DeliveryRefType == "Sample"){
+                $qty_ref = 0;
+                $qty_success = 0;
+            }else{
+                $qty_ref = 0;
+                $qty_success = 0;
+    
+            }
+            $detail[] = array( 
+                "id" => $row->ProdukId, 
+                "produkid" => $row->ProdukId, 
+                "satuan_id"=> ($row->DeliveryDetailSatuanId == 0 ? "" : $row->DeliveryDetailSatuanId),
+                "satuan_text"=>$row->DeliveryDetailSatuanText,   
+                "varian"=> JSON_DECODE($row->DeliveryDetailVarian,true), 
+                "qty"=> $row->DeliveryDetailQty,
+                "qty_spare"=> $row->DeliveryDetailQtySpare,
+                "qty_ref"=> $qty_ref,
+                "qty_success"=> $qty_success,
+                "text"=> $row->DeliveryDetailText,
+                "group"=> $row->DeliveryDetailGroup,
+                "type"=> $row->DeliveryDetailType ,
+                "image_url"=> 
+                $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->DeliveryDetailVarian,true)
+            );
+        };
+
+        $data["delivery"] = $delivery; 
+        $data["detail"] =  $detail; 
+        $data["template"] =$models->get_data_template_footer($delivery->TemplateId);   
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
+    }
+
+    
+    public function delivery_proses($id)
+    {       
+        $models = new ProjectModel();
+        $data["delivery"] = $models->get_data_delivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/delivery/proses_delivery',$data)); 
+    } 
+    public function delivery_finish($id)
+    {       
+        $models = new ProjectModel();
+        $modelsproduk = new ProdukModel();
+        $data["delivery"] = $models->get_data_delivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth 
+
+        $arr_detail = $models->get_data_delivery_detail($id);
+        foreach($arr_detail as $row){
+            $detail[] = array( 
+                "id" => $row->ProdukId, 
+                "produkid" => $row->ProdukId, 
+                "satuan_id"=> ($row->DeliveryDetailSatuanId == 0 ? "" : $row->DeliveryDetailSatuanId),
+                "satuan_text"=>$row->DeliveryDetailSatuanText,   
+                "varian"=> JSON_DECODE($row->DeliveryDetailVarian,true), 
+                "qty_ref"=> $row->DeliveryDetailQty,
+                "qty"=> $row->DeliveryDetailQty,
+                "qty_spare"=> $row->DeliveryDetailQtySpare, 
+                "qty_waste"=> 0, 
+                "text"=> $row->DeliveryDetailText,
+                "group"=> $row->DeliveryDetailGroup,
+                "type"=> $row->DeliveryDetailType,
+                "image_url"=>  
+                $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->DeliveryDetailVarian,true)
+            );
+        }; 
+       
+        $data["detail"] =  $detail; 
+        return $this->response->setBody(view('admin/project/delivery/add_finish_delivery',$data)); 
+    } 
 }
 

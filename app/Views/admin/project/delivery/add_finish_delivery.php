@@ -1,5 +1,5 @@
  
-<div class="modal fade" id="modal-finish-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-delivery-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-finish-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-delivery-label" style="overflow-y:auto;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,50 +9,9 @@
             <div class="modal-body p-2"> 
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
-                        <span class="label-dialog">Item Detail</span> 
-                    </div>
-                </div>     
-                <div class="card " style="min-height:50px;">
-                    <div class="card-body p-2 bg-light"> 
-                        <div class="row align-items-center  d-none d-md-flex px-3">
-                            <div class="col-12 col-md-5 my-1">    
-                                <div class="row">  
-                                    <div class="col-12"> 
-                                        <span class="label-head-dialog">Deskripsi</span> 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-7 my-1">
-                                <div class="row"> 
-                                    <div class="col-3"> 
-                                        <span class="label-head-dialog"><i class="ti-settings"></i></span>   
-                                    </div> 
-                                    <div class="col-9">
-                                        <div class="row"> 
-                                            <div class="col-4">
-                                                <span class="label-head-dialog">Diterima</span>  
-                                            </div>
-                                            <div class="col-4">
-                                                <span class="label-head-dialog">Rusak</span>  
-                                            </div>
-                                            <div class="col-4">
-                                                <span class="label-head-dialog">Spare</span>  
-                                            </div>
-                                        </div> 
-                                    </div>  
-                                </div>
-                            </div> 
-                        </div> 
-                        <div id="tb_varian" class="text-center"> 
-                        </div>  
-                    </div>
-                </div> 
-                <div class="row mx-2 my-3 align-items-center">
-                    <div class="label-border-right position-relative" >
                         <span class="label-dialog">Document</span> 
                     </div>
-                </div>      
-              
+                </div>     
                 <div class="row mx-2"> 
                     <div class="col-6">
                         <div class="row mb-1 align-items-center mt-2">
@@ -70,25 +29,28 @@
                             </div>
                         </div> 
                     </div>   
+                </div>     
+                <div class="row mx-2 my-3 align-items-center">
+                    <div id="table-list"></div>  
                 </div>   
-                
-                <div class="row mb-1 align-items-center mt-2 mx-2">
-                    <label for="DeliveryDateProses" class="col-sm-2 col-form-label pe-0">Upload Bukti</label>
-                    <div class="col-sm-10">
-                        <button id="remove-image" class="btn btn-sm btn-danger btn-action m-1" onclick=""><i class="fa-solid fa-close pe-2"></i>Hapus</button>
+                <div class="row mx-2 my-3 align-items-center">
+                    <div class="label-border-right position-relative" >
+                        <span class="label-dialog">Lampiran Gambar</span> 
                     </div>
-                </div>   
-                <div class="mb-1 mx-2">
-                    <input class="form-control form-control-sm input-form d-none" type="file" accept="image/*" style="width:100%" id="bukti-payment">   
-                    <div class="text-center" id="dropzone">
-                        <div class="dz-message">Tarik dan lepas file gambar di sini atau klik untuk memilih</div>
-                        <img id="preview"  style="
-    object-fit: scale-down;
-    width: 50%;
-    height: 100%;
-"  />
+                </div>  
+                <div class="row p-2"> 
+                    <input type="file" class="d-none" accept="image/*" id="upload-produk" multiple> 
+                    <div class="col-sm-12 d-flex flex-wrap"> 
+                        <div class="d-flex flex-wrap">
+                            <div class="d-flex flex-wrap" id="list-produk">
+                                <div class="image-default-obi" id="img-produk">
+                                    <i class="ti-image" style="font-size:1rem"></i>
+                                    <span>Tambah Foto</span>
+                                </div>
+                            </div> 
+                        </div>
                     </div>
-                </div>
+                </div>    
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -98,6 +60,22 @@
     </div>
 </div>  
 <script>
+
+    var table_delivery_item = new tableItemDelivery("table-list",{
+        dataitem : JSON.parse('<?= JSON_ENCODE($detail,true) ?>'.replace(/\n/g, '\\n')),
+        dropdownParent: $('#modal-add-finish-delievery .modal-content'),
+        baseUrl : "<?= base_url() ?>",
+        modal : $('#modal-add-finish-delievery')
+    }); 
+ 
+    if (table_delivery_item && typeof table_delivery_item.on === 'function') { 
+        table_delivery_item.on("subtotal",function(data){  
+        });
+        table_delivery_item.getSubTotal()
+    } else {
+        console.error("table_delivery_item tidak terdefinisi atau method on() tidak ada");
+    }
+
     $('#DeliveryDateFinish').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
@@ -292,55 +270,7 @@
         }
     }
     load_produk();
-
-    $('#dropzone').on('dragover', function(e) {
-    e.preventDefault();
-    $(this).addClass('dragover');
-    });
-
-    $('#dropzone').on('dragleave', function(e) {
-    $(this).removeClass('dragover');
-    });
-
-    $('#dropzone').on('drop', function(e) {
-    e.preventDefault();
-    $(this).removeClass('dragover');
-    file = e.originalEvent.dataTransfer.files[0];
-    if (file.type.match('image.*')) {
-        tampilkanPreview(file);
-    } else {
-        alert('Hanya file gambar yang diperbolehkan!');
-    }
-    });
-
-    $('#dropzone').on('click', function() {
-    $('#bukti-payment').trigger('click');
-    });
-
-    $('#bukti-payment').on('change', function() {
-    file = this.files[0];
-    if (file.type.match('image.*')) {
-        tampilkanPreview(file);
-    } else {
-        alert('Hanya file gambar yang diperbolehkan!');
-    }
-    });
-
-    $('#preview').hide();
-    function tampilkanPreview(file) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            $("#dropzone .dz-message").hide();
-            $('#preview').attr('src', e.target.result);
-            $('#preview').show();
-        };
-        reader.readAsDataURL(file);
-    }
-    $("#remove-image").click(function(){
-        $('#preview').attr('src',"");
-        $('#preview').hide();
-        $("#dropzone .dz-message").show();
-    });
+ 
 
     $("#btn-finish-delivery").click(function(){
         if(data_detail_item.map((obj) => obj.qty).reduce((a, b) => a + b, 0) == 0){
@@ -397,9 +327,12 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-finish-delivery").modal("hide");   
-                        loader_data_project(<?= $delivery->ProjectId ?>,'pengiriman')  
-                        // $("i[data-menu='pengiriman'][data-id='<?= $delivery->ProjectId ?>']").trigger("click");   
+                        if($("#modal-add-proses-delivery").data("menu") =="Invoice"){
+                            table.ajax.reload(); 
+                        }else{ 
+                            loader_data_project(<?= $delivery->ProjectId ?>,"pengiriman");   
+                        }   
+                        $("#modal-add-proses-delivery").modal("hide");   
                     });
                   
                 }else{

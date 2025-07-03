@@ -404,6 +404,7 @@ class ProjectsurveyModel extends Model
                     $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Request by '.ucwords($row_payment->username).'</span>'; 
                     $bukti = '';
                 }else{ 
+                    $bukti = '';
                     $action = '
                     <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-print"></i></span>';
                     $transfer_from = '<td class="detail">  
@@ -432,7 +433,7 @@ class ProjectsurveyModel extends Model
                     }   
                 }  
 
-                if($row_payment->PaymentMethod == "Cash"){
+                if($row_payment->PaymentType == "Cash"){
                     $transfer_to = ' 
                     <td class="detail">  
                         <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
@@ -452,7 +453,7 @@ class ProjectsurveyModel extends Model
                         <td class="detail">'.$row_payment->PaymentCode.'</td>
                         <td class="detail">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</td>
                         <td class="detail">'.$status.'</td>  
-                        <td class="detail">'.$row_payment->PaymentMethod.'</td>
+                        <td class="detail">'.$row_payment->PaymentType.'</td>
                        '. $transfer_to.'
                        '. $transfer_from.' 
                         <td class="detail">'.$bukti.'</td> 
@@ -479,7 +480,7 @@ class ProjectsurveyModel extends Model
                             <th class="detail">No. Pembayaran</th>
                             <th class="detail">Tanggal</th>
                             <th class="detail">Status</th> 
-                            <th class="detail">Metode</th>
+                            <th class="detail">Tipe</th>
                             <th class="detail">Tujuan</th> 
                             <th class="detail">Sumber</th>
                             <th class="detail">Bukti Transaksi</th>
@@ -505,7 +506,7 @@ class ProjectsurveyModel extends Model
                                 <th class="detail">No. Pembayaran</th>
                                 <th class="detail">Tanggal</th>
                                 <th class="detail">Status</th> 
-                                <th class="detail">Metode</th>
+                                <th class="detail">Tipe</th>
                                 <th class="detail">Tujuan</th> 
                                 <th class="detail">Sumber</th>
                                 <th class="detail">Bukti Transaksi</th>
@@ -516,74 +517,7 @@ class ProjectsurveyModel extends Model
                         </tbody>
                     </table>';
             }
-        } 
-        $html_payment_sample = '<table class="table detail-payment">
-                <thead>
-                    <tr>
-                        <th class="detail" style="width:70px">Action</th>
-                        <th class="detail">No. Pembayaran</th>
-                        <th class="detail">Tanggal</th>
-                        <th class="detail">Status</th> 
-                        <th class="detail">Metode</th>
-                        <th class="detail">Tujuan</th> 
-                        <th class="detail">Sumber</th>
-                        <th class="detail">Bukti Transaksi</th>
-                        <th class="detail">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="action-td no-border">  
-                            <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey(5,this,\'\')"><i class="fa-solid fa-print"></i></span>  
-                            <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_Survey(5,this,\'\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                            <div class="d-inline ">
-                                <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_project_Survey(5,this,\'\')"><i class="fa-solid fa-circle-xmark"></i></span>
-                            </div>
-                        </td>
-                        <td class="detail">PAY/016/05/2025</td>
-                        <td class="detail">28 May 2025</td>
-                        <td class="detail">Pelunasan</td>
-                        <td class="detail"><span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Update Status">Aproved by Syahrul Fauzan</span></td> 
-                        <td class="detail"> 
-                            <div class="text-head-3 pb-2">TRANSFER BCA</div>  
-                            <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>BCA</div>
-                            <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>123456789</div>
-                            <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>Syahrul Fauzan</div>
-                        </td> 
-                        <td class="detail"> 
-                            <div class="text-head-3 pb-2">BCA CV 1</div>   
-                            <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>BCA</div>
-                            <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>123456789</div>
-                            <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>Mahiera Global Solution</div>
-                        </td> 
-                        <td class="detail">Lihat bukti</td> 
-                        <td class="detail">Rp. 275.000</td>
-                    </tr>
-                    <tr>
-                        <td class="action-td no-border">  
-                            <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="print_project_Survey(5,this,\'\')"><i class="fa-solid fa-print"></i></span>  
-                            <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_project_Survey(5,this,\'\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                            <div class="d-inline ">
-                                <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_project_Survey(5,this,\'\')"><i class="fa-solid fa-circle-xmark"></i></span>
-                            </div>
-                        </td>
-                        <td class="detail">PAY/016/05/2025</td>
-                        <td class="detail">28 May 2025</td>
-                        <td class="detail">Pelunasan</td>
-                        <td class="detail"><span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Update Status">Request By Nesa Saputra</span></td> 
-                        <td class="detail"> 
-                            <div class="text-head-3 pb-2">TRANSFER BCA</div>  
-                            <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>BCA</div>
-                            <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>123456789</div>
-                            <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>Syahrul Fauzan</div>
-                        </td> 
-                        <td class="detail">-</td>
-                        <td class="detail">-</td> 
-                        <td class="detail">Rp. 275.000
-                        </td>
-                    </tr>
-                </tbody>
-            </table>';
+        }  
         return $html_payment;
     }
 

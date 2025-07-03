@@ -617,7 +617,7 @@ class ProjectsampleModel extends Model
         return $payment;
     }
     function get_data_delivery_sample($row){
-         if($row->SampleDelivery == 0){ 
+        if($row->SampleDelivery == 0){ 
             return '
             <div class="fw-normal row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
                 <div class="col bg-light py-2">  

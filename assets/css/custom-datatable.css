@@ -1,3 +1,10 @@
+.fa-stack.small {
+    font-size: 0.75rem;
+}
+i { 
+    vertical-align: middle;
+}
+
 table.dataTable thead>tr>th.dt-orderable-asc span.dt-column-order:before, table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order:before, table.dataTable thead>tr>td.dt-orderable-asc span.dt-column-order:before, table.dataTable thead>tr>td.dt-ordering-asc span.dt-column-order:before{
     position: absolute;
     font-family: 'Font Awesome 6 Free';
@@ -140,6 +147,7 @@ div.dt-container div.dt-scroll-body {
 
 table.detail-item{
     box-shadow: -1px 1px 4px 0 #334a9d52;
+    max-width: 90vw;
 }
 
 table.detail-item td.detail {
@@ -162,20 +170,20 @@ table.detail-item tfoot th.detail {
     font-size: 0.7rem !important;
 }
  
-table.detail-payment{ 
+table.detail-payment, table.detail-delivery{ 
     box-shadow: -1px 1px 4px 0 #334a9d52;
 }
-table.detail-payment td.detail {
+table.detail-payment td.detail , table.detail-delivery td.detail{
     padding: 0.5rem !important;
     border-bottom: 1px solid #e1e1e1;
     font-size: 0.7rem !important; 
 }
-table.detail-payment thead th.detail {    
+table.detail-payment thead th.detail , table.detail-delivery thead th.detail{    
     padding: 0.5rem 0.2rem !important;
     border-bottom: 1px solid #e1e1e1;
     background: #f3f5f9 !important;
 }
-table.detail-payment tfoot th.detail {    
+table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{    
     padding: 0.5rem 0.2rem !important;
     border-bottom: 1px solid #e3e3e3 !important;
     border-top: 1px solid #e3e3e3 !important;
@@ -204,7 +212,7 @@ table.detail-payment tfoot th.detail {
     left: 14px;
     width: 2px;
     height: 3rem;
-    background-color: #ccc;
+    background-color: #305176;
 }
 .child-row {
     position: relative;
@@ -217,13 +225,16 @@ table.detail-payment tfoot th.detail {
     position: absolute;
     left: 15px;
     top: 15px;
-    width: 20px;
+    width: 18px;
     height: 2px;
-    background-color: #ccc;
+    background-color: #305176;
 }
 .list-detail{
     position: relative;
     width: 99%;
+}
+.list-detail:first-child{ 
+    padding-top: 0.15rem; 
 }
 .list-detail:last-child{
     padding-bottom: 1rem; 
@@ -235,7 +246,7 @@ table.detail-payment tfoot th.detail {
     top: 15px;
     width: 2px;
     height: 100%;
-    border: 1px solid #ccc;
+    border: 1px solid #305176;
 }
 .list-detail:not(:last-child)::after {
     content: '';
@@ -243,9 +254,122 @@ table.detail-payment tfoot th.detail {
     left: -21px;
     top: calc(100% + 13px);
     width: 19px;
-    border: 1px solid #ccc;
+    border: 1px solid #305176;
+}
+
+.child-row  .view-detail-1::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% - 1.5rem);
+    left: 14px;
+    width: 2px;
+    height: 3rem;
+    background-color: #305176;
+}
+.view-detail-1{
+    padding-left: 1.7rem;
+}
+.dataTables_wrapper .dataTables_scrollBody {
+overflow-y: auto;
+height: calc(100vh - 100px); /* Sesuaikan dengan kebutuhan */
+}
+
+.dataTables_wrapper .dataTables_scrollFoot {
+position: sticky;
+bottom: 0;
+background-color: #fff;
+}
+.child-row  .view-detail-1::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 1.35rem;
+    width: 18px;
+    height: 2px;
+    background-color: #305176;
+}
+.list-detail-1{
+    position: relative;
+    width: 99%;
+}
+.list-detail-1:last-child{
+    padding-bottom: 1rem; 
+}
+.list-detail-1:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 15px;
+    width: 2px;
+    height: 100%;
+    border: 1px solid #305176;
+}
+.list-detail-1:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: calc(100% + 13px);
+    width: 19px;
+    border: 1px solid #305176;
 }
 
 .action-td .pointer i{
     padding: 0.1rem;
 }
+
+.timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;    
+    font-size: 0.65rem;
+}
+  
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 120px;
+    width: 2px;
+    background-color: #ccc;
+    transform: translateX(-50%);
+  }
+  
+  .timeline-item {
+    position: relative; 
+  }
+  
+  .timeline-badge {
+    position: absolute;
+    top: 20px;
+    left: 119px;
+    width: 10px;
+    height: 10px;
+    background-color: #337ab7;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  
+  .timeline-date {
+    position: absolute; 
+    top: 15px;
+    left: 0;
+  }
+  .timeline-panel {
+    position: relative; 
+    left: 130px; 
+    padding: 5px;  
+    width: calc(100% - 130px);
+  }  
+  .timeline-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 0;
+  }
+  
+  .timeline-text {
+    font-size: 14px;
+    color: #666;
+  }
