@@ -74,7 +74,9 @@ class HeaderModel extends Model
                             </div>
                         </div>'
                 ;
+                
                 $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0852-1795-2625<br>BATA REGULER JAKARTA';
+                $detail = 'DISIAPKAN OLEH : ERWIN BRACHMANA<br>DIRECT CONTACT : 0821-2229-3427<br>BATA REGULER JAKARTA';
                 break;
             case 3:
                 $html = '<div class="fixed">
