@@ -746,7 +746,7 @@ class ProdukModel extends Model
             }  
         }
     }
-    public function get_produk($post){ 
+    public function get_produk($post,$image = true){ 
         $builder = $this->db->table("produk");   
         $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");   
         $builder->join("produk_detail","produk.ProdukId= produk_detail.ProdukDetailRef","left");  
@@ -774,26 +774,49 @@ class ProdukModel extends Model
         $result =  $builder->get()->getResult();  
         $array_php = array();
         foreach($result as $row){ 
-            $array_php[] = array(
-                'image' => ($row->ProdukDetailImage == "" ? $this->getproductimageUrl($row->ProdukId): $row->ProdukDetailImage),
-                'name' => $row->ProdukName,
-                'kode' => $row->ProdukCode,
-                'kategori' => $row->ProdukCategoryName,
-                'varian' => json_decode($row->ProdukDetailVarian),
-                'price_buy' => $row->ProdukDetailHargaBeli,
-                'price_sell' => $row->ProdukDetailHargaJual,
-                'id' => $row->ProdukId,
-                'produkid' => $row->ProdukId, 
-                'text' => $row->ProdukName,
-                'group' => $row->ProdukCategoryName,
-                'berat' => $row->ProdukDetailBerat,
-                'satuan_id' => $row->ProdukSatuanId,
-                'satuan_text' => $row->ProdukSatuanName,
-                'pcsM2' => $row->ProdukDetailPcsM2,
-                'disc' => "0",
-                'qty' => "1",
-                'total' => $row->ProdukDetailHargaJual,
-            ); 
+            if($image){
+                $array_php[] = array(
+                    'image' => ($row->ProdukDetailImage == "" ? $this->getproductimageUrl($row->ProdukId): $row->ProdukDetailImage),
+                    'name' => $row->ProdukName,
+                    'kode' => $row->ProdukCode,
+                    'kategori' => $row->ProdukCategoryName,
+                    'varian' => json_decode($row->ProdukDetailVarian),
+                    'price_buy' => $row->ProdukDetailHargaBeli,
+                    'price_sell' => $row->ProdukDetailHargaJual,
+                    'id' => $row->ProdukId,
+                    'produkid' => $row->ProdukId, 
+                    'text' => $row->ProdukName,
+                    'group' => $row->ProdukCategoryName,
+                    'berat' => $row->ProdukDetailBerat,
+                    'satuan_id' => $row->ProdukSatuanId,
+                    'satuan_text' => $row->ProdukSatuanName,
+                    'pcsM2' => $row->ProdukDetailPcsM2,
+                    'disc' => "0",
+                    'qty' => "1",
+                    'total' => $row->ProdukDetailHargaJual,
+                );
+            }else{
+                    
+                $array_php[] = array( 
+                    'name' => $row->ProdukName,
+                    'kode' => $row->ProdukCode,
+                    'kategori' => $row->ProdukCategoryName,
+                    'varian' => json_decode($row->ProdukDetailVarian),
+                    'price_buy' => $row->ProdukDetailHargaBeli,
+                    'price_sell' => $row->ProdukDetailHargaJual,
+                    'id' => $row->ProdukId,
+                    'produkid' => $row->ProdukId, 
+                    'text' => $row->ProdukName,
+                    'group' => $row->ProdukCategoryName,
+                    'berat' => $row->ProdukDetailBerat,
+                    'satuan_id' => $row->ProdukSatuanId,
+                    'satuan_text' => $row->ProdukSatuanName,
+                    'pcsM2' => $row->ProdukDetailPcsM2,
+                    'disc' => "0",
+                    'qty' => "1",
+                    'total' => $row->ProdukDetailHargaJual,
+                ); 
+            }
         }
         return json_encode(
             $array_php
