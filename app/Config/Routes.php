@@ -5,6 +5,9 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */  
+
+$routes->post('/api/get_produk', 'ApiController::get_produk');
+
 $routes->get('/', 'AdminController::index', ['filter' => 'login']); 
 $routes->get('/admin', 'AdminController::index', ['filter' => 'login']);
 $routes->get('/admin/account', 'AdminController::account', ['filter' => 'login']);
@@ -120,6 +123,7 @@ $routes->post('/action/edit-data-delivery/(:num)', 'ActionController::delivery_e
 $routes->post('/action/delete-data-delivery/(:num)', 'ActionController::delivery_delete/$1', ['filter' => 'login']);
 $routes->post('/action/add-proses-delivery/(:num)', 'ActionController::delivery_proses/$1', ['filter' => 'login']);
 $routes->post('/action/edit-proses-delivery/(:num)', 'ActionController::delivery_proses_edit/$1', ['filter' => 'login']);
+$routes->post('/action/add-finish-delivery/(:num)', 'ActionController::delivery_finish/$1', ['filter' => 'login']);
 $routes->post('/action/finish-data-delivery/(:num)', 'ActionController::delivery_finish/$1', ['filter' => 'login']);
 $routes->post('/action/edit-finish-delivery/(:num)', 'ActionController::delivery_finish_edit/$1', ['filter' => 'login']);
 

@@ -799,7 +799,7 @@ class ProdukModel extends Model
             $array_php
         );
     }
-
+ 
 
     public function getproductdetail($id,$url = true){
         $builder = $this->db->table("produk_detail");

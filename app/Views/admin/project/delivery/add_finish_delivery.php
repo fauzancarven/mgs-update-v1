@@ -84,206 +84,127 @@
             format: 'DD MMMM YYYY'
         }
     });
-    var data_detail_item = JSON.parse('<?= JSON_ENCODE($detail,true) ?>');   
-     
-    delete_varian_click = function(index){ 
-        data_detail_item.splice(index, 1);
-        load_produk() 
-    }
-    up_varian_click = function(index){ 
-        if (index > 0) { 
-            var nilaiSementara = data_detail_item[index - 1];
-            data_detail_item.splice(index - 1, 1, data_detail_item[index]);
-            data_detail_item.splice(index, 1, nilaiSementara);
-        }
-        load_produk();
-    }
-    down_varian_click = function(index){  
-        if (index < data_detail_item.length - 1) {
-            var nilaiSementara = data_detail_item[index + 1];
-            data_detail_item.splice(index + 1, 1, data_detail_item[index]);
-            data_detail_item.splice(index, 1, nilaiSementara);
-        }
-        load_produk() 
-    }
-    load_produk = function(){
-        var html = '';
-        if(data_detail_item.length == 0){
-            html += `<div class="d-flex justify-content-center flex-column align-items-center"> 
-                            <img src="<?= base_url()?>assets/images/empty.png" alt="" style="width:150px;height:150px;">
-                            <span class="text-head-1">Item belum ditambahkan</span>
-                        </div>`;  
-        }
-        let last_group_abjad = 65;
-        let last_group_no = 1;
-        for(var i = 0; data_detail_item.length > i;i++){
-            if(data_detail_item[i]["type"] == "category"){ 
-                html += `
-                    <div class="row align-items-center ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
-                        <div class="col-12 col-md-4"> 
-                            <div class="row align-items-center"> 
-                                <div class="col-7 col-md-12 my-1 group text-start"> 
-                                    <span class="text-head-3">${String.fromCharCode(last_group_abjad)}. ${data_detail_item[i]["text"]}</span>  
-                                </div>   
-                                <div class="col-5 d-md-none d-block col-0 px-0"> 
-                                    <div class="btn-group d-inline-block float-end" role="group"> 
-                                        <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
-                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
-                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
-                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
-                                    </div>
-                                </div>   
-                            </div>
-                        </div>
-                        <div class="col-8 my-1 d-md-block d-none">   
-                            <div class="row px-2 align-items-center">
-                                <div class="col-2 px-0"> 
-                                    <div class="btn-group d-inline-block float-end" role="group"> 
-                                        <button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>
-                                        <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
-                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
-                                        <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
-                                    </div>
-                                </div> 
-                            </div> 
-                        </div>
-                    </div>`;
-                last_group_abjad++;
-                last_group_no = 1;
-            }  
-            if(data_detail_item[i]["type"] == "product"){ 
-                var varian = "";
-                if(data_detail_item[i]["id"] != "0"){
-                    varian = `  <span class="text-detail-2 text-truncate">${data_detail_item[i]["group"]}</span> 
-                                <div class="d-flex gap-1">`;
-                    for(var j = 0; data_detail_item[i]["varian"].length > j;j++){
-                        varian += `<span class="badge badge-${j % 5}">${data_detail_item[i]["varian"][j]["varian"] + ": " + data_detail_item[i]["varian"][j]["value"]}</span>`; 
-                    }
-                    varian +=  '</div>';
+    
+    $("#img-produk").on('click',function(){
+        $("#upload-produk").trigger("click");
+    })  
+    $("#upload-produk").on('change', function() { 
+        const files = this.files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function() {
+                    
+                    $("#img-produk").remove()
+                    $("#list-produk").append(`<div class="image-default-obi border">
+                    <img src="${reader.result}" draggable="true">
+                    <div class="action">
+                        <a class="btn btn-sm btn-white p-1" onclick="crop_image(this)"><i class="fas fa-crop-alt"></i></a>
+                        <a class="btn btn-sm btn-white p-1" onclick="delete_image(this)"><i class="fas fa-trash"></i></a>
+                    </div>
+                    </div>`);
+                    // Tambahkan event dragstart, dragover, dragleave, dan drop untuk setiap gambar
+                    var draggedImage = null;
+                    $('.image-default-obi.border img').on('dragstart', function(event) {
+                        draggedImage = $(this);
+                    });
+                    $('.image-default-obi.border').on('dragover', function(event) {
+                        event.preventDefault();
+                        $(this).addClass('dragover');
+                        });
+                        $('.image-default-obi.border').on('dragleave', function() {
+                        $(this).removeClass('dragover');
+                        });
+                        $('.image-default-obi.border').on('drop', function(event) {
+                        event.preventDefault();
+                        $(this).removeClass('dragover');
+                        const existingImage = $(this).find('img');
+                        if (draggedImage) {
+                            const sourceDropzone = draggedImage.closest('.image-default-obi.border');
+                            sourceDropzone.prepend(existingImage);
+                            $(this).prepend(draggedImage);
+                        }
+                    });
+                    
+                    $("#list-produk").append(`<div class="image-default-obi" id="img-produk">
+                        <i class="ti-image" style="font-size:1rem"></i>
+                        <span>Tambah Foto</span>
+                    </div>`);
+                    
+                    $("#img-produk").on('click',function(){
+                        $("#upload-produk").trigger("click");
+                    })  
                 }
-                html += `   <div class="row align-items-center  ${i > 0 ? "border-top mt-1 pt-1" : ""} mx-1">
-                                <div class="col-12 col-md-5 my-1 varian px-0">   
-                                    <div class="d-flex">
-                                        <span class="no-urut text-head-3">${last_group_no}.</span> 
-                                        <div class="d-flex flex-column text-start flex-fill">
-                                            <span class="text-head-3">${data_detail_item[i]["text"]}</span>
-                                            ${varian} 
-                                        </div>  
-                                        <div class="btn-group d-inline-block d-md-none float-end" role="group">  
-                                            ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
-                                            <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
-                                            <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
-                                            <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-7 my-1 detail">
-                                    <div class="row px-2"> 
-                                        <div class="col-3 px-0 d-none d-md-block ">  
-                                            <div class="btn-group float-end d-inline-block" role="group">  
-                                                ${data_detail_item[i]["id"] == "0" ? `<button class="btn btn-sm btn-warning btn-action p-2 py-1 rounded" onclick="edit_varian_click(${i})"><i class="fa-solid fa-pencil"></i></button>` : ""}
-                                                <button class="btn btn-sm btn-danger btn-action p-2 py-1 rounded" onclick="delete_varian_click(${i})"><i class="fa-solid fa-close"></i></button> 
-                                                <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="up_varian_click(${i})"><i class="fa-solid fa-arrow-up"></i></button> 
-                                                <button class="btn btn-sm btn-primary btn-action p-2 py-1 rounded" onclick="down_varian_click(${i})"><i class="fa-solid fa-arrow-down"></i></button> 
-                                            </div>
-                                        </div>  
-                                        <div class="col-12 col-md-9 px-1">   
-                                            <div class="row">   
-                                                <div class="col-4  px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diterima</span>
-                                                    <div class="input-group">  
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" id="input-pengiriman-${i}" data-id="${i}">
-                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span> 
-                                                    </div>   
-                                                </div> 
-                                                <div class="col-4 px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Rusak</span>
-                                                    <div class="input-group"> 
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-rusak-${i}" data-id="${i}">
-                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span> 
-                                                    </div>    
-                                                </div> 
-                                                <div class="col-4  px-1">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Spare</span>
-                                                    <div class="input-group"> 
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="input-spare-${i}" data-id="${i}">
-                                                        <span class="input-group-text font-std px-1">${data_detail_item[i]["satuan_text"]}</span>
-                                                    </div>     
-                                                </div> 
-                                            </div>   
-                                        </div>   
-                                    </div>    
-                                </div>     
-                            </div> `;
-
-                
-                last_group_no++; 
             }
         }
-        $("#tb_varian").html(html); 
-        var inputrusak = []; 
-        var inputpengiriman = []; 
-        var inputspare = [];
-        for(var i = 0; data_detail_item.length > i;i++){
-            if(data_detail_item[i]["type"] == "product"){
-   
-
-                //input Pengiiman
-                inputpengiriman[i] = new Cleave(`#input-pengiriman-${i}`, {
-                    numeral: true,
-                    delimeter: ",",
-                    numeralDecimalScale:3,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
-                inputpengiriman[i].setRawValue(data_detail_item[i]["qty"]);
-                $(`#input-pengiriman-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["qty"] = inputpengiriman[$(this).data("id")].getRawValue();
-                    if($(`#input-pengiriman-${i}`).val() == "") $(`#input-pengiriman-${i}`).val(0) 
-                });   
- 
-                //input Rusak
-                inputrusak[i] = new Cleave(`#input-rusak-${i}`, {
-                        numeral: true,
-                        delimeter: ",",
-                        numeralDecimalScale:3,
-                        numeralThousandGroupStyle:"thousand"
-                }); 
-                inputrusak[i].setRawValue(data_detail_item[i]["qty_waste"]);
-                $(`#input-rusak-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["qty_waste"] = inputrusak[$(this).data("id")].getRawValue();
-                    if($(`#input-rusak-${i}`).val() == "") $(`#input-rusak-${i}`).val(0) 
-                });  
-
-                //input Spare
-                inputspare[i] = new Cleave(`#input-spare-${i}`, {
-                    numeral: true,
-                    delimeter: ",",
-                    numeralDecimalScale:3,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
-                inputspare[i].setRawValue(data_detail_item[i]["qty_spare"]);
-                $(`#input-spare-${i}`).on("keyup",function(){ 
-                    data_detail_item[$(this).data("id")]["qty_spare"] = inputspare[$(this).data("id")].getRawValue();
-                    if($(`#input-spare-${i}`).val() == "") $(`#input-spare-${i}`).val(0) 
-                });   
-            }
+    });
+    var $uploadCrop, tempFilename, rawImg, imageId; 
+    $uploadCrop = $('#crop-image').croppie({
+        viewport: {
+            width: 400,
+            height: 400,
+        },
+        showZoomer: false,
+        enforceBoundary: false,
+        enableExif: true,
+        enableOrientation: true
+    });
+    crop_image = function(el){ 
+        var image_crop = $(el).parent().parent().find('img');
+        var flip = 0;
+        $('#modal-edit').modal('show');
+        
+        $('#modal-edit').on('shown.bs.modal', function(){ 
+            $uploadCrop.croppie('bind', {
+                url: $(image_crop).attr('src')
+            }).then(function(){
+                console.log('jQuery bind complete');
+            });
+        });
+        rotate_image = function(val){
+            $uploadCrop.croppie('rotate',parseInt(val));
         }
+        flip_image = function(val){
+            flip = flip == 0 ? val : 0;
+            $uploadCrop.croppie('bind', { 
+                url: $(el).parent().parent().find('img').attr('src'),
+                orientation: flip
+            });
+        } 
+
+        $('#submit-crop').unbind().click(function (ev) {
+            $uploadCrop.croppie('result', {
+                type: 'base64',
+                format: 'png',
+                size: {width: 400, height: 400}
+            }).then(function (resp) { 
+                $(image_crop).attr('src',resp) 
+                $('#modal-edit').modal('hide');
+            });
+        });
     }
-    load_produk();
+    delete_image = function(el){
+        $(el).parent().parent().remove();
+    }   
  
 
-    $("#btn-finish-delivery").click(function(){
+    $("#btn-finish-delivery").click(function(){ 
+        var data_detail_item = table_delivery_item.getDataRow(); 
         if(data_detail_item.map((obj) => obj.qty).reduce((a, b) => a + b, 0) == 0){
             Swal.fire({
                 icon: 'error',
-                text: 'Qty pengiriman belum lengkap ...!!!', 
+                text: 'Qty pengiriman tidak boleh qty 0 ...!!!', 
                 confirmButtonColor: "#3085d6", 
             }).then(function(){ 
                 swal.close(); 
             }) ;
             return; 
         }
-        if($("#preview").attr('src') == "" ||$("#preview").attr('src') == undefined ){
+
+        var srcList = $("#list-produk img").not("#img-produk img").map(function(){ return $(this).attr("src")}).get();
+        if(srcList.length === 0 ){
             Swal.fire({
                 icon: 'error',
                 text: 'Bukti pengemasan harus di upload...!!!', 
@@ -309,12 +230,12 @@
         var header = {  
             DeliveryDateFinish: $("#DeliveryDateFinish").data('daterangepicker').startDate.format("YYYY-MM-DD"),   
             DeliveryReceiveName: $("#DeliveryReceiveName").val(),  
-            Image: $("#preview").attr('src'), 
+            DeliveryImageListFinish: srcList, 
         }
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/finish-data-delivery/<?= $delivery->DeliveryId?>", 
+            url: "<?= base_url() ?>action/add-finish-delivery/<?= $delivery->DeliveryId?>", 
             data:{
                 "header":header,
                 "detail":detail, 
