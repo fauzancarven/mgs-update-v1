@@ -799,22 +799,14 @@ class ProdukModel extends Model
                     
                 $array_php[] = array( 
                     'name' => $row->ProdukName,
-                    'kode' => $row->ProdukCode,
-                    'kategori' => $row->ProdukCategoryName,
-                    'varian' => json_decode($row->ProdukDetailVarian),
+                    'kode' => $row->ProdukCode, 
                     'price_buy' => $row->ProdukDetailHargaBeli,
-                    'price_sell' => $row->ProdukDetailHargaJual,
-                    'id' => $row->ProdukId,
-                    'produkid' => $row->ProdukId, 
+                    'price_sell' => $row->ProdukDetailHargaJual, 
                     'text' => $row->ProdukName,
                     'group' => $row->ProdukCategoryName,
-                    'berat' => $row->ProdukDetailBerat,
-                    'satuan_id' => $row->ProdukSatuanId,
+                    'berat' => $row->ProdukDetailBerat, 
                     'satuan_text' => $row->ProdukSatuanName,
-                    'pcsM2' => $row->ProdukDetailPcsM2,
-                    'disc' => "0",
-                    'qty' => "1",
-                    'total' => $row->ProdukDetailHargaJual,
+                    'pcsM2' => $row->ProdukDetailPcsM2, 
                 ); 
             }
         }
