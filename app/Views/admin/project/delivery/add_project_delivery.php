@@ -1296,7 +1296,7 @@ console.log(`<?= json_encode($project) ?>`)
                         if($("#modal-add-delivery").data("menu") =="Invoice"){
                             table.ajax.reload(); 
                         }else{ 
-                            loader_data_project(<?= $project["project_id"] ?>,"pengiriman");   
+                            loader_data_project('<?= $project["project_id"] ?>',"pengiriman");   
                         }   
                     });
                   
