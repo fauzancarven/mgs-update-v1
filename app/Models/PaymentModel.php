@@ -201,6 +201,41 @@ class PaymentModel extends Model
 
         // if($data["PaymentRefType"] == "Invoice") $this->update_data_invoice_status($data["PaymentRef"]); 
     } 
+    
+    public function insert_data_proforma($data){
+        $builder = $this->db->table("payment");
+        $builder->insert(array(
+            "PaymentCode"=>$this->get_next_code_proforma($data["PaymentDate"]), 
+            "ProjectId"=>$data["ProjectId"],
+            "PaymentRef"=>$data["PaymentRef"],
+            "PaymentRefType"=>$data["PaymentRefType"],
+            "PaymentDate"=>$data["PaymentDate"],
+            "PaymentDate2"=>$data["PaymentDate"],
+            "PaymentType"=>$data["PaymentType"], 
+            "PaymentTotal"=>$data["PaymentTotal"],
+            "PaymentNote"=>$data["PaymentNote"], 
+            "PaymentDoc"=>2,  
+            "TemplateId"=>$data["TemplateId"],  
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+        ));
+
+        // $builder = $this->db->table("payment");
+        // $builder->select('*');
+        // $builder->orderby('PaymentId', 'DESC');
+        // $builder->limit(1);
+        // $query = $builder->get()->getRow();   
+        
+        
+        // $modelssample = new ProjectsampleModel;
+        // if($data["PaymentRefType"] == "Sample"){
+        //     $modelssample->update_data_sample_status($data["PaymentRef"]);
+        // }
+
+        // if($data["PaymentRefType"] == "Invoice"){ 
+        //     $this->update_data_invoice_status($data["PaymentRef"]);
+        // }
+    }
     public function insert_data_payment_request($data){
         $nextcode = $this->get_next_code_payment(date("Y-m-d"));
         $builder = $this->db->table("payment");
@@ -363,5 +398,14 @@ class PaymentModel extends Model
         $builder->where('PaymentDoc',1); 
         return $builder->get()->getResult();  
     }
+    
+    public function get_data_proforma_by_ref($id){
+        $builder = $this->db->table("payment"); 
+        $builder->where('PaymentRef',$id); 
+        $builder->where('PaymentRefType',"Invoice"); 
+        $builder->where('PaymentDoc',2); 
+        return $builder->get()->getResult();  
+    }
+
     
 }

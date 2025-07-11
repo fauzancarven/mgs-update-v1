@@ -679,7 +679,7 @@ class InvoiceModel extends Model
             $builder->join("method","MethodId = PaymentMethod ","left"); 
             $builder->where('PaymentRef',$row->InvId); 
             $builder->where('PaymentRefType',"Invoice");
-            $builder->orderby('PaymentDoc', '1'); 
+            $builder->orderby('PaymentDoc', 'ASC'); 
             $builder->orderby('PaymentId', 'ASC'); 
             $payment = $builder->get()->getResult();  
             $payment_total = 0;
@@ -703,11 +703,18 @@ class InvoiceModel extends Model
                                                 </a>  ';
                     }
                 }   
+                if($row_payment->PaymentDoc == 1){
+                    $statusdoc = "Invoice";
+                } else{
+                    
+                    $statusdoc = "Proforma";
+                }
+
                 if($row_payment->PaymentStatus == "0"){ 
                     $action = '
-                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-print"></i></span>
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-circle-xmark"></i></span>';
+                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"><i class="fa-solid fa-print"></i></span>
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"><i class="fa-solid fa-circle-xmark"></i></span>';
                     $transfer_from = '<td class="detail">-</td>';
                     $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Menunggu Approval</span>';  
                     $buktiterima = "-";

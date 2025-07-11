@@ -782,9 +782,15 @@
             },
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-add-payment").modal("show");  
-                $("#modal-add-payment").data("menu","Invoice");  
-                $(".tooltip").remove(); 
+                if(type == "Invoice"){ 
+                    $("#modal-add-payment").modal("show");  
+                    $("#modal-add-payment").data("menu","Invoice");  
+                }else{
+
+                    $("#modal-add-proforma").modal("show");  
+                    $("#modal-add-proforma").data("menu","Invoice");  
+                }
+                    $(".tooltip").remove(); 
 
                 isProcessingInvoicePayment[id] = false;
                 $(el).html(old_text); 
@@ -871,12 +877,16 @@
         
         $("html, body").css("overflow","auto");
     }
-
-
-    print_payment = function(id,el,ref){ 
-        //window.open('<?= base_url("print/project/paymentA5/") ?>' + id, '_blank');
-        $("#modal-print-payment").modal("show");
-        $("#modal-print-payment").data("id",id) 
+ 
+    print_payment = function(id,el,type){ 
+        if(type == "Invoice"){
+            
+            //window.open('<?= base_url("print/project/paymentA5/") ?>' + id, '_blank');
+            $("#modal-print-payment").modal("show");
+            $("#modal-print-payment").data("id",id) 
+        }else{ 
+            window.open('<?= base_url("print/project/proformaA5/") ?>' + id, '_blank');
+        }
     }
     
     $("#btn-print-payment").click(function(i){ 
@@ -1067,8 +1077,9 @@
             url: "<?= base_url() ?>message/finish-delivery-invoice/" + id,  
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-add-finish-delivery").modal("show");  
-                $("#modal-add-finish-delivery").data("menu","Invoice");  
+                
+                $("#modal-add-proses-delivery").modal("show");  
+                $("#modal-add-proses-delivery").data("menu","Invoice");  
                 $(".tooltip").remove(); 
 
                 isProcessingDeliveryFinish[id] = false;

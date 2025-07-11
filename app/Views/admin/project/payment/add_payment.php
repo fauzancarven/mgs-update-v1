@@ -83,7 +83,7 @@
                         <div class="dz-message">Tarik dan lepas file gambar di sini atau klik untuk memilih</div>
                         <img id="preview" width="200" height="200" />
                     </div>
-                </div> <!-- 
+                </div>
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
                         <span class="label-dialog">Term and Condition </span> 
@@ -107,7 +107,7 @@
                             </div>
                         </div>    
                     </div>  
-                </div>   -->
+                </div>
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -200,246 +200,258 @@
 
 
     
-    // var quill = [];  
-    // $(".template-footer").each(function(index, el){
-    //     var message = $(el).find("[name='EditFooterMessage']")[0];
-    //     var type = "payment"; 
-    //     quill[type] = new Quill(message,  {
-    //         debug: 'false',
-    //         modules: {
-    //             toolbar: [['bold', 'italic', 'underline', 'strike'],[{ 'list': 'ordered'}]],
-    //         },  
-    //         theme: "bubble"//'snow'
-    //     }); 
-    //     quill[type].enable(false);
-    //     quill[type].root.style.background = '#F7F7F7'; // warna disable 
-    //     const btnsaveas = $(el).find("a[value='simpanAs']")[0];
-    //     const btnsave = $(el).find("a[value='simpan']")[0];
-    //     const btnedit = $(el).find("a[value='edit']")[0];
-    //     const selectoption = $(el).find("select")[0];
+    var quill = [];  
+    $(".template-footer").each(function(index, el){
+        var message = $(el).find("[name='EditFooterMessage']")[0];
+        var type = "payment"; 
+        quill[type] = new Quill(message,  {
+            debug: 'false',
+            modules: {
+                toolbar: [['bold', 'italic', 'underline', 'strike'],[{ 'list': 'ordered'}]],
+            },  
+            theme: "bubble"//'snow'
+        }); 
+        quill[type].enable(false);
+        quill[type].root.style.background = '#F7F7F7'; // warna disable 
+        const btnsaveas = $(el).find("a[value='simpanAs']")[0];
+        const btnsave = $(el).find("a[value='simpan']")[0];
+        const btnedit = $(el).find("a[value='edit']")[0];
+        const selectoption = $(el).find("select")[0];
 
-    //     $(btnsave).hide();
-    //     $(btnsaveas).hide();
-    //     $(btnedit).hide();
+        $(btnsave).hide();
+        $(btnsaveas).hide();
+        $(btnedit).hide();
  
-    //     $(selectoption).select2({
-    //         dropdownParent: $('#modal-add-payment .modal-content'),
-    //         placeholder: "Pilih Template",
-    //         tags:true,
-    //         ajax: {
-    //             url: "<?= base_url()?>select2/get-data-template-footer/" + type,
-    //             dataType: 'json',
-    //             type:"POST",
-    //             delay: 250,
-    //             data: function (params) {
-    //                 // CSRF Hash
-    //                 var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
-    //                 var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
-    //                 return {
-    //                     searchTerm: params.term, // search term
-    //                     [csrfName]: csrfHash // CSRF Token
-    //                 };
-    //             },
-    //             processResults: function (response) {
+        $(selectoption).select2({
+            dropdownParent: $('#modal-add-payment .modal-content'),
+            placeholder: "Pilih Template",
+            tags:true,
+            ajax: {
+                url: "<?= base_url()?>select2/get-data-template-footer/" + type,
+                dataType: 'json',
+                type:"POST",
+                delay: 250,
+                data: function (params) {
+                    // CSRF Hash
+                    var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                    var csrfHash = $('.txt_csrfname').val(); // CSRF hash 
+                    return {
+                        searchTerm: params.term, // search term
+                        [csrfName]: csrfHash // CSRF Token
+                    };
+                },
+                processResults: function (response) {
         
-    //                 // Update CSRF Token
-    //                 $('.txt_csrfname').val(response.token); 
+                    // Update CSRF Token
+                    $('.txt_csrfname').val(response.token); 
 
-    //                 return {
-    //                     results: response.data
-    //                 };
-    //             },
-    //             cache: true
-    //         }, 
-    //         createTag: function(params) {
-    //             return {
-    //                 id: params.term,
-    //                 text: params.term, 
-    //                 tags: true // menandai tag baru
-    //             };
-    //         },
-    //         createTagText: function(params) {
-    //             return "Tambah '" + params.term + "'";
-    //         },  
-    //         templateResult: function(params) {
-    //             if (params.newTag) {
-    //                 return "Tambah '" + params.text + "'";
-    //             }
-    //             if (params.loading) return params.text; 
-    //             return params.text;
-    //             //return params.text;
-    //         },
-    //         templateSelection: function(params) {
-    //             return params.text;
-    //         }, 
-    //         //escapeMarkup: function(m) { return m; }
-    //     }).on("select2:select", function(e) {  
-    //         var data = e.params.data;    
-    //         //console.log(data);
-    //         if (e.params.data.tags) { 
-    //             quill[type].setContents(); 
+                    return {
+                        results: response.data
+                    };
+                },
+                cache: true
+            }, 
+            createTag: function(params) {
+                return {
+                    id: params.term,
+                    text: params.term, 
+                    tags: true // menandai tag baru
+                };
+            },
+            createTagText: function(params) {
+                return "Tambah '" + params.term + "'";
+            },  
+            templateResult: function(params) {
+                if (params.newTag) {
+                    return "Tambah '" + params.text + "'";
+                }
+                if (params.loading) return params.text; 
+                return params.text;
+                //return params.text;
+            },
+            templateSelection: function(params) {
+                return params.text;
+            }, 
+            //escapeMarkup: function(m) { return m; }
+        }).on("select2:select", function(e) {  
+            var data = e.params.data;    
+            //console.log(data);
+            if (e.params.data.tags) { 
+                quill[type].setContents(); 
                 
-    //             $(btnsave).show();
-    //             $(btnsaveas).show();
-    //             $(btnedit).hide();
+                $(btnsave).show();
+                $(btnsaveas).show();
+                $(btnedit).hide();
  
-    //             quill[type].enable(true);
-    //             quill[type].root.style.background = '#FFFFFF'; // warna enable
-    //         } else { 
-    //             quill[type].setContents(JSON.parse(data.delta));  
+                quill[type].enable(true);
+                quill[type].root.style.background = '#FFFFFF'; // warna enable
+            } else { 
+                quill[type].setContents(JSON.parse(data.delta));  
                 
-    //             $(btnsave).hide();
-    //             $(btnsaveas).hide();
-    //             $(btnedit).show(); 
+                $(btnsave).hide();
+                $(btnsaveas).hide();
+                $(btnedit).show(); 
 
-    //             quill[type].enable(false);
-    //             quill[type].root.style.background = '#F7F7F7'; // warna enable
-    //         } 
-    //     });
+                quill[type].enable(false);
+                quill[type].root.style.background = '#F7F7F7'; // warna enable
+            } 
+        });
 
-    //     $(btnsave).click(function(){ 
-    //         if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
-    //             $.ajax({ 
-    //                 dataType: "json",
-    //                 method: "POST",
-    //                 url: "<?= base_url() ?>action/add-data-template-footer", 
-    //                 data:{
-    //                     "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
-    //                     "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
-    //                     "TemplateFooterDelta": quill[type].getContents(), 
-    //                     "TemplateFooterCategory": type, 
-    //                 },
-    //                 success: function(data) {    
-    //                     //console.log(data); 
-    //                     if(data["status"]===true){     
+        $(btnsave).click(function(){ 
+            if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
+                $.ajax({ 
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/add-data-template-footer", 
+                    data:{
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
+                    },
+                    success: function(data) {    
+                        //console.log(data); 
+                        if(data["status"]===true){     
                           
-    //                         $(btnsave).hide();
-    //                         $(btnsaveas).hide();
-    //                         $(btnedit).show(); 
+                            $(btnsave).hide();
+                            $(btnsaveas).hide();
+                            $(btnedit).show(); 
 
-    //                         quill[type].enable(false);
-    //                         quill[type].root.style.background = '#F7F7F7'; // warna disable    
-    //                     }
-    //                 },
-    //                 error : function(xhr, textStatus, errorThrown){   
-    //                     Swal.fire({
-    //                         icon: 'error',
-    //                         text: xhr["responseJSON"]['message'], 
-    //                         confirmButtonColor: "#3085d6", 
-    //                     });
-    //                 }
-    //             }); 
-    //         }else{
-    //             $.ajax({ 
-    //                 dataType: "json",
-    //                 method: "POST",
-    //                 url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
-    //                 data:{
-    //                     "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
-    //                     "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
-    //                     "TemplateFooterDelta": quill[type].getContents(), 
-    //                     "TemplateFooterCategory": type, 
-    //                 },
-    //                 success: function(data) {    
-    //                     //console.log(data); 
-    //                     if(data["status"]===true){ 
+                            quill[type].enable(false);
+                            quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                        }
+                    },
+                    error : function(xhr, textStatus, errorThrown){   
+                        Swal.fire({
+                            icon: 'error',
+                            text: xhr["responseJSON"]['message'], 
+                            confirmButtonColor: "#3085d6", 
+                        });
+                    }
+                }); 
+            }else{
+                $.ajax({ 
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/edit-data-template-footer/" + $(selectoption).select2("data")[0]["id"] , 
+                    data:{
+                        "TemplateFooterName":$(selectoption).select2("data")[0]["text"] ,
+                        "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
+                        "TemplateFooterDelta": quill[type].getContents(), 
+                        "TemplateFooterCategory": type, 
+                    },
+                    success: function(data) {    
+                        //console.log(data); 
+                        if(data["status"]===true){ 
 
-    //                         $(btnsave).hide();
-    //                         $(btnsaveas).hide();
-    //                         $(btnedit).show(); 
+                            $(btnsave).hide();
+                            $(btnsaveas).hide();
+                            $(btnedit).show(); 
 
-    //                         quill[type].enable(false);
-    //                         quill[type].root.style.background = '#F7F7F7'; // warna disable    
-    //                     }
-    //                 },
-    //                 error : function(xhr, textStatus, errorThrown){   
-    //                     Swal.fire({
-    //                         icon: 'error',
-    //                         text: xhr["responseJSON"]['message'], 
-    //                         confirmButtonColor: "#3085d6", 
-    //                     });
-    //                 }
-    //             }); 
-    //         }
-    //     }) 
-    //     $(btnsaveas).click(function(){
-    //         $("#modal-add-payment").modal("hide"); 
-    //         Swal.fire({
-    //             title: 'Simpan Template',
-    //             input: 'text',
-    //             buttonsStyling: false,
-    //             showCancelButton: true,
-    //             showCancelButton: true,
-    //             customClass: {
-    //                 confirmButton: 'btn btn-primary mx-1',
-    //                 cancelButton: 'btn btn-secondary mx-1',
-    //                 loader: 'custom-loader',
-    //                 input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
-    //             },
-    //             backdrop: true,
-    //             confirmButtonText: "Simpan",
-    //             loaderHtml: '<div class="spinner-border text-primary"></div>',
-    //             preConfirm: async (name) => {
-    //                 try {  
-    //                     $.ajax({ 
-    //                         dataType: "json",
-    //                         method: "POST",
-    //                         url: "<?= base_url() ?>action/add-data-template-footer", 
-    //                         data:{ 
-    //                             "TemplateFooterName": name ,
-    //                             "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
-    //                             "TemplateFooterDelta": quill[type].getContents(), 
-    //                             "TemplateFooterCategory": type, 
-    //                         },
-    //                         success: function(data) {    
-    //                             //console.log(data); 
-    //                             if(data["status"]===true){    
-    //                                 $(selectoption).append(new Option(data["data"]["TemplateFooterName"] ,data["data"]["TemplateFooterId"], true, true)).trigger('change'); 
+                            quill[type].enable(false);
+                            quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                        }
+                    },
+                    error : function(xhr, textStatus, errorThrown){   
+                        Swal.fire({
+                            icon: 'error',
+                            text: xhr["responseJSON"]['message'], 
+                            confirmButtonColor: "#3085d6", 
+                        });
+                    }
+                }); 
+            }
+        }) 
+        $(btnsaveas).click(function(){
+            $("#modal-add-payment").modal("hide"); 
+            Swal.fire({
+                title: 'Simpan Template',
+                input: 'text',
+                buttonsStyling: false,
+                showCancelButton: true,
+                showCancelButton: true,
+                customClass: {
+                    confirmButton: 'btn btn-primary mx-1',
+                    cancelButton: 'btn btn-secondary mx-1',
+                    loader: 'custom-loader',
+                    input: 'form-control form-control-sm w-auto input-form', // Tambahkan kelas pada input
+                },
+                backdrop: true,
+                confirmButtonText: "Simpan",
+                loaderHtml: '<div class="spinner-border text-primary"></div>',
+                preConfirm: async (name) => {
+                    try {  
+                        $.ajax({ 
+                            dataType: "json",
+                            method: "POST",
+                            url: "<?= base_url() ?>action/add-data-template-footer", 
+                            data:{ 
+                                "TemplateFooterName": name ,
+                                "TemplateFooterDetail": quill[type].root.innerHTML.replace(/\s+/g, " "), 
+                                "TemplateFooterDelta": quill[type].getContents(), 
+                                "TemplateFooterCategory": type, 
+                            },
+                            success: function(data) {    
+                                //console.log(data); 
+                                if(data["status"]===true){    
+                                    $(selectoption).append(new Option(data["data"]["TemplateFooterName"] ,data["data"]["TemplateFooterId"], true, true)).trigger('change'); 
                                     
-    //                                 $(btnsave).hide();
-    //                                 $(btnsaveas).hide();
-    //                                 $(btnedit).show(); 
+                                    $(btnsave).hide();
+                                    $(btnsaveas).hide();
+                                    $(btnedit).show(); 
 
-    //                                 quill[type].enable(false);
-    //                                 quill[type].root.style.background = '#F7F7F7'; // warna disable    
-    //                             }
-    //                         },
-    //                         error : function(xhr, textStatus, errorThrown){   
-    //                             Swal.fire({
-    //                                 icon: 'error',
-    //                                 text: xhr["responseJSON"]['message'], 
-    //                                 confirmButtonColor: "#3085d6", 
-    //                             });
-    //                         }
-    //                     }); 
-    //                 } catch (error) {
-    //                     Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
-    //                 }
-    //             },
-    //             allowOutsideClick: () => !Swal.isLoading()
-    //         }).then((result) => {    
-    //             $(btnsave).hide();
-    //             $(btnsaveas).hide();
-    //             $(btnedit).show(); 
+                                    quill[type].enable(false);
+                                    quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                                }
+                            },
+                            error : function(xhr, textStatus, errorThrown){   
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: xhr["responseJSON"]['message'], 
+                                    confirmButtonColor: "#3085d6", 
+                                });
+                            }
+                        }); 
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error["responseJSON"]['message']}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {    
+                $(btnsave).hide();
+                $(btnsaveas).hide();
+                $(btnedit).show(); 
 
-    //             quill[type].enable(false);
-    //             quill[type].root.style.background = '#F7F7F7'; // warna disable    
-    //             $("#modal-add-payment").modal("show");
-    //         }); 
-    //     })
-    //     $(btnedit).click(function(){
+                quill[type].enable(false);
+                quill[type].root.style.background = '#F7F7F7'; // warna disable    
+                $("#modal-add-payment").modal("show");
+            }); 
+        })
+        $(btnedit).click(function(){
 
-    //         $(btnsave).show();
-    //         $(btnsaveas).show();
-    //         $(btnedit).hide();
+            $(btnsave).show();
+            $(btnsaveas).show();
+            $(btnedit).hide();
 
-    //         quill[type].enable(true);
-    //         quill[type].root.style.background = '#FFFFFF'; // warna enable
+            quill[type].enable(true);
+            quill[type].root.style.background = '#FFFFFF'; // warna enable
 
-    //     }) 
-    // });
+        }) 
+    });
   
     $("#btn-add-payment").click(function(){ 
+        
+        if($($(".template-footer").find("select")[0]).val() == null){
+            Swal.fire({
+                icon: 'error',
+                text: 'Template harus dipilih...!!!', 
+                confirmButtonColor: "#3085d6", 
+            }).then(function(){ 
+                swal.close();
+                setTimeout(() => $($(".template-footer").find("select")[0]).select2("open"), 300); 
+            }) ;
+            return; 
+        }     
         if($("#total-payment").val() == 0){
             Swal.fire({
                 icon: 'error',
@@ -457,6 +469,7 @@
             method: "POST",
             url: "<?= base_url() ?>action/add-data-payment", 
             data:{ 
+                "TemplateId": $($(".template-footer").find("select")[0]).val(),   
                 "PaymentRef": '<?= $project["PaymentRef"] ?>', 
                 "PaymentRefType": '<?= $project["PaymentRefType"] ?>',  
                 "ProjectId": '<?= $project["ProjectId"] ?>', 

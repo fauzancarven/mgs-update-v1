@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-add-proses-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true">
+<div class="modal fade" id="modal-add-proses-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-labelledby="modal-add-project-label" aria-hidden="true" data-menu="project">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

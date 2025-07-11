@@ -102,6 +102,50 @@ class DeliveryModel extends Model
 
         return $detailhtml; 
     } 
+    function get_data_detail_delivery_receive($id){ 
+        $modelsproduk = new ProdukModel();
+        $detail = array(); 
+        $detailhtml = ' <table class="table detail-item m-0 w-auto">
+                            <thead>
+                                <tr>
+                                    <th class="detail text-center" style="width:50px">Gambar</th>
+                                    <th class="detail">Nama</th>
+                                    <th class="detail">Qty</th>
+                                    <th class="detail">Spare</th> 
+                                    <th class="detail">Rusak</th> 
+                                </tr>
+                            </thead>
+                            <tbody>';
+        $arr_detail = $this->get_data_delivery_detail($id);
+        foreach($arr_detail as $row_data){
+            $arr_varian = json_decode($row_data->DeliveryDetailVarian);
+            $arr_badge = "";
+            $arr_no = 0;
+            foreach($arr_varian as $varian){
+                $arr_badge .= '<span class="badge badge-sm badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                $arr_no++;
+            } 
+
+            $detailhtml .= ' <tr>
+                    <td class="detail">
+                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->DeliveryDetailVarian,true).'" alt="Gambar" class="image-produk">
+                    </td>
+                    <td class="detail">
+                        <span class="text-head-3">'.$row_data->DeliveryDetailText.'</span><br>
+                        <span class="text-detail-2 text-truncate">'.$row_data->DeliveryDetailGroup.'</span> 
+                        <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
+                    </td>
+                    <td class="detail">'.number_format($row_data->DeliveryDetailQtyReceive, 2, ',', '.').' '.$row_data->DeliveryDetailSatuanText.'</td> 
+                    <td class="detail">'.number_format($row_data->DeliveryDetailQtyReceiveSpare, 2, ',', '.').$row_data->DeliveryDetailSatuanText.'</td>
+                    <td class="detail">'.number_format($row_data->DeliveryDetailQtyReceiveWaste, 2, ',', '.').$row_data->DeliveryDetailSatuanText.'</td>
+                </tr> ';
+        };
+        $detailhtml .= '
+        </tbody> 
+        </table>';
+
+        return $detailhtml; 
+    } 
     
     function get_data_payment_delivery($row,$header = false){
         $html_payment = "";
@@ -352,6 +396,69 @@ class DeliveryModel extends Model
                 </li> 
             </ul> ';
         }else{
+
+            $htmlimage = "";
+            $folder_utama = 'assets/images/delivery';  
+            $files = glob($folder_utama."/".$row->DeliveryId. '/proses_*');
+            foreach ($files as $file) {
+              
+                if (is_file($file)) {
+                    $filepath = $file; 
+                    $filetype = mime_content_type($file); 
+                    $file_name = basename($file);
+                    $htmlimage .=  '<img onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" />';
+                }
+            }
+            
+            $htmlimagefinish = "";
+            $folder_utama = 'assets/images/delivery';  
+            $files = glob($folder_utama."/".$row->DeliveryId. '/finish_*');
+            foreach ($files as $file) {
+              
+                if (is_file($file)) {
+                    $filepath = $file; 
+                    $filetype = mime_content_type($file); 
+                    $file_name = basename($file);
+                    $htmlimagefinish .=  '<img onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" />';
+                }
+            }
+            $html_status = ' 
+                    <span class="text-head-3 payment">
+                        <span class="badge text-bg-success me-1">Tidak ada</span>
+                    </span>';
+            $html_status_detail = ' 
+            <ul class="timeline">
+                <li class="timeline-item">
+                    <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDate)).'</div>
+                    <div class="timeline-badge"></div>
+                    <div class="timeline-panel">
+                        <span class="badge text-bg-success">Create Document</span><br>
+                        <span class="tex-detail-3">Dokument berhasil dibuat oleh '.$row->username.'</span> 
+                    </div>
+                </li> 
+                <li class="timeline-item">
+                    <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDateProses)).'</div>
+                    <div class="timeline-badge"></div>
+                    <div class="timeline-panel">
+                        <span class="badge text-bg-success">Packing dan Kirim</span><br>
+                        <div class="list-image d-flex gap-1 pt-2">
+                        '.$htmlimage.' 
+                        </div>
+                    </div>
+                </li> 
+                <li class="timeline-item">
+                    <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDateFinish)).'</div>
+                    <div class="timeline-badge"></div>
+                    <div class="timeline-panel">
+                        <span class="badge text-bg-success">Penerimaan Barang</span><br>
+                        <span class="tex-detail-3">Dokument diterima oleh '.$row->DeliveryReceiveName.'</span> 
+                        <div class="list-image d-flex gap-1 pt-2">
+                        '.$htmlimagefinish.' 
+                        </div>
+                        '.$this->get_data_detail_delivery_receive($row->DeliveryId).'
+                    </div>
+                </li>  
+            </ul> ';
            
         }
 

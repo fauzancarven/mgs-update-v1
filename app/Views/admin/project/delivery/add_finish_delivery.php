@@ -1,5 +1,5 @@
  
-<div class="modal fade" id="modal-add-finish-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-delivery-label" style="overflow-y:auto;">
+<div class="modal fade" id="modal-add-finish-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-delivery-label" style="overflow-y:auto;" data-menu="project">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -247,13 +247,14 @@
                         icon: 'success',
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
-                    }).then((result) => {   
-                        if($("#modal-add-proses-delivery").data("menu") =="Invoice"){
+                    }).then((result) => {    
+                        if($("#modal-add-finish-delivery").data("menu") == "Invoice"){
                             table.ajax.reload(); 
                         }else{ 
                             loader_data_project(<?= $delivery->ProjectId ?>,"pengiriman");   
-                        }   
-                        $("#modal-add-proses-delivery").modal("hide");   
+                        }     
+                        
+                        $("#modal-add-finish-delivery").modal("hide"); 
                     });
                   
                 }else{

@@ -446,7 +446,7 @@ class ActionController extends BaseController
     }
     public function proforma_add(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PaymentModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_proforma($postData); 

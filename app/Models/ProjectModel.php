@@ -4072,13 +4072,18 @@ class ProjectModel extends Model
         if (!file_exists($folder_utama."/".$id)){
             mkdir($folder_utama."/".$id, 0777, true);  
         }
-        $files = glob($folder_utama."/".$id. '/finish.*');
+        $files = glob($folder_utama."/".$id. '/finish_*');
         foreach ($files as $file) {
             unlink($file);
         } 
-        if (isset($data["header"]['Image'])) {
-            $data_image = $this->simpan_gambar_base64($data["header"]['Image'], $folder_utama."/".$id, "finish");  
+        if (isset($data["header"]['DeliveryImageListFinish'])) {  
+            $no = 0;
+            foreach ($data["header"]['DeliveryImageListFinish'] as $image) {
+                $this->simpan_gambar_base64($image, $folder_utama."/".$id, "finish_".$no); 
+                $no++;
+            } 
         } 
+
         foreach($data["detail"] as $row){  
             $varian = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
             $builder = $this->db->table("delivery_detail"); 
@@ -4982,40 +4987,6 @@ class ProjectModel extends Model
         }
        
     } 
-    public function insert_data_proforma($data){
-        $builder = $this->db->table("payment");
-        $builder->insert(array(
-            "PaymentCode"=>$this->get_next_code_proforma($data["PaymentDate"]), 
-            "ProjectId"=>$data["ProjectId"],
-            "PaymentRef"=>$data["PaymentRef"],
-            "PaymentRefType"=>$data["PaymentRefType"],
-            "PaymentDate"=>$data["PaymentDate"],
-            "PaymentDate2"=>$data["PaymentDate"],
-            "PaymentType"=>$data["PaymentType"], 
-            "PaymentTotal"=>$data["PaymentTotal"],
-            "PaymentNote"=>$data["PaymentNote"], 
-            "PaymentDoc"=>2,  
-            "TemplateId"=>$data["TemplateId"],  
-            "created_user"=>user()->id, 
-            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
-        ));
-
-        $builder = $this->db->table("payment");
-        $builder->select('*');
-        $builder->orderby('PaymentId', 'DESC');
-        $builder->limit(1);
-        $query = $builder->get()->getRow();   
-        
-        
-        $modelssample = new ProjectsampleModel;
-        if($data["PaymentRefType"] == "Sample"){
-            $modelssample->update_data_sample_status($data["PaymentRef"]);
-        }
-
-        if($data["PaymentRefType"] == "Invoice"){ 
-            $this->update_data_invoice_status($data["PaymentRef"]);
-        }
-    }
     public function update_data_proforma($data,$id){
         $builder = $this->db->table("payment"); 
         $builder->set('PaymentDate', $data["PaymentDate"]);

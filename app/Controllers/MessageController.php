@@ -814,6 +814,22 @@ class MessageController extends BaseController
         $modelspayment = new PaymentModel();  
         $request = Services::request();
         $postData = $request->getPost(); 
+        
+        if($postData['type'] == "Proforma"){
+            $models = new InvoiceModel();  
+            $datainvoice = $models->get_data_invoice($id); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_proforma_by_ref($id);   
+            $data["project"] = $datainvoice; 
+            $data["method"] = $modelspayment->getMethod(); 
+            $data["user"] = User(); //mengambil session dari mythauth
+            return $this->response->setBody(view('admin/project/payment/add_proforma.php',$data));  
+        }
         if($postData['type'] == "sample"){
             $models = new ProjectsampleModel();  
             $datasample = $models->get_data_sample($id); 
