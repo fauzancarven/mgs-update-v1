@@ -393,7 +393,7 @@
             url: "<?= base_url() ?>action/add-data-proforma", 
             data:{ 
                 "PaymentRef": <?= $project->InvId ?>, 
-                "ProjectId": <?= $project->ProjectId ?>, 
+                "ProjectId": '<?= $project->ProjectId ?>', 
                 "PaymentDate": $("#date-payment").data('daterangepicker').startDate.format("YYYY-MM-DD"),  
                 "PaymentType": $("#type-payment").val(), 
                 "PaymentRefType": "Invoice",
