@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Edit Proforma</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Ubah Proforma</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3"> 
@@ -137,7 +137,7 @@
         }); 
         quill[type].enable(false);
         quill[type].root.style.background = '#F7F7F7'; // warna disable 
-        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($template->TemplateFooterDelta)?>));  
+        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($payment->TemplateFooterDelta)?>));  
 
         const btnsaveas = $(el).find("a[value='simpanAs']")[0];
         const btnsave = $(el).find("a[value='simpan']")[0];
@@ -223,7 +223,7 @@
             } 
         });
 
-        $(selectoption).append(new Option("<?=$template->TemplateFooterName ?>" , "<?=$template->TemplateFooterId?>", true, true)).trigger('change'); 
+        $(selectoption).append(new Option("<?=$payment->TemplateFooterName ?>" , "<?=$payment->TemplateFooterId?>", true, true)).trigger('change'); 
         
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
@@ -413,6 +413,8 @@
                     }).then((result) => {   
                         $("#modal-edit-proforma").modal("hide"); if($("#modal-add-proforma").data("menu") =="sample"){
                             loader_datatable(); 
+                        }else if($("#modal-add-proforma").data("menu") =="Invoice"){
+                            table.ajax.reload(); 
                         }else{  
                             loader_data_project('<?= $project->ProjectId ?>','invoice') 
                         }     

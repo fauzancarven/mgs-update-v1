@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Edit Payment</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-add-project-label">Ubah Pembayaran</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3"> 
@@ -24,44 +24,55 @@
                         </div>
                     </div>  
                 </div> 
+                
                 <div class="mb-1">
-                    <label for="date-payment" class="col-form-label">Tanggal:</label>
-                    <input class="form-control form-control-sm input-form" style="width:100%" id="date-payment">
-                </div> 
-                <div class="mb-1"> 
-                    <label for="category-project" class="col-form-label">Type:</label> 
-                    <select class="form-select form-select-sm" style="width:100%" id="type-payment">
-                        <option value="DP" selected>DP</option>
-                        <option value="DP 10%">DP 10%</option>
-                        <option value="DP 20%">DP 20%</option>
-                        <option value="DP 30%">DP 30%</option>
-                        <option value="DP 40%">DP 40%</option>
-                        <option value="DP 50%">DP 50%</option>
-                        <option value="DP 60%">DP 60%</option>
-                        <option value="DP 70%">DP 70%</option>
-                        <option value="DP 80%">DP 80%</option>
-                        <option value="DP 90%">DP 90%</option> 
-                        <option value="Pelunasan">Pelunasan</option>
-                    </select>  
-                </div> 
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <label for="grandtotal-payment" class="col-form-label">Tanggal:</label>
+                            <input class="form-control form-control-sm input-form" style="width:100%" id="date-payment">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="sisa-payment" class="col-form-label">Type:</label> 
+                            <select class="form-select form-select-sm" style="width:100%" id="type-payment">
+                                <option value="DP">DP</option>
+                                <option value="DP 10%">DP 10%</option>
+                                <option value="DP 20%">DP 20%</option>
+                                <option value="DP 30%">DP 30%</option>
+                                <option value="DP 40%">DP 40%</option>
+                                <option value="DP 50%">DP 50%</option>
+                                <option value="DP 60%">DP 60%</option>
+                                <option value="DP 70%">DP 70%</option>
+                                <option value="DP 80%">DP 80%</option>
+                                <option value="DP 90%">DP 90%</option> 
+                                <option value="Pelunasan" selected>Pelunasan</option>
+                            </select>   
+                        </div>  
+                    </div>  
+                </div>  
                 <div class="mb-1"> 
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <label for="method-payment" class="col-form-label">Method Payment:</label>
+                            <label for="method-payment" class="col-form-label">Metode Pembayaran:</label>
                             <select class="form-select form-select-sm" style="width:100%" id="method-payment">
-                                <option value="TUNAI (CASH)" selected>TUNAI (CASH)</option>
-                                <option value="BCA TF">BCA TF</option>
+                                <?php
+                                    foreach($method as $row){
+                                        echo '<option value="'.$row->MethodId.'">'.$row->MethodName.'</option>';
+                                    }
+                                ?> 
+                                <!-- <option value="Mandiri">Bank Mandiri</option>
+                                <option value="BNI">Bank BNI</option>
+                                <option value="PERMATA">Bank PERMATA</option> -->
                             </select> 
                         </div>
                         <div class="col-12 col-md-6">
-                            <label for="total-payment" class="col-form-label">Total Payment:</label>
+                            <label for="total-payment" class="col-form-label">Total Pembayaran:</label>
                             <div class="input-group"> 
                                 <span class="input-group-text font-std">Rp.</span>
                                 <input type="text"class="form-control form-control-sm  input-form d-inline-block number-price" id="total-payment" value="<?= $payment->PaymentTotal ?>">
                             </div>  
                         </div>
                     </div>  
-                </div> 
+                </div>  
                 <div class="mb-1">
                     <label for="comment-payment" class="col-form-label">Catatan:</label>
                     <input class="form-control form-control-sm input-form" style="width:100%" id="comment-payment" value="<?= $payment->PaymentNote ?>">
@@ -198,6 +209,7 @@
     });
 
     
+    console.log(`<?= JSON_ENCODE($image)?>`);
     var quill = [];  
     $(".template-footer").each(function(index, el){
         var message = $(el).find("[name='EditFooterMessage']")[0];
@@ -211,7 +223,7 @@
         }); 
         quill[type].enable(false);
         quill[type].root.style.background = '#F7F7F7'; // warna disable  
-        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($template->TemplateFooterDelta)?>));  
+        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($payment->TemplateFooterDelta)?>));  
 
         const btnsaveas = $(el).find("a[value='simpanAs']")[0];
         const btnsave = $(el).find("a[value='simpan']")[0];
@@ -296,7 +308,7 @@
                 quill[type].root.style.background = '#F7F7F7'; // warna enable
             } 
         }); 
-        $(selectoption).append(new Option("<?=$template->TemplateFooterName ?>" , "<?=$template->TemplateFooterId?>", true, true)).trigger('change'); 
+        $(selectoption).append(new Option("<?=$payment->TemplateFooterName ?>" , "<?=$payment->TemplateFooterId?>", true, true)).trigger('change'); 
 
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
@@ -463,7 +475,11 @@
                 "PaymentMethod":$("#method-payment").val(), 
                 "PaymentTotal": $("#total-payment").val().replace(/[^0-9]/g, ''), 
                 "PaymentNote":$("#comment-payment").val(), 
-                "image": $("#preview").attr('src'), 
+                "TemplateId": $($(".template-footer").find("select")[0]).val(), 
+                "image": $("#preview").attr('src'),  
+                "PaymentRef": '<?= $payment->PaymentRef ?>', 
+                "PaymentRefType": '<?= $payment->PaymentRefType ?>',  
+                "ProjectId": '<?= $payment->ProjectId ?>', 
             },
             success: function(data) {   
                 if(data["status"]===true){
@@ -472,8 +488,14 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-edit-payment").modal("hide");   
-                        loader_data_project('<?= $project["ProjectId"] ?>','<?= $project["PaymentRefType"] ?>') 
+                        $("#modal-edit-payment").modal("hide");    
+                        if($("#modal-edit-payment").data("menu") =="sample"){
+                            loader_datatable(); 
+                        }else if($("#modal-edit-payment").data("menu") =="Invoice"){
+                            table.ajax.reload(); 
+                        }else{  
+                            loader_data_project('<?= $payment->ProjectId ?>','<?= strtolower($payment->PaymentRefType) ?>') 
+                        }  
                     });
                   
                 }else{

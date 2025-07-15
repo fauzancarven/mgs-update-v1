@@ -39,6 +39,40 @@ class TemplatefooterModel extends Model
     protected $beforeDelete = [];
     protected $afterDelete = [];
 
- 
+    /********************************************** */
+    /** FUNCTION UNTUK MENU PROJECT TEMPLATE FOOTER */  
+    /********************************************** */
+    public function insert_data_template_footer($data){  
+
+        $builder = $this->db->table("template_footer");
+        $builder->insert(array(
+            "TemplateFooterName"=> $data["TemplateFooterName"],
+            "TemplateFooterDetail"=> $data["TemplateFooterDetail"],
+            "TemplateFooterDelta"=> JSON_ENCODE($data["TemplateFooterDelta"]), 
+            "TemplateFooterCategory"=> $data["TemplateFooterCategory"],
+        ));  
+
+         // GET ID PRODUK 
+        $builder = $this->db->table("template_footer");
+        $builder->select('*'); 
+        $builder->orderby('TemplateFooterId', 'DESC');
+        $builder->limit(1);
+        return $builder->get()->getRow();
+    }
+    public function update_data_template_footer($data,$id){   
+        $builder = $this->db->table("template_footer");
+        $builder->set('TemplateFooterName', $data["TemplateFooterName"]);
+        $builder->set('TemplateFooterDetail', $data["TemplateFooterDetail"]); 
+        $builder->set('TemplateFooterCategory', $data["TemplateFooterCategory"]); 
+        $builder->set('TemplateFooterDelta', JSON_ENCODE($data["TemplateFooterDelta"]));
+        $builder->where('TemplateFooterId', $id); 
+        $builder->update(); 
+    }
+    public function get_data_template_footer($id){
+        $builder = $this->db->table("template_footer");
+        $builder->where('TemplateFooterId',$id);
+        $builder->limit(1);
+        return $builder->get()->getRow();  
+    }
     
 }

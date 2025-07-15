@@ -13,9 +13,11 @@ use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukvarianModel;
 use App\Models\InvoiceModel;
 use App\Models\ProjectModel;
-use App\Models\ProjectsphModel;
+use App\Models\SphModel;
+use App\Models\TemplatefooterModel;
+
 use App\Models\PaymentModel;
-use App\Models\ProjectsurveyModel;
+use App\Models\SurveyModel;
 use Myth\Auth\Entities\User;  
 
 use Config\Services; 
@@ -169,7 +171,7 @@ class MessageController extends BaseController
     }
     public function survey_edit($id)
     {     
-        $models = new ProjectsurveyModel();
+        $models = new SurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
  
@@ -193,7 +195,7 @@ class MessageController extends BaseController
     }
     public function project_survey_edit($id)
     {     
-        $models = new ProjectsurveyModel();
+        $models = new SurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
  
@@ -206,13 +208,13 @@ class MessageController extends BaseController
     }
     public function project_survey_finish($id)
     {     
-        $models = new ProjectsurveyModel();  
+        $models = new SurveyModel();  
         $data["project"] = $models->get_data_survey($id);
         return $this->response->setBody(view('admin/project/survey/add_project_survey_finish.php',$data)); 
     }
     public function project_survey_finish_edit($id)
     {     
-        $models = new ProjectsurveyModel();  
+        $models = new SurveyModel();  
         $data["project"] = $models->get_data_survey_finish($id);
         return $this->response->setBody(view('admin/project/survey/edit_project_survey_finish.php',$data)); 
     }
@@ -228,7 +230,7 @@ class MessageController extends BaseController
     public function project_sample_add($id)
     {     
         $models = new ProjectModel();
-        $modelsurvey = new ProjectsurveyModel();
+        $modelsurvey = new SurveyModel();
         $modelscustomer = new CustomerModel(); 
         $request = Services::request();
         $postData = $request->getPost(); 
@@ -303,7 +305,7 @@ class MessageController extends BaseController
     public function project_sph_add($id)
     {     
         $models = new ProjectModel();
-        $modelsurvey = new ProjectsurveyModel();
+        $modelsurvey = new SurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
@@ -423,7 +425,7 @@ class MessageController extends BaseController
     }
     public function penawaran_edit($id)
     {     
-        $models = new ProjectsphModel();
+        $models = new SphModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
@@ -595,7 +597,7 @@ class MessageController extends BaseController
     public function project_invoice_add($id)
     {     
         $models = new ProjectModel();
-        $modelsurvey = new ProjectsurveyModel();
+        $modelsurvey = new SurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel(); 
         $modelsproduk = new ProdukModel();
@@ -709,7 +711,7 @@ class MessageController extends BaseController
     public function project_invoice_edit($id)
     {     
         $models = new ProjectModel();
-        $modelsurvey = new ProjectsurveyModel();
+        $modelsurvey = new SurveyModel();
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
         $modelsproduk = new ProdukModel();
@@ -808,77 +810,6 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
     }
-    public function payment_add($id)
-    {      
-
-        $modelspayment = new PaymentModel();  
-        $request = Services::request();
-        $postData = $request->getPost(); 
-        
-        if($postData['type'] == "Proforma"){
-            $models = new InvoiceModel();  
-            $datainvoice = $models->get_data_invoice($id); 
-            $project = array(
-                "ProjectId"=>$datainvoice->ProjectId, 
-                "PaymentRef"=>$datainvoice->InvId, 
-                "PaymentRefType"=>"Invoice",
-                "GrandTotal"=>$datainvoice->InvGrandTotal,
-            );
-            $data["payment"] = $modelspayment->get_data_proforma_by_ref($id);   
-            $data["project"] = $datainvoice; 
-            $data["method"] = $modelspayment->getMethod(); 
-            $data["user"] = User(); //mengambil session dari mythauth
-            return $this->response->setBody(view('admin/project/payment/add_proforma.php',$data));  
-        }
-        if($postData['type'] == "sample"){
-            $models = new ProjectsampleModel();  
-            $datasample = $models->get_data_sample($id); 
-            $project = array(
-                "ProjectId"=>$datasample->ProjectId,
-                "PaymentRef"=>$datasample->SampleId, 
-                "PaymentRefType"=>"Sample",
-                "GrandTotal"=>$datasample->SampleGrandTotal,
-            );
-            $data["payment"] = $modelspayment->get_data_payment_by_sample($id);  
-        }
-        if($postData['type'] == "Invoice"){
-            $models = new InvoiceModel();  
-            $datainvoice = $models->get_data_invoice($id); 
-            $project = array(
-                "ProjectId"=>$datainvoice->ProjectId, 
-                "PaymentRef"=>$datainvoice->InvId, 
-                "PaymentRefType"=>"Invoice",
-                "GrandTotal"=>$datainvoice->InvGrandTotal,
-            );
-            $data["payment"] = $modelspayment->get_data_payment_by_invoice($id);  
-        }
-        if($postData['type'] == "pembelian"){
-            $models = new ProjectpembelianModel();  
-            $datapo = $models->get_data_pembelian($id); 
-            $project = array(
-                "ProjectId"=>$datapo->ProjectId, 
-                "PaymentRef"=>$datapo->POId,
-                "PaymentRefType"=>"Pembelian",
-                "GrandTotal"=>$datapo->POGrandTotal,
-            );
-            $data["payment"] = $modelspayment->get_data_payment_by_pembelian($id);  
-        }
-        if($postData['type'] == "delivery"){
-            $models = new ProjectdeliveryModel();  
-            $datadelivery = $models->getDataDelivery($id); 
-            $project = array(
-                "ProjectId"=>$datadelivery->ProjectId, 
-                "PaymentRef"=>$datadelivery->DeliveryId, 
-                "PaymentRefType"=>"Pengiriman",
-                "GrandTotal"=>$datadelivery->DeliveryTotal,
-            );
-            $data["payment"] = $modelspayment->get_data_payment_by_delivery($id);  
-        }
-        $data["project"] = $project; 
-        $data["method"] = $modelspayment->getMethod(); 
-        $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
-    }
     public function project_payment_edit($id)
     {     
         $models = new ProjectModel();      
@@ -926,9 +857,150 @@ class MessageController extends BaseController
             $data["payments"] = $models->get_data_payment_by_delivery($data["payment"]->PaymentRef);  
         }
 
-        $data["project"] = $project; 
+        $data["project"] = $project;  
         $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
-        $data["image"] = $models->get_data_payment_image($data["payment"]->ProjectId,$data["payment"]->PaymentRef,$data["payment"]->PaymentRefType,$id);    
+        $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$id);    
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
+    }
+    public function payment_add($id)
+    {      
+
+        $modelspayment = new PaymentModel();  
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        
+        if($postData['type'] == "Proforma"){
+            $models = new InvoiceModel();  
+            $datainvoice = $models->get_data_invoice($id); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_proforma_by_ref($id);   
+            $data["project"] = $datainvoice; 
+            $data["method"] = $modelspayment->getMethod(); 
+            $data["user"] = User(); //mengambil session dari mythauth
+            return $this->response->setBody(view('admin/project/payment/add_proforma.php',$data));  
+        }
+        if($postData['type'] == "sample"){
+            $models = new SampleModel();  
+            $datasample = $models->get_data_sample($id); 
+            $project = array(
+                "ProjectId"=>$datasample->ProjectId,
+                "PaymentRef"=>$datasample->SampleId, 
+                "PaymentRefType"=>"Sample",
+                "GrandTotal"=>$datasample->SampleGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_sample($id);  
+        }
+        if($postData['type'] == "Invoice"){
+            $models = new InvoiceModel();  
+            $datainvoice = $models->get_data_invoice($id); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_invoice($id);  
+        }
+        if($postData['type'] == "pembelian"){
+            $models = new ProjectpembelianModel();  
+            $datapo = $models->get_data_pembelian($id); 
+            $project = array(
+                "ProjectId"=>$datapo->ProjectId, 
+                "PaymentRef"=>$datapo->POId,
+                "PaymentRefType"=>"Pembelian",
+                "GrandTotal"=>$datapo->POGrandTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_pembelian($id);  
+        }
+        if($postData['type'] == "delivery"){
+            $models = new ProjectdeliveryModel();  
+            $datadelivery = $models->getDataDelivery($id); 
+            $project = array(
+                "ProjectId"=>$datadelivery->ProjectId, 
+                "PaymentRef"=>$datadelivery->DeliveryId, 
+                "PaymentRefType"=>"Pengiriman",
+                "GrandTotal"=>$datadelivery->DeliveryTotal,
+            );
+            $data["payment"] = $modelspayment->get_data_payment_by_delivery($id);  
+        }
+        $data["project"] = $project; 
+        $data["method"] = $modelspayment->getMethod(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
+    }
+    public function payment_edit($id)
+    {     
+        $models = new PaymentModel();    
+        $modelsTemplate = new TemplatefooterModel();    
+        $modelsInvoice = new InvoiceModel();      
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        $data["payment"] = $models->get_data_payment($id);    
+        if($postData['type'] == "Invoice"){
+            $datainvoice = $modelsInvoice->get_data_invoice($data["payment"]->PaymentRef); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+            );
+            $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef);  
+        } 
+        if($postData['type'] == "Proforma"){ 
+            $datainvoice = $modelsInvoice->get_data_invoice($data["payment"]->PaymentRef); 
+            $project = array(
+                "ProjectId"=>$datainvoice->ProjectId, 
+                "PaymentRef"=>$datainvoice->InvId, 
+                "PaymentRefType"=>"Invoice",
+                "GrandTotal"=>$datainvoice->InvGrandTotal,
+            );
+            $data["payments"] = $models->get_data_proforma_by_ref($data["payment"]->PaymentRef);   
+            $data["project"] = $datainvoice; 
+
+            return $this->response->setBody(view('admin/project/payment/edit_proforma.php',$data)); 
+        } 
+
+        if($postData['type'] == "sample"){
+            $datasample = $models->get_data_sample($data["payment"]->PaymentRef); 
+            $project = array(
+                "ProjectId"=>$datasample->ProjectId,
+                "PaymentRef"=>$datasample->SampleId, 
+                "PaymentRefType"=>"Sample",
+                "GrandTotal"=>$datasample->SampleGrandTotal,
+            );
+            $data["payments"] = $models->get_data_payment_by_sample($data["payment"]->PaymentRef);  
+        }
+        if($postData['type'] == "pembelian"){
+            $datapo = $models->getDataPO($id); 
+            $project = array(
+                "ProjectId"=>$datapo->ProjectId, 
+                "PaymentRef"=>$datapo->POId,
+                "PaymentRefType"=>"Pembelian",
+                "GrandTotal"=>$datapo->POGrandTotal,
+            );
+            $data["payments"] = $models->get_data_payment_by_pembelian($data["payment"]->PaymentRef);  
+        }
+        if($postData['type'] == "delivery"){
+            $datadelivery = $models->getDataDelivery($id); 
+            $project = array(
+                "ProjectId"=>$datadelivery->ProjectId, 
+                "PaymentRef"=>$datadelivery->DeliveryId, 
+                "PaymentRefType"=>"Pengiriman",
+                "GrandTotal"=>$datadelivery->DeliveryTotal,
+            );
+            $data["payments"] = $models->get_data_payment_by_delivery($data["payment"]->PaymentRef);  
+        }
+
+        $data["method"] = $models->getMethod(); 
+        $data["project"] = $project; 
+        $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
+        $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
     }
@@ -939,7 +1011,7 @@ class MessageController extends BaseController
         $models = new ProjectModel();  
 
         if($postData['type'] == "Survey"){
-            $models = new ProjectsurveyModel();  
+            $models = new SurveyModel();  
             $req = $models->get_data_survey($id); 
             $data["total"] = $req->SurveyTotal;
             $data["ref"] = $req->SurveyId;

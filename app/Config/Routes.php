@@ -107,6 +107,8 @@ $routes->post('/action/update-invoice/(:num)/(:num)', 'ActionController::invoice
 
 $routes->post('/action/add-data-payment', 'ActionController::payment_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-payment/(:num)', 'ActionController::payment_edit/$1', ['filter' => 'login']); 
+$routes->post('/action/delete-data-payment/(:num)', 'ActionController::payment_delete/$1', ['filter' => 'login']); 
+
 $routes->post('/action/delete-data-project-payment/(:num)', 'ActionController::payment_delete/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-project-request-payment/(:num)', 'ActionController::payment_request_delete/$1', ['filter' => 'login']); 
 
@@ -248,7 +250,9 @@ $routes->post('/message/add-project-payment/(:num)', 'MessageController::project
 $routes->post('/message/edit-project-payment/(:num)', 'MessageController::project_payment_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/request-project-payment/(:num)', 'MessageController::project_payment_request/$1', ['filter' => 'login']);  
 $routes->post('/message/request-project-payment-edit/(:num)', 'MessageController::project_payment_request_edit/$1', ['filter' => 'login']);  
+
 $routes->post('/message/add-payment/(:num)', 'MessageController::payment_add/$1', ['filter' => 'login']); 
+$routes->post('/message/edit-payment/(:num)', 'MessageController::payment_edit/$1', ['filter' => 'login']); 
 
 $routes->post('/message/request-payment/(:num)', 'MessageController::payment_request/$1', ['filter' => 'login']); 
 $routes->post('/message/request-payment-edit/(:num)', 'MessageController::payment_request_edit/$1', ['filter' => 'login']);  

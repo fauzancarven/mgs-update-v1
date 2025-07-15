@@ -6,8 +6,8 @@ use App\Models\UserModel;
 use App\Models\CustomerModel;
 use App\Models\CustomercategoryModel;
 use App\Models\ProjectModel;
-use App\Models\ProjectsurveyModel;
-use App\Models\ProjectsphModel;
+use App\Models\SurveyModel;
+use App\Models\SphModel;
 use App\Models\PaymentModel;
 use App\Models\ProdukunitModel;
 use App\Models\ProdukcategoryModel;
@@ -17,6 +17,7 @@ use App\Models\InvoiceModel;
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
 use App\Models\LampiranModel;
+use App\Models\TemplatefooterModel; 
 use Config\Services; 
 
 class ActionController extends BaseController
@@ -232,7 +233,7 @@ class ActionController extends BaseController
 
     public function survey_add(){
         $request = Services::request();
-        $models = new ProjectsurveyModel(); 
+        $models = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_survey($postData); 
@@ -241,7 +242,7 @@ class ActionController extends BaseController
     }
     public function survey_edit($id){
         $request = Services::request();
-        $models = new ProjectsurveyModel(); 
+        $models = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_survey($id,$postData); 
@@ -250,7 +251,7 @@ class ActionController extends BaseController
     }
     public function survey_delete($id){
         $request = Services::request();
-        $models = new ProjectsurveyModel(); 
+        $models = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->delete_data_survey($id);  
@@ -258,7 +259,7 @@ class ActionController extends BaseController
     }
     public function survey_status($id,$status){
         $request = Services::request();
-        $models = new ProjectsurveyModel(); 
+        $models = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {    
             echo $models->update_status_survey($id,$status);  
         }
@@ -266,7 +267,7 @@ class ActionController extends BaseController
 
     public function survey_finish($id){
         $request = Services::request();
-        $models = new ProjectsurveyModel(); 
+        $models = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $files = $request->getFiles(); 
             $data = $request->getPost(); 
@@ -275,7 +276,7 @@ class ActionController extends BaseController
     }
     public function survey_finish_edit($id){
         $request = Services::request();
-        $models = new ProjectsurveyModel(); 
+        $models = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $files = $request->getFiles(); 
             $data = $request->getPost(); 
@@ -318,7 +319,7 @@ class ActionController extends BaseController
     }
     public function penawaran_add(){
         $request = Services::request();
-        $models = new ProjectsphModel(); 
+        $models = new SphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_sph($postData); 
@@ -327,7 +328,7 @@ class ActionController extends BaseController
     }
     public function penawaran_edit($id){
         $request = Services::request();
-        $models = new ProjectsphModel(); 
+        $models = new SphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_sph($postData,$id); 
@@ -336,7 +337,7 @@ class ActionController extends BaseController
     } 
     public function penawaran_delete($id){
         $request = Services::request();
-        $models = new ProjectsphModel(); 
+        $models = new SphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->delete_data_sph($id);  
@@ -344,7 +345,7 @@ class ActionController extends BaseController
     }
     public function penawaran_status($id,$status){
         $request = Services::request();
-        $models = new ProjectsphModel(); 
+        $models = new SphModel(); 
         if ($request->getMethod(true) === 'POST') {    
             echo $models->update_status_sph($id,$status);  
         }
@@ -384,14 +385,6 @@ class ActionController extends BaseController
         }
     } 
 
-    public function payment_delete($id){
-        $request = Services::request();
-        $models = new ProjectModel(); 
-        if ($request->getMethod(true) === 'POST') {   
-            $postData = $request->getPost(); 
-            echo $models->delete_data_payment($id);  
-        }
-    }
     public function invoice_update_delivery($id){
         $request = Services::request();
         $models = new ProjectModel(); 
@@ -411,11 +404,19 @@ class ActionController extends BaseController
     }
     public function payment_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PaymentModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_payment($postData,$id); 
             echo json_encode(array("status"=>true));
+        }
+    }
+    public function payment_delete($id){
+        $request = Services::request();
+        $models = new PaymentModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            echo $models->delete_data_payment_request($id);  
         }
     }
     public function payment_request(){
@@ -455,7 +456,7 @@ class ActionController extends BaseController
     }
     public function proforma_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PaymentModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_proforma($postData,$id); 
@@ -591,7 +592,7 @@ class ActionController extends BaseController
     }
     public function template_footer_add(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new TemplatefooterModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $data = $models->insert_data_template_footer($postData); 
@@ -600,7 +601,7 @@ class ActionController extends BaseController
     }
     public function template_footer_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new TemplatefooterModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $data =  $models->update_data_template_footer($postData,$id); 

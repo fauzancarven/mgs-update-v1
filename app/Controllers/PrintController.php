@@ -3,9 +3,11 @@
 namespace App\Controllers;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use App\Models\ProjectsurveyModel;
-use App\Models\ProjectsphModel;
+use App\Models\SurveyModel;
+use App\Models\SphModel;
 use App\Models\ProjectModel;
+use App\Models\PaymentModel;
+use App\Models\InvoiceModel;
 use App\Models\ProdukModel;
 use App\Models\HeaderModel;
 
@@ -21,7 +23,7 @@ class PrintController extends BaseController
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $modelsurvey = new ProjectsurveyModel();
+                $modelsurvey = new SurveyModel();
                 $modelheader = new HeaderModel();
                 $data["survey"] = $modelsurvey->get_data_survey($id); 
                 $data["staff"] = $modelsurvey->get_data_survey_staff($data["survey"]->SurveyStaff); 
@@ -46,7 +48,7 @@ class PrintController extends BaseController
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $modelsurvey = new ProjectsurveyModel();
+                $modelsurvey = new SurveyModel();
                 $modelheader = new HeaderModel();
                 $data["survey"] = $modelsurvey->get_data_survey($id); 
                 $data["staff"] = $modelsurvey->get_data_survey_staff($data["survey"]->SurveyStaff); 
@@ -73,7 +75,7 @@ class PrintController extends BaseController
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectsphModel();
+                $models = new SphModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
                 $data["sph"] = $models->get_data_sph($id); 
@@ -198,13 +200,14 @@ class PrintController extends BaseController
                 $options->set('paper', 'a5');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectModel();   
+                $models = new PaymentModel();   
+                $modelsinvoice = new InvoiceModel();   
                 $modelheader = new HeaderModel(); 
                 $data["payment"] = $models->get_data_payment($id); 
                 if($data["payment"]->PaymentRefType=="Invoice"){ 
                         $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef); 
-                        $data["project"] = $models->get_data_invoice($data["payment"]->PaymentRef); 
-                        $data["detail"] = $models->get_data_invoice_detail($data["payment"]->PaymentRef); 
+                        $data["project"] = $modelsinvoice->get_data_invoice($data["payment"]->PaymentRef); 
+                        $data["detail"] = $modelsinvoice->get_data_invoice_detail($data["payment"]->PaymentRef); 
                         $data["customer"] = array(
                                 "CustomerName" => $data["project"]->InvCustName,
                                 "CustomerTelp" => $data["project"]->InvCustTelp,
@@ -236,14 +239,15 @@ class PrintController extends BaseController
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectModel();
+                $models = new PaymentModel();   
+                $modelsinvoice = new InvoiceModel();  
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
                 $data["payment"] = $models->get_data_payment($id); 
                 if($data["payment"]->PaymentRefType == "Invoice"){
                         $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef); 
 
-                        $data["inv"] = $models->get_data_invoice($data["payment"]->PaymentRef);
+                        $data["inv"] = $modelsinvoice->get_data_invoice($data["payment"]->PaymentRef);
                         $dataref = "";
                         if($data["inv"]->InvImageList !== "[]"){
                                 $dataref .= '<div class="page_break"></div><h2 class="text-center" style="margin-bottom:20px;">Lampiran</h2><div style="display:block;padding-top:30px;">';
@@ -273,7 +277,7 @@ class PrintController extends BaseController
                                 "optional" => $dataref,
                         ); 
                         
-                        $arr_detail = $models->get_data_invoice_detail($data["payment"]->PaymentRef);
+                        $arr_detail = $modelsinvoice->get_data_invoice_detail($data["payment"]->PaymentRef);
                         $detail = array();
                         foreach($arr_detail as $row){
                                 $detail[] = array(
@@ -327,13 +331,14 @@ class PrintController extends BaseController
                 $options->set('paper', 'a5');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectModel();   
+                $models = new PaymentModel();   
+                $modelsinvoice = new InvoiceModel();   
                 $modelheader = new HeaderModel();  
                 $data["payment"] = $models->get_data_proforma($id); 
                 if($data["payment"]->PaymentRefType=="Invoice"){ 
                         $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef); 
-                        $data["project"] = $models->get_data_invoice($data["payment"]->PaymentRef); 
-                        $data["detail"] = $models->get_data_invoice_detail($data["payment"]->PaymentRef); 
+                        $data["project"] = $modelsinvoice->get_data_invoice($data["payment"]->PaymentRef); 
+                        $data["detail"] = $modelsinvoice->get_data_invoice_detail($data["payment"]->PaymentRef); 
                         $data["customer"] = array(
                                 "CustomerName" => $data["project"]->InvCustName,
                                 "CustomerTelp" => $data["project"]->InvCustTelp,
@@ -341,8 +346,8 @@ class PrintController extends BaseController
                         ) ;
                 }  
                 $data["payments"] = $models->get_data_proforma_by_ref($data["payment"]->PaymentRef); 
-                $data["project"] = $models->get_data_invoice($data["payment"]->PaymentRef); 
-                $data["detail"] = $models->get_data_invoice_detail($data["payment"]->PaymentRef);  
+                $data["project"] = $modelsinvoice->get_data_invoice($data["payment"]->PaymentRef); 
+                $data["detail"] = $modelsinvoice->get_data_invoice_detail($data["payment"]->PaymentRef);  
                 $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  
                 $dompdf = new Dompdf($options);  
                 

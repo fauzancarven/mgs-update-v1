@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;  
 use CodeIgniter\Database\RawSql;
 use App\Models\ActivityModel;
-class ProjectsurveyModel extends Model
+class SurveyModel extends Model
 {  
     protected $DBGroup = 'default';
     protected $table = 'survey'; 

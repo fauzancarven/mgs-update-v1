@@ -807,6 +807,91 @@
             }
         });
     }
+
+    var isProcessingInvoicePaymentEdit = [];
+    edit_payment = function(id,el,type){
+        // INSERT LOADER BUTTON
+        if (isProcessingInvoicePaymentEdit[id]) {
+            console.log("project invoice cancel load");
+            return;
+        }  
+        isProcessingInvoicePaymentEdit[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/edit-payment/" + id, 
+            data:{
+                type:type
+            },
+            success: function(data) {  
+                $("#modal-message").html(data);
+                if(type == "Invoice"){ 
+                    $("#modal-edit-payment").modal("show");  
+                    $("#modal-edit-payment").data("menu","Invoice");  
+                }else{
+
+                    $("#modal-edit-proforma").modal("show");  
+                    $("#modal-edit-proforma").data("menu","Invoice");  
+                }
+                $(".tooltip").remove(); 
+
+                isProcessingInvoicePaymentEdit[id] = false;
+                $(el).html(old_text); 
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingInvoicePaymentEdit[id] = false;
+                $(el).html(old_text); 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    var isProcessingInvoicePaymentDelete = [];
+    delete_payment  = function(id,el,type){ 
+         // INSERT LOADER BUTTON
+        if (isProcessingInvoicePaymentDelete[id]) {
+            return;
+        }  
+        isProcessingInvoicePaymentDelete[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Anda yakin ingin menghapus Payment ini...???",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Yakin Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/delete-data-payment/" + id, 
+                    success: function(data) { 
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Pembayaran berhasil dihapus",
+                            icon: "success",
+                            confirmButtonColor: "#3085d6",
+                        });    
+                        table.ajax.reload(null, false);
+                    }, 
+                });
+            }
+            isProcessingInvoiceDelete[id] = false;
+            $(el).html(old_text); 
+        });
+    };
     
     view_file = function(el){ 
         filetype = $(el).data("type");

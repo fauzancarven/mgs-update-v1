@@ -7,7 +7,7 @@ use CodeIgniter\Database\RawSql;
 use App\Models\ProdukModel; 
 use App\Models\ActivityModel;
 
-class ProjectsphModel extends Model
+class SphModel extends Model
 {  
     protected $DBGroup = 'default';
     protected $table = 'penawaran';
@@ -860,11 +860,11 @@ class ProjectsphModel extends Model
  
         //update status sample
         
-        $modelssample = new ProjectsampleModel;
+        $modelssample = new SampleModel;
         if( $header["SphRefType"] == "Sample") $modelssample->update_data_sample_status($header["SphRef"]);  
         //update status Survey
         
-        $modelssurvey = new ProjectsurveyModel;
+        $modelssurvey = new SurveyModel;
         if( $header["SphRefType"] == "Survey") $modelssurvey->update_data_survey_status($header["SphRef"]);  
  
         //update status project
@@ -926,7 +926,7 @@ class ProjectsphModel extends Model
         }   
 
         //update status sample 
-        $modelssample = new ProjectsampleModel;
+        $modelssample = new SampleModel;
         if( $header["SphRefType"] == "Sample") $modelssample->update_data_sample_status($header["SphRef"]);  
         //update status Survey
         if( $header["SphRefType"] == "Survey") $this->update_data_survey_status($header["SphRef"]);   

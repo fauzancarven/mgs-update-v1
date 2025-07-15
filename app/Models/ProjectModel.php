@@ -7,7 +7,7 @@ use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\Codeigniter4Adapter;
 use CodeIgniter\Database\RawSql;
 use App\Models\ProdukModel;
-use App\Models\ProjectsampleModel;
+use App\Models\SampleModel;
 
 class ProjectModel extends Model
 { 
@@ -938,7 +938,7 @@ class ProjectModel extends Model
         $alertsurveymessage = 'data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="'. $message.'"';
 
         //ALERT SAMPLE  
-        $modelssample = new ProjectsampleModel;
+        $modelssample = new SampleModel;
         $alertsample = $modelssample->data_project_sample_notif($row->ProjectId);
         $sample = $modelssample->data_project_sample_count($row->ProjectId);
         $message = "";
@@ -1039,7 +1039,7 @@ class ProjectModel extends Model
     public function load_data_project_tab($data){
         switch ($data["type"]) {
             case "sample":
-                $modelSample = new ProjectsampleModel();
+                $modelSample = new SampleModel();
                 return  $modelSample->data_project_sample($data["ProjectId"]);
                 break; 
             case "penawaran":
@@ -1101,41 +1101,7 @@ class ProjectModel extends Model
       
     }
   
-    /********************************************** */
-    /** FUNCTION UNTUK MENU PROJECT TEMPLATE FOOTER */  
-    /********************************************** */
-    public function insert_data_template_footer($data){  
-
-        $builder = $this->db->table("template_footer");
-        $builder->insert(array(
-            "TemplateFooterName"=> $data["TemplateFooterName"],
-            "TemplateFooterDetail"=> $data["TemplateFooterDetail"],
-            "TemplateFooterDelta"=> JSON_ENCODE($data["TemplateFooterDelta"]), 
-            "TemplateFooterCategory"=> $data["TemplateFooterCategory"],
-        ));  
-
-         // GET ID PRODUK 
-        $builder = $this->db->table("template_footer");
-        $builder->select('*'); 
-        $builder->orderby('TemplateFooterId', 'DESC');
-        $builder->limit(1);
-        return $builder->get()->getRow();
-    }
-    public function update_data_template_footer($data,$id){   
-        $builder = $this->db->table("template_footer");
-        $builder->set('TemplateFooterName', $data["TemplateFooterName"]);
-        $builder->set('TemplateFooterDetail', $data["TemplateFooterDetail"]); 
-        $builder->set('TemplateFooterCategory', $data["TemplateFooterCategory"]); 
-        $builder->set('TemplateFooterDelta', JSON_ENCODE($data["TemplateFooterDelta"]));
-        $builder->where('TemplateFooterId', $id); 
-        $builder->update(); 
-    }
-    public function get_data_template_footer($id){
-        $builder = $this->db->table("template_footer");
-        $builder->where('TemplateFooterId',$id);
-        $builder->limit(1);
-        return $builder->get()->getRow();  
-    }
+  
  
     /************************************* */
     /** FUNCTION UNTUK MENU PROJECT        */  
@@ -2111,7 +2077,7 @@ class ProjectModel extends Model
  
         //update status sample
         
-        $modelssample = new ProjectsampleModel;
+        $modelssample = new SampleModel;
         if( $header["SphRefType"] == "Sample") $modelssample->update_data_sample_status($header["SphRef"]);  
         //update status Survey
         if( $header["SphRefType"] == "Survey") $this->update_data_survey_status($header["SphRef"]);  
@@ -2225,6 +2191,7 @@ class ProjectModel extends Model
             }
         } 
     } 
+
     /************************************** */
     /** FUNCTION UNTUK MENU PROJECT INVOICE */  
     /************************************** */
@@ -3941,7 +3908,7 @@ class ProjectModel extends Model
 
         if($header["DeliveryRefType"] == "Sample"){
             
-            $modelssample = new ProjectsampleModel;
+            $modelssample = new SampleModel;
             $modelssample->update_data_sample_status($header["DeliveryRef"]);
         }
         if($header["DeliveryRefType"] == "Invoice"){
@@ -4852,175 +4819,61 @@ class ProjectModel extends Model
     /** FUNCTION UNTUK MENU PROJECT PAYMENT     */  
     /****************************************** */ 
   
-    public function update_data_payment($data,$id){
-        $builder = $this->db->table("payment"); 
-        $builder->set('PaymentDate', $data["PaymentDate"]);
-        $builder->set('PaymentType', $data["PaymentType"]); 
-        $builder->set('PaymentMethod', $data["PaymentMethod"]); 
-        $builder->set('PaymentTotal', $data["PaymentTotal"]); 
-        $builder->set('PaymentNote', $data["PaymentNote"]);    
-        $builder->set('updated_user',user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
-        $builder->where('PaymentId', $id); 
-        $builder->update(); 
- 
-
-        //Buat folder utama
-        $folder_utama = 'assets/images/payment'; 
-        if (!file_exists($folder_utama)) {
-            mkdir($folder_utama, 0777, true);  
-        } 
-
-        //Buat folder berdasarkan id
-        if (!file_exists($folder_utama."/".$data["ProjectId"])) {
-            mkdir($folder_utama."/".$data["ProjectId"], 0777, true);  
-        }
-        if($data["SampleId"] = ""){
-            if (!file_exists($folder_utama."/".$data["ProjectId"]."/invoice")) {
-                mkdir($folder_utama."/".$data["ProjectId"]."/invoice", 0777, true);  
-            }
-            $folder_utama = $folder_utama."/".$data["ProjectId"]."/invoice"; 
-        }else{
-            if (!file_exists($folder_utama."/".$data["ProjectId"]."/sample")) {
-                mkdir($folder_utama."/".$data["ProjectId"]."/sample", 0777, true);  
-            }
-            $folder_utama = $folder_utama."/".$data["ProjectId"]."/sample"; 
-        }
-            //Remove image yang lama
-        $filename = $folder_utama."/".$id.'.*';
-        $files = glob($filename); 
-        foreach ($files as $file) {
-            unlink($file);
-        }
-        if (isset($data['image'])) {  
-            $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama, $id);  
-        } 
-
-        
-        $modelssample = new ProjectsampleModel;
-        if($data["PaymentRefType"] == "Sample"){
-            $modelssample->update_data_sample_status($data["PaymentRef"]);
-        }
-
-        if($data["PaymentRefType"] == "Invoice"){ 
-            $this->update_data_invoice_status($data["PaymentRef"]);
-        }
-
-    }
-    public function delete_data_payment($id){ 
+    // public function delete_data_payment($id){ 
          
-        $data_payment = $this->get_data_payment($id); 
+    //     $data_payment = $this->get_data_payment($id); 
  
-        $builder = $this->db->table("payment");
-        $builder->where('PaymentId',$id);
-        $builder->delete();   
+    //     $builder = $this->db->table("payment");
+    //     $builder->where('PaymentId',$id);
+    //     $builder->delete();   
 
-        $modelssample = new ProjectsampleModel;
-        if( $data_payment->PaymentRefType == "Sample"){
-            $modelssample->update_data_sample_status($data_payment->PaymentRef);
-        }
+    //     $modelssample = new SampleModel;
+    //     if( $data_payment->PaymentRefType == "Sample"){
+    //         $modelssample->update_data_sample_status($data_payment->PaymentRef);
+    //     }
 
-        if($data_payment->PaymentRefType == "Invoice"){ 
-            $this->update_data_invoice_status($data_payment->PaymentRef);
-        }
+    //     if($data_payment->PaymentRefType == "Invoice"){ 
+    //         $this->update_data_invoice_status($data_payment->PaymentRef);
+    //     }
 
-        return JSON_ENCODE(array("status"=>true));
-    }
-    public function get_data_payment_by_invoice($id){
-        $builder = $this->db->table("payment");  
-        $builder->where('PaymentRef',$id); 
-        $builder->where('PaymentRefType',"Invoice"); 
-        $builder->where('PaymentDoc',1); 
-        return $builder->get()->getResult();  
-    }
-    public function get_data_payment_by_sample($id){
-        $builder = $this->db->table("payment"); 
-        $builder->where('PaymentRef',$id); 
-        $builder->where('PaymentRefType',"Sample"); 
-        $builder->where('PaymentDoc',1); 
-        return $builder->get()->getResult();  
-    }
-    public function get_data_payment_by_pembelian($id){
-        $builder = $this->db->table("payment"); 
-        $builder->where('PaymentRef',$id); 
-        $builder->where('PaymentRefType',"Pembelian");  
-        $builder->where('PaymentDoc',1); 
-        return $builder->get()->getResult();  
-    }
-    public function get_data_payment_by_delivery($id){
-        $builder = $this->db->table("payment"); 
-        $builder->where('PaymentRef',$id); 
-        $builder->where('PaymentRefType',"Pengiriman");  
-        $builder->where('PaymentDoc',1); 
-        return $builder->get()->getResult();  
-    }
-    public function get_data_payment($id){
-        $builder = $this->db->table("payment");  
-        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
-        $builder->where('PaymentId',$id); 
-        $builder->where('PaymentDoc',1); 
-        return $builder->get()->getRow();  
-    }
-    public function get_data_payment_image($project_id,$ref,$type,$id){
-
-        // Cek apakah file gambar ada  
-        $path_gambar = 'assets/images/payment/'.$project_id.'/.'.$type.'/'.$id.'.*';   
-        $files = glob($path_gambar);
-        foreach ($files as $file) {
-            if (!file_exists($file)) {
-                return "";
-            }
-    
-            // Ambil jenis file gambar
-            $jenis_gambar = mime_content_type($file);
-    
-            // Baca file gambar
-            $gambar = file_get_contents($file);
-    
-            // Ubah gambar ke base64
-            $base64 = base64_encode($gambar);
-    
-            // Tambahkan header jenis file gambar
-            $base64 = "data:$jenis_gambar;base64,$base64";
-    
-            return $base64;
-        }
-       
-    } 
-    public function update_data_proforma($data,$id){
-        $builder = $this->db->table("payment"); 
-        $builder->set('PaymentDate', $data["PaymentDate"]);
-        $builder->set('PaymentType', $data["PaymentType"]);  
-        $builder->set('PaymentTotal', $data["PaymentTotal"]); 
-        $builder->set('PaymentNote', $data["PaymentNote"]);    
-        $builder->set('updated_user',user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
-        $builder->where('PaymentId', $id); 
-        $builder->update();   
-
-        
-        $modelssample = new ProjectsampleModel;
-        if($data["PaymentRefType"] == "Sample"){
-            $modelssample->update_data_sample_status($data["PaymentRef"]);
-        }
-
-        if($data["PaymentRefType"] == "Invoice"){ 
-            $this->update_data_invoice_status($data["PaymentRef"]);
-        }
-    }
-    public function get_data_proforma_by_ref($id){
-        $builder = $this->db->table("payment"); 
-        $builder->where('PaymentRef',$id); 
-        $builder->where('PaymentRefType',"Invoice"); 
-        $builder->where('PaymentDoc',2); 
-        return $builder->get()->getResult();  
-    }
-    public function get_data_proforma($id){
-        $builder = $this->db->table("payment"); 
-        $builder->where('PaymentId',$id); 
-        $builder->where('PaymentDoc',2); 
-        return $builder->get()->getRow();  
-    }
+    //     return JSON_ENCODE(array("status"=>true));
+    // }
+    // public function get_data_payment_by_invoice($id){
+    //     $builder = $this->db->table("payment");  
+    //     $builder->where('PaymentRef',$id); 
+    //     $builder->where('PaymentRefType',"Invoice"); 
+    //     $builder->where('PaymentDoc',1); 
+    //     return $builder->get()->getResult();  
+    // }
+    // public function get_data_payment_by_sample($id){
+    //     $builder = $this->db->table("payment"); 
+    //     $builder->where('PaymentRef',$id); 
+    //     $builder->where('PaymentRefType',"Sample"); 
+    //     $builder->where('PaymentDoc',1); 
+    //     return $builder->get()->getResult();  
+    // }
+    // public function get_data_payment_by_pembelian($id){
+    //     $builder = $this->db->table("payment"); 
+    //     $builder->where('PaymentRef',$id); 
+    //     $builder->where('PaymentRefType',"Pembelian");  
+    //     $builder->where('PaymentDoc',1); 
+    //     return $builder->get()->getResult();  
+    // }
+    // public function get_data_payment_by_delivery($id){
+    //     $builder = $this->db->table("payment"); 
+    //     $builder->where('PaymentRef',$id); 
+    //     $builder->where('PaymentRefType',"Pengiriman");  
+    //     $builder->where('PaymentDoc',1); 
+    //     return $builder->get()->getResult();  
+    // }
+    // public function get_data_payment($id){
+    //     $builder = $this->db->table("payment");  
+    //     $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left");
+    //     $builder->where('PaymentId',$id); 
+    //     $builder->where('PaymentDoc',1); 
+    //     return $builder->get()->getRow();  
+    // }
+   
 
 
     /****************************************** */

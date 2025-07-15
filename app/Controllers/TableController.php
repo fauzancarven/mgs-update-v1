@@ -4,9 +4,9 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\StoreModel;
 use App\Models\ProjectModel;
-use App\Models\ProjectsurveyModel;
-use App\Models\ProjectsampleModel;
-use App\Models\ProjectsphModel;
+use App\Models\SurveyModel;
+use App\Models\SampleModel;
+use App\Models\SphModel;
 use App\Models\InvoiceModel;
 use App\Models\CustomerModel;
 use App\Models\ProdukModel;
@@ -50,7 +50,7 @@ class TableController extends BaseController
     public function project_survey()
     {   
         $request = Services::request();
-        $datatable = new ProjectsurveyModel(); 
+        $datatable = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_table_project_survey($request->getPost());
         }    
@@ -59,7 +59,7 @@ class TableController extends BaseController
     public function project_survey_datatable()
     {   
         $request = Services::request();
-        $datatable = new ProjectsurveyModel(); 
+        $datatable = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_datatable_project_survey($request->getPost());
         }     
@@ -67,7 +67,7 @@ class TableController extends BaseController
     public function project_sample()
     {   
         $request = Services::request();
-        $datatable = new ProjectsampleModel(); 
+        $datatable = new SampleModel(); 
         if ($request->getMethod(true) === 'POST') {   
             //echo $datatable->load_table_project_sample($request->getPost());
         }    
@@ -76,7 +76,7 @@ class TableController extends BaseController
     public function project_sample_datatable()
     {   
         $request = Services::request();
-        $datatable = new ProjectsampleModel(); 
+        $datatable = new SampleModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_datatable_project_sample($request->getPost());
         }    
@@ -85,7 +85,7 @@ class TableController extends BaseController
     public function project_penawaran()
     {   
         $request = Services::request();
-        $datatable = new ProjectsphModel(); 
+        $datatable = new SphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_table_project_penawaran($request->getPost());
         }    
@@ -94,7 +94,7 @@ class TableController extends BaseController
     public function project_penawaran_datatable()
     {   
         $request = Services::request();
-        $datatable = new ProjectsphModel(); 
+        $datatable = new SphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_datatable_project_penawaran($request->getPost());
         }    
@@ -103,7 +103,7 @@ class TableController extends BaseController
     public function project_invoice()
     {   
         $request = Services::request();
-        $datatable = new ProjectsphModel(); 
+        $datatable = new SphModel(); 
         if ($request->getMethod(true) === 'POST') {   
             echo $datatable->load_table_project_invoice($request->getPost());
         }    

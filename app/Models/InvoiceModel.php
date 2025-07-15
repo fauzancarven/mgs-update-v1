@@ -671,7 +671,8 @@ class InvoiceModel extends Model
                     Tidak ada pembayaran untuk transaksi ini  
                 </div>';
         }else{
-            $html_payment_detail = ""; 
+            $html_payment_list = ""; 
+            $html_proforma_list = ""; 
             $payment_total = 0; 
             $builder = $this->db->table("payment");
             $builder->select('*'); 
@@ -684,6 +685,7 @@ class InvoiceModel extends Model
             $payment = $builder->get()->getResult();  
             $payment_total = 0;
             $performa_total = 0; 
+
             foreach($payment as $row_payment){  
                 $bukti = "-";
                 $folder_utama = 'assets/images/payment/'.$row_payment->PaymentRefType.'/'.$row_payment->PaymentRef.'/sumber'; 
@@ -691,32 +693,44 @@ class InvoiceModel extends Model
                 if (!file_exists($folder_utama)) {
                     mkdir($folder_utama, 0777, true);  
                 }  
+                 
                 $files = scandir($folder_utama);
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..') {
-                        $filepath = $folder_utama.'/' . $file;
-                        $filesize = filesize($folder_utama. '/' . $file); 
-                        $filetype = mime_content_type($folder_utama. '/' . $file);
-                        $bukti = '  
+                        if (strpos($file, $row_payment->PaymentId) === 0) {
+                            $filepath = $folder_utama.'/' . $file;
+                            $filesize = filesize($folder_utama. '/' . $file); 
+                            $filetype = mime_content_type($folder_utama. '/' . $file);
+                            $bukti = '  
                                                 <a onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
                                                     <i class="fa-solid fa-eye"></i> Lihat bukti
-                                                </a>  ';
+                                                </a>  '; 
+                        }
                     }
                 }   
                 if($row_payment->PaymentDoc == 1){
                     $statusdoc = "Invoice";
+                    
+                    $payment_total += $row_payment->PaymentTotal; 
                 } else{
                     
+                    $performa_total += $row_payment->PaymentTotal; 
                     $statusdoc = "Proforma";
                 }
 
                 if($row_payment->PaymentStatus == "0"){ 
                     $action = '
                     <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"><i class="fa-solid fa-print"></i></span>
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"><i class="fa-solid fa-circle-xmark"></i></span>';
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="edit_payment('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="delete_payment('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"><i class="fa-solid fa-circle-xmark"></i></span>';
                     $transfer_from = '<td class="detail">-</td>';
-                    $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Menunggu Approval</span>';  
+                    if($statusdoc == "Invoice"){
+
+                        $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Menunggu Approval</span>';  
+                    }else{
+                        
+                        $status =  '<span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Success">Success</span>';  
+                    }
                     $buktiterima = "-";
                 }else{ 
                     $action = '
@@ -746,8 +760,21 @@ class InvoiceModel extends Model
                     </td>';
                 }
 
-                $payment_total += $row_payment->PaymentTotal; 
-                $html_payment_detail .= '
+                if($row_payment->PaymentDoc == 1){ 
+                    $html_payment_list .= '
+                        <tr>
+                            <td class="action-td no-border">'.$action.'</td>
+                            <td class="detail">'.$row_payment->PaymentCode.'</td>
+                            <td class="detail">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</td>
+                            <td class="detail">'.$status.'</td>  
+                            <td class="detail">'.$row_payment->PaymentType.'</td>
+                            '. $transfer_to.'
+                            <td class="detail">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</td>
+                            <td class="detail">'.$bukti.'</td> 
+                            <td class="detail">'.$buktiterima.'</td> 
+                        </tr>';
+                }else{
+                    $html_proforma_list .= '
                     <tr>
                         <td class="action-td no-border">'.$action.'</td>
                         <td class="detail">'.$row_payment->PaymentCode.'</td>
@@ -759,11 +786,12 @@ class InvoiceModel extends Model
                         <td class="detail">'.$bukti.'</td> 
                         <td class="detail">'.$buktiterima.'</td> 
                     </tr>';
+                }
                 
             
             }  
             
-            if($payment_total == 0){
+            if($payment_total == 0 && $performa_total == 0){
                 $html_payment = ' 
                         <span class="text-head-3 payment">
                             <span class="badge text-bg-warning me-1">Belum Ada</span>
@@ -782,6 +810,17 @@ class InvoiceModel extends Model
                         <span class="text-head-3 payment">
                             <span class="badge text-bg-warning me-1">Belum Selesai</span>
                         </span>';
+
+                if($html_proforma_list !== ""){
+                    $html_proforma_list = '<tr>
+                        <td class="detail no-border" colspan="9">List Proforma</td> 
+                    </tr>'.$html_proforma_list;
+                }
+                if($html_payment_list !== ""){
+                    $html_payment_list = '<tr>
+                        <td class="detail no-border" colspan="9">List Payment</td> 
+                    </tr>'.$html_payment_list;
+                }
                 $html_payment_detail = '
                 <table class="table detail-payment">
                     <thead>
@@ -797,14 +836,15 @@ class InvoiceModel extends Model
                             <th class="detail">Bukti Masuk</th>
                         </tr>
                     </thead>
-                    <tbody>'.$html_payment_detail.'
+                    <tbody>'.$html_proforma_list.''.$html_payment_list.'
                     </tbody>
                 </table> 
                 <div class="alert alert-warning p-2 m-0" role="alert">
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->InvId.',this,\'Survey\')">Ajukan pembayaran</a> 
+                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini,  
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_payment('.$row->InvId.',this,\'Invoice\')">Buat Pembayaran</a> atau 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_payment('.$row->InvId.',this,\'Proforma\')">Buat Proforma</a> 
                     </span>
                 </div> ';
             } else{   
@@ -813,6 +853,19 @@ class InvoiceModel extends Model
                         <span class="text-head-3 payment">
                             <span class="badge text-bg-success me-1">Selesai</span>
                         </span>';
+
+
+                        
+                if($html_proforma_list !== ""){
+                    $html_proforma_list = '<tr>
+                        <td class="detail no-border" colspan="9">Proforma</td> 
+                    </tr>'.$html_proforma_list;
+                }
+                if($html_payment_list !== ""){
+                    $html_payment_list = '<tr>
+                        <td class="detail no-border" colspan="9">Payment</td> 
+                    </tr>'.$html_payment_list;
+                }
                 $html_payment_detail = '
                     <table class="table detail-payment">
                         <thead>
@@ -828,7 +881,7 @@ class InvoiceModel extends Model
                                 <th class="detail">Bukti Masuk</th>
                             </tr>
                         </thead>
-                        <tbody>'.$html_payment_detail.'
+                        <tbody>'.$html_proforma_list.''.$html_payment_list.'
                         </tbody>
                     </table>';
             } 
@@ -939,7 +992,7 @@ class InvoiceModel extends Model
         // //update status Survey
         // if( $header["InvRefType"] == "Survey") $this->update_data_survey_status($header["InvRef"]);
         // //update status Sample
-        // $modelssample = new ProjectsampleModel;
+        // $modelssample = new SampleModel;
         // if( $header["InvRefType"] == "Sample") $modelssample->update_data_sample_status($header["InvRef"]); 
  
         //update status project
@@ -1023,7 +1076,7 @@ class InvoiceModel extends Model
         // if( $header["InvRefType"] == "Survey") $this->update_data_survey_status($header["InvRef"]);
         // //update status Sample
         
-        // $modelssample = new ProjectsampleModel;
+        // $modelssample = new SampleModel;
         // if( $header["InvRefType"] == "Sample") $modelssample->update_data_sample_status($header["InvRef"]); 
 
  
@@ -1056,7 +1109,7 @@ class InvoiceModel extends Model
         // //update status Survey
         // if( $result->InvRefType == "Survey") $this->update_data_survey_status($result->InvRef);
         // //update status Sample
-        // $modelssample = new ProjectsampleModel;
+        // $modelssample = new SampleModel;
         // if( $result->InvRefType == "Sample") $modelssample->update_data_sample_status($result->InvRef);
         
         //create Log action 

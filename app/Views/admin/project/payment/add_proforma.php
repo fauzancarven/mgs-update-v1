@@ -413,6 +413,8 @@
                         
                         if($("#modal-add-proforma").data("menu") =="sample"){
                             loader_datatable(); 
+                        }else if($("#modal-add-proforma").data("menu") =="Invoice"){
+                            table.ajax.reload(); 
                         }else{  
                             loader_data_project('<?= $project->ProjectId ?>','invoice') 
                         }  

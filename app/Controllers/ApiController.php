@@ -13,6 +13,7 @@ class ApiController extends BaseController
         $models = new ProdukModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
+            
             return $this->response->setJSON($models->get_produk($postData,false));  
         }
         

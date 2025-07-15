@@ -7,9 +7,9 @@ use App\Models\ProvinceModel;
 use App\Models\StoreModel;
 use App\Models\UserModel;
 use App\Models\ProjectModel;
-use App\Models\ProjectsampleModel;
+use App\Models\SampleModel;
 use App\Models\ProjectcategoryModel;
-use App\Models\ProjectsphModel;
+use App\Models\SphModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianModel;
@@ -938,7 +938,7 @@ class SelectController extends BaseController
 
             $modelsitem = new ProdukModel();   
             $models = new ProjectModel();
-            $modelssample = new ProjectsampleModel();
+            $modelssample = new SampleModel();
             $Project = $modelssample->get_list_ref_sample($id,$postData);
             
             $data = array();
@@ -1185,7 +1185,7 @@ class SelectController extends BaseController
             $response = array();  
 
             $modelsitem = new ProdukModel();   
-            $models = new ProjectsphModel();
+            $models = new SphModel();
             $Project = $models->get_data_sph_ref(null,$postData); 
 
             $data = array();

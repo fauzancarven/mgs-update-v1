@@ -7,7 +7,7 @@ use CodeIgniter\Database\RawSql;
 use App\Models\ProjectModel; 
 use App\Models\ProdukModel; 
 
-class ProjectsampleModel extends Model
+class SampleModel extends Model
 {  
     protected $DBGroup = 'default';
     protected $table = 'sample'; 
