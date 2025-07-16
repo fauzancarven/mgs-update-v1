@@ -528,13 +528,13 @@
                         <div class="collapse <?= ($menu === 'Inventory' ? "show" : "") ?>" id="ui-inventory">
                             <ul class="nav flex-column sub-menu"> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/inventory/stock">
                                         <i class="ti-view-list-alt menu-icon"></i>
                                         <span class="menu-title">Stock Produk</span>
                                     </a>
                                 </li> 
-                                <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/stock">
+                                <li class="nav-item <?= ($title === 'Pembelian' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/inventory/pembelian">
                                         <i class="ti-view-list-alt menu-icon"></i>
                                         <span class="menu-title">Pembelian</span>
                                     </a>

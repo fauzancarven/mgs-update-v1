@@ -25,7 +25,8 @@ $routes->get('/admin/sales/survey', 'AdminController::survey', ['filter' => 'log
 $routes->get('/admin/sales/sample', 'AdminController::sample', ['filter' => 'login']);
 $routes->get('/admin/sales/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice', 'AdminController::invoice', ['filter' => 'login']);
-$routes->get('/admin/sales/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
+$routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
+
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
 
@@ -45,6 +46,7 @@ $routes->post('/datatables/get-datatable-survey', 'TableController::project_surv
 $routes->post('/datatables/get-datatable-sample', 'TableController::project_sample_datatable', ['filter' => 'login']);
 $routes->post('/datatables/get-datatable-penawaran', 'TableController::project_penawaran_datatable', ['filter' => 'login']);
 $routes->post('/datatables/get-datatable-invoice', 'TableController::project_invoice_datatable', ['filter' => 'login']);
+$routes->post('/datatables/get-datatable-pembelian', 'TableController::pembelian_datatable', ['filter' => 'login']);
 $routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter' => 'login']);
 
 $routes->post('/datatables/get-datatable-payment-request', 'TableController::payment_request_datatable', ['filter' => 'login']);

@@ -221,13 +221,14 @@ class AdminController extends BaseController
             'notif' => [],
             'session' => $this->session,
             'title' => 'Pembelian',
-            'menu' => "Sales",
+            'menu' => "Inventory",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
         return view('admin/project/po/index', $data); 
     }
+
     public function accounting(){    
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();

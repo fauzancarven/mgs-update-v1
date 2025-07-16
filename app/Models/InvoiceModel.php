@@ -82,7 +82,7 @@ class InvoiceModel extends Model
             }
         }
     }
-    function load_datatable_project_invoice($filter = null){
+    function load_datatable_invoice($filter = null){
         $filterdata = 0;
         $countTotal = 0;
         $count = 0;

@@ -11,7 +11,7 @@ class SphModel extends Model
 {  
     protected $DBGroup = 'default';
     protected $table = 'penawaran';
-    function load_datatable_project_penawaran($filter = null){
+    function load_datatable_penawaran($filter = null){
         $filterdata = 0;
         $countTotal = 0;
         $count = 0;

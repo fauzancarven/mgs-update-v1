@@ -12,7 +12,7 @@ class SampleModel extends Model
     protected $DBGroup = 'default';
     protected $table = 'sample'; 
 
-    public function load_datatable_project_sample($filter = null){ 
+    public function load_datatable_sample($filter = null){ 
         $modelsproduk = new ProdukModel();
         $filterdata = 0;
         $countTotal = 0;

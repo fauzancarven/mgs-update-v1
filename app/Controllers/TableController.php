@@ -10,6 +10,7 @@ use App\Models\SphModel;
 use App\Models\InvoiceModel;
 use App\Models\CustomerModel;
 use App\Models\ProdukModel;
+use App\Models\PembelianModel;
 use App\Models\VendorModel;
 use App\Models\AccountingModel;
 use Config\Services; 
@@ -61,7 +62,7 @@ class TableController extends BaseController
         $request = Services::request();
         $datatable = new SurveyModel(); 
         if ($request->getMethod(true) === 'POST') {   
-            echo $datatable->load_datatable_project_survey($request->getPost());
+            echo $datatable->load_datatable_survey($request->getPost());
         }     
     } 
     public function project_sample()
@@ -78,7 +79,7 @@ class TableController extends BaseController
         $request = Services::request();
         $datatable = new SampleModel(); 
         if ($request->getMethod(true) === 'POST') {   
-            echo $datatable->load_datatable_project_sample($request->getPost());
+            echo $datatable->load_datatable_sample($request->getPost());
         }    
         
     } 
@@ -96,7 +97,7 @@ class TableController extends BaseController
         $request = Services::request();
         $datatable = new SphModel(); 
         if ($request->getMethod(true) === 'POST') {   
-            echo $datatable->load_datatable_project_penawaran($request->getPost());
+            echo $datatable->load_datatable_penawaran($request->getPost());
         }    
         
     } 
@@ -114,10 +115,20 @@ class TableController extends BaseController
         $request = Services::request();
         $datatable = new InvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {   
-            echo $datatable->load_datatable_project_invoice($request->getPost());
+            echo $datatable->load_datatable_invoice($request->getPost());
         }    
         
     } 
+    public function pembelian_datatable()
+    {   
+        $request = Services::request();
+        $datatable = new PembelianModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_datatable_pembelian($request->getPost());
+        }    
+        
+    } 
+ 
     public function customer()
     {   
         $request = Services::request();
@@ -156,6 +167,7 @@ class TableController extends BaseController
         }    
         
     } 
+
 
     
     public function payment_request_datatable()

@@ -23,7 +23,7 @@ class SurveyModel extends Model
     
         return $bytes;
     }
-    function load_datatable_project_survey($filter = null){
+    function load_datatable_survey($filter = null){
         $filterdata = 0;
         $countTotal = 0;
         $count = 0;
