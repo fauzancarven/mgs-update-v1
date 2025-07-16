@@ -232,13 +232,13 @@
     
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script> 
     <script>
-        const socket = io("wss://socket.mahieraglobalsolution.com"); 
-        socket.on('message', function(msg) { 
-            tampilkanNotifikasi(msg);
-        });  
-        socket.on('load-project', function(msg) { 
-            tampilkanNotifikasi(msg);
-        });
+        // const socket = io("socket.mahieraglobalsolution.com"); 
+        // socket.on('message', function(msg) { 
+        //     tampilkanNotifikasi(msg);
+        // });  
+        // socket.on('load-project', function(msg) { 
+        //     tampilkanNotifikasi(msg);
+        // });
         $('.toast').toast({
             delay: 5000,
             animation: true,
