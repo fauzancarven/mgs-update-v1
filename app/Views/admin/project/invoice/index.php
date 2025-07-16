@@ -100,6 +100,7 @@
                     <th>Pembayaran</th> 
                     <th>Pengiriman</th> 
                     <th>Grand Total</th> 
+                    <th>Sisa Pembayaran</th> 
                 </tr>
             </thead> 
             <tbody> 
@@ -515,6 +516,7 @@
             { data: "payment" ,orderable: false , width: "90px",className:"align-top"}, 
             { data: "delivery" ,orderable: false ,width: "90px", className:"align-top"},  
             { data: "total", className:"align-top",width: "90px"},  
+            { data: "paymenttotal" ,orderable: false ,width: "90px", className:"align-top"},  
         ],
         "footerCallback": function (row, data, start, end, display) {
             // Tambahkan CSS styling untuk membuat footer tetap terlihat

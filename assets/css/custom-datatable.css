@@ -147,7 +147,7 @@ div.dt-container div.dt-scroll-body {
 
 table.detail-item{
     box-shadow: -1px 1px 4px 0 #334a9d52;
-    max-width: 90vw;
+    max-width: 80vw;
 }
 
 table.detail-item td.detail {
@@ -172,6 +172,7 @@ table.detail-item tfoot th.detail {
  
 table.detail-payment, table.detail-delivery{ 
     box-shadow: -1px 1px 4px 0 #334a9d52;
+    max-width: 80vw;
 }
 table.detail-payment td.detail , table.detail-delivery td.detail{
     padding: 0.5rem !important;

@@ -268,8 +268,8 @@ class InvoiceModel extends Model
                 "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->InvGrandTotal,0)."</span></div>", 
                 "delivery" => $this->get_data_delivery_invoice($row,true), 
                 "payment" => $this->get_data_payment_invoice($row,true), 
-                "customer" => $row->InvCustName,
-                "customer" => $row->InvCustName,
+                "paymenttotal" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->InvGrandTotal - $this->get_data_payment_invoice($row,true,true),0)."</span></div>", 
+                "customer" => $row->InvCustName, 
                 "customertelp" => ($row->InvCustTelp ? $row->InvCustTelp : ""),
                 "customeraddress" => $row->InvAddress, 
                 "store"=>$store,
@@ -658,9 +658,12 @@ class InvoiceModel extends Model
 
         }
     }
-    function get_data_payment_invoice($row,$header = false){
+    function get_data_payment_invoice($row,$header = false,$total = false){
         $html_payment = "";
         $html_payment_detail = "";
+        
+        $payment_total = 0;
+        $performa_total = 0; 
         if($row->InvGrandTotal == 0){
             $html_payment = ' 
                     <span class="text-head-3 payment">
@@ -683,8 +686,6 @@ class InvoiceModel extends Model
             $builder->orderby('PaymentDoc', 'ASC'); 
             $builder->orderby('PaymentId', 'ASC'); 
             $payment = $builder->get()->getResult();  
-            $payment_total = 0;
-            $performa_total = 0; 
 
             foreach($payment as $row_payment){  
                 $bukti = "-";
@@ -886,12 +887,15 @@ class InvoiceModel extends Model
                     </table>';
             } 
         }
+        if($total){ 
+            return  $payment_total;
+        }else{ 
+            if($header){
+                return  $html_payment;
+            }else{
+                return  $html_payment_detail;
 
-        if($header){
-            return  $html_payment;
-        }else{
-            return  $html_payment_detail;
-
+            }
         }
     }
     function get_data_invoice($id){

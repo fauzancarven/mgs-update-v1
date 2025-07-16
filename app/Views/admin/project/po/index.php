@@ -97,7 +97,10 @@
                     <th>Status</th>
                     <th>Admin</th>
                     <th>Customer</th>
-                    <th>Total</th> 
+                    <th>Pembayaran</th> 
+                    <th>Pengiriman</th> 
+                    <th>Total Pembelian</th> 
+                    <th>Sisa Pembayaran</th> 
                 </tr>
             </thead> 
             <tbody> 
@@ -302,6 +305,8 @@
         "order": [[4, "desc"]],
         "processing": true,
         "serverSide": true, 
+        scrollX: true,
+        "scrollY": "calc(100vh - 260px)", /* sesuaikan dengan kebutuhan Anda */
         "ajax": {
             "url": "<?= base_url()?>datatables/get-datatable-pembelian",
             "type": "POST", 
@@ -324,7 +329,7 @@
             { data: "date", className:"align-top", width: "100px"}, 
             { data: "vendor" , className:"align-top text-wrap", width: "100px"},  
             { data: "status" , className:"align-top", width: "100px"},  
-            { data: "admin" , className:"align-top", width: "100px"},   
+            { data: "admin" , className:"align-top", width: "100px"}, 
             { data: "customer", className:"align-top", width: "250px",
                 render: function(data, type, row) { 
                     var html = ` 
@@ -335,7 +340,10 @@
                     return html;
                 }
             },  
+            { data: "payment" , className:"align-top", width: "100px"},
+            { data: "delivery" , className:"align-top", width: "100px"},
             { data: "biaya", width: "auto",className:"align-top"}, 
+            { data: "PaymentTotal", width: "auto",className:"align-top"}, 
         ] 
     }); 
 
