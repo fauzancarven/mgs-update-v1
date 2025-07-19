@@ -371,6 +371,7 @@ class SurveyModel extends Model
             }
         }  
     }
+
     function get_data_payment_survey($row){ 
         $html_payment = ""; 
         $payment_total = 0;
@@ -520,6 +521,8 @@ class SurveyModel extends Model
         }  
         return $html_payment;
     }
+
+    
 
 
     function insert_data_survey($data){  

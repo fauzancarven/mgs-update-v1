@@ -400,6 +400,26 @@
         return detailitem; 
     }
     
+    tooltiprenew = function(){
+         // Hapus tooltip sebelumnya
+        var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerListOld.map(function (tooltipTriggerEl) {
+            var tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+            if (tooltip) {
+                tooltip.dispose();
+            }
+        });
+        $(".tooltip").remove(); 
+        // Buat tooltip baru
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+            if (tooltipTriggerEl.innerText?.includes('top')) {
+                tooltip.enable();
+            }
+            return tooltip;
+        });
+    }
     var isProcessingPO;
     add_click = function(el){
         if (isProcessingPO) {
@@ -415,8 +435,8 @@
             url: "<?= base_url() ?>message/add-pembelian", 
             success: function(data) {  
                 $("#modal-message").html(data);
-                $("#modal-add-pembelian").modal("show"); 
-                $("#modal-add-pembelian").data("menu","Pembelian");  
+                $("#modal-add-po").modal("show"); 
+                $("#modal-add-po").data("menu","Pembelian");  
 
                 isProcessingPO = false;
                 $(el).html(old_text); 

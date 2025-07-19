@@ -243,6 +243,8 @@ class InvoiceModel extends Model
                         </span>
                         <span>Pembelian</span> 
                     </div>  
+                    
+                    '.$this->get_data_pembelian_invoice($row).'
                 </div> 
             </div>
             ';
@@ -268,6 +270,7 @@ class InvoiceModel extends Model
                 "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->InvGrandTotal,0)."</span></div>", 
                 "delivery" => $this->get_data_delivery_invoice($row,true), 
                 "payment" => $this->get_data_payment_invoice($row,true), 
+                "pembelian" => $this->get_data_pembelian_invoice($row,true), 
                 "paymenttotal" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->InvGrandTotal - $this->get_data_payment_invoice($row,true,true),0)."</span></div>", 
                 "customer" => $row->InvCustName, 
                 "customertelp" => ($row->InvCustTelp ? $row->InvCustTelp : ""),
@@ -421,9 +424,10 @@ class InvoiceModel extends Model
         $delivery_detail = "";
         if($row->InvDelivery == 0){
             $delivery = ' 
-                    <span class="text-head-3 delivery">
-                        <span class="badge text-bg-success me-1">Tidak ada</span>
-                    </span>';
+            <span class="fa-stack small">
+                <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
+                <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
+            </span>';
             $delivery_detail = '<div class="text-head-3 p-2">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
                     Mode pengriman tidak diaktifkan untuk transaksi ini, 
@@ -616,8 +620,9 @@ class InvoiceModel extends Model
             if($delivery_detail == ""){
 
                 $delivery = ' 
-                <span class="text-head-3 delivery">
-                    <span class="badge text-bg-warning me-1">Belum ada</span>
+                <span class="fa-stack small">
+                    <i class="fa-regular fa-circle fa-stack-2x text-secondary"></i>
+                    <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
                 </span>';
                 $delivery_detail = '<div class="text-head-3 p-2">
                 <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
@@ -627,8 +632,9 @@ class InvoiceModel extends Model
             </div>';
             }else{ 
                 $delivery = ' 
-                <span class="text-head-3 delivery">
-                    <span class="badge text-bg-success me-1">Selesai</span>
+                <span class="fa-stack small">
+                    <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
                 </span>';
                 $delivery_detail = '<table class="table detail-delivery">
                     <thead>
@@ -666,9 +672,10 @@ class InvoiceModel extends Model
         $performa_total = 0; 
         if($row->InvGrandTotal == 0){
             $html_payment = ' 
-                    <span class="text-head-3 payment">
-                        <span class="badge text-bg-success me-1">Tidak ada</span>
-                    </span>';
+                    <span class="fa-stack small">
+                        <i class="fa-regular fa-circle fa-stack-2x"></i>
+                        <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                    </span> ';
             $html_payment_detail = '<div class="text-head-3 p-2">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
                     Tidak ada pembayaran untuk transaksi ini  
@@ -794,9 +801,10 @@ class InvoiceModel extends Model
             
             if($payment_total == 0 && $performa_total == 0){
                 $html_payment = ' 
-                        <span class="text-head-3 payment">
-                            <span class="badge text-bg-warning me-1">Belum Ada</span>
-                        </span>';
+                    <span class="fa-stack small">
+                        <i class="fa-regular fa-circle fa-stack-2x text-secondary"></i>
+                        <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                    </span> ';
                 $html_payment_detail .= ' <div class="d-inline-block alert alert-warning p-2 m-0" role="alert">
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
@@ -808,9 +816,10 @@ class InvoiceModel extends Model
             }else if($payment_total < $row->InvGrandTotal){  
                 
                 $html_payment = ' 
-                        <span class="text-head-3 payment">
-                            <span class="badge text-bg-warning me-1">Belum Selesai</span>
-                        </span>';
+                <span class="fa-stack small">
+                    <i class="fa-regular fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                </span> ';
 
                 if($html_proforma_list !== ""){
                     $html_proforma_list = '<tr>
@@ -851,9 +860,10 @@ class InvoiceModel extends Model
             } else{   
                 
                 $html_payment = ' 
-                        <span class="text-head-3 payment">
-                            <span class="badge text-bg-success me-1">Selesai</span>
-                        </span>';
+                <span class="fa-stack small">
+                    <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                </span> ';
 
 
                         
@@ -898,6 +908,98 @@ class InvoiceModel extends Model
             }
         }
     }
+    function get_data_pembelian_invoice($row,$header = false){
+        $pembelian = "";
+        $pembelian_detail = ""; 
+        $pembelian = ' 
+        <span class="fa-stack small">
+            <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
+            <i class="fa-solid fa-cart-shopping fa-stack-1x fa-inverse"></i> 
+        </span>';
+        $pembelian_detail = '<div class="text-head-3 p-2">
+                <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                Mode pengriman tidak diaktifkan untuk transaksi ini, 
+                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="update_invoice_pembelian('.$row->InvId.',this,1)">aktifkan mode Pengiriman</a>
+            </div>';
+    
+        if($header){
+            return  $pembelian;
+        }else{
+            return  $pembelian_detail;
+
+        }
+    }
+
+    function get_data_ref_invoice($refid,$search = null){
+        if($refid){
+            $querywhere = "ref_join.refid = ".$refid;
+        }else{ 
+            $querywhere = "";
+        } 
+        if(isset($data["searchTerm"])){
+            $querywhere  .= " and (
+                code like '%".$data["searchTerm"]."%' or 
+                CustomerTelp like '%".$data["searchTerm"]."%' or 
+                CustomerName like '%".$data["searchTerm"]."%' or 
+                CustomerAddress like '%".$data["searchTerm"]."%' 
+            ) ";
+        }else{
+            $querywhere .= "";
+        }  
+
+        if($querywhere != "") $querywhere = "where ". $querywhere ;
+        $querysample = "";
+        $querysurvey = "";
+        if(isset($data["ref"])){
+            if($data["type"]=="Sample"){
+                $querysample  = "or SampleId = ".$data["ref"];
+            } 
+            if($data["type"]=="Survey"){
+                $querysurvey  = "or SurveyId = ".$data["ref"];
+            }  
+        }
+        $builder = $this->db->query('SELECT * FROM 
+        (
+            SELECT 
+                SampleId refid, 
+                SampleCode as code,
+                ProjectId ref,
+                SampleDate date,
+                "Sample" AS type,
+                SampleCustName as CustomerName,
+                SampleCustTelp as CustomerTelp,
+                SampleAddress as CustomerAddress
+                FROM sample where SampleStatus < 2 '.$querysample.'
+            UNION 
+            SELECT 
+                SurveyId refid,
+                SurveyCode,
+                ProjectId ref,
+                SurveyDate date, 
+                "Survey",
+                SurveyCustName,
+                SurveyCustTelp,
+                SurveyAddress
+                FROM survey where SurveyStatus < 2 '.$querysurvey.'
+            UNION 
+            SELECT 
+                SphId refid,
+                SphCode,
+                ProjectId ref,
+                SphDate date, 
+                "Penawaran",
+                SphCustName,
+                SphCustTelp,
+                SphAddress
+                FROM penawaran where SphStatus < 1 '.$querysurvey.'
+        ) AS ref_join
+        LEFT JOIN project ON project.ProjectId = ref_join.ref 
+         
+        '. $querywhere.'
+        ORDER BY ref_join.date asc'); 
+        return $builder->getResultArray();  
+    }
+    
     function get_data_invoice($id){
         $builder = $this->db->table("invoice");
         $builder->select("*,  CASE 
@@ -1019,7 +1121,7 @@ class InvoiceModel extends Model
         );    
     } 
     
-    public function update_data_invoice($data,$id){ 
+    function update_data_invoice($data,$id){ 
         $dataold = $builder = $this->getWhere(['InvId' => $id], 1)->getRow(); 
  
         $header = $data["header"];  
@@ -1096,7 +1198,7 @@ class InvoiceModel extends Model
     }
 
     
-    public function delete_data_invoice($id){ 
+    function delete_data_invoice($id){ 
         $builder = $this->db->table("invoice");
         $builder->set('InvStatus','3'); 
         $builder->set('updated_user',user()->id); 

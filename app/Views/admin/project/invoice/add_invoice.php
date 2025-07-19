@@ -19,10 +19,16 @@
                             </div>
                         </div> 
                         <div class="customer-display card bg-light show mt-4 m-1 p-2"> 
+                        
                             <div class="row mb-1 align-items-center">
                                 <label for="CustomerId" class="col-sm-3 col-form-label">Customer</label>
                                 <div class="col-sm-9">
-                                    <select class="form-select form-select-sm" style="width:100%" id="CustomerId"></select>
+                                    <div class="input-group input-group-sm">  
+                                        <select class="form-control form-control-sm" id="CustomerId" name="CustomerId"  style="width:90%"></select> 
+                                        <button class="btn btn-primary btn-sm" type="button" style="width:10%" onclick="customer_add()"> 
+                                            <i class="ti-plus"></i> 
+                                        </button>
+                                    </div>  
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
@@ -110,16 +116,13 @@
                         </div>   
                     </div>   
                 </div>
-                  
-
                 <div class="row mx-2 my-3 align-items-center">
                     <div class="label-border-right position-relative" >
                         <span class="label-dialog">Detail Produk</span> 
                     </div>
                 </div>     
                 <div id="table-list"> 
-                </div>  
-
+                </div> 
                 <div class="row">  
                     <div class="col-12 col-md-8 px-1 order-2 order-md-1">   
                         <div class="row mx-2 my-3 align-items-center">
@@ -617,6 +620,36 @@
         }, 
     });
 
+    var isProcessingCustomerAdd 
+    function customer_add(){
+        if (isProcessingCustomerAdd) { 
+            return;
+        }  
+        isProcessingCustomerAdd = true;  
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-customer", 
+            success: function(data) {   
+                $("#modal-add-invoice").modal("hide"); 
+                $("#modal-optional").html(data);
+                $("#modal-add-customer").modal("show");  
+
+                $("#modal-add-customer").on("hidden.bs.modal",function(){ 
+                    $("#modal-add-invoice").modal("show");  
+                })    
+                isProcessingCustomerAdd = false;    
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingCustomerAdd = false; 
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
 
     $("#InvAdmin").select2({
         dropdownParent: $('#modal-add-invoice .modal-content'),

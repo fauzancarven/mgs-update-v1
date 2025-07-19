@@ -97,10 +97,9 @@
                     <th>Status</th>
                     <th>Admin</th>
                     <th>Customer</th>
-                    <th>Pembayaran</th> 
-                    <th>Pengiriman</th> 
                     <th>Grand Total</th> 
                     <th>Sisa Pembayaran</th> 
+                    <th></th>  
                 </tr>
             </thead> 
             <tbody> 
@@ -513,10 +512,19 @@
                     return html;
                 }
             }, 
-            { data: "payment" ,orderable: false , width: "90px",className:"align-top"}, 
-            { data: "delivery" ,orderable: false ,width: "90px", className:"align-top"},  
             { data: "total", className:"align-top",width: "90px"},  
             { data: "paymenttotal" ,orderable: false ,width: "90px", className:"align-top"},  
+            { orderable: false , width: "90px", className:"align-top",
+                render: function(data, type, row) { 
+                    var html = ` 
+                        <div class="d-flex">
+                        ${row.payment}
+                        ${row.delivery}
+                        ${row.pembelian}
+                        </div>`; 
+                    return html;
+                }
+            },  
         ],
         "footerCallback": function (row, data, start, end, display) {
             // Tambahkan CSS styling untuk membuat footer tetap terlihat

@@ -556,6 +556,27 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/po/edit_project_po',$data)); 
     }
+
+    public function po_add()
+    {     
+        $models = new ProjectModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+        $modelsvendor = new VendorModel();
+
+        // $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
+        // $data["project"] = $project; 
+        // $customer =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
+        // $data["customer"] = array(
+        //     "CustomerName"=> $customer->CustomerName.($customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " )"),
+        //     "CustomerTelp"=> $customer->CustomerTelp1.($customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2),
+        //     "CustomerAddress"=>$customer->CustomerAddress,
+        // ); 
+        $data["vendor"] = $modelsvendor->get()->getResult();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/po/add_po.php',$data)); 
+    }
+
     public function invoice_add(){
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/invoice/add_invoice.php',$data));  

@@ -3056,6 +3056,8 @@ class ProjectModel extends Model
         $builder->orderby('InvId', 'DESC'); 
         return  $builder->countAllResults();
     } 
+
+    
     public function get_data_invoice($id){
         $builder = $this->db->table("invoice");
         $builder->select("*,  CASE 
@@ -3163,68 +3165,6 @@ class ProjectModel extends Model
         //update status Sample
         $this->update_data_invoice_status($id); 
     } 
-    public function get_data_ref_invoice($refid,$search = null){
-        if(isset($data["searchTerm"])){
-            $querywhere  = "and (
-                code like '%".$data["searchTerm"]."%' or 
-                CustomerTelp like '%".$data["searchTerm"]."%' or 
-                CustomerName like '%".$data["searchTerm"]."%' or 
-                CustomerAddress like '%".$data["searchTerm"]."%' 
-            ) ";
-        }else{
-            $querywhere = "";
-        }  
-        $querysample = "";
-        $querysurvey = "";
-        if(isset($data["ref"])){
-            if($data["type"]=="Sample"){
-                $querysample  = "or SampleId = ".$data["ref"];
-            } 
-            if($data["type"]=="Survey"){
-                $querysurvey  = "or SurveyId = ".$data["ref"];
-            }  
-        }
-        $builder = $this->db->query('SELECT * FROM 
-        (
-            SELECT 
-                SampleId refid, 
-                SampleCode as code,
-                ProjectId ref,
-                SampleDate date,
-                "Sample" AS type,
-                SampleCustName as CustomerName,
-                SampleCustTelp as CustomerTelp,
-                SampleAddress as CustomerAddress
-                FROM sample where SampleStatus < 2 '.$querysample.'
-            UNION 
-            SELECT 
-                SurveyId refid,
-                SurveyCode,
-                ProjectId ref,
-                SurveyDate date, 
-                "Survey",
-                SurveyCustName,
-                SurveyCustTelp,
-                SurveyAddress
-                FROM survey where SurveyStatus < 2 '.$querysurvey.'
-            UNION 
-            SELECT 
-                SphId refid,
-                SphCode,
-                ProjectId ref,
-                SphDate date, 
-                "Penawaran",
-                SphCustName,
-                SphCustTelp,
-                SphAddress
-                FROM penawaran where SphStatus < 1 '.$querysurvey.'
-        ) AS ref_join
-        LEFT JOIN project ON project.ProjectId = ref_join.ref 
-        WHERE ref_join.ref = '.$refid.' 
-        '. $querywhere.'
-        ORDER BY ref_join.date asc'); 
-        return $builder->getResultArray();  
-    }
 
     /************************************** */
     /** FUNCTION UNTUK MENU PROJECT DELIVERY */  

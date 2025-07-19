@@ -845,6 +845,44 @@
             tooltiprenew();
         });
     };
+ 
+    var isProcessingSurveyReturn = [];
+    survey_return_add_click = function(project,el,ref,type){
+        if(type == "Sample"){
+            if (isProcessingSurveyReturn[ref]) {
+                console.log("project Sample cancel load");
+                return;
+            }   
+            isProcessingSurveyReturn[ref] = true; 
+            let old_text = $(el).html();
+            $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
+
+            $.ajax({  
+                method: "POST",
+                url: "<?= base_url() ?>message/add-sample", 
+                success: function(data) {  
+                    $("#modal-message").html(data);
+                    $("#modal-add-sample").modal("show"); 
+                    $("#modal-add-sample").data("menu","Sample");  
+
+                    isProcessingSurveyReturn[ref] = false;
+                    $(el).html(old_text); 
+                    tooltiprenew();
+                },
+                error: function(xhr, textStatus, errorThrown){ 
+                    isProcessingSurveyReturn[ref] = false;
+                    $(el).html(old_text); 
+
+                    Swal.fire({
+                        icon: 'error',
+                        text: xhr["responseJSON"]['message'], 
+                        confirmButtonColor: "#3085d6", 
+                    }); 
+                    tooltiprenew();
+                }
+            });
+        }
+    }
 
 </script>
 

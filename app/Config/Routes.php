@@ -191,6 +191,8 @@ $routes->post('/select2/get-data-vendor-kategori', 'SelectController::vendor_cat
 $routes->post('/select2/get-data-users', 'SelectController::users', ['filter' => 'login']);
 $routes->post('/select2/get-data-template-footer/(:any)', 'SelectController::template_footer/$1', ['filter' => 'login']); 
 $routes->post('/select2/get-data-ref-sph', 'SelectController::ref_sph', ['filter' => 'login']);
+$routes->post('/select2/get-data-ref-invoice', 'SelectController::ref_invoice', ['filter' => 'login']);
+$routes->post('/select2/get-data-ref-po', 'SelectController::ref_po', ['filter' => 'login']);
 $routes->post('/select2/get-data-ref-vendor/(:num)', 'SelectController::ref_project_vendor/$1', ['filter' => 'login']);
 $routes->post('/select2/get-data-ref-sph/(:num)', 'SelectController::ref_project_sph/$1', ['filter' => 'login']);
 $routes->post('/select2/get-data-ref-invoice/(:num)', 'SelectController::ref_project_invoice/$1', ['filter' => 'login']);
@@ -247,6 +249,7 @@ $routes->post('/message/edit-project-invoice/(:num)', 'MessageController::projec
 
 $routes->post('/message/add-project-po/(:num)', 'MessageController::project_po_add/$1', ['filter' => 'login']);   
 $routes->post('/message/edit-project-po/(:num)', 'MessageController::project_po_edit/$1', ['filter' => 'login']);  
+$routes->post('/message/add-pembelian', 'MessageController::po_add/$1', ['filter' => 'login']);   
 
 $routes->post('/message/add-project-payment/(:num)', 'MessageController::project_payment_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-payment/(:num)', 'MessageController::project_payment_edit/$1', ['filter' => 'login']);  

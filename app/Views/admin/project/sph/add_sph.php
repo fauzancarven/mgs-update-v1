@@ -22,7 +22,13 @@
                             <div class="row mb-1 align-items-center">
                                 <label for="CustomerId" class="col-sm-3 col-form-label">Customer</label>
                                 <div class="col-sm-9">
-                                    <select class="form-select form-select-sm" style="width:100%" id="CustomerId"></select>
+                                    
+                                    <div class="input-group input-group-sm">  
+                                        <select class="form-control form-control-sm" id="CustomerId" name="CustomerId"  style="width:90%"></select> 
+                                        <button class="btn btn-primary btn-sm" type="button" style="width:10%" onclick="customer_add()"> 
+                                            <i class="ti-plus"></i> 
+                                        </button>
+                                    </div>   
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">

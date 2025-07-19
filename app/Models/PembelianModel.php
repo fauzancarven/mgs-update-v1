@@ -353,7 +353,6 @@ class PembelianModel extends Model
 
         return $detailhtml; 
     }
- 
     function get_data_delivery_pembelian($row,$header = false){
         $delivery = "";
         $delivery_detail = ""; 
@@ -764,7 +763,55 @@ class PembelianModel extends Model
 
 
 
+    function get_data_ref_pembelian($refid,$search = null){
+        if($refid){
+            $querywhere = "ref_join.refid = ".$refid;
+        }else{ 
+            $querywhere = "";
+        } 
+        if(isset($data["searchTerm"])){
+            $querywhere  .= " and (
+                code like '%".$data["searchTerm"]."%' or 
+                CustomerTelp like '%".$data["searchTerm"]."%' or 
+                CustomerName like '%".$data["searchTerm"]."%' or 
+                CustomerAddress like '%".$data["searchTerm"]."%' 
+            ) ";
+        }else{
+            $querywhere .= "";
+        }  
 
+        if($querywhere != "") $querywhere = "where ". $querywhere ;
+        $querysample = "";
+        $querysurvey = "";
+        if(isset($data["ref"])){
+            if($data["type"]=="Sample"){
+                $querysample  = "or SampleId = ".$data["ref"];
+            } 
+            if($data["type"]=="Survey"){
+                $querysurvey  = "or SurveyId = ".$data["ref"];
+            }  
+        }
+        $builder = $this->db->query('SELECT * FROM 
+        (
+            SELECT 
+                InvId refid, 
+                InvCode as code,
+                ProjectId ref,
+                InvDate date,
+                "Invoice" AS type,
+                CustomerId as CustomerId,
+                InvCustName as CustomerName,
+                InvCustTelp as CustomerTelp,
+                InvAddress as CustomerAddress
+                FROM invoice where InvStatus < 2 '.$querysample.' 
+        ) AS ref_join
+        LEFT JOIN project ON project.ProjectId = ref_join.ref 
+         
+        '. $querywhere.'
+        ORDER BY ref_join.date asc'); 
+        return $builder->getResultArray();  
+    }
+    
     
     function get_data_pembelian_detail($id){
         $builder = $this->db->table("pembelian_detail");
