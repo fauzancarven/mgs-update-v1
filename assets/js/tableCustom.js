@@ -176,6 +176,7 @@ class tableItem {
         var inputqty = [];
         var inputharga = []; 
         var inputtotal = [];
+        var inputdisc = [];
 
         for(var i = 0; self.dataitem.length > i;i++){
             if(self.dataitem[i]["type"] == "product"){
