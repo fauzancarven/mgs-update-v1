@@ -249,7 +249,7 @@ class SampleModel extends Model
             $builder->select('*');
             $builder->where('InvRef',$id); 
             $builder->where('InvRefType',"Sample");  
-            $builder->orderby('SurveyId', 'DESC'); 
+            $builder->orderby('InvId', 'DESC'); 
             $queryref = $builder->get()->getRow();   
             if($queryref){
                 return '   
