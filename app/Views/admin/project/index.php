@@ -707,13 +707,7 @@
             $(el).find("span").html("Sembunyikan")
         }
     }
-
-    socket.on('load-project', function(data) { 
-        if(data["menu"] == "project"){
-            loader_datatable();
-        }
-    });
-
+ 
     var paging = 1;
     var table;  
     var filter_arr = {

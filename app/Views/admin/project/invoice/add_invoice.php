@@ -112,7 +112,7 @@
                                     <label class="text-detail" for="InvDelivery2">Ya</label>
                                 </div>
                                 </div>
-                            </div>   
+                            </div>    
                         </div>   
                     </div>   
                 </div>
@@ -1369,7 +1369,6 @@
     }); 
 
     $("#btn-add-invoice").click(function(){
-        var data_detail_item = table_sph_item.getDataRow(); 
         if($("#CustomerId").val() == null){
             Swal.fire({
                 icon: 'error',
@@ -1403,6 +1402,8 @@
             }) ;
             return; 
         }    
+        
+        var data_detail_item = table_sph_item.getDataRow(); 
         if(data_detail_item.some((item) => item.type === "product") == false){
             Swal.fire({
                 icon: 'error',

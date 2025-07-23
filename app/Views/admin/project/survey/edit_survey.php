@@ -19,7 +19,7 @@
                     <select class="form-select form-select-sm" style="width:100%" id="SurveyAdmin"></select>
                 </div>  
                 
-                <div class="mb-1">
+                <div class="mb-1 d-none">
                     <label for="ProjectId" class="col-form-label">Project</label>
                     <select class="form-select form-select-sm" style="width:100%" id="ProjectId"></select>
                 </div> 

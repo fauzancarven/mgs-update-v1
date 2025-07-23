@@ -134,6 +134,7 @@ $routes->post('/action/edit-finish-delivery/(:num)', 'ActionController::delivery
 $routes->post('/action/add-data-po', 'ActionController::pembelian_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-po/(:num)', 'ActionController::pembelian_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-po/(:num)', 'ActionController::pembelian_delete/$1', ['filter' => 'login']);
+$routes->post('/action/update-pembelian/(:num)/(:num)', 'ActionController::pembelian_status/$1/$2', ['filter' => 'login']); 
 
 $routes->post('/action/add-data-project-accounting/(:num)', 'ActionController::project_accounting_add/$1', ['filter' => 'login']);  
 $routes->post('/action/edit-data-project-accounting/(:num)', 'ActionController::project_accounting_edit/$1', ['filter' => 'login']);  

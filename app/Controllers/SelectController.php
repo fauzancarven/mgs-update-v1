@@ -1297,6 +1297,7 @@ class SelectController extends BaseController
             $postData = $request->getPost(); 
             $response = array(); 
 
+            $modelscustomer = new CustomerModel();
             $modelsvendor = new VendorModel();
             $modelsitem = new ProdukModel(); 
             $models = new PembelianModel();
@@ -1310,10 +1311,17 @@ class SelectController extends BaseController
                 "vendor" => $modelsvendor->get()->getResult(),   
                 "detail_item" => [],    
                 "customer" => array(
+                    "CustomerId" => "",
+                    "CustomerSelect" => "",
                     "CustomerName" => "",
                     "CustomerTelp" => "", 
                     "CustomerAddress" => "",
                 ),     
+                "store" => array( 
+                    "StoreId"=> "",
+                    "StoreName"=> "",
+                    "StoreCode"=> "",
+                ),
                 "type" => "-",  
             );
             foreach($Project as $row){
@@ -1355,7 +1363,7 @@ class SelectController extends BaseController
                             "image_url"=> $modelsitem->getproductimagedatavarian(  $row_item->ProdukId,$row_item->InvDetailVarian,true),  
                             "varian"=> JSON_DECODE($row_item->InvDetailVarian,true),
                             "priceref"=> $row_item->InvDetailPrice, 
-                            "totalref"=> $row_item->InvDetailQty,
+                            "totalref"=> $row_item->InvDetailTotal,
                             "discref"=> $row_item->InvDetailDisc, 
                             "price"=> $harga, 
                             "disc"=> 0,
@@ -1371,12 +1379,18 @@ class SelectController extends BaseController
                     "text" => $row['code'], 
                     "html" => $htmlItem,     
                     "type" => $row['type'],   
-                    "customer" => array(
+                    "customer" => array( 
+                        "CustomerSelect" => $modelscustomer->get_customer_name($row['CustomerId']),
                         "CustomerId" => $row['CustomerId'],
                         "CustomerName" => $row['CustomerName'],
                         "CustomerTelp" => $row['CustomerTelp'], 
                         "CustomerAddress" => $row['CustomerAddress'],    
                     ),   
+                    "store" => array( 
+                        "StoreId"=> $row['StoreId'],
+                        "StoreName"=> $row['StoreName'],
+                        "StoreCode"=>$row['StoreCode'],
+                    ),
                     "vendor" => $vendor_array,   
                     "detail_item" => $detail,   
                 );

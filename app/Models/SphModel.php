@@ -573,31 +573,19 @@ class SphModel extends Model
                             </thead>
                             <tbody>';
         $arr_detail = $this->get_data_sph_detail($row->SphId);
+        
+        $abjad = 'A';
         foreach($arr_detail as $row_data){
             $arr_varian = json_decode($row_data->SphDetailVarian);
             $arr_badge = "";
             $arr_no = 0;
+            
             foreach($arr_varian as $varian){
                 $arr_badge .= '<span class="badge badge-sm badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
                 $arr_no++;
-            }
-            $detail[] = array(
-                        "id" => $row_data->ProdukId,  
-                        "produkid" => $row_data->ProdukId, 
-                        "satuan_id"=> ($row_data->SphDetailSatuanId == 0 ? "" : $row_data->SphDetailSatuanId),
-                        "satuan_text"=>$row_data->SphDetailSatuanText,  
-                        "price"=>$row_data->SphDetailPrice,
-                        "varian"=> JSON_DECODE($row_data->SphDetailVarian,true),
-                        "total"=> $row_data->SphDetailTotal,
-                        "disc"=> $row_data->SphDetailDisc,
-                        "qty"=> $row_data->SphDetailQty,
-                        "text"=> $row_data->SphDetailText,
-                        "group"=> $row_data->SphDetailGroup,
-                        "type"=> $row_data->SphDetailType,
-                        "image_url"=> $modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,true)
-                    );
-
-            $detailhtml .= ' <tr>
+            }  
+            if($row_data->SphDetailType == "product"){ 
+                $detailhtml .= ' <tr>
                     <td class="detail">
                         <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,true).'" alt="Gambar" class="image-produk">
                     </td>
@@ -611,6 +599,16 @@ class SphModel extends Model
                     <td class="detail">Rp. '.number_format($row_data->SphDetailDisc, 0, ',', '.').'</td>
                     <td class="detail">Rp. '.number_format($row_data->SphDetailTotal, 0, ',', '.').'</td>
                 </tr> ';
+            }else{
+                $detailhtml .= ' <tr>
+                    <td colspan="6" class="detail">
+                        <span class="text-head-3">'.$abjad.'. '.$row_data->SphDetailText.'</span><br>
+                        <span class="text-detail-2 text-truncate">'.$row_data->SphDetailGroup.'</span> 
+                        <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
+                    </td>
+                </tr> ';
+                $abjad++;
+            }
         };
         $detailhtml .= '
         </tbody>

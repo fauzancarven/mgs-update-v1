@@ -331,6 +331,9 @@ class PrintController extends BaseController
                 $options->set('paper', 'a5');
                 $options->set('orientation', 'potrait');
 
+                $request = Services::request();
+                $postData = $request->getGet();
+                $data["postdata"] = $postData; 
                 $models = new PaymentModel();   
                 $modelsinvoice = new InvoiceModel();   
                 $modelheader = new HeaderModel();  

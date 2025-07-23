@@ -197,6 +197,29 @@ class PaymentModel extends Model
         if (isset($data['image'])) {  
             $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama, $query->PaymentId);  
         }  
+
+        //update status
+        if($data["PaymentRefType"] == "Invoice"){
+            $builder = $this->db->table('invoice');
+            $builder->select('InvGrandTotal'); 
+            $builder->where('InvId', $data["PaymentRef"]); 
+            $datainvoice = $builder->get()->getRow();
+
+            $builder = $this->db->table('payment');
+            $builder->select('sum(PaymentTotal) as total'); 
+            $builder->where('PaymentRef', $data["PaymentRef"]); 
+            $builder->where('PaymentRefType', "Invoice"); 
+            $builder->where('PaymentDoc', "1"); 
+            $datapayment = $builder->get()->getRow();
+            
+            $invoiceModel = new InvoiceModel();  
+            if($datainvoice->InvGrandTotal > $datapayment->total){ 
+                $invoiceModel->update_status_invoice_payment($data["PaymentRef"],1);
+            }else{
+                $invoiceModel->update_status_invoice_payment($data["PaymentRef"],2); 
+            } 
+        }
+
     } 
     
     public function update_data_payment($data,$id){

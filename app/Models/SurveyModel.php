@@ -339,7 +339,7 @@ class SurveyModel extends Model
                     return '   
                         <div class="text-head-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data diteruskan ke invoice">
                             <i class="fa-solid fa-share-from-square text-success"></i>
-                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="survey_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->InvId.'\',\'Invoice\')">'.$queryref->invCode.'</a>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="survey_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->InvId.'\',\'Invoice\')">'.$queryref->InvCode.'</a>
                         </div> 
                     ';
                 }else{ 

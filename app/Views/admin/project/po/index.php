@@ -92,15 +92,13 @@
                     <th>Action</th>
                     <th>Toko</th>
                     <th>Nomor</th>
-                    <th>Tanggal</th>
-                    <th>Vendor</th>
+                    <th>Tanggal</th> 
                     <th>Status</th>
                     <th>Admin</th>
-                    <th>Customer</th>
-                    <th>Pembayaran</th> 
-                    <th>Pengiriman</th> 
-                    <th>Total Pembelian</th> 
+                    <th>Customer</th> 
+                    <th>Grand Total</th> 
                     <th>Sisa Pembayaran</th> 
+                    <th></th> 
                 </tr>
             </thead> 
             <tbody> 
@@ -112,6 +110,7 @@
 <script>
     var xhr_load_project; 
     var filter_status_select = []
+    var filter_store_select = []
     function loader_datatable(){
         // if (xhr_load_project) {
         //     xhr_load_project.abort();
@@ -305,17 +304,21 @@
         "order": [[4, "desc"]],
         "processing": true,
         "serverSide": true, 
-        scrollX: true,
-        "scrollY": "calc(100vh - 260px)", /* sesuaikan dengan kebutuhan Anda */
+        scrollX: true, 
         "ajax": {
             "url": "<?= base_url()?>datatables/get-datatable-pembelian",
             "type": "POST", 
             "data": function(data){ 
                 data["search"] =  $("#searchdatapembelian").val();
                 data["filter"] = filter_status_select;
+                data["store"] = filter_store_select;
                 data["datestart"] = $("#searchdatadate").data("start");
                 data["dateend"] = $("#searchdatadate").data("end");
             }
+        }, 
+        "initComplete": function(settings, json) {
+            $("#data-table-pembelian").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");        
+            $('[data-bs-toggle="tooltip"]').tooltip();
         }, 
         "columns": [ 
             { data: null ,orderable: false,width: "20px",className:"p-0 ps-2",
@@ -326,24 +329,31 @@
             { data: "action" ,orderable: false , className:"action-td",width: "60px"}, 
             { data: "store", className:"align-top" , width: "150px"}, 
             { data: "code", className:"align-top", width: "120px"}, 
-            { data: "date", className:"align-top", width: "100px"}, 
-            { data: "vendor" , className:"align-top text-wrap", width: "100px"},  
+            { data: "date", className:"align-top", width: "100px"},   
             { data: "status" , className:"align-top", width: "100px"},  
             { data: "admin" , className:"align-top", width: "100px"}, 
-            { data: "customer", className:"align-top", width: "250px",
+            { data: "customer", className:"align-top", width: "200px","max-width": "200px",
                 render: function(data, type, row) { 
                     var html = ` 
                         <div class="text-head-3 pb-2">${row.customer}</div> 
                         ${(row.customertelp !== "" ? `<div class="text-detail-3 pb-1"><i class="fa-solid fa-phone pe-1"></i>${row.customertelp}</div>` : "")}
-                        <div class="text-detail-3 text-truncate" style="width: 20rem;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
+                        <div class="text-detail-3 text-truncate" style="width: 15rem;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}"><i class="fa-solid fa-location-dot pe-1"></i>${row.customeraddress}</div>`;
 
                     return html;
                 }
+            },   
+            { data: "biaya", width: "90px",className:"align-top"}, 
+            { data: "PaymentTotal", width: "90px",className:"align-top"}, 
+            { orderable: false , width: "90px", className:"align-top",
+                render: function(data, type, row) { 
+                    var html = ` 
+                        <div class="d-flex">
+                        ${row.payment}
+                        ${row.delivery} 
+                        </div>`; 
+                    return html;
+                }
             },  
-            { data: "payment" , className:"align-top", width: "100px"},
-            { data: "delivery" , className:"align-top", width: "100px"},
-            { data: "biaya", width: "auto",className:"align-top"}, 
-            { data: "PaymentTotal", width: "auto",className:"align-top"}, 
         ] 
     }); 
 
@@ -420,6 +430,7 @@
             return tooltip;
         });
     }
+
     var isProcessingPO;
     add_click = function(el){
         if (isProcessingPO) {
@@ -455,7 +466,42 @@
             }
         });
     }
- 
+    
+    var IsUpdateStatus = [];
+    update_status = function(status,id,el){ 
+        if (IsUpdateStatus[id]) {
+            console.log("project invoice cancel load");
+            return;
+        }  
+
+        IsUpdateStatus[id] = true; 
+        let old_text = $(el).html();
+        $(el).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>');
+
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>action/update-pembelian/" + id +  "/" + status, 
+            success: function(data) {     
+                IsUpdateStatus[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+
+                table.ajax.reload(null, false);
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                IsUpdateStatus[id] = false;
+                $(el).html(old_text); 
+                tooltiprenew();
+
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    };  
+
 
 </script>
 

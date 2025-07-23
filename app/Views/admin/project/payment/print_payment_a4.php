@@ -453,7 +453,7 @@
                     $total_pay = 0;
                     foreach($payments as $row){
                         if($row->PaymentId < $payment->PaymentId){
-                            echo '<tr class="'.($postdata["total"]==1 ? "":"hide").'"><td class="td-footer text-bold" colspan="'.$col.'">'.$row->PaymentType.' pada tanggal '.date_format(date_create($row->PaymentDate),"d M Y").')</td> <td class="td-center text-bold">Rp. '.number_format($row->PaymentTotal, 0, ',', '.').'</td></tr>';
+                            echo '<tr class="'.($postdata["total"]==1 ? "":"hide").' '.($postdata["old"]==0 ? "":"hide").'"><td class="td-footer text-bold" colspan="'.$col.'">'.$row->PaymentType.' pada tanggal '.date_format(date_create($row->PaymentDate),"d M Y").')</td> <td class="td-center text-bold">Rp. '.number_format($row->PaymentTotal, 0, ',', '.').'</td></tr>';
                             $total_pay += $row->PaymentTotal;
                         }
                     }
@@ -463,7 +463,7 @@
                     <td class="td-footer text-bold" colspan="<?= $col ?>"><?= $payment->PaymentType." pada tanggal ".date_format(date_create($payment->PaymentDate),"d M Y")." " ?></td>
                     <td class="td-center text-bold">Rp. <?= number_format($payment->PaymentTotal, 0, ',', '.') ?></td>
                 <tr> 
-                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
+                <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?> <?= ($postdata["sisa"]==0) ? "":"hide" ?>">
                     <td class="td-footer text-bold" colspan="<?= $col ?>">Sisa Pembayaran</td>
                     <td class="td-center text-bold">Rp. <?= number_format($ref["GrandTotal"] - ($total_pay + $payment->PaymentTotal), 0, ',', '.') ?></td>
                 <tr> 

@@ -479,33 +479,33 @@
                         </a> 
                         <div class="collapse <?= ($menu === 'Sales' ? "show" : "") ?>" id="ui-basic-1">
                             <ul class="nav flex-column sub-menu"> 
-                                <li class="nav-item <?= ($title === 'Project' ? "active" : "") ?> d-none"> 
-                                    <a class="nav-link" href="<?= base_url(); ?>admin/project">
-                                        <i class="ti-home menu-icon"></i>
+                                <li class="nav-item <?= ($title === 'Project' ? "active" : "") ?>"> 
+                                    <a class="nav-link" href="<?= base_url(); ?>admin/sales/project">
+                                        <i class="ti-angle-right menu-icon"></i>
                                         <span class="menu-title">Project</span>
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Survey' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/sales/survey">
-                                        <i class="ti-home menu-icon"></i>
+                                        <i class="ti-angle-right menu-icon"></i>
                                         <span class="menu-title">Survey</span>
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Sample' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/sales/sample">
-                                        <i class="ti-user menu-icon"></i>
+                                        <i class="ti-angle-right  menu-icon"></i>
                                         <span class="menu-title">Sample</span>
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Penawaran' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/sales/penawaran">
-                                        <i class="ti-id-badge menu-icon"></i>
+                                        <i class="ti-angle-right  menu-icon"></i>
                                         <span class="menu-title">Penawaran</span> 
                                     </a>
                                 </li>
                                 <li class="nav-item <?= ($title === 'Invoice' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/sales/invoice">
-                                        <i class="ti-package menu-icon"></i>
+                                        <i class="ti-angle-right  menu-icon"></i>
                                         <span class="menu-title">Invoice</span>
                                     </a>
                                 </li>   
@@ -529,13 +529,13 @@
                             <ul class="nav flex-column sub-menu"> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/inventory/stock">
-                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <i class="ti-angle-right menu-icon"></i>
                                         <span class="menu-title">Stock Produk</span>
                                     </a>
                                 </li> 
                                 <li class="nav-item <?= ($title === 'Pembelian' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/inventory/pembelian">
-                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <i class="ti-angle-right menu-icon"></i>
                                         <span class="menu-title">Pembelian</span>
                                     </a>
                                 </li> 
@@ -559,19 +559,19 @@
                             <ul class="nav flex-column sub-menu"> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/pettycash">
-                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <i class="ti-angle-right menu-icon"></i>
                                         <span class="menu-title">Petty Cash</span>
                                     </a>
                                 </li> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/paymentrequest">
-                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <i class="ti-angle-right menu-icon"></i>
                                         <span class="menu-title">Payment Request</span>
                                     </a>
                                 </li> 
                                 <li class="nav-item <?= ($title === 'Stock' ? "active" : "") ?>"> 
                                     <a class="nav-link" href="<?= base_url(); ?>admin/bukubesar">
-                                        <i class="ti-view-list-alt menu-icon"></i>
+                                        <i class="ti-angle-right menu-icon"></i>
                                         <span class="menu-title">Buku Besar</span>
                                     </a>
                                 </li> 

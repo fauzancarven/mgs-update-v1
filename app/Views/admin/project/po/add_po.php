@@ -31,21 +31,21 @@
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphAddress" class="col-sm-3 col-form-label">Nama Customer</label>
+                                <label for="POAddress" class="col-sm-3 col-form-label">Nama Customer</label>
                                 <div class="col-sm-9">
-                                    <input  class="form-control form-control-sm input-form" id="SphCustName" type="text" value=""/>
+                                    <input  class="form-control form-control-sm input-form" id="POCustName" type="text" value=""/>
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphAddress" class="col-sm-3 col-form-label">Telp Customer</label>
+                                <label for="POAddress" class="col-sm-3 col-form-label">Telp Customer</label>
                                 <div class="col-sm-9">
-                                    <input  class="form-control form-control-sm input-form" id="SphCustTelp"  type="text" value=""/>
+                                    <input  class="form-control form-control-sm input-form" id="POCustTelp"  type="text" value=""/>
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphAddress" class="col-sm-3 col-form-label">Alamat Project</label>
+                                <label for="POAddress" class="col-sm-3 col-form-label">Alamat Project</label>
                                 <div class="col-sm-9">
-                                    <textarea  class="form-control form-control-sm input-form" id="SphAddress"></textarea>
+                                    <textarea  class="form-control form-control-sm input-form" id="POAddress"></textarea>
                                 </div>
                             </div>  
                         </div>  
@@ -63,36 +63,47 @@
                         
                         <div class="document-display card bg-light show mt-4 m-1 p-2">
                             <div class="row mb-1 align-items-center">
-                                <label for="SphCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
+                                <label for="POCode" class="col-sm-2 col-form-label">Kode<sup class="error">&nbsp;*</sup></label>
                                 <div class="col-sm-10">
-                                    <input id="SphCode" name="SphCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
+                                    <input id="POCode" name="POCode" type="text" class="form-control form-control-sm input-form" value="(auto)" disabled>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center d-none">
+                                <label for="ProjectId" class="col-sm-2 col-form-label">Project</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select form-select-sm" style="width:100%" id="ProjectId"></select>
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="sphref" class="col-sm-2 col-form-label">ref</label>
+                                <label for="sphref" class="col-sm-2 col-form-label">Referensi</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select form-select-sm" id="sphref" name="sphref" placeholder="Pilih Toko" style="width:100%">
-                                        <option value="0" selected data-type="-">No Data Selected</option>
+                                    <select class="form-select form-select-sm" id="sphref" name="sphref" placeholder="Pilih Toko" style="width:100%"> 
                                     </select>  
                                 </div>
                             </div> 
                             <div class="row mb-1 align-items-center">
-                                <label for="SphDate" class="col-sm-2 col-form-label">Tanggal</label>
+                                <label for="StoreId" class="col-sm-2 col-form-label">Toko</label>
                                 <div class="col-sm-10">
-                                    <input id="SphDate" name="SphDate" type="text" class="form-control form-control-sm input-form" value="">
+                                    <select class="form-select form-select-sm" style="width:100%" id="StoreId"></select>
+                                </div>
+                            </div> 
+                            <div class="row mb-1 align-items-center">
+                                <label for="PODate" class="col-sm-2 col-form-label">Tanggal</label>
+                                <div class="col-sm-10">
+                                    <input id="PODate" name="PODate" type="text" class="form-control form-control-sm input-form" value="">
                                 </div>
                             </div>  
                             <div class="row mb-1 align-items-center">
-                                <label for="SphAdmin" class="col-sm-2 col-form-label">Admin</label>
+                                <label for="POAdmin" class="col-sm-2 col-form-label">Admin</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select form-select-sm" id="SphAdmin" name="SphAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
+                                    <select class="form-select form-select-sm" id="POAdmin" name="POAdmin" placeholder="Pilih Admin" style="width:100%"></select>  
                                 </div>
                             </div>  
                             <div class="row mb-1 align-items-center">
-                                <label for="SphVendor" class="col-sm-2 col-form-label">Vendor</label>
+                                <label for="POVendor" class="col-sm-2 col-form-label">Vendor</label>
                                 <div class="col-sm-10">
                                     <div class="input-group input-group-sm">  
-                                        <select class="form-select form-select-sm" id="SphVendor" name="SphVendor" placeholder="Pilih Vendor" style="width:90%"></select>  
+                                        <select class="form-select form-select-sm" id="POVendor" name="POVendor" placeholder="Pilih Vendor" style="width:90%"></select>  
                                         <button class="btn btn-primary btn-sm" type="button" style="width:10%" onclick="vendor_add()"> 
                                             <i class="ti-plus"></i> 
                                         </button>
@@ -214,7 +225,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="SphSubTotal">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" disabled value="0" id="POSubTotal">
                                 </div>     
                             </div>
                         </div> 
@@ -225,7 +236,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SphDiscTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="PODiscTotal" value="0">
                                 </div>     
                             </div>
                         </div> 
@@ -236,7 +247,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="SphPPHTotal" value="0">
+                                    <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="POPPHTotal" value="0">
                                 </div>     
                             </div>
                         </div> 
@@ -247,7 +258,7 @@
                             <div class="col-8"> 
                                 <div class="input-group"> 
                                     <span class="input-group-text font-std">Rp.</span>
-                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="SphGrandTotal" >
+                                    <input type="text"class="form-control form-control-sm  input-form hargajual" disabled value="0" id="POGrandTotal" >
                                 </div>     
                             </div>
                         </div> 
@@ -278,7 +289,7 @@
         }
     }
 
-    $('#SphDate').daterangepicker({
+    $('#PODate').daterangepicker({
         "singleDatePicker": true,
         "startDate": moment(),
         "endDate":  moment(), 
@@ -308,8 +319,7 @@
             processResults: function (response) {
     
                 // Update CSRF Token
-                $('.txt_csrfname').val(response.token); 
-
+                $('.txt_csrfname').val(response.token);  
                 return {
                     results: response.data
                 };
@@ -333,37 +343,27 @@
             return data['text'];
         }
     }).on("select2:select", function(e) {  
-        var data = e.params.data;     
-       console.log(data);
-        //console.log(data)
-        // $('#SphVendor').select2('destroy');
-        // $('#SphVendor').empty();    
-       // template_select_vendor(data.vendor); 
+        var data = e.params.data;      
         data_detail_item = [];  
-        // for(var i = 0;data.detail_item.length >i;i++){
-        //     if(data.detail_item[i].type == "product"){
-        //         data_detail_item.push({
-        //             "varian" : data.detail_item[i].varian,
-        //             "id" : data.detail_item[i].id,
-        //             "produkid" : data.detail_item[i].produkid,
-        //             "text" : data.detail_item[i].text,
-        //             "satuan_id" : data.detail_item[i].satuan_id,
-        //             "satuan_text" : data.detail_item[i].satuan_text, 
-        //             "qty" : data.detail_item[i].qty,  
-        //             "group" : data.detail_item[i].group, 
-        //             "harga" : data.detail_item[i].harga, 
-        //             "total" : data.detail_item[i].total,
-        //         }) 
-        //     }
-        // } 
+        console.log(data);
+        $('#CustomerId').append(new Option(data.customer.CustomerSelect , data.customer.CustomerId, true, true)).trigger('change');  
+        $('#POCustName').val(data.customer.CustomerName);
+        $('#POCustTelp').val(data.customer.CustomerTelp);
+        $('#POAddress').val(data.customer.CustomerAddress); 
+
+        
+        $('#StoreId').append(new Option(data.store.StoreCode + " - " +  data.store.StoreName, data.store.StoreId, true, true)).trigger('change');   
+
         load_produk_ref(data.detail_item)  
-        table_po_item.setData(data["detail_item"]) 
+        table_po_item.setData(data["detail_item"]);
+
         if(data["id"] == 0) {
             $(".head-ref").hide();
         }else{ 
             $(".head-ref").show();
         }
     })
+    $('#sphref').append(new Option("Tidak ada yang dipilih" , 0, true, true)).trigger('change');   
         
     load_produk_ref = function(data_detail){
         var html = '';
@@ -383,7 +383,7 @@
             for(var j = 0; data_detail[i]["varian"].length > j;j++){
 
                 varian += `<span class="badge badge-${j % 5}">${data_detail[i]["varian"][j]["varian"] + ": " + data_detail[i]["varian"][j]["value"]}</span>`; 
-                if( data_detail[i]["varian"][j]["value"] == $("#SphVendor").select2("data")[0].code){
+                if( data_detail[i]["varian"][j]["value"] == $("#POVendor").select2("data")[0].code){
                     return_item = true;
                 } 
             } 
@@ -456,7 +456,7 @@
                 "name" : data[i].VendorName,  
             }) 
         }
-        $("#SphVendor").select2({
+        $("#POVendor").select2({
             dropdownParent: $('#modal-add-po .modal-content'),
             placeholder: "Pilih Vendor",
             data: data_vendor,
@@ -543,22 +543,151 @@
     }).on("select2:select", function(e) {
         var data = e.params.data;  
         if(data.id !== 0){   
-            $('#InvCustName').val(data.customername);
-            $('#InvCustTelp').val(data.customertelp);
-            $('#InvAddress').val(data.customeraddress); 
-            $("#InvCustName").attr("disabled",false);
-            $("#InvCustTelp").attr("disabled",false);
-            $("#InvAddress").attr("disabled",false);
+            $('#POCustName').val(data.customername);
+            $('#POCustTelp').val(data.customertelp);
+            $('#POAddress').val(data.customeraddress); 
+            $("#POCustName").attr("disabled",false);
+            $("#POCustTelp").attr("disabled",false);
+            $("#POAddress").attr("disabled",false);
         }else{
-            $("#InvCustName").attr("disabled",true);
-            $("#InvCustTelp").attr("disabled",true);
-            $("#InvAddress").attr("disabled",true);
+            $("#POCustName").attr("disabled",true);
+            $("#POCustTelp").attr("disabled",true);
+            $("#POAddress").attr("disabled",true);
 
         }
     });
+ 
+    var isProcessingCustomerAdd 
+    function customer_add(){
+        if (isProcessingCustomerAdd) { 
+            return;
+        }  
+        isProcessingCustomerAdd = true;  
+        $.ajax({  
+            method: "POST",
+            url: "<?= base_url() ?>message/add-customer", 
+            success: function(data) {   
+                $("#modal-add-po").modal("hide"); 
+                $("#modal-optional").html(data);
+                $("#modal-add-customer").modal("show");  
 
+                $("#modal-add-customer").on("hidden.bs.modal",function(){ 
+                    $("#modal-add-po").modal("show");  
+                })    
+                isProcessingCustomerAdd = false;    
+            },
+            error: function(xhr, textStatus, errorThrown){ 
+                isProcessingCustomerAdd = false; 
 
-    $("#SphAdmin").select2({
+                Swal.fire({
+                    icon: 'error',
+                    text: xhr["responseJSON"]['message'], 
+                    confirmButtonColor: "#3085d6", 
+                });
+            }
+        });
+    }
+
+    $("#ProjectId").select2({
+        dropdownParent: $('#modal-add-po .modal-content'),
+        placeholder: "Pilih Project",
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-project",
+            dataType: 'json',
+            type:"POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash // CSRF Token
+                };
+            },
+            processResults: function (response) {
+    
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        },
+        language: {
+            noResults: function () {
+                return $("<button class=\"btn btn-sm btn-primary\" onclick=\"customer_add()\">Tambah Customer Baru</button>");
+            }
+        },
+        escapeMarkup: function(m) {
+            return m;
+        },
+        templateResult: function template(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return $(data.html);
+        },
+        templateSelection: function templateSelect(data) {
+            if ($(data.html).length === 0) {
+                return data.text;
+            }
+            return data['text'];
+        }
+        
+    }).on("select2:select", function(e) {
+        var data = e.params.data;  
+        if(data.id == 0){ 
+            $("#StoreId").attr("disabled",false);  
+            $("#CustomerId").attr("disabled",false);
+        } else{
+            $("#StoreId").attr("disabled",true);
+            $("#CustomerId").attr("disabled",true);
+            $('#StoreId').append(new Option(data.store , data.storeid, true, true)).trigger('change');   
+            $('#CustomerId').append(new Option(data.customer , data.customerid, true, true)).trigger('change');
+            $('#InvCustName').val(data.customername);
+            $('#InvCustTelp').val(data.customertelp);
+            $('#InvAddress').val(data.customeraddress);
+
+        }
+    }); 
+    $('#ProjectId').append(new Option("Tidak ada yang dipilih" , 0, true, true)).trigger('change');   
+
+    $("#StoreId").select2({
+        dropdownParent: $('#modal-add-po .modal-content'),
+        placeholder: "Pilih Toko",
+        ajax: {
+            url: "<?= base_url()?>select2/get-data-store",
+            dataType: 'json',
+            type:"POST",
+            delay: 250,
+            data: function (params) {
+                // CSRF Hash
+                var csrfName = $('.txt_csrfname').attr('name'); // CSRF Token name
+                var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+                return {
+                    searchTerm: params.term, // search term
+                    [csrfName]: csrfHash // CSRF Token
+                };
+            },
+            processResults: function (response) {
+    
+                // Update CSRF Token
+                $('.txt_csrfname').val(response.token); 
+
+                return {
+                    results: response.data
+                };
+            },
+            cache: true
+        }, 
+    });
+
+    $("#POAdmin").select2({
         dropdownParent: $('#modal-add-po .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
@@ -588,22 +717,22 @@
             cache: true
         }, 
     });
-    $('#SphAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
+    $('#POAdmin').append(new Option("<?=$user->code. " - " . $user->username ?>" , "<?=$user->id?>", true, true)).trigger('change');   
       
 
-    var po_sub_total = new Cleave(`#SphSubTotal`, {
+    var po_sub_total = new Cleave(`#POSubTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     });  
-    var po_disc_total = new Cleave(`#SphDiscTotal`, {
+    var po_disc_total = new Cleave(`#PODiscTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     }); 
-    var po_grand_total = new Cleave(`#SphGrandTotal`, {
+    var po_grand_total = new Cleave(`#POGrandTotal`, {
             numeral: true,
             delimeter: ",",
             numeralDecimalScale:0,
@@ -617,9 +746,9 @@
     }); 
 
     grand_total_harga = function(data){
-        var grandtotal =  data.totalitem  - $("#SphDiscTotal").val().replace(/[^0-9-]/g, '');  
-        $("#SphSubTotal").val(data.totalitem.toLocaleString('en-US'))  
-        $("#SphGrandTotal").val(grandtotal.toLocaleString('en-US')) 
+        var grandtotal =  data.totalitem  - $("#PODiscTotal").val().replace(/[^0-9-]/g, '');  
+        $("#POSubTotal").val(data.totalitem.toLocaleString('en-US'))  
+        $("#POGrandTotal").val(grandtotal.toLocaleString('en-US')) 
     };
     
     if (table_po_item && typeof table_po_item.on === 'function') { 
@@ -630,10 +759,10 @@
     } else {
         console.error("table_po_item tidak terdefinisi atau method on() tidak ada");
     }
-    $("#SphDiscTotal").on("keyup",function(){
+    $("#PODiscTotal").on("keyup",function(){
             grand_total_harga(table_po_item.getSubTotal());
-        if(parseInt($("#SphGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
-            $("#SphDiscTotal").val(0)
+        if(parseInt($("#POGrandTotal").val().replace(/[^0-9-]/g, '')) < 0){
+            $("#PODiscTotal").val(0)
             grand_total_harga(table_po_item.getSubTotal());
         }
     });
@@ -890,7 +1019,7 @@
             }) ;
             return; 
         }    
-        if($("#SphVendor").val() == null){
+        if($("#POVendor").val() == null){
             Swal.fire({
                 icon: 'error',
                 text: 'Vendor harus diinput...!!!', 
@@ -898,20 +1027,34 @@
             }).then(function(){ 
                 swal.close(); 
                 setTimeout(function(){  
-                    // $("#SphVendor").select2("open")
+                    // $("#POVendor").select2("open")
+                } , 500); 
+            }) ;
+            return; 
+        }
+        if($("#StoreId").val() == null){
+            Swal.fire({
+                icon: 'error',
+                text: 'Toko harus dipilih...!!!', 
+                confirmButtonColor: "#3085d6", 
+            }).then(function(){ 
+                swal.close(); 
+                setTimeout(function(){  
+                    $("#StoreId").select2("open")
                 } , 500); 
             }) ;
             return; 
         }
 
-        if(data_detail_item.length == 0){
+        var data_detail_item = table_po_item.getDataRow(); 
+        if(data_detail_item.some((item) => item.type === "product") == false){
             Swal.fire({
                 icon: 'error',
                 text: 'Produk harus dimasukan...!!!', 
                 confirmButtonColor: "#3085d6", 
             }).then(function(){ 
                 swal.close();
-                setTimeout(() => $("#btn-add-product").trigger("click"), 300); 
+                // setTimeout(() => $("#btn-add-product").trigger("click"), 300); 
             }) ;
             return; 
         }
@@ -927,20 +1070,22 @@
         }
 
         var header = {  
-            PODate: $("#SphDate").data('daterangepicker').startDate.format("YYYY-MM-DD"), 
+            PODate: $("#PODate").data('daterangepicker').startDate.format("YYYY-MM-DD"), 
             PORef: $('#sphref').val(),
             PORefType: $('#sphref option:selected').data('type'),
-            VendorId: ($("#SphVendor").select2("data")[0]["text"] == $("#SphVendor").select2("data")[0]["id"] ? 0 : $("#SphVendor").val()), 
-            VendorName: $("#SphVendor").select2("data")[0]["text"], 
-            POCustName: $("#SphCustName").val(),   
-            POCustTelp: $("#SphCustTelp").val(),  
-            POAddress: $("#SphAddress").val(),  
-            POAdmin: $("#SphAdmin").val(),  
+            VendorId: ($("#POVendor").select2("data")[0]["text"] == $("#POVendor").select2("data")[0]["id"] ? 0 : $("#POVendor").val()), 
+            VendorName: $("#POVendor").select2("data")[0]["text"], 
+            POCustName: $("#POCustName").val(),   
+            POCustTelp: $("#POCustTelp").val(),  
+            POAddress: $("#POAddress").val(),  
+            ProjectId: $("#ProjectId").val(),   
+            StoreId: $("#StoreId").val(), 
+            POAdmin: $("#POAdmin").val(),  
             TemplateId: $($(".template-footer").find("select")[0]).val(), 
-            POSubTotal: $("#SphSubTotal").val().replace(/[^0-9]/g, ''), 
-            POPPNTotal: $("#SphPPHTotal").val().replace(/[^0-9]/g, ''), 
-            PODiscTotal: $("#SphDiscTotal").val().replace(/[^0-9]/g, ''), 
-            POGrandTotal: $("#SphGrandTotal").val().replace(/[^0-9]/g, '')
+            POSubTotal: $("#POSubTotal").val().replace(/[^0-9]/g, ''), 
+            POPPNTotal: $("#POPPHTotal").val().replace(/[^0-9]/g, ''), 
+            PODiscTotal: $("#PODiscTotal").val().replace(/[^0-9]/g, ''), 
+            POGrandTotal: $("#POGrandTotal").val().replace(/[^0-9]/g, '')
         }
         var detail = [];
         for(var i = 0;data_detail_item.length > i;i++){   
@@ -975,8 +1120,8 @@
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
                         $("#modal-add-po").modal("hide");    
-                        if($("#modal-add-po").data("menu") =="pembelian"){
-                            loader_datatable();  
+                        if($("#modal-add-po").data("menu") =="Pembelian"){
+                            table.ajax.reload(null, false); 
                         }      
                     });
                   
@@ -1016,7 +1161,7 @@
                     $("#modal-add-po").modal("show");  
 
                     if(data_vendor){ 
-                        $('#SphVendor').append(new Option(data_vendor.VendorCode + " - " - data_vendor.VendorName, data_vendor.VendorId, true, true)).trigger('change');
+                        $('#POVendor').append(new Option(data_vendor.VendorCode + " - " - data_vendor.VendorName, data_vendor.VendorId, true, true)).trigger('change');
                     } 
 
                 })   

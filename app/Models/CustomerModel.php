@@ -12,36 +12,7 @@ class CustomerModel extends Model
     protected $DBGroup = 'default';
     protected $table = 'customer';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
-    // protected $insertID = 0;
-    // protected $returnType = 'array';
-    // protected $useSoftDeletes = false;
-    // protected $protectFields = true;
-    // //protected $allowedFields = ['CustomerCode','category','company','name','comment','telp1', 'email','address','telp2','instagram','village'];
-
-    // // Dates
-    // protected $useTimestamps = false;
-    // protected $dateFormat = 'datetime';
-    // protected $createdField = 'created_at';
-    // protected $updatedField = 'updated_at';
-    // protected $deletedField = 'deleted_at';
-
-    // // Validation
-    // protected $validationRules = [];
-    // protected $validationMessages = [];
-    // protected $skipValidation = false;
-    // protected $cleanValidationRules = true;
-
-    // // Callbacks
-    // protected $allowCallbacks = true;
-    // protected $beforeInsert = [];
-    // protected $afterInsert = [];
-    // protected $beforeUpdate = [];
-    // protected $afterUpdate = [];
-    // protected $beforeFind = [];
-    // protected $afterFind = [];
-    // protected $beforeDelete = [];
-    // protected $afterDelete = [];
+    protected $useAutoIncrement = true; 
 
     public function blog_json()
     {
@@ -177,4 +148,18 @@ class CustomerModel extends Model
         echo JSON_ENCODE(array("status"=>true));
     }
     
+    public function get_customer_name($id){
+        $builder = $this->db->table($this->table);  
+        $builder->where("CustomerId",$id);
+        $data = $builder->get()->getRow(); 
+        if($data){ 
+            if($data->CustomerCompany == "" || $data->CustomerCompany == "-"){ 
+                return $data->CustomerCode. " - ".$data->CustomerName;
+            }else{
+                return $data->CustomerCode. " - ".$data->CustomerName. " (".$data->CustomerCompany. ")"; 
+            }
+        }else{
+            return "CS0000 - null";
+        }
+    }   
 }

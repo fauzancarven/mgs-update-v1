@@ -908,20 +908,155 @@ class InvoiceModel extends Model
             }
         }
     }
-    function get_data_pembelian_invoice($row,$header = false){
-        $pembelian = "";
-        $pembelian_detail = ""; 
-        $pembelian = ' 
-        <span class="fa-stack small">
-            <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
-            <i class="fa-solid fa-cart-shopping fa-stack-1x fa-inverse"></i> 
-        </span>';
-        $pembelian_detail = '<div class="text-head-3 p-2">
-                <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
-                Mode pengriman tidak diaktifkan untuk transaksi ini, 
-                <a class="text-head-3 text-primary" style="cursor:pointer" onclick="update_invoice_pembelian('.$row->InvId.',this,1)">aktifkan mode Pengiriman</a>
-            </div>';
-    
+    function get_data_pembelian_invoice($row,$header = false){ 
+        $pembelian = '';
+        $pembelian_detail = '';
+
+
+        $modelsproduk = new ProdukModel();
+        $modelspembelian = new PembelianModel();
+        $builder = $this->db->table("pembelian"); 
+        $builder->join("vendor","vendor.VendorId = pembelian.VendorId ","left"); 
+        $builder->where('PORef',$row->InvId); 
+        $builder->where('PORefType',"Invoice");  
+        $builder->where('POStatus <',"3"); 
+        $builder->orderby('POId', 'ASC'); 
+        $datapo = $builder->get()->getResult(); 
+        foreach($datapo as $row_po){ 
+            $status = "";
+            if($row_po->POStatus==0){
+                $status .= '
+                    <span class="pointer text-head-3 badge text-bg-primary text-head-3">
+                        <span class="me-1 " >New</span>
+                    </span> ';
+            }
+            if($row_po->POStatus==1){
+                $status .= '
+                    <span class="pointer text-head-3 badge text-bg-info text-head-3">
+                        <span class="me-1 " >Proses</span>
+                    </span> '; 
+            }
+            if($row_po->POStatus==2){ 
+                $status .= '
+                    <span class=" pointertext-head-3 badge text-bg-success text-head-3">
+                        <span class="me-1 " >Completed</span>
+                    </span> ';  
+            }
+            if($row_po->POStatus==3){ 
+                $status .=  '
+                    <span class="pointer text-head-3 badge text-bg-danger text-head-3">
+                        <span class="me-1 " >Cancel</span>
+                    </span> ';  
+            }
+            $vendor = '<div class="text-head-3 text-wrap pt-2">'.($row_po->VendorId == 0 ? $row_po->NameVendor : $row_po->VendorName).'</div>';
+
+            $pembelian_detail .= '<tr class="dt-hasChild">
+            <td class="detail ">
+                <a class="pointer text-head-3 btn-detail-delivery" data-id="'.$row_po->POId.'"><i class="fa-solid fa-chevron-right"></i></a>
+            </td> 
+            <td class="detail action-td" style="width:70px"> 
+                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Data Pemeblian" onclick="print_po('.$row_po->POId.',this,'.$row_po->ProjectId.')"><i class="fa-solid fa-print"></i></span>   
+            </td> 
+            <td class="detail" style="width:125px"> 
+                <div class="d-flex align-items-center ">  
+                    <div class="flex-grow-1 ms-1">
+                        <div class="d-flex flex-column"> 
+                            <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>
+                            <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">'.$row->StoreName.'</span>  
+                            <span class="pointer text-head-3 pt-1 d-none">
+                                <span class="me-1 badge text-bg-info text-head-3">Proses</span>
+                            </span>
+                        </div>   
+                    </div>
+                </div>
+            </td>
+            <td class="detail" style="width:125px"> 
+                '.$row_po->POCode.' 
+                <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Invoice">
+                    <i class="fa-solid fa-money-bill text-success"></i>
+                    <a class="text-detail-3 pointer text-decoration-underline text-success">'.$row->InvCode.'</a>
+                </div>  
+            </td>
+            <td class="detail">'.date_format(date_create($row_po->PODate),"d M Y").'</td>   
+            <td class="detail">'.$status.'
+            </td> 
+            <td class="detail">'.$vendor.'
+            </td>
+            <td class="detail">Rp. '.number_format($row_po->POGrandTotal,0).'</td>
+            </tr> 
+            <tr class="child-row delivery d-none" data-id="'.$row_po->POId.'">
+                <td class="detail" colspan="10">
+                    <div class="view-detail-1" style="display:none">
+                        <div class="list-detail-1 pb-3">
+                            <div class="text-head-2 py-1"> 
+                                <span class="fa-stack small">
+                                    <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                    <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
+                                </span>
+                                <span>Produk</span> 
+                            </div>  
+                            '.$modelspembelian->get_data_detail_pembelian($row_po).'
+                        </div>   
+                        <div class="list-detail-1 pb-3">
+                            <div class="text-head-2 py-1"> 
+                                <span class="fa-stack small">
+                                    <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                                </span>
+                                <span>Pembayaran</span> 
+                            </div>  
+                            '.$modelspembelian->get_data_payment_pembelian($row_po).'
+                        </div>
+                        <div class="list-detail-1 pb-3">
+                            <div class="text-head-2 py-1"> 
+                                <span class="fa-stack small">
+                                    <i class="fa-regular fa-circle fa-stack-2x"></i>
+                                    <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
+                                </span>
+                                <span>Pengiriman</span> 
+                            </div>  
+                            '.$modelspembelian->get_data_delivery_pembelian($row_po).'
+                        </div>
+                    </div>
+                </td>
+            </tr>';  
+        } 
+        if($pembelian_detail == ""){
+
+            $pembelian = ' 
+            <span class="fa-stack small">
+                <i class="fa-regular fa-circle fa-stack-2x text-secondary"></i>
+                <i class="fa-solid fa-cart-shopping fa-stack-1x fa-inverse"></i> 
+            </span>';
+            $pembelian_detail .= ' <div class="d-inline-block alert alert-warning p-2 m-0" role="alert">
+                <span class="text-head-3">
+                    <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                    Belum ada pembelian yang dibuat dari dokumen ini
+                </span>
+            </div> ';  
+        }else{ 
+            $pembelian = ' 
+            <span class="fa-stack small">
+                <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
+                <i class="fa-solid fa-cart-shopping fa-stack-1x fa-inverse"></i> 
+            </span>';
+            $pembelian_detail = '<table class="table detail-delivery">
+                <thead>
+                    <tr>
+                        <th class="detail" style="width:30px"></th>
+                        <th class="detail" style="width:70px">Action</th>
+                        <th class="detail">Toko</th>
+                        <th class="detail">Nomor</th>
+                        <th class="detail">Tanggal</th> 
+                        <th class="detail">Status</th>
+                        <th class="detail">Vendor</th> 
+                        <th class="detail">Total</th>
+                    </tr>
+                </thead>
+                <tbody>'.$pembelian_detail.'
+                </tbody>
+            </table>';
+        }
         if($header){
             return  $pembelian;
         }else{
@@ -1091,21 +1226,7 @@ class InvoiceModel extends Model
             $row["InvDetailVarian"] = (isset($row["InvDetailVarian"]) ? json_encode($row["InvDetailVarian"]) : "[]");  
             $builder = $this->db->table("invoice_detail");
             $builder->insert($row); 
-        }
- 
-        // //update status Penawaran
-        // if( $header["InvRefType"] == "Penawaran") $this->update_data_sph_status($header["InvRef"]);
-        // //update status Survey
-        // if( $header["InvRefType"] == "Survey") $this->update_data_survey_status($header["InvRef"]);
-        // //update status Sample
-        // $modelssample = new SampleModel;
-        // if( $header["InvRefType"] == "Sample") $modelssample->update_data_sample_status($header["InvRef"]); 
- 
-        //update status project
-        $builder = $this->db->table("project"); 
-        $builder->set('ProjectStatus', 6);  
-        $builder->where('ProjectId', $header["ProjectId"]); 
-        $builder->update();  
+        }  
 
         //create Log action 
         $activityModel = new ActivityModel();
@@ -1266,4 +1387,71 @@ class InvoiceModel extends Model
 
         return JSON_ENCODE(array("status"=>true));
     }  
+
+    function update_status_invoice_po($id,$status){   
+        $dataold = $builder = $this->getWhere(['InvId' => $id], 1)->getRow();  
+
+        $builder = $this->db->table("invoice"); 
+        $builder->set('InvStatusPO', $status);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId', $id); 
+        $builder->update();   
+
+        $statuslist = array(
+            0 => "New", // kolom action tidak dapat diurutkan
+            1 => "Proses", // kolom action tidak dapat diurutkan
+            2 => "Finish", // kolom name
+            3 => "Cancel", // kolom name 
+        );
+
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Invoice",
+                "type"=>"Status PO",
+                "name"=> "Status PO Data Invoice diubah dari ".$statuslist[$dataold->InvStatus]." menjadi ".$statuslist[$status] . " dengan nomor ".$dataold->InvCode,
+                "desc"=> json_encode([]),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+            )
+        ); 
+
+        return JSON_ENCODE(array("status"=>true));
+    }  
+
+    function update_status_invoice_payment($id,$status){   
+        $dataold = $builder = $this->getWhere(['InvId' => $id], 1)->getRow();  
+
+        $builder = $this->db->table("invoice"); 
+        $builder->set('InvStatusPayment', $status);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('InvId', $id); 
+        $builder->update();   
+
+        $statuslist = array(
+            0 => "New", // kolom action tidak dapat diurutkan
+            1 => "Proses", // kolom action tidak dapat diurutkan
+            2 => "Finish", // kolom name
+            3 => "Cancel", // kolom name 
+        );
+
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Invoice",
+                "type"=>"Status Payment",
+                "name"=> "Status Payment Data Invoice diubah dari ".$statuslist[$dataold->InvStatus]." menjadi ".$statuslist[$status] . " dengan nomor ".$dataold->InvCode,
+                "desc"=> json_encode([]),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+            )
+        ); 
+
+        return JSON_ENCODE(array("status"=>true));
+    }  
+
 }

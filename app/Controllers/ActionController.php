@@ -14,6 +14,7 @@ use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\InvoiceModel;
+use App\Models\PembelianModel; 
 use App\Models\ProdukModel;
 use App\Models\VendorModel;
 use App\Models\LampiranModel;
@@ -524,7 +525,7 @@ class ActionController extends BaseController
     }
     public function pembelian_add(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PembelianModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_pembelian($postData); 
@@ -548,6 +549,13 @@ class ActionController extends BaseController
             echo $models->delete_data_pembelian($id);  
         }
     }
+    public function pembelian_status($id,$status){
+        $request = Services::request();
+        $models = new PembelianModel(); 
+        if ($request->getMethod(true) === 'POST') {    
+            echo $models->update_status_pembelian($id,$status);  
+        }
+    } 
 
     public function project_accounting_add($id){
         $request = Services::request();

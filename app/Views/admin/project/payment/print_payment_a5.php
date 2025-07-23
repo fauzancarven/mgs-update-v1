@@ -212,6 +212,9 @@
     .td-end{
         text-align: right; 
     }
+    tr.hide{
+        display:none !important;
+    }
     .text-end{
         text-align: right;  
     }
@@ -408,7 +411,7 @@
                     $total_pay = 0;
                     foreach($payments as $row){
                         if($row->PaymentId < $payment->PaymentId){
-                            echo '<tr>
+                            echo '<tr class="'.($postdata["old"]==0 ? "" : "hide").'">
                             <td colspan="2" style="border-left:none;line-height:1;"></td>
                             <th class="td-footer text-bold"  style="line-height:1;" colspan="'.$col.'">('.date_format(date_create($row->PaymentDate),"d M Y").") ".$row->PaymentType.'</th>
                             <th class="td-center text-bold">
@@ -428,7 +431,7 @@
                         <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;"><?= number_format($payment->PaymentTotal, 0, ',', '.') ?></div>
                     </th>
                 </tr>  
-                <tr>
+                <tr class="<?=($postdata["sisa"]==0 ? "" : "hide") ?>">
                     <td colspan="2" style="border-left:none;line-height:1;"></td>
                     <th class="td-footer text-bold"  style="line-height:1;" colspan="<?= $col ?>">Sisa</th>
                     <th class="td-center text-bold">

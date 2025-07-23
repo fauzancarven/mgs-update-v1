@@ -4124,29 +4124,6 @@ class ProjectModel extends Model
     /** FUNCTION UNTUK MENU PROJECT PEMBELIAN   */  
     /****************************************** */ 
     
-    private function get_next_code_pembelian($date){
-        //sample SPH/001/01/2024
-        $arr_date = explode("-", $date);
-        $builder = $this->db->table("pembelian");  
-        $builder->select("ifnull(max(SUBSTRING(POCode,4,3)),0) + 1 as nextcode"); 
-        $builder->where("month(PODate2)",$arr_date[1]);
-        $builder->where("year(PODate2)",$arr_date[0]); 
-        $data = $builder->get()->getRow(); 
-        switch (strlen($data->nextcode)){
-            case 1:
-                $nextid = "PO/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 2:
-                $nextid = "PO/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid; 
-            case 3:
-                $nextid = "PO/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-            default:
-                $nextid = "PO/000/".$arr_date[1]."/".$arr_date[0];
-                return $nextid;  
-        } 
-    } 
     private function data_project_pembelian($project_id){
         $html = ""; 
         $builder = $this->db->table("pembelian");
@@ -4638,60 +4615,7 @@ class ProjectModel extends Model
         $builder->orderby('POId', 'ASC');  
         return  $builder->countAllResults();
     }
-    public function insert_data_pembelian($data){ 
-        $header = $data["header"]; 
-
-        $builder = $this->db->table("pembelian");
-        $builder->insert(array(
-            "POCode"=>$this->get_next_code_pembelian($header["PODate"]),
-            "PODate"=>$header["PODate"],  
-            "PODate2"=>$header["PODate"],  
-            "ProjectId"=>$header["ProjectId"],
-            "PORef"=>$header["PORef"],
-            "PORefType"=>$header["PORefType"], 
-            "POAdmin"=>$header["POAdmin"], 
-            "VendorId"=>$header["VendorId"], 
-            "VendorName"=>$header["VendorName"], 
-            "TemplateId"=>$header["TemplateId"],
-            "POCustName"=>$header["POCustName"],
-            "POCustTelp"=>$header["POCustTelp"],
-            "POAddress"=>$header["POAddress"],
-            "POSubTotal"=>$header["POSubTotal"],
-            "POPPNTotal"=>$header["POPPNTotal"],
-            "PODiscTotal"=>$header["PODiscTotal"],
-            "POGrandTotal"=>$header["POGrandTotal"],
-            "created_user"=>user()->id, 
-            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
-        ));
-
-        $builder = $this->db->table("pembelian");
-        $builder->select('*');
-        $builder->orderby('POId', 'DESC');
-        $builder->limit(1);
-        $query = $builder->get()->getRow();  
-        // ADD DETAIL PRODUK 
-        foreach($data["detail"] as $row){ 
-            $row["PODetailRef"] = $query->POId;
-            $row["PODetailVarian"] = (isset($row["PODetailVarian"]) ? json_encode($row["PODetailVarian"]) : "[]");  
-            $builder = $this->db->table("pembelian_detail");
-            $builder->insert($row); 
-        }
-
-        
-        if($header["PORefType"] == "Penawaran"){
-            $this->update_data_sph_status($header["PORef"]);
-        }
-        if($header["PORefType"] == "Invoice"){
-            $this->update_data_invoice_status($header["PORef"]);
-        }
-
-        //update status project
-        $builder = $this->db->table("project"); 
-        $builder->set('ProjectStatus', 4);  
-        $builder->where('ProjectId', $header["ProjectId"]); 
-        $builder->update();  
-
-    } 
+    
     public function update_data_pembelian($data,$id){ 
         $header = $data["header"];  
         $builder = $this->db->table("pembelian"); 
