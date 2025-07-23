@@ -67,7 +67,76 @@ class PembelianModel extends Model
     protected $beforeDelete = [];
     protected $afterDelete = [];
 
-    
+    function getTerbilang($number) {
+        $terbilang = array(
+            1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
+            6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
+            11 => 'Sebelas', 12 => 'Dua Belas', 13 => 'Tiga Belas', 14 => 'Empat Belas', 15 => 'Lima Belas',
+            16 => 'Enam Belas', 17 => 'Tujuh Belas', 18 => 'Delapan Belas', 19 => 'Sembilan Belas', 20 => 'Dua Puluh',
+            30 => 'Tiga Puluh', 40 => 'Empat Puluh', 50 => 'Lima Puluh', 60 => 'Enam Puluh',
+            70 => 'Tujuh Puluh', 80 => 'Delapan Puluh', 90 => 'Sembilan Puluh', 100 => 'Seratus'
+        );
+
+        if ($number < 20 || $number == 100) {
+            return $terbilang[$number];
+        } elseif ($number < 100) {
+            $puluh = floor($number / 10) * 10;
+            $sisa = $number % 10;
+            if ($sisa > 0) {
+                return $terbilang[$puluh] . ' ' . $terbilang[$sisa];
+            } else {
+                return $terbilang[$puluh];
+            }
+        } elseif ($number < 1000) {
+            $ratus = floor($number / 100);
+            $sisa = $number % 100;
+            if ($sisa > 0) {
+                if ($ratus == 1) {
+                    return 'Seratus ' . getTerbilang($sisa);
+                } else {
+                    return $terbilang[$ratus] . ' Ratus ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($ratus == 1) {
+                    return 'Seratus';
+                } else {
+                    return $terbilang[$ratus] . ' Ratus';
+                }
+            }
+        } elseif ($number < 1000000) {
+            $ribu = floor($number / 1000);
+            $sisa = $number % 1000;
+            if ($sisa > 0) {
+                if ($ribu == 1) {
+                    return 'Seribu ' . getTerbilang($sisa);
+                } else {
+                    return getTerbilang($ribu) . ' Ribu ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($ribu == 1) {
+                    return 'Seribu';
+                } else {
+                    return getTerbilang($ribu) . ' Ribu';
+                }
+            }
+        } elseif ($number < 1000000000) {
+            $juta = floor($number / 1000000);
+            $sisa = $number % 1000000;
+            if ($sisa > 0) {
+                if ($juta == 1) {
+                    return 'Satu Juta ' . getTerbilang($sisa);
+                } else {
+                    return getTerbilang($juta) . ' Juta ' . getTerbilang($sisa);
+                }
+            } else {
+                if ($juta == 1) {
+                    return 'Satu Juta';
+                } else {
+                    return getTerbilang($juta) . ' Juta';
+                }
+            }
+        }
+    }
     function load_datatable_pembelian($filter = null){
         $filterdata = 0;
         $countTotal = 0;
@@ -255,7 +324,7 @@ class PembelianModel extends Model
                 "detail" =>$htmldetail,
                 "payment" => $this->get_data_payment_pembelian($row,true), 
                 "delivery" => $this->get_data_delivery_pembelian($row,true), 
-                "PaymentTotal" => 0,
+                "PaymentTotal" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->POGrandTotal - $this->get_data_payment_pembelian($row,true,true),0)."</span></div>", 
                 "action" =>'  
                         <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Form PO" onclick="print_pembelian('.$row->POId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-print"></i></span>  
                         <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data PO" onclick="edit_pembelian('.$row->POId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-pen-to-square"></i></span>
@@ -423,7 +492,7 @@ class PembelianModel extends Model
                 '.$row_delivery->DeliveryCode.' 
                 <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Invoice">
                     <i class="fa-solid fa-money-bill text-success"></i>
-                    <a class="text-detail-3 pointer text-decoration-underline text-success">'.$row->InvCode.'</a>
+                    <a class="text-detail-3 pointer text-decoration-underline text-success">'.$row->POCode.'</a>
                 </div>  
             </td>
             <td class="detail">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</td>  
@@ -616,12 +685,11 @@ class PembelianModel extends Model
         $html_payment_detail = "";
         $payment_total = 0;
         if($row->POGrandTotal == 0){
-            
             $html_payment = ' 
-                <span class="fa-stack small">
-                    <i class="fa-regular fa-circle fa-stack-2x"></i>
-                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span> ';
+            <span class="fa-stack small">
+                <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
+                <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+            </span>';
             $html_payment_detail = ' 
             <div class="fw-normal row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
                 <div class="col bg-light py-2">  
@@ -645,15 +713,15 @@ class PembelianModel extends Model
             foreach($payment as $row_payment){  
                 if($row_payment->PaymentStatus == "0"){ 
                     $action = '
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Pembelian\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Pembelian\')"><i class="fa-solid fa-circle-xmark"></i></span>';
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-circle-xmark"></i></span>';
                     $transfer_from = '<td class="detail">-</td>';
                     $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Request by '.ucwords($row_payment->username).'</span>'; 
                     $bukti = '';
                 }else{ 
                     $bukti = '';
                     $action = '
-                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Pembelian\')"><i class="fa-solid fa-print"></i></span>';
+                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-print"></i></span>';
                     $transfer_from = '<td class="detail">  
                         <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentFromBank.'</div>
                         <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentFromRek.'</div>
@@ -711,12 +779,11 @@ class PembelianModel extends Model
             }  
              
             if($payment_total == 0){
-                
                 $html_payment = ' 
                 <span class="fa-stack small">
                     <i class="fa-regular fa-circle fa-stack-2x text-secondary"></i>
                     <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span> ';
+                </span>';
                 $html_payment_detail .= ' <div class="alert alert-warning p-2 m-1" role="alert">
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
@@ -725,12 +792,11 @@ class PembelianModel extends Model
                     </span>
                 </div> '; 
             }else if($payment_total < $row->POGrandTotal){  
-                
                 $html_payment = ' 
                 <span class="fa-stack small">
                     <i class="fa-regular fa-circle fa-stack-2x text-primary"></i>
                     <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span> ';
+                </span>';
                 $html_payment_detail = '
                 <table class="table detail-payment">
                     <thead>
@@ -746,7 +812,7 @@ class PembelianModel extends Model
                             <th class="detail">Total</th>
                         </tr>
                     </thead>
-                    <tbody>'.$html_payment.'
+                    <tbody>'.$html_payment_detail.'
                     </tbody>
                 </table> 
                 <div class="alert alert-warning p-2 m-1" role="alert">
@@ -761,7 +827,7 @@ class PembelianModel extends Model
                 <span class="fa-stack small">
                     <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
                     <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span> ';
+                </span>';
                 $html_payment_detail = '
                     <table class="table detail-payment">
                         <thead>
@@ -777,7 +843,7 @@ class PembelianModel extends Model
                                 <th class="detail">Total</th>
                             </tr>
                         </thead>
-                        <tbody>'.$html_payment.'
+                        <tbody>'.$html_payment_detail.'
                         </tbody>
                     </table>';
             }
@@ -790,7 +856,7 @@ class PembelianModel extends Model
             }else{
                 return $html_payment_detail; 
             }
-        }
+        }  
     }
 
 
@@ -870,9 +936,18 @@ class PembelianModel extends Model
     
     
     function get_data_pembelian($id){
-        $builder = $this->db->table("pembelian");
-        $builder->where('POId',$id); 
-        return $builder->get()->getResult();  
+        $builder = $this->db->table("pembelian");   
+        $builder->select("*,  CASE 
+        WHEN PORefType = '-' THEN 'No data Selected' 
+        WHEN PORefType = 'Invoice' THEN (select InvCode from invoice where InvId = PORef) 
+        WHEN PORefType = 'Penawaran' THEN (select SphCode from penawaran where SphId = PORef)
+        END AS 'PORefCode',pembelian.VendorName VendorName,pembelian.ProjectId ProjectId,pembelian.CustomerId CustomerId");  
+        $builder->join("invoice",'invoice.InvId=pembelian.PORef',"left");  
+        $builder->join("template_footer","pembelian.TemplateId = template_footer.TemplateFooterId","left");
+        $builder->join("project",'project.ProjectId=pembelian.ProjectId',"left"); 
+        $builder->join("store","pembelian.StoreId = store.StoreId","left"); 
+        $builder->where('POId',$id);  
+        return $builder->get()->getRow();  
     } 
 
     function get_data_pembelian_detail($id){
@@ -895,6 +970,7 @@ class PembelianModel extends Model
             "PORefType"=>$header["PORefType"], 
             "POAdmin"=>$header["POAdmin"], 
             "VendorId"=>$header["VendorId"], 
+            "CustomerId"=>$header["CustomerId"], 
             "StoreId"=>$header["StoreId"], 
             "VendorName"=>$header["VendorName"], 
             "TemplateId"=>$header["TemplateId"],
@@ -946,8 +1022,88 @@ class PembelianModel extends Model
         }
 
     } 
+    function update_data_pembelian($data,$id){ 
+        $header = $data["header"];  
+        $builder = $this->db->table("pembelian"); 
+        $builder->set('PODate', $header["PODate"]);    
+        $builder->set('VendorId', $header["VendorId"]);  
+        $builder->set('VendorName', $header["VendorName"]);  
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('POSubTotal', $header["POSubTotal"]); 
+        $builder->set('POPPNTotal', $header["POPPNTotal"]); 
+        $builder->set('PODiscTotal', $header["PODiscTotal"]); 
+        $builder->set('POGrandTotal', $header["POGrandTotal"]);   
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
+        $builder->where('POId', $id); 
+        $builder->update(); 
 
+        $builder = $this->db->table("pembelian_detail");
+        $builder->where('PODetailRef',$id);
+        $builder->delete(); 
 
+       // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["PODetailRef"] = $id;
+            $row["PODetailVarian"] = (isset($row["PODetailVarian"]) ? json_encode($row["PODetailVarian"]) : "[]");  
+            $builder = $this->db->table("pembelian_detail");
+            $builder->insert($row); 
+        }
+
+        //update status
+        if($header["PORefType"] == "Invoice"){
+            $builder = $this->db->table('invoice_detail id');
+            $builder->select('id.ProdukId, id.InvDetailVarian, id.InvDetailQty, COALESCE(SUM(pd.PODetailQty), 0) AS PODetailQty');
+            $builder->join('pembelian_detail pd', 'id.ProdukId = pd.ProdukId AND id.InvDetailVarian = pd.PODetailVarian', 'left');
+            $builder->join('pembelian p', 'pd.PODetailRef = p.POId AND p.PORef = '.$header["PORef"].'', 'left');
+            $builder->where('id.InvDetailRef', $header["PORef"]);
+            $builder->groupBy('id.ProdukId, id.InvDetailVarian, id.InvDetailQty');
+            $datadiff = $builder->get()->getResult();
+            $some = true;
+            foreach($datadiff as $row){
+                if($row->PODetailQty < $row->InvDetailQty)$some = false;
+            } 
+
+            $invoiceModel = new InvoiceModel();  
+            if($some){ 
+                $invoiceModel->update_status_invoice_po($header["PORef"],2);
+            }else{
+                $invoiceModel->update_status_invoice_po($header["PORef"],1); 
+            } 
+        }
+    }
+    function delete_data_pembelian($id){
+        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();  
+
+        $builder = $this->db->table("pembelian"); 
+        $builder->set('POStatus', 3);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('POId', $id); 
+        $builder->update();   
+ 
+
+        $statuslist = array(
+            0 => "New", // kolom action tidak dapat diurutkan
+            1 => "Proses", // kolom action tidak dapat diurutkan
+            2 => "Finish", // kolom name
+            3 => "Cancel", // kolom name 
+        );
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Pembelian",
+                "type"=>"Status",
+                "name"=> "Status Data Pembelian diubah dari ".$statuslist[$dataold->POStatus]." menjadi Cancel dengan nomor ".$dataold->POCode,
+                "desc"=> json_encode([]),
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+            )
+        ); 
+
+        return JSON_ENCODE(array("status"=>true));
+    }
     function update_status_pembelian($id,$status){   
         $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();  
 

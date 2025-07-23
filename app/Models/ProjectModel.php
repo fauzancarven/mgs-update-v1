@@ -4616,46 +4616,8 @@ class ProjectModel extends Model
         return  $builder->countAllResults();
     }
     
-    public function update_data_pembelian($data,$id){ 
-        $header = $data["header"];  
-        $builder = $this->db->table("pembelian"); 
-        $builder->set('PODate', $header["PODate"]);    
-        $builder->set('VendorId', $header["VendorId"]);  
-        $builder->set('VendorName', $header["VendorName"]);  
-        $builder->set('TemplateId', $header["TemplateId"]); 
-        $builder->set('POSubTotal', $header["POSubTotal"]); 
-        $builder->set('POPPNTotal', $header["POPPNTotal"]); 
-        $builder->set('PODiscTotal', $header["PODiscTotal"]); 
-        $builder->set('POGrandTotal', $header["POGrandTotal"]);   
-        $builder->set('updated_user',user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
-        $builder->where('POId', $id); 
-        $builder->update(); 
-
-        $builder = $this->db->table("pembelian_detail");
-        $builder->where('PODetailRef',$id);
-        $builder->delete(); 
-
-       // ADD DETAIL PRODUK 
-        foreach($data["detail"] as $row){ 
-            $row["PODetailRef"] = $id;
-            $row["PODetailVarian"] = (isset($row["PODetailVarian"]) ? json_encode($row["PODetailVarian"]) : "[]");  
-            $builder = $this->db->table("pembelian_detail");
-            $builder->insert($row); 
-        }
-    }
-    public function delete_data_pembelian($id){
-        $builder = $this->db->table("pembelian");
-        $builder->where('POId',$id);
-        $builder->delete(); 
-
-       
-        $builder = $this->db->table("pembelian_detail");
-        $builder->where('PODetailRef',$id);
-        $builder->delete(); 
-
-        return JSON_ENCODE(array("status"=>true));
-    }
+   
+   
     public function get_data_pembelian($id){
         $builder = $this->db->table("pembelian");   
         $builder->select("*,  CASE 

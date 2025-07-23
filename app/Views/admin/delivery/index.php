@@ -6,10 +6,10 @@
     <div class="card-header border-bottom-0 px-4 pt-4 pb-0 bg-white mb-lg-0 mb-2">  
         <div class="d-flex align-items-center mb-4 "> 
             <div class="p-1 flex-fill" > 
-                <h4 class="mb-0">LIST PEMBELIAN</h4> 
+                <h4 class="mb-0">LIST PENGIRIMAN</h4> 
             </div>     
             <div class="justify-content-end d-flex gap-1"> 
-                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Pembelian<span></button>
+                <button class="btn btn-sm btn-primary px-3 rounded" onclick="add_click(this)"><i class="fa-solid fa-plus"></i><span class="d-none d-md-inline-block ps-2">Tambah Pengiriman<span></button>
             </div>   
         </div>
         <!-- BAGIAN FILTER -->
@@ -19,17 +19,17 @@
                 <i class="fa-solid fa-store"></i> 
                 <i class="fa-solid fa-caret-down"></i>
                 <div class="filter-data left" style="width: 18rem;" for="storedatafilter">
-                    <ul class="list-group w-75" > 
+                    <ul class="list-group w-75"> 
                         <?php
                         foreach($store as $row){
                             echo '
-                            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
-                                <div class="form-check w-100">
-                                    <input class="form-check-input select store" type="checkbox" data-group="store" data-value="'.$row->StoreId.'" value="'.$row->StoreId.'" id="store-'.$row->StoreId.'">
-                                    <label class="form-check-label ps-0 ms-0 stretched-link" for="store-'.$row->StoreId.'">'.$row->StoreCode.'</label>
-                                </div> 
-                            </li>';
-                        }
+                                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-0 px-2">
+                                    <div class="form-check w-100">
+                                        <input class="form-check-input select store" type="checkbox" data-group="store" data-value="'.$row->StoreId.'" value="'.$row->StoreId.'" id="store-'.$row->StoreId.'">
+                                        <label class="form-check-label ps-0 ms-0 stretched-link" for="store-'.$row->StoreId.'">'.$row->StoreCode.'</label>
+                                    </div> 
+                                </li>';
+                            }
                         ?> 
                        
                     </ul>
@@ -73,7 +73,7 @@
                 </div>
             </div>  
             <div class="input-group flex-fill">  
-                <input class="form-control form-control-sm input-form" id="searchdatapembelian" placeholder="Cari nama project, catatan, lokasi ataupun nomer dokumen" value="" type="text">
+                <input class="form-control form-control-sm input-form" id="searchdatapengiriman" placeholder="Cari nama project, catatan, lokasi ataupun nomer dokumen" value="" type="text">
                 <i class="fa-solid fa-magnifying-glass"></i>   
                 <div class="d-sm-none d-block ps-2">
                     <button class="btn btn-sm btn-secondary rounded"  data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop"><i class="fa-solid fa-filter"></i></button>
@@ -85,7 +85,7 @@
         </div> 
     </div>
     <div class="card-body py-0 px-4 pb-4" id="table"> 
-        <table id="data-table-pembelian" class="table table-hover table-nested">
+        <table id="data-table-pengiriman" class="table table-hover table-nested">
             <thead>
                 <tr> 
                     <th></th>
@@ -97,8 +97,7 @@
                     <th>Admin</th>
                     <th>Customer</th> 
                     <th>Grand Total</th> 
-                    <th>Sisa Pembayaran</th> 
-                    <th></th> 
+                    <th>Sisa Pembayaran</th>  
                 </tr>
             </thead> 
             <tbody> 
@@ -204,9 +203,9 @@
         // xhr_load_project = $.ajax({ 
         //     dataType: "json",
         //     method: "POST",
-        //     url: "<?= base_url()?>datatables/get-data-project/pembelian", 
+        //     url: "<?= base_url()?>datatables/get-data-project/pengiriman", 
         //     data:{  
-        //         "search" : $("#searchdatapembelian").val(), 
+        //         "search" : $("#searchdatapengiriman").val(), 
         //         "status" : filter_status_select, 
         //         "datestart" : $("#searchdatadate").data("start"),
         //         "dateend" : $("#searchdatadate").data("end"),
@@ -313,7 +312,7 @@
     });
     
     // FILTER SEARCH
-    $("#searchdatapembelian").keyup(function(){
+    $("#searchdatapengiriman").keyup(function(){
         //loader_datatable(); 
         table.ajax.reload(null, false);
     })
@@ -376,7 +375,7 @@
     // }
     
     //loader_datatable();
-    table = $('#data-table-pembelian').DataTable({ 
+    table = $('#data-table-pengiriman').DataTable({ 
         "searching": false,
         "lengthChange": false, 
         "pageLength": parseInt(10),
@@ -391,10 +390,10 @@
         "serverSide": true, 
         scrollX: true, 
         "ajax": {
-            "url": "<?= base_url()?>datatables/get-datatable-pembelian",
+            "url": "<?= base_url()?>datatables/get-datatable-pengiriman",
             "type": "POST", 
             "data": function(data){ 
-                data["search"] =  $("#searchdatapembelian").val();
+                data["search"] =  $("#searchdatapengiriman").val();
                 data["filter"] = filter_status_select;
                 data["store"] = filter_store_select;
                 data["datestart"] = $("#searchdatadate").data("start");
@@ -402,7 +401,7 @@
             }
         }, 
         "initComplete": function(settings, json) {
-            $("#data-table-pembelian").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");        
+            $("#data-table-pengiriman").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");        
             $('[data-bs-toggle="tooltip"]').tooltip();
         }, 
         "columns": [ 
@@ -428,17 +427,7 @@
                 }
             },   
             { data: "biaya", width: "90px",className:"align-top"}, 
-            { data: "PaymentTotal", width: "90px",className:"align-top"}, 
-            { orderable: false , width: "90px", className:"align-top",
-                render: function(data, type, row) { 
-                    var html = ` 
-                        <div class="d-flex">
-                        ${row.payment}
-                        ${row.delivery} 
-                        </div>`; 
-                    return html;
-                }
-            },  
+            { data: "PaymentTotal", width: "90px",className:"align-top"},  
         ] 
     }); 
 
@@ -528,7 +517,7 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/add-pembelian", 
+            url: "<?= base_url() ?>message/add-pengiriman", 
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-po").modal("show"); 
@@ -551,13 +540,13 @@
             }
         });
     }
-    print_pembelian = function(id,el,ref){
+    print_pengiriman = function(id,el,ref){
         $("#modal-print-po").modal("show");
         $("#modal-print-po").data("id",id) 
     } 
     
     var isProcessingPOEdit = [];
-    edit_pembelian = function(id,el,ref){
+    edit_pengiriman = function(id,el,ref){
         if (isProcessingPOEdit[id]) {
             console.log("Edit PO cancel load");
             return;
@@ -568,7 +557,7 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/edit-pembelian/" + id, 
+            url: "<?= base_url() ?>message/edit-pengiriman/" + id, 
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-po").modal("show"); 
@@ -593,7 +582,7 @@
     }
 
     var isProcessingPODelete = [];
-    delete_pembelian = function(id,el,ref){ 
+    delete_pengiriman = function(id,el,ref){ 
          // INSERT LOADER BUTTON
         if (isProcessingPODelete[id]) {
             return;
@@ -605,7 +594,7 @@
         tooltiprenew();
         Swal.fire({
             title: "Are you sure?",
-            text: "Anda yakin ingin membatalkan pembelian ini.",
+            text: "Anda yakin ingin membatalkan pengiriman ini.",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -657,7 +646,7 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>action/update-pembelian/" + id +  "/" + status, 
+            url: "<?= base_url() ?>action/update-pengiriman/" + id +  "/" + status, 
             success: function(data) {     
                 IsUpdateStatus[id] = false;
                 $(el).html(old_text); 
@@ -873,10 +862,10 @@
     }
   
     var isProcessingDeliveryAdd = [];
-    add_pembelian_delivery = function(id,el){
+    add_pengiriman_delivery = function(id,el){
          // INSERT LOADER BUTTON
          if (isProcessingDeliveryAdd[id]) {
-            console.log("project pembelian cancel load");
+            console.log("project pengiriman cancel load");
             return;
         }  
         isProcessingDeliveryAdd[id] = true; 
@@ -885,7 +874,7 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/add-delivery-pembelian/" + id,  
+            url: "<?= base_url() ?>message/add-delivery-pengiriman/" + id,  
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-delivery").modal("show");  
@@ -909,10 +898,10 @@
     }
     
     var isProcessingDeliveryEdit = [];
-    edit_pembelian_delivery = function(id,el){
+    edit_pengiriman_delivery = function(id,el){
          // INSERT LOADER BUTTON
          if (isProcessingDeliveryEdit[id]) {
-            console.log("project pembelian cancel load");
+            console.log("project pengiriman cancel load");
             return;
         }  
         isProcessingDeliveryEdit[id] = true; 
@@ -921,7 +910,7 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/edit-delivery-pembelian/" + id,  
+            url: "<?= base_url() ?>message/edit-delivery-pengiriman/" + id,  
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-edit-delivery").modal("show");  
@@ -952,7 +941,7 @@
     delivery_proses = function(id,el){
     // INSERT LOADER BUTTON
     if (isProcessingDeliveryProses[id]) {
-            console.log("project pembelian cancel load");
+            console.log("project pengiriman cancel load");
             return;
         }  
         isProcessingDeliveryProses[id] = true; 
@@ -961,7 +950,7 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/proses-delivery-pembelian/" + id,  
+            url: "<?= base_url() ?>message/proses-delivery-pengiriman/" + id,  
             success: function(data) {  
                 $("#modal-message").html(data);
                 $("#modal-add-proses-delivery").modal("show");  
@@ -989,7 +978,7 @@
     delivery_finish = function(id,el){
     // INSERT LOADER BUTTON
     if (isProcessingDeliveryFinish[id]) {
-            console.log("project pembelian cancel load");
+            console.log("project pengiriman cancel load");
             return;
         }  
         isProcessingDeliveryFinish[id] = true; 
@@ -998,7 +987,7 @@
 
         $.ajax({  
             method: "POST",
-            url: "<?= base_url() ?>message/finish-delivery-pembelian/" + id,  
+            url: "<?= base_url() ?>message/finish-delivery-pengiriman/" + id,  
             success: function(data) {  
                 $("#modal-message").html(data);
                 

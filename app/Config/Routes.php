@@ -26,6 +26,7 @@ $routes->get('/admin/sales/sample', 'AdminController::sample', ['filter' => 'log
 $routes->get('/admin/sales/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice', 'AdminController::invoice', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
+$routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
 
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
@@ -47,8 +48,9 @@ $routes->post('/datatables/get-datatable-sample', 'TableController::project_samp
 $routes->post('/datatables/get-datatable-penawaran', 'TableController::project_penawaran_datatable', ['filter' => 'login']);
 $routes->post('/datatables/get-datatable-invoice', 'TableController::project_invoice_datatable', ['filter' => 'login']);
 $routes->post('/datatables/get-datatable-pembelian', 'TableController::pembelian_datatable', ['filter' => 'login']);
-$routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter' => 'login']);
+$routes->post('/datatables/get-datatable-pengiriman', 'TableController::pengiriman_datatable', ['filter' => 'login']);
 
+$routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter' => 'login']);
 $routes->post('/datatables/get-datatable-payment-request', 'TableController::payment_request_datatable', ['filter' => 'login']);
 
 
@@ -250,8 +252,8 @@ $routes->post('/message/edit-project-invoice/(:num)', 'MessageController::projec
 
 $routes->post('/message/add-project-po/(:num)', 'MessageController::project_po_add/$1', ['filter' => 'login']);   
 $routes->post('/message/edit-project-po/(:num)', 'MessageController::project_po_edit/$1', ['filter' => 'login']);  
-$routes->post('/message/add-pembelian', 'MessageController::po_add/$1', ['filter' => 'login']);   
-
+$routes->post('/message/add-pembelian', 'MessageController::po_add', ['filter' => 'login']);   
+$routes->post('/message/edit-pembelian/(:num)', 'MessageController::po_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/add-project-payment/(:num)', 'MessageController::project_payment_add/$1', ['filter' => 'login']);  
 $routes->post('/message/edit-project-payment/(:num)', 'MessageController::project_payment_edit/$1', ['filter' => 'login']);  
 $routes->post('/message/request-project-payment/(:num)', 'MessageController::project_payment_request/$1', ['filter' => 'login']);  
@@ -282,6 +284,11 @@ $routes->post('/message/add-delivery-invoice/(:num)', 'MessageController::delive
 $routes->post('/message/edit-delivery-invoice/(:num)', 'MessageController::delivery_edit/$1/invoice', ['filter' => 'login']);  
 $routes->post('/message/proses-delivery-invoice/(:num)', 'MessageController::delivery_proses/$1/invoice', ['filter' => 'login']);  
 $routes->post('/message/finish-delivery-invoice/(:num)', 'MessageController::delivery_finish/$1/invoice', ['filter' => 'login']);  
+
+$routes->post('/message/add-delivery-pembelian/(:num)', 'MessageController::delivery_add/$1/pembelian', ['filter' => 'login']);  
+$routes->post('/message/edit-delivery-pembelian/(:num)', 'MessageController::delivery_edit/$1/pembelian', ['filter' => 'login']);  
+$routes->post('/message/proses-delivery-pembelian/(:num)', 'MessageController::delivery_proses/$1/pembelian', ['filter' => 'login']);  
+$routes->post('/message/finish-delivery-pembelian/(:num)', 'MessageController::delivery_finish/$1/pembelian', ['filter' => 'login']);  
 
 
 /**

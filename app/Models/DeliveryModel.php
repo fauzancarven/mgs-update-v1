@@ -7,7 +7,7 @@ use App\Models\ProdukModel;
 class DeliveryModel extends Model
 { 
     protected $DBGroup = 'default';
-    protected $table = 'activity';
+    protected $table = 'delivery';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $insertID = 0;
@@ -42,6 +42,209 @@ class DeliveryModel extends Model
 
 
 
+    function load_datatable_delivery($filter = null){
+        $filterdata = 0;
+        $countTotal = 0;
+        $count = 0;
+        $draw = $filter['draw'];  
+        $start = $filter['start'];
+        $length = $filter['length']; 
+        $datatable = array();
+        
+        $builder = $this->db->table("delivery");  
+        $builder->join("users","users.id = delivery.DeliveryAdmin ","left");  
+        $builder->join("store","store.StoreId = delivery.StoreId","left");    
+        if($filter["datestart"]){
+            $builder->where("DeliveryDate >=",$filter["datestart"]);
+            $builder->where("DeliveryDate <=",$filter["dateend"]); 
+        } 
+        //mengambil total semua data
+        $builder1 = clone $builder; 
+        $countTotal = $builder1->get()->getNumRows();
+
+
+        if(isset($filter["filter"])){ 
+            $builder->whereIn("DeliveryStatus",$filter["filter"]); 
+            $filterdata = 1;
+        } 
+        if(isset($filter["store"])){ 
+            $builder->whereIn("pembelian.StoreId",$filter["store"]); 
+            $filterdata = 1;
+        } 
+        if($filter["search"]){ 
+            $builder->groupStart(); 
+            $builder->like("ProjectName",$filter["search"]);
+            $builder->orLike("ProjectComment",$filter["search"]);
+            $builder->orLike("DeliveryAddress",$filter["search"]);
+            $builder->orLike("DeliveryCode",$filter["search"]);
+            $builder->orLike("username",$filter["search"]);
+            $builder->orLike("DeliveryCustName",$filter["search"]);
+            $builder->groupEnd();  
+            $filterdata = 1;
+        }
+        
+        // Order TAble
+        $columns = array(
+            0 => null, // kolom action tidak dapat diurutkan
+            1 => null, // kolom action tidak dapat diurutkan
+            2 => "StoreCode", // kolom name
+            3 => "DeliveryCode", // kolom name
+            4 => "DeliveryDate", // kolom action tidak dapat diurutkan
+            5 => "DeliveryStatus", // kolom image tidak dapat diurutkan
+            6 => "DeliveryAdmin", // kolom action tidak dapat diurutkan
+            7 => "DeliveryCustName", // kolom action tidak dapat diurutkan
+            8 => "DeliveryStaff", // kolom action tidak dapat diurutkan
+            9 => "DeliveryTotal", // kolom action tidak dapat diurutkan
+        );
+        if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
+            $orderColumn = $columns[$filter['order'][0]['column']];
+            $orderDir = $filter['order'][0]['dir'];
+        
+            if ($orderDir != 'asc' && $orderDir != 'desc') {
+                $orderDir = 'asc';
+            } 
+            $builder->orderby($orderColumn,$orderDir);   
+        }
+
+        $datafilter = clone $builder;  
+        $count = $datafilter->get()->getNumRows();
+
+        $builder->limit($length,$start); 
+        $query = $builder->get();  
+        foreach($query->getResult() as $row){
+           
+  
+            // MENGAMBIL DATA STATUS
+            $status = "";
+            if($row->DeliveryStatus==0){
+                $status .= '
+                    <span class="pointer text-head-3 badge text-bg-primary text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >New</span>
+                    </span> ';
+            }
+            if($row->DeliveryStatus==1){
+                $status .= '
+                    <span class="pointer text-head-3 badge text-bg-info text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Proses</span>
+                    </span> '; 
+            }
+            if($row->DeliveryStatus==2){ 
+                $status .= '
+                    <span class=" pointertext-head-3 badge text-bg-success text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Completed</span>
+                    </span> ';  
+            }
+            if($row->DeliveryStatus==3){ 
+                $status .=  '
+                    <span class="pointer text-head-3 badge text-bg-danger text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
+                        <span class="me-1 " >Cancel</span>
+                    </span> ';  
+            }
+            $status .= '  
+            <ul class="dropdown-menu shadow drop-status ">
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(0,'.$row->DeliveryId.',this)">
+                        New
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(1,'.$row->DeliveryId.',this)">
+                        </i>Proses
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(2,'.$row->DeliveryId.',this)">
+                        Completed
+                    </a>
+                </li> 
+                <li>
+                    <a class="dropdown-item m-0 px-2" onclick="update_status(3,'.$row->DeliveryId.',this)">
+                        Cancel
+                    </a>
+                </li>  
+            </ul>';
+                
+             
+            
+            // MENGAMBIL DATA Pembayaran  
+            $htmldetail = '      
+            <div class="view-detail" style="display:none">
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-1">  
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Produk</span>
+                    </div> 
+                    '.$this->get_data_detail_delivery($row->DeliveryId).'
+                </div>
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-1"> 
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Pembayaran</span> 
+                    </div> 
+                    '.$this->get_data_payment_delivery($row).'
+                </div> 
+                <div class="list-detail pb-3">
+                    <div class="text-head-2 py-1">
+                        <span class="fa-stack small">
+                            <i class="fa-regular fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <span>Progress</span> 
+                        '.$this->get_data_status_delivery($row).'
+                    </div>  
+                </div>  
+            </div>'; 
+            // MENGAMBIL DATA Toko 
+            $store = '
+                    <div class="d-flex align-items-center ">  
+                        <div class="flex-grow-1 ms-1">
+                            <div class="d-flex flex-column"> 
+                                <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>
+                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">'.$row->StoreName.'</span>  
+                                <span class="text-detail-2 text-wrap overflow-none ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><i class="fa-solid fa-diagram-project pe-1 "></i>Document Project</span>  
+                            </div>   
+                        </div>
+                    </div>';
+            $data_row = array( 
+                "delivery" => $row, 
+                "code" => $row->DeliveryCode,
+                "date" =>date_format(date_create($row->DeliveryDate),"d M Y"),
+                "status" => $status,
+                "store" => $store,
+                "admin" => ucwords($row->username),  
+                "biaya" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->DeliveryTotal,0)."</span></div>", 
+                "customer" => $row->DeliveryToName,
+                "customertelp" => ($row->DeliveryToTelp ? $row->DeliveryToTelp : ""),
+                "customeraddress" => $row->DeliveryToAddress,
+                "detail" =>$htmldetail,
+                "payment" => $this->get_data_payment_delivery($row,true),  
+                "PaymentTotal" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->DeliveryTotal - $this->get_data_payment_delivery($row,true,true),0)."</span></div>", 
+                "action" =>'  
+                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Form Delivery" onclick="print_delivery('.$row->DeliveryId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-print"></i></span>  
+                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Delivery" onclick="edit_delivery('.$row->DeliveryId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-pen-to-square"></i></span>
+                        <div class="d-inline ">
+                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Delivery" onclick="delete_delivery('.$row->DeliveryId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-circle-xmark"></i></span>
+                        </div>',
+            );
+            array_push($datatable, $data_row);
+        }
+
+        return json_encode(
+            array(
+                "draw"=>$draw,
+                "recordsTotal"=>$countTotal,
+                "recordsFiltered"=>($filterdata == 0 ? $countTotal : $count ),
+                "data"=>$datatable, 
+            )
+        );
+
+    } 
     function get_data_delivery_detail($id){
         $builder = $this->db->table("delivery_detail");
         $builder->where('DeliveryDetailRef',$id); 
@@ -147,9 +350,10 @@ class DeliveryModel extends Model
         return $detailhtml; 
     } 
     
-    function get_data_payment_delivery($row,$header = false){
+    function get_data_payment_delivery($row,$header = false,$total = false){
         $html_payment = "";
         $html_payment_detail = "";
+        $payment_total = 0; 
         if($row->DeliveryTotal == 0){
             $html_payment = ' 
                     <span class="text-head-3 payment">
@@ -160,8 +364,7 @@ class DeliveryModel extends Model
                     Tidak ada pembayaran untuk transaksi ini  
                 </div>';
         }else{
-            $html_payment_detail = ""; 
-            $payment_total = 0; 
+            $html_payment_detail = "";  
             $builder = $this->db->table("payment");
             $builder->select('*'); 
             $builder->join("users","users.id = payment.created_user ","left"); 
@@ -254,7 +457,7 @@ class DeliveryModel extends Model
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
                         Belum ada pembayaran yang dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="payment_request('.$row->DeliveryId.',this,\'Delivery\')">Ajukan Pembayaran</a> 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->DeliveryId.',this,\'Delivery\')">Ajukan Pembayaran</a> 
                     </span>
                 </div> '; 
             }else if($payment_total < $row->DeliveryTotal){  
@@ -315,12 +518,16 @@ class DeliveryModel extends Model
             } 
         }
 
-        if($header){
-            return  $html_payment;
-        }else{
-            return  $html_payment_detail;
+        if($total){ 
+            return  $payment_total;
+        }else{ 
+            if($header){
+                return  $html_payment;
+            }else{
+                return  $html_payment_detail;
 
-        }
+            }
+        } 
     }
  
     function get_data_status_delivery($row,$header = false){

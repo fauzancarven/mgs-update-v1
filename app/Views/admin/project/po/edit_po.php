@@ -1,9 +1,9 @@
  
-<div class="modal fade" id="modal-add-po" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-add-po-label" style="overflow-y:auto;" data-menu="project">
+<div class="modal fade" id="modal-edit-po" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="1"  aria-labelledby="modal-edit-po-label" style="overflow-y:auto;" data-menu="project">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fs-5 fw-bold" id="modal-add-po-label">Tambah PO Vendor</h2>
+                <h2 class="modal-title fs-5 fw-bold" id="modal-edit-po-label">Ubah PO Vendor</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"> 
@@ -267,7 +267,7 @@
             </div>
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="btn-add-penawaran">Simpan</button>
+                <button type="button" class="btn btn-primary" id="btn-edit-penawaran">Simpan</button>
             </div>
         </div>
     </div>
@@ -275,6 +275,7 @@
 
 <div id="modal-optional"></div>
 <script>    
+
     togglecustom = function(cls,el){    
         if($("." + cls).hasClass("show")){
             $("." + cls).removeClass("show")
@@ -293,13 +294,13 @@
         "singleDatePicker": true,
         "startDate": moment(),
         "endDate":  moment(), 
-        dropdownParent: $('#modal-add-po .modal-content'), 
+        dropdownParent: $('#modal-edit-po .modal-content'), 
         locale: {
             format: 'DD MMMM YYYY'
         }
     });
     $("#sphref").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-ref-po",
@@ -457,7 +458,7 @@
             }) 
         }
         $("#POVendor").select2({
-            dropdownParent: $('#modal-add-po .modal-content'),
+            dropdownParent: $('#modal-edit-po .modal-content'),
             placeholder: "Pilih Vendor",
             data: data_vendor,
             tags:true,
@@ -492,7 +493,7 @@
     
   
     $("#CustomerId").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Pelanggan",
         ajax: {
             url: "<?= base_url()?>select2/get-data-customer",
@@ -567,12 +568,12 @@
             method: "POST",
             url: "<?= base_url() ?>message/add-customer", 
             success: function(data) {   
-                $("#modal-add-po").modal("hide"); 
+                $("#modal-edit-po").modal("hide"); 
                 $("#modal-optional").html(data);
                 $("#modal-add-customer").modal("show");  
 
                 $("#modal-add-customer").on("hidden.bs.modal",function(){ 
-                    $("#modal-add-po").modal("show");  
+                    $("#modal-edit-po").modal("show");  
                 })    
                 isProcessingCustomerAdd = false;    
             },
@@ -589,7 +590,7 @@
     }
 
     $("#ProjectId").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Project",
         ajax: {
             url: "<?= base_url()?>select2/get-data-project",
@@ -657,7 +658,7 @@
     $('#ProjectId').append(new Option("Tidak ada yang dipilih" , 0, true, true)).trigger('change');   
 
     $("#StoreId").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Toko",
         ajax: {
             url: "<?= base_url()?>select2/get-data-store",
@@ -688,7 +689,7 @@
     });
 
     $("#POAdmin").select2({
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         placeholder: "Pilih Admin",
         ajax: {
             url: "<?= base_url()?>select2/get-data-users",
@@ -738,13 +739,15 @@
             numeralDecimalScale:0,
             numeralThousandGroupStyle:"thousand"
     });  
+     
     var table_po_item = new tableItemPo("table-list",{
-        dataitem : [],
-        dropdownParent: $('#modal-add-po .modal-content'),
+        dataitem : JSON.parse('<?= JSON_ENCODE($detail,true) ?>'),
+        dropdownParent: $('#modal-edit-po .modal-content'),
         baseUrl : "<?= base_url() ?>",
-        modal : $('#modal-add-po')
+        modal : $('#modal-edit-po')
     }); 
-
+    load_produk_ref(JSON.parse('<?= JSON_ENCODE($detailref,true) ?>')); 
+    
     grand_total_harga = function(data){
         var grandtotal =  data.totalitem  - $("#PODiscTotal").val().replace(/[^0-9-]/g, '');  
         $("#POSubTotal").val(data.totalitem.toLocaleString('en-US'))  
@@ -767,6 +770,26 @@
         }
     });
      
+    //editmode.
+    $("#POCode").val("<?= $project->POCode?>");
+    $('#PODate').data('daterangepicker').setStartDate(moment("<?= $project->PODate?>"));
+    $('#StoreId').append(new Option("<?=$project->StoreCode. " - " . $project->StoreName ?>" , "<?=$project->StoreId?>", true, true)).trigger('change'); 
+    $('#POVendor').append(new Option("<?=$project->VendorName ?>" , "<?=$project->VendorId?>", true, true)).trigger('change'); 
+    console.log("<?=$project->PORefCode ?>")
+    var newOption = new Option("<?=$project->PORefCode ?>", "<?=$project->PORef?>", true, true);
+    $(newOption).data('type', '<?=$project->PORefType?>');
+    $('#sphref').append(newOption).trigger('change');  
+    $("#POCustName").val("<?= $project->POCustName?>");
+    $("#POCustTelp").val("<?= $project->POCustTelp?>");
+    $("#POAddress").val("<?= $project->POAddress?>"); 
+    $('#CustomerId').append(new Option("<?=$customer ?>" , "<?=$project->CustomerId?>", true, true)).trigger('change'); 
+
+
+    if(<?=$project->PORef ?> == 0) {
+        $(".head-ref").hide();
+    }else{ 
+        $(".head-ref").show();
+    }
 
     var quill = [];  
     $(".template-footer").each(function(index, el){
@@ -780,7 +803,8 @@
             theme: "bubble"//'snow'
         }); 
         quill[type].enable(false);
-        quill[type].root.style.background = '#F7F7F7'; // warna disable 
+        quill[type].root.style.background = '#F7F7F7'; // warna disable  
+        quill[type].setContents(JSON.parse(<?= JSON_ENCODE($project->TemplateFooterDelta)?>));  
         const btnsaveas = $(el).find("a[value='simpanAs']")[0];
         const btnsave = $(el).find("a[value='simpan']")[0];
         const btnedit = $(el).find("a[value='edit']")[0];
@@ -791,7 +815,7 @@
         $(btnedit).hide();
  
         $(selectoption).select2({
-            dropdownParent: $('#modal-add-po .modal-content'),
+            dropdownParent: $('#modal-edit-po .modal-content'),
             placeholder: "Pilih Template",
             tags:true,
             ajax: {
@@ -864,6 +888,7 @@
                 quill[type].root.style.background = '#F7F7F7'; // warna enable
             } 
         });
+        $(selectoption).append(new Option("<?=$project->TemplateFooterName ?>" , "<?=$project->TemplateFooterId?>", true, true)).trigger('change'); 
 
         $(btnsave).click(function(){ 
             if($(selectoption).select2("data")[0]["id"] == $(selectoption).select2("data")[0]["text"]){
@@ -931,7 +956,7 @@
             }
         }) 
         $(btnsaveas).click(function(){
-            $("#modal-add-po").modal("hide"); 
+            $("#modal-edit-po").modal("hide"); 
             Swal.fire({
                 title: 'Simpan Template',
                 input: 'text',
@@ -992,7 +1017,7 @@
 
                 quill[type].enable(false);
                 quill[type].root.style.background = '#F7F7F7'; // warna disable    
-                $("#modal-add-po").modal("show");
+                $("#modal-edit-po").modal("show");
             }); 
         })
         $(btnedit).click(function(){
@@ -1007,7 +1032,7 @@
         }) 
     });
 
-    $("#btn-add-penawaran").click(function(){
+    $("#btn-edit-penawaran").click(function(){
         if($($(".template-footer").find("select")[0]).val() == null){
             Swal.fire({
                 icon: 'error',
@@ -1075,7 +1100,6 @@
             PORefType: $('#sphref option:selected').data('type'),
             VendorId: ($("#POVendor").select2("data")[0]["text"] == $("#POVendor").select2("data")[0]["id"] ? 0 : $("#POVendor").val()), 
             VendorName: $("#POVendor").select2("data")[0]["text"], 
-            CustomerId: $("#CustomerId").val(),  
             POCustName: $("#POCustName").val(),   
             POCustTelp: $("#POCustTelp").val(),  
             POAddress: $("#POAddress").val(),  
@@ -1107,7 +1131,7 @@
         $.ajax({ 
             dataType: "json",
             method: "POST",
-            url: "<?= base_url() ?>action/add-data-po", 
+            url: "<?= base_url() ?>action/edit-data-po/<?= $project->POId?>", 
             data:{
                 "header":header,
                 "detail":detail, 
@@ -1120,8 +1144,8 @@
                         text: 'Simpan data berhasil...!!!',  
                         confirmButtonColor: "#3085d6", 
                     }).then((result) => {   
-                        $("#modal-add-po").modal("hide");    
-                        if($("#modal-add-po").data("menu") =="Pembelian"){
+                        $("#modal-edit-po").modal("hide");    
+                        if($("#modal-edit-po").data("menu") =="Pembelian"){
                             table.ajax.reload(null, false); 
                         }      
                     });
@@ -1154,12 +1178,12 @@
             url: "<?= base_url() ?>message/add-vendor", 
             success: function(data) {  
 
-                $("#modal-add-po").modal("hide"); 
+                $("#modal-edit-po").modal("hide"); 
                 $("#modal-optional").html(data);
                 $("#modal-add-vendor").modal("show");  
 
                 $("#modal-add-vendor").on("hidden.bs.modal",function(){ 
-                    $("#modal-add-po").modal("show");  
+                    $("#modal-edit-po").modal("show");  
 
                     if(data_vendor){ 
                         $('#POVendor').append(new Option(data_vendor.VendorCode + " - " - data_vendor.VendorName, data_vendor.VendorId, true, true)).trigger('change');

@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title><?= 'PO_'.$po->CustomerName.'_'.$po->PODate ?></title>
+    <title><?= 'PO_'.$po->POCustName.'_'.$po->PODate ?></title>
     <link rel="stylesheet" type="text/css" href="assets/fonts/roboto/roboto.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/poppins/poppins.css"> 
 </head>
 <style>  
-    body {
+  body {
         padding: 5px;
         padding-top: 15px;
         padding-left: 0px;
@@ -26,12 +26,10 @@
     }
     .judul{
         position:absolute;
-        top:65px;
+        top:70px;
         right: 30px;
-        z-index: 1000;
+        z-index: 100;
         color:black !important;
-        border:1px solid;
-        padding:1px 5px;
     }
     .logo{
         position: absolute;
@@ -56,6 +54,12 @@
         left: 50px;
         top: 10px;
         object-fit: contain;
+    }
+    .logo.mgs img{
+        top: 0px;
+        left: 30px;
+        height: 80px;
+        width: 140px;
     }
     .deskripsi{
         position: absolute;
@@ -275,60 +279,22 @@
     li {
         padding: 0px;
     } 
-  
+    tr.hide{
+        display:none !important;
+    }
 </style>
 <body>  
-    <div class="header">
-        <div class="logo">  
-            <img src="assets/images/logo/logo-brj-blue.png" alt=""> 
-            <span>BATA REGULER JAKARTA</span>
-        </div>
-        <div class="deskripsi">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/maps.svg" alt="">
-                            </div>
-                            
-                        </td>
-                        <td>
-                            <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
-                        </td>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/email.svg" alt="">
-                            </div>
-                            
-                        </td>
-                        <td>
-                            <span>bataregulerjakarta@gmail.com</span>
-                        </td>
-                        <td>
-                            <div class="icon">
-                                <img src="assets/images/icon/phone.svg" alt=""> 
-                            </div>
-                            
-                        </td>
-                        <td>0852-1795-2625<br>0812-1260-9992
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>   
-        <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>  
-    </div>   
+    <?= $header_footer ?>
     <div class="body">
         <h4 class="judul text-center">PO VENDOR</h4>
         <table style="width: 100%;align-items: start;justify-content: baseline;">
             <tbody>
                 <tr>
                     <td style="width: 80%;"> 
-                        <span >Kepada Yth.:</span><br>
-                        <span class="text-bold"><?= $po->CustomerName.($po->CustomerCompany == "" ? : " (".$po->CustomerCompany.")") ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
-                        <span class="text-bold"><?= $po->CustomerTelp1.($po->CustomerTelp2 == "" ? : " / ".$po->CustomerTelp2) ?></span><br>
-                        <span class="text-bold"><?= $po->CustomerAddress ?></span><br>
+                        <span >Kepada Yth.:</span><br> 
+                        <span class="text-bold"><?= $po->POCustName ?></span>&nbsp;&nbsp;&nbsp;&nbsp;Telp : 
+                        <span class="text-bold"><?= $po->POCustTelp  ?></span><br>
+                        <span class="text-bold"><?= $po->POAddress ?></span><br>
                     </td> 
                     <td style="align-items: start;justify-content: center"> 
                         <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $po->POCode ?></div><br>

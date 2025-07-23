@@ -145,9 +145,11 @@
                         $("#modal-request-payment").modal("hide");  
                         if('<?= strtolower($refType) ?>' == "survey"){  
                             table.ajax.reload(null, false);
+                        } else if('<?= strtolower($refType) ?>' == "pembelian"){
+                            table.ajax.reload(null, false);
                         } else if('<?= strtolower($refType) ?>' == "delivery"){
                             loader_data_project('<?= $project ?>','pengiriman')  
-                        }{ 
+                        }else{ 
                             loader_data_project('<?= $project ?>','<?= strtolower($refType) ?>')  
                         }
                          

@@ -534,7 +534,7 @@ class ActionController extends BaseController
     }
     public function pembelian_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PembelianModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_pembelian($postData,$id); 
@@ -543,7 +543,7 @@ class ActionController extends BaseController
     }
     public function pembelian_delete($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new PembelianModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->delete_data_pembelian($id);  

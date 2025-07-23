@@ -9,6 +9,7 @@ use App\Models\SampleModel;
 use App\Models\SphModel;
 use App\Models\InvoiceModel;
 use App\Models\CustomerModel;
+use App\Models\DeliveryModel;
 use App\Models\ProdukModel;
 use App\Models\PembelianModel;
 use App\Models\VendorModel;
@@ -128,6 +129,15 @@ class TableController extends BaseController
         }    
         
     } 
+    public function pengiriman_datatable()
+    {   
+        $request = Services::request();
+        $datatable = new DeliveryModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_datatable_delivery($request->getPost());
+        }    
+        
+    } 
  
     public function customer()
     {   
@@ -179,5 +189,7 @@ class TableController extends BaseController
         }    
         
     } 
+    
+
     
 }

@@ -300,53 +300,38 @@ class PaymentModel extends Model
                 "created_user"=>user()->id, 
                 "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
             )
-        ); 
+        );  
+        
+        // if($data["PaymentRequestMethod"] == "Cash"){
+        //     $message = sprintf(
+        //         "*PENGAJUAN PEMBAYARAN*\n" .
+        //         "ada request pembayaran dari dokumen %s yang dibuat oleh %s dengan permintaan cash atau tunai\n" . 
+        //         "\tNama \t\t: %s\n" .
+        //         "\tTotal \t\t: Rp. %s",
+        //         $data["PaymentRequestRefType"],
+        //         user()->username, 
+        //         $data["PaymentRequestName"],
+        //         number_format($data["PaymentRequestTotal"])
+        //     ); 
+        // }else{
+        //     $message = sprintf(
+        //         "*PENGAJUAN PEMBAYARAN*\n" .
+        //         "ada request pembayaran dari dokumen %s yang dibuat oleh %s ditransfer ke\n" .
+        //         "\tBank \t\t: %s\n" .
+        //         "\tNo. Rekening \t: %s\n" .
+        //         "\tNama \t\t: %s\n" .
+        //         "\tTotal \t\t: Rp. %s",
+        //         $data["PaymentRequestRefType"],
+        //         user()->username,
+        //         $data["PaymentRequestBank"],
+        //         $data["PaymentRequestRek"],
+        //         $data["PaymentRequestName"],
+        //         number_format($data["PaymentRequestTotal"])
+        //     ); 
+        // } 
 
-        // $builder = $this->db->table("payment_request");
-        // $builder->insert(array(  
-        //     "PaymentRequestMethod"=>$data["PaymentRequestMethod"], 
-        //     "PaymentRequestRef"=>$data["PaymentRequestRef"],
-        //     "PaymentRequestRefType"=>$data["PaymentRequestRefType"], 
-        //     "ProjectId"=>$data["ProjectId"],
-        //     "PaymentRequestBank"=>$data["PaymentRequestBank"],
-        //     "PaymentRequestRek"=>$data["PaymentRequestRek"],
-        //     "PaymentRequestName"=>$data["PaymentRequestName"],
-        //     "PaymentRequestTotal"=>$data["PaymentRequestTotal"],
-        //     "PaymentRequestStatus"=>$data["PaymentRequestStatus"], 
-        //     "created_user"=>user()->id, 
-        //     "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
-        // ));  
-
-        if($data["PaymentRequestMethod"] == "Cash"){
-            $message = sprintf(
-                "*PENGAJUAN PEMBAYARAN*\n" .
-                "ada request pembayaran dari dokumen %s yang dibuat oleh %s dengan permintaan cash atau tunai\n" . 
-                "\tNama \t\t: %s\n" .
-                "\tTotal \t\t: Rp. %s",
-                $data["PaymentRequestRefType"],
-                user()->username, 
-                $data["PaymentRequestName"],
-                number_format($data["PaymentRequestTotal"])
-            ); 
-        }else{
-            $message = sprintf(
-                "*PENGAJUAN PEMBAYARAN*\n" .
-                "ada request pembayaran dari dokumen %s yang dibuat oleh %s ditransfer ke\n" .
-                "\tBank \t\t: %s\n" .
-                "\tNo. Rekening \t: %s\n" .
-                "\tNama \t\t: %s\n" .
-                "\tTotal \t\t: Rp. %s",
-                $data["PaymentRequestRefType"],
-                user()->username,
-                $data["PaymentRequestBank"],
-                $data["PaymentRequestRek"],
-                $data["PaymentRequestName"],
-                number_format($data["PaymentRequestTotal"])
-            ); 
-        } 
-
-        $sender = new NotificationModel();
-        $sender->send_wa($message);
+        // $sender = new NotificationModel();
+        // $sender->send_wa($message);
     }
     public function delete_data_payment_request($id){   
         $dataold = $builder = $this->getWhere(['paymentId' => $id], 1)->getRow();  
@@ -373,7 +358,7 @@ class PaymentModel extends Model
         $dataold = $builder = $this->getWhere(['paymentId' => $id], 1)->getRow();  
 
         $builder = $this->db->table("payment"); 
-        $builder->set('PaymentMethod', $data["PaymentMethod"]);
+        $builder->set('PaymentType', $data["PaymentMethod"]);
         $builder->set('PaymentToBank', $data["PaymentToBank"]); 
         $builder->set('PaymentToName', $data["PaymentToName"]);  
         $builder->set('PaymentToRek', $data["PaymentToRek"]); 

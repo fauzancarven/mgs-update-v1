@@ -352,12 +352,14 @@ background-color: #fff;
     transform: translateX(-50%);
     z-index: 1;
   }
-  
   .timeline-date {
-    position: absolute; 
+    position: absolute;
     top: 15px;
     left: 0;
-  }
+    width: 5rem;
+    max-width: 5rem;
+    text-wrap: auto;
+    }
   .timeline-panel {
     position: relative; 
     left: 130px; 

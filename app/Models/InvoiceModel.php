@@ -917,6 +917,7 @@ class InvoiceModel extends Model
         $modelspembelian = new PembelianModel();
         $builder = $this->db->table("pembelian"); 
         $builder->join("vendor","vendor.VendorId = pembelian.VendorId ","left"); 
+        $builder->join("store","store.StoreId = pembelian.StoreId","left");   
         $builder->where('PORef',$row->InvId); 
         $builder->where('PORefType',"Invoice");  
         $builder->where('POStatus <',"3"); 

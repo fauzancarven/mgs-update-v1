@@ -254,4 +254,21 @@ class AdminController extends BaseController
         ]; 
         return view('admin/accounting/paymentrequest', $data); 
     }
+
+    public function delivery(){    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Delivery',
+            'menu' => "Delivery", 
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/delivery/index', $data); 
+    }
+    
 }

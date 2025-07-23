@@ -8,6 +8,7 @@ use App\Models\SphModel;
 use App\Models\ProjectModel;
 use App\Models\PaymentModel;
 use App\Models\InvoiceModel;
+use App\Models\PembelianModel;
 use App\Models\ProdukModel;
 use App\Models\HeaderModel;
 
@@ -429,7 +430,7 @@ class PrintController extends BaseController
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $models = new ProjectModel();
+                $models = new PembelianModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
                 $data["po"] = $models->get_data_pembelian($id); 
@@ -452,14 +453,17 @@ class PrintController extends BaseController
                         );
                 };
                 $data["detail"] = $detail; 
-                $data["postdata"] = $postData; 
-                $data["header_footer"] = $modelheader->get_header_a4($data["po"]->StoreId);  
-                if(isset($postData["custom"])){ 
-                        $data["header_footer"]["detail"] = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0895-3529-92663<br>MAHIERA GLOBAL SOLUTION';
-                }
+                $data["postdata"] = $postData;  
+              
                 if($postData["kertas"] =="A4"){
+                        $data["header_footer"] = $modelheader->get_header_a4($data["po"]->StoreId);
+                        if(isset($postData["custom"])){ 
+                                $data["header_footer"]["detail"] = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0895-3529-92663<br>MAHIERA GLOBAL SOLUTION';
+                        } 
                         $html = view('admin/project/po/print_po_a4',$data);  
                 }else{ 
+                        
+                         $data["header_footer"] = $modelheader->get_header_a5($data["po"]->StoreId); 
                         $dompdf->set_paper(array(0,0,420, 620),  'landscape');
                         $html = view('admin/project/po/print_po_a5',$data); 
                         
@@ -467,6 +471,6 @@ class PrintController extends BaseController
                 //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();
-                $dompdf->stream( 'INV_'.$data["po"]->CustomerName.'_'.$data["po"]->PODate.'.pdf', [ 'Attachment' => false ]);
+                $dompdf->stream( 'INV_'.$data["po"]->POCustName.'_'.$data["po"]->PODate.'.pdf', [ 'Attachment' => false ]);
 	}
 }

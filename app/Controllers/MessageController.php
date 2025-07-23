@@ -11,6 +11,7 @@ use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\ProdukvarianModel;
+use App\Models\PembelianModel;
 use App\Models\InvoiceModel;
 use App\Models\ProjectModel;
 use App\Models\SphModel;
@@ -448,7 +449,7 @@ class MessageController extends BaseController
                         "group"=> $row->SphDetailGroup,
                         "type"=> $row->SphDetailType,
                         "image_url"=>  
-                        $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->SphDetailVarian,true)
+                        $modelsproduk->getproductimagedatavarian($row->ProdukId,$row->SphDetailVarian,true)
                     );
         };
         $data["project"] = $project; 
@@ -510,7 +511,7 @@ class MessageController extends BaseController
                 );
             };
         }
-        if($project->PORefType == "Invoice"){  
+        if($project->PORefType == "Invoice"){   
             $arr_detail_ref = $models->get_data_invoice_detail($project->PORef);
             foreach($arr_detail_ref as $row){
                 $detailref[] = array(
@@ -563,18 +564,94 @@ class MessageController extends BaseController
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel();
         $modelsvendor = new VendorModel();
-
-        // $project = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
-        // $data["project"] = $project; 
-        // $customer =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
-        // $data["customer"] = array(
-        //     "CustomerName"=> $customer->CustomerName.($customer->CustomerCompany == "" ? "" : " ( " . $customer->CustomerCompany . " )"),
-        //     "CustomerTelp"=> $customer->CustomerTelp1.($customer->CustomerTelp2 == "" ? "" : " / ".$customer->CustomerTelp2),
-        //     "CustomerAddress"=>$customer->CustomerAddress,
-        // ); 
+ 
         $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/po/add_po.php',$data)); 
+    }
+    public function po_edit($id)
+    {     
+        $models = new PembelianModel();
+        $modelscustomer = new CustomerModel();
+        $modelsstore = new StoreModel();
+        $modelsvendor = new VendorModel();
+        $modelsstore = new StoreModel();
+        $modelsvendor = new VendorModel();
+        $modelsproduk = new ProdukModel();
+
+        $project = $models->get_data_pembelian($id); 
+        $arr_detail = $models->get_data_pembelian_detail($id);
+        $detail = array();
+        $detailref = array(); 
+        if($project->PORefType == "Penawaran"){  
+            $modelssph = new SphModel();
+            $arr_detail_ref = $modelssph->get_data_sph_detail($project->PORef);
+            foreach($arr_detail_ref as $row){
+                $detailref[] = array(
+                    "id" => $row->ProdukId, 
+                    "produkid" => $row->ProdukId, 
+                    "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                    "satuan_text"=>$row->SphDetailSatuanText,  
+                    "price"=>$row->SphDetailPrice,
+                    "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                    "total"=> $row->SphDetailTotal,
+                    "disc"=> $row->SphDetailDisc,
+                    "qty"=> $row->SphDetailQty,
+                    "text"=> $row->SphDetailText,
+                    "group"=> $row->SphDetailGroup,
+                    "type"=> $row->SphDetailType,
+                    "image_url"=>  
+                    $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->SphDetailVarian,true)
+                );
+            };
+        }
+        if($project->PORefType == "Invoice"){  
+            $modelsinvoice = new InvoiceModel();
+            $arr_detail_ref = $modelsinvoice->get_data_invoice_detail($project->PORef);
+            foreach($arr_detail_ref as $row){
+                $detailref[] = array(
+                    "id" => $row->ProdukId, 
+                    "produkid" => $row->ProdukId, 
+                    "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                    "satuan_text"=>$row->InvDetailSatuanText,  
+                    "priceref"=>$row->InvDetailPrice,
+                    "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                    "totalref"=> $row->InvDetailTotal,
+                    "discref"=> $row->InvDetailDisc,
+                    "qty"=> $row->InvDetailQty,
+                    "text"=> $row->InvDetailText,
+                    "group"=> $row->InvDetailGroup,
+                    "type"=> $row->InvDetailType,
+                    "image_url"=>  
+                    $modelsproduk->getproductimagedatavarian($row->ProdukId,$row->InvDetailVarian,true)
+                );
+            };
+        }
+  
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->PODetailSatuanId == 0 ? "" : $row->PODetailSatuanId),
+                        "satuan_text"=>$row->PODetailSatuanText,  
+                        "varian"=> JSON_DECODE($row->PODetailVarian,true),
+                        "group"=> $row->PODetailGroup,
+                        "text"=> $row->PODetailText,
+                        "price"=>$row->PODetailPrice,
+                        "total"=> $row->PODetailTotal,  
+                        "qty"=> $row->PODetailQty,
+                        "type"=> $row->PODetailType,
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian($row->ProdukId,$row->PODetailVarian,true)
+                    );
+        }; 
+        $data["project"] = $project; 
+        $data["customer"] = $modelscustomer->get_customer_name($project->CustomerId); 
+        $data["detail"] =  $detail;
+        $data["detailref"] =  $detailref; 
+        $data["vendor"] = $modelsvendor->get()->getResult();
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/po/edit_po.php',$data)); 
     }
 
     public function invoice_add(){
@@ -1048,7 +1125,8 @@ class MessageController extends BaseController
             $data["project"] = $req->ProjectId;
             return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data));  
         }   
-        if($postData['type'] == "pembelian"){
+        if($postData['type'] == "Pembelian"){
+            $models = new PembelianModel();  
             $req = $models->get_data_pembelian($id);
             $data["total"] = $req->POGrandTotal;
             $data["ref"] = $req->POId;
@@ -1359,13 +1437,13 @@ class MessageController extends BaseController
         }
     } 
     public function delivery_add($id,$type){
-        $modelinvoice = new InvoiceModel();
         $models = new ProjectModel();
         $modelscustomer = new CustomerModel(); 
         $modelsproduk = new ProdukModel();
          
         $detail = array();
         if($type == "invoice"){  
+            $modelinvoice = new InvoiceModel();
             $datainvoice = $modelinvoice->get_data_invoice($id);  
             $project = array(
                 "code"=>$datainvoice->InvCode,
@@ -1379,7 +1457,7 @@ class MessageController extends BaseController
                 "CustomerTelp"=>$datainvoice->InvCustTelp,
                 "CustomerAddress"=>$datainvoice->InvAddress, 
             );
-            $arr_detail = $models->get_data_invoice_detail($id);
+            $arr_detail = $modelinvoice->get_data_invoice_detail($id);
             foreach($arr_detail as $row){
                 $detail[] = array( 
                             "id" => $row->ProdukId, 
@@ -1400,9 +1478,45 @@ class MessageController extends BaseController
                             "image_url"=>  
                             $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->InvDetailVarian,true)
                         );
-            };
-
-           
+            }; 
+        }   
+        if($type == "pembelian"){  
+            $modelpembelian = new PembelianModel();
+            $datapembelian = $modelpembelian->get_data_pembelian($id);  
+            $project = array(
+                "code"=>$datapembelian->POCode,
+                "StoreId"=>$datapembelian->StoreId,
+                "StoreCode"=>$datapembelian->StoreCode,
+                "StoreName"=>$datapembelian->StoreName,
+                "project_id"=>$datapembelian->ProjectId, 
+                "DeliveryRef"=>$datapembelian->POId, 
+                "DeliveryRefType"=>"Pembelian",
+                "CustomerName"=>$datapembelian->POCustName,
+                "CustomerTelp"=>$datapembelian->POCustTelp,
+                "CustomerAddress"=>$datapembelian->POAddress, 
+            );
+            $arr_detail = $modelpembelian->get_data_pembelian_detail($id);
+            foreach($arr_detail as $row){
+                $detail[] = array( 
+                            "id" => $row->ProdukId, 
+                            "produkid" => $row->ProdukId, 
+                            "satuan_id"=> ($row->PODetailSatuanId == 0 ? "" : $row->PODetailSatuanId),
+                            "satuan_text"=>$row->PODetailSatuanText, 
+                            "price"=>$row->PODetailPrice,
+                            "varian"=> JSON_DECODE($row->PODetailVarian,true),
+                            "total"=> $row->PODetailTotal,
+                            "disc"=>0,
+                            "qty_ref"=> $row->PODetailQty,
+                            "qty_success"=>$models->get_data_delivery_detail_by_ref($id,$row->ProdukId,$row->PODetailVarian,$row->PODetailText), 
+                            "qty"=> $row->PODetailQty - $models->get_data_delivery_detail_by_ref($id,$row->ProdukId,$row->PODetailVarian,$row->PODetailText),
+                            "qty_spare"=> 0,
+                            "text"=> $row->PODetailText,
+                            "group"=> $row->PODetailGroup,
+                            "type"=> $row->PODetailType,
+                            "image_url"=>  
+                            $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->PODetailVarian,true)
+                        );
+            }; 
         }  
        
         $data["project"] = $project; 
@@ -1459,8 +1573,7 @@ class MessageController extends BaseController
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
     }
-
-    
+ 
     public function delivery_proses($id)
     {       
         $models = new ProjectModel();

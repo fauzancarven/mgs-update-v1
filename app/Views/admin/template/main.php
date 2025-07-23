@@ -230,7 +230,7 @@
 
     <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 
     
-    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script> 
+    <!-- <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>  -->
     <script>
         // const socket = io("socket.mahieraglobalsolution.com"); 
         // socket.on('message', function(msg) { 

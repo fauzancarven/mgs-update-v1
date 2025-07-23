@@ -69,14 +69,14 @@
         }
     });
     
-    //$('#method-payment').append(new Option('<?= $payment->PaymentMethod ?>' , '<?= $payment->PaymentMethod ?>', true, true)).trigger('change');   
-    $('#method-payment').val('<?= $payment->PaymentMethod ?>').trigger('change');
+    //$('#method-payment').append(new Option('<?= $payment->PaymentType ?>' , '<?= $payment->PaymentType ?>', true, true)).trigger('change');   
+    $('#method-payment').val('<?= $payment->PaymentType ?>').trigger('change');
     $('#method-payment').trigger({
         type: 'select2:select',
         params: {
             data: {
-                id: '<?= $payment->PaymentMethod ?>',
-                text: $('#method-payment').find('option[value="<?= $payment->PaymentMethod ?>"]').text()
+                id: '<?= $payment->PaymentType ?>',
+                text: $('#method-payment').find('option[value="<?= $payment->PaymentType ?>"]').text()
             }
         }
     });
@@ -151,6 +151,8 @@
                     }).then((result) => {   
                         $("#modal-request-payment-edit").modal("hide");  
                         if('<?= strtolower($payment->PaymentRefType) ?>' == "survey"){  
+                            table.ajax.reload(null, false);
+                        } else if('<?= strtolower($payment->PaymentRefType) ?>' == "pembelian"){
                             table.ajax.reload(null, false);
                         } else if('<?= strtolower($payment->PaymentRefType) ?>' == "delivery"){
                             loader_data_project('<?= $payment->ProjectId ?>','pengiriman')  
