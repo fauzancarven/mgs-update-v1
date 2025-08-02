@@ -53,7 +53,8 @@
     },
     "autoload": {
         "psr-4": {
-            "CodeIgniter\\": "system/"
+            "CodeIgniter\\": "system/",
+            "Psr\\Log\\": "system/ThirdParty/PSR/Log/"
         },
         "exclude-from-classmap": [
             "**/Database/Migrations/**"

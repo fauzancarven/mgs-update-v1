@@ -10,5 +10,6 @@ assets/images/profile/*
 assets/images/payment/*
 assets/images/delivery/*
 assets/images/project/*
+assets/images/survey/*
 deploy.php
 composer.lock
