@@ -515,6 +515,7 @@
             kertas: $("#SphPrintFormat").val(),
             image: $('input[name="SphPrintImage"]:checked').val(),
             total: $('input[name="SphPrintTotal"]:checked').val(),
+            date: moment().format('DDMMYYYYHHmmss'),
         },
         "GET",'_blank');
         $("#modal-print-penawaran").modal("hide"); 
