@@ -16,6 +16,10 @@ use Config\Services;
 define("DOMPDF_ENABLE_REMOTE", false);
 class PrintController extends BaseController
 {
+     public function __construct()
+    {
+        while (ob_get_level()) { ob_end_clean(); }
+    }
         public function survey($id){
                  
                 $options = new Options(); 
@@ -38,6 +42,7 @@ class PrintController extends BaseController
                 //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();
+                
                 $dompdf->stream( 'SVY_'.$data["survey"]->SurveyCustName.'_'.$data["survey"]->SurveyDate.'.pdf', [ 'Attachment' => false ]);
         }
         
@@ -112,7 +117,7 @@ class PrintController extends BaseController
                 $html = view('admin/project/sph/print_sph_a4',$data);  
                 //return $html;
                 $dompdf->loadHtml($html);
-                $dompdf->render();
+                $dompdf->render(); 
                 $dompdf->stream( 'SPH_'.$data["sph"]->CustomerName.'_'.$data["sph"]->SphDate.'.pdf', [ 'Attachment' => false ]);
 	}
 	public function project_invoice($id)
