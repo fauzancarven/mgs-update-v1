@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class HeaderModel extends Model
 {
-    function get_header_a4($id){
+    function get_header_a4($id,$custom = false){
         switch ($id) { 
             case 2:
                 $html = '<div class="fixed">
@@ -76,7 +76,9 @@ class HeaderModel extends Model
                 ;
                 
                 $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0852-1795-2625<br>BATA REGULER JAKARTA';
-                $detail = 'DISIAPKAN OLEH : ERWIN BRACHMANA<br>DIRECT CONTACT : 0821-2229-3427<br>BATA REGULER JAKARTA';
+                if($custom ){
+                    $detail = 'DISIAPKAN OLEH : ERWIN BRACHMANA<br>DIRECT CONTACT : 0821-2229-3427<br>BATA REGULER JAKARTA'; 
+                }
                 break;
             case 3:
                 $html = '<div class="fixed">
@@ -464,8 +466,13 @@ class HeaderModel extends Model
                     </div>'
                 ;
                 
-                $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0812-1260-9992<br>MAHIERA GLOBAL SOLUTION';
-                break;
+                if($custom ){
+                    $detail = 'DISIAPKAN OLEH : ERWIN BRACHMANA<br>DIRECT CONTACT : 0821-2229-3427<br>MAHIERA GLOBAL SOLUTION'; 
+                }else{
+                    
+                    $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0812-1260-9992<br>MAHIERA GLOBAL SOLUTION';
+                    break;
+                }
         }
         return array(
             "html"=> $html,

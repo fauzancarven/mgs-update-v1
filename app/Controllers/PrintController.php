@@ -100,7 +100,11 @@ class PrintController extends BaseController
                 };
                 $data["detail"] = $detail; 
                 $data["postdata"] = $postData; 
-                $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);  
+                if(isset($postData["custom"])){  
+                        $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId,true);
+                }else{ 
+                        $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);
+                }  
                 
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
