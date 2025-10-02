@@ -5,6 +5,8 @@ vendor/*
 writable/*
 tests/* 
 system/* 
+assets/images/mgs-erp/*
+assets/images/product/*
 assets/images/produk/*
 assets/images/profile/*
 assets/images/payment/*
