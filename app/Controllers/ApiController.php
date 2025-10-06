@@ -14,7 +14,7 @@ class ApiController extends BaseController
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             
-            return $this->response->setJSON($models->get_produk($postData,true));  
+            return $this->response->setJSON($models->get_produk($postData,false));  
         }
         
     }  
