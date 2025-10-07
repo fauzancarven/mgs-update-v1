@@ -70,7 +70,7 @@ class PrintController extends BaseController
                 $dompdf->render();
                 $dompdf->stream( 'SVY_'.$data["survey"]->SurveyCustName.'_'.$data["survey"]->SurveyDate.'.pdf', [ 'Attachment' => false ]);
         }
-	public function project_sph($id,$html_view = false)
+	public function project_sph($id)
 	{
                 $request = Services::request();
                 $postData = $request->getGet();
@@ -115,10 +115,7 @@ class PrintController extends BaseController
                 $dompdf->getOptions()->setChroot('assets');   
 
                 $html = view('admin/project/sph/print_sph_a4',$data);  
-                //return $html;
-                if($html_view){
-                        return  $html;
-                }
+                //return $html; 
                 $dompdf->loadHtml($html);
                 $dompdf->render(); 
                 $dompdf->stream( 'SPH_'.$data["sph"]->CustomerName.'_'.$data["sph"]->SphDate.'.pdf', [ 'Attachment' => false ]);
