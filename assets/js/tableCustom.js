@@ -70,7 +70,7 @@ class tableItem {
                                         <span class="no-urut text-head-3 order-md-2 order-1 p-2">${String.fromCharCode(last_group_abjad)}. </span>  
                                         <div class="d-flex flex-column text-start flex-fill order-md-3 order-2 justify-content-center">
                                             <span class="text-head-3 span-custom-input"  data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
-                                            <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"]}</textarea> 
+                                            <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"].replace(/<br>/g, '\n')}</textarea> 
                                         </div>  
                                         <div class="px-0 order-md-1 order-3"> 
                                             <div class="btn-group d-inline-block" role="group"> 
@@ -121,7 +121,7 @@ class tableItem {
                                                 </div> 
                                                 <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
                                                     <span class="text-head-3 span-custom-input"  data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
-                                                    <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"]}</textarea>
+                                                    <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"].replace(/<br>/g, '\n')}</textarea>
                                                     ${varian} 
                                                 </div>  
                                             </div>
@@ -469,7 +469,7 @@ class tableItem {
                 "qty":  1,
                 "total": 0,
                 "type" :"product",
-                "image_url" : "https://192.168.100.52/mahiera/assets/images/produk/default.png"
+                "image_url" : "https://system.mahieraglobalsolution.com/assets/images/produk/default.png"
             });
             self.render();
         }); 
@@ -605,7 +605,7 @@ class tableItemDelivery {
                                         <span class="no-urut text-head-3 order-md-2 order-1 p-2">${String.fromCharCode(last_group_abjad)}. </span>  
                                         <div class="d-flex flex-column text-start flex-fill order-md-3 order-2 justify-content-center">
                                             <span class="text-head-3 span-custom-input"  data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
-                                            <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"]}</textarea> 
+                                            <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"].replace(/<br>/g, '\n')}</textarea> 
                                         </div>  
                                         <div class="px-0 order-md-1 order-3"> 
                                             <div class="btn-group d-inline-block" role="group"> 
@@ -650,7 +650,7 @@ class tableItemDelivery {
                                                 </div> 
                                                 <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
                                                     <span class="text-head-3 span-custom-input"  data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
-                                                    <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"]}</textarea>
+                                                    <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"].replace(/<br>/g, '\n')}</textarea>
                                                     ${varian} 
                                                 </div>  
                                             </div>
@@ -1049,7 +1049,7 @@ class tableItemPo {
                                         <span class="no-urut text-head-3 order-md-2 order-1 p-2">${String.fromCharCode(last_group_abjad)}. </span>  
                                         <div class="d-flex flex-column text-start flex-fill order-md-3 order-2 justify-content-center">
                                             <span class="text-head-3 span-custom-input"  data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
-                                            <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"]}</textarea> 
+                                            <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"].replace(/<br>/g, '\n')}</textarea> 
                                         </div>  
                                         <div class="px-0 order-md-1 order-3"> 
                                             <div class="btn-group d-inline-block" role="group"> 
@@ -1100,7 +1100,7 @@ class tableItemPo {
                                                 </div> 
                                                 <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
                                                     <span class="text-head-3 span-custom-input"  data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
-                                                    <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"]}</textarea>
+                                                    <textarea class="text-custom-input" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"].replace(/<br>/g, '\n')}</textarea>
                                                     ${varian} 
                                                 </div>  
                                             </div>
