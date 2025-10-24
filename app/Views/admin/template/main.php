@@ -230,15 +230,18 @@
 
     <script src="<?= base_url(); ?>assets/js/jquery.redirect.js">  </script> 
     
-    <!-- <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>  -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script> 
     <script>
-        // const socket = io("socket.mahieraglobalsolution.com"); 
-        // socket.on('message', function(msg) { 
-        //     tampilkanNotifikasi(msg);
-        // });  
-        // socket.on('load-project', function(msg) { 
-        //     tampilkanNotifikasi(msg);
-        // });
+       
+        const socket = io('https://socket.mahieraglobalsolution.com', {
+            auth: {
+                apiKey: '21e33004a8df6d9c6759e0db55809ea14049eb3d'
+            }
+        });   
+        $.getJSON('https://api.ipify.org?format=json', function(data) { 
+            socket.emit("login",{"username":"<?= user()->code; ?>","email":"<?= user()->email; ?>","userAgent": navigator.userAgent,"ipAddress":data.ip});
+        });
+
         $('.toast').toast({
             delay: 5000,
             animation: true,
@@ -577,6 +580,12 @@
                                 </li> 
                             </ul>
                         </div>  
+                    </li>   
+                    <li class="nav-item <?= ($title === 'Chat' ? "active" : "") ?>">
+                        <a class="nav-link" href="<?= base_url(); ?>admin/chat">
+                            <i class="ti-comments menu-icon"></i>
+                            <span class="menu-title">Chat</span>
+                        </a> 
                     </li>   
                 </ul>
             </nav>

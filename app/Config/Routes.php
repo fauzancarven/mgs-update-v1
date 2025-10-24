@@ -27,6 +27,7 @@ $routes->get('/admin/sales/penawaran', 'AdminController::penawaran', ['filter' =
 $routes->get('/admin/sales/invoice', 'AdminController::invoice', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
+$routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);
 
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
