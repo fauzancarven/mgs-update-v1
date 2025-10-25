@@ -77,7 +77,7 @@
                 <div class="chat-all-list">
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                            <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                            <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                             <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -90,7 +90,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -103,7 +103,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -116,7 +116,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -129,7 +129,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -142,7 +142,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -155,7 +155,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -168,7 +168,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -181,7 +181,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -194,7 +194,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -207,7 +207,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -220,7 +220,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -233,7 +233,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -246,7 +246,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -259,7 +259,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -272,7 +272,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -285,7 +285,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -298,7 +298,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -311,7 +311,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -324,7 +324,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>
@@ -337,7 +337,7 @@
                     </div><!-- chat-sidebar-single end --> 
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">Kathryn Murphy</h6>
@@ -350,7 +350,7 @@
                     </div><!-- chat-sidebar-single end -->
                     <div class="chat-sidebar-single active">
                         <div class="img">
-                        <img src="https://192.168.1.100/mahiera_new/assets/images/profile/user/MGS00004.png" alt="image">
+                        <img src="<?= base_url() ?>/assets/images/profile/user/MGS00004.png" alt="image">
                         </div>
                         <div class="info">
                         <h6 class="text-sm mb-1">James Michael</h6>

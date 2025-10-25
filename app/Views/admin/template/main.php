@@ -237,10 +237,11 @@
             auth: {
                 apiKey: '21e33004a8df6d9c6759e0db55809ea14049eb3d'
             }
-        });   
+        });    
+            
         $.getJSON('https://api.ipify.org?format=json', function(data) { 
             socket.emit("login",{"username":"<?= user()->code; ?>","email":"<?= user()->email; ?>","userAgent": navigator.userAgent,"ipAddress":data.ip});
-        });
+        }); 
 
         $('.toast').toast({
             delay: 5000,
