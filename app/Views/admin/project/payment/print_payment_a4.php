@@ -211,7 +211,7 @@ body {
 table.item {
           width: 100%;
           border-collapse: collapse;
-          table-layout: fixed;
+          /* table-layout: fixed; */
 }
 
 table.item td {
@@ -222,13 +222,6 @@ table.item td:nth-child(1) {
           width: 5%;
 }
 
-table.item td.image {
-          width: 12%;
-}
-
-table.item td.text {
-          width: 23%;
-}
 
 table.item td:nth-child(4) {
           width: auto;
@@ -240,6 +233,18 @@ table.item td:nth-child(5) {
 
 table.item td:last-child {
           width: auto;
+}
+
+table.item td.image {
+          width: 12%;
+}
+
+table.item td.text {
+          width: 30%;
+}
+
+table.item td.text-only {
+          width: 45%;
 }
 
 .item th {
@@ -269,7 +274,7 @@ table.item,
 }
 
 table.tc {
-          border-collapse: collapse;
+          /* border-collapse: collapse; */
 }
 
 table.tc,
@@ -375,7 +380,7 @@ li[data-list="bullet"]:before {
 <body>
           <?= $header_footer["html"] ?>
           <div class="body">
-                    <h2 class="text-center" style="margin-top:0;padding-top:0">PAYMENT</h2>
+                    <h2 class="text-center" style="margin-top:0;padding-top:0">INVOICE PAYMENT</h2>
                     <table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
                               <tbody>
                                         <tr>
@@ -530,8 +535,12 @@ li[data-list="bullet"]:before {
                             $html_items .= '
                             <tr> 
                                 <td class="td-center">'.$no.'</td>
-                                 '.($postdata["image"] == 1 ? ($item["image"] == "" ? "<td class='td-center image'></td>" : "<td class='td-center image'><img style='width:50px;height:50px;margin:3px;' src='".$item["image"]."'/></td>") : "").'
-                                <td class="ps-2 text">'.$item["text"].$arr_badge.'</td>
+                                 '.($postdata["image"] == 1 ? 
+                                    ($item["image"] == "" ? 
+                                    "<td class='td-center image'></td>" : 
+                                    "<td class='td-center image'><img style='width:50px;height:50px;margin:3px;' src='".$item["image"]."'/></td>")
+                                    : "").'
+                                <td class="ps-2 '. ($postdata["image"] == 1 ? "text" :"text-only" ).'">'.$item["text"].$arr_badge.'</td>
                                 <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
                                 <td class="td-center">Rp. '.number_format($item["price"], 0, ',', '.').'</td>
                                 '.($discShow ? "<td class='td-center'>Rp. ".number_format($item["disc"], 0, ',', '.')."</td>" : "").'
