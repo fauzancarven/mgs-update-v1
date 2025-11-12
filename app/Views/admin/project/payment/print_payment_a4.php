@@ -551,7 +551,7 @@ li[data-list="bullet"]:before {
                             
                           
                             $html_items .= '    <tr>
-                                                    <td class="td-group" colspan="'.   $col + 1 .'">'.$huruf.'. BARANG</td>
+                                                    <td class="td-group" colspan="'.   $col + 1 .'">'.$huruf.'. '.$item["text"].'</td>
                                                 </tr>';
                             $huruf++;
                             $no = 1;
