@@ -370,3 +370,7 @@
 <div style="margin-bottom: 100px;"></div> 
 <div id="modal-message"></div> 
 <?php $this->endSection(); ?>
+
+<script>
+    
+</script>
