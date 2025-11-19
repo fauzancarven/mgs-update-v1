@@ -301,7 +301,9 @@ class HeaderModel extends Model
             
                 $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0812-1260-9995<br>ADMIN SENTRA BATA';
                 break;
-            case 5 || 6 || 7:
+            case 5:
+            case 6:
+            case 7:
                 $html = '<div class="fixed">
                     <div class="header"> 
                         <div class="logo">  
