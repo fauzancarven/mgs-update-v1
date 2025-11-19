@@ -355,6 +355,16 @@
                                     <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $inv->InvCode ?></div></td>
                                 </tr>
                                 <tr style="border-bottom:1px solid;margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;width:30px;"><div class="width-label label-color d-inline-block">No. PO.</div></td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
+                                    <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $inv->InvCode ?></div></td>
+                                </tr>
+                                <tr style="border-bottom:1px solid;margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;width:30px;"><div class="width-label label-color d-inline-block">No. SPK.</div></td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
+                                    <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $inv->InvCode ?></div></td>
+                                </tr>
+                                <tr style="border-bottom:1px solid;margin:12px;">
                                     <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">Tgl. Pembuatan.</div></td>
                                     <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
                                     <td style="border:none;width: auto;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($inv->InvDate),"d F Y") ?></div></td>

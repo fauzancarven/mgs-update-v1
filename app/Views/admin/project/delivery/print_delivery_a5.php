@@ -26,10 +26,11 @@
     }
     .judul{
         position:absolute;
-        top:75px;
-        right: 30px;
+        top:20px;
+        right: 40%;
         z-index: 100;
         color:black !important;
+        font-size:18px;
     }
     .logo{
         position: absolute;
@@ -295,9 +296,11 @@
                         <div class="width-label label-color d-inline-block">Penerima</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->DeliveryToName ?></div><br>
                         <div class="width-label label-color d-inline-block">Telp</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->DeliveryToTelp ?></div><br>
                         <div class="width-label label-color d-inline-block">address</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->DeliveryToAddress ?></div><br> 
+                        <div class="width-label label-color d-inline-block"> </div><div class="label-color d-inline-block">&nbsp;&nbsp;&nbsp;</div><div class="label-color-1 d-inline-block text-bold">FUI2 - PENGADAAN PEMBANGUNAN GEDUNG FASILKOM UI ZONA III</div><br> 
                     </td> 
                     <td style="align-items: start;justify-content: center"> 
                         <div class="width-label label-color d-inline-block">No. Doc.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= $delivery->DeliveryCode ?></div><br>
+                        <div class="width-label label-color d-inline-block">No. PO.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold">POD25-0001942</div><br>
                         <div class="width-label label-color d-inline-block">Tgl.</div><div class="label-color d-inline-block">&nbsp;:&nbsp;</div><div class="label-color-1 d-inline-block text-bold"><?= date_format(date_create($delivery->DeliveryDate),"d F Y") ?></div><br> 
                     </td>
                 </tr>
@@ -330,7 +333,7 @@
                         <tr> 
                             <td class="td-center">'.$no.'</td>
                             <td class="ps-1">'.$item->DeliveryDetailText.$arr_badge.'</td>
-                            <td class="td-center">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
+                            <td class="td-center"> </td> 
                             <td class="td-center">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
                         </tr>';
                         $no++;  

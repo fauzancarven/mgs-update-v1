@@ -157,8 +157,9 @@ class PrintController extends BaseController
                         $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);
                         $html = view('admin/project/invoice/print_invoice_a5',$data); 
                 }else{ 
-                        $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
-                        $html = view('admin/project/invoice/print_invoice_a4',$data); 
+                        $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId); 
+                        $html = view('admin/project/invoice/print_invoice_a4_pica',$data); 
+                        // $html = view('admin/project/invoice/print_invoice_a4',$data); 
                 }
                 //return $html;
                 $dompdf->loadHtml($html);

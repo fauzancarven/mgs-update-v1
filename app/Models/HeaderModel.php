@@ -9,74 +9,11 @@ class HeaderModel extends Model
     function get_header_a4($id){
         switch ($id) { 
             case 2:
-                $html = '<div class="fixed">
-                            <div class="header">
-                            <div class="logo">  
-                                <img src="assets/images/logo/brand/brj.png" alt=""> 
-                            </div>
-                            <div class="deskripsi">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="icon">
-                                                    <img src="assets/images/icon/maps.svg" alt="">
-                                                </div>
-                                                
-                                            </td>
-                                            <td>
-                                                <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
-                                            </td>
-                                            <td>
-                                                <div class="icon">
-                                                    <img src="assets/images/icon/email.svg" alt="">
-                                                </div>
-                                                
-                                            </td>
-                                            <td>
-                                                <span>bataregulerjakarta@gmail.com</span>
-                                            </td>
-                                            <td>
-                                                <div class="icon">
-                                                    <img src="assets/images/icon/phone.svg" alt=""> 
-                                                </div>
-                                                
-                                            </td>
-                                            <td>0852-1795-2625<br>0812-1260-9992
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>   
-                            <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>   
-                            </div>   
-                        </div>   
-                        <div class="footer"> 
-                            <table>
-                                <tr>
-                                    <td>BATA EXPOSE</td>
-                                    <td><div class="divider"></div></td>
-                                    <td>BATA TEMPEL</td> 
-                                    <td><div class="divider"></div></td> 
-                                    <td>ROSTER DINDING</td>  
-                                    <td><div class="divider"></div></td>
-                                    <td>PAVING BLOCK</td>   
-                                </tr>
-                            </table>
-                            <div class="line"> 
-                                <div class="line1"></div> 
-                            </div>
-                            <div class="line-1"> 
-                                <div class="line1"></div> 
-                            </div>
-                            <div class="line-2"> 
-                                <div class="line1"></div> 
-                            </div>
-                        </div>'
+                $html = '  '
                 ;
                 
                 $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0852-1795-2625<br>BATA REGULER JAKARTA';
-                $detail = 'DISIAPKAN OLEH : ERWIN BRACHMANA<br>DIRECT CONTACT : 0821-2229-3427<br>BATA REGULER JAKARTA';
+                $detail = 'DISIAPKAN OLEH : ERWIN BRACHMANA<br>DIRECT CONTACT : 0821-2229-3427';
                 break;
             case 3:
                 $html = '<div class="fixed">
@@ -143,6 +80,9 @@ class HeaderModel extends Model
                                 <div class="line1"></div> 
                             </div>
                         </div>'
+                ;
+                
+                $html = '  '
                 ;
                 $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0852-1795-2625<br>ROSTER REGULER JAKARTA';
                 break;
@@ -464,7 +404,9 @@ class HeaderModel extends Model
                     </div>'
                 ;
                 
-                $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0812-1260-9992<br>MAHIERA GLOBAL SOLUTION';
+                $html = '  '
+                ;
+                $detail = 'DISIAPKAN OLEH : PM<br>DIRECT CONTACT : 0821-2229-3427';
                 break;
         }
         return array(
@@ -519,46 +461,7 @@ class HeaderModel extends Model
                 break;
             default: 
                 
-            $html = ' <div class="header">
-            <div class="logo mgs">  
-                <img src="assets/images/logo/logo-blue-1.png" alt="">  
-            </div>
-            <div class="deskripsi">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="icon">
-                                    <img src="assets/images/icon/maps.svg" alt="">
-                                </div>
-                                
-                            </td>
-                            <td>
-                                <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
-                            </td>
-                            <td>
-                                <div class="icon">
-                                    <img src="assets/images/icon/email.svg" alt="">
-                                </div>
-                                
-                            </td>
-                            <td>
-                                <span>info.mahieraglobalsolution@gmail.com</span>
-                            </td>
-                            <td>
-                                <div class="icon">
-                                    <img src="assets/images/icon/phone.svg" alt=""> 
-                                </div>
-                                
-                            </td>
-                            <td>0812-1260-9992<br>0812-1262-9997
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>   
-            <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>  
-        </div>  ';
+            $html = '  ';
                 break;
         }
         return $html;

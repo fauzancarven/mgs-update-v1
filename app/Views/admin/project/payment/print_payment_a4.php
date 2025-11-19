@@ -321,7 +321,7 @@
 <body>  
     <?= $header_footer["html"] ?>
     <div class="body" >
-        <h2 class="text-center" style="margin-top:0;padding-top:0">PAYMENT</h2>
+        <h2 class="text-center" style="margin-top:0;padding-top:0">INVOICE PAYMENT</h2>
         <table style="width: 100%;border-collapse: collapse;margin-bottom:10px">
             <tbody>
                 <tr>
@@ -353,6 +353,16 @@
                                     <td style="border:none;padding-left:3px;vertical-align:start;width:30px;"><div class="width-label label-color d-inline-block">No. Doc.</div></td>
                                     <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
                                     <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold"><?= $payment->PaymentCode ?></div></td>
+                                </tr>
+                                <tr style="border-bottom:1px solid;margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;width:30px;"><div class="width-label label-color d-inline-block">No. PO.</div></td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
+                                    <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold">POD25-0001942</div></td>
+                                </tr>
+                                <tr style="border-bottom:1px solid;margin:12px;">
+                                    <td style="border:none;padding-left:3px;vertical-align:start;width:30px;"><div class="width-label label-color d-inline-block">No. SPK.</div></td>
+                                    <td style="border:none;padding:2px;width: 3px;vertical-align:start;"><div class="label-color d-inline-block">:</div></td>
+                                    <td style="border:none;vertical-align:start;"><div class="label-color-1 d-inline-block text-bold">POD25-0001942</div></td>
                                 </tr>
                                 <tr style="border-bottom:1px solid;margin:12px;">
                                     <td style="border:none;padding-left:3px;vertical-align:start;"><div class="width-label label-color d-inline-block">Tgl. Pembuatan.</div></td>
@@ -460,7 +470,7 @@
                 ?>  
                 
                 <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?>">
-                    <td class="td-footer text-bold" colspan="<?= $col ?>"><?= $payment->PaymentType." pada tanggal ".date_format(date_create($payment->PaymentDate),"d M Y")." " ?></td>
+                    <td class="td-footer text-bold" colspan="<?= $col ?>"><?= $payment->PaymentType ?></td>
                     <td class="td-center text-bold">Rp. <?= number_format($payment->PaymentTotal, 0, ',', '.') ?></td>
                 <tr> 
                 <tr class="<?= ($postdata["total"]==1) ? "":"hide" ?> <?= ($postdata["sisa"]==0) ? "":"hide" ?>">
