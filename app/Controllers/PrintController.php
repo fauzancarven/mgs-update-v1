@@ -131,9 +131,10 @@ class PrintController extends BaseController
                 $options->set('orientation', 'potrait');
 
                 $models = new ProjectModel();
+                $modelInvoice = new InvoiceModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
-                $data["inv"] = $models->get_data_invoice($id); 
+                $data["inv"] = $modelInvoice->get_data_invoice($id); 
                 $arr_detail = $models->get_data_invoice_detail($id);
                 $detail = array();
                 foreach($arr_detail as $row){ 
@@ -161,8 +162,8 @@ class PrintController extends BaseController
                 }
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
-                if($data["postdata"]["kertas"] == "A5"){ 
-                        $dompdf->set_paper(array(0,0,420, 620), 'landscape');
+                if($data["postdata"]["kertas"] == "A5"){  
+                        $dompdf->set_paper(array(0,0,420, 620), 'landscape'); 
                         $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);
                         $html = view('admin/project/invoice/print_invoice_a5',$data); 
                 }else{ 
@@ -187,6 +188,7 @@ class PrintController extends BaseController
                 $models = new ProjectModel(); 
                 $modelheader = new HeaderModel(); 
                 $data["project"] = $models->get_data_invoice($id); 
+                return  $data["project"];
                 $data["detail"] = $models->get_data_invoice_detail($id); 
                 $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  
                 
