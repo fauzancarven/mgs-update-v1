@@ -44,21 +44,43 @@ class AdminController extends BaseController
         $this->helpers = ['form', 'url']; 
          //
         $this->authgroup = new AuthgroupModel();
-        $this->session = service('session');
+        $this->session = \Config\Services::session();
         $this->config = config('Auth');
         $this->auth   = service('authentication');
     }
     public function index()
     {   
+      
         $data = [
             'notif' => [],
             'session' => $this->session,
             'title' => 'Dashboard',
             'menu' => "", 
-        ]; 
+        ];  
         return view('admin/dashboard/index', $data);
         
     }
+
+    public function profile($id = null)
+    {     
+        $this->session->set('nama_pengguna', 'John Doe');
+        $modelsuser = new UserModel();
+        if($id){
+            $users = $modelsuser->getWhere(["id"=>$id])->getRow();
+        }else{
+            $users =  $modelsuser->getWhere(["id"=>user()->id])->getRow();
+        }
+        $data = [
+            'notif' => [],
+            'session' => $this->session->get(),
+            'title' => 'Dashboard',
+            'menu' => "", 
+            'users' =>  $users,
+        ]; 
+        return view('admin/account/view', $data);
+        
+    }
+
     public function sidebar(){
         $request = Services::request();
         if ($request->getMethod(true) === 'POST') {   
@@ -195,6 +217,22 @@ class AdminController extends BaseController
             'admin' => $modelsuser->get()->getResult()
         ]; 
         return view('admin/project/sph/index', $data); 
+    }
+    public function penawaran_add()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Penawaran',
+            'menu' => "Sales",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/project/sph/add_view', $data); 
     }
     public function invoice()
     {    

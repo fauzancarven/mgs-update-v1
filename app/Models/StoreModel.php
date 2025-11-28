@@ -46,22 +46,16 @@ class StoreModel extends Model
             return  '<div><img src="'.$data["StoreLogo"].'"  class="m-auto" style="width:50px;height:50px;"/></div>' ; 
         });
         $dt->add('action', function($data){
-        	return ' 
-                <div class="d-md-inline-block d-none"> 
-                    <button class="btn btn-sm btn-primary btn-action m-1" onclick="edit_click('.$data["StoreId"].')"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
-                    <button class="btn btn-sm btn-danger btn-action m-1" onclick="delete_click('.$data["StoreId"].')"><i class="fa-solid fa-close  pe-2"></i>Delete</button> 
-                </div>
-                <div class="d-md-none d-flex btn-action"> 
-                    <div class="dropdown">
-                        <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="ti-more-alt icon-rotate-45"></i>
-                        </a>
-                        <ul class="dropdown-menu shadow">
-                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["StoreId"].')"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
-                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["StoreId"].')"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-                        </ul>
-                    </div> 
-                </div> 
+        	return '  
+            <a onclick="edit_click('.$data["StoreId"].')"
+                class="w-32-px h-32-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center">
+                <iconify-icon icon="lucide:edit"></iconify-icon>
+            </a>
+            <a onclick="delete_click('.$data["StoreId"].')"
+                class="w-32-px h-32-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center">
+                <iconify-icon icon="mingcute:delete-2-line">
+                </iconify-icon>
+            </a> 
                 ';
         });
 

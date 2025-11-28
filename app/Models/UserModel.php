@@ -98,31 +98,53 @@ class UserModel extends Model
         $dt->add('image', function($data){ 
             $path = 'assets/images/profile/user/'.$data["code"].'.png';
             if (file_exists($path)) {    
-                return  '<div><img src="'.base_url().  $path ."?timestamp=".date("YmdHis").'"  class="image-upload m-auto" style="width:50px;height:50px;"/></div>' ;
+                return  ' 
+                <div><img src="'.base_url().  $path ."?timestamp=".date("YmdHis").'"  class="image-upload m-auto" style="width:50px;height:50px;"/></div>' ;
             } else {
                 $path = 'assets/images/profile/default.png';   
                 return  '<div><img src="'.base_url().  $path ."?timestamp=".date("YmdHis").'"  class="image-upload m-auto" style="width:50px;height:50px;"/></div>' ;
             } 
         }); 
+        $dt->add('imagename', function($data){ 
+            $path = 'assets/images/profile/user/'.$data["code"].'.png';
+            if (file_exists($path)) {    
+                return  '
+                <div class="d-flex align-items-center">
+                <img src="'.base_url().  $path ."?timestamp=".date("YmdHis").'" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                <div class="flex-grow-1">
+                    <span class="text-md mb-0 fw-normal text-secondary-light">'.ucwords($data["username"]).'</span>
+                </div> 
+                </div> ' ;
+            } else {
+                $path = 'assets/images/profile/default.png';   
+                return  '
+                <div class="d-flex align-items-center">
+                <img src="'.base_url().  $path ."?timestamp=".date("YmdHis").'" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                <div class="flex-grow-1">
+                    <span class="text-md mb-0 fw-normal text-secondary-light">'.ucwords($data["username"]).'</span>
+                </div> 
+                </div> ' ;  
+            } 
+        }); 
         $dt->add('action', function($data){
         	return ' 
-                <div class="d-md-flex d-none"> 
-                    <button class="btn btn-sm btn-action btn-primary rounded m-1" onclick="edit_click('.$data["id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</button>
-                    <button class="btn btn-sm btn-action btn-warning rounded m-1" onclick="reset_click('.$data["id"].',this)"><i class="fa-solid fa-key  pe-2"></i>Reset Password</button>
-                    <button class="btn btn-sm btn-action btn-danger rounded m-1" onclick="delete_click('.$data["id"].',this)"><i class="fa-solid fa-close  pe-2"></i>Delete</button> 
-                </div>
-                <div class="d-md-none d-flex btn-action"> 
-                    <div class="dropdown">
-                        <a class="icon-rotate-90" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="ti-more-alt icon-rotate-45"></i>
-                        </a>
-                        <ul class="dropdown-menu shadow">
-                            <li><a class="dropdown-item m-0 px-2" onclick="edit_click('.$data["id"].',this)"><i class="fa-solid fa-pencil pe-2"></i>Edit</a></li>
-                            <li><a class="dropdown-item m-0 px-2" onclick="reset_click('.$data["id"].',this)"><i class="fa-solid fa-key pe-2"></i>Reset Password</a></li>
-                            <li><a class="dropdown-item m-0 px-2" onclick="delete_click('.$data["id"].',this)"><i class="fa-solid fa-close pe-2"></i>Delete</a></li> 
-                        </ul>
-                    </div> 
-                </div> ';
+            
+            <a onclick="edit_click('.$data["id"].')"
+                class="w-40-px h-40-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center">
+                <iconify-icon icon="lucide:edit"></iconify-icon>
+            </a>
+            <a onclick="reset_click('.$data["id"].')"
+                class="w-40-px h-40-px bg-warning-focus text-warning-main rounded-circle d-inline-flex align-items-center justify-content-center">
+                <iconify-icon icon="mdi:key-variant">
+                </iconify-icon>
+            </a> 
+            <a onclick="delete_click('.$data["id"].')"
+                class="w-40-px h-40-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center">
+                <iconify-icon icon="mingcute:delete-2-line">
+                </iconify-icon>
+            </a> 
+
+                ';
         }); 
         return $dt->generate();
     }

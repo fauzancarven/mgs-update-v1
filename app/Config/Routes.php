@@ -9,6 +9,11 @@ use CodeIgniter\Router\RouteCollection;
 $routes->post('/api/get_produk', 'ApiController::get_produk');
 
 $routes->get('/', 'AdminController::index', ['filter' => 'login']); 
+
+
+
+$routes->get('/users/view', 'AdminController::profile', ['filter' => 'login']); 
+
 $routes->get('/admin', 'AdminController::index', ['filter' => 'login']);
 $routes->get('/admin/account', 'AdminController::account', ['filter' => 'login']);
 $routes->get('/admin/project', 'AdminController::project', ['filter' => 'login']);
@@ -24,6 +29,7 @@ $routes->get('/admin/bukubesar', 'AdminController::bukubesar', ['filter' => 'log
 $routes->get('/admin/sales/survey', 'AdminController::survey', ['filter' => 'login']);
 $routes->get('/admin/sales/sample', 'AdminController::sample', ['filter' => 'login']);
 $routes->get('/admin/sales/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
+$routes->get('/admin/sales/penawaran/add', 'AdminController::penawaran_add', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice', 'AdminController::invoice', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
