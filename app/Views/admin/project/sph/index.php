@@ -153,8 +153,8 @@
                                         <iconify-icon icon="material-symbols-light:storefront-outline"
                                                   class="icon text-lg">
                                         </iconify-icon>
-                                        <div class="filter-data left" style="width: 18rem;" for="storedatafilter">
-                                                  <ul class="list-group w-75">
+                                        <div class="filter-data left" for="storedatafilter">
+                                                  <ul class="list-group">
                                                             <?php
                                                         foreach($store as $row){
                                                             echo '
@@ -193,8 +193,8 @@
 
                                         <iconify-icon icon="mdi:timer" class="icon text-lg">
                                         </iconify-icon>
-                                        <div class="filter-data left" style="width: 18rem;" for="searchdatafilter">
-                                                  <ul class="list-group w-75 radius-8">
+                                        <div class="filter-data left" for="searchdatafilter">
+                                                  <ul class="list-group radius-8">
                                                             <li
                                                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light">
                                                                       <div
@@ -670,7 +670,7 @@ table = $('#data-table-sph').DataTable({
                               data: null,
                               orderable: false,
                               className: "p-0 ps-2",
-                              width: "20px",
+                              //   width: "20px",
                               render: function(data, type, row) {
                                         return '<a class="cursor-pointer text-head-3 btn-detail-item"> <iconify-icon icon="material-symbols:chevron-right-rounded" class="icon text-xxl"> </iconify-icon></a>';
                               }
@@ -679,32 +679,32 @@ table = $('#data-table-sph').DataTable({
                               data: "action",
                               orderable: false,
                               className: "action-td",
-                              width: "60px"
+                              // width: "60px"
                     },
                     {
                               data: "doc",
                               className: "align-top",
-                              width: "120px"
+                              //  width: "120px"
                     },
                     {
                               data: "date",
                               className: "align-top",
-                              width: "100px"
+                              // width: "100px"
                     },
                     {
                               data: "status",
                               className: "text-center",
-                              width: "100px"
+                              // width: "100px"
                     },
                     {
                               data: "admin",
                               className: "align-top",
-                              width: "100px"
+                              // width: "100px"
                     },
                     {
                               data: "customer",
                               className: "align-top",
-                              width: "250px",
+                              // width: "250px",
                               render: function(data, type, row) {
                                         var html =
                                                   ` 
@@ -718,7 +718,7 @@ table = $('#data-table-sph').DataTable({
                     {
                               data: "total",
                               className: "align-top",
-                              width: "150px"
+                              //width: "100px"
                     },
           ]
 });
@@ -891,6 +891,9 @@ delete_sph = function(id, el, ref) {
 
 var isProcessingSphEdit = [];
 edit_sph = function(id, el, ref) {
+
+          window.location = "<?= base_url() ?>admin/sales/penawaran/edit/" + id;
+          return;
           if (isProcessingSphEdit[id]) {
                     console.log("project Penawaran cancel load");
                     return;

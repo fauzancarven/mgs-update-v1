@@ -84,6 +84,7 @@
           <script src="<?= base_url(); ?>assets/js/cleave.min.js"></script>
           <script src="<?= base_url(); ?>assets/js/cleave-phone.id.js"></script>
           <script src="<?= base_url(); ?>assets/js/quill.js"></script>
+          <script src="<?= base_url(); ?>assets/js/table.js"></script>
 
 
           <script>

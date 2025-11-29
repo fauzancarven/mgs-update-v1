@@ -30,6 +30,7 @@ $routes->get('/admin/sales/survey', 'AdminController::survey', ['filter' => 'log
 $routes->get('/admin/sales/sample', 'AdminController::sample', ['filter' => 'login']);
 $routes->get('/admin/sales/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
 $routes->get('/admin/sales/penawaran/add', 'AdminController::penawaran_add', ['filter' => 'login']);
+$routes->get('/admin/sales/penawaran/edit/(:any)', 'AdminController::penawaran_edit/$1', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice', 'AdminController::invoice', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);

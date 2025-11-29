@@ -529,6 +529,49 @@ class HeaderModel extends Model
                 <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>  
             </div>  ';
                 break;
+                case 8:
+                    $html = ' <div class="header">
+                    <div class="logo">  
+                        <img src="assets/images/logo/sentra.png" alt="" style="padding-left:10px"> 
+                        <span>SENTRA BATA INDONESIA</span>
+                    </div>
+                    <div class="deskripsi">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="icon" >
+                                            <img src="assets/images/icon/maps.svg" alt="">
+                                        </div>
+                                        
+                                    </td>
+                                    <td>
+                                        <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
+                                    </td>
+                                    <td>
+                                        <div class="icon">
+                                            <img src="assets/images/icon/email.svg" alt="">
+                                        </div>
+                                        
+                                    </td>
+                                    <td>
+                                        <span>sentrabata@gmail.com</span>
+                                    </td>
+                                    <td>
+                                        <div class="icon">
+                                            <img src="assets/images/icon/phone.svg" alt=""> 
+                                        </div>
+                                        
+                                    </td>
+                                    <td>+62 812-1260-9995
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>   
+                    <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR</span></div>  
+                </div>  ';
+                    break;
             default: 
                 
             $html = ' <div class="header">

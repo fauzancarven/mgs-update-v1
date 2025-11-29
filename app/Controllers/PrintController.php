@@ -165,8 +165,7 @@ class PrintController extends BaseController
                         $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                         $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);
                         $html = view('admin/project/invoice/print_invoice_a5',$data); 
-                }else{ 
-                        return "<h1>" + $data["inv"]->StoreId + "</h1>";//
+                }else{  
                         $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
                         $html = view('admin/project/invoice/print_invoice_a4',$data); 
                 }

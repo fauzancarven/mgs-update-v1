@@ -15751,3 +15751,7 @@ input:-webkit-autofill:active {
 .view-detail {
   padding-left: 4rem;
 }
+
+h2.swal2-title {
+  font-size: 2rem !important;
+}

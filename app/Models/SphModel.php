@@ -169,7 +169,7 @@ class SphModel extends Model
                 "penawaran" => $row,
                 "doc" =>$store.'<span class="text-primary-600 fw-bold">'.$row->SphCode.'</span>'.$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
                 "code" => '<span class="text-primary-600">'.$row->SphCode.'</span>'.$this->get_data_forward_penawaran($row->SphRefType,$row->SphRef).$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
-                "date" => date_format(date_create($row->SphDate),"d M Y")."<span class='text-danger-600 text-xs'>".$statusExp."</span>",
+                "date" => date_format(date_create($row->SphDate),"d M Y")."<br><span class='text-danger-600 text-xs'>".$statusExp."</span>",
                 "status" => $status,
                 "admin" => ucwords($row->username),
                 "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->SphGrandTotal,0)."</span></div>",
@@ -764,6 +764,7 @@ class SphModel extends Model
         $builder->join("store","store.StoreId = penawaran.StoreId","left"); 
         $builder->join("customer","penawaran.CustomerId = customer.CustomerId","left");
         $builder->join("template_footer","penawaran.TemplateId = template_footer.TemplateFooterId","left");
+        $builder->join("users","penawaran.SphAdmin = users.id","left");
         $builder->where('penawaran.SphId',$id); 
         $builder->limit(1);
         return $builder->get()->getRow();   

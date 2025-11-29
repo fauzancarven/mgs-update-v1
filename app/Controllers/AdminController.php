@@ -8,10 +8,13 @@ use App\Models\UserModel;
 use App\Models\ProjectModel;
 use App\Models\StoreModel;
 use App\Models\ProjectcategoryModel;
+use App\Models\ProdukModel;
 use App\Models\ProdukvarianModel;
 use App\Models\ProdukvarianvalueModel;
 use App\Models\VendorModel; 
 use App\Models\ProdukcategoryModel;
+use App\Models\SphModel;
+
 
 use \App\Models\AuthgroupModel;
 use CodeIgniter\Session\Session;
@@ -234,8 +237,50 @@ class AdminController extends BaseController
         ]; 
         return view('admin/project/sph/add_view', $data); 
     }
+    public function penawaran_edit($id)
+    {    
+        $models = new SphModel();
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $modelsproduk = new ProdukModel();
+         
+        $arr_detail = $models->get_data_sph_detail($id);  
+        $detail = array();
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
+                        "satuan_text"=>$row->SphDetailSatuanText,  
+                        "price"=>$row->SphDetailPrice,
+                        "varian"=> JSON_DECODE($row->SphDetailVarian,true),
+                        "total"=> $row->SphDetailTotal,
+                        "disc"=> $row->SphDetailDisc,
+                        "qty"=> $row->SphDetailQty,
+                        "text"=> $row->SphDetailText,
+                        "group"=> $row->SphDetailGroup,
+                        "type"=> $row->SphDetailType,
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian($row->ProdukId,$row->SphDetailVarian,true)
+                    );
+        };
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Penawaran',
+            'menu' => "Sales",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'project' => $models->get_data_sph($id),
+            'detail' => $detail, 
+
+        ];  
+        return view('admin/project/sph/edit_view', $data); 
+    }
     public function invoice()
     {    
+        $models = new SphModel();
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();
         $project = new  ProjectcategoryModel();
