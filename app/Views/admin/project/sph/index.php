@@ -280,24 +280,22 @@
 
           <div class="card-body py-0 py-4 pb-4" id="table">
                     <div class="table-responsive scroll-sm">
-                              <div class="table-responsive scroll-sm">
-                                        <table id="data-table-sph" class="table bordered-table " style="width:95%">
-                                                  <thead>
-                                                            <tr>
-                                                                      <th scope="col">#</th>
-                                                                      <th scope="col">Action</th>
-                                                                      <th scope="col">Document</th>
-                                                                      <th scope="col">Tanggal</th>
-                                                                      <th scope="col">Status</th>
-                                                                      <th scope="col">Admin</th>
-                                                                      <th scope="col">Customer</th>
-                                                                      <th scope="col">Grand Total</th>
-                                                            </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                  </tbody>
-                                        </table>
-                              </div>
+                              <table id="data-table-sph" class="table bordered-table " style="width:95%">
+                                        <thead>
+                                                  <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Action</th>
+                                                            <th scope="col">Document</th>
+                                                            <th scope="col">Tanggal</th>
+                                                            <th scope="col">Status</th>
+                                                            <th scope="col">Admin</th>
+                                                            <th scope="col">Customer</th>
+                                                            <th scope="col">Grand Total</th>
+                                                  </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                              </table>
                     </div>
           </div>
           <!-- <div id="data-project"> 
@@ -669,7 +667,31 @@ table = $('#data-table-sph').DataTable({
                     }
           },
           "initComplete": function(settings, json) {
-                    tooltiprenew();
+                    $("#data-table-sph").wrap(
+                              "<div id='scroll-table' style='overflow:auto; width:100%;position:relative;max-height:60vh'></div>"
+                    );
+                    $('[data-bs-toggle="tooltip"]').tooltip();
+                    console.log($("#scroll-table").width())
+                    $("#scroll-table").on("scroll", function() {
+
+                              const scrollX = $(this).scrollX;
+                              const scrollY = $(this).scrollY;
+                              console.log(
+                                        $(this).width(),
+                                        scrollX
+                              );
+
+                              if (scrollX >
+                                        0 &&
+                                        scrollY >
+                                        0
+                              ) {
+                                        console.log(
+                                                  'Scroll X dan Y aktif!'
+                                        );
+                              }
+                    })
+
           },
           "columns": [{
                               data: null,

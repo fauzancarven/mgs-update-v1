@@ -163,25 +163,23 @@
 
           <div class="card-body py-0 py-4 pb-4" id="table">
                     <div class="table-responsive scroll-sm">
-                              <div class="table-responsive scroll-sm">
-                                        <table id="data-table-invoice" class="table bordered-table " style="width:95%">
-                                                  <thead>
-                                                            <tr>
-                                                                      <th scope="col">#</th>
-                                                                      <th scope="col">Action</th>
-                                                                      <th scope="col">Document</th>
-                                                                      <th scope="col">Tanggal</th>
-                                                                      <th scope="col">Status</th>
-                                                                      <th scope="col">Admin</th>
-                                                                      <th scope="col">Customer</th>
-                                                                      <th scope="col">Grand Total</th>
-                                                                      <th scope="col">Sisa Payment</th>
-                                                            </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                  </tbody>
-                                        </table>
-                              </div>
+                              <table id="data-table-invoice" class="table bordered-table " style="width:95%">
+                                        <thead>
+                                                  <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Action</th>
+                                                            <th scope="col">Document</th>
+                                                            <th scope="col">Tanggal</th>
+                                                            <th scope="col">Status</th>
+                                                            <th scope="col">Admin</th>
+                                                            <th scope="col">Customer</th>
+                                                            <th scope="col">Grand Total</th>
+                                                            <th scope="col">Sisa Payment</th>
+                                                  </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                              </table>
                     </div>
           </div>
 </div>
@@ -850,7 +848,7 @@ table = $('#data-table-invoice').DataTable({
           },
           "initComplete": function(settings, json) {
                     $("#data-table-invoice").wrap(
-                              "<div style='overflow:auto; width:100%;position:relative;'></div>"
+                              "<div style='overflow:auto; width:100%;position:relative;max-height:60vh'></div>"
                     );
                     $('[data-bs-toggle="tooltip"]').tooltip();
           },

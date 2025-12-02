@@ -148,7 +148,7 @@ class SphModel extends Model
             $htmldetail = '      
             <div class="view-detail" style="display:none">
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                    <div class="text-head-2 py-2 fw-bold text-sm d-flex align-items-center text-lg text-primary-600">
                         <iconify-icon icon="ix:box-closed" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Detail Produk 
                     </div> 
                     '.$this->get_data_detail_penawaran($row).'
