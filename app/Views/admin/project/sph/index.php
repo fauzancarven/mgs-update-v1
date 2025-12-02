@@ -159,7 +159,7 @@
                                                         foreach($store as $row){
                                                             echo '
                                                             <li
-                                                                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light">
+                                                                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
                                                                         <div
                                                                                 class="form-check style-check d-flex align-items-center">
                                                                                 <input class="form-check-input select store"
@@ -196,7 +196,7 @@
                                         <div class="filter-data left" for="searchdatafilter">
                                                   <ul class="list-group radius-8">
                                                             <li
-                                                                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light">
+                                                                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
                                                                       <div
                                                                                 class="form-check style-check d-flex align-items-center">
                                                                                 <input class="form-check-input select category"
@@ -211,7 +211,7 @@
                                                                       </div>
                                                             </li>
                                                             <li
-                                                                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light">
+                                                                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
 
                                                                       <div
                                                                                 class="form-check style-check d-flex align-items-center">
@@ -227,7 +227,7 @@
                                                                       </div>
                                                             </li>
                                                             <li
-                                                                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light">
+                                                                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
                                                                       <div
                                                                                 class="form-check style-check d-flex align-items-center">
                                                                                 <input class="form-check-input select category"
@@ -243,7 +243,7 @@
                                                                       </div>
                                                             </li>
                                                             <li
-                                                                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light">
+                                                                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
                                                                       <div
                                                                                 class="form-check style-check d-flex align-items-center">
                                                                                 <input class="form-check-input select category"
@@ -277,23 +277,28 @@
 
                     </div>
           </div>
-          <div class="card-body py-0 py-4 pb-4" id="table" style="width:100%">
-                    <table id="data-table-sph" class="table bordered-table ">
-                              <thead>
-                                        <tr>
-                                                  <th>#</th>
-                                                  <th>Action</th>
-                                                  <th>Document</th>
-                                                  <th>Tanggal</th>
-                                                  <th>Status</th>
-                                                  <th>Admin</th>
-                                                  <th>Customer</th>
-                                                  <th>Grand Total</th>
-                                        </tr>
-                              </thead>
-                              <tbody>
-                              </tbody>
-                    </table>
+
+          <div class="card-body py-0 py-4 pb-4" id="table">
+                    <div class="table-responsive scroll-sm">
+                              <div class="table-responsive scroll-sm">
+                                        <table id="data-table-sph" class="table bordered-table " style="width:95%">
+                                                  <thead>
+                                                            <tr>
+                                                                      <th scope="col">#</th>
+                                                                      <th scope="col">Action</th>
+                                                                      <th scope="col">Document</th>
+                                                                      <th scope="col">Tanggal</th>
+                                                                      <th scope="col">Status</th>
+                                                                      <th scope="col">Admin</th>
+                                                                      <th scope="col">Customer</th>
+                                                                      <th scope="col">Grand Total</th>
+                                                            </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                  </tbody>
+                                        </table>
+                              </div>
+                    </div>
           </div>
           <!-- <div id="data-project"> 
     </div>
@@ -433,7 +438,7 @@ function loader_datatable() {
           //             Swal.fire({
           //                 icon: 'error',
           //                 text: data, 
-          //                 confirmButtonColor: "#3085d6", 
+          //                 confirmButtonColor: "var(--brand)", 
           //             });
           //         }  
           //         load_paging_html(data);
@@ -446,7 +451,7 @@ function loader_datatable() {
           //         Swal.fire({
           //             icon: 'error',
           //             text: xhr["responseJSON"]['message'], 
-          //             confirmButtonColor: "#3085d6", 
+          //             confirmButtonColor: "var(--brand)", 
           //         });
           //     }
           // });
@@ -641,14 +646,14 @@ table = $('#data-table-sph').DataTable({
           "searching": false,
           "lengthChange": false,
           "pageLength": parseInt(10),
-          scrollX: true,
+          //   responsive: true,
+          //   scrollX: true,
           "language": {
                     "emptyTable": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
                     "zeroRecords": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
                     "loadingRecords": `<div class="loading-spinner"></div>`,
                     "processing": `<div class="loading-spinner"></div>`,
           },
-          "autoWidth": false,
           "ordering": false,
           "processing": true,
           "serverSide": true,
@@ -670,7 +675,7 @@ table = $('#data-table-sph').DataTable({
                               data: null,
                               orderable: false,
                               className: "p-0 ps-2",
-                              //   width: "20px",
+                              width: "20px",
                               render: function(data, type, row) {
                                         return '<a class="cursor-pointer text-head-3 btn-detail-item"> <iconify-icon icon="material-symbols:chevron-right-rounded" class="icon text-xxl"> </iconify-icon></a>';
                               }
@@ -679,32 +684,32 @@ table = $('#data-table-sph').DataTable({
                               data: "action",
                               orderable: false,
                               className: "action-td",
-                              // width: "60px"
+                              width: "60px"
                     },
                     {
                               data: "doc",
                               className: "align-top",
-                              //  width: "120px"
+                              width: "150px"
                     },
                     {
                               data: "date",
                               className: "align-top",
-                              // width: "100px"
+                              width: "130px"
                     },
                     {
                               data: "status",
                               className: "text-center",
-                              // width: "100px"
+                              width: "100px"
                     },
                     {
                               data: "admin",
                               className: "align-top",
-                              // width: "100px"
+                              width: "150px"
                     },
                     {
                               data: "customer",
                               className: "align-top",
-                              // width: "250px",
+                              //width: "350px",
                               render: function(data, type, row) {
                                         var html =
                                                   ` 
@@ -718,7 +723,7 @@ table = $('#data-table-sph').DataTable({
                     {
                               data: "total",
                               className: "align-top",
-                              //width: "100px"
+                              width: "150px"
                     },
           ]
 });
@@ -815,7 +820,7 @@ add_click = function(el) {
                                                   [
                                                             'message'
                                                   ],
-                                        confirmButtonColor: "#3085d6",
+                                        confirmButtonColor: "var(--brand)",
                               });
                               tooltiprenew();
                     }
@@ -859,9 +864,9 @@ delete_sph = function(id, el, ref) {
                     text: "Anda yakin ingin membatalkan penawaran ini.",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
+                    confirmButtonColor: "var(--brand)",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Ya, Yakin Hapus!"
+                    confirmButtonText: "Ya"
           }).then((result) => {
                     if (result.isConfirmed) {
                               $.ajax({
@@ -876,7 +881,7 @@ delete_sph = function(id, el, ref) {
                                                             title: "Success!",
                                                             text: "Data penawaran berhasil di batalkan.",
                                                             icon: "success",
-                                                            confirmButtonColor: "#3085d6",
+                                                            confirmButtonColor: "var(--brand)",
                                                   });
                                                   table.ajax.reload(null,
                                                             false
@@ -934,7 +939,7 @@ edit_sph = function(id, el, ref) {
                                                   [
                                                             'message'
                                                   ],
-                                        confirmButtonColor: "#3085d6",
+                                        confirmButtonColor: "var(--brand)",
                               });
                               tooltiprenew();
                     }
@@ -977,7 +982,7 @@ update_status = function(status, id, el) {
                                                   [
                                                             'message'
                                                   ],
-                                        confirmButtonColor: "#3085d6",
+                                        confirmButtonColor: "var(--brand)",
                               });
                     }
           });

@@ -184,7 +184,7 @@
     width: 100%;
     font-size: 0.875rem;
     border-radius: var(--bs-border-radius-sm);
-    padding: 0.45rem 1.5rem;
+    padding: 0.45rem 1.25rem;
     border: 1px solid var(--input-form-light);
 }
 

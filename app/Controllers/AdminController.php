@@ -14,6 +14,7 @@ use App\Models\ProdukvarianvalueModel;
 use App\Models\VendorModel; 
 use App\Models\ProdukcategoryModel;
 use App\Models\SphModel;
+use App\Models\InvoiceModel; 
 
 
 use \App\Models\AuthgroupModel;
@@ -22,6 +23,9 @@ use Myth\Auth\Config\Auth as AuthConfig;
 use Myth\Auth\Entities\User; 
 
 use Config\Services; 
+
+use App\Libraries\Nextcloud;
+
 
 class AdminController extends BaseController
 {
@@ -294,6 +298,65 @@ class AdminController extends BaseController
             'admin' => $modelsuser->get()->getResult()
         ]; 
         return view('admin/project/invoice/index', $data); 
+    } 
+    public function invoice_add()
+    {   
+        $models = new SphModel();
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Invoice',
+            'menu' => "Sales",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/project/invoice/add_view', $data);  
+    }
+    
+    public function invoice_edit($id)
+    {    
+        $models = new InvoiceModel();
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $modelsproduk = new ProdukModel();
+         
+        $arr_detail = $models->get_data_invoice_detail($id);  
+        $detail = array();
+        foreach($arr_detail as $row){
+            $detail[] = array(
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                        "satuan_text"=>$row->InvDetailSatuanText,  
+                        "price"=>$row->InvDetailPrice,
+                        "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                        "total"=> $row->InvDetailTotal,
+                        "disc"=> $row->InvDetailDisc,
+                        "qty"=> $row->InvDetailQty,
+                        "text"=> $row->InvDetailText,
+                        "group"=> $row->InvDetailGroup,
+                        "type"=> $row->InvDetailType,
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian($row->ProdukId,$row->InvDetailVarian,true)
+                    );
+        };
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Invoice',
+            'menu' => "Sales",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'project' =>  $models->get_data_invoice($id),
+            'detail' => $detail, 
+
+        ];   
+        return view('admin/project/invoice/edit_view', $data); 
     }
     public function pembelian()
     {    
@@ -353,21 +416,34 @@ class AdminController extends BaseController
         ]; 
         return view('admin/delivery/index', $data); 
     }
-    public function chat(){    
-        $modelsstore = new StoreModel();
-        $modelsuser = new UserModel();
-        $project = new  ProjectcategoryModel();
-        $data = [
-            'notif' => [],
-            'session' => $this->session,
-            'title' => 'Chat',
-            'menu' => "Chat", 
-            'store' => $modelsstore->get()->getResult(),
-            'kategori' => $project->get()->getResult(),
-            'admin' => $modelsuser->get()->getResult()
-        ]; 
-        return view('admin/chat/index', $data); 
-    }
+    // public function chat(){    
+    //     $modelsstore = new StoreModel();
+    //     $modelsuser = new UserModel();
+    //     $project = new  ProjectcategoryModel();
+    //     $data = [
+    //         'notif' => [],
+    //         'session' => $this->session,
+    //         'title' => 'Chat',
+    //         'menu' => "Chat", 
+    //         'store' => $modelsstore->get()->getResult(),
+    //         'kategori' => $project->get()->getResult(),
+    //         'admin' => $modelsuser->get()->getResult()
+    //     ]; 
+    //     return view('admin/chat/index', $data); 
+    // }
     
+    
+    public function chat(){   
+        $nextcloud = new Nextcloud(); 
+        $data = [
+        'notif' => [],
+        'session' => $this->session,
+        'title' => 'Delivery',
+        'menu' => "Delivery", 
+        'files' => $nextcloud->getFileList('/')
+        ];
+
+        return view('nextcloud/index', $data);
+    }
     
 }

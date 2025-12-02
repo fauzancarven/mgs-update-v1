@@ -253,7 +253,7 @@ class DeliveryModel extends Model
     function get_data_detail_delivery($id){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-item m-0">
+        $detailhtml = ' <table class="table detail-item m-0 shadow-7">
                             <thead>
                                 <tr>
                                     <th class="detail text-center" style="width:50px">Gambar</th>
@@ -308,7 +308,7 @@ class DeliveryModel extends Model
     function get_data_detail_delivery_receive($id){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-item m-0 w-auto">
+        $detailhtml = ' <table class="table detail-item m-0 w-auto shadow-7">
                             <thead>
                                 <tr>
                                     <th class="detail text-center" style="width:50px">Gambar</th>

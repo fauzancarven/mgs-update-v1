@@ -44,6 +44,7 @@
           <link rel="stylesheet" href="<?= base_url() ?>assets/css/sweetalert2.min.css">
           <link rel="stylesheet" href="<?= base_url() ?>assets/css/select2.min.css">
           <link rel="stylesheet" href="<?= base_url() ?>assets/css/quill.bubble.css">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/croppie.css">
 
 </head>
 
@@ -85,6 +86,7 @@
           <script src="<?= base_url(); ?>assets/js/cleave-phone.id.js"></script>
           <script src="<?= base_url(); ?>assets/js/quill.js"></script>
           <script src="<?= base_url(); ?>assets/js/table.js"></script>
+          <script src="<?= base_url(); ?>assets/js/croppie.min.js"></script>
 
 
           <script>

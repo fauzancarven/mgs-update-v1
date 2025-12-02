@@ -209,7 +209,7 @@
                                                                                 Rp.
                                                                       </span>
                                                                       <input type="text" class="form-control"
-                                                                                id="SphSubTotal" value="0">
+                                                                                id="SphSubTotal" value="0" readonly>
                                                             </div>
                                                   </div>
                                         </div>
@@ -222,7 +222,8 @@
                                                                                 Rp.
                                                                       </span>
                                                                       <input type="text" class="form-control"
-                                                                                id="SphDiscItemTotal" value="0">
+                                                                                id="SphDiscItemTotal" value="0"
+                                                                                readonly>
                                                             </div>
                                                   </div>
                                         </div>
@@ -267,7 +268,7 @@
                                                                                 Rp.
                                                                       </span>
                                                                       <input type="text" class="form-control"
-                                                                                id="SphGrandTotal" value="0">
+                                                                                id="SphGrandTotal" value="0" readonly>
                                                             </div>
                                                   </div>
                                         </div>
@@ -279,13 +280,13 @@
                               <div class="card">
                                         <div class="card-body">
                                                   <div class="d-flex align-items-center justify-content-end gap-3">
-                                                            <button type="button"
+                                                            <a href="<?= base_url()?>admin/sales/penawaran"
                                                                       class="btn btn-sm border border-danger-600 bg-hover-danger-200 text-danger-600 radius-8 d-inline-flex align-items-center gap-1">
                                                                       <iconify-icon icon="simple-line-icons:close"
                                                                                 class="text-xl">
                                                                       </iconify-icon>
                                                                       Batalkan
-                                                            </button>
+                                                            </a>
                                                             <button type="button" id="btn-add-penawaran"
                                                                       class="btn btn-sm btn-primary-600 radius-8 d-inline-flex align-items-center gap-1">
                                                                       <iconify-icon icon="simple-line-icons:check"
@@ -476,15 +477,6 @@ $("#CustomerId").select2({
           }
 });
 
-$('#SphDelivery').change(function() {
-          if ($("#SphDelivery").is(':checked') == 0) {
-                    $('#SphDeliveryTotal').prop("readonly", true)
-                    $('#SphDeliveryTotal').val("0")
-          } else {
-
-                    $('#SphDeliveryTotal').prop("readonly", false)
-          }
-});
 var isProcessingCustomerAdd;
 
 function customer_add() {
@@ -650,6 +642,7 @@ if (table_sph_item && typeof table_sph_item.on === 'function') {
           console.error("table_sph_item tidak terdefinisi atau method on() tidak ada");
 }
 $("#SphDiscTotal").on("keyup", function() {
+          if ($("#SphDiscTotal").val() === "") $("#SphDiscTotal").val(0)
           grand_total_harga(table_sph_item.getSubTotal());
           if (parseInt($("#SphGrandTotal").val().replace(/[^0-9-]/g, '')) < 0) {
                     $("#SphDiscTotal").val(0)
@@ -658,9 +651,20 @@ $("#SphDiscTotal").on("keyup", function() {
 });
 
 $("#SphDeliveryTotal").on("keyup", function() {
+          if ($("#SphDeliveryTotal").val() === "") $("#SphDeliveryTotal").val(0)
           grand_total_harga(table_sph_item.getSubTotal());
 });
 
+$('#SphDelivery').change(function() {
+          if ($("#SphDelivery").is(':checked') == 0) {
+                    $('#SphDeliveryTotal').prop("readonly", true)
+                    $('#SphDeliveryTotal').val("0")
+                    $('#SphDeliveryTotal').trigger("keyup")
+          } else {
+
+                    $('#SphDeliveryTotal').prop("readonly", false)
+          }
+});
 $("#SphRef").select2({
           placeholder: "Pilih dokument referensi",
           ajax: {
@@ -1344,20 +1348,6 @@ $("#btn-add-penawaran").click(function() {
                               });
                     }
           });
-});
-
-
-$('#test-item tbody').sortable({
-          handle: '.button-drag',
-          items: 'tr',
-          cursor: 'move',
-          opacity: 0.7,
-          start: function(event, ui) {
-                    ui.item.addClass('dragging');
-          },
-          stop: function(event, ui) {
-                    ui.item.removeClass('dragging');
-          }
 });
 </script>
 

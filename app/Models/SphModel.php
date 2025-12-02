@@ -73,6 +73,7 @@ class SphModel extends Model
             $builder->orderby($orderColumn,$orderDir);   
         }else{
             $builder->orderby("SphDate",'desc');   
+            $builder->orderby("SphCode",'desc');   
         }
 
         $datafilter = clone $builder;  
@@ -147,8 +148,8 @@ class SphModel extends Model
             $htmldetail = '      
             <div class="view-detail" style="display:none">
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-2">
-                        <i class="fa-regular fa-circle pe-2" style="color:#cccccc"></i>Detail Produk</span>
+                    <div class="text-head-2 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                        <iconify-icon icon="ix:box-closed" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Detail Produk 
                     </div> 
                     '.$this->get_data_detail_penawaran($row).'
                 </div>
@@ -581,13 +582,36 @@ class SphModel extends Model
         ); 
     }
 
+    function customColor($number) {
+        switch ($number) {
+                  case 0:
+                            return 'bg-info-focus text-primary-600 border border-primary-600';
+                            break;
+                  case 1:
+                            return 'bg-lilac-focus text-lilac-600 border border-lilac-600 ';
+                            break;
+                  case 2:
+                            return 'bg-warning-focus text-warning-600  border border-warning-600 ';
+                            break;
+                  case 3:
+                            return 'bg-danger-focus text-danger-600 border border-danger-600';
+                            break;
+                  case 4:
+                            return 'bg-info-focus text-primary-600';
+                            break;
+
+                  default:
+                            break;
+        }
+    }
     
     function get_data_detail_penawaran($row){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-item m-0">
+        $detailhtml = ' <table class="table detail-item m-0 shadow-6">
                             <thead>
                                 <tr>
+                                    <th class="detail" style="width: 35px;">#</th>
                                     <th class="detail text-center" style="width:50px">Gambar</th>
                                     <th class="detail">Nama</th>
                                     <th class="detail">Qty</th>
@@ -600,36 +624,44 @@ class SphModel extends Model
         $arr_detail = $this->get_data_sph_detail($row->SphId);
         
         $abjad = 'A';
+        $number = '1';
         foreach($arr_detail as $row_data){
             $arr_varian = json_decode($row_data->SphDetailVarian);
             $arr_badge = "";
             $arr_no = 0;
             
             foreach($arr_varian as $varian){
-                $arr_badge .= '<span class="badge badge-sm badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                $color = $this->customColor(fmod($arr_no,5));
+                $arr_badge .= '<span class="'.$color.' radius-4 px-8 py-4 text-xs line-height-1 badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
                 $arr_no++;
             }  
             if($row_data->SphDetailType == "product"){ 
-                $detailhtml .= ' <tr>
+                $detailhtml .= ' <tr> 
+                <td  class="detail">'.$number.'</td>
                     <td class="detail">
-                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,true).'" alt="Gambar" class="image-produk">
+                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,false).'" alt="Gambar" class="image-produk w-50-px h-50-px rounded-3">
                     </td>
                     <td class="detail">
-                        <span class="text-head-3">'.$row_data->SphDetailText.'</span><br>
-                        <span class="text-detail-2 text-truncate">'.$row_data->SphDetailGroup.'</span> 
-                        <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
+                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                            <span class="fw-medium mb-0">'.$row_data->SphDetailText.'</span> 
+                            <span class="text-detail-2 text-truncate text-xs">'.$row_data->SphDetailGroup.'</span> 
+                            <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
+                        </div>
                     </td>
                     <td class="detail">'.number_format($row_data->SphDetailQty, 2, ',', '.').' '.$row_data->SphDetailSatuanText.'</td>
                     <td class="detail">Rp. '.number_format($row_data->SphDetailPrice, 0, ',', '.').'</td>
                     <td class="detail">Rp. '.number_format($row_data->SphDetailDisc, 0, ',', '.').'</td>
                     <td class="detail">Rp. '.number_format($row_data->SphDetailTotal, 0, ',', '.').'</td>
                 </tr> ';
+                $number++;
             }else{
+                $number = 1;
                 $detailhtml .= ' <tr>
+                    <td  class="detail">'.$abjad.'</td>
                     <td colspan="6" class="detail">
-                        <span class="text-head-3">'.$abjad.'. '.$row_data->SphDetailText.'</span><br>
-                        <span class="text-detail-2 text-truncate">'.$row_data->SphDetailGroup.'</span> 
-                        <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
+                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                            <span class="text-head-3">'.$row_data->SphDetailText.'</span>
+                        </div>
                     </td>
                 </tr> ';
                 $abjad++;
@@ -639,7 +671,7 @@ class SphModel extends Model
         </tbody>
         <tfoot>
             <tr>
-                <th class="bg-light" colspan="6">
+                <th colspan="7">
                     <div class="d-flex m-1 gap-2 align-items-center justify-content-end pe-4"> 
                         <span class="text-detail-2">Sub Total:</span>
                         <span class="text-head-2">Rp. '.number_format($row->SphSubTotal,0,',','.').'</span>  
@@ -732,9 +764,8 @@ class SphModel extends Model
                         <span class="text-detail-3 text-decoration-none">Data tidak diteruskan</span> 
                     </div>';  
                 }else{ 
-                    return '  <div class="text-detail-3 pt-2">
-                    <button onclick="sph_return_add_click(\''.$project.'\',this,\''.$id.'\',\'Sample\')" type="button" class="radius-8 bg-primary-light text-secondary-light text-xs line-height-1 text-hover-primary-600 p-1"><iconify-icon icon="cuida:test-tube-outline" class="menu-icon d-inline-block pe-1"></iconify-icon>Sample</button>
-                    <button onclick="sph_return_add_click(\''.$project.'\',this,\''.$id.'\',\'Invoice\')" type="button" class="radius-8 bg-primary-light text-secondary-light text-xs line-height-1 text-hover-primary-600 p-1"><iconify-icon icon="hugeicons:invoice-03" class="menu-icon d-inline-block pe-1"></iconify-icon>Invoice</button></div>';
+                    return '  <div class="text-detail-3 pt-2"> 
+                    <button onclick="sph_return_add_click(\''.$project.'\',this,\''.$id.'\',\'Invoice\')" type="button" class="radius-8 bg-primary-light text-secondary-light text-xs line-height-1 text-hover-primary-600 p-1"><iconify-icon icon="hugeicons:invoice-03" class="menu-icon d-inline-block pe-1"></iconify-icon>Teruskan Invoice</button></div>';
                     return '  
                     <div class="text-detail-3 pt-2">
                         <i class="fa-solid fa-share-from-square text-primary"></i> 
@@ -863,6 +894,7 @@ class SphModel extends Model
             "SphCustName"=>$header["SphCustName"],
             "SphCustTelp"=>$header["SphCustTelp"], 
             "SphAddress"=>$header["SphAddress"],
+            "SphProjectAddress"=>$header["SphProjectAddress"],
             "TemplateId"=>$header["TemplateId"],
             "SphDelivery"=>$header["SphDelivery"],
             "SphSubTotal"=>$header["SphSubTotal"],
@@ -932,6 +964,7 @@ class SphModel extends Model
         $builder->set('SphCustName', $header["SphCustName"]); 
         $builder->set('SphCustTelp', $header["SphCustTelp"]); 
         $builder->set('SphAddress', $header["SphAddress"]); 
+        $builder->set('SphProjectAddress', $header["SphProjectAddress"]);
         $builder->set('TemplateId', $header["TemplateId"]); 
         $builder->set('SphSubTotal', $header["SphSubTotal"]); 
         $builder->set('SphDiscItemTotal', $header["SphDiscItemTotal"]); 

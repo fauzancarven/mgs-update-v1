@@ -1,41 +1,63 @@
 .fa-stack.small {
     font-size: 0.75rem;
 }
-i { 
+
+i {
     vertical-align: middle;
 }
 
-table.dataTable thead>tr>th.dt-orderable-asc span.dt-column-order:before, table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order:before, table.dataTable thead>tr>td.dt-orderable-asc span.dt-column-order:before, table.dataTable thead>tr>td.dt-ordering-asc span.dt-column-order:before{
+table.dataTable thead>tr>th.dt-orderable-asc span.dt-column-order:before,
+table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order:before,
+table.dataTable thead>tr>td.dt-orderable-asc span.dt-column-order:before,
+table.dataTable thead>tr>td.dt-ordering-asc span.dt-column-order:before {
     position: absolute;
     font-family: 'Font Awesome 6 Free';
     display: block;
     bottom: 40%;
-    content: "\f0d8"; 
+    content: "\f0d8";
 }
-table.dataTable thead>tr>th.dt-orderable-desc span.dt-column-order:after, table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order:after, table.dataTable thead>tr>td.dt-orderable-desc span.dt-column-order:after, table.dataTable thead>tr>td.dt-ordering-desc span.dt-column-order:after {
+
+table.dataTable thead>tr>th.dt-orderable-desc span.dt-column-order:after,
+table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order:after,
+table.dataTable thead>tr>td.dt-orderable-desc span.dt-column-order:after,
+table.dataTable thead>tr>td.dt-ordering-desc span.dt-column-order:after {
     position: absolute;
     font-family: 'Font Awesome 6 Free';
     display: block;
     top: 40%;
-    content: "\f0d7"; 
+    content: "\f0d7";
 }
-.table thead th, .jsgrid .jsgrid-table thead th {
+
+.table thead th,
+.jsgrid .jsgrid-table thead th {
     vertical-align: bottom;
     border-bottom: none;
 }
-thead>tr>th.dt-orderable-asc:hover, table.dataTable thead>tr>th.dt-orderable-desc:hover, table.dataTable thead>tr>td.dt-orderable-asc:hover, table.dataTable thead>tr>td.dt-orderable-desc:hover {
+
+thead>tr>th.dt-orderable-asc:hover,
+table.dataTable thead>tr>th.dt-orderable-desc:hover,
+table.dataTable thead>tr>td.dt-orderable-asc:hover,
+table.dataTable thead>tr>td.dt-orderable-desc:hover {
     outline: none;
     outline-offset: -2px;
 }
+
 span.dt-column-title {
     padding-right: 15px;
 }
-.dt-info, .dt-paging{
+
+.dt-info,
+.dt-paging {
     padding-top: 0;
 }
-.table th, .jsgrid .jsgrid-table th, .table td, .jsgrid .jsgrid-table td{
-    border-top:none;
+
+.table th,
+.jsgrid .jsgrid-table th,
+.table td,
+.jsgrid .jsgrid-table td {
+    border-top: none;
 }
+
 /* table.dataTable tbody tr:first-child td:first-child {
     border-top-left-radius: 0;
 }
@@ -53,39 +75,47 @@ table.dataTable tbody tr:last-child td:last-child {
 } */
 
 th.detail {
-    padding:0.5rem 0.25rem !important;
-    background: #f3f3f354 !important;;
+    padding: 0.5rem 0.25rem !important;
+    background: #f3f3f354 !important;
+    ;
 }
-.table-nested{
+
+.table-nested {
     /* table-layout: fixed; // ***********add this */
-    word-wrap:break-word; /*// ***********and this */
+    word-wrap: break-word;
+    /*// ***********and this */
 }
+
 .table-nested tr th {
-    background: #3051764f;    
+    background: #3051764f;
     border-bottom: 1px solid #334a9d;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    color: black !important; 
+    color: black !important;
     font-size: 0.7rem;
 }
-.table-nested tr td { 
+
+.table-nested tr td {
     padding-top: 1rem;
-    padding-bottom: 1rem; 
+    padding-bottom: 1rem;
     font-weight: bold;
     color: #003571 !important;
     font-size: 0.7rem;
     border-bottom: 1px solid #334a9d38;
 }
-.table-nested tr.dt-hasChild td { 
+
+.table-nested tr.dt-hasChild td {
     border-bottom: none;
 }
+
 .table-nested tr.dt-hasChild:hover>* {
     box-shadow: inset 0 0 0 9999px rgb(255 255 255 / 8%) !important;
 }
 
 table.dataTable tbody tr {
     background-color: transparent;
-} 
+}
+
 /* #data-table-item tr th:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
@@ -94,13 +124,15 @@ table.dataTable tbody tr {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px; 
 }*/
-.table td img.image-produk, .jsgrid .jsgrid-table td img.image-produk{
+.table td img.image-produk,
+.jsgrid .jsgrid-table td img.image-produk {
     width: 35px;
     height: 35px;
     border-radius: 0.25rem;
-    object-fit: cover; 
+    object-fit: cover;
 
 }
+
 .table td img.logo {
     width: 15px !important;
     height: 15px !important;
@@ -109,15 +141,17 @@ table.dataTable tbody tr {
 table.dataTable.table.table-hover>tbody>tr.child-row:hover>* {
     background: #ffffff54;
     box-shadow: none;
-} 
+}
 
 td.no-border {
     border: none;
 }
+
 td.detail {
-    padding:0.5rem 0.25rem !important;
+    padding: 0.5rem 0.25rem !important;
 }
-.table>:not(caption)>*>*{
+
+.table>:not(caption)>*>* {
     border-bottom-width: 0;
 }
 
@@ -141,11 +175,12 @@ td.detail {
     box-shadow: inset 0 0 5px #f4f6ff;
     border-radius: 10px;
 }
+
 div.dt-container div.dt-scroll-body {
     border-bottom: 0 solid #dee2e6;
 }
 
-table.detail-item{
+table.detail-item {
     box-shadow: -1px 1px 4px 0 #334a9d52;
     max-width: 80vw;
 }
@@ -153,14 +188,16 @@ table.detail-item{
 table.detail-item td.detail {
     padding: 0.2rem !important;
     border-bottom: 1px solid #e1e1e1;
-    font-size: 0.7rem !important; 
+    font-size: 0.7rem !important;
 }
-table.detail-item thead th.detail {    
+
+table.detail-item thead th.detail {
     padding: 0.5rem 0.2rem !important;
     border-bottom: 1px solid #e1e1e1;
     background: #f3f5f9 !important;
 }
-table.detail-item tfoot th.detail {    
+
+table.detail-item tfoot th.detail {
     padding: 0.5rem 0.2rem !important;
     border-bottom: 1px solid #e3e3e3 !important;
     border-top: 1px solid #e3e3e3 !important;
@@ -169,22 +206,29 @@ table.detail-item tfoot th.detail {
     color: #003571 !important;
     font-size: 0.7rem !important;
 }
- 
-table.detail-payment, table.detail-delivery{ 
+
+table.detail-payment,
+table.detail-delivery {
     box-shadow: -1px 1px 4px 0 #334a9d52;
     max-width: 80vw;
 }
-table.detail-payment td.detail , table.detail-delivery td.detail{
+
+table.detail-payment td.detail,
+table.detail-delivery td.detail {
     padding: 0.5rem !important;
     border-bottom: 1px solid #e1e1e1;
-    font-size: 0.7rem !important; 
+    font-size: 0.7rem !important;
 }
-table.detail-payment thead th.detail , table.detail-delivery thead th.detail{    
+
+table.detail-payment thead th.detail,
+table.detail-delivery thead th.detail {
     padding: 0.5rem 0.2rem !important;
     border-bottom: 1px solid #e1e1e1;
     background: #f3f5f9 !important;
 }
-table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{    
+
+table.detail-payment tfoot th.detail,
+table.detail-delivery tfoot th.detail {
     padding: 0.5rem 0.2rem !important;
     border-bottom: 1px solid #e3e3e3 !important;
     border-top: 1px solid #e3e3e3 !important;
@@ -192,7 +236,8 @@ table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{
     font-weight: bold !important;
     color: #003571 !important;
     font-size: 0.7rem !important;
-} 
+}
+
 .dt-hasChild {
     position: relative;
 }
@@ -206,7 +251,7 @@ table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{
     height: 50%;
     background-color: #ccc;
 } */
-.child-row  .view-detail::after {
+.child-row .view-detail::after {
     content: '';
     position: absolute;
     bottom: calc(100% - 1rem);
@@ -215,13 +260,16 @@ table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{
     height: 3rem;
     background-color: #305176;
 }
+
 .child-row {
     position: relative;
-} 
-.view-detail{
+}
+
+.view-detail {
     padding-left: 1.7rem;
 }
-.child-row  .view-detail::before {
+
+.child-row .view-detail::before {
     content: '';
     position: absolute;
     left: 15px;
@@ -230,16 +278,20 @@ table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{
     height: 2px;
     background-color: #305176;
 }
-.list-detail{
+
+.list-detail {
     position: relative;
     width: 99%;
 }
-.list-detail:first-child{ 
-    padding-top: 0.15rem; 
+
+.list-detail:first-child {
+    padding-top: 0.15rem;
 }
-.list-detail:last-child{
-    padding-bottom: 1rem; 
+
+.list-detail:last-child {
+    padding-bottom: 1rem;
 }
+
 .list-detail:not(:last-child)::before {
     content: '';
     position: absolute;
@@ -249,6 +301,7 @@ table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{
     height: 100%;
     border: 1px solid #305176;
 }
+
 .list-detail:not(:last-child)::after {
     content: '';
     position: absolute;
@@ -258,7 +311,7 @@ table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{
     border: 1px solid #305176;
 }
 
-.child-row  .view-detail-1::after {
+.child-row .view-detail-1::after {
     content: '';
     position: absolute;
     bottom: calc(100% - 1.5rem);
@@ -267,20 +320,24 @@ table.detail-payment tfoot th.detail, table.detail-delivery tfoot th.detail{
     height: 3rem;
     background-color: #305176;
 }
-.view-detail-1{
+
+.view-detail-1 {
     padding-left: 1.7rem;
 }
+
 .dataTables_wrapper .dataTables_scrollBody {
-overflow-y: auto;
-height: calc(100vh - 100px); /* Sesuaikan dengan kebutuhan */
+    overflow-y: auto;
+    height: calc(100vh - 100px);
+    /* Sesuaikan dengan kebutuhan */
 }
 
 .dataTables_wrapper .dataTables_scrollFoot {
-position: sticky;
-bottom: 0;
-background-color: #fff;
+    position: sticky;
+    bottom: 0;
+    background-color: #fff;
 }
-.child-row  .view-detail-1::before {
+
+.child-row .view-detail-1::before {
     content: '';
     position: absolute;
     left: 15px;
@@ -289,13 +346,16 @@ background-color: #fff;
     height: 2px;
     background-color: #305176;
 }
-.list-detail-1{
+
+.list-detail-1 {
     position: relative;
     width: 99%;
 }
-.list-detail-1:last-child{
-    padding-bottom: 1rem; 
+
+.list-detail-1:last-child {
+    padding-bottom: 1rem;
 }
+
 .list-detail-1:not(:last-child)::before {
     content: '';
     position: absolute;
@@ -305,6 +365,7 @@ background-color: #fff;
     height: 100%;
     border: 1px solid #305176;
 }
+
 .list-detail-1:not(:last-child)::after {
     content: '';
     position: absolute;
@@ -314,7 +375,7 @@ background-color: #fff;
     border: 1px solid #305176;
 }
 
-.action-td .pointer i{
+.action-td .pointer i {
     padding: 0.1rem;
 }
 
@@ -322,11 +383,11 @@ background-color: #fff;
     list-style: none;
     padding: 0;
     margin: 0;
-    position: relative;    
+    position: relative;
     font-size: 0.65rem;
 }
-  
-  .timeline::before {
+
+.timeline::before {
     content: "";
     position: absolute;
     top: 0;
@@ -335,13 +396,13 @@ background-color: #fff;
     width: 2px;
     background-color: #ccc;
     transform: translateX(-50%);
-  }
-  
-  .timeline-item {
-    position: relative; 
-  }
-  
-  .timeline-badge {
+}
+
+.timeline-item {
+    position: relative;
+}
+
+.timeline-badge {
     position: absolute;
     top: 20px;
     left: 119px;
@@ -351,28 +412,31 @@ background-color: #fff;
     border-radius: 50%;
     transform: translateX(-50%);
     z-index: 1;
-  }
-  .timeline-date {
+}
+
+.timeline-date {
     position: absolute;
     top: 15px;
     left: 0;
     width: 5rem;
     max-width: 5rem;
     text-wrap: auto;
-    }
-  .timeline-panel {
-    position: relative; 
-    left: 130px; 
-    padding: 5px;  
+}
+
+.timeline-panel {
+    position: relative;
+    left: 130px;
+    padding: 5px;
     width: calc(100% - 130px);
-  }  
-  .timeline-title {
+}
+
+.timeline-title {
     font-size: 18px;
     font-weight: bold;
     margin-top: 0;
-  }
-  
-  .timeline-text {
+}
+
+.timeline-text {
     font-size: 14px;
     color: #666;
-  }
+}

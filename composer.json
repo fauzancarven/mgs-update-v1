@@ -18,7 +18,8 @@
         "mpdf/mpdf": "^8.2",
         "myth/auth": "^1.2",
         "ozdemir/datatables": "^2.3",
-        "psr/log": "^3.0"
+        "psr/log": "^3.0",
+        "sabre/dav": "^4.7"
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.7",
