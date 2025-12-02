@@ -608,7 +608,7 @@ class SphModel extends Model
     function get_data_detail_penawaran($row){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-item m-0 shadow-6">
+        $detailhtml = ' <table class="table detail-item m-0 shadow-7">
                             <thead>
                                 <tr>
                                     <th class="detail" style="width: 35px;">#</th>
