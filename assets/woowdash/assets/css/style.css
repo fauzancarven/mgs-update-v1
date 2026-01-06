@@ -16159,3 +16159,31 @@ h2.swal2-title {
   background-color: #ccc;
   border-radius: 10px;
 }
+
+
+#dropzone {
+  min-height: 5rem;
+  border: 1px dashed #ccc;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.bar-action {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 50px;
+  background: #000000c7;
+  width: 100%;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  color: white;
+  gap: 1rem;
+}
+
+table.table.detail-payment,
+table.table.detail-item {
+  width: auto;
+}

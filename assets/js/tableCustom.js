@@ -1,68 +1,68 @@
-class tableItem { 
-    constructor(elementId,options = {}) { 
+class tableItem {
+    constructor(elementId, options = {}) {
         this.elementId = elementId;
-        this.dataitem = options.dataitem || []; 
-        this.baseUrl = options.baseUrl || ""; 
-        this.dropdownParent = options.dropdownParent || $(`#${this.elementId}`); 
-        this.modalel = options.modal || $(`#${this.elementId}`); 
-        this.eventHandlers = {}; 
+        this.dataitem = options.dataitem || [];
+        this.baseUrl = options.baseUrl || "";
+        this.dropdownParent = options.dropdownParent || $(`#${this.elementId}`);
+        this.modalel = options.modal || $(`#${this.elementId}`);
+        this.eventHandlers = {};
         this.getDataRow();
-        this.render(); 
-    } 
+        this.render();
+    }
     on(eventName, callback) {
         if (!this.eventHandlers[eventName]) {
-          this.eventHandlers[eventName] = [];
+            this.eventHandlers[eventName] = [];
         }
         this.eventHandlers[eventName].push(callback);
     }
     trigger(eventName, data) {
         if (this.eventHandlers[eventName]) {
-          this.eventHandlers[eventName].forEach(callback => {
-            callback(data);
-          });
+            this.eventHandlers[eventName].forEach(callback => {
+                callback(data);
+            });
         }
     }
-    addDataRow(arr){
-        this.dataitem.push(arr) ;
-    } 
-    saveEditableInput(index){  
-        var data_value = $("#" + this.elementId + " .text-custom-input[data-id='"+ index + "']").val();
-        $("#" + this.elementId + " .span-custom-input[data-id='"+ index + "']").html(data_value.replaceAll(/\n/g, '<br>'));
-        $("#" + this.elementId + " .text-custom-input[data-id='"+ index + "']").hide();
-        $("#" + this.elementId + " .span-custom-input[data-id='"+ index + "']").show();
-        $("#" + this.elementId + " .btn-action.detail[data-id='"+ index +"'][data-type='edit']").show();
-        $("#" + this.elementId + " .btn-action.detail[data-id='"+ index +"'][data-type='save']").hide();
- 
+    addDataRow(arr) {
+        this.dataitem.push(arr);
+    }
+    saveEditableInput(index) {
+        var data_value = $("#" + this.elementId + " .text-custom-input[data-id='" + index + "']").val();
+        $("#" + this.elementId + " .span-custom-input[data-id='" + index + "']").html(data_value.replaceAll(/\n/g, '<br>'));
+        $("#" + this.elementId + " .text-custom-input[data-id='" + index + "']").hide();
+        $("#" + this.elementId + " .span-custom-input[data-id='" + index + "']").show();
+        $("#" + this.elementId + " .btn-action.detail[data-id='" + index + "'][data-type='edit']").show();
+        $("#" + this.elementId + " .btn-action.detail[data-id='" + index + "'][data-type='save']").hide();
+
         this.dataitem[index]["text"] = data_value;
     }
-    getDataRow(){ 
+    getDataRow() {
         return this.dataitem;
     }
-    getSubTotal(){ 
+    getSubTotal() {
         var totalitem = this.dataitem.reduce((acc, current) => acc + current.price * current.qty, 0);
-        var totaldiscitem = this.dataitem.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var data =  {
+        var totaldiscitem = this.dataitem.reduce((acc, current) => acc + current.disc * current.qty, 0);
+        var data = {
             "totalitem": totalitem,
             "totaldiscitem": totaldiscitem
         }
-        this.trigger("subtotal",data);
+        this.trigger("subtotal", data);
         return data;
     }
- 
-    loadDatahtml(){
-        try {  
-            if(this.dataitem.length === 0){
+
+    loadDatahtml() {
+        try {
+            if (this.dataitem.length === 0) {
                 return `<div class="d-flex justify-content-center flex-column align-items-center">
                 <img src="${this.baseUrl}assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span class="text-head-1">Item belum ditambahkan</span>
                 </div>`;
-            }else{
-                var html = ''; 
+            } else {
+                var html = '';
                 var last_group_abjad = 65;
                 var last_group_no = 1;
-                for(var i = 0; this.dataitem.length > i;i++){
+                for (var i = 0; this.dataitem.length > i; i++) {
                     var data_value = this.dataitem[i]["text"];
-                    if(this.dataitem[i]["type"] == "category"){ 
+                    if (this.dataitem[i]["type"] == "category") {
                         html += `
                             <div class="row align-items-center mx-0 hr p-2">
                                 <div class="col-12 col-md-6 px-0">      
@@ -89,17 +89,17 @@ class tableItem {
                             </div>`;
                         last_group_abjad++;
                         last_group_no = 1;
-                    }  
-                    if(this.dataitem[i]["type"] == "product"){ 
+                    }
+                    if (this.dataitem[i]["type"] == "product") {
                         var varian = "";
-                        if(this.dataitem[i]["id"] != "0"){
+                        if (this.dataitem[i]["id"] != "0") {
                             varian = `  <span class="text-detail-2 text-truncate">${this.dataitem[i]["group"]}</span> 
                                         <div class="d-flex gap-1 flex-wrap">`;
-                            for(var j = 0; this.dataitem[i]["varian"].length > j;j++){
-                                varian += `<span class="badge badge-${j % 5}">${this.dataitem[i]["varian"][j]["varian"] + ": " + this.dataitem[i]["varian"][j]["value"]}</span>`; 
+                            for (var j = 0; this.dataitem[i]["varian"].length > j; j++) {
+                                varian += `<span class="badge badge-${j % 5}">${this.dataitem[i]["varian"][j]["varian"] + ": " + this.dataitem[i]["varian"][j]["value"]}</span>`;
                             }
-                            varian +=  '</div>';
-                        } 
+                            varian += '</div>';
+                        }
                         html += `   <div class="row align-items-center mx-0 hr p-2">
                                         <div class="col-12 col-md-6 my-1 varian px-0">   
                                             <div class="d-flex">
@@ -162,56 +162,56 @@ class tableItem {
                                                 </div>   
                                             </div>    
                                         </div>    
-                                    </div> `; 
-                        last_group_no++; 
-                    } 
+                                    </div> `;
+                        last_group_no++;
+                    }
                 }
-               return html; 
+                return html;
             }
-        } catch (error) {    
+        } catch (error) {
         }
     }
-    setupDatahtml(){
+    setupDatahtml() {
         var self = this;
         var inputqty = [];
-        var inputharga = []; 
+        var inputharga = [];
         var inputtotal = [];
         var inputdisc = [];
 
-        for(var i = 0; self.dataitem.length > i;i++){
-            if(self.dataitem[i]["type"] == "product"){
+        for (var i = 0; self.dataitem.length > i; i++) {
+            if (self.dataitem[i]["type"] == "product") {
 
-                function total_harga(id){
-                    var total = (inputharga[id].getRawValue() - inputdisc[id].getRawValue() ) * inputqty[id].getRawValue();
+                function total_harga(id) {
+                    var total = (inputharga[id].getRawValue() - inputdisc[id].getRawValue()) * inputqty[id].getRawValue();
                     self.dataitem[id]["total"] = total;
-                    inputtotal[id].setRawValue(total); 
-                    self.getSubTotal(); 
-                } 
+                    inputtotal[id].setRawValue(total);
+                    self.getSubTotal();
+                }
 
                 //event qty
                 inputqty[i] = new Cleave(`#input-qty-${i}`, {
-                        numeral: true,
-                        delimeter: ",",
-                        numeralDecimalScale:3,
-                        numeralThousandGroupStyle:"thousand"
-                }); 
+                    numeral: true,
+                    delimeter: ",",
+                    numeralDecimalScale: 3,
+                    numeralThousandGroupStyle: "thousand"
+                });
                 inputqty[i].setRawValue(self.dataitem[i]["qty"]);
-                $(`#input-qty-${i}`).on("keyup",function(){ 
+                $(`#input-qty-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")]["qty"] = inputqty[$(this).data("id")].getRawValue();
-                    if($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0) 
+                    if ($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0)
                     total_harga($(this).data("id"));
-                });  
- 
+                });
+
                 //event satuan
-                $(`#select-satuan-${i}`).select2({ 
-                    dropdownParent: self.dropdownParent, 
+                $(`#select-satuan-${i}`).select2({
+                    dropdownParent: self.dropdownParent,
                     placeholder: "pilih",
                     width: 'auto',
                     adaptContainerWidth: true,
                     ajax: {
                         url: self.baseUrl + "select2/get-data-produk-satuan",
                         dataType: 'json',
-                        type:"POST",
+                        type: "POST",
                         delay: 250,
                         data: function (params) {
                             // CSRF Hash
@@ -223,16 +223,16 @@ class tableItem {
                             };
                         },
                         processResults: function (response) {
-                
+
                             // Update CSRF Token
-                            $('.txt_csrfname').val(response.token); 
+                            $('.txt_csrfname').val(response.token);
 
                             return {
                                 results: response.data
                             };
                         },
                         cache: true
-                    }, 
+                    },
                     language: {
                         noResults: function () {
                             return $("<button class=\"btn btn-sm btn-primary\" onclick=\"select_satuan_add()\">Tambah <b>" + $(`#select-satuan-${i}`).data('select2').dropdown.$search[0].value + "</b></button>");
@@ -240,56 +240,56 @@ class tableItem {
                     },
                     formatResult: select2OptionFormat,
                     formatSelection: select2OptionFormat,
-                    escapeMarkup: function(m) { return m; }
-                }).on("select2:select", function(e) {
-                    var data = e.params.data;  
+                    escapeMarkup: function (m) { return m; }
+                }).on("select2:select", function (e) {
+                    var data = e.params.data;
                     self.dataitem[$(this).data("id")]["satuan_id"] = data.id
-                    self.dataitem[$(this).data("id")]["satuan_text"]= data.text
+                    self.dataitem[$(this).data("id")]["satuan_text"] = data.text
                 });
-                if(self.dataitem[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(self.dataitem[i]["satuan_text"] , self.dataitem[i]["satuan_id"], true, true)).trigger('change');  
-                if(self.dataitem[i]["id"] === "0")  $(`#select-satuan-${i}`).prop("disabled",false)
+                if (self.dataitem[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(self.dataitem[i]["satuan_text"], self.dataitem[i]["satuan_id"], true, true)).trigger('change');
+                if (self.dataitem[i]["id"] === "0") $(`#select-satuan-${i}`).prop("disabled", false)
                 //event harga
                 inputharga[i] = new Cleave(`#input-harga-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
+                    numeralDecimalScale: 0,
+                    numeralThousandGroupStyle: "thousand"
+                });
                 inputharga[i].setRawValue(self.dataitem[i]["price"]);
-                $(`#input-harga-${i}`).on("keyup",function(){ 
+                $(`#input-harga-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")]["price"] = inputharga[$(this).data("id")].getRawValue();
-                    if($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0) 
+                    if ($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0)
                     total_harga($(this).data("id"));
-                });   
+                });
                 //event disc
                 inputdisc[i] = new Cleave(`#input-disc-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
+                    numeralDecimalScale: 0,
+                    numeralThousandGroupStyle: "thousand"
+                });
                 inputdisc[i].setRawValue(self.dataitem[i]["disc"]);
-                $(`#input-disc-${i}`).on("keyup",function(){ 
+                $(`#input-disc-${i}`).on("keyup", function () {
                     var nilaiSaatIni = parseInt(inputdisc[$(this).data("id")].getRawValue());
                     var maksvalue = parseInt(inputharga[$(this).data("id")].getRawValue());
-                    if (nilaiSaatIni > maksvalue) { 
+                    if (nilaiSaatIni > maksvalue) {
                         inputdisc[$(this).data("id")].setRawValue(maksvalue);
-                    } 
-                    self.dataitem[$(this).data("id")]["disc"] = inputdisc[$(this).data("id")].getRawValue(); 
+                    }
+                    self.dataitem[$(this).data("id")]["disc"] = inputdisc[$(this).data("id")].getRawValue();
 
-                    if($(`#input-disc-${i}`).val() == "") $(`#input-disc-${i}`).val(0) 
-                    total_harga($(this).data("id")); 
-                });  
+                    if ($(`#input-disc-${i}`).val() == "") $(`#input-disc-${i}`).val(0)
+                    total_harga($(this).data("id"));
+                });
 
                 //event total
                 inputtotal[i] = new Cleave(`#input-total-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
-                inputtotal[i].setRawValue(self.dataitem[i]["total"]); 
-                
+                    numeralDecimalScale: 0,
+                    numeralThousandGroupStyle: "thousand"
+                });
+                inputtotal[i].setRawValue(self.dataitem[i]["total"]);
+
                 total_harga(i);
             }
         }
@@ -358,7 +358,7 @@ class tableItem {
             </div>
             </div>
         `;
-        try { 
+        try {
             $("#" + this.elementId).html(html);
         } catch (error) {
             console.log(error);
@@ -367,60 +367,60 @@ class tableItem {
 
         //master add button
         var isProcessingSphAddproduk = false;
-        $("#" + this.elementId + " a[name='btn-add-product']").click(function(){
+        $("#" + this.elementId + " a[name='btn-add-product']").click(function () {
             var elem = $(this);
             if (isProcessingSphAddproduk) {
                 console.log("add-product cancel load");
                 return;
-            }  
-            isProcessingSphAddproduk = true; 
+            }
+            isProcessingSphAddproduk = true;
             var old_text = $(elem).html();
             $(elem).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-            $.ajax({  
+            $.ajax({
                 method: "POST",
-                url: self.baseUrl + "message/select-produk", 
-                success: function(data) {  
-                    isProcessingSphAddproduk = false; 
-                    $(elem).html(old_text); 
-                    $("#modal-optional").html(data); 
-                    self.modalel.modal("hide");   
-                    $("#modal-select-item").modal("show"); 
+                url: self.baseUrl + "message/select-produk",
+                success: function (data) {
+                    isProcessingSphAddproduk = false;
+                    $(elem).html(old_text);
+                    $("#modal-optional").html(data);
+                    self.modalel.modal("hide");
+                    $("#modal-select-item").modal("show");
 
                     // Membuat event emitter
-                    $(document).on("select_produk", function(event, data) { 
-                        if(data.id === undefined) return;
- 
-                        for(var i = 0;self.dataitem.length > i;i++){  
-                            if(data.id == 0) continue
-                            if(self.dataitem[i]["type"] == "product"){ 
+                    $(document).on("select_produk", function (event, data) {
+                        if (data.id === undefined) return;
+
+                        for (var i = 0; self.dataitem.length > i; i++) {
+                            if (data.id == 0) continue
+                            if (self.dataitem[i]["type"] == "product") {
                                 var arr1 = self.dataitem[i]["varian"];
                                 var arr2 = data.varian;
                                 arr1.sort((a, b) => a.varian.localeCompare(b.varian));
                                 arr2.sort((a, b) => a.varian.localeCompare(b.varian));
                             }
-                            if(JSON.stringify(arr1) === JSON.stringify(arr2) && self.dataitem[i]["produkid"] === data.produkid ){
+                            if (JSON.stringify(arr1) === JSON.stringify(arr2) && self.dataitem[i]["produkid"] === data.produkid) {
                                 Swal.fire({
                                     icon: 'error',
-                                    text: "Item sudah ada !!!", 
-                                    confirmButtonColor: "#3085d6", 
+                                    text: "Item sudah ada !!!",
+                                    confirmButtonColor: "#3085d6",
                                 });
                                 return;
                             }
-                        }  
-                
+                        }
+
                         data["type"] = "product";
-                        self.addDataRow(data)  
-                        $("#modal-select-item").modal("hide");  
+                        self.addDataRow(data)
+                        $("#modal-select-item").modal("hide");
                         self.render();
                     });
-                       
+
                     $('#modal-select-item').on('hidden.bs.modal', function () {
                         if (document.activeElement) {
                             document.activeElement.blur();
                         }
-                        self.modalel.modal("show");   
-                        
+                        self.modalel.modal("show");
+
                         $(document).off("select_produk");
                     });
 
@@ -441,163 +441,164 @@ class tableItem {
                     //     select_produk(data_select_produk);
                     // });
                 },
-                error: function(xhr, textStatus, errorThrown){ 
+                error: function (xhr, textStatus, errorThrown) {
                     isProcessingSphAddproduk = false;
-                    $(elem).html(old_text); 
+                    $(elem).html(old_text);
 
                     Swal.fire({
                         icon: 'error',
-                        text: xhr["responseJSON"]['message'], 
-                        confirmButtonColor: "#3085d6", 
+                        text: xhr["responseJSON"]['message'],
+                        confirmButtonColor: "#3085d6",
                     });
                 }
             });
         });
-        $("#" + this.elementId + " a[name='btn-add-product-manual']").click(function(){ 
+        $("#" + this.elementId + " a[name='btn-add-product-manual']").click(function () {
             self.addDataRow({
                 "id": 0,
                 "produkid": 0,
                 "varian": [],
-                "text" : "produk",
-                "group" : "", 
+                "text": "produk",
+                "group": "",
                 "berat": 0,
                 "satuan_id": 0,
                 "satuan_text": "",
-                "pcsM2": "",  
-                "price":0,
+                "pcsM2": "",
+                "price": 0,
                 "disc": 0,
-                "qty":  1,
+                "qty": 1,
                 "total": 0,
-                "type" :"product",
-                "image_url" : "https://system.mahieraglobalsolution.com/assets/images/produk/default.png"
+                "type": "product",
+                "image_url": "https://system.mahieraglobalsolution.com/assets/images/produk/default.png"
             });
             self.render();
-        }); 
-        $("#" + this.elementId + " a[name='btn-add-category']").click(function(){
+        });
+        $("#" + this.elementId + " a[name='btn-add-category']").click(function () {
             self.addDataRow({
                 type: "category",
                 text: "Kategori",
                 qty: 0,
                 price: 0,
                 disc: 0,
-                total: 0, 
-                varian: [], 
+                total: 0,
+                varian: [],
             });
             self.render();
         });
 
 
         //event Action Button rows and input editable label
-        $("#" + this.elementId + " .span-custom-input").click(function(){
-            var index =  $(this).data("id");
-            if(self.dataitem[index]["id"] == 0 || self.dataitem[index]["type"] == "category"){ 
-                $("#" + self.elementId + " .text-custom-input[data-id='"+ index +"']").show(); 
+        $("#" + this.elementId + " .span-custom-input").click(function () {
+            var index = $(this).data("id");
+            if (self.dataitem[index]["id"] == 0 || self.dataitem[index]["type"] == "category") {
+                $("#" + self.elementId + " .text-custom-input[data-id='" + index + "']").show();
                 $(this).hide();
-                $(".btn-action.detail[data-id='"+ index +"'][data-type='edit']").hide();
-                $(".btn-action.detail[data-id='"+ index +"'][data-type='save']").show();  
+                $(".btn-action.detail[data-id='" + index + "'][data-type='edit']").hide();
+                $(".btn-action.detail[data-id='" + index + "'][data-type='save']").show();
             }
-            $("#" + self.elementId + " .text-custom-input[data-id='"+ index +"']").on('input', function() {  
+            $("#" + self.elementId + " .text-custom-input[data-id='" + index + "']").on('input', function () {
                 $(this).height('auto');
                 $(this).height(this.scrollHeight);
-            }).on('focusout', function() {  
+            }).on('focusout', function () {
                 self.saveEditableInput(index)
-            }); 
+            });
         });
-        $("#" + this.elementId + " .btn-action.detail[data-type='edit']").click(function(){
-            $("#" + self.elementId + " .span-custom-input[data-id='"+ $(this).data("id") +"']").trigger("click");
+        $("#" + this.elementId + " .btn-action.detail[data-type='edit']").click(function () {
+            $("#" + self.elementId + " .span-custom-input[data-id='" + $(this).data("id") + "']").trigger("click");
         })
-        $("#" + this.elementId + " .btn-action.detail[data-type='save']").click(function(){
-            self.saveEditableInput($(this).data("id")); 
-        }) 
-        $("#" + this.elementId + " .btn-action.detail[data-type='delete']").click(function(){
-            self.dataitem.splice($(this).data("id"),1); 
+        $("#" + this.elementId + " .btn-action.detail[data-type='save']").click(function () {
+            self.saveEditableInput($(this).data("id"));
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='delete']").click(function () {
+            self.dataitem.splice($(this).data("id"), 1);
             self.render()
-        })  
-        $("#" + this.elementId + " .btn-action.detail[data-type='up']").click(function(){  
-            if ($(this).data("id")  > 0) { 
-                var nilaiSementara = self.dataitem[$(this).data("id") - 1]; 
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='up']").click(function () {
+            if ($(this).data("id") > 0) {
+                var nilaiSementara = self.dataitem[$(this).data("id") - 1];
                 self.dataitem.splice($(this).data("id") - 1, 1, self.dataitem[$(this).data("id")]);
                 self.dataitem.splice($(this).data("id"), 1, nilaiSementara);
             }
             self.render()
-        })  
-        $("#" + this.elementId + " .btn-action.detail[data-type='down']").click(function(){ 
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='down']").click(function () {
 
             if ($(this).data("id") < self.dataitem.length - 1) {
                 var nilaiSementara = self.dataitem[$(this).data("id") + 1];
                 self.dataitem.splice($(this).data("id") + 1, 1, self.dataitem[$(this).data("id")]);
                 self.dataitem.splice($(this).data("id"), 1, nilaiSementara);
-            } 
+            }
             self.render()
-        })   
-    }  
+        })
+    }
 }
-class tableItemDelivery { 
-    constructor(elementId,options = {}) { 
+
+class tableItemDelivery {
+    constructor(elementId, options = {}) {
         this.elementId = elementId;
-        this.dataitem = options.dataitem || []; 
-        this.baseUrl = options.baseUrl || ""; 
-        this.dropdownParent = options.dropdownParent || $(`#${this.elementId}`); 
-        this.modalel = options.modal || $(`#${this.elementId}`); 
-        this.eventHandlers = {}; 
+        this.dataitem = options.dataitem || [];
+        this.baseUrl = options.baseUrl || "";
+        this.dropdownParent = options.dropdownParent || $(`#${this.elementId}`);
+        this.modalel = options.modal || $(`#${this.elementId}`);
+        this.eventHandlers = {};
         this.getDataRow();
-        this.render(); 
-    } 
+        this.render();
+    }
     on(eventName, callback) {
         if (!this.eventHandlers[eventName]) {
-          this.eventHandlers[eventName] = [];
+            this.eventHandlers[eventName] = [];
         }
         this.eventHandlers[eventName].push(callback);
     }
     trigger(eventName, data) {
         if (this.eventHandlers[eventName]) {
-          this.eventHandlers[eventName].forEach(callback => {
-            callback(data);
-          });
+            this.eventHandlers[eventName].forEach(callback => {
+                callback(data);
+            });
         }
     }
-    addDataRow(arr){
-        this.dataitem.push(arr) ;
-    } 
-    saveEditableInput(index){  
-        var data_value = $("#" + this.elementId + " .text-custom-input[data-id='"+ index + "']").val();
-        $("#" + this.elementId + " .span-custom-input[data-id='"+ index + "']").html(data_value.replaceAll(/\n/g, '<br>'));
-        $("#" + this.elementId + " .text-custom-input[data-id='"+ index + "']").hide();
-        $("#" + this.elementId + " .span-custom-input[data-id='"+ index + "']").show();
-        $("#" + this.elementId + " .btn-action.detail[data-id='"+ index +"'][data-type='edit']").show();
-        $("#" + this.elementId + " .btn-action.detail[data-id='"+ index +"'][data-type='save']").hide();
- 
+    addDataRow(arr) {
+        this.dataitem.push(arr);
+    }
+    saveEditableInput(index) {
+        var data_value = $("#" + this.elementId + " .text-custom-input[data-id='" + index + "']").val();
+        $("#" + this.elementId + " .span-custom-input[data-id='" + index + "']").html(data_value.replaceAll(/\n/g, '<br>'));
+        $("#" + this.elementId + " .text-custom-input[data-id='" + index + "']").hide();
+        $("#" + this.elementId + " .span-custom-input[data-id='" + index + "']").show();
+        $("#" + this.elementId + " .btn-action.detail[data-id='" + index + "'][data-type='edit']").show();
+        $("#" + this.elementId + " .btn-action.detail[data-id='" + index + "'][data-type='save']").hide();
+
         this.dataitem[index]["text"] = data_value;
     }
-    getDataRow(){ 
+    getDataRow() {
         return this.dataitem;
     }
-    getSubTotal(){ 
+    getSubTotal() {
         var totalitem = this.dataitem.reduce((acc, current) => acc + current.price * current.qty, 0);
-        var totaldiscitem = this.dataitem.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var data =  {
+        var totaldiscitem = this.dataitem.reduce((acc, current) => acc + current.disc * current.qty, 0);
+        var data = {
             "totalitem": totalitem,
             "totaldiscitem": totaldiscitem
         }
-        this.trigger("subtotal",data);
+        this.trigger("subtotal", data);
         return data;
     }
- 
-    loadDatahtml(){
-        try {  
-            if(this.dataitem.length === 0){
+
+    loadDatahtml() {
+        try {
+            if (this.dataitem.length === 0) {
                 return `<div class="d-flex justify-content-center flex-column align-items-center">
                 <img src="${this.baseUrl}assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span class="text-head-1">Item belum ditambahkan</span>
                 </div>`;
-            }else{
+            } else {
 
-                var html = ''; 
+                var html = '';
                 var last_group_abjad = 65;
                 var last_group_no = 1;
-                for(var i = 0; this.dataitem.length > i;i++){ 
+                for (var i = 0; this.dataitem.length > i; i++) {
                     var data_value = this.dataitem[i]["text"];
-                    if(this.dataitem[i]["type"] == "category"){ 
+                    if (this.dataitem[i]["type"] == "category") {
                         html += `
                             <div class="row align-items-center mx-0 hr p-2">
                                 <div class="col-12 col-md-6 px-0">      
@@ -624,17 +625,17 @@ class tableItemDelivery {
                             </div>`;
                         last_group_abjad++;
                         last_group_no = 1;
-                    }  
-                    if(this.dataitem[i]["type"] == "product"){ 
+                    }
+                    if (this.dataitem[i]["type"] == "product") {
                         var varian = "";
-                        if(this.dataitem[i]["id"] != "0"){
+                        if (this.dataitem[i]["id"] != "0") {
                             varian = `  <span class="text-detail-2 text-truncate">${this.dataitem[i]["group"]}</span> 
                                         <div class="d-flex gap-1 flex-wrap">`;
-                            for(var j = 0; this.dataitem[i]["varian"].length > j;j++){
-                                varian += `<span class="badge badge-${j % 5}">${this.dataitem[i]["varian"][j]["varian"] + ": " + this.dataitem[i]["varian"][j]["value"]}</span>`; 
+                            for (var j = 0; this.dataitem[i]["varian"].length > j; j++) {
+                                varian += `<span class="badge badge-${j % 5}">${this.dataitem[i]["varian"][j]["varian"] + ": " + this.dataitem[i]["varian"][j]["value"]}</span>`;
                             }
-                            varian +=  '</div>';
-                        } 
+                            varian += '</div>';
+                        }
                         html += `   <div class="row align-items-center mx-0 hr p-2">
                                         <div class="col-12 col-md-4 my-1 varian px-0">   
                                             <div class="d-flex align-items-center">
@@ -687,37 +688,37 @@ class tableItemDelivery {
                                                 </div>   
                                             </div>    
                                         </div>    
-                                    </div> `; 
-                                    
-                        last_group_no++; 
-                    } 
+                                    </div> `;
+
+                        last_group_no++;
+                    }
                 }
-               return html; 
+                return html;
             }
-        } catch (error) {    
+        } catch (error) {
         }
     }
-    setupDatahtml(){
-         
+    setupDatahtml() {
+
         var self = this;
         var inputqty = [];
         var inputharga = [];
         var inputdisc = [];
         var inputtotal = [];
 
-        for(var i = 0; self.dataitem.length > i;i++){
-            if(self.dataitem[i]["type"] == "product"){  
- 
+        for (var i = 0; self.dataitem.length > i; i++) {
+            if (self.dataitem[i]["type"] == "product") {
+
                 //event satuan
-                $(`#select-satuan-${i}`).select2({ 
-                    dropdownParent: self.dropdownParent, 
+                $(`#select-satuan-${i}`).select2({
+                    dropdownParent: self.dropdownParent,
                     placeholder: "pilih",
                     width: 'auto',
                     adaptContainerWidth: true,
                     ajax: {
                         url: self.baseUrl + "select2/get-data-produk-satuan",
                         dataType: 'json',
-                        type:"POST",
+                        type: "POST",
                         delay: 250,
                         data: function (params) {
                             // CSRF Hash
@@ -729,16 +730,16 @@ class tableItemDelivery {
                             };
                         },
                         processResults: function (response) {
-                
+
                             // Update CSRF Token
-                            $('.txt_csrfname').val(response.token); 
+                            $('.txt_csrfname').val(response.token);
 
                             return {
                                 results: response.data
                             };
                         },
                         cache: true
-                    }, 
+                    },
                     language: {
                         noResults: function () {
                             return $("<button class=\"btn btn-sm btn-primary\" onclick=\"select_satuan_add()\">Tambah <b>" + $(`#select-satuan-${i}`).data('select2').dropdown.$search[0].value + "</b></button>");
@@ -746,69 +747,69 @@ class tableItemDelivery {
                     },
                     formatResult: select2OptionFormat,
                     formatSelection: select2OptionFormat,
-                    escapeMarkup: function(m) { return m; }
-                }).on("select2:select", function(e) {
-                    var data = e.params.data;  
+                    escapeMarkup: function (m) { return m; }
+                }).on("select2:select", function (e) {
+                    var data = e.params.data;
                     self.dataitem[$(this).data("id")]["satuan_id"] = data.id
-                    self.dataitem[$(this).data("id")]["satuan_text"]= data.text
+                    self.dataitem[$(this).data("id")]["satuan_text"] = data.text
                 });
-                if(self.dataitem[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(self.dataitem[i]["satuan_text"] , self.dataitem[i]["satuan_id"], true, true)).trigger('change');  
-                if(self.dataitem[i]["id"] === "0")  $(`#select-satuan-${i}`).prop("disabled",true)
+                if (self.dataitem[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(self.dataitem[i]["satuan_text"], self.dataitem[i]["satuan_id"], true, true)).trigger('change');
+                if (self.dataitem[i]["id"] === "0") $(`#select-satuan-${i}`).prop("disabled", true)
 
                 //event qty
                 inputqty[i] = new Cleave(`#input-qty-${i}`, {
-                        numeral: true,
-                        delimeter: ",",
-                        numeralDecimalScale:3,
-                        numeralThousandGroupStyle:"thousand"
-                });  
+                    numeral: true,
+                    delimeter: ",",
+                    numeralDecimalScale: 3,
+                    numeralThousandGroupStyle: "thousand"
+                });
                 inputharga[i] = new Cleave(`#input-diterima-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
+                    numeralDecimalScale: 0,
+                    numeralThousandGroupStyle: "thousand"
+                });
                 inputdisc[i] = new Cleave(`#input-spare-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
+                    numeralDecimalScale: 0,
+                    numeralThousandGroupStyle: "thousand"
+                });
                 inputtotal[i] = new Cleave(`#input-rusak-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
+                    numeralDecimalScale: 0,
+                    numeralThousandGroupStyle: "thousand"
+                });
 
                 inputqty[i].setRawValue(self.dataitem[i]["qty_ref"]);
-                $(`#input-qty-${i}`).on("keyup",function(){ 
+                $(`#input-qty-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")]["qty_ref"] = inputqty[$(this).data("id")].getRawValue();
-                    if($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0)  
-                });  
- 
+                    if ($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0)
+                });
+
 
                 //event diterima
                 inputharga[i].setRawValue(self.dataitem[i]["qty"]);
-                $(`#input-diterima-${i}`).on("keyup",function(){ 
+                $(`#input-diterima-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")]["qty"] = inputharga[$(this).data("id")].getRawValue();
-                    if($(`#input-diterima-${i}`).val() == "") $(`#input-diterima-${i}`).val(0)  
-                });   
+                    if ($(`#input-diterima-${i}`).val() == "") $(`#input-diterima-${i}`).val(0)
+                });
 
                 //event spare
                 inputdisc[i].setRawValue(self.dataitem[i]["qty_spare"]);
-                $(`#input-spare-${i}`).on("keyup",function(){ 
+                $(`#input-spare-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")]["qty_spare"] = inputdisc[$(this).data("id")].getRawValue();
-                    if($(`#input-spare-${i}`).val() == "") $(`#input-spare-${i}`).val(0)  
-                });  
+                    if ($(`#input-spare-${i}`).val() == "") $(`#input-spare-${i}`).val(0)
+                });
 
                 //event rusak
                 inputtotal[i].setRawValue(self.dataitem[i]["qty_waste"]);
-                $(`#input-rusak-${i}`).on("keyup",function(){ 
+                $(`#input-rusak-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")]["qty_waste"] = inputtotal[$(this).data("id")].getRawValue();
-                    if($(`#input-rusak-${i}`).val() == "") $(`#input-rusak-${i}`).val(0)  
-                });  
-                 
+                    if ($(`#input-rusak-${i}`).val() == "") $(`#input-rusak-${i}`).val(0)
+                });
+
             }
         }
     }
@@ -848,7 +849,7 @@ class tableItemDelivery {
             </div>
             </div>
         `;
-        try { 
+        try {
             $("#" + this.elementId).html(html);
         } catch (error) {
             console.log(error);
@@ -857,191 +858,191 @@ class tableItemDelivery {
 
         //master add button
         var isProcessingSphAddproduk = false;
-        $("#" + this.elementId + " a[name='btn-add-product']").click(function(){
+        $("#" + this.elementId + " a[name='btn-add-product']").click(function () {
             var elem = $(this);
             if (isProcessingSphAddproduk) {
                 console.log("add-product cancel load");
                 return;
-            }  
-            isProcessingSphAddproduk = true; 
+            }
+            isProcessingSphAddproduk = true;
             var old_text = $(elem).html();
             $(elem).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-            $.ajax({  
+            $.ajax({
                 method: "POST",
-                url: self.baseUrl + "message/select-produk", 
-                success: function(data) {  
-                    isProcessingSphAddproduk = false; 
-                    $(elem).html(old_text); 
-                    $("#modal-optional").html(data); 
-                    self.modalel.modal("hide");   
-                    $("#modal-select-item").modal("show"); 
+                url: self.baseUrl + "message/select-produk",
+                success: function (data) {
+                    isProcessingSphAddproduk = false;
+                    $(elem).html(old_text);
+                    $("#modal-optional").html(data);
+                    self.modalel.modal("hide");
+                    $("#modal-select-item").modal("show");
 
                     // Membuat event emitter
-                    $(document).on("select_produk", function(event, data) { 
-                        if(data.id === undefined) return;
- 
-                        for(var i = 0;self.dataitem.length > i;i++){  
-                            if(data.id == 0) continue
-                            if(self.dataitem[i]["type"] == "product"){ 
+                    $(document).on("select_produk", function (event, data) {
+                        if (data.id === undefined) return;
+
+                        for (var i = 0; self.dataitem.length > i; i++) {
+                            if (data.id == 0) continue
+                            if (self.dataitem[i]["type"] == "product") {
                                 var arr1 = self.dataitem[i]["varian"];
                                 var arr2 = data.varian;
                                 arr1.sort((a, b) => a.varian.localeCompare(b.varian));
                                 arr2.sort((a, b) => a.varian.localeCompare(b.varian));
                             }
-                            if(JSON.stringify(arr1) === JSON.stringify(arr2) && self.dataitem[i]["produkid"] === data.produkid ){
+                            if (JSON.stringify(arr1) === JSON.stringify(arr2) && self.dataitem[i]["produkid"] === data.produkid) {
                                 Swal.fire({
                                     icon: 'error',
-                                    text: "Item sudah ada !!!", 
-                                    confirmButtonColor: "#3085d6", 
+                                    text: "Item sudah ada !!!",
+                                    confirmButtonColor: "#3085d6",
                                 });
                                 return;
                             }
-                        }  
-                
+                        }
+
                         data["type"] = "product";
-                        self.addDataRow(data)  
-                        $("#modal-select-item").modal("hide");  
+                        self.addDataRow(data)
+                        $("#modal-select-item").modal("hide");
                         self.render();
                     });
-                       
+
                     $('#modal-select-item').on('hidden.bs.modal', function () {
                         if (document.activeElement) {
                             document.activeElement.blur();
                         }
-                        self.modalel.modal("show");   
-                        
+                        self.modalel.modal("show");
+
                         $(document).off("select_produk");
-                    }); 
+                    });
                 },
-                error: function(xhr, textStatus, errorThrown){ 
+                error: function (xhr, textStatus, errorThrown) {
                     isProcessingSphAddproduk = false;
-                    $(elem).html(old_text); 
+                    $(elem).html(old_text);
 
                     Swal.fire({
                         icon: 'error',
-                        text: xhr["responseJSON"]['message'], 
-                        confirmButtonColor: "#3085d6", 
+                        text: xhr["responseJSON"]['message'],
+                        confirmButtonColor: "#3085d6",
                     });
                 }
             });
-        }); 
+        });
 
         //event Action Button rows and input editable label
-        $("#" + this.elementId + " .span-custom-input").click(function(){
-            var index =  $(this).data("id");
-            if(self.dataitem[index]["id"] == 0 || self.dataitem[index]["type"] == "category"){ 
-                $("#" + self.elementId + " .text-custom-input[data-id='"+ index +"']").show(); 
+        $("#" + this.elementId + " .span-custom-input").click(function () {
+            var index = $(this).data("id");
+            if (self.dataitem[index]["id"] == 0 || self.dataitem[index]["type"] == "category") {
+                $("#" + self.elementId + " .text-custom-input[data-id='" + index + "']").show();
                 $(this).hide();
-                $(".btn-action.detail[data-id='"+ index +"'][data-type='edit']").hide();
-                $(".btn-action.detail[data-id='"+ index +"'][data-type='save']").show();  
+                $(".btn-action.detail[data-id='" + index + "'][data-type='edit']").hide();
+                $(".btn-action.detail[data-id='" + index + "'][data-type='save']").show();
             }
-            $("#" + self.elementId + " .text-custom-input[data-id='"+ index +"']").on('input', function() {  
+            $("#" + self.elementId + " .text-custom-input[data-id='" + index + "']").on('input', function () {
                 $(this).height('auto');
                 $(this).height(this.scrollHeight);
-            }).on('focusout', function() {  
+            }).on('focusout', function () {
                 self.saveEditableInput(index)
-            }); 
+            });
         });
-        $("#" + this.elementId + " .btn-action.detail[data-type='edit']").click(function(){
-            $("#" + self.elementId + " .span-custom-input[data-id='"+ $(this).data("id") +"']").trigger("click");
+        $("#" + this.elementId + " .btn-action.detail[data-type='edit']").click(function () {
+            $("#" + self.elementId + " .span-custom-input[data-id='" + $(this).data("id") + "']").trigger("click");
         })
-        $("#" + this.elementId + " .btn-action.detail[data-type='save']").click(function(){
-            self.saveEditableInput($(this).data("id")); 
-        }) 
-        $("#" + this.elementId + " .btn-action.detail[data-type='delete']").click(function(){
-            self.dataitem.splice($(this).data("id"),1); 
+        $("#" + this.elementId + " .btn-action.detail[data-type='save']").click(function () {
+            self.saveEditableInput($(this).data("id"));
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='delete']").click(function () {
+            self.dataitem.splice($(this).data("id"), 1);
             self.render()
-        })  
-        $("#" + this.elementId + " .btn-action.detail[data-type='up']").click(function(){  
-            if ($(this).data("id")  > 0) { 
-                var nilaiSementara = self.dataitem[$(this).data("id") - 1]; 
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='up']").click(function () {
+            if ($(this).data("id") > 0) {
+                var nilaiSementara = self.dataitem[$(this).data("id") - 1];
                 self.dataitem.splice($(this).data("id") - 1, 1, self.dataitem[$(this).data("id")]);
                 self.dataitem.splice($(this).data("id"), 1, nilaiSementara);
             }
             self.render()
-        })  
-        $("#" + this.elementId + " .btn-action.detail[data-type='down']").click(function(){ 
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='down']").click(function () {
 
             if ($(this).data("id") < self.dataitem.length - 1) {
                 var nilaiSementara = self.dataitem[$(this).data("id") + 1];
                 self.dataitem.splice($(this).data("id") + 1, 1, self.dataitem[$(this).data("id")]);
                 self.dataitem.splice($(this).data("id"), 1, nilaiSementara);
-            } 
+            }
             self.render()
-        })   
-    }  
+        })
+    }
 }
 
-class tableItemPo { 
-    constructor(elementId,options = {}) { 
+class tableItemPo {
+    constructor(elementId, options = {}) {
         this.elementId = elementId;
-        this.dataitem = options.dataitem || []; 
-        this.baseUrl = options.baseUrl || ""; 
-        this.dropdownParent = options.dropdownParent || $(`#${this.elementId}`); 
-        this.modalel = options.modal || $(`#${this.elementId}`); 
-        this.eventHandlers = {}; 
+        this.dataitem = options.dataitem || [];
+        this.baseUrl = options.baseUrl || "";
+        this.dropdownParent = options.dropdownParent || $(`#${this.elementId}`);
+        this.modalel = options.modal || $(`#${this.elementId}`);
+        this.eventHandlers = {};
         this.getDataRow();
-        this.render(); 
-    } 
+        this.render();
+    }
     on(eventName, callback) {
         if (!this.eventHandlers[eventName]) {
-          this.eventHandlers[eventName] = [];
+            this.eventHandlers[eventName] = [];
         }
         this.eventHandlers[eventName].push(callback);
     }
     trigger(eventName, data) {
         if (this.eventHandlers[eventName]) {
-          this.eventHandlers[eventName].forEach(callback => {
-            callback(data);
-          });
+            this.eventHandlers[eventName].forEach(callback => {
+                callback(data);
+            });
         }
     }
-    setData(data){
+    setData(data) {
         this.dataitem = data;
-        this.render(); 
+        this.render();
     }
-    addDataRow(arr){
-        this.dataitem.push(arr) ;
-    } 
-    saveEditableInput(index){  
-        var data_value = $("#" + this.elementId + " .text-custom-input[data-id='"+ index + "']").val();
-        $("#" + this.elementId + " .span-custom-input[data-id='"+ index + "']").html(data_value.replaceAll(/\n/g, '<br>'));
-        $("#" + this.elementId + " .text-custom-input[data-id='"+ index + "']").hide();
-        $("#" + this.elementId + " .span-custom-input[data-id='"+ index + "']").show();
-        $("#" + this.elementId + " .btn-action.detail[data-id='"+ index +"'][data-type='edit']").show();
-        $("#" + this.elementId + " .btn-action.detail[data-id='"+ index +"'][data-type='save']").hide();
- 
+    addDataRow(arr) {
+        this.dataitem.push(arr);
+    }
+    saveEditableInput(index) {
+        var data_value = $("#" + this.elementId + " .text-custom-input[data-id='" + index + "']").val();
+        $("#" + this.elementId + " .span-custom-input[data-id='" + index + "']").html(data_value.replaceAll(/\n/g, '<br>'));
+        $("#" + this.elementId + " .text-custom-input[data-id='" + index + "']").hide();
+        $("#" + this.elementId + " .span-custom-input[data-id='" + index + "']").show();
+        $("#" + this.elementId + " .btn-action.detail[data-id='" + index + "'][data-type='edit']").show();
+        $("#" + this.elementId + " .btn-action.detail[data-id='" + index + "'][data-type='save']").hide();
+
         this.dataitem[index]["text"] = data_value;
     }
-    getDataRow(){ 
+    getDataRow() {
         return this.dataitem;
     }
-    getSubTotal(){ 
+    getSubTotal() {
         var totalitem = this.dataitem.reduce((acc, current) => acc + current.price * current.qty, 0);
-        var totaldiscitem = this.dataitem.reduce((acc, current) => acc + current.disc * current.qty , 0);
-        var data =  {
+        var totaldiscitem = this.dataitem.reduce((acc, current) => acc + current.disc * current.qty, 0);
+        var data = {
             "totalitem": totalitem,
             "totaldiscitem": totaldiscitem
         }
-        this.trigger("subtotal",data);
+        this.trigger("subtotal", data);
         return data;
     }
- 
-    loadDatahtml(){
-        try {  
-            if(this.dataitem.length === 0){
+
+    loadDatahtml() {
+        try {
+            if (this.dataitem.length === 0) {
                 return `<div class="d-flex justify-content-center flex-column align-items-center">
                 <img src="${this.baseUrl}assets/images/empty.png" alt="" style="width:150px;height:150px;">
                 <span class="text-head-1">Item belum ditambahkan</span>
                 </div>`;
-            }else{
-                var html = ''; 
+            } else {
+                var html = '';
                 var last_group_abjad = 65;
                 var last_group_no = 1;
-                for(var i = 0; this.dataitem.length > i;i++){
+                for (var i = 0; this.dataitem.length > i; i++) {
                     var data_value = this.dataitem[i]["text"];
-                    if(this.dataitem[i]["type"] == "category"){ 
+                    if (this.dataitem[i]["type"] == "category") {
                         html += `
                             <div class="row align-items-center mx-0 hr p-2">
                                 <div class="col-12 col-md-6 px-0">      
@@ -1068,17 +1069,17 @@ class tableItemPo {
                             </div>`;
                         last_group_abjad++;
                         last_group_no = 1;
-                    }  
-                    if(this.dataitem[i]["type"] == "product"){ 
+                    }
+                    if (this.dataitem[i]["type"] == "product") {
                         var varian = "";
-                        if(this.dataitem[i]["id"] != "0"){
+                        if (this.dataitem[i]["id"] != "0") {
                             varian = `  <span class="text-detail-2 text-truncate">${this.dataitem[i]["group"]}</span> 
                                         <div class="d-flex gap-1 flex-wrap">`;
-                            for(var j = 0; this.dataitem[i]["varian"].length > j;j++){
-                                varian += `<span class="badge badge-${j % 5}">${this.dataitem[i]["varian"][j]["varian"] + ": " + this.dataitem[i]["varian"][j]["value"]}</span>`; 
+                            for (var j = 0; this.dataitem[i]["varian"].length > j; j++) {
+                                varian += `<span class="badge badge-${j % 5}">${this.dataitem[i]["varian"][j]["varian"] + ": " + this.dataitem[i]["varian"][j]["value"]}</span>`;
                             }
-                            varian +=  '</div>';
-                        } 
+                            varian += '</div>';
+                        }
                         html += `   <div class="row align-items-center mx-0 hr p-2">
                                         <div class="col-12 col-md-6 my-1 varian px-0">   
                                             <div class="d-flex">
@@ -1134,55 +1135,55 @@ class tableItemPo {
                                                 </div>   
                                             </div>    
                                         </div>    
-                                    </div> `; 
-                        last_group_no++; 
-                    } 
+                                    </div> `;
+                        last_group_no++;
+                    }
                 }
-               return html; 
+                return html;
             }
-        } catch (error) {    
+        } catch (error) {
         }
     }
-    setupDatahtml(){
+    setupDatahtml() {
         var self = this;
         var inputqty = [];
-        var inputharga = []; 
+        var inputharga = [];
         var inputtotal = [];
 
-        for(var i = 0; self.dataitem.length > i;i++){
-            if(self.dataitem[i]["type"] == "product"){
+        for (var i = 0; self.dataitem.length > i; i++) {
+            if (self.dataitem[i]["type"] == "product") {
 
-                function total_harga(id){
-                    var total = (inputharga[id].getRawValue() ) * inputqty[id].getRawValue();
+                function total_harga(id) {
+                    var total = (inputharga[id].getRawValue()) * inputqty[id].getRawValue();
                     self.dataitem[id]["total"] = total;
-                    inputtotal[id].setRawValue(total); 
-                    self.getSubTotal(); 
-                } 
+                    inputtotal[id].setRawValue(total);
+                    self.getSubTotal();
+                }
 
                 //event qty
                 inputqty[i] = new Cleave(`#input-qty-${i}`, {
-                        numeral: true,
-                        delimeter: ",",
-                        numeralDecimalScale:3,
-                        numeralThousandGroupStyle:"thousand"
-                }); 
+                    numeral: true,
+                    delimeter: ",",
+                    numeralDecimalScale: 3,
+                    numeralThousandGroupStyle: "thousand"
+                });
                 inputqty[i].setRawValue(self.dataitem[i]["qty"]);
-                $(`#input-qty-${i}`).on("keyup",function(){ 
+                $(`#input-qty-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")]["qty"] = inputqty[$(this).data("id")].getRawValue();
-                    if($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0) 
+                    if ($(`#input-qty-${i}`).val() == "") $(`#input-qty-${i}`).val(0)
                     total_harga($(this).data("id"));
-                });  
- 
+                });
+
                 //event satuan
-                $(`#select-satuan-${i}`).select2({ 
-                    dropdownParent: self.dropdownParent, 
+                $(`#select-satuan-${i}`).select2({
+                    dropdownParent: self.dropdownParent,
                     placeholder: "pilih",
                     width: 'auto',
                     adaptContainerWidth: true,
                     ajax: {
                         url: self.baseUrl + "select2/get-data-produk-satuan",
                         dataType: 'json',
-                        type:"POST",
+                        type: "POST",
                         delay: 250,
                         data: function (params) {
                             // CSRF Hash
@@ -1194,16 +1195,16 @@ class tableItemPo {
                             };
                         },
                         processResults: function (response) {
-                
+
                             // Update CSRF Token
-                            $('.txt_csrfname').val(response.token); 
+                            $('.txt_csrfname').val(response.token);
 
                             return {
                                 results: response.data
                             };
                         },
                         cache: true
-                    }, 
+                    },
                     language: {
                         noResults: function () {
                             return $("<button class=\"btn btn-sm btn-primary\" onclick=\"select_satuan_add()\">Tambah <b>" + $(`#select-satuan-${i}`).data('select2').dropdown.$search[0].value + "</b></button>");
@@ -1211,37 +1212,37 @@ class tableItemPo {
                     },
                     formatResult: select2OptionFormat,
                     formatSelection: select2OptionFormat,
-                    escapeMarkup: function(m) { return m; }
-                }).on("select2:select", function(e) {
-                    var data = e.params.data;  
+                    escapeMarkup: function (m) { return m; }
+                }).on("select2:select", function (e) {
+                    var data = e.params.data;
                     self.dataitem[$(this).data("id")]["satuan_id"] = data.id
-                    self.dataitem[$(this).data("id")]["satuan_text"]= data.text
+                    self.dataitem[$(this).data("id")]["satuan_text"] = data.text
                 });
-                if(self.dataitem[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(self.dataitem[i]["satuan_text"] , self.dataitem[i]["satuan_id"], true, true)).trigger('change');  
-                if(self.dataitem[i]["id"] === "0")  $(`#select-satuan-${i}`).prop("disabled",false)
+                if (self.dataitem[i]["satuan_id"] > 0) $(`#select-satuan-${i}`).append(new Option(self.dataitem[i]["satuan_text"], self.dataitem[i]["satuan_id"], true, true)).trigger('change');
+                if (self.dataitem[i]["id"] === "0") $(`#select-satuan-${i}`).prop("disabled", false)
                 //event harga
                 inputharga[i] = new Cleave(`#input-harga-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
+                    numeralDecimalScale: 0,
+                    numeralThousandGroupStyle: "thousand"
+                });
                 inputharga[i].setRawValue(self.dataitem[i]["price"]);
-                $(`#input-harga-${i}`).on("keyup",function(){ 
+                $(`#input-harga-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")]["price"] = inputharga[$(this).data("id")].getRawValue();
-                    if($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0) 
+                    if ($(`#input-harga-${i}`).val() == "") $(`#input-harga-${i}`).val(0)
                     total_harga($(this).data("id"));
-                });    
+                });
 
                 //event total
                 inputtotal[i] = new Cleave(`#input-total-${i}`, {
                     numeral: true,
                     delimeter: ",",
-                    numeralDecimalScale:0,
-                    numeralThousandGroupStyle:"thousand"
-                }); 
-                inputtotal[i].setRawValue(self.dataitem[i]["total"]); 
-                
+                    numeralDecimalScale: 0,
+                    numeralThousandGroupStyle: "thousand"
+                });
+                inputtotal[i].setRawValue(self.dataitem[i]["total"]);
+
                 total_harga(i);
             }
         }
@@ -1307,7 +1308,7 @@ class tableItemPo {
             </div>
             </div>
         `;
-        try { 
+        try {
             $("#" + this.elementId).html(html);
         } catch (error) {
             console.log(error);
@@ -1316,60 +1317,60 @@ class tableItemPo {
 
         //master add button
         var isProcessingSphAddproduk = false;
-        $("#" + this.elementId + " a[name='btn-add-product']").click(function(){
+        $("#" + this.elementId + " a[name='btn-add-product']").click(function () {
             var elem = $(this);
             if (isProcessingSphAddproduk) {
                 console.log("add-product cancel load");
                 return;
-            }  
-            isProcessingSphAddproduk = true; 
+            }
+            isProcessingSphAddproduk = true;
             var old_text = $(elem).html();
             $(elem).html('<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>');
 
-            $.ajax({  
+            $.ajax({
                 method: "POST",
-                url: self.baseUrl + "message/select-produk", 
-                success: function(data) {  
-                    isProcessingSphAddproduk = false; 
-                    $(elem).html(old_text); 
-                    $("#modal-optional").html(data); 
-                    self.modalel.modal("hide");   
-                    $("#modal-select-item").modal("show"); 
+                url: self.baseUrl + "message/select-produk",
+                success: function (data) {
+                    isProcessingSphAddproduk = false;
+                    $(elem).html(old_text);
+                    $("#modal-optional").html(data);
+                    self.modalel.modal("hide");
+                    $("#modal-select-item").modal("show");
 
                     // Membuat event emitter
-                    $(document).on("select_produk", function(event, data) { 
-                        if(data.id === undefined) return;
- 
-                        for(var i = 0;self.dataitem.length > i;i++){  
-                            if(data.id == 0) continue
-                            if(self.dataitem[i]["type"] == "product"){ 
+                    $(document).on("select_produk", function (event, data) {
+                        if (data.id === undefined) return;
+
+                        for (var i = 0; self.dataitem.length > i; i++) {
+                            if (data.id == 0) continue
+                            if (self.dataitem[i]["type"] == "product") {
                                 var arr1 = self.dataitem[i]["varian"];
                                 var arr2 = data.varian;
                                 arr1.sort((a, b) => a.varian.localeCompare(b.varian));
                                 arr2.sort((a, b) => a.varian.localeCompare(b.varian));
                             }
-                            if(JSON.stringify(arr1) === JSON.stringify(arr2) && self.dataitem[i]["produkid"] === data.produkid ){
+                            if (JSON.stringify(arr1) === JSON.stringify(arr2) && self.dataitem[i]["produkid"] === data.produkid) {
                                 Swal.fire({
                                     icon: 'error',
-                                    text: "Item sudah ada !!!", 
-                                    confirmButtonColor: "#3085d6", 
+                                    text: "Item sudah ada !!!",
+                                    confirmButtonColor: "#3085d6",
                                 });
                                 return;
                             }
-                        }  
-                
+                        }
+
                         data["type"] = "product";
-                        self.addDataRow(data)  
-                        $("#modal-select-item").modal("hide");  
+                        self.addDataRow(data)
+                        $("#modal-select-item").modal("hide");
                         self.render();
                     });
-                       
+
                     $('#modal-select-item').on('hidden.bs.modal', function () {
                         if (document.activeElement) {
                             document.activeElement.blur();
                         }
-                        self.modalel.modal("show");   
-                        
+                        self.modalel.modal("show");
+
                         $(document).off("select_produk");
                     });
 
@@ -1390,94 +1391,94 @@ class tableItemPo {
                     //     select_produk(data_select_produk);
                     // });
                 },
-                error: function(xhr, textStatus, errorThrown){ 
+                error: function (xhr, textStatus, errorThrown) {
                     isProcessingSphAddproduk = false;
-                    $(elem).html(old_text); 
+                    $(elem).html(old_text);
 
                     Swal.fire({
                         icon: 'error',
-                        text: xhr["responseJSON"]['message'], 
-                        confirmButtonColor: "#3085d6", 
+                        text: xhr["responseJSON"]['message'],
+                        confirmButtonColor: "#3085d6",
                     });
                 }
             });
         });
-        $("#" + this.elementId + " a[name='btn-add-product-manual']").click(function(){ 
+        $("#" + this.elementId + " a[name='btn-add-product-manual']").click(function () {
             self.addDataRow({
                 "id": 0,
                 "produkid": 0,
                 "varian": [],
-                "text" : "produk",
-                "group" : "", 
+                "text": "produk",
+                "group": "",
                 "berat": 0,
                 "satuan_id": 0,
                 "satuan_text": "",
-                "pcsM2": "",  
-                "price":0,
+                "pcsM2": "",
+                "price": 0,
                 "disc": 0,
-                "qty":  1,
+                "qty": 1,
                 "total": 0,
-                "type" :"product",
-                "image_url" : "https://192.168.100.52/mahiera/assets/images/produk/default.png"
+                "type": "product",
+                "image_url": "https://192.168.100.52/mahiera/assets/images/produk/default.png"
             });
             self.render();
-        }); 
-        $("#" + this.elementId + " a[name='btn-add-category']").click(function(){
+        });
+        $("#" + this.elementId + " a[name='btn-add-category']").click(function () {
             self.addDataRow({
                 type: "category",
                 text: "Kategori",
                 qty: 0,
                 price: 0,
                 disc: 0,
-                total: 0, 
-                varian: [], 
+                total: 0,
+                varian: [],
             });
             self.render();
         });
 
 
         //event Action Button rows and input editable label
-        $("#" + this.elementId + " .span-custom-input").click(function(){
-            var index =  $(this).data("id");
-            if(self.dataitem[index]["id"] == 0 || self.dataitem[index]["type"] == "category"){ 
-                $("#" + self.elementId + " .text-custom-input[data-id='"+ index +"']").show(); 
+        $("#" + this.elementId + " .span-custom-input").click(function () {
+            var index = $(this).data("id");
+            if (self.dataitem[index]["id"] == 0 || self.dataitem[index]["type"] == "category") {
+                $("#" + self.elementId + " .text-custom-input[data-id='" + index + "']").show();
                 $(this).hide();
-                $(".btn-action.detail[data-id='"+ index +"'][data-type='edit']").hide();
-                $(".btn-action.detail[data-id='"+ index +"'][data-type='save']").show();  
+                $(".btn-action.detail[data-id='" + index + "'][data-type='edit']").hide();
+                $(".btn-action.detail[data-id='" + index + "'][data-type='save']").show();
             }
-            $("#" + self.elementId + " .text-custom-input[data-id='"+ index +"']").on('input', function() {  
+            $("#" + self.elementId + " .text-custom-input[data-id='" + index + "']").on('input', function () {
                 $(this).height('auto');
                 $(this).height(this.scrollHeight);
-            }).on('focusout', function() {  
+            }).on('focusout', function () {
                 self.saveEditableInput(index)
-            }); 
+            });
         });
-        $("#" + this.elementId + " .btn-action.detail[data-type='edit']").click(function(){
-            $("#" + self.elementId + " .span-custom-input[data-id='"+ $(this).data("id") +"']").trigger("click");
+        $("#" + this.elementId + " .btn-action.detail[data-type='edit']").click(function () {
+            $("#" + self.elementId + " .span-custom-input[data-id='" + $(this).data("id") + "']").trigger("click");
         })
-        $("#" + this.elementId + " .btn-action.detail[data-type='save']").click(function(){
-            self.saveEditableInput($(this).data("id")); 
-        }) 
-        $("#" + this.elementId + " .btn-action.detail[data-type='delete']").click(function(){
-            self.dataitem.splice($(this).data("id"),1); 
+        $("#" + this.elementId + " .btn-action.detail[data-type='save']").click(function () {
+            self.saveEditableInput($(this).data("id"));
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='delete']").click(function () {
+            self.dataitem.splice($(this).data("id"), 1);
             self.render()
-        })  
-        $("#" + this.elementId + " .btn-action.detail[data-type='up']").click(function(){  
-            if ($(this).data("id")  > 0) { 
-                var nilaiSementara = self.dataitem[$(this).data("id") - 1]; 
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='up']").click(function () {
+            if ($(this).data("id") > 0) {
+                var nilaiSementara = self.dataitem[$(this).data("id") - 1];
                 self.dataitem.splice($(this).data("id") - 1, 1, self.dataitem[$(this).data("id")]);
                 self.dataitem.splice($(this).data("id"), 1, nilaiSementara);
             }
             self.render()
-        })  
-        $("#" + this.elementId + " .btn-action.detail[data-type='down']").click(function(){ 
+        })
+        $("#" + this.elementId + " .btn-action.detail[data-type='down']").click(function () {
 
             if ($(this).data("id") < self.dataitem.length - 1) {
                 var nilaiSementara = self.dataitem[$(this).data("id") + 1];
                 self.dataitem.splice($(this).data("id") + 1, 1, self.dataitem[$(this).data("id")]);
                 self.dataitem.splice($(this).data("id"), 1, nilaiSementara);
-            } 
+            }
             self.render()
-        })   
-    } 
+        })
+    }
 }

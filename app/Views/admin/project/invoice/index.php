@@ -1374,8 +1374,9 @@ view_file = function(el) {
                               $('#view-container').html(`<div style="position: fixed;padding: 0;margin: 0;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);display: flex;justify-content: center;align-items: end;z-index: 2000;">
                     <iframe src="${viewerUrl}" frameborder="0" style="width: 100vw;height: calc(100vh - 50px);"></iframe>
                     <div class="bar-action">
-                        <span class="flex-fill">${$(el).data("name")}</span>  
-                        <i class="fa-solid fa-xmark" onclick="closeIframe()"></i>
+                        <span class="flex-fill">${$(el).data("name")}</span> 
+                        <iconify-icon icon="material-symbols:close-rounded" class="menu-icon" onclick="closeIframe()">
+                                                  </iconify-icon>  
                     </div>
                     
                 </div> `);
@@ -1389,7 +1390,8 @@ view_file = function(el) {
                     </div>
                     <div class="bar-action">
                         <span class="flex-fill">${$(el).data("name")}</span>  
-                        <i class="fa-solid fa-xmark" onclick="closeIframe()"></i>
+                        <iconify-icon icon="material-symbols:close-rounded" class="menu-icon" onclick="closeIframe()">
+                                                  </iconify-icon>  
                     </div> 
                     
                 </div> `);
