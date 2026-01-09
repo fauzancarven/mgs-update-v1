@@ -221,7 +221,7 @@ class HeaderModel extends Model
                 $html = '<div class="fixed">
                     <div class="header"> 
                         <div class="logo">  
-                            <img class="mgs" src="assets/images/logo/brand/sentra.png" alt=""> 
+                            <img class=" " src="assets/images/logo/brand/sentra.png" alt=""> 
                         </div>
                         <div class="deskripsi">
                             <table>
@@ -488,8 +488,8 @@ class HeaderModel extends Model
         switch ($id) { 
             case 2:
                 $html = ' <div class="header">
-                <div class="logo">  
-                    <img src="assets/images/logo/logo-brj-blue.png" alt=""> 
+                <div class="logo brj">  
+                    <img src="assets/images/logo/brand/brj-notext-color.png" alt=""> 
                     <span>BATA REGULER JAKARTA</span>
                 </div>
                 <div class="deskripsi">
@@ -531,8 +531,8 @@ class HeaderModel extends Model
                 break;
             case 8:
                 $html = ' <div class="header">
-                <div class="logo">  
-                    <img src="assets/images/logo/sentra.png" alt="" style="padding-left:10px"> 
+                <div class="logo sentra">  
+                    <img src="assets/images/logo/brand/sentra-notext-color.png"  alt="" style="padding-left:10px"> 
                     <span>SENTRA BATA INDONESIA</span>
                 </div>
                 <div class="deskripsi">

@@ -89,7 +89,7 @@ body {
 
 .logo img {
           position: absolute;
-          height: 65px;
+          height: 80px;
           width: 80px;
           left: 41px;
           top: 5px;

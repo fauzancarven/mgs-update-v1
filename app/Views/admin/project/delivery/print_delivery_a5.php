@@ -69,6 +69,21 @@ body {
           width: 140px;
 }
 
+
+.logo.sentra img {
+          top: -15px;
+          left: 35px;
+          height: 80px;
+          width: 80px;
+}
+
+.logo.brj img {
+          top: -15px;
+          left: 45px;
+          height: 80px;
+          width: 80px;
+}
+
 .deskripsi {
           position: absolute;
           left: 0;
