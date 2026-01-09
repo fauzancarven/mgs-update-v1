@@ -299,7 +299,7 @@ class HeaderModel extends Model
                     </div>'
                 ;
             
-                $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0812-1260-9995<br>ADMIN SENTRA BATA';
+                $detail = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0812-1260-9995<br>ADMIN SENTRABATA INDONESIA';
                 break;
             case 5:
             case 6:
@@ -533,7 +533,7 @@ class HeaderModel extends Model
                 $html = ' <div class="header">
                 <div class="logo sentra">  
                     <img src="assets/images/logo/brand/sentra-notext-color.png"  alt="" style="padding-left:10px"> 
-                    <span>SENTRA BATA INDONESIA</span>
+                    <span>SENTRABATA INDONESIA</span>
                 </div>
                 <div class="deskripsi">
                     <table>
