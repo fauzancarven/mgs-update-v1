@@ -958,7 +958,7 @@ $(document).ready(function() {
             if(data_detail_item[i]["type"] == "product"){ 
                 detail.push({
                     ProdukId: data_detail_item[i]["produkid"], 
-                    SphDetailText: data_detail_item[i]["text"],
+                    SphDetailText: data_detail_item[i]["text"].replace(/\n/g, '<br>'),
                     SphDetailType: data_detail_item[i]["type"], 
                     SphDetailSatuanId: data_detail_item[i]["satuan_id"], 
                     SphDetailSatuanText: data_detail_item[i]["satuan_text"],

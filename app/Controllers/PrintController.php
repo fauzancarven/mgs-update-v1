@@ -16,6 +16,10 @@ use Config\Services;
 define("DOMPDF_ENABLE_REMOTE", false);
 class PrintController extends BaseController
 {
+     public function __construct()
+    {
+        while (ob_get_level()) { ob_end_clean(); }
+    }
         public function survey($id){
                  
                 $options = new Options(); 
@@ -38,6 +42,7 @@ class PrintController extends BaseController
                 //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();
+                
                 $dompdf->stream( 'SVY_'.$data["survey"]->SurveyCustName.'_'.$data["survey"]->SurveyDate.'.pdf', [ 'Attachment' => false ]);
         }
         
@@ -100,15 +105,19 @@ class PrintController extends BaseController
                 };
                 $data["detail"] = $detail; 
                 $data["postdata"] = $postData; 
-                $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);  
+                if(isset($postData["custom"])){  
+                        $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId,true);
+                }else{ 
+                        $data["header_footer"] = $modelheader->get_header_a4($data["sph"]->StoreId);
+                }  
                 
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
 
                 $html = view('admin/project/sph/print_sph_a4',$data);  
-                //return $html;
+                //return $html; 
                 $dompdf->loadHtml($html);
-                $dompdf->render();
+                $dompdf->render(); 
                 $dompdf->stream( 'SPH_'.$data["sph"]->CustomerName.'_'.$data["sph"]->SphDate.'.pdf', [ 'Attachment' => false ]);
 	}
 	public function project_invoice($id)
@@ -122,9 +131,10 @@ class PrintController extends BaseController
                 $options->set('orientation', 'potrait');
 
                 $models = new ProjectModel();
+                $modelInvoice = new InvoiceModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
-                $data["inv"] = $models->get_data_invoice($id); 
+                $data["inv"] = $modelInvoice->get_data_invoice($id); 
                 $arr_detail = $models->get_data_invoice_detail($id);
                 $detail = array();
                 foreach($arr_detail as $row){ 
@@ -152,14 +162,13 @@ class PrintController extends BaseController
                 }
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
-                if($data["postdata"]["kertas"] == "A5"){ 
-                        $dompdf->set_paper(array(0,0,420, 620), 'landscape');
+                if($data["postdata"]["kertas"] == "A5"){  
+                        $dompdf->set_paper(array(0,0,420, 620), 'landscape'); 
                         $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);
                         $html = view('admin/project/invoice/print_invoice_a5',$data); 
-                }else{ 
-                        $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId); 
-                        $html = view('admin/project/invoice/print_invoice_a4_pica',$data); 
-                        // $html = view('admin/project/invoice/print_invoice_a4',$data); 
+                }else{  
+                        $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
+                        $html = view('admin/project/invoice/print_invoice_a4',$data); 
                 }
                 //return $html;
                 $dompdf->loadHtml($html);
@@ -178,6 +187,7 @@ class PrintController extends BaseController
                 $models = new ProjectModel(); 
                 $modelheader = new HeaderModel(); 
                 $data["project"] = $models->get_data_invoice($id); 
+                return  $data["project"];
                 $data["detail"] = $models->get_data_invoice_detail($id); 
                 $data["header_footer"] = $modelheader->get_header_a5($data["project"]->StoreId);  
                 

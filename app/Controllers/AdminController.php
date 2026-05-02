@@ -270,5 +270,21 @@ class AdminController extends BaseController
         ]; 
         return view('admin/delivery/index', $data); 
     }
+    public function chat(){    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Chat',
+            'menu' => "Chat", 
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/chat/index', $data); 
+    }
+    
     
 }

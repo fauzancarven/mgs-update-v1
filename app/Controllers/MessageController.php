@@ -1323,7 +1323,7 @@ class MessageController extends BaseController
 
         $data["delivery"] = $delivery; 
         $data["detail"] =  $detail; 
-        $data["template"] =$models->get_data_template_footer($delivery->TemplateId);   
+        //$data["template"] =$models->get_data_template_footer($delivery->TemplateId);   
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
     }
@@ -1567,9 +1567,10 @@ class MessageController extends BaseController
             );
         };
 
+        $modelsTemplate = new TemplatefooterModel();    
         $data["delivery"] = $delivery; 
         $data["detail"] =  $detail; 
-        $data["template"] =$models->get_data_template_footer($delivery->TemplateId);   
+        $data["template"] = $modelsTemplate->get_data_template_footer($delivery->TemplateId);   
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
     }
@@ -1585,6 +1586,7 @@ class MessageController extends BaseController
     {       
         $models = new ProjectModel();
         $modelsproduk = new ProdukModel();
+        
         $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth 
 
@@ -1612,4 +1614,3 @@ class MessageController extends BaseController
         return $this->response->setBody(view('admin/project/delivery/add_finish_delivery',$data)); 
     } 
 }
-

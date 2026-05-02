@@ -159,7 +159,7 @@
     table.item{
         width: 100%;
         border-collapse: collapse;
-        table-layout: fixed;
+        /* table-layout: fixed; */
         line-height:1.2;
     }
 

@@ -4050,9 +4050,13 @@ class ProjectModel extends Model
         WHEN DeliveryRefType = 'Sample' THEN (select SampleCode from sample where SampleId = DeliveryRef)
         WHEN DeliveryRefType = 'Pembelian' THEN (select POCode from pembelian where POId = DeliveryRef)
         WHEN DeliveryRefType = 'Invoice' THEN (select InvCode from invoice where InvId = DeliveryRef)
-        END AS 'DeliveryRefCode'"); 
-        $builder->join('customer',"delivery.CustomerId=customer.CustomerId","left");   
-        $builder->join('store',"store.StoreId=delivery.StoreId","left"); 
+        END AS 'DeliveryRefCode',  CASE 
+        WHEN DeliveryRefType = '-' THEN '0'
+        WHEN DeliveryRefType = 'Sample' THEN (select StoreId from sample where SampleId = DeliveryRef)
+        WHEN DeliveryRefType = 'Pembelian' THEN (select StoreId from pembelian where POId = DeliveryRef)
+        WHEN DeliveryRefType = 'Invoice' THEN (select StoreId from invoice where InvId = DeliveryRef)
+        END AS 'StoreId'"); 
+        $builder->join('customer',"delivery.CustomerId=customer.CustomerId","left");    
         $builder->join("template_footer","delivery.TemplateId = template_footer.TemplateFooterId","left");
         $builder->where('delivery.DeliveryId',$id);  
         return $builder->get()->getRow();  

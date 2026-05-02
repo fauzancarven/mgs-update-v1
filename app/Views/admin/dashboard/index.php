@@ -3,147 +3,168 @@
 <?php $this->section('content'); ?>
 
 <style>
-    .simple-pagination ul {
-        margin: 0 0 20px;
-        padding: 0;
-        list-style: none;
-        text-align: left;
-    }
+.simple-pagination ul {
+          margin: 0 0 20px;
+          padding: 0;
+          list-style: none;
+          text-align: left;
+}
 
-    .simple-pagination li {
-        display: inline-block;
-        margin-right: 5px;
+.simple-pagination li {
+          display: inline-block;
+          margin-right: 5px;
 
-    }
+}
 
-    .simple-pagination li a,
-    .simple-pagination li span {
-        color: #666;
-        padding: 8px 12px;
-        text-decoration: none;
-        background-color: #FFF;
-        border-radius: 5px;
-        margin-bottom: 5px;
-    }
+.simple-pagination li a,
+.simple-pagination li span {
+          color: #666;
+          padding: 8px 12px;
+          text-decoration: none;
+          background-color: #FFF;
+          border-radius: 5px;
+          margin-bottom: 5px;
+}
 
-    .simple-pagination .current {
-        color: #0B1460;
-        background-color: #fff;
-        border: 1px;
-        border-style: solid;
-    }
+.simple-pagination .current {
+          color: #0B1460;
+          background-color: #fff;
+          border: 1px;
+          border-style: solid;
+}
 
-    .simple-pagination .prev.current,
-    .simple-pagination .next.current {
-        background: #fff;
-    }
+.simple-pagination .prev.current,
+.simple-pagination .next.current {
+          background: #fff;
+}
 
-    .swiper-wrapper {
-        position: relative;
-        width: 100%;
-        /* height: 63px !important; */
-        height: 45px !important;
-    }
+.swiper-wrapper {
+          position: relative;
+          width: 100%;
+          /* height: 63px !important; */
+          height: 45px !important;
+}
 </style>
- 
+
 
 <div class="">
-    <div class="row">
-        <div class="col-md-12 grid-margin">
-            <div class="row">
-                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                    <h3 class="font-weight-bold">Welcome <?= user()->username?></h3>
-                    <!-- <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span class="text-primary">3 unread alerts!</span></h6> -->
-                </div>
-                <div class="col-12 col-xl-4">
-                    <!-- <div class="justify-content-end d-flex">
-                        <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                            <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <i class="mdi mdi-calendar"></i> Today (10 Jan 2021)
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                                <a class="dropdown-item" href="#">January - March</a>
-                                <a class="dropdown-item" href="#">March - June</a>
-                                <a class="dropdown-item" href="#">June - August</a>
-                                <a class="dropdown-item" href="#">August - November</a>
-                            </div>
-                        </div>
-                    </div> -->
-                </div>
-            </div>
-        </div>
-    </div> 
-    <h5 class="font-weight-normal mb-0 p-2 fw-bold">Master Data</h5>
-    <div class="d-flex g-2 flex-md-row flex-column">
-        <a class="card card-tale m-2" style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/store") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-store fa-4x"></i> 
-                <p class="pt-4 fw-bold">STORE</p> 
-            </div>
-        </a>
-        <a class="card card-dark-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/account") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-user fa-4x"></i>
-                <span class="pt-4 fw-bold">ACCOUNT</span> 
-            </div>
-        </a>
-        <a class="card tale-bg m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/customer") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-users fa-4x"></i>
-                <p class="pt-4 fw-bold">CUSTOMER</p> 
-            </div>
-        </a>
-        <a class="card card-light-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/vendor") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-cart-flatbed-suitcase fa-4x"></i>
-                <p class="pt-4 fw-bold">VENDOR</p> 
-            </div>
-        </a>
-        <a class="card card-light-danger m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/produk") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-basket-shopping fa-4x"></i>
-                <p class="pt-4 fw-bold">PRODUK</p> 
-            </div>
-        </a>
-    </div> 
-    <h5 class="font-weight-normal mb-0 p-2 fw-bold">Sales</h5> 
-    <div class="d-flex g-2 flex-md-row flex-column">
-        <a class="card card-dark-blue m-2 d-none"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/project") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="ti-blackboard menu-icon fa-4x"></i>
-                <p class="pt-4 fw-bold">PROJECT</p> 
-            </div>
-        </a> 
-        <a class="card card-dark-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/sales/survey") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-street-view fa-4x"></i>
-                <p class="pt-4 fw-bold">Survey</p> 
-            </div>
-        </a> 
-        <a class="card card-dark-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/sales/sample") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-truck-ramp-box fa-4x"></i>
-                <p class="pt-4 fw-bold">Sample</p> 
-            </div>
-        </a> 
-        <a class="card card-dark-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/sales/penawaran") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-hand-holding-droplet fa-4x"></i>
-                <p class="pt-4 fw-bold">Penawaran</p> 
-            </div>
-        </a> 
-        <a class="card card-dark-blue m-2"  style="cursor:pointer;text-decoration:none" href="<?= base_url("/admin/sales/invoice") ?>">
-            <div class="card-body d-flex flex-column text-center">
-                <i class="fa-solid fa-money-bill fa-4x"></i>
-                <p class="pt-4 fw-bold">Invoice</p> 
-            </div>
-        </a>
-    </div> 
-   
-    <div style="margin-bottom: 100px;"></div> 
+          <div class="row">
+                    <div class="col-md-12">
+                              <div class="row">
+                                        <div class="col-12 col-xl-8 mb-4 mb-xl-0 mx-3">
+                                                  <h3 class="font-weight-bold">Selamat Datang kembali
+                                                            <?= user()->username?></h3>
+                                                  <!-- <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span class="text-primary">3 unread alerts!</span></h6> -->
+                                        </div>
+                                        <div class="col-12 col-xl-4">
+                                                  <!-- <div class="justify-content-end d-flex">
+                                                            <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
+                                                                      <button class="btn btn-sm btn-light bg-white dropdown-toggle"
+                                                                                type="button" id="dropdownMenuDate2"
+                                                                                data-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="true">
+                                                                                <i class="mdi mdi-calendar"></i> Today
+                                                                                (10 Jan 2021)
+                                                                      </button>
+                                                                      <div class="dropdown-menu dropdown-menu-right"
+                                                                                aria-labelledby="dropdownMenuDate2">
+                                                                                <a class="dropdown-item"
+                                                                                          href="#">January - March</a>
+                                                                                <a class="dropdown-item" href="#">March
+                                                                                          - June</a>
+                                                                                <a class="dropdown-item" href="#">June -
+                                                                                          August</a>
+                                                                                <a class="dropdown-item" href="#">August
+                                                                                          - November</a>
+                                                                      </div>
+                                                            </div>
+                                                  </div> -->
+                                        </div>
+                              </div>
+                    </div>
+          </div>
+          <h5 class="font-weight-normal mb-0 p-2 fw-bold">Master Data</h5>
+          <div class="d-flex g-2 flex-md-row flex-column">
+                    <a class="card card-tale m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/store") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-store fa-4x"></i>
+                                        <p class="pt-4 fw-bold">STORE</p>
+                              </div>
+                    </a>
+                    <a class="card card-dark-blue m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/account") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-user fa-4x"></i>
+                                        <span class="pt-4 fw-bold">ACCOUNT</span>
+                              </div>
+                    </a>
+                    <a class="card tale-bg m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/customer") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-users fa-4x"></i>
+                                        <p class="pt-4 fw-bold">CUSTOMER</p>
+                              </div>
+                    </a>
+                    <a class="card card-light-blue m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/vendor") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-cart-flatbed-suitcase fa-4x"></i>
+                                        <p class="pt-4 fw-bold">VENDOR</p>
+                              </div>
+                    </a>
+                    <a class="card card-light-danger m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/produk") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-basket-shopping fa-4x"></i>
+                                        <p class="pt-4 fw-bold">PRODUK</p>
+                              </div>
+                    </a>
+          </div>
+          <h5 class="font-weight-normal mb-0 p-2 fw-bold">Sales</h5>
+          <div class="d-flex g-2 flex-md-row flex-column">
+                    <a class="card card-dark-blue m-2 d-none" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/project") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="ti-blackboard menu-icon fa-4x"></i>
+                                        <p class="pt-4 fw-bold">PROJECT</p>
+                              </div>
+                    </a>
+                    <a class="card card-dark-blue m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/sales/survey") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-street-view fa-4x"></i>
+                                        <p class="pt-4 fw-bold">Survey</p>
+                              </div>
+                    </a>
+                    <a class="card card-dark-blue m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/sales/sample") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-truck-ramp-box fa-4x"></i>
+                                        <p class="pt-4 fw-bold">Sample</p>
+                              </div>
+                    </a>
+                    <a class="card card-dark-blue m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/sales/penawaran") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-hand-holding-droplet fa-4x"></i>
+                                        <p class="pt-4 fw-bold">Penawaran</p>
+                              </div>
+                    </a>
+                    <a class="card card-dark-blue m-2" style="cursor:pointer;text-decoration:none"
+                              href="<?= base_url("/admin/sales/invoice") ?>">
+                              <div class="card-body d-flex flex-column text-center">
+                                        <i class="fa-solid fa-money-bill fa-4x"></i>
+                                        <p class="pt-4 fw-bold">Invoice</p>
+                              </div>
+                    </a>
+          </div>
+
+          <div style="margin-bottom: 100px;"></div>
 
 
-    <!-- <div class="row">
+          <!-- <div class="row">
 
         <div class="col-md-6 stretch-card grid-margin">
             <div class="card">
@@ -264,7 +285,7 @@
             </div>
         </div>
     </div> -->
-    <!-- <div class="row">
+          <!-- <div class="row">
         <div class="col-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -349,33 +370,39 @@
 
 
 <!-- delete Group-->
-<div class="modal fade" id="delete-group" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog " role="document">
-        <div class="modal-content" style="border-radius : 20px;">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">Are you sure want to delete this Group? <br> <span class="text-danger">asdasd</span></div>
-            <div class="modal-footer ">
-                <div class="row d-flex col-12 px-0 py-2">
-                    <div class="col-6">
-                        <button class="btn btn-secondary w-100" type="button" data-dismiss="modal">Cancel</button>
-                    </div>
-                    <div class="col-6">
-                        <form action="<?= base_url(); ?>delete_group" method="post">
-                            <?= csrf_field(); ?>
-                            <input type="hidden" name="_method" value="DELETE">
+<div class="modal fade" id="delete-group" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog " role="document">
+                    <div class="modal-content" style="border-radius : 20px;">
+                              <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                  <span aria-hidden="true">×</span>
+                                        </button>
+                              </div>
+                              <div class="modal-body text-center">Are you sure want to delete this Group? <br> <span
+                                                  class="text-danger">asdasd</span></div>
+                              <div class="modal-footer ">
+                                        <div class="row d-flex col-12 px-0 py-2">
+                                                  <div class="col-6">
+                                                            <button class="btn btn-secondary w-100" type="button"
+                                                                      data-dismiss="modal">Cancel</button>
+                                                  </div>
+                                                  <div class="col-6">
+                                                            <form action="<?= base_url(); ?>delete_group" method="post">
+                                                                      <?= csrf_field(); ?>
+                                                                      <input type="hidden" name="_method"
+                                                                                value="DELETE">
 
-                            <button type="submit" class="btn btn-primary w-100"> Delete</button>
-                        </form>
+                                                                      <button type="submit"
+                                                                                class="btn btn-primary w-100">
+                                                                                Delete</button>
+                                                            </form>
+                                                  </div>
+                                        </div>
+                              </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+          </div>
 </div>
 
 

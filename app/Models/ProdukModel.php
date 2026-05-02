@@ -807,6 +807,7 @@ class ProdukModel extends Model
                     'berat' => $row->ProdukDetailBerat, 
                     'satuan_text' => $row->ProdukSatuanName,
                     'pcsM2' => $row->ProdukDetailPcsM2, 
+                    'varian' => json_decode($row->ProdukDetailVarian),
                 ); 
             }
         }

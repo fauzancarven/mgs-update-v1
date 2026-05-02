@@ -760,6 +760,7 @@
             kertas: $("#InvPrintFormat").val(),
             image: $('input[name="InvPrintImage"]:checked').val(),
             total: $('input[name="InvPrintTotal"]:checked').val(),
+            date: moment().format('DDMMYYYYHHmmss'),
         },
         "GET",'_blank');
         $("#modal-print-invoice").modal("hide");
@@ -1098,6 +1099,7 @@
             image: $('input[name="PaymentPrintImage"]:checked').val(),
             sisa: $('input[name="PaymentPrintPriceSisa"]:checked').val(),
             old: $('input[name="PaymentPrintPriceOld"]:checked').val(),
+            date: moment().format('DDMMYYYYHHmmss'),
         },
         "GET",'_blank');
         $("#modal-print-payment").modal("hide"); 
@@ -1109,6 +1111,7 @@
             image: $('input[name="ProformaPrintImage"]:checked').val(),
             sisa: $('input[name="ProformaPrintPriceSisa"]:checked').val(),
             old: $('input[name="ProformaPrintPriceOld"]:checked').val(),
+            date: moment().format('DDMMYYYYHHmmss'),
         },
         "GET",'_blank');
         $("#modal-print-proforma").modal("hide"); 

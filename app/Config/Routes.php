@@ -27,6 +27,7 @@ $routes->get('/admin/sales/penawaran', 'AdminController::penawaran', ['filter' =
 $routes->get('/admin/sales/invoice', 'AdminController::invoice', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
+$routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);
 
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
@@ -296,7 +297,7 @@ $routes->post('/message/finish-delivery-pembelian/(:num)', 'MessageController::d
  */ 
 $routes->get('/print/survey/(:num)', 'PrintController::survey/$1');  
 $routes->get('/print/project/survey/(:num)', 'PrintController::project_survey/$1');  
-$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1');   
+$routes->get('/print/project/sph/(:num)', 'PrintController::project_sph/$1');      
 $routes->get('/print/project/invoice/(:num)', 'PrintController::project_invoice/$1');  
 $routes->get('/print/project/invoiceA5/(:num)', 'PrintController::project_invoice_a5/$1');  
 $routes->get('/print/project/deliveryA5/(:num)', 'PrintController::project_delivery_a5/$1');  
