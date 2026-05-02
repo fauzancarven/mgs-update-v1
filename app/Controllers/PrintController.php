@@ -89,7 +89,7 @@ class PrintController extends BaseController
                 $detail = array();
                 foreach($arr_detail as $row){
                         $detail[] = array(
-                                "image" => $produk->getproductimage($row->ProdukId), 
+                                "image" => $produk->getproductimagedatavarian($row->ProdukId,$row->SphDetailVarian,false), 
                                 "produkid" => $row->ProdukId, 
                                 "satuan_id"=> ($row->SphDetailSatuanId == 0 ? "" : $row->SphDetailSatuanId),
                                 "satuan_text"=>$row->SphDetailSatuanText,  
@@ -130,10 +130,10 @@ class PrintController extends BaseController
                 $options->set('paper', 'A4');
                 $options->set('orientation', 'potrait');
 
-                $models = new ProjectModel();
+                $models = new InvoiceModel();
                 $produk = new ProdukModel();
                 $modelheader = new HeaderModel(); 
-                $data["inv"] = $models->get_data_invoice($id); 
+                $data["inv"] = $models->get_data_invoice($id);  
                 $arr_detail = $models->get_data_invoice_detail($id);
                 $detail = array();
                 foreach($arr_detail as $row){ 

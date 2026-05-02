@@ -8,6 +8,7 @@ use App\Models\CustomercategoryModel;
 use App\Models\ProjectModel;
 use App\Models\SurveyModel;
 use App\Models\SphModel;
+use App\Models\DeliveryModel;
 use App\Models\PaymentModel;
 use App\Models\ProdukunitModel;
 use App\Models\ProdukcategoryModel;
@@ -351,6 +352,14 @@ class ActionController extends BaseController
             echo $models->update_status_sph($id,$status);  
         }
     } 
+    public function penawaran_comment($id){
+        $request = Services::request();
+        $models = new SphModel(); 
+        if ($request->getMethod(true) === 'POST') {     
+            $postData = $request->getPost();  
+            echo $models->update_comment($postData["SphNote"],$id);  
+        }
+    } 
  
     public function invoice_add(){
         $request = Services::request();
@@ -383,6 +392,14 @@ class ActionController extends BaseController
         $models = new InvoiceModel(); 
         if ($request->getMethod(true) === 'POST') {    
             echo $models->update_status_invoice($id,$status);  
+        }
+    } 
+    public function invoice_comment($id){
+        $request = Services::request();
+        $models = new InvoiceModel(); 
+        if ($request->getMethod(true) === 'POST') {     
+            $postData = $request->getPost();  
+            echo $models->update_comment($postData["InvNote"],$id);  
         }
     } 
 
@@ -467,7 +484,7 @@ class ActionController extends BaseController
 
     public function delivery_add(){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new DeliveryModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->insert_data_delivery($postData); 
@@ -476,7 +493,7 @@ class ActionController extends BaseController
     }
     public function delivery_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new DeliveryModel();
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             $models->update_data_delivery($postData,$id); 
@@ -493,23 +510,41 @@ class ActionController extends BaseController
     }
     public function delivery_proses($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new DeliveryModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->proses_data_delivery($postData,$id);  
         }
     }
-    public function delivery_proses_edit($id){
+    public function delivery_proses_edit_date($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new DeliveryModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
-            echo $models->edit_proses_data_delivery($postData,$id);  
+            echo $models->edit_proses_date_delivery($postData,$id);  
+            echo json_encode(array("status"=>true));
         }
     }
+    public function get_delivery_proses_status($id){ 
+        $models = new DeliveryModel();   
+        $delivery = $models->get_data_delivery($id);
+        echo json_encode(array("status"=>true,"data"=>$models->get_data_status_delivery($delivery))); 
+    }
+
+    public function delivery_proses_edit($id){
+        $request = Services::request();
+        $models = new DeliveryModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            $postData = $request->getPost(); 
+            $models->edit_proses_data_delivery($postData,$id);  
+            echo json_encode(array("status"=>true));
+        }
+    }
+
+
     public function delivery_finish($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new DeliveryModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->finish_data_delivery($postData,$id);  
@@ -517,12 +552,13 @@ class ActionController extends BaseController
     }
     public function delivery_finish_edit($id){
         $request = Services::request();
-        $models = new ProjectModel(); 
+        $models = new DeliveryModel(); 
         if ($request->getMethod(true) === 'POST') {   
             $postData = $request->getPost(); 
             echo $models->finish_data_delivery_edit($postData,$id);  
         }
     }
+    
     public function pembelian_add(){
         $request = Services::request();
         $models = new PembelianModel(); 

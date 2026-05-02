@@ -162,25 +162,24 @@
           </div>
 
           <div class="card-body py-0 py-4 pb-4" id="table">
-                    <div class="table-responsive scroll-sm">
-                              <table id="data-table-invoice" class="table bordered-table " style="width:95%">
-                                        <thead>
-                                                  <tr>
-                                                            <th scope="col">#</th>
-                                                            <th scope="col">Action</th>
-                                                            <th scope="col">Document</th>
-                                                            <th scope="col">Tanggal</th>
-                                                            <th scope="col">Status</th>
-                                                            <th scope="col">Admin</th>
-                                                            <th scope="col">Customer</th>
-                                                            <th scope="col">Grand Total</th>
-                                                            <th scope="col">Sisa Payment</th>
-                                                  </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                              </table>
-                    </div>
+                    <table id="data-table-invoice" class="table bordered-table " style="width:97%">
+                              <thead>
+                                        <tr>
+                                                  <th scope="col"></th>
+                                                  <th scope="col"></th>
+                                                  <th scope="col">Document</th>
+                                                  <th scope="col">Tanggal</th>
+                                                  <th scope="col">Status</th>
+                                                  <th scope="col">Admin</th>
+                                                  <th scope="col">Catatan</th>
+                                                  <th scope="col">Grand Total</th>
+                                                  <th scope="col">Sisa Payment</th>
+                                                  <th scope="col">Customer</th>
+                                        </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                    </table>
           </div>
 </div>
 
@@ -208,7 +207,7 @@
                                                   </div>
                                         </div>
                                         <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="InvPrintImage" class="col-sm-4 col-form-label">gunakan
+                                                  <label for="InvPrintImage" class="col-sm-4 col-form-label">Tampilkan
                                                             gambar item</label>
                                                   <div class="col-sm-8">
                                                             <div class="form-check form-check-inline">
@@ -224,26 +223,6 @@
                                                                                 value="1" checked>
                                                                       <label class="text-detail"
                                                                                 for="InvPrintImage2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2 d-none">
-                                                  <label for="InvPrintTotal" class="col-sm-4 col-form-label">gunakan
-                                                            grand total</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="InvPrintTotal" id="InvPrintTotal1"
-                                                                                value="0">
-                                                                      <label class="text-detail"
-                                                                                for="InvPrintTotal1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="InvPrintTotal" id="InvPrintTotal2"
-                                                                                value="1" checked>
-                                                                      <label class="text-detail"
-                                                                                for="InvPrintTotal2">Ya</label>
                                                             </div>
                                                   </div>
                                         </div>
@@ -565,6 +544,36 @@
           </div>
 </div>
 
+<!-- Modal Comment -->
+<div class="modal fade" id="modal-comment-invoice" tabindex="-1" data-id="0"
+          aria-labelledby="modal-comment-invoiceLabel" aria-hidden="true">
+          <div class="modal-dialog">
+                    <div class="modal-content">
+                              <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="modal-comment-invoiceLabel">Comment invoice
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                  aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body p-3">
+                                        <div class="row mb-24 gy-3 align-items-center">
+                                                  <label class="form-label mb-0 col-sm-3">Catatan</label>
+                                                  <div class="col-sm-9">
+                                                            <textarea id="InvNote" class="form-control" rows="4"
+                                                                      cols="50"
+                                                                      placeholder="Catatan invoice"></textarea>
+                                                  </div>
+                                        </div>
+                              </div>
+                              <div class="modal-footer p-2">
+                                        <button type="button" class="btn btn-sm btn-secondary"
+                                                  data-bs-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-sm btn-primary-600"
+                                                  id="btn-comment-sph">Simpan</button>
+                              </div>
+                    </div>
+          </div>
+</div>
 
 <div id='view-container'></div>
 <div id="modal-message"></div>
@@ -848,7 +857,7 @@ table = $('#data-table-invoice').DataTable({
           },
           "initComplete": function(settings, json) {
                     $("#data-table-invoice").wrap(
-                              "<div style='overflow:auto; width:100%;position:relative;max-height:60vh'></div>"
+                              "<div style='overflow:auto; width:100%;position:relative; height:60vh'></div>"
                     );
                     $('[data-bs-toggle="tooltip"]').tooltip();
           },
@@ -858,7 +867,7 @@ table = $('#data-table-invoice').DataTable({
                               width: "20px",
                               className: "p-0 ps-2",
                               render: function(data, type, row) {
-                                        return '<a class="cursor-pointer text-head-3 btn-detail-item"> <iconify-icon icon="material-symbols:chevron-right-rounded" class="icon text-xxl"> </iconify-icon></a>';
+                                        return '<a class="cursor-pointer text-head-3 btn-detail-item"> <iconify-icon icon="material-symbols:arrow-right-rounded" class="icon text-xxl" style="transition: transform 0.3s ease-in-out"> </iconify-icon></a>';
                               }
                     },
                     {
@@ -869,35 +878,39 @@ table = $('#data-table-invoice').DataTable({
                     },
                     {
                               data: "doc",
-                              className: "align-top",
-                              width: "150px"
+                              width: "100px",
+                              render: function(data, type, row) {
+                                        var html = data + ` 
+                                            <div class="d-flex gap-1 pt-4">
+                                                ${row.payment}
+                                                ${row.delivery}
+                                                ${row.pembelian}
+                                            </div>`;
+                                        return html;
+                              }
                     },
                     {
                               data: "date",
-                              width: "130px",
-                              className: "align-top"
+                              width: "100px",
                     },
                     {
                               data: "status",
-                              width: "150px",
-                              className: "align-top"
+                              width: "100px",
                     },
                     {
                               data: "admin",
                               width: "150px",
-                              className: "align-top"
                     },
                     {
-                              data: "customer",
-                              width: "350px",
-                              className: "align-top",
+                              data: "note",
+                              width: "150px",
+                              className: "action-td",
                               render: function(data, type, row) {
-                                        var html =
-                                                  ` 
-                        <div class="text-head-3 pb-2 text-truncate" style="max-width: 250px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
-                        ${(row.customertelp !== "" ? `<div class="text-detail-3 text-xs">${row.customertelp}</div>` : "")}
-                        <div class="text-detail-3 text-truncate text-xs" style="max-width: 250px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}">${row.customeraddress}</div>`;
-
+                                        var html = `<span>${data}</span>
+                                    <a onclick="comment(${row.InvId},'${row.note}')"
+                                        class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Ubah Catatan">
+                                        <iconify-icon icon="lucide:edit"></iconify-icon>
+                                    </a>`;
                                         return html;
                               }
                     },
@@ -913,15 +926,15 @@ table = $('#data-table-invoice').DataTable({
                               className: "align-top"
                     },
                     {
-                              orderable: false,
-                              className: "align-top",
+                              data: "customer",
+                              //   width: "350px",
                               render: function(data, type, row) {
-                                        var html = ` 
-                        <div class="d-flex gap-1">
-                        ${row.payment}
-                        ${row.delivery}
-                        ${row.pembelian}
-                        </div>`;
+                                        var html =
+                                                  ` 
+                        <div class="text-head-3 pb-2 text-truncate" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
+                        ${(row.customertelp !== "" ? `<div class="text-detail-3 text-xs">${row.customertelp}</div>` : "")}
+                        <div class="text-detail-3 text-truncate text-xxs" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}">${row.customeraddress}</div>`;
+
                                         return html;
                               }
                     },
@@ -941,6 +954,8 @@ table.on('draw.dt', function() {
           if (info.page + 1 > info.pages && info.pages > 0) {
                     table.page('last').draw('page');
           }
+
+          $('[data-bs-toggle="tooltip"]').tooltip();
 });
 table.on('click', '.btn-detail-item', function() {
           console.log("klik detail");
@@ -965,7 +980,8 @@ table.on('click', '.btn-detail-item', function() {
 
 
                     $(".btn-detail-delivery").unbind().click(function() {
-                              console.log("klik delivery", $(this).data("id"));
+
+                              tooltiprenew()
                               var trdelivery = $(".child-row.delivery[data-id='" +
                                         $(
                                                   this).data("id") +
@@ -995,6 +1011,7 @@ table.on('click', '.btn-detail-item', function() {
                               }
                     });
           }
+          $('[data-bs-toggle="tooltip"]').tooltip();
 });
 
 function format(data) {
@@ -1035,7 +1052,6 @@ add_click = function(el) {
           $(el).html(
                     '<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status">Loading...</span>'
           );
-
           $.ajax({
                     method: "POST",
                     url: "<?= base_url() ?>message/add-invoice",
@@ -1082,6 +1098,33 @@ $("#btn-print-invoice").click(function(i) {
 
 })
 
+comment = function(id, catatan) {
+          $("#modal-comment-invoice").modal("show");
+          $("#modal-comment-invoice").data("id", id);
+          $("#InvNote").val(catatan);
+}
+$("#btn-comment-sph").click(function(i) {
+          $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/change-comment-invoice/" +
+                              $("#modal-comment-invoice").data("id"),
+                    data: {
+                              InvNote: $("#InvNote").val()
+                    },
+                    success: function(data) {
+                              Swal.fire({
+                                        title: "Success!",
+                                        text: "Catatan Berhasil disimpan",
+                                        icon: "success",
+                                        confirmButtonColor: "var(--brand)",
+                              });
+                              table.ajax.reload(null, false);
+                              $("#modal-comment-invoice").modal(
+                                        "hide");
+                    },
+          });
+});
 var isProcessingInvoiceEdit;
 edit_invoice = function(id, el, ref) {
 
@@ -1386,7 +1429,7 @@ view_file = function(el) {
                               var viewerUrl = $(el).data("file");
                               $('#view-container').html(`<div style="position: fixed;padding: 0;margin: 0;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);display: flex;justify-content: center;align-items: end;z-index: 2000;">
                     <div id="panzoom-container" style="width: 100vw;height: 100vh">
-                        <img id="gambar" src="<?=base_url()?>${viewerUrl}"> 
+                        <img id="gambar" src="${viewerUrl}"> 
                     </div>
                     <div class="bar-action">
                         <span class="flex-fill">${$(el).data("name")}</span>  
@@ -1530,85 +1573,124 @@ update_invoice_delivery = function(id, el, status) {
 
 var isProcessingDeliveryAdd = [];
 add_invoice_delivery = function(id, el) {
-          // INSERT LOADER BUTTON
-          if (isProcessingDeliveryAdd[id]) {
-                    console.log("project invoice cancel load");
-                    return;
-          }
-          isProcessingDeliveryAdd[id] = true;
-          let old_text = $(el).html();
-          $(el).html(
-                    '<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>'
-          );
 
-          $.ajax({
-                    method: "POST",
-                    url: "<?= base_url() ?>message/add-delivery-invoice/" + id,
-                    success: function(data) {
-                              $("#modal-message").html(data);
-                              $("#modal-add-delivery").modal("show");
-                              $("#modal-add-delivery").data("menu", "Invoice");
-                              $(".tooltip").remove();
+          window.location = "<?= base_url() ?>admin/sales/invoice/delivery_add/" + id;
+          return;
+          //   // INSERT LOADER BUTTON
+          //   if (isProcessingDeliveryAdd[id]) {
+          //             console.log("project invoice cancel load");
+          //             return;
+          //   }
+          //   isProcessingDeliveryAdd[id] = true;
+          //   let old_text = $(el).html();
+          //   $(el).html(
+          //             '<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>'
+          //   );
 
-                              isProcessingDeliveryAdd[id] = false;
-                              $(el).html(old_text);
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                              isProcessingDeliveryAdd[id] = false;
-                              $(el).html(old_text);
+          //   $.ajax({
+          //             method: "POST",
+          //             url: "<?= base_url() ?>message/add-delivery-invoice/" + id,
+          //             success: function(data) {
+          //                       $("#modal-message").html(data);
+          //                       $("#modal-add-delivery").modal("show");
+          //                       $("#modal-add-delivery").data("menu", "Invoice");
+          //                       $(".tooltip").remove();
 
-                              Swal.fire({
-                                        icon: 'error',
-                                        text: xhr["responseJSON"]
-                                                  [
-                                                            'message'
-                                                  ],
-                                        confirmButtonColor: "#3085d6",
-                              });
-                    }
-          });
+          //                       isProcessingDeliveryAdd[id] = false;
+          //                       $(el).html(old_text);
+          //             },
+          //             error: function(xhr, textStatus, errorThrown) {
+          //                       isProcessingDeliveryAdd[id] = false;
+          //                       $(el).html(old_text);
+
+          //                       Swal.fire({
+          //                                 icon: 'error',
+          //                                 text: xhr["responseJSON"]
+          //                                           [
+          //                                                     'message'
+          //                                           ],
+          //                                 confirmButtonColor: "#3085d6",
+          //                       });
+          //             }
+          //   });
 }
 
 var isProcessingDeliveryEdit = [];
-edit_invoice_delivery = function(id, el) {
-          // INSERT LOADER BUTTON
-          if (isProcessingDeliveryEdit[id]) {
-                    console.log("project invoice cancel load");
-                    return;
-          }
-          isProcessingDeliveryEdit[id] = true;
-          let old_text = $(el).html();
-          $(el).html(
-                    '<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>'
-          );
+edit_delivery = function(id, el) {
+          window.location = "<?= base_url() ?>admin/sales/invoice/delivery_edit/" + id;
+          return;
+          //   // INSERT LOADER BUTTON
+          //   if (isProcessingDeliveryEdit[id]) {
+          //             console.log("project invoice cancel load");
+          //             return;
+          //   }
+          //   isProcessingDeliveryEdit[id] = true;
+          //   let old_text = $(el).html();
+          //   $(el).html(
+          //             '<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>'
+          //   );
 
-          $.ajax({
-                    method: "POST",
-                    url: "<?= base_url() ?>message/edit-delivery-invoice/" + id,
-                    success: function(data) {
-                              $("#modal-message").html(data);
-                              $("#modal-edit-delivery").modal("show");
-                              $("#modal-edit-delivery").data("menu", "Invoice");
-                              $(".tooltip").remove();
+          //   $.ajax({
+          //             method: "POST",
+          //             url: "<?= base_url() ?>message/edit-delivery-invoice/" + id,
+          //             success: function(data) {
+          //                       $("#modal-message").html(data);
+          //                       $("#modal-edit-delivery").modal("show");
+          //                       $("#modal-edit-delivery").data("menu", "Invoice");
+          //                       $(".tooltip").remove();
 
-                              isProcessingDeliveryEdit[id] = false;
-                              $(el).html(old_text);
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                              isProcessingDeliveryEdit[id] = false;
-                              $(el).html(old_text);
+          //                       isProcessingDeliveryEdit[id] = false;
+          //                       $(el).html(old_text);
+          //             },
+          //             error: function(xhr, textStatus, errorThrown) {
+          //                       isProcessingDeliveryEdit[id] = false;
+          //                       $(el).html(old_text);
 
-                              Swal.fire({
-                                        icon: 'error',
-                                        text: xhr["responseJSON"]
-                                                  [
-                                                            'message'
-                                                  ],
-                                        confirmButtonColor: "#3085d6",
+          //                       Swal.fire({
+          //                                 icon: 'error',
+          //                                 text: xhr["responseJSON"]
+          //                                           [
+          //                                                     'message'
+          //                                           ],
+          //                                 confirmButtonColor: "#3085d6",
+          //                       });
+          //             }
+          //   });
+}
+
+var isProcessingInvoiceDelete = [];
+delete_delivery = function(id, el) {
+          Swal.fire({
+                    title: "Are you sure?",
+                    text: "Anda yakin ingin menghapus pengiriman ini...???",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Yakin Hapus!"
+          }).then((result) => {
+                    if (result.isConfirmed) {
+                              $.ajax({
+                                        dataType: "json",
+                                        method: "POST",
+                                        url: "<?= base_url() ?>action/delete-data-delivery/" +
+                                                  id,
+                                        success: function(data) {
+                                                  Swal.fire({
+                                                            title: "Deleted!",
+                                                            text: "Your file has been deleted.",
+                                                            icon: "success",
+                                                            confirmButtonColor: "#3085d6",
+                                                  });
+                                                  table.ajax.reload(null,
+                                                            false
+                                                  );
+                                        },
                               });
                     }
+                    isProcessingInvoiceDelete[id] = false;
           });
-}
+};
 
 print_delivery = function(id) {
           window.open('<?= base_url("print/project/deliveryA5/") ?>' + id, '_blank');
@@ -1655,8 +1737,165 @@ delivery_proses = function(id, el) {
                     }
           });
 }
+var isProcessingDeliveryProsesEdit = [];
+delivery_proses_edit = function(id, el) {
+          // INSERT LOADER BUTTON
+          if (isProcessingDeliveryProsesEdit[id]) {
+                    console.log("project invoice cancel load");
+                    return;
+          }
+          isProcessingDeliveryProsesEdit[id] = true;
+          let old_text = $(el).html();
+          $(el).html(
+                    '<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>'
+          );
 
+          $.ajax({
+                    method: "POST",
+                    url: "<?= base_url() ?>message/proses-delivery-invoice-edit/" + id,
+                    success: function(data) {
+                              $("#modal-message").html(data);
+                              $("#modal-edit-proses-delivery").modal("show");
+                              $("#modal-edit-proses-delivery").data("menu",
+                                        "Invoice");
+                              $(".tooltip").remove();
 
+                              isProcessingDeliveryProses[id] = false;
+                              $(el).html(old_text);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                              isProcessingDeliveryProses[id] = false;
+                              $(el).html(old_text);
+
+                              Swal.fire({
+                                        icon: 'error',
+                                        text: xhr["responseJSON"]
+                                                  [
+                                                            'message'
+                                                  ],
+                                        confirmButtonColor: "#3085d6",
+                              });
+                    }
+          });
+}
+delivery_proses_edit_date = function(id, el) {
+          Swal.fire({
+                    title: 'Ubah Tanggal Packing dan Kirim',
+                    // 1. Inject a custom HTML input
+                    html: '<input id="range-picker" class="swal2-input">',
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Simpan",
+                    // 2. Initialize the picker when the modal opens
+                    didOpen: () => {
+                              $('#range-picker').daterangepicker({
+                                        "singleDatePicker": true,
+                                        "startDate": moment($(
+                                                            el
+                                                  )
+                                                  .data(
+                                                            "date"
+                                                  )
+                                        ),
+                                        autoUpdateInput: true,
+                                        locale: {
+                                                  format: 'DD MMM YYYY'
+                                        }
+                              });
+                    },
+                    // 3. Capture the selected value on confirm
+                    preConfirm: () => {
+                              $(el).data("date", $('#range-picker').data(
+                                                  'daterangepicker')
+                                        .startDate
+                                        .format("YYYY-MM-DD"));
+                              return $('#range-picker').data('daterangepicker')
+                                        .startDate
+                                        .format("dddd, D MMMM Y");
+                    }
+          }).then((result) => {
+                    if (result.isConfirmed) {
+                              $.ajax({
+                                        dataType: "json",
+                                        method: "POST",
+                                        url: "<?= base_url() ?>action/change-date-delivery-proses/" +
+                                                  id,
+                                        data: {
+                                                  "DeliveryDateProses": $(
+                                                                      '#range-picker'
+                                                            )
+                                                            .data(
+                                                                      'daterangepicker'
+                                                            )
+                                                            .startDate
+                                                            .format(
+                                                                      "YYYY-MM-DD"
+                                                            )
+                                        },
+                                        success: function(data) {
+
+                                                  $("#delivery-proses-date-" +
+                                                                      id
+                                                            )
+                                                            .html(result
+                                                                      .value
+                                                            )
+                                                  console.log("Selected Range: " +
+                                                            result
+                                                            .value
+                                                  );
+                                                  Swal.fire({
+                                                            icon: 'success',
+                                                            text: "Data berhasil disimpan...!",
+                                                            confirmButtonColor: "#3085d6",
+                                                  });
+                                        },
+                              });
+                    }
+          });
+}
+delivery_proses_edit_file = function(id, el) {
+          // INSERT LOADER BUTTON
+          if (isProcessingDeliveryProsesEdit[id]) {
+                    console.log("project invoice cancel load");
+                    return;
+          }
+          isProcessingDeliveryProsesEdit[id] = true;
+          let old_text = $(el).html();
+          $(el).html(
+                    '<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>'
+          );
+
+          $.ajax({
+                    method: "POST",
+                    url: "<?= base_url() ?>message/edit-proses-delivery-invoice/" + id,
+                    success: function(data) {
+                              $("#modal-message").html(data);
+                              $("#modal-edit-proses-delivery").modal("show");
+                              $("#modal-edit-proses-delivery").data("menu",
+                                        "Invoice");
+                              $(".tooltip").remove();
+
+                              isProcessingDeliveryProsesEdit[id] = false;
+                              $(el).html(old_text);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                              isProcessingDeliveryProsesEdit[id] = false;
+                              $(el).html(old_text);
+
+                              Swal.fire({
+                                        icon: 'error',
+                                        text: xhr["responseJSON"]
+                                                  [
+                                                            'message'
+                                                  ],
+                                        confirmButtonColor: "#3085d6",
+                              });
+                    }
+          });
+}
 var isProcessingDeliveryFinish = [];
 delivery_finish = function(id, el) {
           // INSERT LOADER BUTTON
@@ -1676,8 +1915,8 @@ delivery_finish = function(id, el) {
                     success: function(data) {
                               $("#modal-message").html(data);
 
-                              $("#modal-add-proses-delivery").modal("show");
-                              $("#modal-add-proses-delivery").data("menu",
+                              $("#modal-add-finish-delivery").modal("show");
+                              $("#modal-add-finish-delivery").data("menu",
                                         "Invoice");
                               $(".tooltip").remove();
 

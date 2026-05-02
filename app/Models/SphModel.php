@@ -87,58 +87,58 @@ class SphModel extends Model
             $statusExp = "";
             if($row->SphStatus==0){
                 $status .= '
-                    <span class="bg-info-focus text-primary-600  px-16 py-2 rounded-pill fw-medium text-xs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >New</span>
-                    </span> '; 
+                    <button class="bg-info-focus text-primary-600  px-8 py-2 radius-8 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-1 "  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status" >New</span>
+                    </button> '; 
                     $sphDate = date_create($row->SphDate);
                     $estimasi = date_modify($sphDate, '+14 days');
                     $selisih = date_diff($estimasi, date_create());
                   
                     if ($estimasi < date_create()) {
-                        $statusExp = '<span class="me-1"><i class="ri-calendar-schedule-fill me-1"></i>Sudah Expired</span>';
+                        $statusExp = '<span class="me-1"><i class="ri-calendar-schedule-fill me-1"></i>Expired</span>';
                     } else {
                       $hari = $selisih->days; 
-                      $statusExp =  '<span class="me-1"><i class="ri-calendar-schedule-fill me-1"></i>Exp :'. $hari .' hari lagi</span>';
+                      $statusExp =  '<span class="me-1"><i class="ri-calendar-schedule-fill me-1"></i>Exp : '. $hari .' hari lagi</span>';
                     }
 
             }
             if($row->SphStatus==1){
                 $status .= '
-                    <span class="bg-lilac-100 text-lilac-600 px-16 py-2 rounded-pill fw-medium text-xs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Proses</span>
-                    </span> '; 
+                    <button class="bg-lilac-100 text-lilac-600 px-8 py-2 radius-8 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-1"  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">Proses</span>
+                    </button> '; 
             }
             if($row->SphStatus==2){
                 $status .= '
-                    <span class="bg-success-focus text-success-main px-16 py-2 rounded-pill fw-medium text-xs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Completed</span>
-                    </span> ';  
+                    <button class="bg-success-focus text-success-main px-8 py-2 radius-8 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-1 "  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">Completed</span>
+                    </button> ';  
             }
             if($row->SphStatus==3){
                 $status .=  '
-                    <span class="bg-danger-focus text-danger-main px-16 py-2 rounded-pill fw-medium text-xs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Cancel</span>
-                    </span> ';  
+                    <button class="bg-danger-focus text-danger-main px-8 py-2 radius-8 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-1 "  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">Cancel</span>
+                    </button> ';  
             }
             $status .= '  
             <ul class="dropdown-menu shadow drop-status ">
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(0,'.$row->SphId.',this)">
+                    <a class="dropdown-item text-xs m-0 px-2" onclick="update_status(0,'.$row->SphId.',this)">
                         New
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(1,'.$row->SphId.',this)">
-                        </i>Proses
+                    <a class="dropdown-item text-xs m-0 px-2" onclick="update_status(1,'.$row->SphId.',this)">
+                        Proses
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(2,'.$row->SphId.',this)">
+                    <a class="dropdown-item text-xs m-0 px-2" onclick="update_status(2,'.$row->SphId.',this)">
                         Completed
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(3,'.$row->SphId.',this)">
+                    <a class="dropdown-item text-xs m-0 px-2" onclick="update_status(3,'.$row->SphId.',this)">
                         Cancel
                     </a>
                 </li>  
@@ -156,42 +156,40 @@ class SphModel extends Model
             </div>
             ';
             // MENGAMBIL DATA Toko 
-            $store = '
-                    <div class="d-flex align-items-center ">  
-                        <div class="flex-grow-1">
+            $store = ' 
                             <div class="d-flex flex-column"> 
                                 <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>  
                                 <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><iconify-icon icon="cuida:subtask-outline" class="menu-icon">
                                 </iconify-icon>Document Project</span>  
-                            </div>   
-                        </div>
-                    </div>';
+                            </div>    ';
             $data_row = array( 
+                "SphId" => $row->SphId,
                 "penawaran" => $row,
-                "doc" =>$store.'<span class="text-primary-600 fw-bold">'.$row->SphCode.'</span>'.$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
+                "doc" =>$store.'<div class="text-neutral-400 text-xxs" style="line-height:1">'.$row->SphCode.'</div>'.$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
                 "code" => '<span class="text-primary-600">'.$row->SphCode.'</span>'.$this->get_data_forward_penawaran($row->SphRefType,$row->SphRef).$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
-                "date" => date_format(date_create($row->SphDate),"d M Y")."<br><span class='text-danger-600 text-xs'>".$statusExp."</span>",
+                "date" => '<div class="text-head-3" style="line-height:1">'.date_format(date_create($row->SphDate),"d M Y")."</div><div class='text-danger-600 text-xxs'>".$statusExp."</div>",
                 "status" => $status,
                 "admin" => ucwords($row->username),
                 "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->SphGrandTotal,0)."</span></div>",
                 "customer" => ucwords($row->SphCustName),
                 "customertelp" => ($row->SphCustTelp ? $row->SphCustTelp : ""), 
                 "customeraddress" => $row->SphAddress, 
+                "note" => $row->SphNote, 
                 "store"=>$store,
                 "detail" => $htmldetail, 
                 "action" =>'  
                 <div class="d-flex align-items-center gap-1 justify-content-center">
                         <a onclick="print_sph('.$row->SphId.',this,\''.$row->ProjectId.'\')"
-                            class="w-32-px h-32-px bg-info-focus text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center">
+                            class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Print Penawaran">
                             <iconify-icon icon="lucide:printer"></iconify-icon>
                         </a>
                         <a onclick="edit_sph('.$row->SphId.',this,\''.$row->ProjectId.'\')"
-                            class="w-32-px h-32-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center">
+                            class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Ubah Penawaran">
                             <iconify-icon icon="lucide:edit"></iconify-icon>
                         </a>
                         <a onclick="delete_sph('.$row->SphId.',this,\''.$row->ProjectId.'\')"
-                            class="w-32-px h-32-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center">
-                            <iconify-icon icon="lucide:x">
+                            class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Hapus Penawaran">
+                            <iconify-icon icon="lucide:trash-2">
                             </iconify-icon>
                         </a> 
                         </div> ',
@@ -585,16 +583,16 @@ class SphModel extends Model
     function customColor($number) {
         switch ($number) {
                   case 0:
-                            return 'bg-info-focus text-primary-600 border border-primary-600';
+                            return 'bg-info-50 text-primary-600';
                             break;
                   case 1:
-                            return 'bg-lilac-focus text-lilac-600 border border-lilac-600 ';
+                            return 'bg-warning-50 text-warning-600';
                             break;
                   case 2:
-                            return 'bg-warning-focus text-warning-600  border border-warning-600 ';
+                            return 'bg-success-50 text-success-600';
                             break;
                   case 3:
-                            return 'bg-danger-focus text-danger-600 border border-danger-600';
+                            return 'bg-danger-50 text-danger-600';
                             break;
                   case 4:
                             return 'bg-info-focus text-primary-600';
@@ -604,7 +602,6 @@ class SphModel extends Model
                             break;
         }
     }
-    
     function get_data_detail_penawaran($row){ 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
@@ -612,8 +609,7 @@ class SphModel extends Model
                             <thead>
                                 <tr>
                                     <th class="detail" style="width: 35px;">#</th>
-                                    <th class="detail text-center" style="width:50px">Gambar</th>
-                                    <th class="detail">Nama</th>
+                                    <th class="detail" colspan="2">Deskripsi</th> 
                                     <th class="detail">Qty</th>
                                     <th class="detail">Harga</th>
                                     <th class="detail">Disc</th>
@@ -632,13 +628,13 @@ class SphModel extends Model
             
             foreach($arr_varian as $varian){
                 $color = $this->customColor(fmod($arr_no,5));
-                $arr_badge .= '<span class="'.$color.' radius-4 px-8 py-4 text-xs line-height-1 badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
+                $arr_badge .= '<span class="'.$color.' radius-8 px-8 py-4 text-xxs fw-bold">'.$varian->varian.' : '.$varian->value.'</span>';
                 $arr_no++;
             }  
             if($row_data->SphDetailType == "product"){ 
                 $detailhtml .= ' <tr> 
-                <td  class="detail">'.$number.'</td>
-                    <td class="detail">
+                <td  class="detail " >'.$number.'.</td>
+                    <td class="detail" style="width: 4rem;" >
                         <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,false).'" alt="Gambar" class="image-produk w-50-px h-50-px rounded-3">
                     </td>
                     <td class="detail">
@@ -657,7 +653,7 @@ class SphModel extends Model
             }else{
                 $number = 1;
                 $detailhtml .= ' <tr>
-                    <td  class="detail">'.$abjad.'</td>
+                    <td  class="detail fw-bold">'.$abjad.'.</td>
                     <td colspan="6" class="detail">
                         <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
                             <span class="text-head-3">'.$row_data->SphDetailText.'</span>
@@ -673,19 +669,19 @@ class SphModel extends Model
             <tr>
                 <th colspan="7">
                     <div class="d-flex m-1 gap-2 align-items-center justify-content-end pe-4"> 
-                        <span class="text-detail-2">Sub Total:</span>
+                        <span class="text-detail-2 fw-normal text-xs">Sub Total:</span>
                         <span class="text-head-2">Rp. '.number_format($row->SphSubTotal,0,',','.').'</span>  
                         <div class="divider-horizontal"></div>
-                        <span class="text-detail-2">Disc Item:</span>
+                        <span class="text-detail-2 fw-normal text-xs">Disc Item:</span>
                         <span class="text-head-2">Rp. '.number_format($row->SphDiscItemTotal,0,',','.').'</span>   
                         <div class="divider-horizontal"></div>
-                        <span class="text-detail-2">Disc Total:</span>
+                        <span class="text-detail-2 fw-normal text-xs">Disc Total:</span>
                         <span class="text-head-2">Rp. '.number_format($row->SphDiscTotal,0,',','.').'</span>   
                         <div class="divider-horizontal"></div>
-                        <span class="text-detail-2">Pengiriman:</span>
+                        <span class="text-detail-2 fw-normal text-xs">Pengiriman:</span>
                         <span class="text-head-2">Rp. '.number_format($row->SphDeliveryTotal,0,',','.').'</span> 
                         <div class="divider-horizontal"></div>
-                        <span class="text-detail-2">Grand Total:</span>
+                        <span class="text-detail-2 fw-normal text-xs">Grand Total:</span>
                         <span class="text-head-2">Rp.'.number_format($row->SphGrandTotal,0,',','.').'</span> 
                     </div>
                 </th>
@@ -764,8 +760,8 @@ class SphModel extends Model
                         <span class="text-detail-3 text-decoration-none">Data tidak diteruskan</span> 
                     </div>';  
                 }else{ 
-                    return '  <div class="text-detail-3 pt-2"> 
-                    <button onclick="sph_return_add_click(\''.$project.'\',this,\''.$id.'\',\'Invoice\')" type="button" class="radius-8 bg-primary-light text-secondary-light text-xs line-height-1 text-hover-primary-600 p-1"><iconify-icon icon="hugeicons:invoice-03" class="menu-icon d-inline-block pe-1"></iconify-icon>Teruskan Invoice</button></div>';
+                    return '  <div class="text-detail-3 pt-8"> 
+                    <button onclick="sph_return_add_click(\''.$project.'\',this,\''.$id.'\',\'Invoice\')" type="button" class="radius-8 bg-primary-light text-secondary-light text-xxs line-height-1 text-hover-primary-600 p-6"><iconify-icon icon="hugeicons:invoice-03" class="menu-icon d-inline-block pe-1"></iconify-icon>Teruskan Invoice</button></div>';
                     return '  
                     <div class="text-detail-3 pt-2">
                         <i class="fa-solid fa-share-from-square text-primary"></i> 
@@ -1066,4 +1062,30 @@ class SphModel extends Model
 
         return JSON_ENCODE(array("status"=>true));
     }  
+    
+    function update_comment($comment,$id){ 
+        $dataold = $builder = $this->getWhere(['SphId' => $id], 1)->getRow();  
+        
+        $builder = $this->db->table("penawaran"); 
+        $builder->set('SphNote', $comment);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('SphId', $id); 
+        $builder->update();   
+
+         //create Log action 
+         $activityModel = new ActivityModel(); 
+         $activityModel->insert(
+             array( 
+                 "menu"=>"penawaran",
+                 "type"=>"Comment",
+                 "name"=> "Catatan Data Penawaran diubah dari ".$dataold->SphNote." menjadi ".$comment . " dengan nomor ".$dataold->SphCode,
+                 "desc"=> json_encode([]),
+                 "created_user"=>user()->id, 
+                 "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+             )
+         ); 
+ 
+         return JSON_ENCODE(array("status"=>true));
+    }
 }

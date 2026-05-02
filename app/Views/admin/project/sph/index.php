@@ -265,8 +265,9 @@
                     </div>
                     <div class="d-flex align-items-center justify-content-end mb-2 gap-2 search-data">
                               <div class="icon-field">
-                                        <input type="text" name="#0" class="form-control form-control-sm w-auto"
-                                                  placeholder="Search" id="searchdatasph">
+                                        <input type="text" name="searchdatasph"
+                                                  class="form-control form-control-sm w-auto" placeholder="Search"
+                                                  id="searchdatasph">
                                         <span class="icon">
                                                   <iconify-icon icon="ion:search-outline"></iconify-icon>
                                         </span>
@@ -279,24 +280,23 @@
           </div>
 
           <div class="card-body py-0 py-4 pb-4" id="table">
-                    <div class="table-responsive scroll-sm">
-                              <table id="data-table-sph" class="table bordered-table " style="width:95%">
-                                        <thead>
-                                                  <tr>
-                                                            <th scope="col">#</th>
-                                                            <th scope="col">Action</th>
-                                                            <th scope="col">Document</th>
-                                                            <th scope="col">Tanggal</th>
-                                                            <th scope="col">Status</th>
-                                                            <th scope="col">Admin</th>
-                                                            <th scope="col">Customer</th>
-                                                            <th scope="col">Grand Total</th>
-                                                  </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                              </table>
-                    </div>
+                    <table id="data-table-sph" class="table bordered-table">
+                              <thead>
+                                        <tr>
+                                                  <th scope="col"></th>
+                                                  <th scope="col"></th>
+                                                  <th scope="col">Document</th>
+                                                  <th scope="col">Tanggal</th>
+                                                  <th scope="col">Status</th>
+                                                  <th scope="col">Admin</th>
+                                                  <th scope="col">Catatan</th>
+                                                  <th scope="col">Grand Total</th>
+                                                  <th scope="col">Customer</th>
+                                        </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                    </table>
           </div>
           <!-- <div id="data-project"> 
     </div>
@@ -345,7 +345,7 @@
                                                   </div>
                                         </div>
                                         <div class="row mb-24 gy-3 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-4">gunakan
+                                                  <label class="form-label mb-0 col-sm-4">Tampilkan
                                                             gambar item</label>
                                                   <div class="col-sm-8">
                                                             <div class="d-flex align-items-center flex-wrap gap-28">
@@ -372,7 +372,7 @@
                                                   </div>
                                         </div>
                                         <div class="row mb-24 gy-3 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-4">gunakan
+                                                  <label class="form-label mb-0 col-sm-4">Tampilkan
                                                             grand total</label>
                                                   <div class="col-sm-8">
                                                             <div class="d-flex align-items-center flex-wrap gap-28">
@@ -403,6 +403,36 @@
                                         <button type="button" class="btn btn-secondary"
                                                   data-bs-dismiss="modal">Batal</button>
                                         <button type="button" class="btn btn-primary" id="btn-print-sph">Print</button>
+                              </div>
+                    </div>
+          </div>
+</div>
+<!-- Modal Comment -->
+<div class="modal fade" id="modal-comment-penawaran" tabindex="-1" data-id="0"
+          aria-labelledby="modal-comment-penawaranLabel" aria-hidden="true">
+          <div class="modal-dialog">
+                    <div class="modal-content">
+                              <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="modal-comment-penawaranLabel">Comment Penawaran
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                  aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body p-3">
+                                        <div class="row mb-24 gy-3 align-items-center">
+                                                  <label class="form-label mb-0 col-sm-3">Catatan</label>
+                                                  <div class="col-sm-9">
+                                                            <textarea id="SphNote" class="form-control" rows="4"
+                                                                      cols="50"
+                                                                      placeholder="Catatan Penawaran"></textarea>
+                                                  </div>
+                                        </div>
+                              </div>
+                              <div class="modal-footer p-2">
+                                        <button type="button" class="btn btn-sm btn-secondary"
+                                                  data-bs-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-sm btn-primary-600"
+                                                  id="btn-comment-sph">Simpan</button>
                               </div>
                     </div>
           </div>
@@ -645,7 +675,7 @@ table = $('#data-table-sph').DataTable({
           "lengthChange": false,
           "pageLength": parseInt(10),
           //   responsive: true,
-          //   scrollX: true,
+          //   scrollX: false,
           "language": {
                     "emptyTable": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
                     "zeroRecords": `<div class="d-flex justify-content-center"><img src="<?= base_url() ?>assets/images/empty.png" alt="" style="width:250px;height:250px;"></div>`,
@@ -668,29 +698,29 @@ table = $('#data-table-sph').DataTable({
           },
           "initComplete": function(settings, json) {
                     $("#data-table-sph").wrap(
-                              "<div id='scroll-table' style='overflow:auto; width:100%;position:relative;max-height:60vh'></div>"
+                              "<div id='scroll-table' style='overflow:auto;  position:relative;max-height:60vh'></div>"
                     );
-                    $('[data-bs-toggle="tooltip"]').tooltip();
-                    console.log($("#scroll-table").width())
-                    $("#scroll-table").on("scroll", function() {
+                    // $('[data-bs-toggle="tooltip"]').tooltip();
+                    // console.log($("#scroll-table").width())
+                    // $("#scroll-table").on("scroll", function() {
 
-                              const scrollX = $(this).scrollX;
-                              const scrollY = $(this).scrollY;
-                              console.log(
-                                        $(this).width(),
-                                        scrollX
-                              );
+                    //           const scrollX = $(this).scrollX;
+                    //           const scrollY = $(this).scrollY;
+                    //           console.log(
+                    //                     $(this).width(),
+                    //                     scrollX
+                    //           );
 
-                              if (scrollX >
-                                        0 &&
-                                        scrollY >
-                                        0
-                              ) {
-                                        console.log(
-                                                  'Scroll X dan Y aktif!'
-                                        );
-                              }
-                    })
+                    //           if (scrollX >
+                    //                     0 &&
+                    //                     scrollY >
+                    //                     0
+                    //           ) {
+                    //                     console.log(
+                    //                               'Scroll X dan Y aktif!'
+                    //                     );
+                    //           }
+                    // })
 
           },
           "columns": [{
@@ -699,7 +729,7 @@ table = $('#data-table-sph').DataTable({
                               className: "p-0 ps-2",
                               width: "20px",
                               render: function(data, type, row) {
-                                        return '<a class="cursor-pointer text-head-3 btn-detail-item"> <iconify-icon icon="material-symbols:chevron-right-rounded" class="icon text-xxl"> </iconify-icon></a>';
+                                        return '<a class="cursor-pointer text-head-3 btn-detail-item"> <iconify-icon icon="material-symbols:arrow-right-rounded" class="icon text-xxl" style="transition: transform 0.3s ease-in-out"> </iconify-icon></a>';
                               }
                     },
                     {
@@ -710,22 +740,35 @@ table = $('#data-table-sph').DataTable({
                     },
                     {
                               data: "doc",
-                              className: "align-top",
-                              width: "150px"
-                    },
-                    {
-                              data: "date",
-                              className: "align-top",
                               width: "130px"
                     },
                     {
+                              data: "date",
+                              width: "100px"
+                    },
+                    {
                               data: "status",
-                              className: "text-center",
                               width: "100px"
                     },
                     {
                               data: "admin",
-                              className: "align-top",
+                              width: "150px"
+                    },
+                    {
+                              data: "note",
+                              width: "150px",
+                              className: "action-td",
+                              render: function(data, type, row) {
+                                        var html = `<span>${data}</span>
+                                    <a onclick="comment(${row.SphId},'${row.note}')"
+                                        class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Ubah Catatan">
+                                        <iconify-icon icon="lucide:edit"></iconify-icon>
+                                    </a>`;
+                                        return html;
+                              }
+                    },
+                    {
+                              data: "total",
                               width: "150px"
                     },
                     {
@@ -735,17 +778,14 @@ table = $('#data-table-sph').DataTable({
                               render: function(data, type, row) {
                                         var html =
                                                   ` 
-                        <div class="text-head-3 pb-2 text-truncate" style="max-width: 250px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
+                                                            <div style="max-width: 350px;">
+                        <div class="text-head-3 pb-2   text-truncate" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
                         ${(row.customertelp !== "" ? `<div class="text-detail-3 text-xs">${row.customertelp}</div>` : "")}
-                        <div class="text-detail-3 text-truncate text-xs" style="max-width: 250px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}">${row.customeraddress}</div>`;
+                        <div class="text-detail-3 text-neutral-400 text-truncate text-xxs" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}">${row.customeraddress}</div>
+                                                            </div>`;
 
                                         return html;
                               }
-                    },
-                    {
-                              data: "total",
-                              className: "align-top",
-                              width: "150px"
                     },
           ]
 });
@@ -755,6 +795,7 @@ table.on('draw.dt', function() {
           if (info.page + 1 > info.pages && info.pages > 0) {
                     table.page('last').draw('page');
           }
+          $('[data-bs-toggle="tooltip"]').tooltip();
 });
 table.on('click', '.btn-detail-item', function() {
           console.log("btn detail click")
@@ -868,6 +909,34 @@ $("#btn-print-sph").click(function(i) {
           $("#modal-print-penawaran").modal("hide");
 });
 
+comment = function(id, catatan) {
+          $("#modal-comment-penawaran").modal("show");
+          $("#modal-comment-penawaran").data("id", id);
+          $("#SphNote").val(catatan);
+}
+
+$("#btn-comment-sph").click(function(i) {
+          $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/change-comment-penawaran/" +
+                              $("#modal-comment-penawaran").data("id"),
+                    data: {
+                              SphNote: $("#SphNote").val()
+                    },
+                    success: function(data) {
+                              Swal.fire({
+                                        title: "Success!",
+                                        text: "Catatan Berhasil disimpan",
+                                        icon: "success",
+                                        confirmButtonColor: "var(--brand)",
+                              });
+                              table.ajax.reload(null, false);
+                              $("#modal-comment-penawaran").modal(
+                                        "hide");
+                    },
+          });
+});
 var isProcessingSphDelete = [];
 delete_sph = function(id, el, ref) {
           // INSERT LOADER BUTTON

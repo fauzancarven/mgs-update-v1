@@ -379,7 +379,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-secondary-light);
   font-family: "Inter", sans-serif;
-  font-size: 1rem;
+  font-size: 0.85rem;
   padding: 0;
   margin: 0;
   font-weight: 400;
@@ -11962,7 +11962,7 @@ h6,
   border-bottom: 1px solid var(--neutral-200);
   background-color: var(--white);
   vertical-align: middle;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
 }
 
 .rounded-table {
@@ -13693,6 +13693,11 @@ select option {
   }
 }
 
+.dropdown-item {
+  color: var(--text-secondary-light);
+}
+
+
 /* Dropdown Toggle Custom Icon */
 .toggle-icon.icon-up::after {
   content: "\ea78" !important;
@@ -15181,15 +15186,15 @@ td.fc-header-center {
 
 @media (min-width: 1400px) {
   .sidebar {
-    width: 17.1875rem;
-    --width-sidebar: 17.1875rem;
+    width: 14rem;
+    --width-sidebar: 14rem;
   }
 }
 
 @media (min-width: 1650px) {
   .sidebar {
-    width: 19.5rem;
-    --width-sidebar: 19.5rem;
+    width: 16rem;
+    --width-sidebar: 16rem;
   }
 }
 
@@ -15241,15 +15246,15 @@ td.fc-header-center {
 
 @media (min-width: 1400px) {
   .sidebar.active:hover {
-    width: 17.1875rem;
-    --width-sidebar-active: 17.1875rem;
+    width: 13rem;
+    --width-sidebar-active: 13rem;
   }
 }
 
 @media (min-width: 1650px) {
   .sidebar.active:hover {
-    width: 19.5rem;
-    --width-sidebar-active: 19.5rem;
+    width: 14rem;
+    --width-sidebar-active: 14rem;
   }
 }
 
@@ -15531,13 +15536,13 @@ td.fc-header-center {
 
 @media (min-width: 1400px) {
   .dashboard-main {
-    margin-inline-start: 17.1875rem;
+    margin-inline-start: 14rem;
   }
 }
 
 @media (min-width: 1650px) {
   .dashboard-main {
-    margin-inline-start: 19.5rem;
+    margin-inline-start: 16rem;
   }
 }
 
@@ -15587,8 +15592,9 @@ input:-webkit-autofill:active {
 
 .search-data>.input-group {
   position: relative;
-  width: 18rem !important;
+  width: 12rem !important;
 }
+
 
 .search-data>.input-group>iconify-icon {
   position: absolute;
@@ -15715,37 +15721,37 @@ input:-webkit-autofill:active {
 
 @media (min-width: 1200px) {
   #action-button-doc.sticky {
-    --width-sidebar: 13.75rem;
+    --width-sidebar: 13rem;
     left: var(--width-sidebar);
     width: calc(100% - var(--width-sidebar));
   }
 
   .search-data>.input-group {
-    width: 14rem !important;
+    width: 10rem !important;
   }
 }
 
 @media (min-width: 1400px) {
   #action-button-doc.sticky {
-    --width-sidebar: 17.1875rem;
+    --width-sidebar: 14rem;
+    left: var(--width-sidebar);
+    width: calc(100% - var(--width-sidebar));
+  }
+
+  .search-data>.input-group {
+    width: 12rem !important;
+  }
+}
+
+@media (min-width: 1650px) {
+  #action-button-doc.sticky {
+    --width-sidebar: 14rem;
     left: var(--width-sidebar);
     width: calc(100% - var(--width-sidebar));
   }
 
   .search-data>.input-group {
     width: 16rem !important;
-  }
-}
-
-@media (min-width: 1650px) {
-  #action-button-doc.sticky {
-    --width-sidebar: 19.5rem;
-    left: var(--width-sidebar);
-    width: calc(100% - var(--width-sidebar));
-  }
-
-  .search-data>.input-group {
-    width: 20rem !important;
   }
 }
 
@@ -15799,6 +15805,7 @@ h2.swal2-title {
   width: 18px;
   height: 2px;
   background-color: var(--brand);
+  animation: .5s linear forwards border-horizontal;
 }
 
 .child-row .view-detail::after {
@@ -15809,6 +15816,16 @@ h2.swal2-title {
   width: 2px;
   height: 3rem;
   background-color: var(--brand);
+}
+
+@keyframes border-horizontal {
+  0% {
+    bottom: 100%;
+  }
+
+  100% {
+    bottom: 0;
+  }
 }
 
 .list-detail {
@@ -16052,10 +16069,10 @@ h2.swal2-title {
 }
 
 
-.search-data>.input-group {
+/* .search-data>.input-group {
   position: relative;
   width: 15rem !important;
-}
+} */
 
 .search-data>.input-group>i {
   position: absolute;
@@ -16184,6 +16201,88 @@ h2.swal2-title {
 }
 
 table.table.detail-payment,
+table.table.detail-delivery,
 table.table.detail-item {
   width: auto;
+}
+
+.text-detail-2 {
+  font-weight: normal;
+}
+
+.input-group-text {
+  border-color: var(--input-form-light);
+}
+
+.list-image img,
+.list-image video {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+
+
+.image-default-obi,
+.image-default-obi.border {
+  transition: all 0.3s ease-in-out;
+  border: 2px dashed #dedede;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 0.5rem;
+  margin: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.image-default-obi span {
+  font-size: 0.75rem;
+  color: gray;
+}
+
+.image-default-obi i {
+  font-size: 2rem;
+  color: gray;
+}
+
+.image-default-obi:hover,
+.image-default-obi.border:hover {
+  border-color: #7bc8ff;
+  color: #7bc8ff;
+  cursor: pointer;
+}
+
+.image-default-obi:hover i,
+.image-default-obi:hover span {
+  color: #7bc8ff;
+}
+
+.image-default-obi img,
+.image-default-obi video {
+  width: 7rem;
+  height: 7rem;
+  object-fit: cover;
+}
+
+.image-default-obi:hover img {
+  filter: blur(1px);
+}
+
+.image-default-obi .action {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: none;
+}
+
+.image-default-obi:hover .action {
+  display: block;
+}
+
+.image-default-obi .action .btn i {
+  font-size: 1rem;
 }

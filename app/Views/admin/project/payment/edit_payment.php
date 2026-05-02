@@ -271,7 +271,6 @@ $("#remove-image").click(function() {
 });
 
 
-console.log(`<?= JSON_ENCODE($image)?>`);
 var quill = [];
 $(".template-footer").each(function(index, el) {
           var message = $(el).find("[name='EditFooterMessage']")[0];

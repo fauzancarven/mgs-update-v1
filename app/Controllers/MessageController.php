@@ -7,6 +7,7 @@ use App\Models\UserModel;
 use App\Models\CustomerModel;
 use App\Models\ProvinceModel;
 use App\Models\VendorModel;
+use App\Models\DeliveryModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\ProdukvarianvalueModel;
@@ -1576,14 +1577,36 @@ class MessageController extends BaseController
  
     public function delivery_proses($id)
     {       
-        $models = new ProjectModel();
+        $models = new DeliveryModel();
         $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/delivery/proses_delivery',$data)); 
     } 
+    public function edit_delivery_proses($id,$doc = null)
+    {       
+        $models = new DeliveryModel();
+        $data["delivery"] = $models->get_data_delivery($id); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        
+        $folder_utama = 'assets/images/delivery';  
+        $files = glob($folder_utama."/".$id. '/proses_*');
+        foreach ($files as $file) {  
+            if (is_file($file)) {
+                $filepath = $file; 
+                $filetype = mime_content_type($file); 
+                $file_name = basename($file); 
+                $data["image"][]  = array(
+                    "url"=>base_url().$file,
+                    "filename"=>$file_name,
+                    "filetype"=>$filetype,
+                ); 
+            } 
+        }  
+        return $this->response->setBody(view('admin/project/delivery/edit_proses_delivery',$data)); 
+    } 
     public function delivery_finish($id)
     {       
-        $models = new ProjectModel();
+        $models = new DeliveryModel();
         $modelsproduk = new ProdukModel();
         $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth 
@@ -1612,4 +1635,3 @@ class MessageController extends BaseController
         return $this->response->setBody(view('admin/project/delivery/add_finish_delivery',$data)); 
     } 
 }
-

@@ -28,6 +28,7 @@ $routes->get('/admin/bukubesar', 'AdminController::bukubesar', ['filter' => 'log
 
 $routes->get('/admin/sales/survey', 'AdminController::survey', ['filter' => 'login']);
 $routes->get('/admin/sales/sample', 'AdminController::sample', ['filter' => 'login']);
+$routes->get('/admin/sales/penawaran-new', 'AdminController::penawaran_new', ['filter' => 'login']);
 $routes->get('/admin/sales/penawaran', 'AdminController::penawaran', ['filter' => 'login']);
 $routes->get('/admin/sales/penawaran/add', 'AdminController::penawaran_add', ['filter' => 'login']);
 $routes->get('/admin/sales/penawaran/edit/(:any)', 'AdminController::penawaran_edit/$1', ['filter' => 'login']);
@@ -35,6 +36,8 @@ $routes->get('/admin/sales/invoice', 'AdminController::invoice', ['filter' => 'l
 $routes->get('/admin/sales/invoice/add', 'AdminController::invoice_add', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice/add/(:any)', 'AdminController::invoice_add/$1', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice/edit/(:any)', 'AdminController::invoice_edit/$1', ['filter' => 'login']);
+$routes->get('/admin/sales/invoice/delivery_add/(:any)', 'AdminController::invoice_delivery_add/$1', ['filter' => 'login']);
+$routes->get('/admin/sales/invoice/delivery_edit/(:any)', 'AdminController::invoice_delivery_edit/$1', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
 $routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);
@@ -115,11 +118,13 @@ $routes->post('/action/add-data-penawaran', 'ActionController::penawaran_add', [
 $routes->post('/action/edit-data-penawaran/(:num)', 'ActionController::penawaran_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-penawaran/(:num)', 'ActionController::penawaran_delete/$1', ['filter' => 'login']);
 $routes->post('/action/update-penawaran/(:num)/(:num)', 'ActionController::penawaran_status/$1/$2', ['filter' => 'login']); 
+$routes->post('/action/change-comment-penawaran/(:num)', 'ActionController::penawaran_comment/$1', ['filter' => 'login']);  
 
 $routes->post('/action/add-data-invoice', 'ActionController::invoice_add', ['filter' => 'login']); 
 $routes->post('/action/edit-data-invoice/(:num)', 'ActionController::invoice_edit/$1', ['filter' => 'login']); 
 $routes->post('/action/delete-data-invoice/(:num)', 'ActionController::invoice_delete/$1', ['filter' => 'login']); 
 $routes->post('/action/update-invoice/(:num)/(:num)', 'ActionController::invoice_status/$1/$2', ['filter' => 'login']); 
+$routes->post('/action/change-comment-invoice/(:num)', 'ActionController::invoice_comment/$1', ['filter' => 'login']);
 
 $routes->post('/action/add-data-payment', 'ActionController::payment_add', ['filter' => 'login']);   
 $routes->post('/action/edit-data-payment/(:num)', 'ActionController::payment_edit/$1', ['filter' => 'login']); 
@@ -141,6 +146,10 @@ $routes->post('/action/edit-data-delivery/(:num)', 'ActionController::delivery_e
 $routes->post('/action/delete-data-delivery/(:num)', 'ActionController::delivery_delete/$1', ['filter' => 'login']);
 $routes->post('/action/add-proses-delivery/(:num)', 'ActionController::delivery_proses/$1', ['filter' => 'login']);
 $routes->post('/action/edit-proses-delivery/(:num)', 'ActionController::delivery_proses_edit/$1', ['filter' => 'login']);
+$routes->post('/action/change-date-delivery-proses/(:num)', 'ActionController::delivery_proses_edit_date/$1', ['filter' => 'login']);
+$routes->post('/get/data-proses-delivery-status/(:num)', 'ActionController::get_delivery_proses_status/$1', ['filter' => 'login']);
+
+
 $routes->post('/action/add-finish-delivery/(:num)', 'ActionController::delivery_finish/$1', ['filter' => 'login']);
 $routes->post('/action/finish-data-delivery/(:num)', 'ActionController::delivery_finish/$1', ['filter' => 'login']);
 $routes->post('/action/edit-finish-delivery/(:num)', 'ActionController::delivery_finish_edit/$1', ['filter' => 'login']);
@@ -295,6 +304,7 @@ $routes->post('/message/edit-project-accounting/(:num)/(:num)', 'MessageControll
 $routes->post('/message/add-delivery-invoice/(:num)', 'MessageController::delivery_add/$1/invoice', ['filter' => 'login']);  
 $routes->post('/message/edit-delivery-invoice/(:num)', 'MessageController::delivery_edit/$1/invoice', ['filter' => 'login']);  
 $routes->post('/message/proses-delivery-invoice/(:num)', 'MessageController::delivery_proses/$1/invoice', ['filter' => 'login']);  
+$routes->post('/message/edit-proses-delivery-invoice/(:num)', 'MessageController::edit_delivery_proses/$1/invoice', ['filter' => 'login']);  
 $routes->post('/message/finish-delivery-invoice/(:num)', 'MessageController::delivery_finish/$1/invoice', ['filter' => 'login']);  
 
 $routes->post('/message/add-delivery-pembelian/(:num)', 'MessageController::delivery_add/$1/pembelian', ['filter' => 'login']);  

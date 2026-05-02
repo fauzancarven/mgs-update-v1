@@ -89,7 +89,7 @@ body {
 
 .logo img {
           position: absolute;
-          height: 65px;
+          height: 80px;
           width: 80px;
           left: 41px;
           top: 5px;
@@ -192,7 +192,6 @@ body {
           margin-left: auto;
           margin-right: auto;
           text-align: center;
-          color: #305176;
 }
 
 .text-bold {
@@ -243,7 +242,7 @@ table.item td:last-child {
 }
 
 .item th {
-          background-color: #c6d9f0;
+          /* background-color: #c6d9f0; */
 }
 
 table.item,

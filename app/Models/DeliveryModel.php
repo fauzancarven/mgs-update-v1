@@ -3,7 +3,9 @@
 namespace App\Models; 
 
 use CodeIgniter\Model; 
+use CodeIgniter\Database\RawSql;
 use App\Models\ProdukModel;
+helper('file_helper');
 class DeliveryModel extends Model
 { 
     protected $DBGroup = 'default';
@@ -40,7 +42,52 @@ class DeliveryModel extends Model
     protected $beforeDelete = [];
     protected $afterDelete = [];
 
+    private function get_next_code_delivery($date){
+        //sample SPH/001/01/2024
+        $arr_date = explode("-", $date);
+        $builder = $this->db->table("delivery");  
+        $builder->select("ifnull(max(SUBSTRING(DeliveryCode,5,3)),0) + 1 as nextcode"); 
+        $builder->where("month(DeliveryDate2)",$arr_date[1]);
+        $builder->where("year(DeliveryDate2)",$arr_date[0]); 
+        $data = $builder->get()->getRow(); 
+        switch (strlen($data->nextcode)) {
+            case 1:
+                $nextid = "DEL/00" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 2:
+                $nextid = "DEL/0" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid; 
+            case 3:
+                $nextid = "DEL/" . $data->nextcode."/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+            default:
+                $nextid = "DEL/000/".$arr_date[1]."/".$arr_date[0];
+                return $nextid;  
+        } 
+    } 
+  
+    function customColor($number) {
+        switch ($number) {
+                  case 0:
+                            return 'bg-info-50 text-primary-600';
+                            break;
+                  case 1:
+                            return 'bg-warning-50 text-warning-600';
+                            break;
+                  case 2:
+                            return 'bg-success-50 text-success-600';
+                            break;
+                  case 3:
+                            return 'bg-danger-50 text-danger-600';
+                            break;
+                  case 4:
+                            return 'bg-info-focus text-primary-600';
+                            break;
 
+                  default:
+                            break;
+        }
+    }
 
     function load_datatable_delivery($filter = null){
         $filterdata = 0;
@@ -245,6 +292,14 @@ class DeliveryModel extends Model
         );
 
     } 
+    function get_data_delivery($id){
+        $builder = $this->db->table("delivery");
+        $builder->join('store',"store.StoreId=delivery.StoreId"); 
+        $builder->join('users',"users.id=delivery.DeliveryAdmin");
+        $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left"); 
+        $builder->where('DeliveryId',$id); 
+        return $builder->get()->getRow();  
+    } 
     function get_data_delivery_detail($id){
         $builder = $this->db->table("delivery_detail");
         $builder->where('DeliveryDetailRef',$id); 
@@ -269,8 +324,10 @@ class DeliveryModel extends Model
             $arr_badge = "";
             $arr_no = 0;
             foreach($arr_varian as $varian){
-                $arr_badge .= '<span class="badge badge-sm badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
-                $arr_no++;
+                
+                $color = $this->customColor(fmod($arr_no,5));
+                $arr_badge .= '<span class="'.$color.' radius-8 px-8 py-4 text-xxs fw-bold">'.$varian->varian.' : '.$varian->value.'</span>';
+                $arr_no++; 
             }
             $detail[] = array(
                         "id" => $row_data->ProdukId,  
@@ -288,15 +345,17 @@ class DeliveryModel extends Model
 
             $detailhtml .= ' <tr>
                     <td class="detail">
-                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->DeliveryDetailVarian,true).'" alt="Gambar" class="image-produk">
+                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->DeliveryDetailVarian,true).'" alt="Gambar" class="image-produk w-50-px h-50-px rounded-3">
                     </td>
-                    <td class="detail">
-                        <span class="text-head-3">'.$row_data->DeliveryDetailText.'</span><br>
-                        <span class="text-detail-2 text-truncate">'.$row_data->DeliveryDetailGroup.'</span> 
-                        <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
+                    <td class="detail"> 
+                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                            <div class="fw-medium">'.$row_data->DeliveryDetailText.'</div>
+                            <div class="text-detail-2 text-truncate text-xxs text-neutral-400" style="line-height:1">'.$row_data->DeliveryDetailGroup.'</div> 
+                            <div class="d-flex gap-1 flex-wrap pt-4">'.$arr_badge.'</div>
+                        </div> 
                     </td>
                     <td class="detail">'.number_format($row_data->DeliveryDetailQty, 2, ',', '.').' '.$row_data->DeliveryDetailSatuanText.'</td> 
-                    <td class="detail">'.number_format($row_data->DeliveryDetailQtySpare, 2, ',', '.').$row_data->DeliveryDetailSatuanText.'</td>
+                    <td class="detail">'.number_format($row_data->DeliveryDetailQtySpare, 2, ',', '.').' '.$row_data->DeliveryDetailSatuanText.'</td>
                 </tr> ';
         };
         $detailhtml .= '
@@ -453,13 +512,13 @@ class DeliveryModel extends Model
                         <span class="text-head-3 payment">
                             <span class="badge text-bg-warning me-1">Belum Ada</span>
                         </span>';
-                $html_payment_detail .= ' <div class="d-inline-block alert alert-warning p-2 m-0" role="alert">
-                    <span class="text-head-3">
-                        <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                        Belum ada pembayaran yang dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->DeliveryId.',this,\'Delivery\')">Ajukan Pembayaran</a> 
-                    </span>
-                </div> '; 
+                $html_payment_detail .= ' 
+                <div class="d-inline-block p-8 pe-16 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7" role="alert">
+                <span class="text-head-3">
+                    <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                    Belum ada pembayaran yang dibuat dari dokumen ini,<a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->DeliveryId.',this,\'Delivery\')">Ajukan Pembayaran</a> 
+                </span>
+            </div> '; 
             }else if($payment_total < $row->DeliveryTotal){  
                 
                 $html_payment = ' 
@@ -535,11 +594,12 @@ class DeliveryModel extends Model
         $html_status_detail = "";
         if($row->DeliveryStatus == 0){
             $html_status = ' 
-                    <span class="text-head-3 payment">
-                        <span class="badge text-bg-success me-1">Tidak ada</span>
-                    </span>';
+                     
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                <iconify-icon icon="hugeicons:delivery-truck-01" class="text-primary-light text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Pengiriman dibuat" ></iconify-icon> 
+            </button>  ';
             $html_status_detail = ' 
-            <ul class="timeline">
+            <ul class="timeline" id="delivery-proses-'.$row->DeliveryId.'">
                 <li class="timeline-item">
                     <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDate)).'</div>
                     <div class="timeline-badge"></div>
@@ -567,15 +627,22 @@ class DeliveryModel extends Model
                     $filepath = $file; 
                     $filetype = mime_content_type($file); 
                     $file_name = basename($file);
-                    $htmlimage .=  '<img onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" />';
+                    if (strpos($filetype, 'image/') === 0) {
+                        $htmlimage .= '<img onclick="view_file(this)" data-file="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" />';
+                      } elseif (strpos($filetype, 'video/') === 0) {
+                        $htmlimage .= '<video onclick="view_file(this)" data-file="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" controls>
+                          <source src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" type="'.$filetype.'">
+                          Your browser does not support the video tag.
+                        </video>';
+                      } 
                 }
             }
             $html_status = ' 
-                    <span class="text-head-3 payment">
-                        <span class="badge text-bg-success me-1">Tidak ada</span>
-                    </span>';
+            <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+            <iconify-icon icon="hugeicons:delivery-truck-01" class="text-warning text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Packing dan kirim" ></iconify-icon> 
+        </button> ';
             $html_status_detail = ' 
-            <ul class="timeline">
+            <ul class="timeline" id="delivery-proses-'.$row->DeliveryId.'">
                 <li class="timeline-item">
                     <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDate)).'</div>
                     <div class="timeline-badge"></div>
@@ -585,10 +652,13 @@ class DeliveryModel extends Model
                     </div>
                 </li> 
                 <li class="timeline-item">
-                    <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDateProses)).'</div>
+                    <div class="timeline-date"><span id="delivery-proses-date-'.$row->DeliveryId.'">'.date("l, j F Y", strtotime($row->DeliveryDateProses)).' </span><a onclick="delivery_proses_edit_date('.$row->DeliveryId.',this)" class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center cursor-pointer" data-bs-toggle="tooltip" data-bs-title="Ubah tanggal packing dan pengiriman" data-date="'.date("Y-m-d", strtotime($row->DeliveryDateProses)).'">
+                    <iconify-icon icon="lucide:edit"></iconify-icon>
+                </a></div>
                     <div class="timeline-badge"></div>
                     <div class="timeline-panel">
-                        <span class="badge text-bg-success">Packing dan Kirim</span><br>
+                        <span class="badge text-bg-success">Packing dan Kirim</span><a onclick="delivery_proses_edit_file('.$row->DeliveryId.',this)" class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center cursor-pointer" data-bs-toggle="tooltip" data-bs-title="Ubah Lampiran packing dan pengiriman">
+                        <iconify-icon icon="lucide:edit"></iconify-icon></a>
                         <div class="list-image d-flex gap-1 pt-2">
                         '.$htmlimage.' 
                         </div>
@@ -613,7 +683,14 @@ class DeliveryModel extends Model
                     $filepath = $file; 
                     $filetype = mime_content_type($file); 
                     $file_name = basename($file);
-                    $htmlimage .=  '<img onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" />';
+                    if (strpos($filetype, 'image/') === 0) {
+                        $htmlimage .= '<img onclick="view_file(this)" data-file="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" />';
+                      } elseif (strpos($filetype, 'video/') === 0) {
+                        $htmlimage .= '<video onclick="view_file(this)" data-file="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" controls>
+                          <source src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" type="'.$filetype.'">
+                          Your browser does not support the video tag.
+                        </video>';
+                      } 
                 }
             }
             
@@ -626,15 +703,22 @@ class DeliveryModel extends Model
                     $filepath = $file; 
                     $filetype = mime_content_type($file); 
                     $file_name = basename($file);
-                    $htmlimagefinish .=  '<img onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" />';
+                    if (strpos($filetype, 'image/') === 0) {
+                        $htmlimagefinish .= '<img onclick="view_file(this)" data-file="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" />';
+                      } elseif (strpos($filetype, 'video/') === 0) {
+                        $htmlimagefinish .= '<video onclick="view_file(this)" data-file="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" data-type="'.$filetype.'" data-name="'.$file.'" class="rounded delivery-proses" controls>
+                          <source src="'.base_url() . $folder_utama."/".$row->DeliveryId. '/' . $file_name . '" type="'.$filetype.'">
+                          Your browser does not support the video tag.
+                        </video>';
+                      } 
                 }
             }
             $html_status = ' 
-                    <span class="text-head-3 payment">
-                        <span class="badge text-bg-success me-1">Tidak ada</span>
-                    </span>';
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:delivery-truck-01" class="text-success text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Terima Barang" ></iconify-icon> 
+                </button>';
             $html_status_detail = ' 
-            <ul class="timeline">
+            <ul class="timeline" id="delivery-proses-'.$row->DeliveryId.'">
                 <li class="timeline-item">
                     <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDate)).'</div>
                     <div class="timeline-badge"></div>
@@ -644,20 +728,27 @@ class DeliveryModel extends Model
                     </div>
                 </li> 
                 <li class="timeline-item">
-                    <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDateProses)).'</div>
+                    <div class="timeline-date"><span id="delivery-proses-date-'.$row->DeliveryId.'">'.date("l, j F Y", strtotime($row->DeliveryDateProses)).' </span><a onclick="delivery_proses_edit_date('.$row->DeliveryId.',this)" class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center cursor-pointer" data-bs-toggle="tooltip" data-bs-title="Ubah tanggal packing dan pengiriman" data-date="'.date("Y-m-d", strtotime($row->DeliveryDateProses)).'">
+                    <iconify-icon icon="lucide:edit"></iconify-icon>
+                </a></div>
                     <div class="timeline-badge"></div>
                     <div class="timeline-panel">
-                        <span class="badge text-bg-success">Packing dan Kirim</span><br>
+                        <span class="badge text-bg-success">Packing dan Kirim</span><a onclick="delivery_proses_edit_file('.$row->DeliveryId.',this)" class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center cursor-pointer" data-bs-toggle="tooltip" data-bs-title="Ubah Lampiran packing dan pengiriman">
+                        <iconify-icon icon="lucide:edit"></iconify-icon></a>
                         <div class="list-image d-flex gap-1 pt-2">
                         '.$htmlimage.' 
                         </div>
                     </div>
                 </li> 
                 <li class="timeline-item">
-                    <div class="timeline-date">'.date("l, j F Y", strtotime($row->DeliveryDateFinish)).'</div>
+                
+                    <div class="timeline-date"><span id="delivery-finish-date-'.$row->DeliveryId.'">'.date("l, j F Y", strtotime($row->DeliveryDateFinish)).' </span><a onclick="delivery_finish_edit_date('.$row->DeliveryId.',this)" class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center cursor-pointer" data-bs-toggle="tooltip" data-bs-title="Ubah tanggal penerima barang" data-date="'.date("Y-m-d", strtotime($row->DeliveryDateFinish)).'">
+                    <iconify-icon icon="lucide:edit"></iconify-icon>
+                    </a></div>
                     <div class="timeline-badge"></div>
                     <div class="timeline-panel">
-                        <span class="badge text-bg-success">Penerimaan Barang</span><br>
+                        <span class="badge text-bg-success">Penerimaan Barang</span><a onclick="delivery_finish_edit_file('.$row->DeliveryId.',this)" class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center cursor-pointer" data-bs-toggle="tooltip" data-bs-title="Ubah penerimaan barang">
+                        <iconify-icon icon="lucide:edit"></iconify-icon></a><br>
                         <span class="tex-detail-3">Dokument diterima oleh '.$row->DeliveryReceiveName.'</span> 
                         <div class="list-image d-flex gap-1 pt-2">
                         '.$htmlimagefinish.' 
@@ -677,6 +768,269 @@ class DeliveryModel extends Model
         }
     }
 
+    function get_data_sum_delivery_item(){
+        $builder = $this->db->table("delivery_detail");
+    }
 
+    
+    function insert_data_delivery($data){ 
+        $header = $data["header"]; 
+        $next_code = $this->get_next_code_delivery($header["DeliveryDate"]);
+        $builder = $this->db->table("delivery");
+        $builder->insert(array(
+            "DeliveryCode"=>$next_code,
+            "DeliveryDate"=>$header["DeliveryDate"], 
+            "DeliveryDate2"=>$header["DeliveryDate"],  
+            "DeliveryRef"=>$header["DeliveryRef"], 
+            "DeliveryRefType"=>$header["DeliveryRefType"], 
+            "ProjectId"=>$header["ProjectId"], 
+            "StoreId"=>$header["StoreId"], 
+            "DeliveryAdmin"=>$header["DeliveryAdmin"],
+            "DeliveryArmada"=>$header["DeliveryArmada"],
+            "DeliveryRitase"=>$header["DeliveryRitase"],
+            "DeliveryTotal"=>$header["DeliveryTotal"],
+            "DeliveryToName"=>$header["DeliveryToName"],
+            "DeliveryToTelp"=>$header["DeliveryToTelp"],
+            "DeliveryToAddress"=>$header["DeliveryToAddress"],
+            "DeliveryFromName"=>$header["DeliveryFromName"],
+            "DeliveryFromTelp"=>$header["DeliveryFromTelp"],
+            "DeliveryFromAddress"=>$header["DeliveryFromAddress"],
+            "TemplateId"=>$header["TemplateId"],
+            "DeliveryStatus"=>0,
+            "created_user"=>user()->id, 
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+        ));
+
+        $builder = $this->db->table("delivery");
+        $builder->select('*');
+        $builder->orderby('DeliveryId', 'DESC');
+        $builder->limit(1);
+        $query = $builder->get()->getRow();  
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["DeliveryDetailRef"] = $query->DeliveryId;
+            $row["DeliveryDetailVarian"] = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
+            $builder = $this->db->table("delivery_detail");
+            $builder->insert($row); 
+        }
+
+        
+
+        // if($header["DeliveryRefType"] == "Sample"){
+            
+        //     $modelssample = new SampleModel;
+        //     $modelssample->update_data_sample_status($header["DeliveryRef"]);
+        // }
+        // if($header["DeliveryRefType"] == "Invoice"){
+        //     $this->update_data_invoice_status($header["DeliveryRef"]);
+        // }
+
+
+        // //update status project
+        // $builder = $this->db->table("project"); 
+        // $builder->set('ProjectStatus', 7);  
+        // $builder->where('ProjectId', $header["ProjectId"]); 
+        // $builder->update();  
+        
+        //create Log action 
+        $activityModel = new ActivityModel(); 
+        $activityModel->insert(
+            array( 
+                "menu"=>"Delivery",
+                "type"=>"Add",
+                "name"=>"Data Delievry ditambahkan dengan nomor ".$next_code,
+                "desc"=> json_encode($data ?? []), 
+                "created_user"=>user()->id, 
+                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'), 
+            )
+        ); 
+    } 
+
+    function update_data_delivery($data,$id){ 
+        $header = $data["header"]; 
+
+        $builder = $this->db->table("delivery"); 
+        $builder->set('DeliveryDate', $header["DeliveryDate"]);  
+        $builder->set('DeliveryAdmin', $header["DeliveryAdmin"]);
+        $builder->set('DeliveryArmada', $header["DeliveryArmada"]);  
+        $builder->set('DeliveryRitase', $header["DeliveryRitase"]);  
+        $builder->set('DeliveryTotal', $header["DeliveryTotal"]);   
+        $builder->set('DeliveryToName', $header["DeliveryToName"]); 
+        $builder->set('DeliveryToTelp', $header["DeliveryToTelp"]); 
+        $builder->set('DeliveryToAddress', $header["DeliveryToAddress"]); 
+        $builder->set('DeliveryFromName', $header["DeliveryFromName"]); 
+        $builder->set('DeliveryFromTelp', $header["DeliveryFromTelp"]); 
+        $builder->set('DeliveryFromAddress', $header["DeliveryFromAddress"]); 
+        $builder->set('TemplateId', $header["TemplateId"]); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
+        $builder->where('DeliveryId', $id); 
+        $builder->update(); 
+
+        $builder = $this->db->table("delivery_detail");
+        $builder->where('DeliveryDetailRef',$id);
+        $builder->delete(); 
+
+        // ADD DETAIL PRODUK 
+        foreach($data["detail"] as $row){ 
+            $row["DeliveryDetailRef"] = $id;
+            $row["DeliveryDetailVarian"] = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
+            $builder = $this->db->table("delivery_detail");
+            $builder->insert($row); 
+        } 
+    }
+    
+    function proses_data_delivery($data,$id){
+        $builder = $this->db->table("delivery");
+        $builder->set('DeliveryDateProses', $data["DeliveryDateProses"]); 
+        $builder->set('DeliveryStatus', 1); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
+        $builder->where('DeliveryId',$id);
+        $builder->update();  
+
+        $folder_utama = 'assets/images/delivery'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$id)){
+            mkdir($folder_utama."/".$id, 0777, true);  
+        }
+        $files = glob($folder_utama."/".$id. '/proses_*');
+        foreach ($files as $file) {
+            unlink($file);
+        } 
+        if (isset($data['DeliveryImageList'])) {  
+            $no = 0;
+            foreach ($data['DeliveryImageList'] as $image) {
+                $data_image = simpan_file_base64($image, $folder_utama."/".$id, "proses_".$no); 
+                $no++;
+            } 
+        }
+        return JSON_ENCODE(array("status"=>true));
+    }
+    
+    function edit_proses_date_delivery($data,$id){
+        $builder = $this->db->table("delivery");
+        $builder->set('DeliveryDateProses', $data["DeliveryDateProses"]);  
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
+        $builder->where('DeliveryId',$id);
+        $builder->update();  
  
+    }
+    
+    function edit_proses_data_delivery($data,$id){
+        $builder = $this->db->table("delivery");
+        $builder->set('DeliveryDateProses', $data["DeliveryDateProses"]);  
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
+        $builder->where('DeliveryId',$id);
+        $builder->update();  
+
+        $folder_utama = 'assets/images/delivery'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$id)){
+            mkdir($folder_utama."/".$id, 0777, true);  
+        }
+        $files = glob($folder_utama."/".$id. '/proses_*');
+        foreach ($files as $file) {
+            unlink($file);
+        } 
+        if (isset($data['DeliveryImageList'])) {   
+            $no = 0;
+            foreach ($data['DeliveryImageList'] as $image) {
+                $data_image = simpan_file_base64($image, $folder_utama."/".$id, "proses_".$no); 
+                $no++;
+            } 
+        }
+        return JSON_ENCODE(array("status"=>true));
+    }
+
+    function finish_data_delivery($data,$id){
+        $builder = $this->db->table("delivery");
+        $builder->set('DeliveryDateFinish', $data["header"]["DeliveryDateFinish"]); 
+        $builder->set('DeliveryReceiveName', $data["header"]["DeliveryReceiveName"]); 
+        $builder->set('DeliveryStatus', 2); 
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
+        $builder->where('DeliveryId',$id);
+        $builder->update();  
+
+        $folder_utama = 'assets/images/delivery'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$id)){
+            mkdir($folder_utama."/".$id, 0777, true);  
+        }
+        $files = glob($folder_utama."/".$id. '/finish_*');
+        foreach ($files as $file) {
+            unlink($file);
+        } 
+        if (isset($data["header"]['DeliveryImageListFinish'])) {  
+            $no = 0;
+            foreach ($data["header"]['DeliveryImageListFinish'] as $image) {
+                simpan_file_base64($image, $folder_utama."/".$id, "finish_".$no); 
+                $no++;
+            } 
+        } 
+
+        foreach($data["detail"] as $row){  
+            $varian = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
+            $builder = $this->db->table("delivery_detail"); 
+            $builder->set('DeliveryDetailQtyReceive', $row["DeliveryDetailQtyReceive"]); 
+            $builder->set('DeliveryDetailQtyReceiveSpare', $row["DeliveryDetailQtyReceiveSpare"]); 
+            $builder->set('DeliveryDetailQtyReceiveWaste', $row["DeliveryDetailQtyReceiveWaste"]); 
+            $builder->where('ProdukId',$row["ProdukId"]);
+            $builder->where('DeliveryDetailVarian',$varian);
+            $builder->where('DeliveryDetailRef',$id);
+            $builder->update();  
+        } 
+
+        return JSON_ENCODE(array("status"=>true));
+    }
+    function finish_data_delivery_edit($data,$id){
+        $builder = $this->db->table("delivery");
+        $builder->set('DeliveryDateFinish', $data["header"]["DeliveryDateFinish"]); 
+        $builder->set('DeliveryReceiveName', $data["header"]["DeliveryReceiveName"]);  
+        $builder->set('updated_user',user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));  
+        $builder->where('DeliveryId',$id);
+        $builder->update();  
+
+        $folder_utama = 'assets/images/delivery'; 
+        if (!file_exists($folder_utama)) {
+            mkdir($folder_utama, 0777, true);  
+        } 
+        //Buat folder berdasarkan id
+        if (!file_exists($folder_utama."/".$id)){
+            mkdir($folder_utama."/".$id, 0777, true);  
+        }
+        $files = glob($folder_utama."/".$id. '/finish.*');
+        foreach ($files as $file) {
+            unlink($file);
+        } 
+        if (isset($data["header"]['Image'])) {
+            $data_image = $this->simpan_gambar_base64($data["header"]['Image'], $folder_utama."/".$id, "finish");  
+        } 
+        foreach($data["detail"] as $row){  
+            $varian = (isset($row["DeliveryDetailVarian"]) ? json_encode($row["DeliveryDetailVarian"]) : "[]");  
+            $builder = $this->db->table("delivery_detail"); 
+            $builder->set('DeliveryDetailQtyReceive', $row["DeliveryDetailQtyReceive"]); 
+            $builder->set('DeliveryDetailQtyReceiveSpare', $row["DeliveryDetailQtyReceiveSpare"]); 
+            $builder->set('DeliveryDetailQtyReceiveWaste', $row["DeliveryDetailQtyReceiveWaste"]); 
+            $builder->where('ProdukId',$row["ProdukId"]);
+            $builder->where('DeliveryDetailVarian',$varian);
+            $builder->where('DeliveryDetailRef',$id);
+            $builder->update();  
+        } 
+
+        return JSON_ENCODE(array("status"=>true));
+    } 
 }

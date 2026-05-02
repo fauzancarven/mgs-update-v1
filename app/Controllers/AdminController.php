@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UserModel;
 use App\Models\ProjectModel;
 use App\Models\StoreModel;
+use App\Models\DeliveryModel;
 use App\Models\ProjectcategoryModel;
 use App\Models\ProdukModel;
 use App\Models\ProdukvarianModel;
@@ -225,6 +226,22 @@ class AdminController extends BaseController
         ]; 
         return view('admin/project/sph/index', $data); 
     }
+    public function penawaran_new()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Penawaran',
+            'menu' => "Sales",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/project/sph/index2', $data); 
+    }
     public function penawaran_add()
     {    
         $modelsstore = new StoreModel();
@@ -282,6 +299,8 @@ class AdminController extends BaseController
         ];  
         return view('admin/project/sph/edit_view', $data); 
     }
+
+    
     public function invoice()
     {    
         $models = new SphModel();
@@ -305,6 +324,7 @@ class AdminController extends BaseController
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();
         $project = new  ProjectcategoryModel();
+        
         $data = [
             'notif' => [],
             'session' => $this->session,
@@ -358,6 +378,126 @@ class AdminController extends BaseController
         ];   
         return view('admin/project/invoice/edit_view', $data); 
     }
+    
+    public function invoice_delivery_add($id)
+    {     
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $modelinvoice = new InvoiceModel(); 
+        $modelsproduk = new ProdukModel();
+        $datainvoice = $modelinvoice->get_data_invoice($id);  
+        $project = array(
+            "code"=>$datainvoice->InvCode,
+            "StoreId"=>$datainvoice->StoreId,
+            "StoreCode"=>$datainvoice->StoreCode,
+            "StoreName"=>$datainvoice->StoreName,
+            "project_id"=>$datainvoice->ProjectId, 
+            "DeliveryRef"=>$datainvoice->InvId, 
+            "DeliveryRefType"=>"Invoice",
+            "CustomerName"=>$datainvoice->InvCustName,
+            "CustomerTelp"=>$datainvoice->InvCustTelp,
+            "CustomerAddress"=>$datainvoice->InvProjectAddress, 
+        );
+        
+        $arr_detail = $modelinvoice->get_data_invoice_detail($id);  
+        $detail = array();  
+        foreach($arr_detail as $row){
+            if($row->InvDetailType == "product" && $row->ProdukId !== "0"){
+            $detail[] = array( 
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                        "satuan_text"=>$row->InvDetailSatuanText, 
+                        "price"=>$row->InvDetailPrice,
+                        "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                        "total"=> $row->InvDetailTotal,
+                        "disc"=> $row->InvDetailDisc,
+                        "qty_ref"=> $row->InvDetailQty,
+                        "qty_success"=>$modelinvoice->get_data_delivery_detail_by_ref($id,$row->ProdukId,$row->InvDetailVarian), 
+                        "qty"=> $row->InvDetailQty - $modelinvoice->get_data_delivery_detail_by_ref($id,$row->ProdukId,$row->InvDetailVarian),
+                        "qty_spare"=> 0,
+                        "text"=> $row->InvDetailText,
+                        "group"=> $row->InvDetailGroup,
+                        "type"=> $row->InvDetailType,
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->InvDetailVarian,true)
+                    );
+                }
+        }; 
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Tambah Pengiriman',
+            'menu' => "Sales",
+            'delivery' => $project,
+            'store' => $modelsstore->get()->getResult(), 
+            'admin' => $modelsuser->get()->getResult(),
+            'detail' => $detail, 
+        ]; 
+        return view('admin/project/delivery/add_view', $data);  
+    }
+
+    public function invoice_delivery_edit($id)
+    {     
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $modelinvoice = new InvoiceModel(); 
+        $modeldelivery = new DeliveryModel(); 
+        $modelsproduk = new ProdukModel();
+        $datadelivery = $modeldelivery->get_data_delivery($id);  
+        $datainvoice = $modelinvoice->get_data_invoice($datadelivery->DeliveryRef);  
+        $project = array(
+            "code"=>$datainvoice->InvCode,
+            "StoreId"=>$datainvoice->StoreId,
+            "StoreCode"=>$datainvoice->StoreCode,
+            "StoreName"=>$datainvoice->StoreName,
+            "project_id"=>$datainvoice->ProjectId, 
+            "DeliveryRef"=>$datainvoice->InvId, 
+            "DeliveryRefType"=>"Invoice",
+            "CustomerName"=>$datainvoice->InvCustName,
+            "CustomerTelp"=>$datainvoice->InvCustTelp,
+            "CustomerAddress"=>$datainvoice->InvProjectAddress, 
+        );
+        
+        $arr_detail = $modeldelivery->get_data_delivery_detail($id);  
+        $detail = array();  
+        foreach($arr_detail as $row){
+            if($row->DeliveryDetailType == "product" && $row->ProdukId !== "0"){
+            $detail[] = array( 
+                        "id" => $row->ProdukId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->DeliveryDetailSatuanId == 0 ? "" : $row->DeliveryDetailSatuanId),
+                        "satuan_text"=>$row->DeliveryDetailSatuanText, 
+                        "price"=>0,
+                        "varian"=> JSON_DECODE($row->DeliveryDetailVarian,true),
+                        "total"=>0,
+                        "disc"=> 0,
+                        "qty_ref"=> $modelinvoice->get_data_invoice_detail($datainvoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian)->InvDetailQty,
+                        "qty_success"=>$modelinvoice->get_data_delivery_detail_by_ref($datainvoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$id), 
+                        "qty"=> $row->DeliveryDetailQty,
+                        "qty_spare"=> 0,
+                        "text"=> $row->DeliveryDetailText,
+                        "group"=> $row->DeliveryDetailGroup,
+                        "type"=> $row->DeliveryDetailType,
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->DeliveryDetailVarian,true)
+                    );
+                }
+        }; 
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Ubah Pengiriman',
+            'menu' => "Sales",
+            'delivery' => $datadelivery,
+            'store' => $modelsstore->get()->getResult(), 
+            'admin' => $modelsuser->get()->getResult(),
+            'detail' => $detail, 
+        ]; 
+        return view('admin/project/delivery/edit_view', $data);  
+    }
+
+
     public function pembelian()
     {    
         $modelsstore = new StoreModel();
