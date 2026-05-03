@@ -576,7 +576,7 @@ tr.hide {
                                         </td>
                                         <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
                                                   <span
-                                                            style="text-transform:capitalize;font-weight:bold"><?= $inv->username?></span><br>
+                                                            style="text-transform:capitalize;font-weight:bold"><?= $project->username?></span><br>
                                                   <div style="border-top:1px solid black;">Admin</div>
                                         </td>
                                         <td rowspan="2" style="width:15%;text-align:center;vertical-align: bottom;">
