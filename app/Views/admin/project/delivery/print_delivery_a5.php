@@ -410,7 +410,7 @@ li {
                         <tr> 
                             <td class="td-center">'.$no.'</td>
                             <td class="ps-1">'.$item->DeliveryDetailText.$arr_badge.'</td>
-                            <td class="td-center"> </td> 
+                            <td class="td-center">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
                             <td class="td-center">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
                         </tr>';
                         $no++;  
