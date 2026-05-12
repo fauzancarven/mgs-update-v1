@@ -950,7 +950,7 @@ $("#btn-add-PO").click(function() {
                     });
                     return;
           }
-          if (data_detail_item.map((obj) => obj.pengiriman).reduce((a, b) => a + b, 0) == 0) {
+          if (data_detail_item.map((item) => item.pengiriman).reduce((a, b) => a + b, 0) == 0) {
                     Swal.fire({
                               icon: 'error',
                               text: 'Qty pengiriman belum lengkap ...!!!',
@@ -973,48 +973,42 @@ $("#btn-add-PO").click(function() {
                     });
                     return;
           }
-          if ($("#armada").val() == "") {
+          if ($("#VendorId").val() == null) {
                     Swal.fire({
                               icon: 'error',
-                              text: 'Armada belum dimasukan...!!!',
+                              text: 'Vendor belum dipilih...!!!',
                               confirmButtonColor: "#3085d6",
                     }).then(function() {
                               swal.close();
-                              setTimeout(() => $("#armada").focus(), 300);
-                    });
-                    return;
-          }
-          if ($("#ritase").val() == "") {
-                    Swal.fire({
-                              icon: 'error',
-                              text: 'Ritasi belum diisi...!!!',
-                              confirmButtonColor: "#3085d6",
-                    }).then(function() {
-                              swal.close();
-                              setTimeout(() => $("#ritase").focus(), 300);
+                              setTimeout(() => $("#POAdmin").select2(
+                                                  "open"),
+                                        300);
                     });
                     return;
           }
 
 
           var header = {
-                    PODate: $("#PODate").data('daterangepicker').startDate
-                              .format("YYYY-MM-DD"),
-                    PORef: '<?= $po["PORef"] ?>',
+                    PODate: $("#PODate").data('daterangepicker').startDate.format(
+                              "YYYY-MM-DD"),
+                    ProjectId: '<?=  $po["project_id"] ?>',
+                    PORef: '<?= $po["PORefType"] ?>',
                     PORefType: '<?= $po["PORefType"] ?>',
-                    ProjectId: '<?= $po["project_id"] ?>',
-                    StoreId: $('#StoreId').val(),
+                    VendorId: ($("#POVendor").select2("data")[0]["text"] == $("#POVendor")
+                              .select2("data")[0]["id"] ? 0 : $("#POVendor")
+                              .val()),
+
+                    VendorName: $("#POVendor").select2("data")[0]["text"],
+                    POCustName: $("#POCustName").val(),
+                    POCustTelp: $("#POCustTelp").val(),
+                    POAddress: $("#POAddress").val(),
                     POAdmin: $("#POAdmin").val(),
-                    POArmada: $("#armada").val(),
-                    PORitase: $("#ritase").val(),
-                    POTotal: $("#biayapengiriman").val().replace(/[^0-9]/g, ''),
-                    POFromName: $("#FromName").val(),
-                    POFromTelp: $("#FromTelp").val(),
-                    POFromAddress: $("#FromAddress").val(),
-                    POToName: $("#ToName").val(),
-                    POToTelp: $("#ToTelp").val(),
-                    POToAddress: $("#ToAddress").val(),
                     TemplateId: $($(".template-footer").find("select")[0]).val(),
+                    POSubTotal: $("#POSubTotal").val().replace(/[^0-9]/g, ''),
+                    PODistItemTotal: $("#PODiscItemTotal").val().replace(/[^0-9]/g, ''),
+                    PODiscTotal: $("#PODiscTotal").val().replace(/[^0-9]/g, ''),
+                    POGrandTotal: $("#POGrandTotal").val().replace(/[^0-9]/g, ''),
+                    TemplateId: $($(".template-footer").find("select")[0]).val()
           }
           var detail = [];
           for (var i = 0; data_detail_item.length > i; i++) {
