@@ -1938,6 +1938,15 @@ delivery_finish = function(id, el) {
                     }
           });
 }
+
+
+
+
+add_invoice_po = function(id, el) {
+
+          window.location = "<?= base_url() ?>admin/sales/invoice/po_add/" + id;
+          return;
+}
 </script>
 
 

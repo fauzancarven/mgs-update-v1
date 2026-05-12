@@ -174,6 +174,23 @@
                                         </li>
 
 
+                                        <li class="sidebar-menu-group-title">Accounting</li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/coa">
+                                                            <iconify-icon icon="cuida:hashtag-outline"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Chart of Account</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/transaction">
+                                                            <iconify-icon icon="cuida:swap-horizontal-arrows-outline"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Transaksi</span>
+                                                  </a>
+                                        </li>
                                         <li class="sidebar-menu-group-title">Master</li>
                                         <li>
                                                   <a href="<?= base_url(); ?>admin/store">

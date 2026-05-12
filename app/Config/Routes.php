@@ -38,10 +38,13 @@ $routes->get('/admin/sales/invoice/add/(:any)', 'AdminController::invoice_add/$1
 $routes->get('/admin/sales/invoice/edit/(:any)', 'AdminController::invoice_edit/$1', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice/delivery_add/(:any)', 'AdminController::invoice_delivery_add/$1', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice/delivery_edit/(:any)', 'AdminController::invoice_delivery_edit/$1', ['filter' => 'login']);
+$routes->get('/admin/sales/invoice/po_add/(:any)', 'AdminController::invoice_pembelian_add/$1', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
 $routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);
 $routes->get('/admin/sales/project', 'AdminController::chat', ['filter' => 'login']);
+$routes->get('/admin/accounting/coa', 'AdminController::coa', ['filter' => 'login']);
+$routes->get('/admin/accounting/transaction', 'AdminController::transaction', ['filter' => 'login']);
 
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
@@ -66,6 +69,8 @@ $routes->post('/datatables/get-datatable-pembelian', 'TableController::pembelian
 $routes->post('/datatables/get-datatable-pengiriman', 'TableController::pengiriman_datatable', ['filter' => 'login']);
 
 $routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter' => 'login']);
+
+$routes->post('/datatables/get-datatable-acc-coa', 'TableController::acc_coa', ['filter' => 'login']);
 $routes->post('/datatables/get-datatable-payment-request', 'TableController::payment_request_datatable', ['filter' => 'login']);
 
 
