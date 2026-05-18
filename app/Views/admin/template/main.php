@@ -135,7 +135,7 @@
 
 
                                         <li class="sidebar-menu-group-title">Sales</li>
-                                        <li>
+                                        <!-- <li>
                                                   <a href="<?= base_url(); ?>admin/sales/project">
                                                             <iconify-icon icon="cuida:subtask-outline"
                                                                       class="menu-icon">
@@ -157,7 +157,7 @@
                                                             </iconify-icon>
                                                             <span>Sampel</span>
                                                   </a>
-                                        </li>
+                                        </li> -->
                                         <li>
                                                   <a href="<?= base_url(); ?>admin/sales/penawaran">
                                                             <iconify-icon icon="ic:outline-handshake" class="menu-icon">
@@ -910,7 +910,7 @@
 
           <!-- main js -->
           <script src="<?= base_url() ?>assets/woowdash/assets/js/app.js"></script>
-
+          <?= $this->renderSection('scriptjs'); ?>
 
 
 </body>

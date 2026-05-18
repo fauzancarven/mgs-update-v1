@@ -2125,6 +2125,36 @@ request_payment = function(id, el, menu) {
                               }
                     });
           }
+
+          if (menu == "Pembelian") {
+                    $.ajax({
+                              method: "POST",
+                              url: "<?= base_url() ?>message/add-payment-pembelian/" +
+                                        id,
+                              success: function(data) {
+                                        $("#modal-message").html(data);
+
+                                        $("#modal-add-payment-pembelian").modal(
+                                                  "show");
+                                        $("#modal-add-payment-pembelian").data(
+                                                  "menu",
+                                                  "Invoice");
+                                        $(".tooltip").remove();
+
+                              },
+                              error: function(xhr, textStatus, errorThrown) {
+
+                                        Swal.fire({
+                                                  icon: 'error',
+                                                  text: xhr["responseJSON"]
+                                                            [
+                                                                      'message'
+                                                            ],
+                                                  confirmButtonColor: "#3085d6",
+                                        });
+                              }
+                    });
+          }
 }
 
 

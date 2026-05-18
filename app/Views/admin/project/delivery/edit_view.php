@@ -297,7 +297,7 @@ $('#DeliveryDate').daterangepicker({
 $("#StoreId").select2({
           placeholder: "Pilih Toko",
           ajax: {
-                    url: "<?= base_url()?>select2 / get - data - store ",
+                    url: "<?= base_url()?>select2/get-data-store",
                     dataType: 'json',
                     type: "POST",
                     delay: 250,

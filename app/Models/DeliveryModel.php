@@ -294,8 +294,8 @@ class DeliveryModel extends Model
     } 
     function get_data_delivery($id){
         $builder = $this->db->table("delivery");
-        $builder->join('store',"store.StoreId=delivery.StoreId"); 
-        $builder->join('users',"users.id=delivery.DeliveryAdmin");
+        $builder->join('store',"store.StoreId=delivery.StoreId","left"); 
+        $builder->join('users',"users.id=delivery.DeliveryAdmin","left");
         $builder->join("template_footer","TemplateId = template_footer.TemplateFooterId","left"); 
         $builder->where('DeliveryId',$id); 
         return $builder->get()->getRow();  

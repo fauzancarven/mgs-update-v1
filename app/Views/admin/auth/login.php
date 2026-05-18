@@ -6,139 +6,165 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>MGS APP - Login</title>
-  <!-- plugins:css -->
-  <link rel="stylesheet" href="<?= base_url(); ?>assets/vendors/feather/feather.css">
-  <link rel="stylesheet" href="<?= base_url(); ?>assets/vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" href="<?= base_url(); ?>assets/vendors/css/vendor.bundle.base.css">
-  <!-- endinject -->
-  <!-- Plugin css for this page -->
-  <link rel="stylesheet" href="<?= base_url(); ?>assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
-  <link rel="stylesheet" href="<?= base_url(); ?>assets/vendors/ti-icons/css/themify-icons.css"> 
-  <link rel="stylesheet" href="<?= base_url(); ?>assets/css/vertical-layout-light/style.css">
-  <!-- End plugin css for this page --> 
   <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png" />
-<!--   
+  <!--   
   <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/bootstrap-5.3.3/css/bootstrap.min.css">   -->
+
+  <!-- remix icon font css  -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/remixicon.css">
+  <!-- BootStrap css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/bootstrap.min.css">
+  <!-- Apex Chart css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/apexcharts.css">
+  <!-- Data Table css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/dataTables.min.css">
+  <!-- Text Editor css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/editor-katex.min.css">
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/editor.atom-one-dark.min.css">
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/editor.quill.snow.css">
+  <!-- Date picker css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/flatpickr.min.css">
+  <!-- Calendar css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/full-calendar.css">
+  <!-- Vector Map css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/jquery-jvectormap-2.0.5.css">
+  <!-- Popup css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/magnific-popup.css">
+  <!-- Slick Slider css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/slick.css">
+  <!-- prism css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/prism.css">
+  <!-- file upload css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/file-upload.css">
+
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/lib/audioplayer.css">
+  <!-- main css -->
+  <link rel="stylesheet" href="<?=base_url()?>assets/woowdash/assets/css/style.css">
 </head>
 
 <body>
-  <div class="container-scroller">
-    <div class="container-fluid page-body-wrapper full-page-wrapper">
-      <div class="content-wrapper d-flex align-items-center auth px-0">
-        <div class="w-100 mx-3">
-          <div class="card col-lg-4 mx-auto">
-            <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-              <div class="brand-logo text-center">
-                <img src="<?= base_url(); ?>assets/images/logo/logo-blue.png" alt="" style="width : 75%;"> 
-              </div>
-              <!-- <h6 class="font-weight-light">Sign in to continue.</h6> -->
 
 
-              <form class="pt-3" action="<?= url_to('login') ?>" method="post">
-                <?= view('Myth\Auth\Views\_message_block') ?>
-                <?= csrf_field() ?>
-
-
-                <?php if ($config->validFields === ['email']) : ?>
-                  <div class="form-group">
-                    <label for="login"><?= lang('Auth.email') ?></label>
-                    <input type="email" class="form-control <?php if (session('errors.login')) : ?>is-invalid<?php endif ?>" name="login" placeholder="<?= lang('Auth.email') ?>">
-                    <div class="invalid-feedback">
-                      <?= session('errors.login') ?>
-                    </div>
-                  </div>
-                <?php else : ?>
-                  <div class="form-group">
-                    <label for="login"><?= lang('Auth.emailOrUsername') ?></label>
-                    <input type="text" class="form-control <?php if (session('errors.login')) : ?>is-invalid<?php endif ?>" name="login" placeholder="<?= lang('Auth.emailOrUsername') ?>">
-                    <div class="invalid-feedback">
-                      <?= session('errors.login') ?>
-                    </div>
-                  </div>
-                <?php endif; ?>
-
-
-                <div class="form-group">
-                  <label for="password"><?= lang('Auth.password') ?></label>
-                  <input type="password" name="password" class="form-control  <?php if (session('errors.password')) : ?>is-invalid<?php endif ?>" placeholder="<?= lang('Auth.password') ?>">
-                  <div class="invalid-feedback">
-                    <?= session('errors.password') ?>
-                  </div>
-                </div>
-
-                <?php if ($config->allowRemembering) : ?>  
-                <div class="form-group ms-3 position-relative">
-                  <input class="form-check-input" type="checkbox" name="remember" style="left: 20px;" id="flexCheckDefault" <?php if (old('remember')) : ?> checked <?php endif ?>>
-                  <label class="form-check-label text-muted ps-4"  for="flexCheckDefault" style="padding-left: 20px;">
-                    <?= lang('Auth.rememberMe') ?>
-                  </label>
-                </div> 
-                <?php endif; ?> 
-
-
-                <div class="mt-3">
-                  <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"><?= lang('Auth.loginAction') ?></button>
-                </div>
-
-                 <!-- <?php if ($config->allowRegistration) : ?>
-                  <div class="mt-3">
-                    <a href="<?= url_to('register') ?>" type="submit" class="btn btn-block btn-light btn-lg font-weight-medium auth-form-btn"><?= lang('Auth.needAnAccount') ?></a>
-                  </div>
-                <?php endif; ?>   -->
-
-                <div class="my-4 d-flex justify-content-between align-items-center">
-
-              </form>
-
-              
-              <!-- <div class="d-flex justify-content-center w-100">
-                <?php if ($config->activeResetter) : ?>
-                  <a href="<?= url_to('forgot') ?>" class="auth-link text-black text-center">Forgot Password ?</a>
-                <?php endif; ?>
-              </div> -->
-
-              <!-- <a href="#" class="auth-link text-black">Forgot password?</a> -->
-            </div>
-            <!-- <hr> -->
-            <!-- <div class="my-2 d-flex flex-column justify-content-between align-items-center">
-              <a class="p-2 btn btn-lg font-weight-medium auth-form-btn" href="">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 262" preserveAspectRatio="xMidYMid">
-                  <path d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" fill="#4285F4" />
-                  <path d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" fill="#34A853" />
-                  <path d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782" fill="#FBBC05" />
-                  <path d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" fill="#EB4335" />
-                </svg>
-                <span>&nbsp;&nbsp;Masuk Dengan Google</span>
-              </a>
-            </div> -->
-            <!-- <div class="mb-2">
-                  <button type="button" class="btn btn-block btn-facebook auth-form-btn">
-                    <i class="ti-facebook mr-2"></i>Connect using facebook
-                  </button>
-                </div>
-                <div class="text-center mt-4 font-weight-light">
-                  Don't have an account? <a href="register.html" class="text-primary">Create</a>
-                </div> -->
-
-
-
-          </div>
-        </div>
-        <!-- <p class="text-muted text-center mt-2" style="font-size:9px;">@ Copyright <a href="https://www.instagram.com/agit_agustian_/">Agit Agustian</a> - Modified for Diamondland</p> -->
+  <section class="auth bg-base d-flex flex-wrap">
+    <div class="auth-left d-lg-block d-none">
+      <div class="d-flex align-items-center flex-column h-100 justify-content-center">
+        <img src="<?=base_url()?>assets/images/auth.png" alt="">
       </div>
     </div>
-    <!-- content-wrapper ends -->
-  </div>
-  <!-- page-body-wrapper ends -->
-  </div>
-  <!-- container-scroller -->
-  <!-- plugins:js -->
-  <script src="<?= base_url(); ?>assets/vendors/js/vendor.bundle.base.js"></script>
-  <!-- endinject -->
-  <!-- Plugin js for this page -->
-  <script src="<?= base_url(); ?>assets/vendors/chart.js/Chart.min.js"></script>
-  <script src="<?= base_url(); ?>assets/vendors/datatables.net/jquery.dataTables.js"></script>
-  <script src="<?= base_url(); ?>assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script> 
+    <div class="auth-right py-32 px-24 d-flex flex-column justify-content-center">
+      <div class="max-w-464-px mx-auto w-100">
+        <div>
+          <a href="index-2.html" class="mb-40 max-w-290-px">
+            <img src="<?=base_url()?>assets/woowdash/assets/images/w-logo.png" alt="">
+          </a>
+          <h4 class="mb-12">Login Aplikasi</h4>
+          <p class="mb-32 text-secondary-light text-lg">Selamat datang kembali! silahkan masukan email dan password anda</p>
+        </div>
+        <?= view('Myth\Auth\Views\_message_block') ?>
+        <?= csrf_field() ?>
+
+        <form action="<?= url_to('login') ?>" method="post">
+
+          <div class="icon-field mb-16">
+            <span class="icon top-50 translate-middle-y">
+              <iconify-icon icon="mage:email"></iconify-icon>
+            </span>
+            <input type="text" name="login" class="form-control h-56-px bg-neutral-50 radius-12 <?php if (session('errors.login')) : ?>is-invalid<?php endif ?>" placeholder="<?= lang('Auth.email') ?>">
+          </div>
+          <div class="position-relative mb-20">
+            <div class="icon-field">
+              <span class="icon top-50 translate-middle-y">
+                <iconify-icon icon="solar:lock-password-outline"></iconify-icon>
+              </span>
+              <input type="password" name="password" class="form-control h-56-px bg-neutral-50 radius-12" placeholder="Password">
+            </div>
+            <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" data-toggle="#your-password"></span>
+          </div>
+          <div class="">
+            <div class="d-flex justify-content-between gap-2">
+
+              <?php if ($config->allowRemembering) : ?>
+              <div class="form-group ms-3 position-relative">
+                <input class="form-check-input" type="checkbox" name="remember" style="left: 20px;" id="flexCheckDefault" <?php if (old('remember')) : ?> checked <?php endif ?>>
+                <label class="form-check-label text-muted ps-4" for="flexCheckDefault" style="padding-left: 20px;">
+                  <?= lang('Auth.rememberMe') ?>
+                </label>
+              </div>
+              <?php endif; ?>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32"> Sign In</button>
+
+          <!-- <div class="mt-32 center-border-horizontal text-center">
+            <span class="bg-base z-1 px-4">Or sign in with</span>
+          </div>
+          <div class="mt-32 d-flex align-items-center gap-3">
+            <button type="button" class="fw-semibold text-primary-light py-16 px-24 w-50 border radius-12 text-md d-flex align-items-center justify-content-center gap-12 line-height-1 bg-hover-primary-50">
+              <iconify-icon icon="ic:baseline-facebook" class="text-primary-600 text-xl line-height-1"></iconify-icon>
+              Google
+            </button>
+            <button type="button" class="fw-semibold text-primary-light py-16 px-24 w-50 border radius-12 text-md d-flex align-items-center justify-content-center gap-12 line-height-1 bg-hover-primary-50">
+              <iconify-icon icon="logos:google-icon" class="text-primary-600 text-xl line-height-1"></iconify-icon>
+              Google
+            </button>
+          </div>
+          <div class="mt-32 text-center text-sm">
+            <p class="mb-0">Don’t have an account? <a href="sign-up.html" class="text-primary-600 fw-semibold">Sign Up</a></p>
+          </div> -->
+
+        </form>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- jQuery library js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/jquery-3.7.1.min.js"></script>
+  <!-- Bootstrap js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/bootstrap.bundle.min.js"></script>
+  <!-- Apex Chart js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/apexcharts.min.js"></script>
+  <!-- Data Table js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/dataTables.min.js"></script>
+  <!-- Iconify Font js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/iconify-icon.min.js"></script>
+  <!-- jQuery UI js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/jquery-ui.min.js"></script>
+  <!-- Vector Map js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/jquery-jvectormap-2.0.5.min.js"></script>
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/jquery-jvectormap-world-mill-en.js"></script>
+  <!-- Popup js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/magnifc-popup.min.js"></script>
+  <!-- Slick Slider js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/slick.min.js"></script>
+  <!-- prism js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/prism.js"></script>
+  <!-- file upload js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/file-upload.js"></script>
+  <!-- audioplayer -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/lib/audioplayer.js"></script>
+
+  <!-- main js -->
+  <script src="<?=base_url()?>assets/woowdash/assets/js/app.js"></script>
+
+  <script>
+    // ================== Password Show Hide Js Start ==========
+    function initializePasswordToggle(toggleSelector) {
+      $(toggleSelector).on('click', function() {
+        $(this).toggleClass("ri-eye-off-line");
+        var input = $($(this).attr("data-toggle"));
+        if (input.attr("type") === "password") {
+          input.attr("type", "text");
+        } else {
+          input.attr("type", "password");
+        }
+      });
+    }
+    // Call the function
+    initializePasswordToggle('.toggle-password');
+    // ========================= Password Show Hide Js End ===========================
+  </script>
 </body>
 
 </html>
