@@ -122,21 +122,21 @@
                                                   <label class="form-label mb-0 col-sm-2">Nama</label>
                                                   <div class="col-sm-10">
                                                             <input type="text" class="form-control form-control-sm"
-                                                                      id="InvCustName" readonly>
+                                                                      id="InvCustName">
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
                                                   <label class="form-label mb-0 col-sm-2">Telp</label>
                                                   <div class="col-sm-10">
                                                             <input type="text" class="form-control form-control-sm"
-                                                                      id="InvCustTelp" readonly>
+                                                                      id="InvCustTelp">
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
                                                   <label class="form-label mb-0 col-sm-2">Alamat</label>
                                                   <div class="col-sm-10">
                                                             <textarea name="#0" class="form-control" rows="4" cols="50"
-                                                                      id="InvAddress" readonly></textarea>
+                                                                      id="InvAddress"></textarea>
                                                   </div>
                                         </div>
                               </div>
@@ -1206,13 +1206,13 @@ $("#CustomerId").select2({
                     $('#InvCustName').val(data.customername);
                     $('#InvCustTelp').val(data.customertelp);
                     $('#InvAddress').val(data.customeraddress);
-                    $("#InvCustName").attr("disabled", false);
-                    $("#InvCustTelp").attr("disabled", false);
-                    $("#InvAddress").attr("disabled", false);
+                    $("#InvCustName").attr("readonly", false);
+                    $("#InvCustTelp").attr("readonly", false);
+                    $("#InvAddress").attr("readonly", false);
           } else {
-                    $("#InvCustName").attr("disabled", true);
-                    $("#InvCustTelp").attr("disabled", true);
-                    $("#InvAddress").attr("disabled", true);
+                    $("#InvCustName").attr("readonly", true);
+                    $("#InvCustTelp").attr("readonly", true);
+                    $("#InvAddress").attr("readonly", true);
 
           }
 });

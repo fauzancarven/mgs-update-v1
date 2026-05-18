@@ -1038,6 +1038,7 @@ class MessageController extends BaseController
         $models = new PaymentModel();    
         $modelsTemplate = new TemplatefooterModel();    
         $modelsInvoice = new InvoiceModel();      
+        $modelsDelivery = new DeliveryModel();  
         $request = Services::request();
         $postData = $request->getPost(); 
         $data["payment"] = $models->get_data_payment($id);    
@@ -1049,7 +1050,15 @@ class MessageController extends BaseController
                 "PaymentRefType"=>"Invoice",
                 "GrandTotal"=>$datainvoice->InvGrandTotal,
             );
-            $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef);  
+            $data["payments"] = $models->get_data_payment_by_invoice($data["payment"]->PaymentRef);
+            
+            
+            $data["method"] = $models->getMethod(); 
+            $data["project"] = $project; 
+            $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
+            $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
+            $data["user"] = User(); //mengambil session dari mythauth
+            return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
         } 
         if($postData['type'] == "Proforma"){ 
             $datainvoice = $modelsInvoice->get_data_invoice($data["payment"]->PaymentRef); 
@@ -1085,8 +1094,8 @@ class MessageController extends BaseController
             );
             $data["payments"] = $models->get_data_payment_by_pembelian($data["payment"]->PaymentRef);  
         }
-        if($postData['type'] == "delivery"){
-            $datadelivery = $models->getDataDelivery($id); 
+        if($postData['type'] == "Delivery"){
+            $datadelivery = $modelsDelivery->get_data_delivery( $data["payment"]->PaymentRef); 
             $project = array(
                 "ProjectId"=>$datadelivery->ProjectId, 
                 "PaymentRef"=>$datadelivery->DeliveryId, 
@@ -1094,16 +1103,39 @@ class MessageController extends BaseController
                 "GrandTotal"=>$datadelivery->DeliveryTotal,
             );
             $data["payments"] = $models->get_data_payment_by_delivery($data["payment"]->PaymentRef);  
+            
+            $data["method"] = $models->getMethod(); 
+            $data["project"] = $project; 
+            $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
+            $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
+            $data["user"] = User(); //mengambil session dari mythauth
+            return $this->response->setBody(view('admin/project/payment/edit_payment_delivery.php',$data)); 
         }
 
-        $data["method"] = $models->getMethod(); 
-        $data["project"] = $project; 
-        $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
-        $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
-        $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
     }
 
+    public function payment_delivery_add($id)
+    {      
+
+        $modelspayment = new PaymentModel();  
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        
+        $models = new DeliveryModel();  
+        $datadelivery = $models->get_data_delivery($id); 
+        $project = array(
+            "ProjectId"=>$datadelivery->ProjectId, 
+            "PaymentRef"=>$datadelivery->DeliveryId, 
+            "PaymentRefType"=>"Pengiriman",
+            "GrandTotal"=>$datadelivery->DeliveryTotal,
+        );
+        $data["payment"] = $modelspayment->get_data_payment_by_delivery($id);  
+    
+        $data["project"] = $project; 
+        $data["method"] = $modelspayment->getMethod(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/payment/add_payment_delivery.php',$data)); 
+    }
     public function payment_request($id){    
         $request = Services::request();
         $postData = $request->getPost();  

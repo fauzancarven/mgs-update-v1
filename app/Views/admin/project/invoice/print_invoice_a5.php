@@ -398,7 +398,7 @@ li {
                         $arr_badge = ""; 
                         foreach($arr_varian as $varian){
                            if($varian->varian == "vendor") continue; 
-                            $arr_badge .= '<br><span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>'; 
+                            $arr_badge .= ' | <span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>'; 
                         }
                         if($item["type"] == "product"){
                             $html_items .= '

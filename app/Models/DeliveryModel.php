@@ -311,14 +311,17 @@ class DeliveryModel extends Model
         $detailhtml = ' <table class="table detail-item m-0 shadow-7">
                             <thead>
                                 <tr>
-                                    <th class="detail text-center" style="width:50px">Gambar</th>
-                                    <th class="detail">Nama</th>
+                                    <th class="detail" style="width: 35px;">#</th>
+                                    <th class="detail" colspan="2">Deskripsi</th> 
                                     <th class="detail">Qty</th>
                                     <th class="detail">Spare</th> 
                                 </tr>
                             </thead>
                             <tbody>';
         $arr_detail = $this->get_data_delivery_detail($id);
+ 
+        $abjad = 'A';
+        $number = '1'; 
         foreach($arr_detail as $row_data){
             $arr_varian = json_decode($row_data->DeliveryDetailVarian);
             $arr_badge = "";
@@ -342,21 +345,35 @@ class DeliveryModel extends Model
                         "type"=> $row_data->DeliveryDetailType,
                         "image_url"=> $modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->DeliveryDetailVarian,true)
                     );
-
-            $detailhtml .= ' <tr>
-                    <td class="detail">
+            if($row_data->DeliveryDetailType == "product"){ 
+                $detailhtml .= ' <tr>
+                <td  class="detail text-center">'.$number.'.</td>
+                    <td class="detail" style="width:4rem">
                         <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->DeliveryDetailVarian,true).'" alt="Gambar" class="image-produk w-50-px h-50-px rounded-3">
                     </td>
-                    <td class="detail"> 
-                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
-                            <div class="fw-medium">'.$row_data->DeliveryDetailText.'</div>
-                            <div class="text-detail-2 text-truncate text-xxs text-neutral-400" style="line-height:1">'.$row_data->DeliveryDetailGroup.'</div> 
-                            <div class="d-flex gap-1 flex-wrap pt-4">'.$arr_badge.'</div>
-                        </div> 
+                    <td class="detail" style="min-width:350px">
+                    <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                        <div class="fw-medium">'.$row_data->DeliveryDetailText.'</div>
+                        <div class="text-detail-2 text-truncate text-xxs text-neutral-400" style="line-height:1">'.$row_data->DeliveryDetailGroup.'</div> 
+                        <div class="d-flex gap-1 flex-wrap pt-4">'.$arr_badge.'</div></div>
                     </td>
-                    <td class="detail">'.number_format($row_data->DeliveryDetailQty, 2, ',', '.').' '.$row_data->DeliveryDetailSatuanText.'</td> 
-                    <td class="detail">'.number_format($row_data->DeliveryDetailQtySpare, 2, ',', '.').' '.$row_data->DeliveryDetailSatuanText.'</td>
+                    <td class="detail">'.number_format($row_data->DeliveryDetailQty, 2, ',', '.').' '.$row_data->DeliveryDetailSatuanText.'</td>
+                    <td class="detail">'.number_format($row_data->DeliveryDetailQtySpare, 2, ',', '.').'</td>
+                    
                 </tr> ';
+                $number++;
+            }else{
+                $number = 1;
+                $detailhtml .= ' <tr>
+                    <td  class="detail text-center  fw-bold">'.$abjad.'.</td>
+                    <td colspan="6" class="detail">
+                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                            <span class="text-head-3">'.$row_data->DeliveryDetailText.'</span>
+                        </div>
+                    </td>
+                </tr> ';
+                $abjad++;
+            } 
         };
         $detailhtml .= '
         </tbody> 
@@ -414,10 +431,11 @@ class DeliveryModel extends Model
         $html_payment_detail = "";
         $payment_total = 0; 
         if($row->DeliveryTotal == 0){
-            $html_payment = ' 
-                    <span class="text-head-3 payment">
-                        <span class="badge text-bg-success me-1">Tidak ada</span>
-                    </span>';
+            $html_payment = '  
+            <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                <iconify-icon icon="hugeicons:payment-02" class="text-success text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Tidak ada pembayaran" ></iconify-icon> 
+            </button>   
+             ';
             $html_payment_detail = '<div class="text-head-3 p-2">
                     <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
                     Tidak ada pembayaran untuk transaksi ini  
@@ -429,7 +447,7 @@ class DeliveryModel extends Model
             $builder->join("users","users.id = payment.created_user ","left"); 
             $builder->join("method","MethodId = PaymentMethod ","left"); 
             $builder->where('PaymentRef',$row->DeliveryId); 
-            $builder->where('PaymentRefType',"Delivery");
+            $builder->where('PaymentRefType',"Pengiriman");
             $builder->orderby('PaymentDoc', '1'); 
             $builder->orderby('PaymentId', 'ASC'); 
             $payment = $builder->get()->getResult();  
@@ -445,22 +463,36 @@ class DeliveryModel extends Model
                 $files = scandir($folder_utama);
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..') {
-                        $filepath = $folder_utama.'/' . $file;
-                        $filesize = filesize($folder_utama. '/' . $file); 
-                        $filetype = mime_content_type($folder_utama. '/' . $file);
-                        $bukti = '  
-                                                <a onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
-                                                    <i class="fa-solid fa-eye"></i> Lihat bukti
-                                                </a>  ';
+                        if (strpos($file, $row_payment->PaymentId) === 0) {
+                            $filepath = $folder_utama.'/' . $file;
+                            $filesize = filesize($folder_utama. '/' . $file); 
+                            $filetype = mime_content_type($folder_utama. '/' . $file);
+                            $bukti = '  
+                                                <button class="radius-8 bg-primary-light text-primary-focus fw-bold text-xxs p-4 text-hover-primary-600" onclick="view_file(this)" data-file="'.base_url().$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
+                                                <i class="ri-eye-line"></i> Lihat bukti
+                                                </button>  '; 
+                        }
                     }
                 }   
                 if($row_payment->PaymentStatus == "0"){ 
+                    $statusdoc = 'Delivery';
                     $action = '
-                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-print"></i></span>
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Invoice\')"><i class="fa-solid fa-circle-xmark"></i></span>';
-                    $transfer_from = '<td class="detail">-</td>';
-                    $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Menunggu Approval</span>';  
+                    <div class="d-flex align-items-center gap-1 justify-content-center"> 
+                    <a onclick="edit_payment('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"
+                        class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Ubah Payment">
+                        <iconify-icon icon="lucide:edit"></iconify-icon>
+                    </a>
+                    <a onclick="delete_payment('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"
+                        class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Hapus Payment">
+                        <iconify-icon icon="lucide:trash-2">
+                        </iconify-icon>
+                    </a> 
+                    </div>
+                    ';
+
+
+                    $transfer_from = '<td class="detail">-</td>'; 
+                    $status =  '<span class="bg-warning-focus text-warning-main px-8 py-2 radius-8 fw-medium text-xxs" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Menunggu Approval</span>';   
                     $buktiterima = "-";
                 }else{ 
                     $action = '
@@ -483,10 +515,7 @@ class DeliveryModel extends Model
                 }else{ 
                     $transfer_to = ' 
                     <td class="detail">  
-                        <div class="text-detail-3 pb-1">'.$row_payment->MethodName.'</div>
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->MethodRekBank.'</div>
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->MethodRekNumber.'</div>
-                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->MethodRekName.'</div>
+                        <div class="text-detail-3 pb-1">'.$row_payment->MethodName.'</div> 
                     </td>';
                 }
 
@@ -494,39 +523,39 @@ class DeliveryModel extends Model
                 $html_payment_detail .= '
                     <tr>
                         <td class="action-td no-border">'.$action.'</td>
-                        <td class="detail">'.$row_payment->PaymentCode.'</td>
+                        <td class="detail"><span class="text-primary-600 fw-bold">'.$row_payment->PaymentCode.'</span></td>
                         <td class="detail">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</td>
                         <td class="detail">'.$status.'</td>  
                         <td class="detail">'.$row_payment->PaymentType.'</td>
                         '. $transfer_to.'
                         <td class="detail">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</td>
-                        <td class="detail">'.$bukti.'</td> 
-                        <td class="detail">'.$buktiterima.'</td> 
+                        <td class="detail">'.$bukti.'</td>  
                     </tr>';
                 
             
             }  
             
             if($payment_total == 0){
-                $html_payment = ' 
-                        <span class="text-head-3 payment">
-                            <span class="badge text-bg-warning me-1">Belum Ada</span>
-                        </span>';
+                $html_payment = '  
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:payment-02" class="text-primary-light text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Belum ada pembayaran" ></iconify-icon> 
+                </button>   
+                 ';
                 $html_payment_detail .= ' 
                 <div class="d-inline-block p-8 pe-16 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7" role="alert">
                 <span class="text-head-3">
                     <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                    Belum ada pembayaran yang dibuat dari dokumen ini,<a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->DeliveryId.',this,\'Delivery\')">Ajukan Pembayaran</a> 
+                    Belum ada pembayaran yang dibuat dari dokumen ini,<a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->DeliveryId.',this,\'Delivery\')">Buat Pembayaran</a> 
                 </span>
             </div> '; 
             }else if($payment_total < $row->DeliveryTotal){  
                 
-                $html_payment = ' 
-                        <span class="text-head-3 payment">
-                            <span class="badge text-bg-warning me-1">Belum Selesai</span>
-                        </span>';
+                $html_payment = '
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:payment-02" class="text-warning text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Belum Selesai" ></iconify-icon> 
+                </button>   ';
                 $html_payment_detail = '
-                <table class="table detail-payment">
+                <table class="table detail-payment shadow-7">
                     <thead>
                         <tr>
                             <th class="detail" style="width:70px">Action</th>
@@ -534,28 +563,28 @@ class DeliveryModel extends Model
                             <th class="detail">Tanggal</th>
                             <th class="detail">Status</th> 
                             <th class="detail">Metode</th>
-                            <th class="detail">Tujuan</th> 
+                            <th class="detail">Sumber</th> 
                             <th class="detail">Total</th>
-                            <th class="detail">Bukti Sumber</th>
-                            <th class="detail">Bukti Masuk</th>
+                            <th class="detail">Bukti</th> 
                         </tr>
                     </thead>
                     <tbody>'.$html_payment_detail.'
                     </tbody>
                 </table> 
-                <div class="alert alert-warning p-2 m-0" role="alert">
+                <div class="p-8 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7 d-inline" role="alert">
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->DeliveryId.',this,\'Survey\')">Ajukan pembayaran</a> 
+                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini,  
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->DeliveryId.',this,\'Delivery\')">Buat Pembayaran</a> 
                     </span>
                 </div> ';
+                
             } else{   
                 
                 $html_payment = ' 
-                        <span class="text-head-3 payment">
-                            <span class="badge text-bg-success me-1">Selesai</span>
-                        </span>';
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:payment-02" class="text-success text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Selesai" ></iconify-icon> 
+                </button>   ';
                 $html_payment_detail = '
                     <table class="table detail-payment">
                         <thead>
@@ -565,10 +594,9 @@ class DeliveryModel extends Model
                                 <th class="detail">Tanggal</th>
                                 <th class="detail">Status</th> 
                                 <th class="detail">Metode</th>
-                                <th class="detail">Tujuan</th> 
+                                <th class="detail">Sumber</th> 
                                 <th class="detail">Total</th>
-                                <th class="detail">Bukti Sumber</th>
-                                <th class="detail">Bukti Masuk</th>
+                                <th class="detail">Bukti</th> 
                             </tr>
                         </thead>
                         <tbody>'.$html_payment_detail.'

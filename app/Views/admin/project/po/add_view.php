@@ -111,21 +111,23 @@
                                                   <label class="form-label mb-0 col-sm-2">Nama</label>
                                                   <div class="col-sm-10">
                                                             <input type="text" class="form-control form-control-sm"
-                                                                      id="ToName" value="<?= $po["CustomerName"] ?>">
+                                                                      id="POCustName"
+                                                                      value="<?= $po["CustomerName"] ?>">
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
                                                   <label class="form-label mb-0 col-sm-2">Telp</label>
                                                   <div class="col-sm-10">
                                                             <input type="text" class="form-control form-control-sm"
-                                                                      id="ToTelp" value="<?= $po["CustomerTelp"] ?>">
+                                                                      id="POCustTelp"
+                                                                      value="<?= $po["CustomerTelp"] ?>">
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
                                                   <label class="form-label mb-0 col-sm-2">Alamat</label>
                                                   <div class="col-sm-10">
                                                             <textarea name="#0" class="form-control" rows="2" cols="50"
-                                                                      id="ToAddress"><?= $po["CustomerAddress"] ?></textarea>
+                                                                      id="POAddress"><?= $po["CustomerAddress"] ?></textarea>
                                                   </div>
                                         </div>
                               </div>
@@ -393,37 +395,51 @@ $("#POAdmin").select2({
           },
 });
 
-$("#VendorId").select2({
-          placeholder: "Pilih Vendor",
-          ajax: {
-                    url: "<?= base_url()?>select2/get-data-produk-vendor",
-                    dataType: 'json',
-                    type: "POST",
-                    delay: 250,
-                    data: function(params) {
-                              // CSRF Hash
-                              var csrfName = $('.txt_csrfname').attr(
-                                        'name'); // CSRF Token name
-                              var csrfHash = $('.txt_csrfname')
-                                        .val(); // CSRF hash
 
+
+function template_select_vendor(data) {
+          data_vendor = [];
+          for (var i = 0; data.length > i; i++) {
+                    data_vendor.push({
+                              "id": data[i].VendorId,
+                              "text": data[i].VendorCode + " - " + data[i].VendorName,
+                              "html": data[i].VendorCode + " - " + data[i].VendorName,
+                              "code": data[i].VendorCode,
+                              "name": data[i].VendorName,
+                    })
+          }
+          $("#VendorId").select2({
+                    placeholder: "Pilih Vendor",
+                    data: data_vendor,
+                    tags: true,
+                    escapeMarkup: function(m) {
+                              return m;
+                    },
+                    createTag: function(params) {
                               return {
-                                        searchTerm: params.term, // search term
-                                        [csrfName]: csrfHash // CSRF Token
+                                        id: params.term,
+                                        text: params.term,
+                                        tags: true // menandai tag baru
                               };
                     },
-                    processResults: function(response) {
-
-                              // Update CSRF Token
-                              $('.txt_csrfname').val(response.token);
-
-                              return {
-                                        results: response.data
-                              };
+                    createTagText: function(params) {
+                              return "Tambah '" + params.term + "'";
                     },
-                    cache: true
-          },
-});
+                    templateResult: function template(data) {
+                              if ($(data.html).length === 0) {
+                                        return data.text;
+                              }
+                              return $(data.html);
+                    },
+                    templateSelection: function templateSelect(data) {
+                              if ($(data.html).length === 0) {
+                                        return data.text;
+                              }
+                              return data['text'];
+                    }
+          });
+}
+template_select_vendor(<?= json_encode($vendor)?>);
 
 
 
@@ -991,17 +1007,22 @@ $("#btn-add-PO").click(function() {
           var header = {
                     PODate: $("#PODate").data('daterangepicker').startDate.format(
                               "YYYY-MM-DD"),
+                    PODate2: $("#PODate2").data('daterangepicker').startDate.format(
+                              "YYYY-MM-DD"),
                     ProjectId: '<?=  $po["project_id"] ?>',
-                    PORef: '<?= $po["PORefType"] ?>',
+                    PORef: '<?= $po["PORef"] ?>',
                     PORefType: '<?= $po["PORefType"] ?>',
-                    VendorId: ($("#POVendor").select2("data")[0]["text"] == $("#POVendor")
-                              .select2("data")[0]["id"] ? 0 : $("#POVendor")
+                    VendorId: ($("#VendorId").select2("data")[0]["text"] == $("#VendorId")
+                              .select2("data")[0]["id"] ? 0 : $("#VendorId")
                               .val()),
 
-                    VendorName: $("#POVendor").select2("data")[0]["text"],
+                    VendorName: $("#VendorId").select2("data")[0]["text"],
+                    StoreId: $("#StoreId").val(),
+                    CustomerId: '<?= $po["CustomerId"] ?>',
                     POCustName: $("#POCustName").val(),
                     POCustTelp: $("#POCustTelp").val(),
                     POAddress: $("#POAddress").val(),
+                    PONote: $("#PODesc").val(),
                     POAdmin: $("#POAdmin").val(),
                     TemplateId: $($(".template-footer").find("select")[0]).val(),
                     POSubTotal: $("#POSubTotal").val().replace(/[^0-9]/g, ''),
@@ -1034,8 +1055,12 @@ $("#btn-add-PO").click(function() {
                                         PODetailQty: data_detail_item[i][
                                                   "qty"
                                         ],
-                                        PODetailQtySpare: data_detail_item[
-                                                  i]["qty_spare"],
+                                        PODetailPrice: data_detail_item[
+                                                  i]["price"],
+                                        PODetailDisc: data_detail_item[
+                                                  i]["disc"],
+                                        PODetailTotal: data_detail_item[
+                                                  i]["total"],
                               });
                     }
           }
@@ -1043,7 +1068,7 @@ $("#btn-add-PO").click(function() {
           $.ajax({
                     dataType: "json",
                     method: "POST",
-                    url: "<?= base_url() ?>action/add-data-PO",
+                    url: "<?= base_url() ?>action/add-data-po",
                     data: {
                               "header": header,
                               "detail": detail,

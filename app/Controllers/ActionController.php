@@ -593,6 +593,14 @@ class ActionController extends BaseController
         }
     } 
 
+    public function pembelian_comment($id){
+        $request = Services::request();
+        $models = new PembelianModel(); 
+        if ($request->getMethod(true) === 'POST') {     
+            $postData = $request->getPost();  
+            echo $models->update_comment($postData["PONote"],$id);  
+        }
+    } 
     public function project_accounting_add($id){
         $request = Services::request();
         $models = new ProjectModel(); 

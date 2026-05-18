@@ -40,6 +40,7 @@ class PembelianModel extends Model
         'POPPNTotal', 
         'PODiscTotal', 
         'POGrandTotal', 
+        'PONote', 
     ];  
  
     
@@ -135,6 +136,29 @@ class PembelianModel extends Model
                     return getTerbilang($juta) . ' Juta';
                 }
             }
+        }
+    }
+    
+    function customColor($number) {
+        switch ($number) {
+                  case 0:
+                            return 'bg-info-50 text-primary-600';
+                            break;
+                  case 1:
+                            return 'bg-warning-50 text-warning-600';
+                            break;
+                  case 2:
+                            return 'bg-success-50 text-success-600';
+                            break;
+                  case 3:
+                            return 'bg-danger-50 text-danger-600';
+                            break;
+                  case 4:
+                            return 'bg-info-focus text-primary-600';
+                            break;
+
+                  default:
+                            break;
         }
     }
     function load_datatable_pembelian($filter = null){
@@ -377,11 +401,11 @@ class PembelianModel extends Model
     function get_data_detail_pembelian($row){
         $modelsproduk = new ProdukModel();
         $detail = array(); 
-        $detailhtml = ' <table class="table detail-item m-0 vw-100">
+        $detailhtml = ' <table class="table detail-item m-0 shadow-7">
                             <thead>
                                 <tr>
-                                    <th class="detail text-center" style="width:50px">Gambar</th>
-                                    <th class="detail">Nama</th>
+                                    <th class="detail" style="width: 35px;">#</th>
+                                    <th class="detail" colspan="2">Deskripsi</th> 
                                     <th class="detail">Qty</th>
                                     <th class="detail">Harga</th> 
                                     <th class="detail">Total</th>
@@ -389,13 +413,18 @@ class PembelianModel extends Model
                             </thead>
                             <tbody>';
         $arr_detail = $this->get_data_pembelian_detail($row->POId);
+        
+        $abjad = 'A';
+        $number = '1'; 
         foreach($arr_detail as $row_data){
             $arr_varian = json_decode($row_data->PODetailVarian);
             $arr_badge = "";
             $arr_no = 0;
             foreach($arr_varian as $varian){
-                $arr_badge .= '<span class="badge badge-sm badge-'.fmod($arr_no,5).' rounded">'.$varian->varian.' : '.$varian->value.'</span>';
-                $arr_no++;
+                
+                $color = $this->customColor(fmod($arr_no,5));
+                $arr_badge .= '<span class="'.$color.' radius-8 px-8 py-4 text-xxs fw-bold">'.$varian->varian.' : '.$varian->value.'</span>';
+                $arr_no++; 
             }
             $detail[] = array(
                         "id" => $row_data->ProdukId,  
@@ -411,20 +440,36 @@ class PembelianModel extends Model
                         "type"=> $row_data->PODetailType,
                         "image_url"=> $modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->PODetailVarian,true)
                     );
-
-            $detailhtml .= ' <tr>
-                    <td class="detail">
-                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->PODetailVarian,true).'" alt="Gambar" class="image-produk">
-                    </td>
-                    <td class="detail">
-                        <span class="text-head-3">'.$row_data->PODetailText.'</span><br>
-                        <span class="text-detail-2 text-truncate">'.$row_data->PODetailGroup.'</span> 
-                        <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
-                    </td>
-                    <td class="detail">'.number_format($row_data->PODetailQty, 2, ',', '.').' '.$row_data->PODetailSatuanText.'</td>
-                    <td class="detail">Rp. '.number_format($row_data->PODetailPrice, 0, ',', '.').'</td> 
-                    <td class="detail">Rp. '.number_format($row_data->PODetailTotal, 0, ',', '.').'</td>
-                </tr> ';
+                if($row_data->PODetailType == "product"){ 
+                        $detailhtml .= ' <tr>
+                        <td  class="detail text-center">'.$number.'.</td>
+                            <td class="detail" style="width:4rem">
+                                <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->PODetailVarian,true).'" alt="Gambar" class="image-produk w-50-px h-50-px rounded-3">
+                            </td>
+                            <td class="detail" style="min-width:350px">
+                            <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                <div class="fw-medium">'.$row_data->PODetailText.'</div>
+                                <div class="text-detail-2 text-truncate text-xxs text-neutral-400" style="line-height:1">'.$row_data->PODetailGroup.'</div> 
+                                <div class="d-flex gap-1 flex-wrap pt-4">'.$arr_badge.'</div></div>
+                            </td>
+                            <td class="detail">'.number_format($row_data->PODetailQty, 2, ',', '.').' '.$row_data->PODetailSatuanText.'</td>
+                            <td class="detail">Rp. '.number_format($row_data->PODetailPrice, 0, ',', '.').'</td> 
+                            <td class="detail">Rp. '.number_format($row_data->PODetailTotal, 0, ',', '.').'</td>
+                            
+                        </tr> ';
+                        $number++;
+                    }else{
+                        $number = 1;
+                        $detailhtml .= ' <tr>
+                            <td  class="detail text-center  fw-bold">'.$abjad.'.</td>
+                            <td colspan="6" class="detail">
+                                <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                    <span class="text-head-3">'.$row_data->PODetailText.'</span>
+                                </div>
+                            </td>
+                        </tr> ';
+                        $abjad++;
+                    }  
         };
         $detailhtml .= '
         </tbody>
@@ -448,6 +493,185 @@ class PembelianModel extends Model
 
         return $detailhtml; 
     }
+    function get_data_payment_pembelian($row,$header = false, $total = false){ 
+        $html_payment = ""; 
+        $html_payment_detail = "";
+        $payment_total = 0;
+        if($row->POGrandTotal == 0){
+            $html_payment = ' 
+            <span class="fa-stack small">
+                <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
+                <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+            </span>';
+            $html_payment_detail = ' 
+            <div class="fw-normal row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
+                <div class="col bg-light py-2">  
+                    <div class="text-head-3">
+                        <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
+                        Tidak ada pembayaran yang harus diselesaikan untuk transaksi ini 
+                    </div>
+                </div>
+            </div>';
+        }else{
+            $builder = $this->db->table("payment");
+            $builder->select('*'); 
+            $builder->join("users","users.id = payment.created_user ","left"); 
+            $builder->where('PaymentRef',$row->POId); 
+            $builder->where('PaymentRefType',"Pembelian");
+            $builder->orderby('PaymentDoc', '1'); 
+            $builder->orderby('PaymentId', 'ASC'); 
+            $payment = $builder->get()->getResult();  
+            $payment_total = 0;
+            $performa_total = 0; 
+            foreach($payment as $row_payment){  
+                if($row_payment->PaymentStatus == "0"){ 
+                    $action = '
+                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-pen-to-square"></i></span>
+                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-circle-xmark"></i></span>';
+                    $transfer_from = '<td class="detail">-</td>';
+                    $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Request by '.ucwords($row_payment->username).'</span>'; 
+                    $bukti = '';
+                }else{ 
+                    $bukti = '';
+                    $action = '
+                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-print"></i></span>';
+                    $transfer_from = '<td class="detail">  
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentFromBank.'</div>
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentFromRek.'</div>
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentFromName.'</div>
+                    </td> ';
+                    $status = '<span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Aproved">Aproved by '.$row_payment->PaymentApproved.'</span>'; 
+
+                    $folder_utama = 'assets/images/payment'; 
+                    //Buat folder berdasarkan id
+                    if (!file_exists($folder_utama."/".$row_payment->PaymentId)) {
+                        mkdir($folder_utama."/".$row_payment->PaymentId, 0777, true);  
+                    } 
+                    $files = scandir($folder_utama."/".$row_payment->PaymentId);
+                    foreach ($files as $file) {
+                        if ($file != '.' && $file != '..') {
+                            $filepath = $folder_utama."/".$row_payment->PaymentId . '/' . $file;
+                            $filesize = filesize($folder_utama."/".$row_payment->PaymentId . '/' . $file); 
+                            $filetype = mime_content_type($folder_utama."/".$row_payment->PaymentId . '/' . $file);
+                            $bukti = '  
+                                                    <a onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
+                                                        <i class="fa-solid fa-eye"></i> Lihat bukti
+                                                    </a>  ';
+                        }
+                    }   
+                }  
+
+                if($row_payment->PaymentType == "Cash"){
+                    $transfer_to = ' 
+                    <td class="detail">  
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
+                    </td>';
+                }else{ 
+                    $transfer_to = ' 
+                    <td class="detail">  
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentToBank.'</div>
+                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentToRek.'</div>
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
+                    </td>';
+                }
+                $payment_total += $row_payment->PaymentTotal; 
+                $html_payment_detail .= '
+                    <tr>
+                        <td class="action-td no-border">'.$action.'</td>
+                        <td class="detail">'.$row_payment->PaymentCode.'</td>
+                        <td class="detail">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</td>
+                        <td class="detail">'.$status.'</td>  
+                        <td class="detail">'.$row_payment->PaymentType.'</td>
+                       '. $transfer_to.'
+                       '. $transfer_from.' 
+                        <td class="detail">'.$bukti.'</td> 
+                        <td class="detail">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</td>
+                    </tr>';
+                 
+            
+            }  
+             
+            if($payment_total == 0){
+                $html_payment = ' 
+                <span class="fa-stack small">
+                    <i class="fa-regular fa-circle fa-stack-2x text-secondary"></i>
+                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                </span>';
+                $html_payment_detail .= ' 
+                <div class="d-inline-block p-8 pe-16 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7" role="alert">
+                <span class="text-head-3">
+                    <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                    Belum ada pembayaran yang dibuat dari dokumen ini,<a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->POId.',this,\'Pembelian\')">Buat Pembayaran</a> 
+                </span>
+            </div>
+            '; 
+            }else if($payment_total < $row->POGrandTotal){  
+                $html_payment = ' 
+                <span class="fa-stack small">
+                    <i class="fa-regular fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                </span>';
+                $html_payment_detail = '
+                <table class="table detail-payment">
+                    <thead>
+                        <tr>
+                            <th class="detail" style="width:70px">Action</th>
+                            <th class="detail">No. Pembayaran</th>
+                            <th class="detail">Tanggal</th>
+                            <th class="detail">Status</th> 
+                            <th class="detail">Tipe</th>
+                            <th class="detail">Tujuan</th> 
+                            <th class="detail">Sumber</th>
+                            <th class="detail">Bukti Transaksi</th>
+                            <th class="detail">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>'.$html_payment_detail.'
+                    </tbody>
+                </table> 
+                <div class="alert alert-warning p-2 m-1" role="alert">
+                    <span class="text-head-3">
+                        <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini, 
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->POId.',this,\'Pembelian\')">Ajukan pembayaran</a> 
+                    </span>
+                </div> ';
+            } else{   
+                $html_payment = ' 
+                <span class="fa-stack small">
+                    <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
+                </span>';
+                $html_payment_detail = '
+                    <table class="table detail-payment">
+                        <thead>
+                            <tr>
+                                <th class="detail" style="width:70px">Action</th>
+                                <th class="detail">No. Pembayaran</th>
+                                <th class="detail">Tanggal</th>
+                                <th class="detail">Status</th> 
+                                <th class="detail">Tipe</th>
+                                <th class="detail">Tujuan</th> 
+                                <th class="detail">Sumber</th>
+                                <th class="detail">Bukti Transaksi</th>
+                                <th class="detail">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>'.$html_payment_detail.'
+                        </tbody>
+                    </table>';
+            }
+        }  
+        if($total){
+            return $payment_total;
+        }else{
+            if($header){
+                return $html_payment;
+            }else{
+                return $html_payment_detail; 
+            }
+        }  
+    } 
     function get_data_delivery_pembelian($row,$header = false){
         $delivery = "";
         $delivery_detail = ""; 
@@ -680,185 +904,6 @@ class PembelianModel extends Model
 
         }
     }
-    function get_data_payment_pembelian($row,$header = false, $total = false){ 
-        $html_payment = ""; 
-        $html_payment_detail = "";
-        $payment_total = 0;
-        if($row->POGrandTotal == 0){
-            $html_payment = ' 
-            <span class="fa-stack small">
-                <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
-                <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-            </span>';
-            $html_payment_detail = ' 
-            <div class="fw-normal row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
-                <div class="col bg-light py-2">  
-                    <div class="text-head-3">
-                        <i class="fa-solid fa-check text-success me-2" style="font-size:0.75rem"></i>
-                        Tidak ada pembayaran yang harus diselesaikan untuk transaksi ini 
-                    </div>
-                </div>
-            </div>';
-        }else{
-            $builder = $this->db->table("payment");
-            $builder->select('*'); 
-            $builder->join("users","users.id = payment.created_user ","left"); 
-            $builder->where('PaymentRef',$row->POId); 
-            $builder->where('PaymentRefType',"Pembelian");
-            $builder->orderby('PaymentDoc', '1'); 
-            $builder->orderby('PaymentId', 'ASC'); 
-            $payment = $builder->get()->getResult();  
-            $payment_total = 0;
-            $performa_total = 0; 
-            foreach($payment as $row_payment){  
-                if($row_payment->PaymentStatus == "0"){ 
-                    $action = '
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-circle-xmark"></i></span>';
-                    $transfer_from = '<td class="detail">-</td>';
-                    $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Request by '.ucwords($row_payment->username).'</span>'; 
-                    $bukti = '';
-                }else{ 
-                    $bukti = '';
-                    $action = '
-                    <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-print"></i></span>';
-                    $transfer_from = '<td class="detail">  
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentFromBank.'</div>
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentFromRek.'</div>
-                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentFromName.'</div>
-                    </td> ';
-                    $status = '<span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Aproved">Aproved by '.$row_payment->PaymentApproved.'</span>'; 
-
-                    $folder_utama = 'assets/images/payment'; 
-                    //Buat folder berdasarkan id
-                    if (!file_exists($folder_utama."/".$row_payment->PaymentId)) {
-                        mkdir($folder_utama."/".$row_payment->PaymentId, 0777, true);  
-                    } 
-                    $files = scandir($folder_utama."/".$row_payment->PaymentId);
-                    foreach ($files as $file) {
-                        if ($file != '.' && $file != '..') {
-                            $filepath = $folder_utama."/".$row_payment->PaymentId . '/' . $file;
-                            $filesize = filesize($folder_utama."/".$row_payment->PaymentId . '/' . $file); 
-                            $filetype = mime_content_type($folder_utama."/".$row_payment->PaymentId . '/' . $file);
-                            $bukti = '  
-                                                    <a onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
-                                                        <i class="fa-solid fa-eye"></i> Lihat bukti
-                                                    </a>  ';
-                        }
-                    }   
-                }  
-
-                if($row_payment->PaymentType == "Cash"){
-                    $transfer_to = ' 
-                    <td class="detail">  
-                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
-                    </td>';
-                }else{ 
-                    $transfer_to = ' 
-                    <td class="detail">  
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentToBank.'</div>
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentToRek.'</div>
-                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
-                    </td>';
-                }
-                $payment_total += $row_payment->PaymentTotal; 
-                $html_payment_detail .= '
-                    <tr>
-                        <td class="action-td no-border">'.$action.'</td>
-                        <td class="detail">'.$row_payment->PaymentCode.'</td>
-                        <td class="detail">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</td>
-                        <td class="detail">'.$status.'</td>  
-                        <td class="detail">'.$row_payment->PaymentType.'</td>
-                       '. $transfer_to.'
-                       '. $transfer_from.' 
-                        <td class="detail">'.$bukti.'</td> 
-                        <td class="detail">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</td>
-                    </tr>';
-                 
-            
-            }  
-             
-            if($payment_total == 0){
-                $html_payment = ' 
-                <span class="fa-stack small">
-                    <i class="fa-regular fa-circle fa-stack-2x text-secondary"></i>
-                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span>';
-                $html_payment_detail .= ' <div class="alert alert-warning p-2 m-1" role="alert">
-                    <span class="text-head-3">
-                        <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                        Belum ada pembayaran yang dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->POId.',this,\'Pembelian\')">Ajukan pembayaran</a> 
-                    </span>
-                </div> '; 
-            }else if($payment_total < $row->POGrandTotal){  
-                $html_payment = ' 
-                <span class="fa-stack small">
-                    <i class="fa-regular fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span>';
-                $html_payment_detail = '
-                <table class="table detail-payment">
-                    <thead>
-                        <tr>
-                            <th class="detail" style="width:70px">Action</th>
-                            <th class="detail">No. Pembayaran</th>
-                            <th class="detail">Tanggal</th>
-                            <th class="detail">Status</th> 
-                            <th class="detail">Tipe</th>
-                            <th class="detail">Tujuan</th> 
-                            <th class="detail">Sumber</th>
-                            <th class="detail">Bukti Transaksi</th>
-                            <th class="detail">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>'.$html_payment_detail.'
-                    </tbody>
-                </table> 
-                <div class="alert alert-warning p-2 m-1" role="alert">
-                    <span class="text-head-3">
-                        <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->POId.',this,\'Pembelian\')">Ajukan pembayaran</a> 
-                    </span>
-                </div> ';
-            } else{   
-                $html_payment = ' 
-                <span class="fa-stack small">
-                    <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
-                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span>';
-                $html_payment_detail = '
-                    <table class="table detail-payment">
-                        <thead>
-                            <tr>
-                                <th class="detail" style="width:70px">Action</th>
-                                <th class="detail">No. Pembayaran</th>
-                                <th class="detail">Tanggal</th>
-                                <th class="detail">Status</th> 
-                                <th class="detail">Tipe</th>
-                                <th class="detail">Tujuan</th> 
-                                <th class="detail">Sumber</th>
-                                <th class="detail">Bukti Transaksi</th>
-                                <th class="detail">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>'.$html_payment_detail.'
-                        </tbody>
-                    </table>';
-            }
-        }  
-        if($total){
-            return $payment_total;
-        }else{
-            if($header){
-                return $html_payment;
-            }else{
-                return $html_payment_detail; 
-            }
-        }  
-    }
-
 
     function get_next_code_pembelian($date){
         //sample SPH/001/01/2024
@@ -933,7 +978,59 @@ class PembelianModel extends Model
         ORDER BY ref_join.date asc'); 
         return $builder->getResultArray();  
     }
-    
+    function get_data_payment_po($row,$header = false,$total = false){
+        $html_status = "";
+        $html_status_detail = "";
+        if($row->POGrandTotal == 0){
+            $html_status = '  
+            <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                <iconify-icon icon="hugeicons:payment-02" class="text-success text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Tidak ada pembayaran" ></iconify-icon> 
+            </button>   
+             ';
+            $html_status_detail = '<div class="text-head-3 p-2">
+                    <i class="fa-solid fa-check text-success me-2 text-success" style="font-size:0.75rem"></i>
+                    Tidak ada pembayaran untuk transaksi ini  
+                </div>';
+        }else{ 
+            $html_payment_detail = "";  
+            $builder = $this->db->table("payment");
+            $builder->select('*'); 
+            $builder->join("users","users.id = payment.created_user ","left"); 
+            $builder->join("method","MethodId = PaymentMethod ","left"); 
+            $builder->where('PaymentRef',$row->POId); 
+            $builder->where('PaymentRefType',"Pembelian");
+            $builder->orderby('PaymentDoc', '1'); 
+            $builder->orderby('PaymentId', 'ASC'); 
+            $payment = $builder->get()->getResult();  
+            $payment_total = 0; 
+
+
+            
+            if($payment_total == 0){
+                $html_status = '  
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:payment-02" class="text-primary-light text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Belum ada pembayaran" ></iconify-icon> 
+                </button>   
+                 ';
+                $html_status_detail .= '  
+                <div class="p-8 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7 d-inline" role="alert">
+                    <span class="text-head-3">
+                        <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
+                        Belum ada pembayaran yang dibuat dari dokumen ini,  
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->POId.',this,\'Pembelian\')">Buat Pembayaran</a> 
+                    </span>
+                </div> 
+                 '; 
+            }
+        }
+        
+
+        if($header){
+            return  $html_status;
+        }else{
+            return  $html_status_detail;
+        }
+    }
     
     function get_data_pembelian($id){
         $builder = $this->db->table("pembelian");   
@@ -964,7 +1061,7 @@ class PembelianModel extends Model
         $builder->insert(array(
             "POCode"=>$this->get_next_code_pembelian($header["PODate"]),
             "PODate"=>$header["PODate"],  
-            "PODate2"=>$header["PODate"],  
+            "PODate2"=>$header["PODate2"],  
             "ProjectId"=>$header["ProjectId"],
             "PORef"=>$header["PORef"],
             "PORefType"=>$header["PORefType"], 
@@ -977,8 +1074,8 @@ class PembelianModel extends Model
             "POCustName"=>$header["POCustName"],
             "POCustTelp"=>$header["POCustTelp"],
             "POAddress"=>$header["POAddress"],
-            "POSubTotal"=>$header["POSubTotal"],
-            "POPPNTotal"=>$header["POPPNTotal"],
+            "PONote"=>$header["PONote"],
+            "POSubTotal"=>$header["POSubTotal"], 
             "PODiscTotal"=>$header["PODiscTotal"],
             "POGrandTotal"=>$header["POGrandTotal"],
             "created_user"=>user()->id, 
@@ -1136,4 +1233,30 @@ class PembelianModel extends Model
 
         return JSON_ENCODE(array("status"=>true));
     }  
+    
+    function update_comment($comment,$id){ 
+        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();  
+        
+        $builder = $this->db->table("pembelian"); 
+        $builder->set('PONote', $comment);    
+        $builder->set('updated_user', user()->id); 
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
+        $builder->where('POId', $id); 
+        $builder->update();   
+
+         //create Log action 
+         $activityModel = new ActivityModel(); 
+         $activityModel->insert(
+             array( 
+                 "menu"=>"Pembelian",
+                 "type"=>"Comment",
+                 "name"=> "Catatan Data pembelian diubah dari ".$dataold->PONote." menjadi ".$comment . " dengan nomor ".$dataold->POCode,
+                 "desc"=> json_encode([]),
+                 "created_user"=>user()->id, 
+                 "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
+             )
+         ); 
+ 
+         return JSON_ENCODE(array("status"=>true));
+    }
 }

@@ -574,6 +574,151 @@
                     </div>
           </div>
 </div>
+<div class="modal fade" id="modal-comment-po" tabindex="-1" data-id="0" aria-labelledby="modal-comment-poLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+                    <div class="modal-content">
+                              <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="modal-comment-poLabel">Comment Pembelian
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                  aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body p-3">
+                                        <div class="row mb-24 gy-3 align-items-center">
+                                                  <label class="form-label mb-0 col-sm-3">Catatan</label>
+                                                  <div class="col-sm-9">
+                                                            <textarea id="PONote" class="form-control" rows="4"
+                                                                      cols="50"
+                                                                      placeholder="Catatan Pembelian"></textarea>
+                                                  </div>
+                                        </div>
+                              </div>
+                              <div class="modal-footer p-2">
+                                        <button type="button" class="btn btn-sm btn-secondary"
+                                                  data-bs-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-sm btn-primary-600"
+                                                  id="btn-comment-po">Simpan</button>
+                              </div>
+                    </div>
+          </div>
+</div>
+
+
+<div class="modal fade" id="modal-print-po" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+                    <div class="modal-content">
+                              <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Pembelian</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                  aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body p-3">
+                                        <div class="row mb-1 align-items-center mt-2">
+                                                  <label for="POPrintFormat" class="col-sm-4 col-form-label">Ukuran
+                                                            Kertas</label>
+                                                  <div class="col-sm-8">
+                                                            <select class="form-select form-select-sm"
+                                                                      id="POPrintFormat" name="POPrintFormat"
+                                                                      placeholder="Pilih Admin" style="width:100%">
+                                                                      <option id="1" selected>A4</option>
+                                                                      <option id="2">A5</option>
+                                                            </select>
+                                                  </div>
+                                        </div>
+                                        <div class="row mb-1 align-items-center mt-2">
+                                                  <label for="POPrintImage" class="col-sm-4 col-form-label">gunakan
+                                                            gambar item</label>
+                                                  <div class="col-sm-8">
+                                                            <div class="form-check form-check-inline">
+                                                                      <input class="form-check-input" type="radio"
+                                                                                name="POPrintImage" id="POPrintImage1"
+                                                                                value="0">
+                                                                      <label class="text-detail"
+                                                                                for="POPrintImage1">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                      <input class="form-check-input" type="radio"
+                                                                                name="POPrintImage" id="POPrintImage2"
+                                                                                value="1" checked>
+                                                                      <label class="text-detail"
+                                                                                for="POPrintImage2">Ya</label>
+                                                            </div>
+                                                  </div>
+                                        </div>
+                                        <div class="row mb-1 align-items-center mt-2">
+                                                  <label for="POPrintPrice" class="col-sm-4 col-form-label">gunakan
+                                                            harga</label>
+                                                  <div class="col-sm-8">
+                                                            <div class="form-check form-check-inline">
+                                                                      <input class="form-check-input" type="radio"
+                                                                                name="POPrintPrice" id="POPrintPrice1"
+                                                                                value="0">
+                                                                      <label class="text-detail"
+                                                                                for="POPrintPrice1">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                      <input class="form-check-input" type="radio"
+                                                                                name="POPrintPrice" id="POPrintPrice2"
+                                                                                value="1" checked>
+                                                                      <label class="text-detail"
+                                                                                for="POPrintPrice2">Ya</label>
+                                                            </div>
+                                                  </div>
+                                        </div>
+                                        <div class="row mb-1 align-items-center mt-2">
+                                                  <label for="POPrintTotal" class="col-sm-4 col-form-label">gunakan
+                                                            grand total</label>
+                                                  <div class="col-sm-8">
+                                                            <div class="form-check form-check-inline">
+                                                                      <input class="form-check-input" type="radio"
+                                                                                name="POPrintTotal" id="POPrintTotal1"
+                                                                                value="0">
+                                                                      <label class="text-detail"
+                                                                                for="POPrintTotal1">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                      <input class="form-check-input" type="radio"
+                                                                                name="POPrintTotal" id="POPrintTotal2"
+                                                                                value="1" checked>
+                                                                      <label class="text-detail"
+                                                                                for="POPrintTotal2">Ya</label>
+                                                            </div>
+                                                  </div>
+                                        </div>
+                                        <script>
+                                        $('input[name="POPrintPrice"]').change(function() {
+                                                  if ($(this).val() == 0) {
+                                                            $('input[name="POPrintTotal"]').prop(
+                                                                      "disabled", true)
+                                                  } else {
+
+                                                            $('input[name="POPrintTotal"]').prop(
+                                                                      "disabled", false)
+                                                  }
+                                        });
+                                        // $("#POPrintFormat").change(function(){
+                                        //     if($(this).val() == "A5"){
+                                        //         $('input[name="POPrintTotal"]').prop("disabled",true)
+                                        //         $('input[name="POPrintPrice"]').prop("disabled",true)
+                                        //         $('input[name="POPrintImage"]').prop("disabled",true)
+                                        //     } else{ 
+                                        //         $('input[name="POPrintTotal"]').prop("disabled",false)
+                                        //         $('input[name="POPrintPrice"]').prop("disabled",false)
+                                        //         $('input[name="POPrintImage"]').prop("disabled",false)
+                                        //     }
+                                        // })
+                                        </script>
+                              </div>
+                              <div class="modal-footer p-2">
+                                        <button type="button" class="btn btn-secondary"
+                                                  data-bs-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-primary" id="btn-print-po">Print</button>
+                              </div>
+                    </div>
+          </div>
+</div>
 
 <div id='view-container'></div>
 <div id="modal-message"></div>
@@ -857,7 +1002,8 @@ table = $('#data-table-invoice').DataTable({
           },
           "initComplete": function(settings, json) {
                     $("#data-table-invoice").wrap(
-                              "<div style='overflow:auto; width:100%;position:relative; height:60vh'></div>"
+                              //   "<div style='overflow:auto; width:100%;position:relative; height:60vh'></div>"
+                              "<div style='overflow:auto; width:100%;position:relative;'></div>"
                     );
                     $('[data-bs-toggle="tooltip"]').tooltip();
           },
@@ -903,10 +1049,10 @@ table = $('#data-table-invoice').DataTable({
                     },
                     {
                               data: "note",
-                              width: "150px",
+                              width: "250px",
                               className: "action-td",
                               render: function(data, type, row) {
-                                        var html = `<span>${data}</span>
+                                        var html = `<span>${data.replaceAll('\\n', '<br>')}</span>
                                     <a onclick="comment(${row.InvId},'${row.note}')"
                                         class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Ubah Catatan">
                                         <iconify-icon icon="lucide:edit"></iconify-icon>
@@ -1332,6 +1478,13 @@ edit_payment = function(id, el, type) {
                                         $("#modal-edit-payment").modal("show");
                                         $("#modal-edit-payment").data("menu",
                                                   "Invoice");
+                              } else if (type == "Delivery") {
+                                        $("#modal-edit-payment-delivery").modal(
+                                                  "show");
+                                        $("#modal-edit-payment-delivery").data(
+                                                  "menu",
+                                                  "Invoice");
+
                               } else {
 
                                         $("#modal-edit-proforma").modal("show");
@@ -1696,6 +1849,8 @@ print_delivery = function(id) {
           window.open('<?= base_url("print/project/deliveryA5/") ?>' + id, '_blank');
 }
 
+
+
 var isProcessingDeliveryProses = [];
 delivery_proses = function(id, el) {
           // INSERT LOADER BUTTON
@@ -1940,6 +2095,37 @@ delivery_finish = function(id, el) {
 }
 
 
+request_payment = function(id, el, menu) {
+          if (menu == "Delivery") {
+                    $.ajax({
+                              method: "POST",
+                              url: "<?= base_url() ?>message/add-payment-delivery/" +
+                                        id,
+                              success: function(data) {
+                                        $("#modal-message").html(data);
+
+                                        $("#modal-add-payment-delivery").modal(
+                                                  "show");
+                                        $("#modal-add-payment-delivery").data(
+                                                  "menu",
+                                                  "Invoice");
+                                        $(".tooltip").remove();
+
+                              },
+                              error: function(xhr, textStatus, errorThrown) {
+
+                                        Swal.fire({
+                                                  icon: 'error',
+                                                  text: xhr["responseJSON"]
+                                                            [
+                                                                      'message'
+                                                            ],
+                                                  confirmButtonColor: "#3085d6",
+                                        });
+                              }
+                    });
+          }
+}
 
 
 add_invoice_po = function(id, el) {
@@ -1947,6 +2133,99 @@ add_invoice_po = function(id, el) {
           window.location = "<?= base_url() ?>admin/sales/invoice/po_add/" + id;
           return;
 }
+
+comment_po = function(id, catatan) {
+          $("#modal-comment-po").modal("show");
+          $("#modal-comment-po").data("id", id);
+          $("#PONote").val(catatan);
+}
+
+$("#btn-comment-po").click(function(i) {
+          $.ajax({
+                    dataType: "json",
+                    method: "POST",
+                    url: "<?= base_url() ?>action/change-comment-po/" +
+                              $("#modal-comment-po").data("id"),
+                    data: {
+                              PONote: $("#PONote").val()
+                    },
+                    success: function(data) {
+                              Swal.fire({
+                                        title: "Success!",
+                                        text: "Catatan Berhasil disimpan",
+                                        icon: "success",
+                                        confirmButtonColor: "var(--brand)",
+                              });
+                              table.ajax.reload(null, false);
+                              $("#modal-comment-po").modal(
+                                        "hide");
+                    },
+          });
+});
+
+
+
+var isProcessingInvoicePODelete = [];
+delete_po = function(id, el, type) {
+          // INSERT LOADER BUTTON
+          if (isProcessingInvoicePODelete[id]) {
+                    return;
+          }
+          isProcessingInvoicePODelete[id] = true;
+          let old_text = $(el).html();
+          $(el).html(
+                    '<span class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span><span class="ps-2" role="status"></span>'
+          );
+
+          Swal.fire({
+                    title: "Are you sure?",
+                    text: "Anda yakin ingin menghapus Pembelian ini...???",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Yakin Hapus!"
+          }).then((result) => {
+                    if (result.isConfirmed) {
+                              $.ajax({
+                                        dataType: "json",
+                                        method: "POST",
+                                        url: "<?= base_url() ?>action/delete-data-po/" +
+                                                  id,
+                                        success: function(data) {
+                                                  Swal.fire({
+                                                            title: "Deleted!",
+                                                            text: "Pembelian berhasil dihapus",
+                                                            icon: "success",
+                                                            confirmButtonColor: "#3085d6",
+                                                  });
+                                                  table.ajax.reload(null,
+                                                            false
+                                                  );
+                                        },
+                              });
+                    }
+                    isProcessingInvoicePODelete[id] = false;
+                    $(el).html(old_text);
+          });
+};
+
+print_po = function(id, el, type) {
+          $("#modal-print-po").modal("show");
+          $("#modal-print-po").data("id", id)
+};
+
+$("#btn-print-po").click(function(i) {
+          $.redirect('<?= base_url("print/project/po/") ?>' + $("#modal-print-po").data("id"), {
+                              kertas: $("#POPrintFormat").val(),
+                              image: $('input[name="POPrintImage"]:checked').val(),
+                              total: $('input[name="POPrintTotal"]:checked').val(),
+                              price: $('input[name="POPrintPrice"]:checked').val(),
+                    },
+                    "GET", '_blank');
+          $("#modal-print-po").modal("hide");
+
+})
 </script>
 
 

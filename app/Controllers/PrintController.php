@@ -447,7 +447,7 @@ class PrintController extends BaseController
                 $detail = array();
                 foreach($arr_detail as $row){
                         $detail[] = array(
-                                "image" => $produk->getproductimage($row->ProdukId), 
+                                "image" =>  $produk->getproductimagedatavarian($row->ProdukId,$row->PODetailVarian,false) , 
                                 "produkid" => $row->ProdukId, 
                                 "satuan_id"=> ($row->PODetailSatuanId == 0 ? "" : $row->PODetailSatuanId),
                                 "satuan_text"=>$row->PODetailSatuanText,  

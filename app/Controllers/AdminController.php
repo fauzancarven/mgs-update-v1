@@ -402,7 +402,7 @@ class AdminController extends BaseController
         $arr_detail = $modelinvoice->get_data_invoice_detail($id);  
         $detail = array();  
         foreach($arr_detail as $row){
-            if($row->InvDetailType == "product" && $row->ProdukId !== "0"){
+            if($row->InvDetailType == "product"  ){
             $detail[] = array( 
                         "id" => $row->ProdukId, 
                         "produkid" => $row->ProdukId, 
@@ -462,7 +462,7 @@ class AdminController extends BaseController
         $arr_detail = $modeldelivery->get_data_delivery_detail($id);  
         $detail = array();  
         foreach($arr_detail as $row){
-            if($row->DeliveryDetailType == "product" && $row->ProdukId !== "0"){
+            if($row->DeliveryDetailType == "product" ){
             $detail[] = array( 
                         "id" => $row->ProdukId, 
                         "produkid" => $row->ProdukId, 
@@ -513,6 +513,7 @@ class AdminController extends BaseController
             "project_id"=>$datainvoice->ProjectId, 
             "PORef"=>$datainvoice->InvId, 
             "PORefType"=>"Invoice",
+            "CustomerId"=>$datainvoice->CustomerId,
             "CustomerName"=>$datainvoice->InvCustName,
             "CustomerTelp"=>$datainvoice->InvCustTelp,
             "CustomerAddress"=>$datainvoice->InvProjectAddress, 
@@ -521,7 +522,7 @@ class AdminController extends BaseController
         $arr_detail = $modelinvoice->get_data_invoice_detail($id);  
         $detail = array();  
         foreach($arr_detail as $row){
-            if($row->InvDetailType == "product" && $row->ProdukId !== "0"){
+            if($row->InvDetailType == "product"){
             $detail[] = array( 
                         "id" => $row->InvDetailId, 
                         "produkid" => $row->ProdukId, 

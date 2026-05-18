@@ -252,7 +252,7 @@ class InvoiceModel extends Model
                 "date" =>  '<div class="text-head-3" style="line-height:1">'.date_format(date_create($row->InvDate),"d M Y").'</div>', 
                 "status" => $status,
                 "admin" => ucwords($row->username), 
-                "note" => $row->InvNote, 
+                "note" => str_replace(array("\r\n", "\r", "\n"), '\n', $row->InvNote), 
                 "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->InvGrandTotal,0)."</span></div>", 
                 "delivery" => $this->get_data_delivery_invoice($row,true), 
                 "payment" => $this->get_data_payment_invoice($row,true), 
@@ -659,7 +659,7 @@ class InvoiceModel extends Model
                 </table>';
                 if($payment_total < $row->InvGrandTotal){
                     
-                $html_payment_detail = '
+                $html_payment_detail .= '
                 <div class="p-8 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7 d-inline" role="alert">
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
@@ -779,7 +779,9 @@ class InvoiceModel extends Model
                 </td>  
                 <td class="detail" style="width:120px"> 
                     <span class="text-primary-600 fw-bold">'.$row_delivery->DeliveryCode.'</span>
+                    <div class="d-flex gap-1 pt-4">
                     '.$modelsDelivery->get_data_status_delivery($row_delivery,true).'
+                    '.$modelsDelivery->get_data_payment_delivery($row_delivery,true).'</div>
                 </td>
                 <td class="detail" style="width:100px">'.date_format(date_create($row_delivery->DeliveryDate),"d M Y").'</td>  
                 <td class="detail">'.$row_delivery->DeliveryRitase.' ('.$this->getTerbilang($row_delivery->DeliveryRitase).')</td> 
@@ -985,105 +987,66 @@ class InvoiceModel extends Model
         $builder->where('POStatus <',"3"); 
         $builder->orderby('POId', 'ASC'); 
         $datapo = $builder->get()->getResult(); 
-        foreach($datapo as $row_po){ 
-            $status = "";
-            if($row_po->POStatus==0){
-                $status .= '
-                    <span class="pointer text-head-3 badge text-bg-primary text-head-3">
-                        <span class="me-1 " >New</span>
-                    </span> ';
-            }
-            if($row_po->POStatus==1){
-                $status .= '
-                    <span class="pointer text-head-3 badge text-bg-info text-head-3">
-                        <span class="me-1 " >Proses</span>
-                    </span> '; 
-            }
-            if($row_po->POStatus==2){ 
-                $status .= '
-                    <span class=" pointertext-head-3 badge text-bg-success text-head-3">
-                        <span class="me-1 " >Completed</span>
-                    </span> ';  
-            }
-            if($row_po->POStatus==3){ 
-                $status .=  '
-                    <span class="pointer text-head-3 badge text-bg-danger text-head-3">
-                        <span class="me-1 " >Cancel</span>
-                    </span> ';  
-            }
+        foreach($datapo as $row_po){  
             $vendor = '<div class="text-head-3 text-wrap pt-2">'.($row_po->VendorId == 0 ? $row_po->NameVendor : $row_po->VendorName).'</div>';
-
+            $statusdoc = "Invoice";
             $pembelian_detail .= '<tr class="dt-hasChild">
             <td class="detail ">
-                <a class="pointer text-head-3 btn-detail-delivery shadow-7" data-id="'.$row_po->POId.'"><i class="fa-solid fa-chevron-right"></i></a>
+                <a class="cursor-pointer text-head-3 btn-detail-delivery" data-id="'.$row_po->POId.'"> <iconify-icon icon="material-symbols:arrow-right-rounded" class="icon text-xxl" rotate="0deg"> </iconify-icon></a> 
             </td> 
-            <td class="detail action-td" style="width:70px"> 
-                <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Data Pemeblian" onclick="print_po('.$row_po->POId.',this,'.$row_po->ProjectId.')"><i class="fa-solid fa-print"></i></span>   
-            </td> 
-            <td class="detail" style="width:125px"> 
-                <div class="d-flex align-items-center ">  
-                    <div class="flex-grow-1 ms-1">
-                        <div class="d-flex flex-column"> 
-                            <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>
-                            <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">'.$row->StoreName.'</span>  
-                            <span class="pointer text-head-3 pt-1 d-none">
-                                <span class="me-1 badge text-bg-info text-head-3">Proses</span>
-                            </span>
-                        </div>   
-                    </div>
-                </div>
-            </td>
-            <td class="detail" style="width:125px"> 
-                '.$row_po->POCode.' 
-                <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Invoice">
-                    <i class="fa-solid fa-money-bill text-success"></i>
-                    <a class="text-detail-3 pointer text-decoration-underline text-success">'.$row->InvCode.'</a>
-                </div>  
-            </td>
-            <td class="detail">'.date_format(date_create($row_po->PODate),"d M Y").'</td>   
-            <td class="detail">'.$status.'
-            </td> 
+            <td class="detail action-td" style="width:70px">   
+                    <div class="d-flex align-items-center gap-1 justify-content-center">
+                        <a onclick="print_po('.$row_po->POId.',this,\''.$statusdoc .'\')""
+                            class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Print Pembelian">
+                            <iconify-icon icon="lucide:printer"></iconify-icon>
+                        </a>
+                        <a onclick="edit_po('.$row_po->POId.',this,\''.$statusdoc .'\')"
+                            class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Ubah Pembelian">
+                            <iconify-icon icon="lucide:edit"></iconify-icon>
+                        </a>
+                        <a onclick="delete_po('.$row_po->POId.',this,\''.$statusdoc .'\')"
+                            class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Hapus Pembelian">
+                            <iconify-icon icon="lucide:trash-2">
+                            </iconify-icon>
+                        </a> 
+                    </div> 
+            </td>    
+            <td class="detail" style="width:120px"> 
+                <span class="text-primary-600 fw-bold">'.$row_po->POCode.'</span>
+                <div class="d-flex gap-1 pt-4"> 
+                '.$modelspembelian->get_data_payment_po($row_po,true).'</div>
+                 
+            </td>  
+            <td class="detail">'.date_format(date_create($row_po->PODate),"d M Y").'</td>    
             <td class="detail">'.$vendor.'
+            </td> <td class="detail action-td"><span>'.$row_po->PONote.'</span>
+            <a onclick="comment_po('.$row_po->POId.',\''.str_replace(array("\r\n", "\r", "\n"), '\n', $row_po->PONote).'\')"
+                class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Ubah Catatan">
+                <iconify-icon icon="lucide:edit"></iconify-icon>
+            </a> 
             </td>
             <td class="detail">Rp. '.number_format($row_po->POGrandTotal,0).'</td>
             </tr> 
             <tr class="child-row delivery d-none" data-id="'.$row_po->POId.'">
                 <td class="detail" colspan="10">
-                    <div class="view-detail-1" style="display:none">
+                    <div class="view-detail-1" style="display:none"> 
                         <div class="list-detail-1 pb-3">
-                            <div class="text-head-2 py-1"> 
-                                <span class="fa-stack small">
-                                    <i class="fa-regular fa-circle fa-stack-2x"></i>
-                                    <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
-                                </span>
-                                <span>Produk</span> 
-                            </div>  
+                            <div class="text-primary-600 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                                <iconify-icon icon="ix:box-closed" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Detail Produk 
+                            </div> 
                             '.$modelspembelian->get_data_detail_pembelian($row_po).'
                         </div>   
                         <div class="list-detail-1 pb-3">
-                            <div class="text-head-2 py-1"> 
-                                <span class="fa-stack small">
-                                    <i class="fa-regular fa-circle fa-stack-2x"></i>
-                                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                                </span>
-                                <span>Pembayaran</span> 
-                            </div>  
+                            <div class="text-primary-600 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                                <iconify-icon icon="hugeicons:payment-02" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Pembayaran 
+                            </div> 
                             '.$modelspembelian->get_data_payment_pembelian($row_po).'
-                        </div>
-                        <div class="list-detail-1 pb-3">
-                            <div class="text-head-2 py-1"> 
-                                <span class="fa-stack small">
-                                    <i class="fa-regular fa-circle fa-stack-2x"></i>
-                                    <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
-                                </span>
-                                <span>Pengiriman</span> 
-                            </div>  
-                            '.$modelspembelian->get_data_delivery_pembelian($row_po).'
-                        </div>
+                        </div> 
                     </div>
                 </td>
             </tr>';  
         } 
+        
         if($pembelian_detail == ""){
 
             $pembelian = ' 
@@ -1107,18 +1070,24 @@ class InvoiceModel extends Model
                 <thead>
                     <tr>
                         <th class="detail" style="width:30px"></th>
-                        <th class="detail" style="width:70px">Action</th>
-                        <th class="detail">Toko</th>
+                        <th class="detail" style="width:70px">Action</th> 
                         <th class="detail">Nomor</th>
-                        <th class="detail">Tanggal</th> 
-                        <th class="detail">Status</th>
+                        <th class="detail">Tanggal</th>  
                         <th class="detail">Vendor</th> 
+                        <th class="detail">Catatan</th> 
                         <th class="detail">Total</th>
                     </tr>
                 </thead>
                 <tbody>'.$pembelian_detail.'
                 </tbody>
-            </table>';
+            </table>
+            
+            <div class="d-inline-block p-8 pe-16 bg-info-50 radius-8 border-start-width-3-px border-info-main border-top-0 border-end-0 border-bottom-0 shadow-7" role="alert">
+            <div class="text-head-3 p-2"> 
+            
+        '.($this->get_pembelian_item_total($row->InvId) == true ? "Pembelian masih belum lengkap" : "") .'
+            <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_invoice_po('.$row->InvId.',this)">Tambahkan Pembelian</a> 
+        </div> </div>';
         }
         if($header){
             return  $pembelian;
@@ -1590,5 +1559,29 @@ class InvoiceModel extends Model
         $datainvoice = $builder->get()->getRow();    
         if($datainvoice->total) $qty_send = $datainvoice->total;
         return $qty_send;
+    }
+    
+    function get_pembelian_item_total($invoice_id){ 
+        $arr_invoice_detail = $this->get_data_invoice_detail($invoice_id);
+        $PO_add = false;
+        $item = ""; 
+        foreach($arr_invoice_detail as $row){
+            if($row->InvDetailType == "product" && $row->ProdukId !== "0"){
+
+                $builder = $this->db->table("pembelian_detail");
+                $builder->select('sum(PODetailQty) as total'); 
+                $builder->join('pembelian','POId = PODetailRef','left'); 
+                $builder->where('ProdukId',$row->ProdukId); 
+                $builder->where('PODetailVarian',$row->InvDetailVarian); 
+                $builder->where('POStatus <',3); 
+                $data = $builder->get()->getRow();   
+                if($row->InvDetailQty > $data->total) $PO_add = true;
+                
+                $item .= $row->ProdukId. $row->InvDetailVarian. $row->InvDetailQty.' | '. $data->total.'<br>';
+            }
+        }
+
+        
+        return $PO_add;
     }
 }

@@ -1230,13 +1230,13 @@ $("#CustomerId").select2({
                     $('#InvCustName').val(data.customername);
                     $('#InvCustTelp').val(data.customertelp);
                     $('#InvAddress').val(data.customeraddress);
-                    $("#InvCustName").attr("disabled", false);
-                    $("#InvCustTelp").attr("disabled", false);
-                    $("#InvAddress").attr("disabled", false);
+                    $("#InvCustName").attr("readonly", false);
+                    $("#InvCustTelp").attr("readonly", false);
+                    $("#InvAddress").attr("readonly", false);
           } else {
-                    $("#InvCustName").attr("disabled", true);
-                    $("#InvCustTelp").attr("disabled", true);
-                    $("#InvAddress").attr("disabled", true);
+                    $("#InvCustName").attr("readonly", true);
+                    $("#InvCustTelp").attr("readonly", true);
+                    $("#InvAddress").attr("readonly", true);
 
           }
 });

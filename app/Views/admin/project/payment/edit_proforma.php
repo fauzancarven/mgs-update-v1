@@ -218,11 +218,14 @@ $(".template-footer").each(function(index, el) {
                               data: function(params) {
                                         // CSRF Hash
                                         var csrfName = $(
-                                                            '.txt_csrfname')
+                                                            '.txt_csrfname'
+                                                            )
                                                   .attr(
-                                                  'name'); // CSRF Token name
+                                                            'name'
+                                                            ); // CSRF Token name
                                         var csrfHash = $(
-                                                            '.txt_csrfname')
+                                                            '.txt_csrfname'
+                                                            )
                                                   .val(); // CSRF hash 
                                         return {
                                                   searchTerm: params
@@ -279,7 +282,7 @@ $(".template-footer").each(function(index, el) {
 
                               quill[type].enable(true);
                               quill[type].root.style.background =
-                              '#FFFFFF'; // warna enable
+                                        '#FFFFFF'; // warna enable
                     } else {
                               quill[type].setContents(JSON.parse(data.delta));
 
@@ -289,7 +292,7 @@ $(".template-footer").each(function(index, el) {
 
                               quill[type].enable(false);
                               quill[type].root.style.background =
-                              '#F7F7F7'; // warna enable
+                                        '#F7F7F7'; // warna enable
                     }
           });
 
@@ -299,7 +302,8 @@ $(".template-footer").each(function(index, el) {
           $(btnsave).click(function() {
                     if ($(selectoption).select2("data")[0]["id"] == $(
                                         selectoption).select2("data")[0][
-                              "text"]) {
+                                        "text"
+                              ]) {
                               $.ajax({
                                         dataType: "json",
                                         method: "POST",
@@ -307,44 +311,48 @@ $(".template-footer").each(function(index, el) {
                                         data: {
                                                   "TemplateFooterName": $(
                                                                       selectoption
-                                                                      )
+                                                            )
                                                             .select2(
-                                                                      "data")[
+                                                                      "data"
+                                                                      )[
                                                                       0
-                                                                      ]
+                                                            ]
                                                             [
-                                                                      "text"],
+                                                                      "text"
+                                                            ],
                                                   "TemplateFooterDetail": quill[
                                                                       type
-                                                                      ]
+                                                            ]
                                                             .root
                                                             .innerHTML
                                                             .replace(/\s+/g,
                                                                       " "
-                                                                      ),
+                                                            ),
                                                   "TemplateFooterDelta": quill[
                                                                       type
-                                                                      ]
+                                                            ]
                                                             .getContents(),
                                                   "TemplateFooterCategory": type,
                                         },
                                         success: function(
-                                                  data) {
+                                                  data
+                                                  ) {
                                                   //console.log(data); 
                                                   if (data["status"] ===
                                                             true
-                                                            ) {
+                                                  ) {
 
                                                             $(btnsave)
-                                                  .hide();
+                                                                      .hide();
                                                             $(btnsaveas)
                                                                       .hide();
                                                             $(btnedit)
-                                                  .show();
+                                                                      .show();
 
                                                             quill[type]
                                                                       .enable(
-                                                                                false);
+                                                                                false
+                                                                                );
                                                             quill[type]
                                                                       .root
                                                                       .style
@@ -354,12 +362,13 @@ $(".template-footer").each(function(index, el) {
                                         },
                                         error: function(xhr, textStatus,
                                                   errorThrown
-                                                  ) {
+                                        ) {
                                                   Swal.fire({
                                                             icon: 'error',
                                                             text: xhr["responseJSON"]
                                                                       [
-                                                                                'message'],
+                                                                                'message'
+                                                                      ],
                                                             confirmButtonColor: "#3085d6",
                                                   });
                                         }
@@ -370,53 +379,59 @@ $(".template-footer").each(function(index, el) {
                                         method: "POST",
                                         url: "<?= base_url() ?>action/edit-data-template-footer/" +
                                                   $(
-                                                            selectoption)
+                                                            selectoption
+                                                            )
                                                   .select2(
-                                                            "data")[
+                                                            "data"
+                                                            )[
                                                             0
-                                                            ]
+                                                  ]
                                                   ["id"],
                                         data: {
                                                   "TemplateFooterName": $(
                                                                       selectoption
-                                                                      )
+                                                            )
                                                             .select2(
-                                                                      "data")[
+                                                                      "data"
+                                                                      )[
                                                                       0
-                                                                      ]
+                                                            ]
                                                             [
-                                                                      "text"],
+                                                                      "text"
+                                                            ],
                                                   "TemplateFooterDetail": quill[
                                                                       type
-                                                                      ]
+                                                            ]
                                                             .root
                                                             .innerHTML
                                                             .replace(/\s+/g,
                                                                       " "
-                                                                      ),
+                                                            ),
                                                   "TemplateFooterDelta": quill[
                                                                       type
-                                                                      ]
+                                                            ]
                                                             .getContents(),
                                                   "TemplateFooterCategory": type,
                                         },
                                         success: function(
-                                                  data) {
+                                                  data
+                                                  ) {
                                                   //console.log(data); 
                                                   if (data["status"] ===
                                                             true
-                                                            ) {
+                                                  ) {
 
                                                             $(btnsave)
-                                                  .hide();
+                                                                      .hide();
                                                             $(btnsaveas)
                                                                       .hide();
                                                             $(btnedit)
-                                                  .show();
+                                                                      .show();
 
                                                             quill[type]
                                                                       .enable(
-                                                                                false);
+                                                                                false
+                                                                                );
                                                             quill[type]
                                                                       .root
                                                                       .style
@@ -426,12 +441,13 @@ $(".template-footer").each(function(index, el) {
                                         },
                                         error: function(xhr, textStatus,
                                                   errorThrown
-                                                  ) {
+                                        ) {
                                                   Swal.fire({
                                                             icon: 'error',
                                                             text: xhr["responseJSON"]
                                                                       [
-                                                                                'message'],
+                                                                                'message'
+                                                                      ],
                                                             confirmButtonColor: "#3085d6",
                                                   });
                                         }
@@ -465,49 +481,56 @@ $(".template-footer").each(function(index, el) {
                                                                       "TemplateFooterName": name,
                                                                       "TemplateFooterDetail": quill[
                                                                                           type
-                                                                                          ]
+                                                                                ]
                                                                                 .root
                                                                                 .innerHTML
                                                                                 .replace(/\s+/g,
                                                                                           " "
-                                                                                          ),
+                                                                                ),
                                                                       "TemplateFooterDelta": quill[
                                                                                           type
-                                                                                          ]
+                                                                                ]
                                                                                 .getContents(),
                                                                       "TemplateFooterCategory": type,
                                                             },
                                                             success: function(
-                                                                      data) {
+                                                                      data
+                                                                      ) {
                                                                       //console.log(data); 
                                                                       if (data["status"] ===
                                                                                 true
-                                                                                ) {
+                                                                      ) {
                                                                                 $(selectoption)
                                                                                           .append(new Option(data[
-                                                                                                              "data"]
+                                                                                                              "data"
+                                                                                                              ]
                                                                                                     [
-                                                                                                              "TemplateFooterName"],
+                                                                                                              "TemplateFooterName"
+                                                                                                    ],
                                                                                                     data[
-                                                                                                              "data"]
+                                                                                                              "data"
+                                                                                                              ]
                                                                                                     [
-                                                                                                              "TemplateFooterId"],
+                                                                                                              "TemplateFooterId"
+                                                                                                    ],
                                                                                                     true,
                                                                                                     true
-                                                                                                    ))
+                                                                                          ))
                                                                                           .trigger(
-                                                                                                    'change');
+                                                                                                    'change'
+                                                                                                    );
 
                                                                                 $(btnsave)
-                                                                      .hide();
+                                                                                          .hide();
                                                                                 $(btnsaveas)
                                                                                           .hide();
                                                                                 $(btnedit)
-                                                                      .show();
+                                                                                          .show();
 
                                                                                 quill[type]
                                                                                           .enable(
-                                                                                                    false);
+                                                                                                    false
+                                                                                                    );
                                                                                 quill[type]
                                                                                           .root
                                                                                           .style
@@ -517,21 +540,23 @@ $(".template-footer").each(function(index, el) {
                                                             },
                                                             error: function(xhr, textStatus,
                                                                       errorThrown
-                                                                      ) {
+                                                            ) {
                                                                       Swal.fire({
                                                                                 icon: 'error',
                                                                                 text: xhr["responseJSON"]
                                                                                           [
-                                                                                                    'message'],
+                                                                                                    'message'
+                                                                                          ],
                                                                                 confirmButtonColor: "#3085d6",
                                                                       });
                                                             }
                                                   });
                                         } catch (
-                                                  error) {
+                                                  error
+                                                  ) {
                                                   Swal.showValidationMessage(
                                                             `Request failed: ${error["responseJSON"]['message']}`
-                                                            );
+                                                  );
                                         }
                               },
                               allowOutsideClick: () => !Swal
@@ -557,7 +582,7 @@ $(".template-footer").each(function(index, el) {
 
                     quill[type].enable(true);
                     quill[type].root.style.background =
-                    '#FFFFFF'; // warna enable
+                              '#FFFFFF'; // warna enable
 
           })
 });
@@ -585,7 +610,7 @@ $("#btn-add-payment").click(function() {
                     }).then(function() {
                               swal.close();
                               setTimeout(() => $("#total-payment").focus(),
-                              300);
+                                        300);
                     });
                     return;
           }
@@ -616,28 +641,32 @@ $("#btn-add-payment").click(function() {
                                         }).then((result) => {
                                                   $("#modal-edit-proforma")
                                                             .modal(
-                                                                      "hide");
-                                                  if ($("#modal-add-proforma")
+                                                                      "hide"
+                                                                      );
+                                                  if ($("#modal-edit-proforma")
                                                             .data(
-                                                                      "menu") ==
+                                                                      "menu"
+                                                                      ) ==
                                                             "sample"
-                                                            ) {
+                                                  ) {
                                                             loader_datatable
                                                                       ();
                                                   } else if (
                                                             $(
-                                                                      "#modal-add-proforma")
+                                                                      "#modal-edit-proforma"
+                                                                      )
                                                             .data(
-                                                                      "menu") ==
+                                                                      "menu"
+                                                                      ) ==
                                                             "Invoice"
-                                                            ) {
+                                                  ) {
                                                             table.ajax
-                                                  .reload();
+                                                                      .reload();
                                                   } else {
                                                             loader_data_project
                                                                       ('<?= $project->ProjectId ?>',
                                                                                 'invoice'
-                                                                                )
+                                                                      )
                                                   }
                                         });
 
@@ -654,7 +683,8 @@ $("#btn-add-payment").click(function() {
                                         icon: 'error',
                                         text: xhr["responseJSON"]
                                                   [
-                                                            'message'],
+                                                            'message'
+                                                  ],
                                         confirmButtonColor: "#3085d6",
                               });
                     }

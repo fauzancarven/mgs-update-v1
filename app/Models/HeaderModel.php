@@ -577,7 +577,7 @@ class HeaderModel extends Model
                 
                         $html = ' <div class="header"> 
                         <div class="logo mgs">  
-                            <img src="assets/images/logo/logo-blue-1.png" alt=""> '.$id.'
+                            <img src="assets/images/logo/logo-blue-1.png" alt="">
                         </div>
                         <div class="deskripsi">
                             <table>
@@ -613,7 +613,7 @@ class HeaderModel extends Model
                                 </tbody>
                             </table>
                         </div>   
-                        <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR  '.$id.'</span></div>  
+                        <div class="slogan"><span class="text-slogan">GENERAL SUPPLIER & CONTRACTOR </span></div>  
                     </div>  ';
                 break;
         }
