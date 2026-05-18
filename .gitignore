@@ -1,6 +1,7 @@
 .gitignore
 .env
 .htaccess
+.well-known/
 vendor/*
 writable/*
 tests/* 
@@ -15,3 +16,5 @@ assets/images/project/*
 assets/images/survey/*
 deploy.php
 composer.lock
+404.html
+502.html
