@@ -497,6 +497,63 @@ class AdminController extends BaseController
         return view('admin/project/delivery/edit_view', $data);  
     }
 
+    public function invoice_pembelian_add($id)
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $modelinvoice = new InvoiceModel(); 
+        $modelsproduk = new ProdukModel();
+        $modelsVendor = new VendorModel();
+        $datainvoice = $modelinvoice->get_data_invoice($id);  
+        $project = array(
+            "code"=>$datainvoice->InvCode,
+            "StoreId"=>$datainvoice->StoreId,
+            "StoreCode"=>$datainvoice->StoreCode,
+            "StoreName"=>$datainvoice->StoreName,
+            "project_id"=>$datainvoice->ProjectId, 
+            "PORef"=>$datainvoice->InvId, 
+            "PORefType"=>"Invoice",
+            "CustomerName"=>$datainvoice->InvCustName,
+            "CustomerTelp"=>$datainvoice->InvCustTelp,
+            "CustomerAddress"=>$datainvoice->InvProjectAddress, 
+        );
+        
+        $arr_detail = $modelinvoice->get_data_invoice_detail($id);  
+        $detail = array();  
+        foreach($arr_detail as $row){
+            if($row->InvDetailType == "product" && $row->ProdukId !== "0"){
+            $detail[] = array( 
+                        "id" => $row->InvDetailId, 
+                        "produkid" => $row->ProdukId, 
+                        "satuan_id"=> ($row->InvDetailSatuanId == 0 ? "" : $row->InvDetailSatuanId),
+                        "satuan_text"=>$row->InvDetailSatuanText, 
+                        "price"=> ($modelsproduk->getDetailProduk(JSON_DECODE($row->InvDetailVarian,true),$row->ProdukId))["ProdukDetailHargaBeli"] ?? "",
+                        "varian"=> JSON_DECODE($row->InvDetailVarian,true),
+                        "total"=> $row->ProdukDetailHargaBeli * $row->InvDetailQty,
+                        "disc"=> 0, 
+                        "qty_ref"=> $row->InvDetailQty, 
+                        "qty"=> $row->InvDetailQty,
+                        "text"=> $row->InvDetailText,
+                        "group"=> $row->InvDetailGroup,
+                        "type"=> $row->InvDetailType,
+                        "image_url"=>  
+                        $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->InvDetailVarian,true)
+                    );
+                }
+        }; 
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Tambah Pembelian',
+            'menu' => "Sales",
+            'po' => $project,
+            'store' => $modelsstore->get()->getResult(), 
+            'admin' => $modelsuser->get()->getResult(),
+            'vendor' => $modelsVendor->get()->getResult(),
+            'detail' => $detail, 
+        ]; 
+        return view('admin/project/po/add_view', $data); 
+    }
 
     public function pembelian()
     {    
@@ -555,6 +612,38 @@ class AdminController extends BaseController
             'admin' => $modelsuser->get()->getResult()
         ]; 
         return view('admin/delivery/index', $data); 
+    }
+
+    
+    public function coa(){    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Accounting',
+            'menu' => "", 
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/accounting/coa/index', $data); 
+    }
+    public function transaction(){    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Accounting',
+            'menu' => "", 
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('admin/accounting/transaction/index', $data); 
     }
     // public function chat(){    
     //     $modelsstore = new StoreModel();

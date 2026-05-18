@@ -159,4 +159,85 @@ class AccountingModel extends Model
         );
 
     }
+
+    function load_datatable_coa($filter = null){
+        $filterdata = 0;
+        $countTotal = 0;
+        $count = 0;
+        $draw = $filter['draw'];  
+        $start = $filter['start'];
+        $length = $filter['length']; 
+        $datatable = array();
+        
+        $builder = $this->db->table("acc_coa");    
+        //mengambil total semua data
+        $builder1 = clone $builder; 
+        $countTotal = $builder1->get()->getNumRows(); 
+        
+        if($filter["search"]){ 
+            $builder->groupStart(); 
+            $builder->like("kode_akun",$filter["search"]);
+            $builder->orLike("nama_akun",$filter["search"]);
+            $builder->orLike("kategori",$filter["search"]);
+            $builder->orLike("saldo_normal",$filter["search"]);
+            $builder->orLike("keterangan",$filter["search"]); 
+            $builder->groupEnd();  
+            $filterdata = 1;
+        }
+        
+        // Order TAble
+        $columns = array(
+            0 => "kode_akun", // kolom action tidak dapat diurutkan
+            1 => "nama_akun", // kolom action tidak dapat diurutkan
+            2 => "kategori", // kolom name
+            3 => "saldo_normal", // kolom name
+            4 => "keterangan", // kolom action tidak dapat diurutkan
+            5 => "", // kolom image tidak dapat diurutkan 
+        );
+        if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
+            $orderColumn = $columns[$filter['order'][0]['column']];
+            $orderDir = $filter['order'][0]['dir'];
+        
+            if ($orderDir != 'asc' && $orderDir != 'desc') {
+                $orderDir = 'asc';
+            } 
+            $builder->orderby($orderColumn,$orderDir);   
+        } 
+
+        $datafilter = clone $builder;  
+        $count = $datafilter->get()->getNumRows();
+if($length > 0) $builder->limit($length,$start); 
+        $query = $builder->get();  
+        foreach($query->getResult() as $row){ 
+            $data_row = array( 
+                "kode_akun" => $row->kode_akun, 
+                "nama_akun" => $row->nama_akun,
+                "kategori" =>$row->kategori,
+                "saldo_normal" => $row->saldo_normal,
+                "keterangan" => $row->keterangan, 
+                "action" =>'  
+                <div class="d-flex align-items-center gap-1 justify-content-center"> 
+                <a onclick="edit_data('.$row->kode_akun.',this,\''.$row->kode_akun.'\')"
+                    class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Ubah Data">
+                    <iconify-icon icon="lucide:edit"></iconify-icon>
+                </a>
+                <a onclick="delete_data('.$row->kode_akun.',this,\''.$row->kode_akun.'\')"
+                    class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Hapus Data">
+                    <iconify-icon icon="lucide:trash-2">
+                    </iconify-icon>
+                </a> ',
+            );
+            array_push($datatable, $data_row);
+        }
+
+        return json_encode(
+            array(
+                "draw"=>$draw,
+                "recordsTotal"=>$countTotal,
+                "recordsFiltered"=>($filterdata == 0 ? $countTotal : $count ),
+                "data"=>$datatable, 
+            )
+        );
+
+    } 
 }

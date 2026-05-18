@@ -1093,7 +1093,7 @@ class InvoiceModel extends Model
             $pembelian_detail .= ' <div class="d-inline-block p-8 pe-16 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7" role="alert">
                 <span class="text-head-3">
                     <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                    Belum ada pembelian yang dibuat dari dokumen ini
+                    Belum ada pembelian yang dibuat dari dokumen ini, <a class="text-head-3 text-primary" style="cursor:pointer" onclick="add_invoice_po('.$row->InvId.',this)">Tambahkan Pembelian</a> 
                 </span>
             </div> ';  
         }else{ 
@@ -1220,6 +1220,7 @@ class InvoiceModel extends Model
     
     function get_data_invoice_detail($id, $produk_id = null,$produk_varian = null){
         $builder = $this->db->table("invoice_detail");
+        $builder->join('produk_detail','InvDetailVarian=ProdukDetailVarian and ProdukDetailRef = ProdukId','left'); 
         $builder->where('InvDetailRef',$id); 
         if($produk_id)  $builder->where('ProdukId',$produk_id);
         if($produk_varian)  $builder->where('InvDetailvarian',$produk_varian); 

@@ -189,6 +189,15 @@ class TableController extends BaseController
         }    
         
     } 
+    public function acc_coa()
+    {   
+        $request = Services::request();
+        $datatable = new AccountingModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_datatable_coa($request->getPost());
+        }    
+        
+    } 
     
 
     
