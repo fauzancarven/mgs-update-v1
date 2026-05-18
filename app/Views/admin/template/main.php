@@ -839,7 +839,7 @@
                                                             <div class="dropdown">
                                                                       <button class="d-flex justify-content-center align-items-center rounded-circle"
                                                                                 type="button" data-bs-toggle="dropdown">
-                                                                                <img src="<?= base_url(); ?>assets/images/profile/user/<?= user()->code; ?>.png"
+                                                                                <img src="<?= base_url(); ?>assets/images/profile/user/<?= user()->code; ?>.png?ver=<?= date("h:i:sA")?>"
                                                                                           alt="image"
                                                                                           class="w-40-px h-40-px object-fit-cover rounded-circle">
                                                                       </button>
