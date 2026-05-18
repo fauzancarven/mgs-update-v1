@@ -3,90 +3,117 @@
 <html lang="en" data-theme="light">
 
 <!-- Mirrored from wowdash.wowtheme7.com/bundlelive/demo/index-10.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 22 Jun 2025 08:53:54 GMT -->
+<?php 
+$version = "V2.1";
+?>
 
 <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>MGSAPP - <?= $title ?></title>
-          <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png" />
+          <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png?ver=<?= $version?>">
           <!-- remix icon font css  -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/remixicon.css">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/remixicon.css?ver=<?= $version?>">
           <!-- BootStrap css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/bootstrap.min.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/bootstrap.min.css?ver=<?= $version?>">
           <!-- Apex Chart css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/apexcharts.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/apexcharts.css?ver=<?= $version?>">
           <!-- Data Table css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/dataTables.min.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/dataTables.min.css?ver=<?= $version?>">
           <!-- Text Editor css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor-katex.min.css">
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor.atom-one-dark.min.css">
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor.quill.snow.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor-katex.min.css?ver=<?= $version?>">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor.atom-one-dark.min.css?ver=<?= $version?>">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor.quill.snow.css?ver=<?= $version?>">
           <!-- Date picker css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/flatpickr.min.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/flatpickr.min.css?ver=<?= $version?>">
           <!-- Calendar css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/full-calendar.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/full-calendar.css?ver=<?= $version?>">
           <!-- Vector Map css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/jquery-jvectormap-2.0.5.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/jquery-jvectormap-2.0.5.css?ver=<?= $version?>">
           <!-- Popup css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/magnific-popup.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/magnific-popup.css?ver=<?= $version?>">
           <!-- Slick Slider css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/slick.css">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/slick.css?ver=<?= $version?>">
           <!-- prism css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/prism.css">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/prism.css?ver=<?= $version?>">
           <!-- file upload css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/file-upload.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/file-upload.css?ver=<?= $version?>">
 
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/audioplayer.css">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/audioplayer.css?ver=<?= $version?>">
           <!-- main css -->
-          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/style.css?version=1.0">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/style.css?ver=<?= $version?>">
 
-          <link rel="stylesheet" href="<?= base_url() ?>assets/css/daterangepicker.css">
-          <link rel="stylesheet" href="<?= base_url() ?>assets/css/sweetalert2.min.css">
-          <link rel="stylesheet" href="<?= base_url() ?>assets/css/select2.min.css">
-          <link rel="stylesheet" href="<?= base_url() ?>assets/css/quill.bubble.css">
-          <link rel="stylesheet" href="<?= base_url() ?>assets/css/croppie.css">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/daterangepicker.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/sweetalert2.min.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/select2.min.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/quill.bubble.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/croppie.css?ver=<?= $version?>">
 
 </head>
 
 <body>
 
           <!-- jQuery library js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-3.7.1.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-3.7.1.min.js?ver=<?= $version?>">
+          </script>
           <!-- Bootstrap js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/bootstrap.bundle.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/bootstrap.bundle.min.js?ver=<?= $version?>">
+          </script>
           <!-- Apex Chart js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/apexcharts.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/apexcharts.min.js?ver=<?= $version?>">
+          </script>
           <!-- Data Table js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/dataTables.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/dataTables.min.js?ver=<?= $version?>">
+          </script>
           <!-- Iconify Font js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/iconify-icon.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/iconify-icon.min.js?ver=<?= $version?>">
+          </script>
           <!-- jQuery UI js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-ui.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-ui.min.js?ver=<?= $version?>">
+          </script>
           <!-- Vector Map js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-jvectormap-2.0.5.min.js"></script>
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-jvectormap-world-mill-en.js"></script>
+          <script
+                    src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-jvectormap-2.0.5.min.js?ver=<?= $version?>">
+          </script>
+          <script
+                    src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-jvectormap-world-mill-en.js?ver=<?= $version?>">
+          </script>
           <!-- Popup js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/magnifc-popup.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/magnifc-popup.min.js?ver=<?= $version?>">
+          </script>
           <!-- Slick Slider js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/slick.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/slick.min.js?ver=<?= $version?>"></script>
           <!-- prism js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/prism.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/prism.js?ver=<?= $version?>"></script>
           <!-- file upload js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/file-upload.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/file-upload.js?ver=<?= $version?>"></script>
           <!-- audioplayer -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/audioplayer.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/audioplayer.js?ver=<?= $version?>"></script>
 
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/dataTables.responsive.js"></script>
-          <script src="<?= base_url(); ?>assets/js/moment.min.js"></script>
-          <script src="<?= base_url(); ?>assets/js/jquery.redirect.js"></script>
-          <script src="<?= base_url(); ?>assets/js/daterangepicker.js"></script>
-          <script src="<?= base_url(); ?>assets/js/select2.min.js"></script>
-          <script src="<?= base_url(); ?>assets/js/sweetalert2.min.js"></script>
-          <script src="<?= base_url(); ?>assets/js/cleave.min.js"></script>
-          <script src="<?= base_url(); ?>assets/js/cleave-phone.id.js"></script>
-          <script src="<?= base_url(); ?>assets/js/quill.js"></script>
-          <script src="<?= base_url(); ?>assets/js/table.js"></script>
-          <script src="<?= base_url(); ?>assets/js/croppie.min.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/dataTables.responsive.js?ver=<?= $version?>">
+          </script>
+          <script src="<?= base_url(); ?>assets/js/moment.min.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/jquery.redirect.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/daterangepicker.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/select2.min.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/sweetalert2.min.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/cleave.min.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/cleave-phone.id.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/quill.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/table.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/croppie.min.js?ver=<?= $version?>"></script>
 
 
           <script>
@@ -839,7 +866,7 @@
                                                             <div class="dropdown">
                                                                       <button class="d-flex justify-content-center align-items-center rounded-circle"
                                                                                 type="button" data-bs-toggle="dropdown">
-                                                                                <img src="<?= base_url(); ?>assets/images/profile/user/<?= user()->code; ?>.png?ver=<?= date("h:i:sA")?>"
+                                                                                <img src="<?= base_url(); ?>assets/images/profile/user/<?= user()->code; ?>.png?ver=<?= $version?>"
                                                                                           alt="image"
                                                                                           class="w-40-px h-40-px object-fit-cover rounded-circle">
                                                                       </button>

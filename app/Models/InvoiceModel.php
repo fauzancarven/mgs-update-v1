@@ -106,7 +106,7 @@ class InvoiceModel extends Model
         $countTotal = $builder1->get()->getNumRows(); 
 
         if(isset($filter["filter"])){ 
-            $builder->whereIn("SphStatus",$filter["filter"]); 
+            $builder->whereIn("InvStatus",$filter["filter"]); 
             $filterdata = 1;
         } 
         if(isset($filter["store"])){ 
@@ -115,9 +115,10 @@ class InvoiceModel extends Model
         } 
         if($filter["search"]){ 
             $builder->groupStart(); 
-            $builder->like("ProjectName",$filter["search"]);
-            $builder->orLike("ProjectComment",$filter["search"]);
+            $builder->like("InvCustName",$filter["search"]);
+            $builder->orLike("InvCustTelp",$filter["search"]);
             $builder->orLike("InvAddress",$filter["search"]);
+            $builder->orLike("InvNote",$filter["search"]);
             $builder->orLike("InvCode",$filter["search"]);
             $builder->groupEnd();  
             $filterdata = 1;
