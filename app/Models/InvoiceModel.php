@@ -989,7 +989,7 @@ class InvoiceModel extends Model
         $builder->orderby('POId', 'ASC'); 
         $datapo = $builder->get()->getResult(); 
         foreach($datapo as $row_po){  
-            $vendor = '<div class="text-head-3 text-wrap pt-2">'.($row_po->VendorId == 0 ? $row_po->NameVendor : $row_po->VendorName).'</div>';
+            $vendor = '<div class="text-head-3 text-wrap pt-2">'.($row_po->VendorId == 0 ? $row_po->VendorName : $row_po->VendorName).'</div>';
             $statusdoc = "Invoice";
             $pembelian_detail .= '<tr class="dt-hasChild">
             <td class="detail ">
