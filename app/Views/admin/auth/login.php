@@ -54,7 +54,7 @@
     <div class="auth-right py-32 px-24 d-flex flex-column justify-content-center">
       <div class="max-w-464-px mx-auto w-100">
         <div>
-          <a href="index-2.html" class="mb-40 max-w-290-px">
+          <a href="<?=base_url()?>" class="mb-40 max-w-290-px">
             <img src="<?=base_url()?>assets/woowdash/assets/images/w-logo.png" alt="">
           </a>
           <h4 class="mb-12">Login Aplikasi</h4>
