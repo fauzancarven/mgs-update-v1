@@ -472,7 +472,7 @@ class AdminController extends BaseController
                         "varian"=> JSON_DECODE($row->DeliveryDetailVarian,true),
                         "total"=>0,
                         "disc"=> 0,
-                        "qty_ref"=> $modelinvoice->get_data_invoice_detail($datainvoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian)->InvDetailQty,
+                        "qty_ref"=> ($modelinvoice->get_data_invoice_detail($datainvoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian)->InvDetailQty ?? 0),
                         "qty_success"=>$modelinvoice->get_data_delivery_detail_by_ref($datainvoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$id), 
                         "qty"=> $row->DeliveryDetailQty,
                         "qty_spare"=> 0,
