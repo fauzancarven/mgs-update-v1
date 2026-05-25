@@ -993,7 +993,7 @@ class InvoiceModel extends Model
             $statusdoc = "Invoice";
             $pembelian_detail .= '<tr class="dt-hasChild">
             <td class="detail ">
-                <a class="cursor-pointer text-head-3 btn-detail-delivery" data-id="'.$row_po->POId.'"> <iconify-icon icon="material-symbols:arrow-right-rounded" class="icon text-xxl" rotate="0deg"> </iconify-icon></a> 
+                <a class="cursor-pointer text-head-3 btn-detail-pembelian" data-id="'.$row_po->POId.'"> <iconify-icon icon="material-symbols:arrow-right-rounded" class="icon text-xxl" rotate="0deg"> </iconify-icon></a> 
             </td> 
             <td class="detail action-td" style="width:70px">   
                     <div class="d-flex align-items-center gap-1 justify-content-center">
@@ -1015,7 +1015,7 @@ class InvoiceModel extends Model
             <td class="detail" style="width:120px"> 
                 <span class="text-primary-600 fw-bold">'.$row_po->POCode.'</span>
                 <div class="d-flex gap-1 pt-4"> 
-                '.$modelspembelian->get_data_payment_po($row_po,true).'</div>
+                '.$modelspembelian->get_data_payment_pembelian($row_po,true).'</div>
                  
             </td>  
             <td class="detail">'.date_format(date_create($row_po->PODate),"d M Y").'</td>    
@@ -1028,7 +1028,7 @@ class InvoiceModel extends Model
             </td>
             <td class="detail">Rp. '.number_format($row_po->POGrandTotal,0).'</td>
             </tr> 
-            <tr class="child-row delivery d-none" data-id="'.$row_po->POId.'">
+            <tr class="child-row pembelian d-none" data-id="'.$row_po->POId.'">
                 <td class="detail" colspan="10">
                     <div class="view-detail-1" style="display:none"> 
                         <div class="list-detail-1 pb-3">

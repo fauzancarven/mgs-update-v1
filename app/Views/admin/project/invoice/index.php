@@ -1156,6 +1156,39 @@ table.on('click', '.btn-detail-item', function() {
                                         $(trdelivery).addClass("open");
                               }
                     });
+
+
+                    $(".btn-detail-pembelian").unbind().click(function() {
+
+                              tooltiprenew()
+                              var trdelivery = $(".child-row.pembelian[data-id='" +
+                                        $(
+                                                  this).data("id") +
+                                        "'");
+                              if ($(trdelivery).hasClass("open")) {
+                                        $(trdelivery).find('.view-detail-1')
+                                                  .slideUp(
+                                                            500,
+                                                            function() {
+                                                                      $(trdelivery)
+                                                                                .addClass(
+                                                                                          "d-none"
+                                                                                );
+                                                            });
+                                        $(trdelivery).removeClass("open");
+                                        $(this).find('iconify-icon').attr(
+                                                  'rotate', "0deg");
+                              } else {
+
+                                        $(this).find('iconify-icon').attr(
+                                                  'rotate', "90deg");
+                                        $(trdelivery).removeClass("d-none");
+                                        $(trdelivery).find('.view-detail-1')
+                                                  .slideDown(
+                                                            500);
+                                        $(trdelivery).addClass("open");
+                              }
+                    });
           }
           $('[data-bs-toggle="tooltip"]').tooltip();
 });
@@ -1482,6 +1515,13 @@ edit_payment = function(id, el, type) {
                                         $("#modal-edit-payment-delivery").modal(
                                                   "show");
                                         $("#modal-edit-payment-delivery").data(
+                                                  "menu",
+                                                  "Invoice");
+                              } else if (type == "Pembelian") {
+                                        $("#modal-edit-payment-pembelian")
+                                                  .modal(
+                                                            "show");
+                                        $("#modal-edit-payment-pembelian").data(
                                                   "menu",
                                                   "Invoice");
 
@@ -2256,6 +2296,11 @@ $("#btn-print-po").click(function(i) {
           $("#modal-print-po").modal("hide");
 
 })
+
+edit_po = function(id, el) {
+          window.location = "<?= base_url() ?>admin/sales/invoice/po_edit/" + id;
+          return;
+}
 </script>
 
 

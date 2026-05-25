@@ -516,6 +516,7 @@ class PembelianModel extends Model
             $builder = $this->db->table("payment");
             $builder->select('*'); 
             $builder->join("users","users.id = payment.created_user ","left"); 
+            $builder->join("method","MethodId = PaymentMethod ","left"); 
             $builder->where('PaymentRef',$row->POId); 
             $builder->where('PaymentRefType',"Pembelian");
             $builder->orderby('PaymentDoc', '1'); 
@@ -524,15 +525,48 @@ class PembelianModel extends Model
             $payment_total = 0;
             $performa_total = 0; 
             foreach($payment as $row_payment){  
+                $bukti = "-";
+                $folder_utama = 'assets/images/payment/'.$row_payment->PaymentRefType.'/'.$row_payment->PaymentRef.'/sumber'; 
+                //Buat folder berdasarkan id
+                if (!file_exists($folder_utama)) {
+                    mkdir($folder_utama, 0777, true);  
+                }  
+                $files = scandir($folder_utama);
+                foreach ($files as $file) {
+                    if ($file != '.' && $file != '..') {
+                        if (strpos($file, $row_payment->PaymentId) === 0) {
+                            $filepath = $folder_utama.'/' . $file;
+                            $filesize = filesize($folder_utama. '/' . $file); 
+                            $filetype = mime_content_type($folder_utama. '/' . $file);
+                            $bukti = '  
+                                                <button class="radius-8 bg-primary-light text-primary-focus fw-bold text-xxs p-4 text-hover-primary-600" onclick="view_file(this)" data-file="'.base_url().$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
+                                                <i class="ri-eye-line"></i> Lihat bukti
+                                                </button>  '; 
+                        }
+                    }
+                }   
+
                 if($row_payment->PaymentStatus == "0"){ 
+                    $statusdoc = 'Pembelian';
                     $action = '
-                    <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah data pembayaran" onclick="request_payment_edit('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                    <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan data pembayaran" onclick="request_payment_delete('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-circle-xmark"></i></span>';
-                    $transfer_from = '<td class="detail">-</td>';
-                    $status =  '<span class="badge text-bg-info me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Request by '.ucwords($row_payment->username).'</span>'; 
-                    $bukti = '';
+                    <div class="d-flex align-items-center gap-1 justify-content-center"> 
+                    <a onclick="edit_payment('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"
+                        class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Ubah Payment">
+                        <iconify-icon icon="lucide:edit"></iconify-icon>
+                    </a>
+                    <a onclick="delete_payment('.$row_payment->PaymentId.',this,\''.$statusdoc .'\')"
+                        class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Hapus Payment">
+                        <iconify-icon icon="lucide:trash-2">
+                        </iconify-icon>
+                    </a> 
+                    </div>
+                    ';
+
+
+                    $transfer_from = '<td class="detail">-</td>'; 
+                    $status =  '<span class="bg-warning-focus text-warning-main px-8 py-2 radius-8 fw-medium text-xxs" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Menunggu Approval">Menunggu Approval</span>';   
+                    $buktiterima = "-";
                 }else{ 
-                    $bukti = '';
                     $action = '
                     <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak data pembayaran" onclick="print_payment('.$row_payment->PaymentId.',this,\'Survey\')"><i class="fa-solid fa-print"></i></span>';
                     $transfer_from = '<td class="detail">  
@@ -540,138 +574,121 @@ class PembelianModel extends Model
                         <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentFromRek.'</div>
                         <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentFromName.'</div>
                     </td> ';
-                    $status = '<span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Aproved">Aproved by '.$row_payment->PaymentApproved.'</span>'; 
-
-                    $folder_utama = 'assets/images/payment'; 
-                    //Buat folder berdasarkan id
-                    if (!file_exists($folder_utama."/".$row_payment->PaymentId)) {
-                        mkdir($folder_utama."/".$row_payment->PaymentId, 0777, true);  
-                    } 
-                    $files = scandir($folder_utama."/".$row_payment->PaymentId);
-                    foreach ($files as $file) {
-                        if ($file != '.' && $file != '..') {
-                            $filepath = $folder_utama."/".$row_payment->PaymentId . '/' . $file;
-                            $filesize = filesize($folder_utama."/".$row_payment->PaymentId . '/' . $file); 
-                            $filetype = mime_content_type($folder_utama."/".$row_payment->PaymentId . '/' . $file);
-                            $bukti = '  
-                                                    <a onclick="view_file(this)" data-file="'.$filepath.'" data-type="'.$filetype.'" data-name="'.$file.'">
-                                                        <i class="fa-solid fa-eye"></i> Lihat bukti
-                                                    </a>  ';
-                        }
-                    }   
+                    $status = '<span class="badge text-bg-success me-1 pointer" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-title="Aproved">Aproved by '.$row_payment->PaymentApproved.'</span>';  
+                    
+                    $buktiterima = "-";
                 }  
 
-                if($row_payment->PaymentType == "Cash"){
+                if($row_payment->PaymentMethod == "0"){
                     $transfer_to = ' 
                     <td class="detail">  
-                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
+                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->MethodName.'</div>
                     </td>';
                 }else{ 
                     $transfer_to = ' 
                     <td class="detail">  
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-building-columns" style="width:20px"></i>'.$row_payment->PaymentToBank.'</div>
-                        <div class="text-detail-3 pb-1"><i class="fa-solid fa-credit-card" style="width:20px"></i>'.$row_payment->PaymentToRek.'</div>
-                        <div class="text-detail-3"><i class="fa-solid fa-user" style="width:20px"></i>'.$row_payment->PaymentToName.'</div>
+                        <div class="text-detail-3 pb-1">'.$row_payment->MethodName.'</div> 
                     </td>';
                 }
                 $payment_total += $row_payment->PaymentTotal; 
                 $html_payment_detail .= '
                     <tr>
                         <td class="action-td no-border">'.$action.'</td>
-                        <td class="detail">'.$row_payment->PaymentCode.'</td>
+                        <td class="detail"><span class="text-primary-600 fw-bold">'.$row_payment->PaymentCode.'</span></td>
                         <td class="detail">'.date_format(date_create($row_payment->PaymentDate),"d M Y").'</td>
                         <td class="detail">'.$status.'</td>  
                         <td class="detail">'.$row_payment->PaymentType.'</td>
-                       '. $transfer_to.'
-                       '. $transfer_from.' 
-                        <td class="detail">'.$bukti.'</td> 
+                        '. $transfer_to.'
                         <td class="detail">Rp. '.number_format($row_payment->PaymentTotal,0, ',', '.').'</td>
+                        <td class="detail">'.$bukti.'</td>  
                     </tr>';
                  
             
             }  
              
             if($payment_total == 0){
-                $html_payment = ' 
-                <span class="fa-stack small">
-                    <i class="fa-regular fa-circle fa-stack-2x text-secondary"></i>
-                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span>';
+                $html_payment = '  
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:payment-02" class="text-primary-light text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Belum ada pembayaran" ></iconify-icon> 
+                </button>   
+                 ';
                 $html_payment_detail .= ' 
                 <div class="d-inline-block p-8 pe-16 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7" role="alert">
                 <span class="text-head-3">
                     <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
                     Belum ada pembayaran yang dibuat dari dokumen ini,<a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->POId.',this,\'Pembelian\')">Buat Pembayaran</a> 
                 </span>
-            </div>
-            '; 
+            </div> '; 
             }else if($payment_total < $row->POGrandTotal){  
-                $html_payment = ' 
-                <span class="fa-stack small">
-                    <i class="fa-regular fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span>';
+                
+                $html_payment = '
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:payment-02" class="text-warning text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Belum Selesai" ></iconify-icon> 
+                </button>   ';
                 $html_payment_detail = '
-                <table class="table detail-payment">
+                <table class="table detail-payment shadow-7">
                     <thead>
                         <tr>
                             <th class="detail" style="width:70px">Action</th>
                             <th class="detail">No. Pembayaran</th>
                             <th class="detail">Tanggal</th>
                             <th class="detail">Status</th> 
-                            <th class="detail">Tipe</th>
-                            <th class="detail">Tujuan</th> 
-                            <th class="detail">Sumber</th>
-                            <th class="detail">Bukti Transaksi</th>
+                            <th class="detail">Metode</th>
+                            <th class="detail">Sumber</th> 
                             <th class="detail">Total</th>
+                            <th class="detail">Bukti</th> 
                         </tr>
                     </thead>
                     <tbody>'.$html_payment_detail.'
                     </tbody>
                 </table> 
-                <div class="alert alert-warning p-2 m-1" role="alert">
+                <div class="p-8 bg-warning-50 radius-8 border-start-width-3-px border-warning-main border-top-0 border-end-0 border-bottom-0 shadow-7 d-inline" role="alert">
                     <span class="text-head-3">
                         <i class="fa-solid fa-triangle-exclamation text-warning me-2" style="font-size:0.75rem"></i>
-                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini, 
-                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->POId.',this,\'Pembelian\')">Ajukan pembayaran</a> 
+                        Masih ada sisa pembayaran yang perlu dibuat dari dokumen ini,  
+                        <a class="text-head-3 text-primary" style="cursor:pointer" onclick="request_payment('.$row->POId.',this,\'Pembelian\')">Buat Pembayaran</a> 
                     </span>
                 </div> ';
+                
             } else{   
+                
                 $html_payment = ' 
-                <span class="fa-stack small">
-                    <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
-                    <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                </span>';
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:payment-02" class="text-success text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Selesai" ></iconify-icon> 
+                </button>   ';
                 $html_payment_detail = '
-                    <table class="table detail-payment">
+                    <table class="table detail-payment shadow-7">
                         <thead>
                             <tr>
                                 <th class="detail" style="width:70px">Action</th>
                                 <th class="detail">No. Pembayaran</th>
                                 <th class="detail">Tanggal</th>
                                 <th class="detail">Status</th> 
-                                <th class="detail">Tipe</th>
-                                <th class="detail">Tujuan</th> 
-                                <th class="detail">Sumber</th>
-                                <th class="detail">Bukti Transaksi</th>
+                                <th class="detail">Metode</th>
+                                <th class="detail">Sumber</th> 
                                 <th class="detail">Total</th>
+                                <th class="detail">Bukti</th> 
                             </tr>
                         </thead>
                         <tbody>'.$html_payment_detail.'
                         </tbody>
                     </table>';
-            }
-        }  
-        if($total){
-            return $payment_total;
-        }else{
+            } 
+        }
+
+        if($total){ 
+            return  $payment_total;
+        }else{ 
             if($header){
-                return $html_payment;
+                return  $html_payment;
             }else{
-                return $html_payment_detail; 
+                return  $html_payment_detail;
+
             }
-        }  
+        } 
     } 
+
+    
     function get_data_delivery_pembelian($row,$header = false){
         $delivery = "";
         $delivery_detail = ""; 
@@ -734,7 +751,7 @@ class PembelianModel extends Model
             </td>
             <td class="detail">Rp. '.number_format($row_delivery->DeliveryTotal,0).'</td>
             </tr> 
-            <tr class="child-row delivery d-none" data-id="'.$row_delivery->DeliveryId.'">
+            <tr class="child-row pembelian d-none" data-id="'.$row_delivery->DeliveryId.'">
                 <td class="detail" colspan="10">
                     <div class="view-detail-1" style="display:none">
                         <div class="list-detail-1 pb-3">
@@ -1043,6 +1060,8 @@ class PembelianModel extends Model
         $builder->join("template_footer","pembelian.TemplateId = template_footer.TemplateFooterId","left");
         $builder->join("project",'project.ProjectId=pembelian.ProjectId',"left"); 
         $builder->join("store","pembelian.StoreId = store.StoreId","left"); 
+        $builder->join("users","id = POAdmin","left");
+        $builder->join("customer","invoice.CustomerId = customer.CustomerId","left");
         $builder->where('POId',$id);  
         return $builder->get()->getRow();  
     } 
@@ -1119,144 +1138,150 @@ class PembelianModel extends Model
         }
 
     } 
-    function update_data_pembelian($data,$id){ 
-        $header = $data["header"];  
-        $builder = $this->db->table("pembelian"); 
-        $builder->set('PODate', $header["PODate"]);    
-        $builder->set('VendorId', $header["VendorId"]);  
-        $builder->set('VendorName', $header["VendorName"]);  
-        $builder->set('TemplateId', $header["TemplateId"]); 
-        $builder->set('POSubTotal', $header["POSubTotal"]); 
-        $builder->set('POPPNTotal', $header["POPPNTotal"]); 
-        $builder->set('PODiscTotal', $header["PODiscTotal"]); 
-        $builder->set('POGrandTotal', $header["POGrandTotal"]);   
-        $builder->set('updated_user',user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
-        $builder->where('POId', $id); 
-        $builder->update(); 
+    function update_data_pembelian($data,$id){
+        $header = $data["header"];
+        $builder = $this->db->table("pembelian");
+        $builder->set('PODate', $header["PODate"]);
+        $builder->set('VendorId', $header["VendorId"]);
+        $builder->set('VendorName', $header["VendorName"]);
+        $builder->set('PONote', $header["PONote"]);
+        $builder->set('POCustName', $header["POCustName"]);
+        $builder->set('POCustTelp', $header["POCustTelp"]);
+        $builder->set('POAddress', $header["POAddress"]);
+        $builder->set('TemplateId', $header["TemplateId"]);
+        $builder->set('POSubTotal', $header["POSubTotal"]);
+        $builder->set('PODiscTotal', $header["PODiscTotal"]);
+        $builder->set('POGrandTotal', $header["POGrandTotal"]);
+        $builder->set('updated_user',user()->id);
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
+        $builder->where('POId', $id);
+        $builder->update();
 
         $builder = $this->db->table("pembelian_detail");
         $builder->where('PODetailRef',$id);
-        $builder->delete(); 
+        $builder->delete();
 
-       // ADD DETAIL PRODUK 
-        foreach($data["detail"] as $row){ 
-            $row["PODetailRef"] = $id;
-            $row["PODetailVarian"] = (isset($row["PODetailVarian"]) ? json_encode($row["PODetailVarian"]) : "[]");  
-            $builder = $this->db->table("pembelian_detail");
-            $builder->insert($row); 
+        // ADD DETAIL PRODUK
+        foreach($data["detail"] as $row){
+        $row["PODetailRef"] = $id;
+        $row["PODetailVarian"] = (isset($row["PODetailVarian"]) ? json_encode($row["PODetailVarian"]) : "[]");
+        $builder = $this->db->table("pembelian_detail");
+        $builder->insert($row);
         }
 
         //update status
         if($header["PORefType"] == "Invoice"){
-            $builder = $this->db->table('invoice_detail id');
-            $builder->select('id.ProdukId, id.InvDetailVarian, id.InvDetailQty, COALESCE(SUM(pd.PODetailQty), 0) AS PODetailQty');
-            $builder->join('pembelian_detail pd', 'id.ProdukId = pd.ProdukId AND id.InvDetailVarian = pd.PODetailVarian', 'left');
-            $builder->join('pembelian p', 'pd.PODetailRef = p.POId AND p.PORef = '.$header["PORef"].'', 'left');
-            $builder->where('id.InvDetailRef', $header["PORef"]);
-            $builder->groupBy('id.ProdukId, id.InvDetailVarian, id.InvDetailQty');
-            $datadiff = $builder->get()->getResult();
-            $some = true;
-            foreach($datadiff as $row){
-                if($row->PODetailQty < $row->InvDetailQty)$some = false;
-            } 
+        $builder = $this->db->table('invoice_detail id');
+        $builder->select('id.ProdukId, id.InvDetailVarian, id.InvDetailQty, COALESCE(SUM(pd.PODetailQty), 0) AS PODetailQty');
+        $builder->join('pembelian_detail pd', 'id.ProdukId = pd.ProdukId AND id.InvDetailVarian = pd.PODetailVarian', 'left');
+        $builder->join('pembelian p', 'pd.PODetailRef = p.POId AND p.PORef = '.$header["PORef"].'', 'left');
+        $builder->where('id.InvDetailRef', $header["PORef"]);
+        $builder->groupBy('id.ProdukId, id.InvDetailVarian, id.InvDetailQty');
+        $datadiff = $builder->get()->getResult();
+        $some = true;
+        foreach($datadiff as $row){
+        if($row->PODetailQty < $row->InvDetailQty)$some = false;
+        }
 
-            $invoiceModel = new InvoiceModel();  
-            if($some){ 
-                $invoiceModel->update_status_invoice_po($header["PORef"],2);
-            }else{
-                $invoiceModel->update_status_invoice_po($header["PORef"],1); 
-            } 
+        $invoiceModel = new InvoiceModel();
+        if($some){
+        $invoiceModel->update_status_invoice_po($header["PORef"],2);
+        }else{
+        $invoiceModel->update_status_invoice_po($header["PORef"],1);
+        }
         }
     }
     function delete_data_pembelian($id){
-        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();  
+        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();
 
-        $builder = $this->db->table("pembelian"); 
-        $builder->set('POStatus', 3);    
-        $builder->set('updated_user', user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('POId', $id); 
-        $builder->update();   
- 
+        $builder = $this->db->table("pembelian");
+        $builder->set('POStatus', 3);
+        $builder->set('updated_user', user()->id);
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
+        $builder->where('POId', $id);
+        $builder->update();
 
-        $statuslist = array(
-            0 => "New", // kolom action tidak dapat diurutkan
-            1 => "Proses", // kolom action tidak dapat diurutkan
-            2 => "Finish", // kolom name
-            3 => "Cancel", // kolom name 
-        );
-        //create Log action 
-        $activityModel = new ActivityModel(); 
-        $activityModel->insert(
-            array( 
-                "menu"=>"Pembelian",
-                "type"=>"Status",
-                "name"=> "Status Data Pembelian diubah dari ".$statuslist[$dataold->POStatus]." menjadi Cancel dengan nomor ".$dataold->POCode,
-                "desc"=> json_encode([]),
-                "created_user"=>user()->id, 
-                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
-            )
-        ); 
-
-        return JSON_ENCODE(array("status"=>true));
-    }
-    function update_status_pembelian($id,$status){   
-        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();  
-
-        $builder = $this->db->table("pembelian"); 
-        $builder->set('POStatus', $status);    
-        $builder->set('updated_user', user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('POId', $id); 
-        $builder->update();   
 
         $statuslist = array(
-            0 => "New", // kolom action tidak dapat diurutkan
-            1 => "Proses", // kolom action tidak dapat diurutkan
-            2 => "Finish", // kolom name
-            3 => "Cancel", // kolom name 
+        0 => "New", // kolom action tidak dapat diurutkan
+        1 => "Proses", // kolom action tidak dapat diurutkan
+        2 => "Finish", // kolom name
+        3 => "Cancel", // kolom name
+        );
+        //create Log action
+        $activityModel = new ActivityModel();
+        $activityModel->insert(
+        array(
+        "menu"=>"Pembelian",
+        "type"=>"Status",
+        "name"=> "Status Data Pembelian diubah dari ".$statuslist[$dataold->POStatus]." menjadi Cancel dengan nomor
+        ".$dataold->POCode,
+        "desc"=> json_encode([]),
+        "created_user"=>user()->id,
+        "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),
+        )
         );
 
-        //create Log action 
-        $activityModel = new ActivityModel(); 
+        return JSON_ENCODE(array("status"=>true));
+        }
+        function update_status_pembelian($id,$status){
+        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();
+
+        $builder = $this->db->table("pembelian");
+        $builder->set('POStatus', $status);
+        $builder->set('updated_user', user()->id);
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
+        $builder->where('POId', $id);
+        $builder->update();
+
+        $statuslist = array(
+        0 => "New", // kolom action tidak dapat diurutkan
+        1 => "Proses", // kolom action tidak dapat diurutkan
+        2 => "Finish", // kolom name
+        3 => "Cancel", // kolom name
+        );
+
+        //create Log action
+        $activityModel = new ActivityModel();
         $activityModel->insert(
-            array( 
-                "menu"=>"Pembelian",
-                "type"=>"Status",
-                "name"=> "Status Data Pembelian diubah dari ".$statuslist[$dataold->POStatus]." menjadi ".$statuslist[$status] . " dengan nomor ".$dataold->POCode,
-                "desc"=> json_encode([]),
-                "created_user"=>user()->id, 
-                "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
-            )
-        ); 
+        array(
+        "menu"=>"Pembelian",
+        "type"=>"Status",
+        "name"=> "Status Data Pembelian diubah dari ".$statuslist[$dataold->POStatus]." menjadi ".$statuslist[$status]
+        . " dengan nomor ".$dataold->POCode,
+        "desc"=> json_encode([]),
+        "created_user"=>user()->id,
+        "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),
+        )
+        );
 
         return JSON_ENCODE(array("status"=>true));
-    }  
-    
-    function update_comment($comment,$id){ 
-        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();  
-        
-        $builder = $this->db->table("pembelian"); 
-        $builder->set('PONote', $comment);    
-        $builder->set('updated_user', user()->id); 
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()')); 
-        $builder->where('POId', $id); 
-        $builder->update();   
+        }
 
-         //create Log action 
-         $activityModel = new ActivityModel(); 
-         $activityModel->insert(
-             array( 
-                 "menu"=>"Pembelian",
-                 "type"=>"Comment",
-                 "name"=> "Catatan Data pembelian diubah dari ".$dataold->PONote." menjadi ".$comment . " dengan nomor ".$dataold->POCode,
-                 "desc"=> json_encode([]),
-                 "created_user"=>user()->id, 
-                 "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
-             )
-         ); 
- 
-         return JSON_ENCODE(array("status"=>true));
+        function update_comment($comment,$id){
+        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();
+
+        $builder = $this->db->table("pembelian");
+        $builder->set('PONote', $comment);
+        $builder->set('updated_user', user()->id);
+        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
+        $builder->where('POId', $id);
+        $builder->update();
+
+        //create Log action
+        $activityModel = new ActivityModel();
+        $activityModel->insert(
+        array(
+        "menu"=>"Pembelian",
+        "type"=>"Comment",
+        "name"=> "Catatan Data pembelian diubah dari ".$dataold->PONote." menjadi ".$comment . " dengan nomor
+        ".$dataold->POCode,
+        "desc"=> json_encode([]),
+        "created_user"=>user()->id,
+        "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),
+        )
+        );
+
+        return JSON_ENCODE(array("status"=>true));
     }
 }

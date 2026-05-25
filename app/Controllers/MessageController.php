@@ -1038,7 +1038,8 @@ class MessageController extends BaseController
         $models = new PaymentModel();    
         $modelsTemplate = new TemplatefooterModel();    
         $modelsInvoice = new InvoiceModel();      
-        $modelsDelivery = new DeliveryModel();  
+        $modelsDelivery = new DeliveryModel();    
+        $modelsPembelian = new PembelianModel(); 
         $request = Services::request();
         $postData = $request->getPost(); 
         $data["payment"] = $models->get_data_payment($id);    
@@ -1074,25 +1075,22 @@ class MessageController extends BaseController
             return $this->response->setBody(view('admin/project/payment/edit_proforma.php',$data)); 
         } 
 
-        if($postData['type'] == "sample"){
-            $datasample = $models->get_data_sample($data["payment"]->PaymentRef); 
+        if($postData['type'] == "Pembelian"){
+            $datadelivery = $modelsPembelian->get_data_pembelian( $data["payment"]->PaymentRef); 
             $project = array(
-                "ProjectId"=>$datasample->ProjectId,
-                "PaymentRef"=>$datasample->SampleId, 
-                "PaymentRefType"=>"Sample",
-                "GrandTotal"=>$datasample->SampleGrandTotal,
-            );
-            $data["payments"] = $models->get_data_payment_by_sample($data["payment"]->PaymentRef);  
-        }
-        if($postData['type'] == "pembelian"){
-            $datapo = $models->getDataPO($id); 
-            $project = array(
-                "ProjectId"=>$datapo->ProjectId, 
-                "PaymentRef"=>$datapo->POId,
+                "ProjectId"=>$datadelivery->ProjectId, 
+                "PaymentRef"=>$datadelivery->POId, 
                 "PaymentRefType"=>"Pembelian",
-                "GrandTotal"=>$datapo->POGrandTotal,
+                "GrandTotal"=>$datadelivery->POGrandTotal,
             );
             $data["payments"] = $models->get_data_payment_by_pembelian($data["payment"]->PaymentRef);  
+            
+            $data["method"] = $models->getMethod(); 
+            $data["project"] = $project; 
+            $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
+            $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
+            $data["user"] = User(); //mengambil session dari mythauth
+            return $this->response->setBody(view('admin/project/payment/edit_payment_pembelian.php',$data));  
         }
         if($postData['type'] == "Delivery"){
             $datadelivery = $modelsDelivery->get_data_delivery( $data["payment"]->PaymentRef); 
@@ -1110,6 +1108,16 @@ class MessageController extends BaseController
             $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
             $data["user"] = User(); //mengambil session dari mythauth
             return $this->response->setBody(view('admin/project/payment/edit_payment_delivery.php',$data)); 
+        }
+        if($postData['type'] == "sample"){
+            $datasample = $models->get_data_sample($data["payment"]->PaymentRef); 
+            $project = array(
+                "ProjectId"=>$datasample->ProjectId,
+                "PaymentRef"=>$datasample->SampleId, 
+                "PaymentRefType"=>"Sample",
+                "GrandTotal"=>$datasample->SampleGrandTotal,
+            );
+            $data["payments"] = $models->get_data_payment_by_sample($data["payment"]->PaymentRef);  
         }
 
     }
@@ -1135,6 +1143,30 @@ class MessageController extends BaseController
         $data["method"] = $modelspayment->getMethod(); 
         $data["user"] = User(); //mengambil session dari mythauth
         return $this->response->setBody(view('admin/project/payment/add_payment_delivery.php',$data)); 
+    }
+
+    
+    public function payment_pembelian_add($id)
+    {      
+
+        $modelspayment = new PaymentModel();  
+        $request = Services::request();
+        $postData = $request->getPost(); 
+        
+        $models = new PembelianModel();  
+        $datadelivery = $models->get_data_pembelian($id); 
+        $project = array(
+            "ProjectId"=>$datadelivery->ProjectId, 
+            "PaymentRef"=>$datadelivery->POId, 
+            "PaymentRefType"=>"Pembelian",
+            "GrandTotal"=>$datadelivery->POGrandTotal,
+        );
+        $data["payment"] = $modelspayment->get_data_payment_by_pembelian($id);  
+    
+        $data["project"] = $project; 
+        $data["method"] = $modelspayment->getMethod(); 
+        $data["user"] = User(); //mengambil session dari mythauth
+        return $this->response->setBody(view('admin/project/payment/add_payment_pembelian.php',$data)); 
     }
     public function payment_request($id){    
         $request = Services::request();

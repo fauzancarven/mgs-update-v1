@@ -16,6 +16,7 @@ use App\Models\VendorModel;
 use App\Models\ProdukcategoryModel;
 use App\Models\SphModel;
 use App\Models\InvoiceModel; 
+use App\Models\PembelianModel; 
 
 
 use \App\Models\AuthgroupModel;
@@ -556,6 +557,56 @@ class AdminController extends BaseController
         return view('admin/project/po/add_view', $data); 
     }
 
+
+    public function invoice_pembelian_edit($id)
+    {     
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $modelinvoice = new InvoiceModel(); 
+        $modelpembelian = new PembelianModel(); 
+        $modelsproduk = new ProdukModel();
+        $modelsVendor = new VendorModel();
+        $datapo = $modelpembelian->get_data_pembelian($id);  
+        $datainvoice = $modelinvoice->get_data_invoice($datapo->PORef);   
+        
+        $arr_detail = $modelpembelian->get_data_pembelian_detail($id);  
+        $detail = array();  
+        foreach($arr_detail as $row){
+            if($row->PODetailType == "product" ){
+            $detail[] = array(  
+                "id" => $row->PODetailId, 
+                "produkid" => $row->ProdukId, 
+                "satuan_id"=> ($row->PODetailSatuanId == 0 ? "" : $row->PODetailSatuanId),
+                "satuan_text"=>$row->PODetailSatuanText, 
+                "price"=> $row->PODetailPrice,
+                "varian"=> JSON_DECODE($row->PODetailVarian,true),
+                "total"=> $row->PODetailTotal ,
+                "disc"=> $row->PODetailDisc ,
+                "qty_ref"=> $row->PODetailQty, 
+                "qty"=> $row->PODetailQty,
+                "text"=> $row->PODetailText,
+                "group"=> $row->PODetailGroup,
+                "type"=> $row->PODetailType,
+                "image_url"=>  
+                $modelsproduk->getproductimagedatavarian(  $row->ProdukId,$row->PODetailVarian,true)
+                    );
+                }
+        }; 
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Ubah Pembelian',
+            'menu' => "Sales",
+            'po' => $datapo,
+            'store' => $modelsstore->get()->getResult(), 
+            'admin' => $modelsuser->get()->getResult(),
+            'vendor' => $modelsVendor->get()->getResult(),
+            'detail' => $detail, 
+        ]; 
+        return view('admin/project/po/edit_view', $data);  
+    }
+
+    
     public function pembelian()
     {    
         $modelsstore = new StoreModel();
@@ -572,7 +623,6 @@ class AdminController extends BaseController
         ]; 
         return view('admin/project/po/index', $data); 
     }
-
     public function accounting(){    
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();

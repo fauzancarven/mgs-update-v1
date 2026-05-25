@@ -39,6 +39,7 @@ $routes->get('/admin/sales/invoice/edit/(:any)', 'AdminController::invoice_edit/
 $routes->get('/admin/sales/invoice/delivery_add/(:any)', 'AdminController::invoice_delivery_add/$1', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice/delivery_edit/(:any)', 'AdminController::invoice_delivery_edit/$1', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice/po_add/(:any)', 'AdminController::invoice_pembelian_add/$1', ['filter' => 'login']);
+$routes->get('/admin/sales/invoice/po_edit/(:any)', 'AdminController::invoice_pembelian_edit/$1', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
 $routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);

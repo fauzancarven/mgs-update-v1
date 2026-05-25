@@ -586,7 +586,7 @@ class DeliveryModel extends Model
                     <iconify-icon icon="hugeicons:payment-02" class="text-success text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Selesai" ></iconify-icon> 
                 </button>   ';
                 $html_payment_detail = '
-                    <table class="table detail-payment">
+                    <table class="table detail-payment shadow-7">
                         <thead>
                             <tr>
                                 <th class="detail" style="width:70px">Action</th>
