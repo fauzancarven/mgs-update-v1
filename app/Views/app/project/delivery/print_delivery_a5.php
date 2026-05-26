@@ -410,13 +410,6 @@ li {
                     echo $html_items;
                 ?>
                               </tbody>
-                              <tfoot>
-                                        <tr>
-                                                  <td colspan="4"
-                                                            style="border-top:1px solid;border-left:none;line-height:1;">
-                                                  </td>
-                                        </tr>
-                              </tfoot>
                     </table>
           </div>
           <div class="footer">
