@@ -378,10 +378,10 @@ li {
                     </table>
 
                     <?php
-            $col = 2;
-            if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++;
-            if($postdata["image"]==1) $col++;
-        ?>
+                            $col = 2;
+                            if((array_filter($detail, fn($item) => $item["disc"] > 0))) $col++;
+                            if($postdata["image"]==1) $col++;
+                        ?>
                     <table class="item">
                               <thead>
                                         <tr>
@@ -395,55 +395,55 @@ li {
                               </thead>
                               <tbody>
                                         <?php
-                    $no = 1;
-                    $huruf  = "A";
-                    $html_items = "";
-                    $discShow = array_filter($detail, fn($item) => $item["disc"] > 0);
-                    foreach($detail as $item){
+                                $no = 1;
+                                $huruf  = "A";
+                                $html_items = "";
+                                $discShow = array_filter($detail, fn($item) => $item["disc"] > 0);
+                                foreach($detail as $item){
 
-                        $arr_varian = json_decode($item["varian"]);
-                        $arr_badge = ""; 
-                        foreach($arr_varian as $varian){
-                            if($varian->varian == "vendor") continue; 
-                           // $arr_badge .= ' | <span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>';  
-                            $arr_badge .= ' | <span style="font-size:10px;">'.$varian->value.'</span>';  
-                        } 
-                        if($item["type"] == "product"){
-                            $html_items .= '
-                            <tr> 
-                                <td class="td-center">'.$no.'</td>
-                                <td class="ps-1">'.$item["text"].$arr_badge.'</td>
-                                <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
-                                <td class="td-center">
-                                    <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item["price"], 0, ',', '.').'</div>
-                                </td>
-                                '.($discShow ? "<td class='td-center'>
-                                    <div style='width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;'>Rp.</div> 
-                                    <div style='width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;'>".number_format($item["disc"], 0, ',', '.')."</div></td>" : "").'
-                                <td class="td-center">
-                                    <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
-                                    <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item["total"], 0, ',', '.').'</div>
-                                </td>
-                            </tr>';
-                            $no++;
-                        }else{
-                            
-                          
-                            $html_items .= '    <tr> 
-                                                    <td class="td-center text-bold">'.$huruf.'</td>
-                                                    <td class="ps-1 text-bold">'.$item["text"].'</td>
-                                                    <td class="td-center"></td>
-                                                    <td class="td-center"></td>
-                                                    '.($discShow ? "<td class='td-center'></td>" : "").'
-                                                    <td class="td-center"></td>
-                                                </tr>';
-                            $huruf++;
-                            $no = 1;
-                        }
-                    }
-                    echo $html_items;
-                ?>
+                                    $arr_varian = json_decode($item["varian"]);
+                                    $arr_badge = ""; 
+                                    foreach($arr_varian as $varian){
+                                        if($varian->varian == "vendor") continue; 
+                                    // $arr_badge .= ' | <span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>';  
+                                        $arr_badge .= ' | <span style="font-size:10px;">'.$varian->value.'</span>';  
+                                    } 
+                                    if($item["type"] == "product"){
+                                        $html_items .= '
+                                        <tr> 
+                                            <td class="td-center">'.$no.'</td>
+                                            <td class="ps-1">'.$item["text"].$arr_badge.'</td>
+                                            <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
+                                            <td class="td-center">
+                                                <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
+                                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item["price"], 0, ',', '.').'</div>
+                                            </td>
+                                            '.($discShow ? "<td class='td-center'>
+                                                <div style='width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;'>Rp.</div> 
+                                                <div style='width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;'>".number_format($item["disc"], 0, ',', '.')."</div></td>" : "").'
+                                            <td class="td-center">
+                                                <div style="width:15%;text-align:left;display:inline-block;line-height:1;margin:0;padding:0;">Rp.</div> 
+                                                <div style="width:75%;text-align:right;display:inline-block;line-height:1;margin:0;padding:0;">'.number_format($item["total"], 0, ',', '.').'</div>
+                                            </td>
+                                        </tr>';
+                                        $no++;
+                                    }else{
+                                        
+                                    
+                                        $html_items .= '    <tr> 
+                                                                <td class="td-center text-bold">'.$huruf.'</td>
+                                                                <td class="ps-1 text-bold">'.$item["text"].'</td>
+                                                                <td class="td-center"></td>
+                                                                <td class="td-center"></td>
+                                                                '.($discShow ? "<td class='td-center'></td>" : "").'
+                                                                <td class="td-center"></td>
+                                                            </tr>';
+                                        $huruf++;
+                                        $no = 1;
+                                    }
+                                }
+                                echo $html_items;
+                            ?>
                               </tbody>
                               <tfoot>
                                         <tr>

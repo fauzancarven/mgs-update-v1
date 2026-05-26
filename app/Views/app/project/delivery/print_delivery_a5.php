@@ -193,7 +193,7 @@ body {
 table.item {
           width: 100%;
           border-collapse: collapse;
-          table-layout: fixed;
+          /* table-layout: fixed; */
           line-height: 1.2;
 }
 
@@ -386,30 +386,37 @@ li {
                               </thead>
                               <tbody>
                                         <?php
-                    $no = 1;
-                    $huruf  = "A";
-                    $html_items = ""; 
-                    foreach($detail as $item){
+                                            $no = 1;
+                                            $huruf  = "A";
+                                            $html_items = ""; 
+                                            foreach($detail as $item){
 
-                        $arr_varian = json_decode($item->DeliveryDetailVarian);
-                        $arr_badge = ""; 
-                        foreach($arr_varian as $varian){
-                            if($varian->varian == "vendor") continue; 
-                           // $arr_badge .= ' | <span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>';  
-                            $arr_badge .= ' | <span style="font-size:10px;">'.$varian->value.'</span>';  
-                        }  
-                        $html_items .= '
-                        <tr> 
-                            <td class="td-center">'.$no.'</td>
-                            <td class="ps-1">'.$item->DeliveryDetailText.$arr_badge.'</td>
-                            <td class="td-center">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
-                            <td class="td-center">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
-                        </tr>';
-                        $no++;  
-                    }
-                    echo $html_items;
-                ?>
+                                                $arr_varian = json_decode($item->DeliveryDetailVarian);
+                                                $arr_badge = ""; 
+                                                foreach($arr_varian as $varian){
+                                                    if($varian->varian == "vendor") continue; 
+                                                // $arr_badge .= ' | <span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>';  
+                                                    $arr_badge .= ' | <span style="font-size:10px;">'.$varian->value.'</span>';  
+                                                }  
+                                                $html_items .= '
+                                                <tr> 
+                                                    <td class="td-center">'.$no.'</td>
+                                                    <td class="ps-1">'.$item->DeliveryDetailText.$arr_badge.'</td>
+                                                    <td class="td-center">'.number_format($item->DeliveryDetailQty, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
+                                                    <td class="td-center">'.number_format($item->DeliveryDetailQtySpare, 2, ',', '.').' '.$item->DeliveryDetailSatuanText.'</td> 
+                                                </tr>';
+                                                $no++;  
+                                            }
+                                            echo $html_items;
+                                        ?>
                               </tbody>
+                              <tfoot>
+                                        <tr>
+                                                  <td colspan="4"
+                                                            style="border-top:1px solid;border-left:none;line-height:1;">
+                                                  </td>
+                                        </tr>
+                              </tfoot>
                     </table>
           </div>
           <div class="footer">
