@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\ProdukModel;
+use App\Models\master\ProdukModel;
 
 use Config\Services; 
 

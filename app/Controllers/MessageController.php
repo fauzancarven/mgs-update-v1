@@ -2,16 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Models\StoreModel;
-use App\Models\UserModel;
-use App\Models\CustomerModel;
+use App\Models\master\StoreModel;
+use App\Models\master\UserModel;
+use App\Models\master\CustomerModel;
 use App\Models\ProvinceModel;
-use App\Models\VendorModel;
+use App\Models\master\VendorModel;
 use App\Models\DeliveryModel;
-use App\Models\ProdukModel;
-use App\Models\ProdukcategoryModel;
-use App\Models\ProdukvarianvalueModel;
-use App\Models\ProdukvarianModel;
+use App\Models\master\ProdukModel;
+use App\Models\master\produk\ProdukcategoryModel;
+use App\Models\master\produk\ProdukvarianvalueModel;
+use App\Models\master\produk\ProdukvarianModel;
 use App\Models\PembelianModel;
 use App\Models\InvoiceModel;
 use App\Models\ProjectModel;
@@ -30,13 +30,13 @@ class MessageController extends BaseController
     }
     public function store_add()
     { 
-        return $this->response->setBody(view('admin/store/add.php')); 
+        return $this->response->setBody(view('app/master/store/add.php')); 
     }
     public function store_edit($id)
     { 
         $models = new StoreModel();
         $data["store"] = $models->getWhere(['StoreId' => $id])->getRow();
-        return $this->response->setBody(view('admin/store/edit.php',$data)); 
+        return $this->response->setBody(view('app/master/store/edit.php',$data)); 
     }
     public function account_add()
     {  
@@ -46,7 +46,7 @@ class MessageController extends BaseController
         $base64 = $models->compressImageToBase64($source, $quality); 
 
         $data["_image"] = $base64;
-        return $this->response->setBody(view('admin/account/add.php',$data)); 
+        return $this->response->setBody(view('app/master/account/add.php',$data)); 
     }
     public function account_edit($id)
     { 
@@ -58,19 +58,19 @@ class MessageController extends BaseController
         $base64 = $models->compressImageToBase64($source, $quality);  
         $data["_image"] = $base64; 
         $data["_account"] = $account; 
-        return $this->response->setBody(view('admin/account/edit.php',$data)); 
+        return $this->response->setBody(view('app/master/account/edit.php',$data)); 
     }
     public function account_reset($id)
     { 
         $models = new UserModel();
         $account = $models->getWhere(['id' => $id], 1)->getRow();  
         $data["_account"] = $account; 
-        return $this->response->setBody(view('admin/account/reset.php',$data)); 
+        return $this->response->setBody(view('app/master/account/reset.php',$data)); 
     }
  
     public function customer_add()
     {   
-        return $this->response->setBody(view('admin/customer/add.php')); 
+        return $this->response->setBody(view('app/master/customer/add.php')); 
     }
     public function customer_edit($id)
     {   
@@ -85,11 +85,11 @@ class MessageController extends BaseController
         $data["_customer"] = $account; 
         $data["_province"] = $village;  
 
-        return $this->response->setBody(view('admin/customer/edit.php',$data)); 
+        return $this->response->setBody(view('app/master/customer/edit.php',$data)); 
     } 
     public function produk_add()
     {   
-        return $this->response->setBody(view('admin/produk/add.php')); 
+        return $this->response->setBody(view('app/master/produk/add.php')); 
     }
     public function produk_edit($id)
     {   
@@ -100,7 +100,7 @@ class MessageController extends BaseController
         $data["_produkdetail"] = $models->getproductdetail($data["_produk"]->ProdukId); 
         $data["_produkimage"] = $models->getproductimageAll($data["_produk"]->ProdukId); 
 
-        return $this->response->setBody(view('admin/produk/edit.php',$data)); 
+        return $this->response->setBody(view('app/master/produk/edit.php',$data)); 
     }
     public function produk_select()
     {   
@@ -115,8 +115,8 @@ class MessageController extends BaseController
             'varian_detail' => $variandetail->get()->getResult(),
             'varianlist' => ''
         ]; 
-        return $this->response->setBody(view('admin/produk/select_new.php',$data)); 
-        //return $this->response->setBody(view('admin/produk/select.php')); 
+        return $this->response->setBody(view('app/master/produk/select_new.php',$data)); 
+        //return $this->response->setBody(view('app/master/produk/select.php')); 
     }
     public function produk_select_new()
     {   
@@ -131,19 +131,19 @@ class MessageController extends BaseController
             'varian_detail' => $variandetail->get()->getResult(),
             'varianlist' => ''
         ]; 
-        return $this->response->setBody(view('admin/produk/select_new', $data)); 
+        return $this->response->setBody(view('app/master/produk/select_new', $data)); 
     }
 
 
     public function vendor_add()
     {   
-        return $this->response->setBody(view('admin/vendor/add.php')); 
+        return $this->response->setBody(view('app/master/vendor/add.php')); 
     }
     public function vendor_edit($id)
     { 
         $models = new VendorModel(); 
         $data["_vendor"] = $models->getWhere(['VendorId' => $id], 1)->getRow();     
-        return $this->response->setBody(view('admin/vendor/edit.php',$data)); 
+        return $this->response->setBody(view('app/master/vendor/edit.php',$data)); 
     }
 
 
@@ -151,7 +151,7 @@ class MessageController extends BaseController
     public function project_add()
     {    
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/add_project.php',$data)); 
+        return $this->response->setBody(view('app/project/add_project.php',$data)); 
     }
     public function project_edit($id)
     {    
@@ -161,7 +161,7 @@ class MessageController extends BaseController
         $models->join("store","store.StoreId=project.StoreId","left");
         $data["project"] = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth 
-        return $this->response->setBody(view('admin/project/edit_project.php',$data)); 
+        return $this->response->setBody(view('app/project/edit_project.php',$data)); 
     }
 
     public function survey_add()
@@ -169,7 +169,7 @@ class MessageController extends BaseController
         $modelscustomer = new CustomerModel();
         $modelsstore = new StoreModel(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/survey/add_survey.php',$data)); 
+        return $this->response->setBody(view('app/project/survey/add_survey.php',$data)); 
     }
     public function survey_edit($id)
     {     
@@ -180,7 +180,7 @@ class MessageController extends BaseController
         $data["project"] = $models->get_data_survey($id);
         $data["staff"] = $models->get_data_survey_staff($data["project"]->SurveyStaff); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/survey/edit_survey.php',$data)); 
+        return $this->response->setBody(view('app/project/survey/edit_survey.php',$data)); 
     }
     public function project_survey_add($id)
     {     
@@ -193,7 +193,7 @@ class MessageController extends BaseController
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
         $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/survey/add_project_survey.php',$data)); 
+        return $this->response->setBody(view('app/project/survey/add_project_survey.php',$data)); 
     }
     public function project_survey_edit($id)
     {     
@@ -206,19 +206,19 @@ class MessageController extends BaseController
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $data["project"]->CustomerId], 1)->getRow();
         $data["store"] = $modelsstore->getWhere(['StoreId' => $data["project"]->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/survey/edit_project_survey.php',$data)); 
+        return $this->response->setBody(view('app/project/survey/edit_project_survey.php',$data)); 
     }
     public function project_survey_finish($id)
     {     
         $models = new SurveyModel();  
         $data["project"] = $models->get_data_survey($id);
-        return $this->response->setBody(view('admin/project/survey/add_project_survey_finish.php',$data)); 
+        return $this->response->setBody(view('app/project/survey/add_project_survey_finish.php',$data)); 
     }
     public function project_survey_finish_edit($id)
     {     
         $models = new SurveyModel();  
         $data["project"] = $models->get_data_survey_finish($id);
-        return $this->response->setBody(view('admin/project/survey/edit_project_survey_finish.php',$data)); 
+        return $this->response->setBody(view('app/project/survey/edit_project_survey_finish.php',$data)); 
     }
 
 
@@ -227,7 +227,7 @@ class MessageController extends BaseController
     {     
 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/sample/add_sample.php',$data)); 
+        return $this->response->setBody(view('app/project/sample/add_sample.php',$data)); 
     }
     public function project_sample_add($id)
     {     
@@ -266,7 +266,7 @@ class MessageController extends BaseController
         }
 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/sample/add_project_sample.php',$data)); 
+        return $this->response->setBody(view('app/project/sample/add_project_sample.php',$data)); 
     }
 
     public function project_sample_edit($id)
@@ -301,7 +301,7 @@ class MessageController extends BaseController
         $data["template"] =$models->get_data_template_footer($project->TemplateId); 
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/sample/edit_project_sample.php',$data)); 
+        return $this->response->setBody(view('app/project/sample/edit_project_sample.php',$data)); 
     }
 
     public function project_sph_add($id)
@@ -384,7 +384,7 @@ class MessageController extends BaseController
         }
  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/sph/add_project_sph.php',$data)); 
+        return $this->response->setBody(view('app/project/sph/add_project_sph.php',$data)); 
     }
     public function project_sph_edit($id)
     {     
@@ -419,11 +419,11 @@ class MessageController extends BaseController
         $data["sample"] = $models->get_data_sample($project->SampleId); 
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/sph/edit_project_sph.php',$data)); 
+        return $this->response->setBody(view('app/project/sph/edit_project_sph.php',$data)); 
     }
     public function penawaran_add(){ 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/sph/add_sph.php',$data)); 
+        return $this->response->setBody(view('app/project/sph/add_sph.php',$data)); 
     }
     public function penawaran_edit($id)
     {     
@@ -457,7 +457,7 @@ class MessageController extends BaseController
         $data["detail"] =  $detail; 
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/sph/edit_sph.php',$data)); 
+        return $this->response->setBody(view('app/project/sph/edit_sph.php',$data)); 
     }
     
     public function project_po_add($id)
@@ -477,7 +477,7 @@ class MessageController extends BaseController
         ); 
         $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/po/add_project_po.php',$data)); 
+        return $this->response->setBody(view('app/project/po/add_project_po.php',$data)); 
     }
     public function project_po_edit($id)
     {     
@@ -556,7 +556,7 @@ class MessageController extends BaseController
         $data["detailref"] =  $detailref; 
         $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/po/edit_project_po',$data)); 
+        return $this->response->setBody(view('app/project/po/edit_project_po',$data)); 
     }
 
     public function po_add()
@@ -568,7 +568,7 @@ class MessageController extends BaseController
  
         $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/po/add_po.php',$data)); 
+        return $this->response->setBody(view('app/project/po/add_po.php',$data)); 
     }
     public function po_edit($id)
     {     
@@ -652,12 +652,12 @@ class MessageController extends BaseController
         $data["detailref"] =  $detailref; 
         $data["vendor"] = $modelsvendor->get()->getResult();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/po/edit_po.php',$data)); 
+        return $this->response->setBody(view('app/project/po/edit_po.php',$data)); 
     }
 
     public function invoice_add(){
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/add_invoice.php',$data));  
+        return $this->response->setBody(view('app/project/invoice/add_invoice.php',$data));  
     }
     public function invoice_edit($id)
     {     
@@ -691,7 +691,7 @@ class MessageController extends BaseController
         $data["detail"] =  $detail; 
         $data["customer"] =  $modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/edit_invoice.php',$data)); 
+        return $this->response->setBody(view('app/project/invoice/edit_invoice.php',$data)); 
     }
     public function project_invoice_add($id)
     {     
@@ -804,7 +804,7 @@ class MessageController extends BaseController
         }
  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/add_project_invoice.php',$data)); 
+        return $this->response->setBody(view('app/project/invoice/add_project_invoice.php',$data)); 
 
     }
     public function project_invoice_edit($id)
@@ -857,7 +857,7 @@ class MessageController extends BaseController
         $data["customer"] =$modelscustomer->getWhere(['CustomerId' => $project->CustomerId], 1)->getRow();
         $data["store"] = $modelsstore->getWhere(['StoreId' => $project->StoreId], 1)->getRow();
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/invoice/edit_project_invoice.php',$data)); 
+        return $this->response->setBody(view('app/project/invoice/edit_project_invoice.php',$data)); 
     }
     public function project_payment_add($id)
     {      
@@ -907,7 +907,7 @@ class MessageController extends BaseController
         }
         $data["project"] = $project; 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
+        return $this->response->setBody(view('app/02_sales/payment/add_payment.php',$data)); 
     }
     public function project_payment_edit($id)
     {     
@@ -960,7 +960,7 @@ class MessageController extends BaseController
         $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
         $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$id);    
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
+        return $this->response->setBody(view('app/project/payment/edit_payment.php',$data)); 
     }
     public function payment_add($id)
     {      
@@ -982,7 +982,7 @@ class MessageController extends BaseController
             $data["project"] = $datainvoice; 
             $data["method"] = $modelspayment->getMethod(); 
             $data["user"] = User(); //mengambil session dari mythauth
-            return $this->response->setBody(view('admin/project/payment/add_proforma.php',$data));  
+            return $this->response->setBody(view('app/project/payment/add_proforma.php',$data));  
         }
         if($postData['type'] == "sample"){
             $models = new SampleModel();  
@@ -1031,7 +1031,7 @@ class MessageController extends BaseController
         $data["project"] = $project; 
         $data["method"] = $modelspayment->getMethod(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/add_payment.php',$data)); 
+        return $this->response->setBody(view('app/02_sales/payment/add_payment.php',$data)); 
     }
     public function payment_edit($id)
     {     
@@ -1059,7 +1059,7 @@ class MessageController extends BaseController
             $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
             $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
             $data["user"] = User(); //mengambil session dari mythauth
-            return $this->response->setBody(view('admin/project/payment/edit_payment.php',$data)); 
+            return $this->response->setBody(view('app/project/payment/edit_payment.php',$data)); 
         } 
         if($postData['type'] == "Proforma"){ 
             $datainvoice = $modelsInvoice->get_data_invoice($data["payment"]->PaymentRef); 
@@ -1072,7 +1072,7 @@ class MessageController extends BaseController
             $data["payments"] = $models->get_data_proforma_by_ref($data["payment"]->PaymentRef);   
             $data["project"] = $datainvoice; 
 
-            return $this->response->setBody(view('admin/project/payment/edit_proforma.php',$data)); 
+            return $this->response->setBody(view('app/project/payment/edit_proforma.php',$data)); 
         } 
 
         if($postData['type'] == "Pembelian"){
@@ -1090,7 +1090,7 @@ class MessageController extends BaseController
             $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
             $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
             $data["user"] = User(); //mengambil session dari mythauth
-            return $this->response->setBody(view('admin/project/payment/edit_payment_pembelian.php',$data));  
+            return $this->response->setBody(view('app/project/payment/edit_payment_pembelian.php',$data));  
         }
         if($postData['type'] == "Delivery"){
             $datadelivery = $modelsDelivery->get_data_delivery( $data["payment"]->PaymentRef); 
@@ -1107,7 +1107,7 @@ class MessageController extends BaseController
             $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
             $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
             $data["user"] = User(); //mengambil session dari mythauth
-            return $this->response->setBody(view('admin/project/payment/edit_payment_delivery.php',$data)); 
+            return $this->response->setBody(view('app/project/payment/edit_payment_delivery.php',$data)); 
         }
         if($postData['type'] == "sample"){
             $datasample = $models->get_data_sample($data["payment"]->PaymentRef); 
@@ -1142,7 +1142,7 @@ class MessageController extends BaseController
         $data["project"] = $project; 
         $data["method"] = $modelspayment->getMethod(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/add_payment_delivery.php',$data)); 
+        return $this->response->setBody(view('app/02_sales/payment/add_payment_delivery.php',$data)); 
     }
 
     
@@ -1166,7 +1166,7 @@ class MessageController extends BaseController
         $data["project"] = $project; 
         $data["method"] = $modelspayment->getMethod(); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/add_payment_pembelian.php',$data)); 
+        return $this->response->setBody(view('app/02_sales/payment/add_payment_pembelian.php',$data)); 
     }
     public function payment_request($id){    
         $request = Services::request();
@@ -1180,7 +1180,7 @@ class MessageController extends BaseController
             $data["ref"] = $req->SurveyId;
             $data["refType"] = "Survey";
             $data["project"] = $req->ProjectId;
-            return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data));  
+            return $this->response->setBody(view('app/project/payment/add_request_payment.php',$data));  
         }
         if($postData['type'] == "delivery"){
             $req = $models->get_data_delivery($id);
@@ -1188,7 +1188,7 @@ class MessageController extends BaseController
             $data["ref"] = $req->DeliveryId;
             $data["refType"] = "Delivery";
             $data["project"] = $req->ProjectId;
-            return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data));  
+            return $this->response->setBody(view('app/project/payment/add_request_payment.php',$data));  
         }   
         if($postData['type'] == "Pembelian"){
             $models = new PembelianModel();  
@@ -1197,7 +1197,7 @@ class MessageController extends BaseController
             $data["ref"] = $req->POId;
             $data["refType"] = "Pembelian";
             $data["project"] = $req->ProjectId;
-            return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data)); 
+            return $this->response->setBody(view('app/project/payment/add_request_payment.php',$data)); 
             
         }
     }
@@ -1206,7 +1206,7 @@ class MessageController extends BaseController
         $postData = $request->getPost();  
         $models = new PaymentModel();   
         $data["payment"] = $models->get_data_request_payment($id);  
-        return $this->response->setBody(view('admin/project/payment/edit_request_payment.php',$data));  
+        return $this->response->setBody(view('app/project/payment/edit_request_payment.php',$data));  
      
     }
     public function project_payment_request($id){
@@ -1220,7 +1220,7 @@ class MessageController extends BaseController
             $data["ref"] = $req->DeliveryId;
             $data["refType"] = "Delivery";
             $data["project"] = $req->ProjectId;
-            return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data));  
+            return $this->response->setBody(view('app/project/payment/add_request_payment.php',$data));  
         }   
         if($postData['type'] == "pembelian"){
             $req = $models->get_data_pembelian($id);
@@ -1228,14 +1228,14 @@ class MessageController extends BaseController
             $data["ref"] = $req->POId;
             $data["refType"] = "Pembelian";
             $data["project"] = $req->ProjectId;
-            return $this->response->setBody(view('admin/project/payment/add_request_payment.php',$data)); 
+            return $this->response->setBody(view('app/project/payment/add_request_payment.php',$data)); 
             
         }
     }
     public function project_payment_request_edit($id){
         $models = new ProjectModel();       
         $data["request"] = $models->get_data_request_payment($id); 
-        return $this->response->setBody(view('admin/project/payment/edit_request_payment.php',$data));  
+        return $this->response->setBody(view('app/project/payment/edit_request_payment.php',$data));  
      
     }
     public function project_proforma_add($id)
@@ -1245,7 +1245,7 @@ class MessageController extends BaseController
         $data["project"] = $project; 
         $data["payment"] = $models->get_data_proforma_by_ref($id);  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/add_proforma.php',$data)); 
+        return $this->response->setBody(view('app/project/payment/add_proforma.php',$data)); 
     }
     public function project_proforma_edit($id)
     {     
@@ -1255,7 +1255,7 @@ class MessageController extends BaseController
         $data["project"] = $models->get_data_invoice($data["payment"]->PaymentRef);      
         $data["payments"] = $models->get_data_proforma_by_ref($data["payment"]->PaymentRef);   
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/payment/edit_proforma.php',$data)); 
+        return $this->response->setBody(view('app/project/payment/edit_proforma.php',$data)); 
     }
     public function project_delivery_add($id)
     {      
@@ -1339,7 +1339,7 @@ class MessageController extends BaseController
         $data["project"] = $project; 
         $data["detail"] =  $detail;  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/delivery/add_project_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/add_project_delivery',$data)); 
     } 
     public function project_delivery_edit($id)
     {      
@@ -1390,14 +1390,14 @@ class MessageController extends BaseController
         $data["detail"] =  $detail; 
         $data["template"] =$models->get_data_template_footer($delivery->TemplateId);   
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/edit_project_delivery',$data)); 
     }
     public function project_delivery_proses($id)
     {       
         $models = new ProjectModel();
         $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/delivery/add_proses_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/add_proses_delivery',$data)); 
     } 
     public function project_delivery_proses_edit($id) {  
         $models = new ProjectModel();
@@ -1410,7 +1410,7 @@ class MessageController extends BaseController
             $imgData = base64_encode(file_get_contents($file));  
             $data["image"]  = 'data:'.mime_content_type($file).';base64,'.$imgData; 
         }  
-        return $this->response->setBody(view('admin/project/delivery/edit_proses_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/edit_proses_delivery',$data)); 
     } 
     public function project_delivery_finish($id)
     {       
@@ -1435,7 +1435,7 @@ class MessageController extends BaseController
             );
         }; 
         $data["detail"] =  $detail; 
-        return $this->response->setBody(view('admin/project/delivery/add_finish_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/add_finish_delivery',$data)); 
     }
     public function project_delivery_finish_edit($id)
     {       
@@ -1471,7 +1471,7 @@ class MessageController extends BaseController
             $data["image"]  = "data:$jenis_gambar;base64,$base64"; 
         }  
         $data["detail"] =  $detail; 
-        return $this->response->setBody(view('admin/project/delivery/edit_finish_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/edit_finish_delivery',$data)); 
     }
 
 
@@ -1484,9 +1484,9 @@ class MessageController extends BaseController
         $data["project"] = $models->getWhere(['ProjectId' => $id], 1)->getRow(); 
         $data["user"] = User(); //mengambil session dari mythauth
         if($group==2){ 
-            return $this->response->setBody(view('admin/project/accounting/add_lain_lain.php',$data)); 
+            return $this->response->setBody(view('app/project/accounting/add_lain_lain.php',$data)); 
         }else{ 
-            return $this->response->setBody(view('admin/project/accounting/add_modal.php',$data)); 
+            return $this->response->setBody(view('app/project/accounting/add_modal.php',$data)); 
         }
     }
 
@@ -1496,9 +1496,9 @@ class MessageController extends BaseController
         $data["project"] = $models->getdataAccounting($id); 
         $data["user"] = User();
         if($group==2){ 
-            return $this->response->setBody(view('admin/project/accounting/edit_lain_lain.php',$data)); 
+            return $this->response->setBody(view('app/project/accounting/edit_lain_lain.php',$data)); 
         }else{ 
-            return $this->response->setBody(view('admin/project/accounting/edit_modal.php',$data)); 
+            return $this->response->setBody(view('app/project/accounting/edit_modal.php',$data)); 
         }
     } 
     public function delivery_add($id,$type){
@@ -1587,7 +1587,7 @@ class MessageController extends BaseController
         $data["project"] = $project; 
         $data["detail"] =  $detail;  
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/delivery/add_project_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/add_project_delivery',$data)); 
     }
     public function delivery_edit($id){
          
@@ -1636,7 +1636,7 @@ class MessageController extends BaseController
         $data["detail"] =  $detail; 
         $data["template"] =$models->get_data_template_footer($delivery->TemplateId);   
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/delivery/edit_project_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/edit_project_delivery',$data)); 
     }
  
     public function delivery_proses($id)
@@ -1644,7 +1644,7 @@ class MessageController extends BaseController
         $models = new DeliveryModel();
         $data["delivery"] = $models->get_data_delivery($id); 
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('admin/project/delivery/proses_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/proses_delivery',$data)); 
     } 
     public function edit_delivery_proses($id,$doc = null)
     {       
@@ -1666,7 +1666,7 @@ class MessageController extends BaseController
                 ); 
             } 
         }  
-        return $this->response->setBody(view('admin/project/delivery/edit_proses_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/edit_proses_delivery',$data)); 
     } 
     public function delivery_finish($id)
     {       
@@ -1696,6 +1696,6 @@ class MessageController extends BaseController
         }; 
        
         $data["detail"] =  $detail; 
-        return $this->response->setBody(view('admin/project/delivery/add_finish_delivery',$data)); 
+        return $this->response->setBody(view('app/project/delivery/add_finish_delivery',$data)); 
     } 
 }

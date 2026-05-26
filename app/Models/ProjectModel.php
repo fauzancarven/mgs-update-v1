@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\Codeigniter4Adapter;
 use CodeIgniter\Database\RawSql;
-use App\Models\ProdukModel;
+use App\Models\master\ProdukModel;
 use App\Models\SampleModel;
 
 class ProjectModel extends Model

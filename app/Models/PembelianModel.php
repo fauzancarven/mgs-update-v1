@@ -6,6 +6,7 @@ use CodeIgniter\Model;
 use CodeIgniter\Database\RawSql;
 use App\Models\NotificationModel; 
 use App\Models\ActivityModel;
+use App\Models\master;
 
 class PembelianModel extends Model
 { 
@@ -399,7 +400,7 @@ class PembelianModel extends Model
     }
 
     function get_data_detail_pembelian($row){
-        $modelsproduk = new ProdukModel();
+        $modelsproduk = new master\ProdukModel();
         $detail = array(); 
         $detailhtml = ' <table class="table detail-item m-0 shadow-7">
                             <thead>
@@ -692,7 +693,7 @@ class PembelianModel extends Model
     function get_data_delivery_pembelian($row,$header = false){
         $delivery = "";
         $delivery_detail = ""; 
-        $modelsproduk = new ProdukModel();
+        $modelsproduk = new master\ProdukModel();
         $modelsDelivery = new DeliveryModel();
         $builder = $this->db->table("delivery");
         $builder->select('*');    

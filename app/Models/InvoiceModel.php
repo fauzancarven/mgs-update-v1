@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;  
 use CodeIgniter\Database\RawSql;
-use App\Models\ProdukModel; 
+use App\Models\master\ProdukModel; 
 use App\Models\ActivityModel;
 use App\Models\DeliveryModel; 
 

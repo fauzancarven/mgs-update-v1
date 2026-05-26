@@ -4,16 +4,16 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\UserModel;
+use App\Models\master\UserModel;
 use App\Models\ProjectModel;
-use App\Models\StoreModel;
+use App\Models\master\StoreModel;
 use App\Models\DeliveryModel;
 use App\Models\ProjectcategoryModel;
-use App\Models\ProdukModel;
-use App\Models\ProdukvarianModel;
-use App\Models\ProdukvarianvalueModel;
-use App\Models\VendorModel; 
-use App\Models\ProdukcategoryModel;
+use App\Models\master\ProdukModel;
+use App\Models\master\produk\ProdukvarianModel;
+use App\Models\master\produk\ProdukvarianvalueModel;
+use App\Models\master\VendorModel; 
+use App\Models\master\produk\ProdukcategoryModel;
 use App\Models\SphModel;
 use App\Models\InvoiceModel; 
 use App\Models\PembelianModel; 
@@ -66,7 +66,7 @@ class AdminController extends BaseController
             'title' => 'Dashboard',
             'menu' => "", 
         ];  
-        return view('admin/dashboard/index', $data);
+        return view('app/01_dashboard/index', $data);
         
     }
 
@@ -86,7 +86,7 @@ class AdminController extends BaseController
             'menu' => "", 
             'users' =>  $users,
         ]; 
-        return view('admin/account/view', $data);
+        return view('app/master/account/view', $data);
         
     }
 
@@ -106,7 +106,7 @@ class AdminController extends BaseController
             'title' => 'Account',
             'menu' => "Master"
         ]; 
-        return view('admin/account/index', $data); 
+        return view('app/master/account/index', $data); 
     }
     public function store()
     {   
@@ -116,7 +116,7 @@ class AdminController extends BaseController
             'title' => 'Store',
             'menu' => "Master"
         ]; 
-        return view('admin/store/index', $data);
+        return view('app/master/store/index', $data);
         
     }
 
@@ -128,7 +128,7 @@ class AdminController extends BaseController
             'title' => 'Customer',
             'menu' => "Master"
         ]; 
-        return view('admin/customer/index', $data);
+        return view('app/master/customer/index', $data);
         
     }
     public function vendor()
@@ -139,7 +139,7 @@ class AdminController extends BaseController
             'title' => 'Vendor',
             'menu' => "Master"
         ]; 
-        return view('admin/vendor/index', $data);
+        return view('app/master/vendor/index', $data);
         
     }
     public function produk()
@@ -159,7 +159,7 @@ class AdminController extends BaseController
             'varian_detail' => $variandetail->get()->getResult(),
             'varianlist' => ''
         ]; 
-        return view('admin/produk/index', $data);
+        return view('app/master/produk/index', $data);
         
     }
     public function project()
@@ -176,7 +176,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/index', $data); 
+        return view('app/project/index', $data); 
     }
     
     public function survey()
@@ -193,7 +193,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/survey/index', $data); 
+        return view('app/project/survey/index', $data); 
     }
     public function sample()
     {    
@@ -209,7 +209,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/sample/index', $data); 
+        return view('app/project/sample/index', $data); 
     }
     public function penawaran()
     {    
@@ -225,7 +225,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/sph/index', $data); 
+        return view('app/02_sales/penawaran/index', $data); 
     }
     public function penawaran_new()
     {    
@@ -241,7 +241,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/sph/index2', $data); 
+        return view('app/02_sales/penawaran/index2', $data); 
     }
     public function penawaran_add()
     {    
@@ -257,7 +257,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/sph/add_view', $data); 
+        return view('app/02_sales/penawaran/add_view', $data); 
     }
     public function penawaran_edit($id)
     {    
@@ -298,7 +298,7 @@ class AdminController extends BaseController
             'detail' => $detail, 
 
         ];  
-        return view('admin/project/sph/edit_view', $data); 
+        return view('app/02_sales/penawaran/edit_view', $data); 
     }
 
     
@@ -317,7 +317,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/invoice/index', $data); 
+        return view('app/02_sales/invoice/index', $data); 
     } 
     public function invoice_add()
     {   
@@ -335,7 +335,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/invoice/add_view', $data);  
+        return view('app/02_sales/invoice/add_view', $data);  
     }
     
     public function invoice_edit($id)
@@ -377,7 +377,7 @@ class AdminController extends BaseController
             'detail' => $detail, 
 
         ];   
-        return view('admin/project/invoice/edit_view', $data); 
+        return view('app/02_sales/invoice/edit_view', $data); 
     }
     
     public function invoice_delivery_add($id)
@@ -435,7 +435,7 @@ class AdminController extends BaseController
             'admin' => $modelsuser->get()->getResult(),
             'detail' => $detail, 
         ]; 
-        return view('admin/project/delivery/add_view', $data);  
+        return view('app/project/delivery/add_view', $data);  
     }
 
     public function invoice_delivery_edit($id)
@@ -495,7 +495,7 @@ class AdminController extends BaseController
             'admin' => $modelsuser->get()->getResult(),
             'detail' => $detail, 
         ]; 
-        return view('admin/project/delivery/edit_view', $data);  
+        return view('app/project/delivery/edit_view', $data);  
     }
 
     public function invoice_pembelian_add($id)
@@ -554,7 +554,7 @@ class AdminController extends BaseController
             'vendor' => $modelsVendor->get()->getResult(),
             'detail' => $detail, 
         ]; 
-        return view('admin/project/po/add_view', $data); 
+        return view('app/project/po/add_view', $data); 
     }
 
 
@@ -603,7 +603,7 @@ class AdminController extends BaseController
             'vendor' => $modelsVendor->get()->getResult(),
             'detail' => $detail, 
         ]; 
-        return view('admin/project/po/edit_view', $data);  
+        return view('app/project/po/edit_view', $data);  
     }
 
     
@@ -621,7 +621,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/project/po/index', $data); 
+        return view('app/project/po/index', $data); 
     }
     public function accounting(){    
         $modelsstore = new StoreModel();
@@ -633,7 +633,7 @@ class AdminController extends BaseController
             'title' => 'Accounting',
             'menu' => "", 
         ]; 
-        return view('admin/accounting/index', $data); 
+        return view('app/accounting/index', $data); 
     }
 
     public function paymentrequest(){    
@@ -646,7 +646,7 @@ class AdminController extends BaseController
             'title' => 'Payment Request',
             'menu' => "Accounting", 
         ]; 
-        return view('admin/accounting/paymentrequest', $data); 
+        return view('app/accounting/paymentrequest', $data); 
     }
 
     public function delivery(){    
@@ -662,7 +662,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/delivery/index', $data); 
+        return view('app/delivery/index', $data); 
     }
 
     
@@ -679,7 +679,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/accounting/coa/index', $data); 
+        return view('app/accounting/coa/index', $data); 
     }
     public function transaction(){    
         $modelsstore = new StoreModel();
@@ -694,7 +694,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('admin/accounting/transaction/index', $data); 
+        return view('app/accounting/transaction/index', $data); 
     }
     // public function chat(){    
     //     $modelsstore = new StoreModel();
@@ -709,7 +709,7 @@ class AdminController extends BaseController
     //         'kategori' => $project->get()->getResult(),
     //         'admin' => $modelsuser->get()->getResult()
     //     ]; 
-    //     return view('admin/chat/index', $data); 
+    //     return view('app/chat/index', $data); 
     // }
     
     

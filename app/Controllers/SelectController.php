@@ -1,24 +1,24 @@
 <?php
 
 namespace App\Controllers; 
-use App\Models\CustomerModel;
+use App\Models\master\CustomerModel;
 use App\Models\CustomercategoryModel;
 use App\Models\ProvinceModel;
-use App\Models\StoreModel;
-use App\Models\UserModel;
+use App\Models\master\StoreModel;
+use App\Models\master\UserModel;
 use App\Models\ProjectModel;
 use App\Models\SampleModel;
 use App\Models\ProjectcategoryModel;
 use App\Models\SphModel;
 use App\Models\InvoiceModel;
 use App\Models\PembelianModel;
-use App\Models\ProdukModel;
-use App\Models\ProdukcategoryModel;
-use App\Models\ProdukvarianModel;
-use App\Models\ProdukvarianvalueModel;
-use App\Models\ProduksatuanModel;
-use App\Models\VendorcategoryModel;
-use App\Models\VendorModel;
+use App\Models\master\ProdukModel;
+use App\Models\master\produk\ProdukcategoryModel;
+use App\Models\master\produk\ProdukvarianModel;
+use App\Models\master\produk\ProdukvarianvalueModel;
+use App\Models\master\produk\ProduksatuanModel;
+use App\Models\master\VendorcategoryModel;
+use App\Models\master\VendorModel;
 use App\Models\TemplatefooterModel;
 use App\Models\LampiranModel;
 

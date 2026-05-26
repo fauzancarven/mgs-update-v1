@@ -1,18 +1,18 @@
 <?php
 
 namespace App\Controllers; 
-use App\Models\UserModel;
-use App\Models\StoreModel;
+use App\Models\master\UserModel;
+use App\Models\master\StoreModel;
 use App\Models\ProjectModel;
 use App\Models\SurveyModel;
 use App\Models\SampleModel;
 use App\Models\SphModel;
 use App\Models\InvoiceModel;
-use App\Models\CustomerModel;
+use App\Models\master\CustomerModel;
 use App\Models\DeliveryModel;
-use App\Models\ProdukModel;
+use App\Models\master\ProdukModel;
 use App\Models\PembelianModel;
-use App\Models\VendorModel;
+use App\Models\master\VendorModel;
 use App\Models\AccountingModel;
 use Config\Services; 
 

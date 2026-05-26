@@ -1,23 +1,23 @@
 <?php
 
 namespace App\Controllers;  
-use App\Models\StoreModel;
-use App\Models\UserModel;
-use App\Models\CustomerModel;
+use App\Models\master\StoreModel;
+use App\Models\master\UserModel;
+use App\Models\master\CustomerModel;
 use App\Models\CustomercategoryModel;
 use App\Models\ProjectModel;
 use App\Models\SurveyModel;
 use App\Models\SphModel;
 use App\Models\DeliveryModel;
 use App\Models\PaymentModel;
-use App\Models\ProdukunitModel;
-use App\Models\ProdukcategoryModel;
-use App\Models\ProdukvarianModel;
-use App\Models\ProdukvarianvalueModel;
+use App\Models\master\produk\ProdukunitModel;
+use App\Models\master\produk\ProdukcategoryModel;
+use App\Models\master\produk\ProdukvarianModel;
+use App\Models\master\produk\ProdukvarianvalueModel;
 use App\Models\InvoiceModel;
 use App\Models\PembelianModel; 
-use App\Models\ProdukModel;
-use App\Models\VendorModel;
+use App\Models\master\ProdukModel;
+use App\Models\master\VendorModel;
 use App\Models\LampiranModel;
 use App\Models\TemplatefooterModel; 
 use Config\Services; 
@@ -33,7 +33,7 @@ class ActionController extends BaseController
     }
     public function test(){
         $models = new ProjectModel(); 
-        return view('admin/test');
+        return view('app/test');
     }
     public function store_add(){   
         $request = Services::request();

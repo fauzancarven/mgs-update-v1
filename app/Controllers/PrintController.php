@@ -9,7 +9,7 @@ use App\Models\ProjectModel;
 use App\Models\PaymentModel;
 use App\Models\InvoiceModel;
 use App\Models\PembelianModel;
-use App\Models\ProdukModel;
+use App\Models\master\ProdukModel;
 use App\Models\HeaderModel;
 
 use Config\Services; 
@@ -38,7 +38,7 @@ class PrintController extends BaseController
                 $dompdf->getOptions()->setChroot('assets');   
                 
 
-                $html = view('admin/project/survey/printa4',$data);  
+                $html = view('app/project/survey/printa4',$data);  
                 //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();
@@ -64,7 +64,7 @@ class PrintController extends BaseController
                 $dompdf->getOptions()->setChroot('assets');   
                 
 
-                $html = view('admin/project/survey/printa4',$data);  
+                $html = view('app/project/survey/printa4',$data);  
                 //return $html;
                 $dompdf->loadHtml($html);
                 $dompdf->render();
@@ -114,7 +114,7 @@ class PrintController extends BaseController
                 $dompdf = new Dompdf($options);  
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/sph/print_sph_a4',$data);  
+                $html = view('app/02_sales/penawaran/print_sph_a4',$data);  
                 //return $html; 
                 $dompdf->loadHtml($html);
                 $dompdf->render(); 
@@ -164,10 +164,10 @@ class PrintController extends BaseController
                 if($data["postdata"]["kertas"] == "A5"){ 
                         $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                         $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);
-                        $html = view('admin/project/invoice/print_invoice_a5',$data); 
+                        $html = view('app/project/invoice/print_invoice_a5',$data); 
                 }else{  
                         $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
-                        $html = view('admin/project/invoice/print_invoice_a4',$data); 
+                        $html = view('app/02_sales/invoice/print_invoice_a4',$data); 
                 }
                 //return $html;
                 $dompdf->loadHtml($html);
@@ -195,7 +195,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/invoice/print_invoice_a5',$data); 
+                $html = view('app/project/invoice/print_invoice_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'INV_'.$data["project"]->CustomerName.'_'.$data["project"]->InvDate.'.pdf', [ 'Attachment' => false ]);
@@ -232,7 +232,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/payment/print_payment_a5',$data); 
+                $html = view('app/02_sales/payment/print_payment_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'PAY_INV_'.$data["project"]->CustomerName.'_'.$data["payment"]->PaymentDate.'.pdf', [ 'Attachment' => false ]);
@@ -322,10 +322,10 @@ class PrintController extends BaseController
                 if($data["postdata"]["kertas"] == "A5"){ 
                         $dompdf->set_paper(array(0,0,420, 620), 'landscape'); 
                         $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);  
-                        $html = view('admin/project/payment/print_payment_a5',$data); 
+                        $html = view('app/02_sales/payment/print_payment_a5',$data); 
                 }else{ 
                         $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);     
-                        $html = view('admin/project/payment/print_payment_a4',$data); 
+                        $html = view('app/project/payment/print_payment_a4',$data); 
                 }
                 $dompdf->loadHtml($html);
                 $dompdf->render();
@@ -368,7 +368,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/payment/print_proforma_a5',$data); 
+                $html = view('app/02_sales/payment/print_proforma_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render(); 
                 $dompdf->stream( 'PRO_INV_'.$data["project"]->CustomerName.'_'.$data["payment"]->PaymentDate.'.pdf', [ 'Attachment' => false ]);
@@ -395,7 +395,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/delivery/print_delivery_a5',$data); 
+                $html = view('app/project/delivery/print_delivery_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'DEL_INV_'.$data["delivery"]->CustomerName.'_'.$data["delivery"]->DeliveryDate.'.pdf', [ 'Attachment' => false ]);
@@ -420,7 +420,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('admin/project/po/print_po_a5',$data); 
+                $html = view('app/project/po/print_po_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'PO_'.$data["po"]->CustomerName.'_'.$data["po"]->PODate.'.pdf', [ 'Attachment' => false ]);
@@ -469,12 +469,12 @@ class PrintController extends BaseController
                         if(isset($postData["custom"])){ 
                                 $data["header_footer"]["detail"] = 'DISIAPKAN OLEH : ADMIN<br>DIRECT CONTACT : 0895-3529-92663<br>MAHIERA GLOBAL SOLUTION';
                         } 
-                        $html = view('admin/project/po/print_po_a4',$data);  
+                        $html = view('app/project/po/print_po_a4',$data);  
                 }else{ 
                         
                          $data["header_footer"] = $modelheader->get_header_a5($data["po"]->StoreId); 
                         $dompdf->set_paper(array(0,0,420, 620),  'landscape');
-                        $html = view('admin/project/po/print_po_a5',$data); 
+                        $html = view('app/project/po/print_po_a5',$data); 
                         
                 }
                 //return $html;

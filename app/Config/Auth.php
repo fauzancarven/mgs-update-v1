@@ -42,11 +42,11 @@ class Auth extends AuthConfig
     ];
 
     public $views = [
-        'login'           => 'admin/auth/login',
-        'register'        => 'admin/auth/register',
-        'forgot'          => 'admin/auth/forgot',
-        'emailForgot'     => 'admin/auth/forgot',
-        'reset'           => 'admin/auth/reset',
+        'login'           => 'app/master/auth/login',
+        'register'        => 'app/master/auth/register',
+        'forgot'          => 'app/master/auth/forgot',
+        'emailForgot'     => 'app/master/auth/forgot',
+        'reset'           => 'app/master/auth/reset',
     ];
     // private function clientgoogle()
     // { 

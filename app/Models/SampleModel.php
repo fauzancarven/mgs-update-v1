@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;  
 use CodeIgniter\Database\RawSql;
 use App\Models\ProjectModel; 
-use App\Models\ProdukModel; 
+use App\Models\master\ProdukModel; 
 
 class SampleModel extends Model
 {  
