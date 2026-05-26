@@ -395,7 +395,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('app/project/delivery/print_delivery_a5',$data); 
+                $html = view('app/02_sales/delivery/print_delivery_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'DEL_INV_'.$data["delivery"]->CustomerName.'_'.$data["delivery"]->DeliveryDate.'.pdf', [ 'Attachment' => false ]);

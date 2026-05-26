@@ -2,7 +2,7 @@
 
 namespace App\Controllers; 
 use App\Models\master\CustomerModel;
-use App\Models\CustomercategoryModel;
+use App\Models\master\CustomercategoryModel;
 use App\Models\ProvinceModel;
 use App\Models\master\StoreModel;
 use App\Models\master\UserModel;

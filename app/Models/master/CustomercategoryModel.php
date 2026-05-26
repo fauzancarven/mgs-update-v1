@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models; 
+namespace App\Models\master; 
 
 use CodeIgniter\Model; 
 class CustomercategoryModel extends Model

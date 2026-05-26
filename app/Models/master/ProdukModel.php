@@ -264,14 +264,20 @@ class ProdukModel extends Model
                 "code" => $row->ProdukCode,
                 "name" => $row->ProdukName,
                 "kategori" => $row->ProdukCategoryName,
-                "harga" => $price,
-                "varian" => '<a class="pointer text-decoration-underline text-head-3 btn-detail">Lihat Detail</a>',
+                "deskripsi" => $row->ProdukDetail,
+                "varian" => $vendorhtml,
+                "harga" => $price, 
                 "variandetail" => $this->getproductdetail($row->ProdukId),
-                "action" =>'  
-                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click('.$row->ProdukId.',this)"><i class="fa-solid fa-pen-to-square"></i></span>
-                        <div class="d-inline ">
-                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data Penawaran" onclick="delete_click('.$row->ProdukId.',this)"><i class="fa-solid fa-circle-xmark"></i></span>
-                        </div>',
+                "action" =>'   
+                    <a onclick="edit_click('.$row->ProdukId.')"
+                        class="w-32-px h-32-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center">
+                        <iconify-icon icon="lucide:edit"></iconify-icon>
+                    </a>
+                    <a onclick="delete_click('.$row->ProdukId.')"
+                        class="w-32-px h-32-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center">
+                        <iconify-icon icon="mingcute:delete-2-line">
+                        </iconify-icon>
+                    </a>  ',
             );
             array_push($datatable, $data_row);
         }
@@ -322,7 +328,7 @@ class ProdukModel extends Model
         } 
  
         // $builder->groupEnd();   
-        $perPage = 10;
+        $perPage = $filter["length"];
         $page = $filter["paging"]; // atau dapatkan dari parameter GET 
         $offset = ($page - 1) * $perPage; 
         $builder->limit($perPage, $offset);

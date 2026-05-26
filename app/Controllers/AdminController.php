@@ -86,7 +86,7 @@ class AdminController extends BaseController
             'menu' => "", 
             'users' =>  $users,
         ]; 
-        return view('app/master/account/view', $data);
+        return view('app/04_master/account/view', $data);
         
     }
 
@@ -106,7 +106,7 @@ class AdminController extends BaseController
             'title' => 'Account',
             'menu' => "Master"
         ]; 
-        return view('app/master/account/index', $data); 
+        return view('app/04_master/account/index', $data); 
     }
     public function store()
     {   
@@ -116,7 +116,7 @@ class AdminController extends BaseController
             'title' => 'Store',
             'menu' => "Master"
         ]; 
-        return view('app/master/store/index', $data);
+        return view('app/04_master/store/index', $data);
         
     }
 
@@ -128,7 +128,7 @@ class AdminController extends BaseController
             'title' => 'Customer',
             'menu' => "Master"
         ]; 
-        return view('app/master/customer/index', $data);
+        return view('app/04_master/customer/index', $data);
         
     }
     public function vendor()
@@ -139,7 +139,7 @@ class AdminController extends BaseController
             'title' => 'Vendor',
             'menu' => "Master"
         ]; 
-        return view('app/master/vendor/index', $data);
+        return view('app/04_master/vendor/index', $data);
         
     }
     public function produk()
@@ -159,7 +159,7 @@ class AdminController extends BaseController
             'varian_detail' => $variandetail->get()->getResult(),
             'varianlist' => ''
         ]; 
-        return view('app/master/produk/index', $data);
+        return view('app/04_master/produk/index', $data);
         
     }
     public function project()
@@ -435,7 +435,7 @@ class AdminController extends BaseController
             'admin' => $modelsuser->get()->getResult(),
             'detail' => $detail, 
         ]; 
-        return view('app/project/delivery/add_view', $data);  
+        return view('app/02_sales/delivery/add_view', $data);  
     }
 
     public function invoice_delivery_edit($id)
@@ -495,7 +495,7 @@ class AdminController extends BaseController
             'admin' => $modelsuser->get()->getResult(),
             'detail' => $detail, 
         ]; 
-        return view('app/project/delivery/edit_view', $data);  
+        return view('app/02_sales/delivery/edit_view', $data);  
     }
 
     public function invoice_pembelian_add($id)

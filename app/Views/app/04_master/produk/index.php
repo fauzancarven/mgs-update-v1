@@ -81,6 +81,8 @@
                                                   <th class="text-center">Image</th>
                                                   <th>Kategori</th>
                                                   <th>Nama Produk</th>
+                                                  <th>Deskripsi</th>
+                                                  <th>Varian</th>
                                                   <th>Harga</th>
                                                   <th>Action</th>
                                         </tr>
@@ -281,6 +283,12 @@ table = $('#data-table-item').DataTable({
                               data: "name"
                     },
                     {
+                              data: "deskripsi"
+                    },
+                    {
+                              data: "varian"
+                    },
+                    {
                               data: "harga",
                               className: "text-center"
                     },
@@ -319,7 +327,7 @@ table.on('click', '.btn-detail-item', function() {
 });
 
 $("#input-search-row").change(function() {
-          table.ajax.reload(null, false).responsive.recalc().columns.adjust();
+          table.page.len($("#input-search-row").val()).draw();
 })
 $("#input-search-data").keyup(function() {
           table.ajax.reload(null, false).responsive.recalc().columns.adjust();

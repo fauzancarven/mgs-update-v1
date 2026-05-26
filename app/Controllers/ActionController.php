@@ -4,7 +4,7 @@ namespace App\Controllers;
 use App\Models\master\StoreModel;
 use App\Models\master\UserModel;
 use App\Models\master\CustomerModel;
-use App\Models\CustomercategoryModel;
+use App\Models\master\CustomercategoryModel;
 use App\Models\ProjectModel;
 use App\Models\SurveyModel;
 use App\Models\SphModel;
