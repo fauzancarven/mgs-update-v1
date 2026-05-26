@@ -213,16 +213,8 @@ table.item td:nth-child(3) {
           width: 12%;
 }
 
-table.item td:nth-child(4) {
-          width: 12%;
-}
-
-table.item td:nth-child(5) {
-          width: 10%;
-}
-
 table.item td:last-child {
-          width: 14%;
+          width: 12%;
 }
 
 .item th {
