@@ -155,12 +155,14 @@ $('#date-payment').daterangepicker({
           // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
 });
 $(".number-price").each(function() {
-          new Cleave(this, {
+          var $el = $(this);
+          var instance = new Cleave(this, {
                     numeral: true,
                     delimeter: ",",
                     numeralDecimalScale: 0,
                     numeralThousandGroupStyle: "thousand"
           });
+          $el.data('cleave-instance', instance);
 });
 
 $("#type-payment").select2({
