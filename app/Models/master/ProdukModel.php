@@ -41,7 +41,6 @@ class ProdukModel extends Model
     protected $afterFind = [];
     protected $beforeDelete = [];
     protected $afterDelete = [];
-
  
   
     /**
@@ -153,6 +152,7 @@ class ProdukModel extends Model
         return $dt->generate();
     }
     public function load_datatable_produk($filter = null){
+        helper('tool_helper');  
         $querytext = "";
         $builder = $this->db->table($this->table);
         $builder->join("produk_category","produk_category.ProdukCategoryId=produk.ProdukCategoryId","left");   
@@ -225,7 +225,7 @@ class ProdukModel extends Model
             $vendorhtml="";
             $datavendor = json_decode($row->ProdukVendor); 
             foreach ($datavendor as $varian) {  
-                $vendorhtml .= '<span class="badge badge-3">'.$varian->text.'</span>';  
+                $vendorhtml .= '<span class="'.customColor(2).' radius-8 px-8 py-4 text-xxs fw-bold">'.$varian->text.'</span>';  
             } 
             $vendorhtml = '<div><span class="fw-bold font-std">Vendor</span><div class="d-flex gap-1 pb-2 flex-wrap overflow-x-auto">'.$vendorhtml.'</div></div>';
             $split_varian = json_decode($row->ProdukVarian); 
@@ -234,8 +234,9 @@ class ProdukModel extends Model
             $i = 0;
             foreach ($data as $varian) { 
                 $html_varian = "";
-                foreach ($varian->value as $value) {
-                    $html_varian .= '<span class="badge badge-'.fmod($i, 5).'">'.$value->text.'</span>';  
+                foreach ($varian->value as $value) { 
+                    $color = customColor(fmod($i,5));
+                    $html_varian .= '<span class="'.$color.' radius-8 px-8 py-4 text-xxs fw-bold">'.$value->text.'</span>'; 
                 }
                 $i++;
                 $vendorhtml .= '<div><span class="fw-bold font-std">'.$varian->varian.'</span><div class="d-flex gap-1 pb-2 flex-wrap overflow-x-auto">'.$html_varian.'</div></div>';
@@ -258,7 +259,15 @@ class ProdukModel extends Model
             $builder->where("ProdukDetailRef",$row->ProdukId); 
             $builder->orderby('produk_detail.ProdukDetailId', 'asc'); 
             $variandetail = $builder->get()->getResult(); 
-            
+            $htmldetail = '      
+            <div class="view-detail" style="display:none">
+                <div class="list-detail pb-3">
+                    <div class="text-primary-600 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                        <iconify-icon icon="ix:box-closed" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Detail Produk 
+                    </div> 
+                    '.$this->get_data_detail_produk($row).'
+                </div>
+            </div>';
             $data_row = array(
                 "image" => "<img src='".$this->getproductimageUrl($row->ProdukId)."?".date("Y-m-dH:i:s")."' alt='Gambar' class='image-produk w-75-px h-75-px rounded-3'>",
                 "code" => $row->ProdukCode,
@@ -267,6 +276,7 @@ class ProdukModel extends Model
                 "deskripsi" => $row->ProdukDetail,
                 "varian" => $vendorhtml,
                 "harga" => $price, 
+                "detail" => $htmldetail,
                 "variandetail" => $this->getproductdetail($row->ProdukId),
                 "action" =>'   
                     <a onclick="edit_click('.$row->ProdukId.')"
@@ -822,7 +832,7 @@ class ProdukModel extends Model
         );
     }
  
-
+    
     public function getproductdetail($id,$url = true){
         $builder = $this->db->table("produk_detail");
         $builder->join("produk_satuan","produk_satuan.ProdukSatuanId =  produk_detail.ProdukDetailSatuanId"); 
@@ -831,6 +841,7 @@ class ProdukModel extends Model
         $array_php = array();
         foreach($result as $row){ 
             $array_php[] = array(
+                'ProdukId' =>  $row->ProdukDetailRef,
                 'ProdukDetailId' =>  $row->ProdukDetailId,
                 'ProdukDetailBerat' => $row->ProdukDetailBerat,
                 'ProdukDetailSatuanId' => $row->ProdukDetailSatuanId,
@@ -908,7 +919,7 @@ class ProdukModel extends Model
                 'ProdukDetailHargaBeli' => $result->ProdukDetailHargaBeli,
                 'ProdukDetailHargaJual' => $result->ProdukDetailHargaJual,
                 'ProdukDetailVarian' =>  json_decode($result->ProdukDetailVarian), 
-                'ProdukDetailImage' => ($result->ProdukDetailImage == "" ? ($url == true ? $this->getproductimageUrl($id) : $this->getproductimage($id)): $result->ProdukDetailImage),
+                'ProdukDetailImage' => $this->getproductimagedatavarian($id,$result->ProdukDetailVarian,$url) ,
             ); 
         }else{
             return null;
@@ -938,5 +949,60 @@ class ProdukModel extends Model
         }
         return ($url == true ? base_url('assets/images/produk/default.png') : $this->ambil_gambar_base64('assets/images/produk/default.png'));  
     }
+
+    function get_data_detail_produk($row){ 
+        helper('tool_helper');  
+        $detail = array(); 
+        $dataitem = $this->getproductdetail($row->ProdukId);
+        $head2 = "";
+        $headcount = 0;
+        foreach ($dataitem[0]["ProdukDetailVarian"] as $key => $value) {
+            $head2 .= "<th class='detail text-center'>" . htmlspecialchars($key) . "</th>";
+            $headcount++;
+        }
+        
+        $detailhtml = ' <table class="table detail-item m-0 shadow-7">
+                            <thead>
+                                <tr>
+                                    <th class="detail text-center align-middle" rowspan="2" style="width: 35px;">Image</th>
+                                    <th class="detail text-center" colspan="'.$headcount.'">Varian</th> 
+                                    <th class="detail text-center align-middle" rowspan="2">Berat</th>
+                                    <th class="detail text-center align-middle" rowspan="2">Satuan</th>
+                                    <th class="detail text-center align-middle" rowspan="2">isi /M2</th>
+                                    <th class="detail text-center align-middle" rowspan="2">Harga Beli</th>
+                                    <th class="detail text-center align-middle" rowspan="2">Harga Jual</th>
+                                    <th class="detail text-center align-middle" rowspan="2">Action</th>
+                                </tr>
+                                '.$head2.'
+                            </thead>
+                            <tbody>'; 
+                            foreach($dataitem as $row_data){ 
+                                $arr_badge = "";
+                                    $arr_no = 0; 
+                                    foreach ($row_data["ProdukDetailVarian"] as $key => $value) {
+                                        $color = customColor(fmod($arr_no,5));
+                                        $arr_badge .= "<td class='detail'><span class='".$color." radius-8 px-8 py-4 text-xxs fw-bold'>".htmlspecialchars($value)."</span></th>";
+                                        $arr_no++;
+                                    }     
+                                
+                                $detailhtml .= ' <tr> 
+                                    <td class="detail" style="width:4rem">
+                                        <img src="'.$row_data["ProdukDetailImage"].'" alt="Gambar" class="image-produk w-50-px h-50-px rounded-3">
+                                    </td>
+                                    '.$arr_badge.' 
+                                    <td class="detail">'. $row_data["ProdukDetailBerat"].'</td> 
+                                    <td class="detail">'. $row_data["ProdukDetailSatuanText"].'</td> 
+                                    <td class="detail">'. $row_data["ProdukDetailPcsM2"].'</td> 
+                                    <td class="detail">'. $row_data["ProdukDetailHargaBeli"].'</td> 
+                                    <td class="detail">'. $row_data["ProdukDetailHargaJual"].'</td> 
+                                    <td class="detail"> </td> 
+                                </tr> ';
+                            } 
+        $detailhtml .= '
+        </tbody> 
+        </table>';
+
+        return $detailhtml; 
+    } 
 
 }

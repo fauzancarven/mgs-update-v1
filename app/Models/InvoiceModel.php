@@ -357,6 +357,8 @@ class InvoiceModel extends Model
         }
     }
     function get_data_detail_invoice($row){ 
+        helper('tool_helper'); 
+
         $modelsproduk = new ProdukModel();
         $detail = array(); 
         $detailhtml = ' <table class="table detail-item m-0 shadow-7">
@@ -382,7 +384,7 @@ class InvoiceModel extends Model
 
             foreach($arr_varian as $varian){
                 
-                $color = $this->customColor(fmod($arr_no,5));
+                $color = customColor(fmod($arr_no,5));
                 $arr_badge .= '<span class="'.$color.' radius-8 px-8 py-4 text-xxs fw-bold">'.$varian->varian.' : '.$varian->value.'</span>';
                 $arr_no++;
             }

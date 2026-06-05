@@ -16,7 +16,7 @@
 <?php endif; ?> -->
 
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-          <h6 class="fw-semibold mb-0">List Customer</h6>
+          <h6 class="fw-semibold mb-0">List Produk</h6>
           <ul class="d-flex align-items-center gap-2">
                     <li class="fw-medium">
                               <a href="<?= base_url() ?>" class="d-flex align-items-center gap-1 hover-text-primary">
@@ -78,6 +78,7 @@
                     <table id="data-table-item" class="table bordered-table mb-0 pb-2" style="width:100%">
                               <thead>
                                         <tr>
+                                                  <th></th>
                                                   <th class="text-center">Image</th>
                                                   <th>Kategori</th>
                                                   <th>Nama Produk</th>
@@ -256,7 +257,7 @@ table = $('#data-table-item').DataTable({
                     "processing": `<div class="loading-spinner"></div>`,
           },
           "order": [
-                    [1, "desc"]
+                    [2, "asc"]
           ],
           "processing": true,
           "serverSide": true,
@@ -271,6 +272,14 @@ table = $('#data-table-item').DataTable({
                     }
           },
           "columns": [{
+                              data: null,
+                              orderable: false,
+                              width: "20px",
+                              className: "p-0 ps-2",
+                              render: function(data, type, row) {
+                                        return '<a class="cursor-pointer text-head-3 btn-detail-item"> <iconify-icon icon="material-symbols:arrow-right-rounded" class="icon text-xxl" style="transition: transform 0.3s ease-in-out"> </iconify-icon></a>';
+                              }
+                    }, {
                               data: "image",
                               orderable: false,
                               className: "text-center",
@@ -315,14 +324,17 @@ table.on('click', '.btn-detail-item', function() {
 
           // Tampilkan data nested
           if (row.child.isShown()) {
-                    row.child.hide();
-                    $(this).find('i').removeClass('fa-rotate-270');
+                    $(tr).next().find('.view-detail').slideUp(500, function() {
+                              row.child.hide();
+                    });
+                    $(this).find('iconify-icon').attr('rotate', "0deg");
           } else {
-                    $(this).find('i').addClass('fa-rotate-270');
+                    $(this).find('iconify-icon').attr('rotate', "90deg");
                     var childRow = row.child(format(data)).show();
                     $(tr).next().addClass('child-row');
-                    $(tr).next().find('td:not(.detail)').addClass('p-0 ps-5');
-                    $(tr).find('td').addClass('no-border');
+                    $(tr).next().find('td:not(.detail)').addClass('p-0 ps-2');
+                    $(tr).next().find('.view-detail').slideDown(500);
+                    $(tr).next().find('td').addClass('no-border');
           }
 });
 
@@ -336,54 +348,58 @@ $("#btn-search-data").click(function() {
           table.ajax.reload(null, false).responsive.recalc().columns.adjust();
 })
 
+// function format(data) {
+//           var detailitem = data.variandetail;
+
+//           var tr = $(this).closest('tr');
+
+//           var tablecustom = $("<table class='table'>");
+//           var theadcustom = $("<thead>");
+//           var tbodycustom = $("<tbody>");
+
+//           Buat header tabel
+//           var headercustom = $("<tr>");
+//           headercustom.append($("<th class='detail'>").text("Gambar"));
+//           $.each(detailitem[0]["ProdukDetailVarian"], function(key, value) {
+//                     headercustom.append($("<th class='detail'>").text(key));
+//           });
+//           headercustom.append($("<th class='detail'>").text("Berat"));
+//           headercustom.append($("<th class='detail'>").text("Satuan"));
+//           headercustom.append($("<th class='detail'>").text("isi /M2"));
+//           headercustom.append($("<th class='detail'>").text("Harga Beli"));
+//           headercustom.append($("<th class='detail'>").text("Harga Jual"));
+//           headercustom.append($("<th class='detail'>").text("Action").attr("width", "100px"));
+//           theadcustom.append(headercustom);
+//           Buat baris tabel 
+//           for (var i = 0; i < detailitem.length; i++) {
+//                     var trcustom = $("<tr>");
+
+//                     trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["ProdukDetailImage"] +
+//                               "' alt='Gambar' class='image-produk'>"));
+//                     $.each(detailitem[i]["ProdukDetailVarian"], function(key, value) {
+//                               trcustom.append($("<td class='detail'>").text(value));
+//                     });
+//                     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailBerat"]));
+//                     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailSatuanText"]));
+//                     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailPcsM2"]));
+//                     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaBeli"]));
+//                     trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaJual"]));
+//                     trcustom.append($("<td class='detail'>").html(
+//                               `
+//             <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-pen-to-square"></i></span>`
+//                     ));
+//                     tbodycustom.append(trcustom);
+//           }
+
+//           Gabungkan tabel
+//           tablecustom.append(theadcustom);
+//           tablecustom.append(tbodycustom);
+
+//           return tablecustom;
+// }
+
 function format(data) {
-          var detailitem = data.variandetail;
-
-          var tr = $(this).closest('tr');
-
-          var tablecustom = $("<table class='table'>");
-          var theadcustom = $("<thead>");
-          var tbodycustom = $("<tbody>");
-
-          // Buat header tabel
-          var headercustom = $("<tr>");
-          headercustom.append($("<th class='detail'>").text("Gambar"));
-          $.each(detailitem[0]["ProdukDetailVarian"], function(key, value) {
-                    headercustom.append($("<th class='detail'>").text(key));
-          });
-          headercustom.append($("<th class='detail'>").text("Berat"));
-          headercustom.append($("<th class='detail'>").text("Satuan"));
-          headercustom.append($("<th class='detail'>").text("isi /M2"));
-          headercustom.append($("<th class='detail'>").text("Harga Beli"));
-          headercustom.append($("<th class='detail'>").text("Harga Jual"));
-          headercustom.append($("<th class='detail'>").text("Action").attr("width", "100px"));
-          theadcustom.append(headercustom);
-          // Buat baris tabel 
-          for (var i = 0; i < detailitem.length; i++) {
-                    var trcustom = $("<tr>");
-
-                    trcustom.append($("<td class='detail'>").html("<img src='" + detailitem[i]["ProdukDetailImage"] +
-                              "' alt='Gambar' class='image-produk'>"));
-                    $.each(detailitem[i]["ProdukDetailVarian"], function(key, value) {
-                              trcustom.append($("<td class='detail'>").text(value));
-                    });
-                    trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailBerat"]));
-                    trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailSatuanText"]));
-                    trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailPcsM2"]));
-                    trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaBeli"]));
-                    trcustom.append($("<td class='detail'>").text(detailitem[i]["ProdukDetailHargaJual"]));
-                    trcustom.append($("<td class='detail'>").html(
-                              `
-            <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data Penawaran" onclick="edit_click_detail(${detailitem[i]["ProdukDetailRef"]},${detailitem[i]["ProdukDetailId"]},this)"><i class="fa-solid fa-pen-to-square"></i></span>`
-                    ));
-                    tbodycustom.append(trcustom);
-          }
-
-          // Gabungkan tabel
-          tablecustom.append(theadcustom);
-          tablecustom.append(tbodycustom);
-
-          return tablecustom;
+          return data.detail;
 }
 var xhr_load_produk;
 

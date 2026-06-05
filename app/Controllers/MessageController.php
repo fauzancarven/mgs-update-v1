@@ -960,7 +960,7 @@ class MessageController extends BaseController
         $data["template"] = $models->get_data_template_footer($data["payment"]->TemplateId); 
         $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$id);    
         $data["user"] = User(); //mengambil session dari mythauth
-        return $this->response->setBody(view('app/project/payment/edit_payment.php',$data)); 
+        return $this->response->setBody(view('app/02_sales/payment/edit_payment.php',$data)); 
     }
     public function payment_add($id)
     {      
@@ -1059,7 +1059,7 @@ class MessageController extends BaseController
             $data["template"] = $modelsTemplate->get_data_template_footer($data["payment"]->TemplateId); 
             $data["image"] = $models->get_data_payment_image($data["payment"]->PaymentRefType,$data["payment"]->PaymentRef,$id);    
             $data["user"] = User(); //mengambil session dari mythauth
-            return $this->response->setBody(view('app/project/payment/edit_payment.php',$data)); 
+            return $this->response->setBody(view('app/02_sales/payment/edit_payment.php',$data)); 
         } 
         if($postData['type'] == "Proforma"){ 
             $datainvoice = $modelsInvoice->get_data_invoice($data["payment"]->PaymentRef); 
