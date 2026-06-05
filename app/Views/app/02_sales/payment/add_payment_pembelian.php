@@ -156,7 +156,7 @@ $(".number-price").each(function() {
 });
 
 $("#type-payment").select2({
-          dropdownParent: $('#modal-add-payment .modal-content'),
+          dropdownParent: $('#modal-add-payment-pembelian .modal-content'),
           tags: true,
 }).on("select2:select", function(e) {
           var data = e.params.data;
