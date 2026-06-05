@@ -919,7 +919,7 @@ class ProdukModel extends Model
                 'ProdukDetailHargaBeli' => $result->ProdukDetailHargaBeli,
                 'ProdukDetailHargaJual' => $result->ProdukDetailHargaJual,
                 'ProdukDetailVarian' =>  json_decode($result->ProdukDetailVarian), 
-                'ProdukDetailImage' => $this->getproductimagedatavarian($id,$result->ProdukDetailVarian,$url) ,
+                'ProdukDetailImage' =>  $result->ProdukDetailImage,
             ); 
         }else{
             return null;
@@ -928,9 +928,9 @@ class ProdukModel extends Model
     public function getproductimagedatavarian($id,$data,$url = true){
         $arr_varian = json_decode($data); 
         $data_varian = array();
-        foreach($arr_varian as $varian){ 
+        foreach($arr_varian as $varian){  
             $data_varian[] = array("varian"=>$varian->varian,  "value"=> $varian->value); 
-        }
+        } 
         $data_image = $this->getDetailProduk($data_varian,$id,$url) ; 
 
         if($data_image){
