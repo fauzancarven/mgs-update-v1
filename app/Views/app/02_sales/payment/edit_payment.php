@@ -199,9 +199,26 @@ $(".number-price").each(function() {
 });
 
 $("#type-payment").select2({
-          dropdownParent: $('#modal-edit-payment .modal-content'),
+          dropdownParent: $('#modal-add-payment .modal-content'),
           tags: true,
-});
+}).on("select2:select", function(e) {
+          var data = e.params.data;
+          var val_dp = parseInt(data.text.replace("DP", ""));
+          var instance = $('#total-payment').data('cleave-instance');
+          if (instance) {
+                    console.log(val_dp)
+                    if (isNaN(val_dp)) {
+                              console.log("nan")
+                              instance.setRawValue($("#sisa-payment").val().replace(/[^0-9]/g,
+                                        ''))
+                    } else {
+
+                              instance.setRawValue($("#sisa-payment").val().replace(/[^0-9]/g,
+                                                  '') / 100 *
+                                        val_dp)
+                    }
+          }
+})
 $('#type-payment').append(new Option('<?= $payment->PaymentType ?>', '<?= $payment->PaymentType ?>', true, true))
           .trigger('change');
 

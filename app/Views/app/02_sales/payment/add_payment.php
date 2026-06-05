@@ -191,18 +191,39 @@ $('#date-payment').daterangepicker({
           // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
 });
 $(".number-price").each(function() {
-          new Cleave(this, {
+          var $el = $(this);
+          var instance = new Cleave(this, {
                     numeral: true,
                     delimeter: ",",
                     numeralDecimalScale: 0,
                     numeralThousandGroupStyle: "thousand"
           });
+          $el.data('cleave-instance', instance);
 });
 
 $("#type-payment").select2({
           dropdownParent: $('#modal-add-payment .modal-content'),
           tags: true,
-});
+}).on("select2:select", function(e) {
+          var data = e.params.data;
+          var val_dp = parseInt(data.text.replace("DP", ""));
+          var instance = $('#total-payment').data('cleave-instance');
+          if (instance) {
+                    console.log(val_dp)
+                    if (isNaN(val_dp)) {
+                              console.log("nan")
+                              instance.setRawValue($("#sisa-payment").val().replace(/[^0-9]/g,
+                                        ''))
+                    } else {
+
+                              instance.setRawValue($("#sisa-payment").val().replace(/[^0-9]/g,
+                                                  '') / 100 *
+                                        val_dp)
+                    }
+          }
+})
+
+
 $("#method-payment").select2({
           dropdownParent: $('#modal-add-payment .modal-content'),
 });

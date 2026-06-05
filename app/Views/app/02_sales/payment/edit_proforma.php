@@ -164,9 +164,26 @@ $(".number-price").each(function() {
 });
 
 $("#type-payment").select2({
-          dropdownParent: $('#modal-edit-proforma .modal-content'),
+          dropdownParent: $('#modal-add-payment .modal-content'),
           tags: true,
-});
+}).on("select2:select", function(e) {
+          var data = e.params.data;
+          var val_dp = parseInt(data.text.replace("DP", ""));
+          var instance = $('#total-payment').data('cleave-instance');
+          if (instance) {
+                    console.log(val_dp)
+                    if (isNaN(val_dp)) {
+                              console.log("nan")
+                              instance.setRawValue($("#sisa-payment").val().replace(/[^0-9]/g,
+                                        ''))
+                    } else {
+
+                              instance.setRawValue($("#sisa-payment").val().replace(/[^0-9]/g,
+                                                  '') / 100 *
+                                        val_dp)
+                    }
+          }
+})
 $("#type-payment").val("<?= $payment->PaymentType ?>").trigger("change");
 $("#method-payment").select2({
           dropdownParent: $('#modal-edit-proforma .modal-content'),
@@ -219,13 +236,13 @@ $(".template-footer").each(function(index, el) {
                                         // CSRF Hash
                                         var csrfName = $(
                                                             '.txt_csrfname'
-                                                            )
+                                                  )
                                                   .attr(
                                                             'name'
-                                                            ); // CSRF Token name
+                                                  ); // CSRF Token name
                                         var csrfHash = $(
                                                             '.txt_csrfname'
-                                                            )
+                                                  )
                                                   .val(); // CSRF hash 
                                         return {
                                                   searchTerm: params
@@ -314,7 +331,7 @@ $(".template-footer").each(function(index, el) {
                                                             )
                                                             .select2(
                                                                       "data"
-                                                                      )[
+                                                            )[
                                                                       0
                                                             ]
                                                             [
@@ -336,7 +353,7 @@ $(".template-footer").each(function(index, el) {
                                         },
                                         success: function(
                                                   data
-                                                  ) {
+                                        ) {
                                                   //console.log(data); 
                                                   if (data["status"] ===
                                                             true
@@ -352,7 +369,7 @@ $(".template-footer").each(function(index, el) {
                                                             quill[type]
                                                                       .enable(
                                                                                 false
-                                                                                );
+                                                                      );
                                                             quill[type]
                                                                       .root
                                                                       .style
@@ -380,10 +397,10 @@ $(".template-footer").each(function(index, el) {
                                         url: "<?= base_url() ?>action/edit-data-template-footer/" +
                                                   $(
                                                             selectoption
-                                                            )
+                                                  )
                                                   .select2(
                                                             "data"
-                                                            )[
+                                                  )[
                                                             0
                                                   ]
                                                   ["id"],
@@ -393,7 +410,7 @@ $(".template-footer").each(function(index, el) {
                                                             )
                                                             .select2(
                                                                       "data"
-                                                                      )[
+                                                            )[
                                                                       0
                                                             ]
                                                             [
@@ -415,7 +432,7 @@ $(".template-footer").each(function(index, el) {
                                         },
                                         success: function(
                                                   data
-                                                  ) {
+                                        ) {
                                                   //console.log(data); 
                                                   if (data["status"] ===
                                                             true
@@ -431,7 +448,7 @@ $(".template-footer").each(function(index, el) {
                                                             quill[type]
                                                                       .enable(
                                                                                 false
-                                                                                );
+                                                                      );
                                                             quill[type]
                                                                       .root
                                                                       .style
@@ -495,7 +512,7 @@ $(".template-footer").each(function(index, el) {
                                                             },
                                                             success: function(
                                                                       data
-                                                                      ) {
+                                                            ) {
                                                                       //console.log(data); 
                                                                       if (data["status"] ===
                                                                                 true
@@ -503,13 +520,13 @@ $(".template-footer").each(function(index, el) {
                                                                                 $(selectoption)
                                                                                           .append(new Option(data[
                                                                                                               "data"
-                                                                                                              ]
+                                                                                                    ]
                                                                                                     [
                                                                                                               "TemplateFooterName"
                                                                                                     ],
                                                                                                     data[
                                                                                                               "data"
-                                                                                                              ]
+                                                                                                    ]
                                                                                                     [
                                                                                                               "TemplateFooterId"
                                                                                                     ],
@@ -518,7 +535,7 @@ $(".template-footer").each(function(index, el) {
                                                                                           ))
                                                                                           .trigger(
                                                                                                     'change'
-                                                                                                    );
+                                                                                          );
 
                                                                                 $(btnsave)
                                                                                           .hide();
@@ -530,7 +547,7 @@ $(".template-footer").each(function(index, el) {
                                                                                 quill[type]
                                                                                           .enable(
                                                                                                     false
-                                                                                                    );
+                                                                                          );
                                                                                 quill[type]
                                                                                           .root
                                                                                           .style
@@ -553,7 +570,7 @@ $(".template-footer").each(function(index, el) {
                                                   });
                                         } catch (
                                                   error
-                                                  ) {
+                                        ) {
                                                   Swal.showValidationMessage(
                                                             `Request failed: ${error["responseJSON"]['message']}`
                                                   );
@@ -642,11 +659,11 @@ $("#btn-add-payment").click(function() {
                                                   $("#modal-edit-proforma")
                                                             .modal(
                                                                       "hide"
-                                                                      );
+                                                            );
                                                   if ($("#modal-edit-proforma")
                                                             .data(
                                                                       "menu"
-                                                                      ) ==
+                                                            ) ==
                                                             "sample"
                                                   ) {
                                                             loader_datatable
@@ -654,10 +671,10 @@ $("#btn-add-payment").click(function() {
                                                   } else if (
                                                             $(
                                                                       "#modal-edit-proforma"
-                                                                      )
+                                                            )
                                                             .data(
                                                                       "menu"
-                                                                      ) ==
+                                                            ) ==
                                                             "Invoice"
                                                   ) {
                                                             table.ajax
