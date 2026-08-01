@@ -31,7 +31,7 @@
                                         class="d-flex align-items-center gap-1 hover-text-primary">
                                         <iconify-icon icon="flowbite:users-group-outline" class="icon text-lg">
                                         </iconify-icon>
-                                        Customer List
+                                        Produk List
                               </a>
                     </li>
           </ul>
@@ -58,7 +58,8 @@
                               </div>
                     </div>
                     <div class="d-flex flex-wrap align-items-center gap-3">
-                              <a onclick="add_click()" class="btn btn-sm btn-primary-600"><i class="ri-add-line"></i>
+                              <a onclick="add_click(this)" class="btn btn-sm btn-primary-600"><i
+                                                  class="ri-add-line"></i>
                                         Create Produk</a>
                     </div>
                     <!-- <div class="d-flex justify-content-between align-items-center">
@@ -114,6 +115,7 @@
         </div>
     </div>
 </div>   -->
+<div id="modal-message"></div>
 <div style="margin-bottom: 100px;"></div>
 <script>
 var paging = 1;
@@ -726,7 +728,7 @@ let isProcessingDelete = false;
 //         }
 //     });
 
-// }); 
+// });  
 
 add_click = function(el) {
           // INSERT LOADER BUTTON
@@ -769,6 +771,7 @@ add_click = function(el) {
                     }
           });
 }
+
 edit_click = function(id, el) {
           if (isProcessingEdit) {
                     return;

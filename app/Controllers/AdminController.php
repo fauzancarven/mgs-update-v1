@@ -696,6 +696,21 @@ class AdminController extends BaseController
         ]; 
         return view('app/accounting/transaction/index', $data); 
     }
+
+    
+    public function produk_add()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Produk add',
+            'menu' => "Produk", 
+        ]; 
+        return view('app/04_master/produk/add_view', $data); 
+    }
     // public function chat(){    
     //     $modelsstore = new StoreModel();
     //     $modelsuser = new UserModel();

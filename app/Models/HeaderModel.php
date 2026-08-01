@@ -275,7 +275,7 @@ class HeaderModel extends Model
                                     
                                 </td>
                                 <td style="padding-left:20px;padding-right:20px;">
-                                    <span>sentrabata@gmail.com</span>
+                                    <span>sentrabataindonesia@gmail.com</span>
                                 </td>
                                 <td>
                                     <div class="icon" style="background:#773e2f">
@@ -547,7 +547,7 @@ class HeaderModel extends Model
                                     
                                 </td>
                                 <td>
-                                    <span>Jl. Bakti Jaya Luk No.1, Bakti Jaya,<br>Kec. Setu, Kota Tangerang Selatan, Banten 15315</span>
+                                    <span>Jl. Siliwangi No.72, Pd. Benda, Kec. Pamulang, <br>Kota Tangerang Selatan, Banten 15416</span>
                                 </td>
                                 <td>
                                     <div class="icon" style="background:#be6141">
@@ -556,7 +556,7 @@ class HeaderModel extends Model
                                     
                                 </td>
                                 <td>
-                                    <span>sentrabata@gmail.com</span>
+                                    <span>sentrabataindonesia@gmail.com</span>
                                 </td>
                                 <td>
                                     <div class="icon" style="background:#be6141">

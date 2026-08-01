@@ -16286,3 +16286,24 @@ table.table.detail-item {
 .image-default-obi .action .btn i {
   font-size: 1rem;
 }
+
+.select2-container .select2-search--inline .select2-search__field {
+  height: 24px !important;
+  font-size: 0.75rem !important;
+  padding-left: 1rem !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+.select2-container .select2-search--inline .select2-search__field::-webkit-input-placeholder,
+.select2-container .select2-search--inline .select2-search__field::-moz-placeholder,
+.select2-container .select2-search--inline .select2-search__field:-ms-input-placeholder,
+.select2-container .select2-search--inline .select2-search__field::placeholder {
+  font-size: 14px !important;
+}
+
+.image-default-obi span.badge {
+  font-size: 0.75rem;
+  color: gray;
+  position: absolute;
+  bottom: 0;
+}

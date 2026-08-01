@@ -46,6 +46,7 @@ $routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);
 $routes->get('/admin/sales/project', 'AdminController::chat', ['filter' => 'login']);
 $routes->get('/admin/accounting/coa', 'AdminController::coa', ['filter' => 'login']);
 $routes->get('/admin/accounting/transaction', 'AdminController::transaction', ['filter' => 'login']);
+$routes->get('/admin/master/produk/add', 'AdminController::produk_add', ['filter' => 'login']);
 
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
 
