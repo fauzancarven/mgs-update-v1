@@ -195,7 +195,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
-                $html = view('app/project/invoice/print_invoice_a5',$data); 
+                $html = view('app/02_sales/invoice/print_invoice_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
                 $dompdf->stream( 'INV_'.$data["project"]->CustomerName.'_'.$data["project"]->InvDate.'.pdf', [ 'Attachment' => false ]);
