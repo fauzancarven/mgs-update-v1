@@ -164,7 +164,7 @@ class PrintController extends BaseController
                 if($data["postdata"]["kertas"] == "A5"){ 
                         $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                         $data["header_footer"] = $modelheader->get_header_a5($data["inv"]->StoreId);
-                        $html = view('app/project/invoice/print_invoice_a5',$data); 
+                        $html = view('app/02_sales/invoice/print_invoice_a5',$data); 
                 }else{  
                         $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);  
                         $html = view('app/02_sales/invoice/print_invoice_a4',$data); 
