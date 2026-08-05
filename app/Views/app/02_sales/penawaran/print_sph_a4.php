@@ -556,10 +556,7 @@ li[data-list="bullet"]:before {
                             $no = 1;
                         }
                     }
-                    echo $html_items;
-                    if($postdata["disc"]==1){
-                        
-                    }
+                    echo $html_items; 
                 ?>
 
                                         <tr>
