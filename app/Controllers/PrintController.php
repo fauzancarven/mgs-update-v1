@@ -176,6 +176,8 @@ class PrintController extends BaseController
 	}
 	public function project_invoice_a5($id)
 	{
+                $request = Services::request();
+                $postData = $request->getGet();
                 $options = new Options(); 
                 $options->set('isHtml5ParserEnabled', true);
                 $options->set('enable_remote', true);
@@ -195,6 +197,7 @@ class PrintController extends BaseController
                 $dompdf->set_paper(array(0,0,420, 620), 'landscape');
                 $dompdf->getOptions()->setChroot('assets');   
 
+                $data["postdata"] = $postData; 
                 $html = view('app/02_sales/invoice/print_invoice_a5',$data); 
                 $dompdf->loadHtml($html);
                 $dompdf->render();
