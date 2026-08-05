@@ -398,6 +398,33 @@
                                                             </div>
                                                   </div>
                                         </div>
+                                        <div class="row mb-24 gy-3 align-items-center">
+                                                  <label class="form-label mb-0 col-sm-4">Gabungkan
+                                                            Disc Item dan Disc Global</label>
+                                                  <div class="col-sm-8">
+                                                            <div class="d-flex align-items-center flex-wrap gap-28">
+                                                                      <div
+                                                                                class="form-check checked-danger d-flex align-items-center gap-2">
+                                                                                <input class="form-check-input"
+                                                                                          type="radio"
+                                                                                          name="SphPrintDisc"
+                                                                                          id="SphPrintDisc1" value="0">
+                                                                                <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                          for="SphPrintDisc1">Tidak</label>
+                                                                      </div>
+                                                                      <div
+                                                                                class="form-check checked-primary d-flex align-items-center gap-2">
+                                                                                <input class="form-check-input"
+                                                                                          type="radio"
+                                                                                          name="SphPrintDisc"
+                                                                                          id="SphPrintDisc2" value="1"
+                                                                                          checked>
+                                                                                <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                          for="SphPrintDisc2">Ya</label>
+                                                                      </div>
+                                                            </div>
+                                                  </div>
+                                        </div>
                               </div>
                               <div class="modal-footer p-2">
                                         <button type="button" class="btn btn-secondary"
@@ -902,6 +929,8 @@ $("#btn-print-sph").click(function(i) {
                               image: $('input[name="SphPrintImage"]:checked')
                                         .val(),
                               total: $('input[name="SphPrintTotal"]:checked')
+                                        .val(),
+                              disc: $('input[name="SphPrintDisc"]:checked')
                                         .val(),
                               date: moment().format('DDMMYYYYHHmmss'),
                     },
