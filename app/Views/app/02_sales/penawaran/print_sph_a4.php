@@ -577,17 +577,17 @@ li[data-list="bullet"]:before {
                                         <?php
                                               if($postdata["disc"]==1){ 
                                                 $disctotal = $sph->SphDiscItemTotal + $sph->SphDiscTotal;
-                                                echo '<tr class="'.($postdata["total"]==1) ? "":"hide".'" style="'.$disctotal  > 0 ? "" : "display:none;".'">';
+                                                echo '<tr class="'.($postdata["total"]==1) ? "":"hide".'" style="'.$disctotal  > 0 ? "" : "display:none".'">';
                                                 echo '<td class="td-footer text-bold" colspan="'.$col.'">Disc Item dan Disc Global</td>';
                                                 echo '<td class="td-center text-bold">Rp. '.number_format($disctotal, 0, ',', '.').'</td>';
                                                 echo '</tr>';
                                               }else{
                                                 
-                                                echo '<tr class="'.($postdata["total"]==1) ? "":"hide".'" style="'.$sph->SphDiscItemTotal > 0 ? "" : "display:none;".'">';
+                                                echo '<tr class="'.($postdata["total"]==1) ? "":"hide".'" style="'.$sph->SphDiscItemTotal > 0 ? "" : "display:none".'">';
                                                 echo '<td class="td-footer text-bold" colspan="'.$col.'">Disc</td>';
                                                 echo '<td class="td-center text-bold">Rp. '.number_format($sph->SphDiscItemTotal, 0, ',', '.').'</td>';
                                                 echo '</tr>';
-                                                echo '<tr class="'.($postdata["total"]==1) ? "":"hide".'" style="'.$sph->SphDiscTotal > 0 ? "" : "display:none;".'">';
+                                                echo '<tr class="'.($postdata["total"]==1) ? "":"hide".'" style="'.$sph->SphDiscTotal > 0 ? "" : "display:none".'">';
                                                 echo '<td class="td-footer text-bold" colspan="'.$col.'">Disc</td>';
                                                 echo '<td class="td-center text-bold">Rp. '.number_format($sph->SphDiscTotal, 0, ',', '.').'</td>';
                                                 echo '</tr>';
