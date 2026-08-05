@@ -226,6 +226,25 @@
                                                             </div>
                                                   </div>
                                         </div>
+                                        <div class="row mb-1 align-items-center mt-2">
+                                                  <label for="InvPrintImage" class="col-sm-4 col-form-label">Gabungkan
+                                                            Disc item dan DIsc Global</label>
+                                                  <div class="col-sm-8">
+                                                            <div class="form-check form-check-inline">
+                                                                      <input class="form-check-input" type="radio"
+                                                                                name="InvDisc" id="InvDisc1" value="0">
+                                                                      <label class="text-detail"
+                                                                                for="InvDisc1">Tidak</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                      <input class="form-check-input" type="radio"
+                                                                                name="InvDisc" id="InvDisc2" value="1"
+                                                                                checked>
+                                                                      <label class="text-detail"
+                                                                                for="InvDisc2">Ya</label>
+                                                            </div>
+                                                  </div>
+                                        </div>
                                         <script>
                                         $('#InvPrintFormat').change(function() {
                                                   console.log($(this).val())
@@ -1270,6 +1289,7 @@ $("#btn-print-invoice").click(function(i) {
                               kertas: $("#InvPrintFormat").val(),
                               image: $('input[name="InvPrintImage"]:checked').val(),
                               total: $('input[name="InvPrintTotal"]:checked').val(),
+                              disc: $('input[name="InvDisc"]:checked').val(),
                               date: moment().format('DDMMYYYYHHmmss'),
                     },
                     "GET", '_blank');
