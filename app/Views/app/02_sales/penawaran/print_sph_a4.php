@@ -583,11 +583,11 @@ li[data-list="bullet"]:before {
                                                 echo '</tr>';
                                               }else{
                                                 
-                                                echo '<tr class="'.($postdata["total"]==1) ? "":"hide".'" style="'.$sph->SphDiscItemTotal > 0 ? "" : "display:none".'">';
+                                                echo '<tr class="'.(($postdata["total"]==1) ? "":"hide").'" style="'.($sph->SphDiscItemTotal > 0 ? "" : "display:none").'">';
                                                 echo '<td class="td-footer text-bold" colspan="'.$col.'">Disc</td>';
                                                 echo '<td class="td-center text-bold">Rp. '.number_format($sph->SphDiscItemTotal, 0, ',', '.').'</td>';
                                                 echo '</tr>';
-                                                echo '<tr class="'.($postdata["total"]==1) ? "":"hide".'" style="'.$sph->SphDiscTotal > 0 ? "" : "display:none".'">';
+                                                echo '<tr class="'.(($postdata["total"]==1) ? "":"hide").'" style="'.($sph->SphDiscTotal > 0 ? "" : "display:none").'">';
                                                 echo '<td class="td-footer text-bold" colspan="'.$col.'">Disc</td>';
                                                 echo '<td class="td-center text-bold">Rp. '.number_format($sph->SphDiscTotal, 0, ',', '.').'</td>';
                                                 echo '</tr>';
