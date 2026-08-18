@@ -16274,17 +16274,69 @@ table.table.detail-item {
 
 .image-default-obi .action {
   position: absolute;
+  top: 0;
+  right: 0;
+  display: none !important;
+}
+
+.image-default-obi:hover .action {
+  display: block !important;
+}
+
+
+.image-default-obi .action .btn iconify-icon {
+  font-size: 1rem;
+}
+
+.image-detail-produk {
+  border: 2px dashed #dedede;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 0.5rem;
+  margin: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  font-size: 0.65rem;
+}
+
+.image-detail-produk iconify-icon.menu-icon {
+  font-size: 2rem;
+}
+
+.image-detail-produk.border:hover,
+.image-detail-produk:hover {
+  border-color: #7bc8ff;
+  color: #7bc8ff;
+  cursor: pointer;
+}
+
+.image-detail-produk img {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+}
+
+.image-detail-produk:hover img {
+  filter: blur(1px);
+}
+
+.image-detail-produk .action {
+  position: absolute;
   bottom: 0;
   right: 0;
   display: none;
 }
 
-.image-default-obi:hover .action {
+.image-detail-produk:hover .action {
   display: block;
 }
 
-.image-default-obi .action .btn i {
-  font-size: 1rem;
+.image-detail-produk:hover .action i {
+  color: #7bc8ff;
 }
 
 .select2-container .select2-search--inline .select2-search__field {

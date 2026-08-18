@@ -47,8 +47,9 @@
                                                                       <div class="d-flex flex-wrap" id="list-produk">
                                                                       </div>
                                                                       <div class="image-default-obi" id="img-produk">
-                                                                                <i class="ti-image"
-                                                                                          style="font-size:1rem"></i>
+                                                                                <iconify-icon icon="griddy-icons:image"
+                                                                                          class="menu-icon">
+                                                                                </iconify-icon>
                                                                                 <span>Tambah Foto</span>
                                                                       </div>
                                                             </div>
@@ -209,8 +210,8 @@ $("#upload-produk").on('change', function() {
                     <div class="image-default-obi border" id="image-frame-${image_index}">
                         <img src="${reader.result}" draggable="true" id="img-${image_index}" class="image-produk w-75-px h-75-px rounded-3"> 
                         <div class="action">
-                            <a class="btn btn-sm btn-white p-1" onclick="crop_image('${image_index}')"><i class="fas fa-crop-alt"></i></a>
-                            <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="crop_image('${image_index}')"><iconify-icon icon="material-symbols:crop" class="text-xl"></iconify-icon></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><iconify-icon icon="mdi:trash" class="text-xl"></iconify-icon></a>
                         </div>
                         <span class="badge text-bg-primary ${image_index > 1 ? "d-none" : ""}">Utama</span>
                     </div>
@@ -218,16 +219,17 @@ $("#upload-produk").on('change', function() {
                         <div class="modal-dialog modal-dialog-centered">  
                             <div class="modal-content" name="form-action">
                                 <div class="modal-header">
-                                    <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
+                                    <h6 class="modal-title"><iconify-icon icon="material-symbols:crop" class="text-xl"></iconify-icon> &nbsp;Edit Gambar</h5>
                                     <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body p-0">
                                     <div id="crop-image-${image_index}" style="height:500px;"></div>
-                                    <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
-                                        <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
-                                        <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
-                                        <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
-                                        <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
+                                    <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;display: flex;column-gap: 0.5rem;">
+                                        <a class="p-2" onclick="rotate_image(90)"><iconify-icon icon="icon-park-outline:rotate" class="text-xl"></iconify-icon></a>
+                                        <a class="p-2" onclick="rotate_image(-90)"><iconify-icon icon="icon-park-outline:rotate" class="text-xl" flip="horizontal"></iconify-icon></a>
+                                        
+                                        <a class="p-2" onclick="flip_image(2)"><iconify-icon icon="vaadin:flip-h" class="text-xl"></iconify-icon></a>
+                                        <a class="p-2" onclick="flip_image(4)"><iconify-icon icon="vaadin:flip-v" class="text-xl"></iconify-icon></a>
                                     </div>
                                 </div>
                                 <div class="modal-footer"> 
@@ -521,8 +523,8 @@ $("#add-varian-produk").click(function() {
                                     <select class="custom-select custom-select-sm form-select form-select-sm selectvarian" placeholder="pilih varian"></select>
                                 </div>
                                 <div class="col-auto px-0 action-table-single-optional">
-                                    <button class="btn btn-sm btn-danger btn-action mb-2" onclick="hapus_varian('-',true)">
-                                        <i class="fa-solid fa-close pe-2"></i>Hapus
+                                    <button class="btn btn-sm btn-primary btn-action mb-2 d-inline-flex align-items-center gap-1" onclick="hapus_varian('-',true)">
+                                        <iconify-icon icon="mdi:trash" class="menu-icon"> </iconify-icon>Hapus
                                     </button
                                 </div>
                             </div>`;
@@ -793,8 +795,9 @@ load_data_varian_produk = function() {
                         <select class="custom-select custom-select-sm form-control form-control-sm selectvarianvalue" style="width:100%" multiple="multiple" required data-type="${data.text}"></select>
                     </div>
                     <div class="col-4 col-md-2 px-0 align-self-start ms-auto action-table-single-optional mb-2 order-sm-last">
-                        <button class="btn btn-sm btn-danger btn-action mb-2" onclick="hapus_varian('${data.text}',true)">
-                            <i class="fa-solid fa-close pe-2"></i>Hapus
+                        <button class="btn btn-sm btn-primary btn-action mb-2 d-inline-flex align-items-center gap-1" onclick="hapus_varian('${data.text}',true)">
+                            <iconify-icon icon="mdi:trash" class="menu-icon">
+                                                  </iconify-icon>Hapus
                         </button> 
                     </div>
                 </div>`;
@@ -1046,8 +1049,8 @@ load_data_list_varian = function() {
           for (var i = 0; i < arr_varian_produk_detail.length; i++) {
                     headerVarian = "";
                     var image = `<input type="file" id="image-input-${i}" style="display: none;" accept="image/*">
-                        <div class="image-detail-produk border  ${arr_varian_produk_detail[i]["ProdukDetailImage"] == "" ? "no-image": "" }"  data-id="${i}">
-                            ${arr_varian_produk_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_produk_detail[i]["ProdukDetailImage"] + '" id="img-detail-'+ i +'"/> <div class="action"> <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(' + i + ')"><i class="fas fa-crop-alt"></i></a>  <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(' + i + ')"><i class="fas fa-trash"></i></a>  </div>'}   
+                        <div class="image-detail-produk border ${arr_varian_produk_detail[i]["ProdukDetailImage"] == "" ? "no-image": "" }"  data-id="${i}">
+                            ${arr_varian_produk_detail[i]["ProdukDetailImage"] == "" ? '<iconify-icon icon="griddy-icons:image" class="menu-icon"></iconify-icon><span>Tambah Foto</span>' : '<img src="' + arr_varian_produk_detail[i]["ProdukDetailImage"] + '" id="img-detail-'+ i +'"/> <div class="action"> <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(' + i + ')"><iconify-icon icon="material-symbols:crop" class="text-xl"></iconify-icon></a>  <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(' + i + ')"><iconify-icon icon="mdi:trash" class="text-xl"></iconify-icon></a>  </div>'}   
                         </div>`;
                     detailhtml += `<div class="row m-2 border-bottom align-items-center varian-item" data-id="${i}">
                                 <div class="col-2 col-md-1 my-2">  
@@ -1086,7 +1089,7 @@ load_data_list_varian = function() {
                                         <div class="mb-3">
                                             <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2">Satuan</span>
                                             <div class="input-group"> 
-                                                <select class="form-select form-select-sm ProdukDetailSatuanId" data-id="${i}" style="width:100%"></select>   
+                                                <select class="form-select form-select-sm ProdukDetailSatuanId" data-id="${i}" style="width:100%;min-width:150px;"></select>   
                                             </div>     
                                         </div>  
                                     </div> 
@@ -1366,8 +1369,8 @@ load_data_list_varian = function() {
                                                             )
                                                             .html(`<img src="${reader.result}" id="img-detail-${data_index}"/>
                         <div class="action">
-                            <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(${data_index})"><i class="fas fa-crop-alt"></i></a>
-                            <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(${data_index})"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(${data_index})"><iconify-icon icon="material-symbols:crop" class="text-xl"></iconify-icon></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(${data_index})"><iconify-icon icon="mdi:trash" class="text-xl"></iconify-icon></a>
                         </div>`);
 
                                                   crop_image_detail
@@ -1420,16 +1423,17 @@ load_data_list_varian = function() {
                                 <div class="modal-dialog modal-dialog-centered">  
                                     <div class="modal-content" name="form-action">
                                         <div class="modal-header">
-                                            <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
+                                            <h6 class="modal-title"><iconify-icon icon="material-symbols:crop" class="text-xl"></iconify-icon> &nbsp;Edit Gambar</h5>
                                             <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body p-0">
-                                            <div id="crop-image-detail-${id}" style="height:500px;"></div>
-                                            <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;">
-                                                <a class="p-2" onclick="rotate_image(90)"><i class="fas fa-undo-alt"></i></a>
-                                                <a class="p-2" onclick="rotate_image(-90)"><i class="fas fa-redo-alt"></i></a>
-                                                <a class="p-2" onclick="flip_image(2)"><i class="fas fa-exchange-alt"></i></a>
-                                                <a class="p-2" onclick="flip_image(4)"><i class="fas fa-exchange-alt fa-rotate-90"></i></a>
+                                            <div id="crop-image-detail-${id}" style="height:500px;"></div> 
+                                            <div class="action" style="position: absolute; bottom: 15px; margin-left: 50%; transform: translateX(-50%); background: #d1d1d1; padding: 0.5rem; border-radius: 0.5rem;  z-index: 2;display: flex;column-gap: 0.5rem;">
+                                                <a class="p-2" onclick="rotate_image(90)"><iconify-icon icon="icon-park-outline:rotate" class="text-xl"></iconify-icon></a>
+                                                <a class="p-2" onclick="rotate_image(-90)"><iconify-icon icon="icon-park-outline:rotate" class="text-xl" flip="horizontal"></iconify-icon></a>
+                                                
+                                                <a class="p-2" onclick="flip_image(2)"><iconify-icon icon="vaadin:flip-h" class="text-xl"></iconify-icon></a>
+                                                <a class="p-2" onclick="flip_image(4)"><iconify-icon icon="vaadin:flip-v" class="text-xl"></iconify-icon></a>
                                             </div>
                                         </div>
                                         <div class="modal-footer"> 
@@ -1524,6 +1528,16 @@ load_data_list_varian = function() {
                                                   orientation: flip
                                         });
                               }
+                    }
+
+                    delete_image_detail = function(id) {
+                              arr_varian_produk_detail[id]["ProdukDetailImage"] = "";
+                              var el = $(".image-detail-produk[data-id=" + id + "]");
+                              $(el).addClass("no-image");
+                              $(el).html(
+                                        '<iconify-icon icon="griddy-icons:image"  class="menu-icon"></iconify-icon><span>Tambah Foto</span>   </div>'
+                              );
+
                     }
                     $(".image-detail-produk.no-image").unbind().click(function() {
                               if (!$(this).hasClass("no-image")) return;
