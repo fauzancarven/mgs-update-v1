@@ -165,11 +165,13 @@
                                                   <th scope="col"></th>
                                                   <th scope="col">Document</th>
                                                   <th scope="col">Tanggal</th>
+                                                  <th scope="col">Estimasi</th>
+                                                  <th scope="col">Status</th>
                                                   <th scope="col">Vendor</th> 
-                                                  <th scope="col">Catatan</th>
+                                                  <th scope="col">Tujuan</th>
                                                   <th scope="col">Grand Total</th>
                                                   <th scope="col">Sisa Payment</th> 
-                                                  <th scope="col">Customer</th> 
+                                                  <th scope="col">Catatan</th> 
                                         </tr>
                               </thead>
                               <tbody>
@@ -1052,19 +1054,27 @@ table = $('#data-table-invoice').DataTable({
                               width: "100px",
                     },
                     {
+                              data: "date2",
+                              width: "100px",
+                    },
+                    {
+                              data: "status",
+                              width: "100px",
+                    },
+                    {
                               data: "vendor",
                               width: "100px",
                     }, 
                     {
-                              data: "pembelian.PONote",
-                              width: "250px",
-                              className: "action-td",
+                              data: "customer",
+                                 width: "250px",
                               render: function(data, type, row) {
-                                        var html = `<span>${data.replaceAll('\\n', '<br>')}</span>
-                                    <a onclick="comment_po(${row.POId},'${row.note}')"
-                                        class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Ubah Catatan">
-                                        <iconify-icon icon="lucide:edit"></iconify-icon>
-                                    </a>`;
+                                        var html =
+                                                  ` 
+                        <div class="text-head-3 pb-2 text-truncate" style="max-width: 250px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
+                        ${(row.customertelp !== "" ? `<div class="text-detail-3 text-xs">${row.customertelp}</div>` : "")}
+                        <div class="text-detail-3 text-truncate text-xxs" style="max-width: 250px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}">${row.customeraddress}</div>`;
+
                                         return html;
                               }
                     },
@@ -1080,15 +1090,15 @@ table = $('#data-table-invoice').DataTable({
                               className: "align-top"
                     },
                     {
-                              data: "customer",
-                              //   width: "350px",
+                              data: "pembelian.PONote",
+                              //width: "250px",
+                              className: "action-td",
                               render: function(data, type, row) {
-                                        var html =
-                                                  ` 
-                        <div class="text-head-3 pb-2 text-truncate" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customer}">${row.customer}</div>
-                        ${(row.customertelp !== "" ? `<div class="text-detail-3 text-xs">${row.customertelp}</div>` : "")}
-                        <div class="text-detail-3 text-truncate text-xxs" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="${row.customeraddress}">${row.customeraddress}</div>`;
-
+                                        var html = `<span>${data.replaceAll('\\n', '<br>')}</span>
+                                    <a onclick="comment_po(${row.POId},'${row.note}')"
+                                        class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Ubah Catatan">
+                                        <iconify-icon icon="lucide:edit"></iconify-icon>
+                                    </a>`;
                                         return html;
                               }
                     },
@@ -1416,7 +1426,7 @@ update_status = function(status, id, el) {
 
           $.ajax({
                     method: "POST",
-                    url: "<?= base_url() ?>action/update-invoice/" + id + "/" + status,
+                    url: "<?= base_url() ?>action/update-pembelian/" + id + "/" + status,
                     success: function(data) {
                               IsUpdateStatus[id] = false;
                               $(el).html(old_text);

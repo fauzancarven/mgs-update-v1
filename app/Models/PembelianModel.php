@@ -176,7 +176,8 @@ class PembelianModel extends Model
         $builder->join("project","project.ProjectId = pembelian.ProjectId ","left");  
         $builder->join("users","users.id = pembelian.POAdmin ","left"); 
         $builder->join("vendor","vendor.VendorId = pembelian.VendorId ","left"); 
-        $builder->join("store","store.StoreId = pembelian.StoreId","left");    
+        $builder->join("store","store.StoreId = pembelian.StoreId","left");     
+        $builder->where("POStatus <"," 3"); 
         if($filter["datestart"]){
             $builder->where("PODate >=",$filter["datestart"]);
             $builder->where("PODate <=",$filter["dateend"]); 
@@ -185,7 +186,6 @@ class PembelianModel extends Model
         $builder1 = clone $builder; 
         $countTotal = $builder1->get()->getNumRows();
 
-        $builder->where("POStatus <"," 3"); 
         if(isset($filter["filter"])){ 
             $builder->whereIn("POStatus",$filter["filter"]); 
             $filterdata = 1;
@@ -236,53 +236,50 @@ class PembelianModel extends Model
         $builder->limit($length,$start); 
         $query = $builder->get();  
         foreach($query->getResult() as $row){
-           
-  
-            // MENGAMBIL DATA STATUS
-            $status = "";
+           $status = "";
             if($row->POStatus==0){
                 $status .= '
-                    <span class="pointer text-head-3 badge text-bg-primary text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >New</span>
-                    </span> ';
+                    <button class="bg-info-focus text-primary-600  px-8 py-2 rounded-3 fw-bold text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
+                        <span class="me-1 "  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status"  >New</span>
+                    </button> '; 
             }
             if($row->POStatus==1){
                 $status .= '
-                    <span class="pointer text-head-3 badge text-bg-info text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Proses</span>
-                    </span> '; 
+                    <button class="bg-lilac-100 text-lilac-600 px-8 py-2 rounded-3 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
+                        <span class="me-1 "  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status" >Proses</span>
+                    </button> '; 
             }
-            if($row->POStatus==2){ 
+            if($row->POStatus==2){
                 $status .= '
-                    <span class=" pointertext-head-3 badge text-bg-success text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Completed</span>
-                    </span> ';  
+                    <button class="bg-success-focus text-success-main px-8 py-2 rounded-3 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
+                        <span class="me-1 " data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status"  >Completed</span>
+                    </button> ';  
             }
-            if($row->POStatus==3){ 
+            if($row->POStatus==3){
                 $status .=  '
-                    <span class="pointer text-head-3 badge text-bg-danger text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Cancel</span>
-                    </span> ';  
+                    <button class="bg-danger-focus text-danger-main px-8 py-2 rounded-3 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"  >
+                        <span class="me-1 " data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status"  >Cancel</span>
+                    </button> ';  
             }
             $status .= '  
             <ul class="dropdown-menu shadow drop-status ">
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(0,'.$row->POId.',this)">
+                    <a class="dropdown-item m-0 px-2 text-xs" onclick="update_status(0,'.$row->POId.',this)">
                         New
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(1,'.$row->POId.',this)">
+                    <a class="dropdown-item m-0 px-2 text-xs" onclick="update_status(1,'.$row->POId.',this)">
                         </i>Proses
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(2,'.$row->POId.',this)">
+                    <a class="dropdown-item m-0 px-2 text-xs" onclick="update_status(2,'.$row->POId.',this)">
                         Completed
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(3,'.$row->POId.',this)">
+                    <a class="dropdown-item m-0 px-2 text-xs" onclick="update_status(3,'.$row->POId.',this)">
                         Cancel
                     </a>
                 </li>  
@@ -323,6 +320,7 @@ class PembelianModel extends Model
                 <div class="d-flex gap-1 pt-4"> 
                 '.$this->get_data_payment_pembelian($row,true).'</div>', 
                 "date" =>  '<div class="text-head-3" style="line-height:1">'.date_format(date_create($row->PODate),"d M Y").'</div>', 
+                "date2" =>  '<div class="text-head-3" style="line-height:1">'.date_format(date_create($row->PODate2),"d M Y").'</div>', 
                 "status" => $status,
                 "vendor" => $vendor,
                 "store" => $store, 
@@ -1138,6 +1136,7 @@ class PembelianModel extends Model
         $header = $data["header"];
         $builder = $this->db->table("pembelian");
         $builder->set('PODate', $header["PODate"]);
+        $builder->set('PODate2', $header["PODate2"]);
         $builder->set('VendorId', $header["VendorId"]);
         $builder->set('VendorName', $header["VendorName"]);
         $builder->set('PONote', $header["PONote"]);

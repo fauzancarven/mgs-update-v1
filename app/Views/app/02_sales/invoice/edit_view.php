@@ -2539,7 +2539,7 @@ $("#btn-edit-invoice").click(function() {
                               swal.close();
                               setTimeout(() => $("#InvAdmin").select2("open"),
                                         300);
-                    });
+                    });s
                     return false;
           }
           if ($($(".template-footer").find("select")[0]).val() == null) {
