@@ -16,7 +16,7 @@
     2.8 Accordion Css
     2.9 Nav tabs Css
     2.10 Pagination Css
-    2.11 Avatar Css
+    2.11 Avatar CssR
     2.12 List Style Css
     2.13 Apex Chart Css
     2.14 Progress Bar Css
@@ -65,7 +65,7 @@
 
 :root {
   --width-sidebar: 19.5rem;
-  --width-sidebar-active: 86px;
+  --width-sidebar-active: 73px;
   --default-font: ;
   --h1: clamp(2rem, 1.2rem + 4vw, 4.5rem);
   --h2: clamp(1.75rem, 1.11rem + 3.2vw, 3.75rem);
@@ -15226,8 +15226,8 @@ td.fc-header-center {
 }
 
 .sidebar.active {
-  --width-sidebar-active: 86px;
-  width: 86px;
+  --width-sidebar-active: 73px;
+  width: 73px;
 }
 
 .sidebar.active:hover {
@@ -15559,7 +15559,7 @@ td.fc-header-center {
 
 @media (min-width: 1199px) {
   .dashboard-main.active {
-    margin-inline-start: 5.375rem;
+    margin-inline-start: 73px;
   }
 }
 

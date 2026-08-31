@@ -199,6 +199,15 @@ class TableController extends BaseController
         
     } 
     
+    public function acc_jurnal()
+    {   
+        $request = Services::request();
+        $datatable = new AccountingModel(); 
+        if ($request->getMethod(true) === 'POST') {   
+            echo $datatable->load_datatable_jurnal($request->getPost());
+        }    
+        
+    }
 
     
 }

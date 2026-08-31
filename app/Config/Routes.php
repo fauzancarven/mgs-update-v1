@@ -40,6 +40,7 @@ $routes->get('/admin/sales/invoice/delivery_add/(:any)', 'AdminController::invoi
 $routes->get('/admin/sales/invoice/delivery_edit/(:any)', 'AdminController::invoice_delivery_edit/$1', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice/po_add/(:any)', 'AdminController::invoice_pembelian_add/$1', ['filter' => 'login']);
 $routes->get('/admin/sales/invoice/po_edit/(:any)', 'AdminController::invoice_pembelian_edit/$1', ['filter' => 'login']);
+$routes->get('/admin/sales/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
 $routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);
@@ -74,6 +75,7 @@ $routes->post('/datatables/get-data-vendor', 'TableController::vendor', ['filter
 
 $routes->post('/datatables/get-datatable-acc-coa', 'TableController::acc_coa', ['filter' => 'login']);
 $routes->post('/datatables/get-datatable-payment-request', 'TableController::payment_request_datatable', ['filter' => 'login']);
+$routes->post('/datatables/get-datatable-payment-jurnal', 'TableController::acc_jurnal', ['filter' => 'login']);
 
 
 /**

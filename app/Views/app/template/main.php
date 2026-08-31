@@ -199,6 +199,13 @@ $version = "V2.1";
                                                             <span>Invoice</span>
                                                   </a>
                                         </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/sales/pembelian">
+                                                            <iconify-icon icon="hugeicons:shopping-bag-03" class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Pembelian</span>
+                                                  </a>
+                                        </li>
 
 
                                         <li class="sidebar-menu-group-title">Accounting</li>
@@ -270,15 +277,15 @@ $version = "V2.1";
                                         <div class="col-auto">
                                                   <div class="d-flex flex-wrap align-items-center gap-4">
                                                             <button type="button" class="sidebar-toggle">
-                                                                      <iconify-icon icon="heroicons:bars-3-solid"
+                                                                      <iconify-icon icon="hugeicons:menu-collapse"
                                                                                 class="icon text-2xl non-active">
                                                                       </iconify-icon>
-                                                                      <iconify-icon icon="iconoir:arrow-right"
+                                                                      <iconify-icon icon="hugeicons:menu-01"
                                                                                 class="icon text-2xl active">
                                                                       </iconify-icon>
                                                             </button>
                                                             <button type="button" class="sidebar-mobile-toggle">
-                                                                      <iconify-icon icon="heroicons:bars-3-solid"
+                                                                      <iconify-icon icon="hugeicons:menu-collapse"
                                                                                 class="icon"></iconify-icon>
                                                             </button>
                                                   </div>

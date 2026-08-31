@@ -206,7 +206,7 @@ class AccountingModel extends Model
 
         $datafilter = clone $builder;  
         $count = $datafilter->get()->getNumRows();
-if($length > 0) $builder->limit($length,$start); 
+        if($length > 0) $builder->limit($length,$start); 
         $query = $builder->get();  
         foreach($query->getResult() as $row){ 
             $data_row = array( 
@@ -240,4 +240,101 @@ if($length > 0) $builder->limit($length,$start);
         );
 
     } 
+    
+    function load_datatable_jurnal($filter = null){
+        $filterdata = 0;
+        $countTotal = 0;
+        $count = 0;
+        $draw = $filter['draw'];  
+        $start = $filter['start'];
+        $length = $filter['length']; 
+        $datatable = array();
+
+        $builder = $this->db->table("payment");   
+        $builder->join("invoice","invoice.InvId = payment.PaymentRef and payment.PaymentRefType = 'Invoice'","left");
+        $builder->join("pembelian","pembelian.POId = payment.PaymentRef and payment.PaymentRefType = 'Pembelian'","left");  
+        $builder->join("delivery","delivery.DeliveryId = payment.PaymentRef and payment.PaymentRefType = 'Delivery'","left");  
+        $builder->where("payment.PaymentDate > '2026-07-01'");
+        //mengambil total semua data
+        $builder1 = clone $builder; 
+        $countTotal = $builder1->get()->getNumRows(); 
+
+        if($filter["search"]){ 
+            $builder->groupStart(); 
+            $builder->like("PaymentCode",$filter["search"]);
+            $builder->orLike("PaymentToBank",$filter["search"]);
+            $builder->orLike("PaymentToRek",$filter["search"]);
+            $builder->orLike("PaymentToName",$filter["search"]);
+            $builder->orLike("PaymentTotal",$filter["search"]); 
+            $builder->orLike("PaymentRef",$filter["search"]); 
+            $builder->groupEnd();  
+            $filterdata = 1;
+        }
+
+        $datafilter = clone $builder;  
+        $count = $datafilter->get()->getNumRows();
+        if($length > 0) $builder->limit($length,$start);  
+        $builder->select("*");
+        $builder->orderby("PaymentRefType", "ASC"); 
+        $builder->orderby("PaymentDate", "ASC"); 
+        $query = $builder->get();  
+        foreach($query->getResult() as $row){ 
+            if($row->PaymentRefType == "Invoice"){
+                 $customer = '
+                 <div class="d-flex align-items-center"><iconify-icon icon="hugeicons:invoice-03" class="menu-icon"></iconify-icon><span class="ms-2">invoice '.$row->PaymentType.'</span></div>
+             <div class="text-head-3 pb-2 text-truncate" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="'.$row->InvCustName.'">'.$row->InvCustName.'</div>
+                        '.($row->InvCustTelp ? '<div class="text-detail-3 text-xs">'.$row->InvCustTelp.'</div>' : '').'
+                        <div class="text-detail-3 text-truncate text-xxs" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="'.$row->InvAddress.'">'.$row->InvAddress.'</div>';
+               
+            }else if($row->PaymentRefType == "Pembelian"){ 
+                 $customer = '
+                 <div class="d-flex align-items-center"><iconify-icon icon="hugeicons:warehouse" class="menu-icon"></iconify-icon><span class="ms-2">pembelian '.$row->PaymentType.'</span></div>
+             <div class="text-head-3 pb-2 text-truncate" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="'.$row->POCustName.'">'.$row->POCustName.'</div>
+                        '.($row->POCustTelp ? '<div class="text-detail-3 text-xs">'.$row->POCustTelp.'</div>' : '').'
+                        <div class="text-detail-3 text-truncate text-xxs" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="'.$row->POAddress.'">'.$row->POAddress.'</div>';
+            }else if($row->PaymentRefType == "Delivery"){
+                $customer = '
+                <div class="d-flex align-items-center"><iconify-icon icon="hugeicons:delivery" class="menu-icon"></iconify-icon><span class="ms-2">delivery '.$row->PaymentType.'</span></div>
+                <div class="text-head-3 pb-2 text-truncate" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="'.$row->DeliveryCustName.'">'.$row->DeliveryCustName.'</div>
+                        '.($row->DeliveryCustTelp ? '<div class="text-detail-3 text-xs">'.$row->DeliveryCustTelp.'</div>' : '').'
+                        <div class="text-detail-3 text-truncate text-xxs" style="max-width: 350px;line-height: 1.2;" data-bs-toggle="tooltip"  data-bs-title="'.$row->DeliveryAddress.'">'.$row->DeliveryAddress.'</div>';
+            }
+
+           
+            $data_row = array( 
+                "PaymentId" => $row->PaymentId, 
+                "PaymentCode" => $row->PaymentCode,
+                "PaymentDate" => '<div class="text-head-3" style="line-height:1">'.date_format(date_create($row->PaymentDate),"d M Y").'</div>',
+                "PaymentType" => $row->PaymentType,
+                "PaymentToBank" => $row->PaymentToBank,
+                "PaymentToRek" => $row->PaymentToRek,
+                "PaymentToName" => $row->PaymentToName,
+                //"PaymentTotal" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->PaymentTotal,0)."</span></div>",
+                "PaymentTotal" => $row->PaymentTotal,
+                "PaymentRefType" => $row->PaymentRefType,
+                "PaymentRef" => $row->PaymentRef,
+                "InvCustName" => $customer,
+                "action" =>'  
+                <div class="d-flex align-items-center gap-1 justify-content-center"> 
+                <a onclick="edit_data('.$row->PaymentId.',this,\''.$row->PaymentId.'\')"
+                    class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Ubah Data">
+                    <iconify-icon icon="lucide:edit"></iconify-icon>
+                </a>
+                <a onclick="delete_data('.$row->PaymentId.',this,\''.$row->PaymentId.'\')"
+                    class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Hapus Data">
+                    <iconify-icon icon="lucide:trash-2">
+                    </iconify-icon>
+                </a> ',
+            );
+            array_push($datatable, $data_row);
+        }
+         return json_encode(
+            array(
+                "draw"=>$draw,
+                "recordsTotal"=>$countTotal,
+                "recordsFiltered"=>($filterdata == 0 ? $countTotal : $count ),
+                "data"=>$datatable, 
+            )
+        );
+    }
 }

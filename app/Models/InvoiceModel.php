@@ -1017,8 +1017,7 @@ class InvoiceModel extends Model
             <td class="detail" style="width:120px"> 
                 <span class="text-primary-600 fw-bold">'.$row_po->POCode.'</span>
                 <div class="d-flex gap-1 pt-4"> 
-                '.$modelspembelian->get_data_payment_pembelian($row_po,true).'</div>
-                 
+                '.$modelspembelian->get_data_payment_pembelian($row_po,true).'</div> 
             </td>  
             <td class="detail">'.date_format(date_create($row_po->PODate),"d M Y").'</td>    
             <td class="detail">'.$vendor.'

@@ -4,7 +4,7 @@
 
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
           <h6 class="fw-semibold mb-0 d-flex align-items-center">
-                    <a href="<?= base_url() ?>admin/sales/invoice" class=" pe-3 d-inline-block" id="btn-back-page">
+                    <a class=" pe-3 d-inline-block" id="btn-back-page">
                               <iconify-icon icon="iconoir:arrow-left" class="icon  ">
                               </iconify-icon>
                     </a>Ubah Pembelian
@@ -19,11 +19,11 @@
                               </a>
                     </li>
                     <li>-</li>
-                    <li class="fw-medium"> <a href="<?= base_url() ?>admin/sales/invoice"
+                    <li class="fw-medium"> <a href="<?= base_url() ?>admin/sales/pembelian"
                                         class="d-flex align-items-center gap-1 hover-text-primary">
-                                        <iconify-icon icon="hugeicons:invoice-03" class="icon text-lg">
+                                        <iconify-icon icon="hugeicons:shopping-bag-03" class="icon text-lg">
                                         </iconify-icon>
-                                        List Invoice
+                                        Pembelian
                               </a>
                     </li>
           </ul>
@@ -39,16 +39,16 @@
                               </div>
                               <div class="card-body">
                                         <div class="row mb-8 gy-2 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-2">Store</label>
-                                                  <div class="col-sm-10">
+                                                  <label class="form-label mb-0 col-sm-3">Store</label>
+                                                  <div class="col-sm-9">
                                                             <select class="form-select form-select-sm"
                                                                       style="width:100%" id="StoreId">
                                                             </select>
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-2">Tanggal</label>
-                                                  <div class="col-sm-10">
+                                                  <label class="form-label mb-0 col-sm-3">Tanggal</label>
+                                                  <div class="col-sm-9">
                                                             <input type="text" id="PODate"
                                                                       class="form-control form-control-sm"
                                                                       placeholder="Enter First Name">
@@ -56,7 +56,7 @@
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
                                                   <div
-                                                            class="form-check style-check d-flex align-items-center col-sm-2">
+                                                            class="form-check style-check d-flex align-items-center col-sm-3">
                                                             <input class="form-check-input ms-10" type="checkbox"
                                                                       value="" id="POInden"
                                                                       <?= $po->POIndent == 1 ? "checked" : "" ?>>
@@ -65,7 +65,7 @@
                                                                       PO Inden
                                                             </label>
                                                   </div>
-                                                  <div class="col-sm-10">
+                                                  <div class="col-sm-9">
                                                             <input type="text" id="PODate2"
                                                                       class="form-control form-control-sm"
                                                                       placeholder="Enter First Name"
@@ -73,24 +73,24 @@
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-2">Admin</label>
-                                                  <div class="col-sm-10">
+                                                  <label class="form-label mb-0 col-sm-3">Admin</label>
+                                                  <div class="col-sm-9">
                                                             <select class="form-select form-select-sm"
                                                                       style="width:100%" id="POAdmin">
                                                             </select>
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-2">Vendor</label>
-                                                  <div class="col-sm-10">
+                                                  <label class="form-label mb-0 col-sm-3">Vendor</label>
+                                                  <div class="col-sm-9">
                                                             <select class="form-select form-select-sm"
                                                                       style="width:100%" id="VendorId">
                                                             </select>
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-2">Catatan</label>
-                                                  <div class="col-sm-10">
+                                                  <label class="form-label mb-0 col-sm-3">Catatan</label>
+                                                  <div class="col-sm-9">
                                                             <textarea class="form-control" name="PODesc" id="PODesc"
                                                                       cols="50" rows="4"></textarea>
                                                   </div>
@@ -104,28 +104,28 @@
                                         <div class="d-flex justify-content-between">
                                                   <h6 class="card-title mb-0 d-flex align-items-center gap-2">
                                                             <iconify-icon icon="lucide:plane-landing" class="menu-icon">
-                                                            </iconify-icon>Penerima
+                                                            </iconify-icon>Tujuan Pengiriman
                                                   </h6>
                                         </div>
                               </div>
                               <div class="card-body">
                                         <div class="row mb-8 gy-2 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-2">Nama</label>
-                                                  <div class="col-sm-10">
+                                                  <label class="form-label mb-0 col-sm-3">Nama</label>
+                                                  <div class="col-sm-9">
                                                             <input type="text" class="form-control form-control-sm"
                                                                       id="POCustName" value="<?= $po->POCustName ?>">
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-2">Telp</label>
-                                                  <div class="col-sm-10">
+                                                  <label class="form-label mb-0 col-sm-3">Telp</label>
+                                                  <div class="col-sm-9">
                                                             <input type="text" class="form-control form-control-sm"
                                                                       id="POCustTelp" value="<?= $po->POCustTelp ?>">
                                                   </div>
                                         </div>
                                         <div class="row mb-8 gy-2 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-2">Alamat</label>
-                                                  <div class="col-sm-10">
+                                                  <label class="form-label mb-0 col-sm-3">Alamat</label>
+                                                  <div class="col-sm-9">
                                                             <textarea name="#0" class="form-control" rows="2" cols="50"
                                                                       id="POAddress"><?= $po->POAddress ?></textarea>
                                                   </div>
@@ -275,6 +275,10 @@
 
 <div id="modal-optional"></div>
 <script>
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const channel = urlParams.get('session');  
 $(document).ready(function() {
           var $elemenBawah = $('#action-button-doc');
           var offsetTop = $('#action-button-doc').offset().top;
@@ -1098,9 +1102,17 @@ $("#btn-edit-PO").click(function() {
                                                             text: 'Simpan data berhasil...!!!',
                                                             confirmButtonColor: "var(--brand)",
                                                   }).then((result) => {
+                                                        if(channel == "pembelian"){
+
+                                                            window.location
+                                                                      .href =
+                                                                      "<?=base_url()?>admin/sales/pembelian";
+                                                        }else{
+
                                                             window.location
                                                                       .href =
                                                                       "<?=base_url()?>admin/sales/invoice";
+                                                        }
                                                   });
 
                                         } else {
@@ -1129,6 +1141,19 @@ $("#btn-edit-PO").click(function() {
                               });
                     }
           });
+});
+$("#btn-back-page").click(function() {
+          if(channel == "pembelian"){
+
+              window.location
+                        .href =
+                        "<?=base_url()?>admin/sales/pembelian";
+          }else{
+
+              window.location
+                        .href =
+                        "<?=base_url()?>admin/sales/invoice";
+          }
 });
 </script>
 

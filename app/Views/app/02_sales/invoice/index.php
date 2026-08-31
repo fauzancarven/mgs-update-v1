@@ -1064,7 +1064,7 @@ table = $('#data-table-invoice').DataTable({
                     },
                     {
                               data: "admin",
-                              width: "150px",
+                              width: "120px",
                     },
                     {
                               data: "note",

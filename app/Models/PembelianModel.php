@@ -14,7 +14,7 @@ class PembelianModel extends Model
     protected $table = 'pembelian';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $insertID = 0;
+    protected $insertID = 0; 
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
@@ -232,6 +232,7 @@ class PembelianModel extends Model
         $datafilter = clone $builder;  
         $count = $datafilter->get()->getNumRows();
 
+        $builder->orderby("PODate","desc");   
         $builder->limit($length,$start); 
         $query = $builder->get();  
         foreach($query->getResult() as $row){
@@ -293,54 +294,39 @@ class PembelianModel extends Model
             $htmldetail = '      
             <div class="view-detail" style="display:none">
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-1">  
-                        <span class="fa-stack small">
-                            <i class="fa-regular fa-circle fa-stack-2x"></i>
-                            <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
-                        </span>
-                        <span>Produk</span>
-                    </div> 
+                    <div class="text-primary-600 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                        <iconify-icon icon="ix:box-closed" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Detail Produk 
+                    </div>  
                     '.$this->get_data_detail_pembelian($row).'
                 </div>
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-1"> 
-                        <span class="fa-stack small">
-                            <i class="fa-regular fa-circle fa-stack-2x"></i>
-                            <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                        </span>
-                        <span>Pembayaran</span> 
+                    <div class="text-primary-600 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                        <iconify-icon icon="hugeicons:payment-02" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Pembayaran 
                     </div> 
                     '.$this->get_data_payment_pembelian($row).'
-                </div> 
-                <div class="list-detail pb-3">
-                    <div class="text-head-2 py-1">
-                        <span class="fa-stack small">
-                            <i class="fa-regular fa-circle fa-stack-2x"></i>
-                            <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
-                        </span>
-                        <span>Pengiriman</span> 
-                    </div> 
-                    '.$this->get_data_delivery_pembelian($row).'
                 </div>  
             </div>';
-            $vendor = '<div class="text-detail-3 text-wrap pt-2">'.($row->VendorId == 0 ? $row->NameVendor : $row->VendorName).'</div>';
+            $vendor = '<div class="text-head-3 text-wrap pt-2">'.($row->VendorId == 0 ? $row->VendorName : $row->VendorName).'</div>';
+            // MENGAMBIL DATA Toko 
+            $statusdoc = "Invoice";
             // MENGAMBIL DATA Toko 
             $store = '
-                    <div class="d-flex align-items-center ">  
-                        <div class="flex-grow-1 ms-1">
-                            <div class="d-flex flex-column"> 
-                                <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>
-                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">'.$row->StoreName.'</span>  
-                                <span class="text-detail-2 text-wrap overflow-none ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><i class="fa-solid fa-diagram-project pe-1 "></i>Document Project</span>  
-                            </div>   
-                        </div>
+                    <div class="d-flex align-items-center ">   
+                        <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span> 
+                        <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><i class="fa-solid fa-diagram-project pe-1 "></i>Document Project</span>   
                     </div>';
             $data_row = array( 
+                "POId" => $row->POId,
+                "doc" =>$store.'<div class="text-neutral-400 text-xxs" style="line-height:1">'.$row->POCode.'</span>',
                 "pembelian" => $row, 
-                "code" => $row->POCode.$vendor.$this->get_data_forward_pembelian($row->PORefType,$row->PORef),
-                "date" =>date_format(date_create($row->PODate),"d M Y"),
+                "code" => '<span class="text-primary-600 fw-bold">'.$row->POCode.'</span>
+                <div class="d-flex gap-1 pt-4"> 
+                '.$this->get_data_payment_pembelian($row,true).'</div>', 
+                "date" =>  '<div class="text-head-3" style="line-height:1">'.date_format(date_create($row->PODate),"d M Y").'</div>', 
                 "status" => $status,
-                "store" => $store,
+                "vendor" => $vendor,
+                "store" => $store, 
+                "note" => str_replace(array("\r\n", "\r", "\n"), '\n', $row->PONote), 
                 "admin" => ucwords($row->username),  
                 "biaya" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->POGrandTotal,0)."</span></div>", 
                 "customer" => $row->POCustName,
@@ -351,11 +337,21 @@ class PembelianModel extends Model
                 "delivery" => $this->get_data_delivery_pembelian($row,true), 
                 "PaymentTotal" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->POGrandTotal - $this->get_data_payment_pembelian($row,true,true),0)."</span></div>", 
                 "action" =>'  
-                        <span class="text-primary pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cetak Form PO" onclick="print_pembelian('.$row->POId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-print"></i></span>  
-                        <span class="text-warning pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ubah Data PO" onclick="edit_pembelian('.$row->POId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-pen-to-square"></i></span>
-                        <div class="d-inline ">
-                            <span class="text-danger pointer text-head-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Batalkan Data PO" onclick="delete_pembelian('.$row->POId.',this,\''.$row->ProjectId.'\')"><i class="fa-solid fa-circle-xmark"></i></span>
-                        </div>',
+                    <div class="d-flex align-items-center gap-1 justify-content-center">
+                        <a onclick="print_po('.$row->POId.',this,\''.$statusdoc .'\')""
+                            class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Print Pembelian">
+                            <iconify-icon icon="lucide:printer"></iconify-icon>
+                        </a>
+                        <a onclick="edit_po('.$row->POId.',this,\''.$statusdoc .'\')"
+                            class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Ubah Pembelian">
+                            <iconify-icon icon="lucide:edit"></iconify-icon>
+                        </a>
+                        <a onclick="delete_po('.$row->POId.',this,\''.$statusdoc .'\')"
+                            class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Hapus Pembelian">
+                            <iconify-icon icon="lucide:trash-2">
+                            </iconify-icon>
+                        </a> 
+                    </div>  ',
             );
             array_push($datatable, $data_row);
         }
@@ -500,10 +496,9 @@ class PembelianModel extends Model
         $payment_total = 0;
         if($row->POGrandTotal == 0){
             $html_payment = ' 
-            <span class="fa-stack small">
-                <i class="fa-regular fa-circle fa-stack-2x text-success"></i>
-                <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-            </span>';
+                <button class="position-relative rounded-circle d-flex justify-content-center align-items-center" type="button">
+                    <iconify-icon icon="hugeicons:payment-02" class="text-success text-xl" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Tidak ada pembayaran" ></iconify-icon> 
+                </button>   ';
             $html_payment_detail = ' 
             <div class="fw-normal row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1">  
                 <div class="col bg-light py-2">  

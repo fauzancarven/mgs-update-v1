@@ -554,7 +554,7 @@ class AdminController extends BaseController
             'vendor' => $modelsVendor->get()->getResult(),
             'detail' => $detail, 
         ]; 
-        return view('app/project/po/add_view', $data); 
+        return view('app/02_sales/pembelian/add_view', $data); 
     }
 
 
@@ -603,7 +603,7 @@ class AdminController extends BaseController
             'vendor' => $modelsVendor->get()->getResult(),
             'detail' => $detail, 
         ]; 
-        return view('app/project/po/edit_view', $data);  
+        return view('app/02_sales/pembelian/edit_view', $data);  
     }
 
     
@@ -621,7 +621,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('app/project/po/index', $data); 
+        return view('app/02_sales/pembelian/index', $data); 
     }
     public function accounting(){    
         $modelsstore = new StoreModel();
@@ -633,7 +633,7 @@ class AdminController extends BaseController
             'title' => 'Accounting',
             'menu' => "", 
         ]; 
-        return view('app/accounting/index', $data); 
+        return view('app/03_accounting/index', $data); 
     }
 
     public function paymentrequest(){    
@@ -646,7 +646,7 @@ class AdminController extends BaseController
             'title' => 'Payment Request',
             'menu' => "Accounting", 
         ]; 
-        return view('app/accounting/paymentrequest', $data); 
+        return view('app/03_accounting/paymentrequest', $data); 
     }
 
     public function delivery(){    
@@ -679,7 +679,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('app/accounting/coa/index', $data); 
+        return view('app/03_accounting/coa/index', $data); 
     }
     public function transaction(){    
         $modelsstore = new StoreModel();
@@ -694,7 +694,7 @@ class AdminController extends BaseController
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 
-        return view('app/accounting/transaction/index', $data); 
+        return view('app/03_accounting/transaction/index', $data); 
     }
 
     

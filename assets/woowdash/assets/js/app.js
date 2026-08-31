@@ -14,11 +14,21 @@
 
     item.toggleClass("dropdown-open");
   });
+  var sidebarStatus = localStorage.getItem("sidebar-active");
+
+  if (sidebarStatus === "true") {
+    $(".sidebar-toggle").addClass("active");
+    $(".sidebar").addClass("active");
+    $(".dashboard-main").addClass("active");
+  }
 
   $(".sidebar-toggle").on("click", function () {
     $(this).toggleClass("active");
     $(".sidebar").toggleClass("active");
-    $(".dashboard-main").toggleClass("active");
+    $(".dashboard-main").toggleClass("active"); 
+
+     var isActive = $(".sidebar").hasClass("active");
+    localStorage.setItem("sidebar-active", isActive);
   });
 
   $(".sidebar-mobile-toggle").on("click", function () {
@@ -70,6 +80,8 @@
     buttonEl.innerText = newCta;
   }
 
+
+
   /**
   * Utility function to update the theme setting on the html tag.
   */
@@ -77,6 +89,7 @@
     document.querySelector("html").setAttribute("data-theme", theme);
   }
 
+ 
   /**
   * 1. Grab what we need from the DOM and system settings on page load.
   */
