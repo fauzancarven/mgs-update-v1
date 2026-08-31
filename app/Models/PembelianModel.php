@@ -185,7 +185,7 @@ class PembelianModel extends Model
         $builder1 = clone $builder; 
         $countTotal = $builder1->get()->getNumRows();
 
-
+        $builder->where("POStatus <"," 3"); 
         if(isset($filter["filter"])){ 
             $builder->whereIn("POStatus",$filter["filter"]); 
             $filterdata = 1;

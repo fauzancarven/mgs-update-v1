@@ -941,9 +941,9 @@ $version = "V2.1";
                               </div>
                     </footer>
           </main>
-
+ 
           <!-- main js -->
-          <script src="<?= base_url() ?>assets/woowdash/assets/js/app.js"></script>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/app.js?version=1.0.0"></script>
           <?= $this->renderSection('scriptjs'); ?>
 
 

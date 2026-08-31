@@ -14,6 +14,7 @@
 
     item.toggleClass("dropdown-open");
   });
+  
   var sidebarStatus = localStorage.getItem("sidebar-active");
 
   if (sidebarStatus === "true") {
