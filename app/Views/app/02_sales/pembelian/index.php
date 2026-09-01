@@ -3,7 +3,7 @@
 <?php $this->section('content'); ?>
 
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-          <h6 class="fw-semibold mb-0">List Pembelian</h6>
+          <h6 class="fw-semibold mb-0">List Pembelian Vendor</h6>
           <ul class="d-flex align-items-center gap-2">
                     <li class="fw-medium">
                               <a href="<?= base_url() ?>" class="d-flex align-items-center gap-1 hover-text-primary">
@@ -18,8 +18,8 @@
                                         class="d-flex align-items-center gap-1 hover-text-primary">
                                         <iconify-icon icon="hugeicons:shopping-bag-03" class="icon text-lg">
                                         </iconify-icon>
-                                        List Pembelian
-                              </a>
+                                        List Pembelian Vendor
+                                </a>
                     </li>
           </ul>
 </div>
@@ -31,28 +31,28 @@
                     <div class="d-none d-sm-flex align-items-center justify-content-end mb-2 gap-2 search-data">
                               <div class="input-group">
                                         <input class="form-control form-control-sm input-form combo"
-                                                  id="storedatafilter" placeholder="Pilih Toko" value="" type="text"
+                                                  id="vendordatafilter" placeholder="Pilih Vendor" value="" type="text"
                                                   readonly>
-                                        <iconify-icon icon="material-symbols-light:storefront-outline"
+                                        <iconify-icon icon="hugeicons:factory"
                                                   class="icon text-lg">
                                         </iconify-icon>
-                                        <div class="filter-data left" for="storedatafilter">
+                                        <div class="filter-data left" for="vendordatafilter">
                                                   <ul class="list-group">
                                                             <?php
-                                                        foreach($store as $row){
+                                                        foreach($vendor as $row){
                                                             echo '
                                                             <li
                                                                         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
                                                                         <div
                                                                                 class="form-check style-check d-flex align-items-center">
-                                                                                <input class="form-check-input select store"
+                                                                                <input class="form-check-input select vendor"
                                                                                             type="checkbox"
-                                                                                            data-group="store"
-                                                                                            data-value="'.$row->StoreId.'" value="'.$row->StoreId.'"
-                                                                                            id="store-'.$row->StoreId.'">
+                                                                                            data-group="vendor"
+                                                                                            data-value="'.$row->VendorId.'" value="'.$row->VendorId.'"
+                                                                                            id="vendor-'.$row->VendorId.'">
                                                                                 <label class="form-check-label stretched-link"
-                                                                                            for="store-'.$row->StoreId.'">
-                                                                                            '.$row->StoreCode.'
+                                                                                            for="vendor-'.$row->VendorId.'">
+                                                                                            '.$row->VendorCode.' - '.$row->VendorName.'
                                                                                 </label>
                                                                         </div>
                                                             </li> ';
@@ -71,22 +71,22 @@
                               </div>
                               <div class="input-group">
                                         <input class="form-control form-control-sm input-form combo"
-                                                  id="searchdatafilter" placeholder="Status" value="" type="text"
+                                                  id="searchdatafilterstatus" placeholder="Status" value="" type="text"
                                                   readonly>
 
                                         <iconify-icon icon="mdi:timer" class="icon text-lg">
                                         </iconify-icon>
-                                        <div class="filter-data left" for="searchdatafilter">
+                                        <div class="filter-data left" for="searchdatafilterstatus">
                                                   <ul class="list-group radius-8">
                                                             <li
                                                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
                                                                       <div
                                                                                 class="form-check style-check d-flex align-items-center">
-                                                                                <input class="form-check-input select category"
+                                                                                <input class="form-check-input select status"
                                                                                           type="checkbox"
-                                                                                          data-group="category"
+                                                                                          data-group="status"
                                                                                           data-value="0" value="New"
-                                                                                          id="status-0">
+                                                                                          id="status-0" checked>
                                                                                 <label class="form-check-label stretched-link"
                                                                                           for="status-0">
                                                                                           New
@@ -98,11 +98,11 @@
 
                                                                       <div
                                                                                 class="form-check style-check d-flex align-items-center">
-                                                                                <input class="form-check-input select category"
+                                                                                <input class="form-check-input select status"
                                                                                           type="checkbox"
-                                                                                          data-group="category"
+                                                                                          data-group="status"
                                                                                           data-value="1" value="Proses"
-                                                                                          id="status-1">
+                                                                                          id="status-1" checked>
                                                                                 <label class="form-check-label stretched-link"
                                                                                           for="status-1">
                                                                                           Proses
@@ -113,9 +113,9 @@
                                                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
                                                                       <div
                                                                                 class="form-check style-check d-flex align-items-center">
-                                                                                <input class="form-check-input select category"
+                                                                                <input class="form-check-input select status"
                                                                                           type="checkbox"
-                                                                                          data-group="category"
+                                                                                          data-group="status"
                                                                                           data-value="2"
                                                                                           value="Completed"
                                                                                           id="status-2">
@@ -129,9 +129,9 @@
                                                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-6 bg-base text-secondary-light border border-bottom-0">
                                                                       <div
                                                                                 class="form-check style-check d-flex align-items-center">
-                                                                                <input class="form-check-input select category"
+                                                                                <input class="form-check-input select status"
                                                                                           type="checkbox"
-                                                                                          data-group="category"
+                                                                                          data-group="status"
                                                                                           data-value="3" value="Cancel"
                                                                                           id="status-3">
                                                                                 <label class="form-check-label stretched-link"
@@ -180,561 +180,557 @@
           </div>
 </div>
 
+<!-- start event modal -->
+    <div class="modal fade" id="modal-print-invoice" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-print-invoiceLabel">Print Invoice</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-3">
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="InvPrintFormat" class="col-sm-4 col-form-label">Ukuran
+                                                                Kertas</label>
+                                                    <div class="col-sm-8">
+                                                                <select class="form-select form-select-sm"
+                                                                        id="InvPrintFormat" name="InvPrintFormat"
+                                                                        placeholder="Pilih Admin" style="width:100%">
+                                                                        <option id="A4" selected>A4</option>
+                                                                        <option id="A5">A5</option>
+                                                                </select>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="InvPrintImage" class="col-sm-4 col-form-label">Tampilkan
+                                                                gambar item</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="InvPrintImage" id="InvPrintImage1"
+                                                                                    value="0">
+                                                                        <label class="text-detail"
+                                                                                    for="InvPrintImage1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="InvPrintImage" id="InvPrintImage2"
+                                                                                    value="1" checked>
+                                                                        <label class="text-detail"
+                                                                                    for="InvPrintImage2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="InvPrintImage" class="col-sm-4 col-form-label">Gabungkan
+                                                                Disc item dan DIsc Global</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="InvDisc" id="InvDisc1" value="0">
+                                                                        <label class="text-detail"
+                                                                                    for="InvDisc1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="InvDisc" id="InvDisc2" value="1"
+                                                                                    checked>
+                                                                        <label class="text-detail"
+                                                                                    for="InvDisc2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <script>
+                                            $('#InvPrintFormat').change(function() {
+                                                    console.log($(this).val())
+                                                    if ($(this).val() == "A5") {
+                                                                $('input[name="InvPrintImage"]').prop(
+                                                                        "disabled", true)
+                                                                $('input[name="InvPrintTotal"]').prop(
+                                                                        "disabled", true)
+                                                    } else {
 
-<div class="modal fade" id="modal-print-invoice" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel"
-          aria-hidden="true">
-          <div class="modal-dialog">
-                    <div class="modal-content">
-                              <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-print-invoiceLabel">Print Invoice</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                  aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body p-3">
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="InvPrintFormat" class="col-sm-4 col-form-label">Ukuran
-                                                            Kertas</label>
-                                                  <div class="col-sm-8">
-                                                            <select class="form-select form-select-sm"
-                                                                      id="InvPrintFormat" name="InvPrintFormat"
-                                                                      placeholder="Pilih Admin" style="width:100%">
-                                                                      <option id="A4" selected>A4</option>
-                                                                      <option id="A5">A5</option>
-                                                            </select>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="InvPrintImage" class="col-sm-4 col-form-label">Tampilkan
-                                                            gambar item</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="InvPrintImage" id="InvPrintImage1"
-                                                                                value="0">
-                                                                      <label class="text-detail"
-                                                                                for="InvPrintImage1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="InvPrintImage" id="InvPrintImage2"
-                                                                                value="1" checked>
-                                                                      <label class="text-detail"
-                                                                                for="InvPrintImage2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="InvPrintImage" class="col-sm-4 col-form-label">Gabungkan
-                                                            Disc item dan DIsc Global</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="InvDisc" id="InvDisc1" value="0">
-                                                                      <label class="text-detail"
-                                                                                for="InvDisc1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="InvDisc" id="InvDisc2" value="1"
-                                                                                checked>
-                                                                      <label class="text-detail"
-                                                                                for="InvDisc2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <script>
-                                        $('#InvPrintFormat').change(function() {
-                                                  console.log($(this).val())
-                                                  if ($(this).val() == "A5") {
-                                                            $('input[name="InvPrintImage"]').prop(
-                                                                      "disabled", true)
-                                                            $('input[name="InvPrintTotal"]').prop(
-                                                                      "disabled", true)
-                                                  } else {
+                                                                $('input[name="InvPrintImage"]').prop(
+                                                                        "disabled", false)
+                                                                $('input[name="InvPrintTotal"]').prop(
+                                                                        "disabled", false)
+                                                    }
+                                            });
+                                            </script>
+                                </div>
+                                <div class="modal-footer p-2">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-primary"
+                                                    id="btn-print-invoice">Print</button>
+                                </div>
+                        </div>
+            </div>
+    </div>
+    <div class="modal fade" id="modal-print-payment" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Payment</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-3">
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="PaymentPrintFormat" class="col-sm-4 col-form-label">Ukuran
+                                                                Kertas</label>
+                                                    <div class="col-sm-8">
+                                                                <select class="form-select form-select-sm"
+                                                                        id="PaymentPrintFormat" name="PaymentPrintFormat"
+                                                                        placeholder="Pilih Admin" style="width:100%">
+                                                                        <option id="A4">A4</option>
+                                                                        <option id="A5" selected>A5</option>
+                                                                </select>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="PaymentPrintImage" class="col-sm-4 col-form-label">gunakan
+                                                                gambar item</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintImage"
+                                                                                    id="PaymentPrintImage1" value="0"
+                                                                                    checked disabled>
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintImage1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintImage"
+                                                                                    id="PaymentPrintImage2" value="1"
+                                                                                    disabled>
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintImage2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
 
-                                                            $('input[name="InvPrintImage"]').prop(
-                                                                      "disabled", false)
-                                                            $('input[name="InvPrintTotal"]').prop(
-                                                                      "disabled", false)
-                                                  }
-                                        });
-                                        </script>
-                              </div>
-                              <div class="modal-footer p-2">
-                                        <button type="button" class="btn btn-secondary"
-                                                  data-bs-dismiss="modal">Batal</button>
-                                        <button type="button" class="btn btn-primary"
-                                                  id="btn-print-invoice">Print</button>
-                              </div>
-                    </div>
-          </div>
-</div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="PaymentPrintPriceOld"
+                                                                class="col-sm-4 col-form-label">Hilangkan Pembayaran
+                                                                Sebelumnya</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintPriceOld"
+                                                                                    id="PaymentPrintPriceOld2" value="0"
+                                                                                    checked>
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintPriceOld1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintPriceOld"
+                                                                                    id="PaymentPrintPriceOld2" value="1">
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintPriceOld2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="PaymentPrintPriceSisa"
+                                                                class="col-sm-4 col-form-label">Hilangkan Sisa
+                                                                Pembayaran</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintPriceSisa"
+                                                                                    id="PaymentPrintPriceSisa1" value="0"
+                                                                                    checked>
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintPriceSisa1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintPriceSisa"
+                                                                                    id="PaymentPrintPriceSisa2" value="1">
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintPriceSisa2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2 d-none">
+                                                    <label for="PaymentPrintPrice" class="col-sm-4 col-form-label">gunakan
+                                                                harga</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintPrice"
+                                                                                    id="PaymentPrintPrice1" value="0"
+                                                                                    checked>
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintPrice1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintPrice"
+                                                                                    id="PaymentPrintPrice2" value="1">
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintPrice2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2 d-none">
+                                                    <label for="PaymentPrintTotal" class="col-sm-4 col-form-label">gunakan
+                                                                grand total</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintTotal"
+                                                                                    id="PaymentPrintTotal1" value="0"
+                                                                                    checked>
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintTotal1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="PaymentPrintTotal"
+                                                                                    id="PaymentPrintTotal2" value="1">
+                                                                        <label class="text-detail"
+                                                                                    for="PaymentPrintTotal2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <script>
+                                            $('input[name="PaymentPrintPrice"]').change(function() {
+                                                    if ($(this).val() == 0) {
+                                                                $('input[name="PaymentPrintTotal"]')
+                                                                        .prop("disabled", true)
+                                                    } else {
 
-<div class="modal fade" id="modal-print-payment" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel"
-          aria-hidden="true">
-          <div class="modal-dialog">
-                    <div class="modal-content">
-                              <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Payment</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                  aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body p-3">
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="PaymentPrintFormat" class="col-sm-4 col-form-label">Ukuran
-                                                            Kertas</label>
-                                                  <div class="col-sm-8">
-                                                            <select class="form-select form-select-sm"
-                                                                      id="PaymentPrintFormat" name="PaymentPrintFormat"
-                                                                      placeholder="Pilih Admin" style="width:100%">
-                                                                      <option id="A4">A4</option>
-                                                                      <option id="A5" selected>A5</option>
-                                                            </select>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="PaymentPrintImage" class="col-sm-4 col-form-label">gunakan
-                                                            gambar item</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintImage"
-                                                                                id="PaymentPrintImage1" value="0"
-                                                                                checked disabled>
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintImage1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintImage"
-                                                                                id="PaymentPrintImage2" value="1"
-                                                                                disabled>
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintImage2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
+                                                                $('input[name="PaymentPrintTotal"]')
+                                                                        .prop("disabled", false)
+                                                    }
+                                            });
+                                            $("#PaymentPrintFormat").change(function() {
+                                                    if ($(this).val() == "A5") {
+                                                                $('input[name="PaymentPrintImage"]')
+                                                                        .prop("disabled", true)
+                                                                $('#PaymentPrintImage1').prop("checked",
+                                                                        true)
+                                                                $('input[name="PaymentPrintPrice"]')
+                                                                        .prop("disabled", true)
+                                                                $('#PaymentPrintPrice1').prop("checked",
+                                                                        true)
+                                                                $('input[name="PaymentPrintTotal"]')
+                                                                        .prop("disabled", true)
+                                                                $('#PaymentPrintTotal1').prop("checked",
+                                                                        true)
+                                                    } else {
+                                                                $('input[name="PaymentPrintImage"]')
+                                                                        .prop("disabled", false)
+                                                                $('input[name="PaymentPrintPrice"]')
+                                                                        .prop("disabled", false)
+                                                                $('input[name="PaymentPrintTotal"]')
+                                                                        .prop("disabled", false)
+                                                    }
+                                            })
+                                            </script>
+                                </div>
+                                <div class="modal-footer p-2">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-primary"
+                                                    id="btn-print-payment">Print</button>
+                                </div>
+                        </div>
+            </div>
+    </div>
+    <div class="modal fade" id="modal-print-proforma" tabindex="-1" data-id="0" aria-labelledby="modal-print-proformaLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Proforma</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-3">
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="ProformaPrintFormat"
+                                                                class="col-sm-4 col-form-label">Ukuran Kertas</label>
+                                                    <div class="col-sm-8">
+                                                                <select class="form-select form-select-sm"
+                                                                        id="ProformaPrintFormat"
+                                                                        name="ProformaPrintFormat"
+                                                                        placeholder="Pilih Admin" style="width:100%">
+                                                                        <option id="A5" selected>A5</option>
+                                                                </select>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="ProformaPrintPriceOld"
+                                                                class="col-sm-4 col-form-label">Hilangkan Pembayaran
+                                                                Sebelumnya</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="ProformaPrintPriceOld"
+                                                                                    id="ProformaPrintPriceOld2" value="0"
+                                                                                    checked>
+                                                                        <label class="text-detail"
+                                                                                    for="ProformaPrintPriceOld1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="ProformaPrintPriceOld"
+                                                                                    id="ProformaPrintPriceOld2" value="1">
+                                                                        <label class="text-detail"
+                                                                                    for="ProformaPrintPriceOld2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="ProformaPrintPriceSisa"
+                                                                class="col-sm-4 col-form-label">Hilangkan Sisa
+                                                                Pembayaran</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="ProformaPrintPriceSisa"
+                                                                                    id="ProformaPrintPriceSisa1" value="0"
+                                                                                    checked>
+                                                                        <label class="text-detail"
+                                                                                    for="ProformaPrintPriceSisa1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="ProformaPrintPriceSisa"
+                                                                                    id="ProformaPrintPriceSisa2" value="1">
+                                                                        <label class="text-detail"
+                                                                                    for="ProformaPrintPriceSisa2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <script>
+                                            $('input[name="ProformaPrintPrice"]').change(function() {
+                                                    if ($(this).val() == 0) {
+                                                                $('input[name="ProformaPrintTotal"]')
+                                                                        .prop("disabled", true)
+                                                    } else {
 
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="PaymentPrintPriceOld"
-                                                            class="col-sm-4 col-form-label">Hilangkan Pembayaran
-                                                            Sebelumnya</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintPriceOld"
-                                                                                id="PaymentPrintPriceOld2" value="0"
-                                                                                checked>
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintPriceOld1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintPriceOld"
-                                                                                id="PaymentPrintPriceOld2" value="1">
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintPriceOld2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="PaymentPrintPriceSisa"
-                                                            class="col-sm-4 col-form-label">Hilangkan Sisa
-                                                            Pembayaran</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintPriceSisa"
-                                                                                id="PaymentPrintPriceSisa1" value="0"
-                                                                                checked>
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintPriceSisa1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintPriceSisa"
-                                                                                id="PaymentPrintPriceSisa2" value="1">
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintPriceSisa2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2 d-none">
-                                                  <label for="PaymentPrintPrice" class="col-sm-4 col-form-label">gunakan
-                                                            harga</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintPrice"
-                                                                                id="PaymentPrintPrice1" value="0"
-                                                                                checked>
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintPrice1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintPrice"
-                                                                                id="PaymentPrintPrice2" value="1">
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintPrice2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2 d-none">
-                                                  <label for="PaymentPrintTotal" class="col-sm-4 col-form-label">gunakan
-                                                            grand total</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintTotal"
-                                                                                id="PaymentPrintTotal1" value="0"
-                                                                                checked>
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintTotal1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="PaymentPrintTotal"
-                                                                                id="PaymentPrintTotal2" value="1">
-                                                                      <label class="text-detail"
-                                                                                for="PaymentPrintTotal2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <script>
-                                        $('input[name="PaymentPrintPrice"]').change(function() {
-                                                  if ($(this).val() == 0) {
-                                                            $('input[name="PaymentPrintTotal"]')
-                                                                      .prop("disabled", true)
-                                                  } else {
+                                                                $('input[name="ProformaPrintTotal"]')
+                                                                        .prop("disabled", false)
+                                                    }
+                                            });
+                                            $("#ProformaPrintFormat").change(function() {
+                                                    if ($(this).val() == "A5") {
+                                                                $('input[name="ProformaPrintImage"]')
+                                                                        .prop("disabled", true)
+                                                                $('#ProformaPrintImage1').prop(
+                                                                        "checked", true)
+                                                                $('input[name="ProformaPrintPrice"]')
+                                                                        .prop("disabled", true)
+                                                                $('#ProformaPrintPrice1').prop(
+                                                                        "checked", true)
+                                                                $('input[name="ProformaPrintTotal"]')
+                                                                        .prop("disabled", true)
+                                                                $('#ProformaPrintTotal1').prop(
+                                                                        "checked", true)
+                                                    } else {
+                                                                $('input[name="ProformaPrintImage"]')
+                                                                        .prop("disabled", false)
+                                                                $('input[name="ProformaPrintPrice"]')
+                                                                        .prop("disabled", false)
+                                                                $('input[name="ProformaPrintTotal"]')
+                                                                        .prop("disabled", false)
+                                                    }
+                                            })
+                                            </script>
+                                </div>
+                                <div class="modal-footer p-2">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-primary"
+                                                    id="btn-print-proforma">Print</button>
+                                </div>
+                        </div>
+            </div>
+    </div>
+    <!-- Modal Comment -->
+    <div class="modal fade" id="modal-comment-invoice" tabindex="-1" data-id="0"
+            aria-labelledby="modal-comment-invoiceLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-comment-invoiceLabel">Comment invoice
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-3">
+                                            <div class="row mb-24 gy-3 align-items-center">
+                                                    <label class="form-label mb-0 col-sm-3">Catatan</label>
+                                                    <div class="col-sm-9">
+                                                                <textarea id="InvNote" class="form-control" rows="4"
+                                                                        cols="50"
+                                                                        placeholder="Catatan invoice"></textarea>
+                                                    </div>
+                                            </div>
+                                </div>
+                                <div class="modal-footer p-2">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-sm btn-primary-600"
+                                                    id="btn-comment-sph">Simpan</button>
+                                </div>
+                        </div>
+            </div>
+    </div>
+    <div class="modal fade" id="modal-comment-po" tabindex="-1" data-id="0" aria-labelledby="modal-comment-poLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-comment-poLabel">Comment Pembelian
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-3">
+                                            <div class="row mb-24 gy-3 align-items-center">
+                                                    <label class="form-label mb-0 col-sm-3">Catatan</label>
+                                                    <div class="col-sm-9">
+                                                                <textarea id="PONote" class="form-control" rows="4"
+                                                                        cols="50"
+                                                                        placeholder="Catatan Pembelian"></textarea>
+                                                    </div>
+                                            </div>
+                                </div>
+                                <div class="modal-footer p-2">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-sm btn-primary-600"
+                                                    id="btn-comment-po">Simpan</button>
+                                </div>
+                        </div>
+            </div>
+    </div>
+    <div class="modal fade" id="modal-print-po" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Pembelian</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-3">
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="POPrintFormat" class="col-sm-4 col-form-label">Ukuran
+                                                                Kertas</label>
+                                                    <div class="col-sm-8">
+                                                                <select class="form-select form-select-sm"
+                                                                        id="POPrintFormat" name="POPrintFormat"
+                                                                        placeholder="Pilih Admin" style="width:100%">
+                                                                        <option id="1" selected>A4</option>
+                                                                        <option id="2">A5</option>
+                                                                </select>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="POPrintImage" class="col-sm-4 col-form-label">gunakan
+                                                                gambar item</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="POPrintImage" id="POPrintImage1"
+                                                                                    value="0">
+                                                                        <label class="text-detail"
+                                                                                    for="POPrintImage1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="POPrintImage" id="POPrintImage2"
+                                                                                    value="1" checked>
+                                                                        <label class="text-detail"
+                                                                                    for="POPrintImage2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="POPrintPrice" class="col-sm-4 col-form-label">gunakan
+                                                                harga</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="POPrintPrice" id="POPrintPrice1"
+                                                                                    value="0">
+                                                                        <label class="text-detail"
+                                                                                    for="POPrintPrice1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="POPrintPrice" id="POPrintPrice2"
+                                                                                    value="1" checked>
+                                                                        <label class="text-detail"
+                                                                                    for="POPrintPrice2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <div class="row mb-1 align-items-center mt-2">
+                                                    <label for="POPrintTotal" class="col-sm-4 col-form-label">gunakan
+                                                                grand total</label>
+                                                    <div class="col-sm-8">
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="POPrintTotal" id="POPrintTotal1"
+                                                                                    value="0">
+                                                                        <label class="text-detail"
+                                                                                    for="POPrintTotal1">Tidak</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" type="radio"
+                                                                                    name="POPrintTotal" id="POPrintTotal2"
+                                                                                    value="1" checked>
+                                                                        <label class="text-detail"
+                                                                                    for="POPrintTotal2">Ya</label>
+                                                                </div>
+                                                    </div>
+                                            </div>
+                                            <script>
+                                            $('input[name="POPrintPrice"]').change(function() {
+                                                    if ($(this).val() == 0) {
+                                                                $('input[name="POPrintTotal"]').prop(
+                                                                        "disabled", true)
+                                                    } else {
 
-                                                            $('input[name="PaymentPrintTotal"]')
-                                                                      .prop("disabled", false)
-                                                  }
-                                        });
-                                        $("#PaymentPrintFormat").change(function() {
-                                                  if ($(this).val() == "A5") {
-                                                            $('input[name="PaymentPrintImage"]')
-                                                                      .prop("disabled", true)
-                                                            $('#PaymentPrintImage1').prop("checked",
-                                                                      true)
-                                                            $('input[name="PaymentPrintPrice"]')
-                                                                      .prop("disabled", true)
-                                                            $('#PaymentPrintPrice1').prop("checked",
-                                                                      true)
-                                                            $('input[name="PaymentPrintTotal"]')
-                                                                      .prop("disabled", true)
-                                                            $('#PaymentPrintTotal1').prop("checked",
-                                                                      true)
-                                                  } else {
-                                                            $('input[name="PaymentPrintImage"]')
-                                                                      .prop("disabled", false)
-                                                            $('input[name="PaymentPrintPrice"]')
-                                                                      .prop("disabled", false)
-                                                            $('input[name="PaymentPrintTotal"]')
-                                                                      .prop("disabled", false)
-                                                  }
-                                        })
-                                        </script>
-                              </div>
-                              <div class="modal-footer p-2">
-                                        <button type="button" class="btn btn-secondary"
-                                                  data-bs-dismiss="modal">Batal</button>
-                                        <button type="button" class="btn btn-primary"
-                                                  id="btn-print-payment">Print</button>
-                              </div>
-                    </div>
-          </div>
-</div>
+                                                                $('input[name="POPrintTotal"]').prop(
+                                                                        "disabled", false)
+                                                    }
+                                            });
+                                            // $("#POPrintFormat").change(function(){
+                                            //     if($(this).val() == "A5"){
+                                            //         $('input[name="POPrintTotal"]').prop("disabled",true)
+                                            //         $('input[name="POPrintPrice"]').prop("disabled",true)
+                                            //         $('input[name="POPrintImage"]').prop("disabled",true)
+                                            //     } else{ 
+                                            //         $('input[name="POPrintTotal"]').prop("disabled",false)
+                                            //         $('input[name="POPrintPrice"]').prop("disabled",false)
+                                            //         $('input[name="POPrintImage"]').prop("disabled",false)
+                                            //     }
+                                            // })
+                                            </script>
+                                </div>
+                                <div class="modal-footer p-2">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-primary" id="btn-print-po">Print</button>
+                                </div>
+                        </div>
+            </div>
+    </div>
 
-
-<div class="modal fade" id="modal-print-proforma" tabindex="-1" data-id="0" aria-labelledby="modal-print-proformaLabel"
-          aria-hidden="true">
-          <div class="modal-dialog">
-                    <div class="modal-content">
-                              <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Proforma</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                  aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body p-3">
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="ProformaPrintFormat"
-                                                            class="col-sm-4 col-form-label">Ukuran Kertas</label>
-                                                  <div class="col-sm-8">
-                                                            <select class="form-select form-select-sm"
-                                                                      id="ProformaPrintFormat"
-                                                                      name="ProformaPrintFormat"
-                                                                      placeholder="Pilih Admin" style="width:100%">
-                                                                      <option id="A5" selected>A5</option>
-                                                            </select>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="ProformaPrintPriceOld"
-                                                            class="col-sm-4 col-form-label">Hilangkan Pembayaran
-                                                            Sebelumnya</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="ProformaPrintPriceOld"
-                                                                                id="ProformaPrintPriceOld2" value="0"
-                                                                                checked>
-                                                                      <label class="text-detail"
-                                                                                for="ProformaPrintPriceOld1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="ProformaPrintPriceOld"
-                                                                                id="ProformaPrintPriceOld2" value="1">
-                                                                      <label class="text-detail"
-                                                                                for="ProformaPrintPriceOld2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="ProformaPrintPriceSisa"
-                                                            class="col-sm-4 col-form-label">Hilangkan Sisa
-                                                            Pembayaran</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="ProformaPrintPriceSisa"
-                                                                                id="ProformaPrintPriceSisa1" value="0"
-                                                                                checked>
-                                                                      <label class="text-detail"
-                                                                                for="ProformaPrintPriceSisa1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="ProformaPrintPriceSisa"
-                                                                                id="ProformaPrintPriceSisa2" value="1">
-                                                                      <label class="text-detail"
-                                                                                for="ProformaPrintPriceSisa2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <script>
-                                        $('input[name="ProformaPrintPrice"]').change(function() {
-                                                  if ($(this).val() == 0) {
-                                                            $('input[name="ProformaPrintTotal"]')
-                                                                      .prop("disabled", true)
-                                                  } else {
-
-                                                            $('input[name="ProformaPrintTotal"]')
-                                                                      .prop("disabled", false)
-                                                  }
-                                        });
-                                        $("#ProformaPrintFormat").change(function() {
-                                                  if ($(this).val() == "A5") {
-                                                            $('input[name="ProformaPrintImage"]')
-                                                                      .prop("disabled", true)
-                                                            $('#ProformaPrintImage1').prop(
-                                                                      "checked", true)
-                                                            $('input[name="ProformaPrintPrice"]')
-                                                                      .prop("disabled", true)
-                                                            $('#ProformaPrintPrice1').prop(
-                                                                      "checked", true)
-                                                            $('input[name="ProformaPrintTotal"]')
-                                                                      .prop("disabled", true)
-                                                            $('#ProformaPrintTotal1').prop(
-                                                                      "checked", true)
-                                                  } else {
-                                                            $('input[name="ProformaPrintImage"]')
-                                                                      .prop("disabled", false)
-                                                            $('input[name="ProformaPrintPrice"]')
-                                                                      .prop("disabled", false)
-                                                            $('input[name="ProformaPrintTotal"]')
-                                                                      .prop("disabled", false)
-                                                  }
-                                        })
-                                        </script>
-                              </div>
-                              <div class="modal-footer p-2">
-                                        <button type="button" class="btn btn-secondary"
-                                                  data-bs-dismiss="modal">Batal</button>
-                                        <button type="button" class="btn btn-primary"
-                                                  id="btn-print-proforma">Print</button>
-                              </div>
-                    </div>
-          </div>
-</div>
-
-<!-- Modal Comment -->
-<div class="modal fade" id="modal-comment-invoice" tabindex="-1" data-id="0"
-          aria-labelledby="modal-comment-invoiceLabel" aria-hidden="true">
-          <div class="modal-dialog">
-                    <div class="modal-content">
-                              <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-comment-invoiceLabel">Comment invoice
-                                        </h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                  aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body p-3">
-                                        <div class="row mb-24 gy-3 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-3">Catatan</label>
-                                                  <div class="col-sm-9">
-                                                            <textarea id="InvNote" class="form-control" rows="4"
-                                                                      cols="50"
-                                                                      placeholder="Catatan invoice"></textarea>
-                                                  </div>
-                                        </div>
-                              </div>
-                              <div class="modal-footer p-2">
-                                        <button type="button" class="btn btn-sm btn-secondary"
-                                                  data-bs-dismiss="modal">Batal</button>
-                                        <button type="button" class="btn btn-sm btn-primary-600"
-                                                  id="btn-comment-sph">Simpan</button>
-                              </div>
-                    </div>
-          </div>
-</div>
-<div class="modal fade" id="modal-comment-po" tabindex="-1" data-id="0" aria-labelledby="modal-comment-poLabel"
-          aria-hidden="true">
-          <div class="modal-dialog">
-                    <div class="modal-content">
-                              <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-comment-poLabel">Comment Pembelian
-                                        </h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                  aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body p-3">
-                                        <div class="row mb-24 gy-3 align-items-center">
-                                                  <label class="form-label mb-0 col-sm-3">Catatan</label>
-                                                  <div class="col-sm-9">
-                                                            <textarea id="PONote" class="form-control" rows="4"
-                                                                      cols="50"
-                                                                      placeholder="Catatan Pembelian"></textarea>
-                                                  </div>
-                                        </div>
-                              </div>
-                              <div class="modal-footer p-2">
-                                        <button type="button" class="btn btn-sm btn-secondary"
-                                                  data-bs-dismiss="modal">Batal</button>
-                                        <button type="button" class="btn btn-sm btn-primary-600"
-                                                  id="btn-comment-po">Simpan</button>
-                              </div>
-                    </div>
-          </div>
-</div>
-
-
-<div class="modal fade" id="modal-print-po" tabindex="-1" data-id="0" aria-labelledby="modal-print-invoiceLabel"
-          aria-hidden="true">
-          <div class="modal-dialog">
-                    <div class="modal-content">
-                              <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modal-print-poLabel">Print Pembelian</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                  aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body p-3">
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="POPrintFormat" class="col-sm-4 col-form-label">Ukuran
-                                                            Kertas</label>
-                                                  <div class="col-sm-8">
-                                                            <select class="form-select form-select-sm"
-                                                                      id="POPrintFormat" name="POPrintFormat"
-                                                                      placeholder="Pilih Admin" style="width:100%">
-                                                                      <option id="1" selected>A4</option>
-                                                                      <option id="2">A5</option>
-                                                            </select>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="POPrintImage" class="col-sm-4 col-form-label">gunakan
-                                                            gambar item</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="POPrintImage" id="POPrintImage1"
-                                                                                value="0">
-                                                                      <label class="text-detail"
-                                                                                for="POPrintImage1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="POPrintImage" id="POPrintImage2"
-                                                                                value="1" checked>
-                                                                      <label class="text-detail"
-                                                                                for="POPrintImage2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="POPrintPrice" class="col-sm-4 col-form-label">gunakan
-                                                            harga</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="POPrintPrice" id="POPrintPrice1"
-                                                                                value="0">
-                                                                      <label class="text-detail"
-                                                                                for="POPrintPrice1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="POPrintPrice" id="POPrintPrice2"
-                                                                                value="1" checked>
-                                                                      <label class="text-detail"
-                                                                                for="POPrintPrice2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <div class="row mb-1 align-items-center mt-2">
-                                                  <label for="POPrintTotal" class="col-sm-4 col-form-label">gunakan
-                                                            grand total</label>
-                                                  <div class="col-sm-8">
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="POPrintTotal" id="POPrintTotal1"
-                                                                                value="0">
-                                                                      <label class="text-detail"
-                                                                                for="POPrintTotal1">Tidak</label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                      <input class="form-check-input" type="radio"
-                                                                                name="POPrintTotal" id="POPrintTotal2"
-                                                                                value="1" checked>
-                                                                      <label class="text-detail"
-                                                                                for="POPrintTotal2">Ya</label>
-                                                            </div>
-                                                  </div>
-                                        </div>
-                                        <script>
-                                        $('input[name="POPrintPrice"]').change(function() {
-                                                  if ($(this).val() == 0) {
-                                                            $('input[name="POPrintTotal"]').prop(
-                                                                      "disabled", true)
-                                                  } else {
-
-                                                            $('input[name="POPrintTotal"]').prop(
-                                                                      "disabled", false)
-                                                  }
-                                        });
-                                        // $("#POPrintFormat").change(function(){
-                                        //     if($(this).val() == "A5"){
-                                        //         $('input[name="POPrintTotal"]').prop("disabled",true)
-                                        //         $('input[name="POPrintPrice"]').prop("disabled",true)
-                                        //         $('input[name="POPrintImage"]').prop("disabled",true)
-                                        //     } else{ 
-                                        //         $('input[name="POPrintTotal"]').prop("disabled",false)
-                                        //         $('input[name="POPrintPrice"]').prop("disabled",false)
-                                        //         $('input[name="POPrintImage"]').prop("disabled",false)
-                                        //     }
-                                        // })
-                                        </script>
-                              </div>
-                              <div class="modal-footer p-2">
-                                        <button type="button" class="btn btn-secondary"
-                                                  data-bs-dismiss="modal">Batal</button>
-                                        <button type="button" class="btn btn-primary" id="btn-print-po">Print</button>
-                              </div>
-                    </div>
-          </div>
-</div>
+<!-- end event modal -->
 
 <div id='view-container'></div>
 <div id="modal-message"></div>
@@ -743,7 +739,7 @@
 <script>
 var xhr_load_project;
 var filter_status_select = []
-var filter_store_select = []
+var filter_vendor_select = []
 
 function loader_datatable() {
           // if (xhr_load_project) {
@@ -879,16 +875,11 @@ load_paging_html = function(data) {
           $("#paging-data").html(page_html);
 }
 // FILTER TANGGAL
-var start = moment().startOf('month');
-var end = moment().endOf('month');
-
-function cb(start, end) {
-          $("#searchdatadate").val(start.format('DD MMM YYYY') + ' - ' + end.format('DD MMM YYYY'));
-          $("#searchdatadate").data("start", start.format('YYYY/MM/DD'))
-          $("#searchdatadate").data("end", end.format('YYYY/MM/DD'))
-          table.ajax.reload(null, false);
-}
+var start = "";
+var end = ""; 
+ 
 $('#searchdatadate').daterangepicker({
+    "alwaysShowCalendars": true,
           autoUpdateInput: false,
           ranges: {
                     'Hari Ini': [moment(), moment()],
@@ -899,14 +890,20 @@ $('#searchdatadate').daterangepicker({
                     'bulan kemarin': [moment().subtract(1, 'month').startOf('month'), moment()
                               .subtract(1, 'month').endOf('month')
                     ]
-          },
-          startDate: start,
-          endDate: end,
+          }, 
           locale: {
                     format: 'DD MMMM YYYY',
                     cancelLabel: 'Reset'
           }
-}, cb);
+});
+
+// Kosongkan atribut data di awal agar backend membaca filter kosong saat load pertama
+$('#searchdatadate').val('');
+$('#searchdatadate').data("start", "");
+$('#searchdatadate').data("end", "");
+ 
+
+
 $('#searchdatadate').on('apply.daterangepicker', function(ev, picker) {
           $(this).val(picker.startDate.format('DD MMM YYYY') + ' - ' + picker.endDate.format(
                     'DD MMM YYYY'));
@@ -925,17 +922,7 @@ $('#searchdatadate').on('apply.daterangepicker', function(ev, picker) {
 $("#searchdatainvoice").keyup(function() {
           //loader_datatable(); 
           table.ajax.reload(null, false);
-})
-$('#filterdatastatus').select2({
-          multiple: true,
-          templateSelection: function(selection) {
-                    var selected = $('#filterdatastatus').val().length;
-                    return selected + " item dipilih";
-          }
-});
-$('#filterdatastatus').on('select2:select', function(e) {
-          $('.select2-selection__choice').remove();
-});
+}) 
 $(".input-group .combo").click(function() {
           if ($(this).parent().hasClass("active")) {
                     $(this).parent().removeClass("active");
@@ -953,7 +940,7 @@ $(".input-group .combo").click(function() {
                     });
           }
 })
-$('.form-check-input.select.category').change(function() {
+$('.form-check-input.select.status').change(function() {
           if ($(this).is(':checked')) {
                     filter_status_select.push($(this).data("value"))
           } else {
@@ -962,23 +949,29 @@ $('.form-check-input.select.category').change(function() {
                               filter_status_select.splice(index, 1);
                     }
           }
-          (filter_status_select.length === 0 ? $("#searchdatafilter").val("") : $(
-                    "#searchdatafilter").val(String(filter_status_select.length) +
+          (filter_status_select.length === 0 ? $("#searchdatafilterstatus").val("") : $(
+                    "#searchdatafilterstatus").val(String(filter_status_select.length) +
                     " status dipilih"));
           //loader_datatable(); 
           table.ajax.reload(null, false);
-})
-$('.form-check-input.select.store').change(function() {
+}) 
+filter_status_select.push(0,1);
+(filter_status_select.length === 0 ? $("#searchdatafilterstatus").val("") : $(
+                    "#searchdatafilterstatus").val(String(filter_status_select.length) +
+                    " status dipilih"));
+
+ 
+$('.form-check-input.select.vendor').change(function() {
           if ($(this).is(':checked')) {
-                    filter_store_select.push($(this).data("value"))
+                    filter_vendor_select.push($(this).data("value"))
           } else {
-                    var index = filter_store_select.indexOf($(this).data("value"));
+                    var index = filter_vendor_select.indexOf($(this).data("value"));
                     if (index !== -1) {
-                              filter_store_select.splice(index, 1);
+                              filter_vendor_select.splice(index, 1);
                     }
           }
-          (filter_store_select.length === 0 ? $("#storedatafilter").val("") : $("#storedatafilter")
-                    .val(String(filter_store_select.length) + " toko dipilih"));
+          (filter_vendor_select.length === 0 ? $("#vendordatafilter").val("") : $("#vendordatafilter")
+                    .val(String(filter_vendor_select.length) + " vendor dipilih"));
           //loader_datatable(); 
           table.ajax.reload(null, false);
 })
@@ -1006,11 +999,11 @@ table = $('#data-table-invoice').DataTable({
           "processing": true,
           "serverSide": true,
           "ajax": {
-                    "url": "<?= base_url()?>datatables/get-datatable-pembelian",
+                    "url": "<?= base_url()?>datatables/get-datatable-pembelian", 
                     "type": "POST",
                     "data": function(data) {
                               data["search"] = $("#searchdatainvoice").val();
-                              data["store"] = filter_store_select;
+                              data["vendor"] = filter_vendor_select;
                               data["filter"] = filter_status_select;
                               data["datestart"] = $("#searchdatadate").data("start");
                               data["dateend"] = $("#searchdatadate").data("end");
@@ -1214,8 +1207,7 @@ table.on('click', '.btn-detail-item', function() {
 function format(data) {
           return data.detail;
 }
-
-cb(start, end);
+ 
 tooltiprenew = function() {
           // Hapus tooltip sebelumnya
           var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

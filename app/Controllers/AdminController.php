@@ -610,6 +610,7 @@ class AdminController extends BaseController
     public function pembelian()
     {    
         $modelsstore = new StoreModel();
+        $modelsVendor = new VendorModel();
         $modelsuser = new UserModel();
         $project = new  ProjectcategoryModel();
         $data = [
@@ -618,6 +619,7 @@ class AdminController extends BaseController
             'title' => 'Pembelian',
             'menu' => "Inventory",
             'store' => $modelsstore->get()->getResult(),
+            'vendor' => $modelsVendor->get()->getResult(),
             'kategori' => $project->get()->getResult(),
             'admin' => $modelsuser->get()->getResult()
         ]; 

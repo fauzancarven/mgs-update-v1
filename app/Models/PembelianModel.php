@@ -190,8 +190,8 @@ class PembelianModel extends Model
             $builder->whereIn("POStatus",$filter["filter"]); 
             $filterdata = 1;
         } 
-        if(isset($filter["store"])){ 
-            $builder->whereIn("pembelian.StoreId",$filter["store"]); 
+        if(isset($filter["vendor"])){ 
+            $builder->whereIn("pembelian.VendorId",$filter["vendor"]); 
             $filterdata = 1;
         } 
         if($filter["search"]){ 
