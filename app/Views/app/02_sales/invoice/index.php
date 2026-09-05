@@ -86,7 +86,7 @@
                                                                                           type="checkbox"
                                                                                           data-group="category"
                                                                                           data-value="0" value="New"
-                                                                                          id="status-0">
+                                                                                          id="status-0" checked>
                                                                                 <label class="form-check-label stretched-link"
                                                                                           for="status-0">
                                                                                           New
@@ -102,7 +102,7 @@
                                                                                           type="checkbox"
                                                                                           data-group="category"
                                                                                           data-value="1" value="Proses"
-                                                                                          id="status-1">
+                                                                                          id="status-1" checked>
                                                                                 <label class="form-check-label stretched-link"
                                                                                           for="status-1">
                                                                                           Proses
@@ -881,17 +881,11 @@ load_paging_html = function(data) {
         `;
           $("#paging-data").html(page_html);
 }
-// FILTER TANGGAL
-var start = moment().startOf('month');
-var end = moment().endOf('month');
-
-function cb(start, end) {
-          $("#searchdatadate").val(start.format('DD MMM YYYY') + ' - ' + end.format('DD MMM YYYY'));
-          $("#searchdatadate").data("start", start.format('YYYY/MM/DD'))
-          $("#searchdatadate").data("end", end.format('YYYY/MM/DD'))
-          table.ajax.reload(null, false);
-}
+var start = "";
+var end = ""; 
+ 
 $('#searchdatadate').daterangepicker({
+    "alwaysShowCalendars": true,
           autoUpdateInput: false,
           ranges: {
                     'Hari Ini': [moment(), moment()],
@@ -902,14 +896,19 @@ $('#searchdatadate').daterangepicker({
                     'bulan kemarin': [moment().subtract(1, 'month').startOf('month'), moment()
                               .subtract(1, 'month').endOf('month')
                     ]
-          },
-          startDate: start,
-          endDate: end,
+          }, 
           locale: {
                     format: 'DD MMMM YYYY',
                     cancelLabel: 'Reset'
           }
-}, cb);
+});
+
+
+// Kosongkan atribut data di awal agar backend membaca filter kosong saat load pertama
+$('#searchdatadate').val('');
+$('#searchdatadate').data("start", "");
+$('#searchdatadate').data("end", "");
+ 
 $('#searchdatadate').on('apply.daterangepicker', function(ev, picker) {
           $(this).val(picker.startDate.format('DD MMM YYYY') + ' - ' + picker.endDate.format(
                     'DD MMM YYYY'));
@@ -956,6 +955,8 @@ $(".input-group .combo").click(function() {
                     });
           }
 })
+
+
 $('.form-check-input.select.category').change(function() {
           if ($(this).is(':checked')) {
                     filter_status_select.push($(this).data("value"))
@@ -971,6 +972,13 @@ $('.form-check-input.select.category').change(function() {
           //loader_datatable(); 
           table.ajax.reload(null, false);
 })
+
+
+filter_status_select.push(0,1);
+(filter_status_select.length === 0 ? $("#searchdatafilter").val("") : $(
+                    "#searchdatafilter").val(String(filter_status_select.length) +
+                    " status dipilih"));
+
 $('.form-check-input.select.store').change(function() {
           if ($(this).is(':checked')) {
                     filter_store_select.push($(this).data("value"))

@@ -37,6 +37,12 @@
                                                   class="icon text-lg">
                                         </iconify-icon>
                                         <div class="filter-data left" for="vendordatafilter">
+                                                <div class="search-filter p-2 bg-white">
+                                                    <div class="input-group flex-fill">  
+                                                        <input class="form-control form-control-sm input-form" name="filter-list" id="searchvendor" data-name="Vendor" placeholder="Cari Vendor" value="" type="text" style="padding-left: 2rem;border: 1px solid #c7c6c6 !important;">
+                                                        <i class="fa-solid fa-magnifying-glass" style="position: absolute;top: 50%;  transform: translate(50%, -50%);z-index: 10;"></i> 
+                                                    </div>
+                                                </div>
                                                   <ul class="list-group">
                                                             <?php
                                                         foreach($vendor as $row){

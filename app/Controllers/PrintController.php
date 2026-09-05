@@ -328,7 +328,7 @@ class PrintController extends BaseController
                         $html = view('app/02_sales/payment/print_payment_a5',$data); 
                 }else{ 
                         $data["header_footer"] = $modelheader->get_header_a4($data["inv"]->StoreId);     
-                        $html = view('app/project/payment/print_payment_a4',$data); 
+                        $html = view('app/02_sales/payment/print_payment_a4',$data); 
                 }
                 $dompdf->loadHtml($html);
                 $dompdf->render();

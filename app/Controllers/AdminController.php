@@ -651,6 +651,25 @@ class AdminController extends BaseController
         return view('app/03_accounting/paymentrequest', $data); 
     }
 
+    public function pengiriman()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsVendor = new VendorModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Pengiriman',
+            'menu' => "Inventory",
+            'store' => $modelsstore->get()->getResult(),
+            'vendor' => $modelsVendor->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('app/02_sales/delivery/index', $data); 
+    }
+
     public function delivery(){    
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();

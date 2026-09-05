@@ -206,6 +206,13 @@ $version = "V2.1";
                                                             <span>Pembelian</span>
                                                   </a>
                                         </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/sales/pengiriman">
+                                                            <iconify-icon icon="hugeicons:container-truck-01" class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Pengiriman</span>
+                                                  </a>
+                                        </li>
 
 
                                         <li class="sidebar-menu-group-title">Accounting</li>
