@@ -1220,37 +1220,37 @@ class PembelianModel extends Model
         return JSON_ENCODE(array("status"=>true));
         }
         function update_status_pembelian($id,$status){
-        $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();
+            $dataold = $builder = $this->getWhere(['POId' => $id], 1)->getRow();
 
-        $builder = $this->db->table("pembelian");
-        $builder->set('POStatus', $status);
-        $builder->set('updated_user', user()->id);
-        $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
-        $builder->where('POId', $id);
-        $builder->update();
+            $builder = $this->db->table("pembelian");
+            $builder->set('POStatus', $status);
+            $builder->set('updated_user', user()->id);
+            $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
+            $builder->where('POId', $id);
+            $builder->update();
 
-        $statuslist = array(
-        0 => "New", // kolom action tidak dapat diurutkan
-        1 => "Proses", // kolom action tidak dapat diurutkan
-        2 => "Finish", // kolom name
-        3 => "Cancel", // kolom name
-        );
+            $statuslist = array(
+            0 => "New", // kolom action tidak dapat diurutkan
+            1 => "Proses", // kolom action tidak dapat diurutkan
+            2 => "Finish", // kolom name
+            3 => "Cancel", // kolom name
+            );
 
-        //create Log action
-        $activityModel = new ActivityModel();
-        $activityModel->insert(
-        array(
-        "menu"=>"Pembelian",
-        "type"=>"Status",
-        "name"=> "Status Data Pembelian diubah dari ".$statuslist[$dataold->POStatus]." menjadi ".$statuslist[$status]
-        . " dengan nomor ".$dataold->POCode,
-        "desc"=> json_encode([]),
-        "created_user"=>user()->id,
-        "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),
-        )
-        );
+            //create Log action
+            $activityModel = new ActivityModel();
+            $activityModel->insert(
+            array(
+            "menu"=>"Pembelian",
+            "type"=>"Status",
+            "name"=> "Status Data Pembelian diubah dari ".$statuslist[$dataold->POStatus]." menjadi ".$statuslist[$status]
+            . " dengan nomor ".$dataold->POCode,
+            "desc"=> json_encode([]),
+            "created_user"=>user()->id,
+            "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),
+            )
+            );
 
-        return JSON_ENCODE(array("status"=>true));
+            return JSON_ENCODE(array("status"=>true));
         }
 
         function update_comment($comment,$id){

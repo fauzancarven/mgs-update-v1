@@ -159,6 +159,7 @@ $routes->post('/action/add-proses-delivery/(:num)', 'ActionController::delivery_
 $routes->post('/action/edit-proses-delivery/(:num)', 'ActionController::delivery_proses_edit/$1', ['filter' => 'login']);
 $routes->post('/action/change-date-delivery-proses/(:num)', 'ActionController::delivery_proses_edit_date/$1', ['filter' => 'login']);
 $routes->post('/get/data-proses-delivery-status/(:num)', 'ActionController::get_delivery_proses_status/$1', ['filter' => 'login']);
+$routes->post('/action/update-delivery/(:num)/(:num)', 'ActionController::delivery_status/$1/$2', ['filter' => 'login']); 
 
 
 $routes->post('/action/add-finish-delivery/(:num)', 'ActionController::delivery_finish/$1', ['filter' => 'login']);

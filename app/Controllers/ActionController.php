@@ -508,6 +508,14 @@ class ActionController extends BaseController
             echo $models->delete_data_delivery($id);  
         }
     }
+
+    public function delivery_status($id,$status){
+        $request = Services::request();
+        $models = new DeliveryModel(); 
+        if ($request->getMethod(true) === 'POST') {    
+            echo $models->update_status_delivery($id,$status);  
+        }
+    } 
     public function delivery_proses($id){
         $request = Services::request();
         $models = new DeliveryModel(); 
