@@ -1223,8 +1223,7 @@ table.on('click', '.btn-detail-item', function() {
 function format(data) {
           return data.detail;
 }
-
-cb(start, end);
+ 
 tooltiprenew = function() {
           // Hapus tooltip sebelumnya
           var tooltipTriggerListOld = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

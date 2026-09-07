@@ -162,50 +162,50 @@ class DeliveryModel extends Model
            
   
             // MENGAMBIL DATA STATUS
-            $status = "";
+          $status = "";
             if($row->DeliveryStatus==0){
                 $status .= '
-                    <span class="pointer text-head-3 badge text-bg-primary text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >New</span>
-                    </span> ';
+                    <button class="bg-info-focus text-primary-600  px-8 py-2 rounded-3 fw-bold text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
+                        <span class="me-1 "  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status"  >New</span>
+                    </button> '; 
             }
             if($row->DeliveryStatus==1){
                 $status .= '
-                    <span class="pointer text-head-3 badge text-bg-info text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Proses</span>
-                    </span> '; 
+                    <button class="bg-lilac-100 text-lilac-600 px-8 py-2 rounded-3 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
+                        <span class="me-1 "  data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status" >Proses</span>
+                    </button> '; 
             }
-            if($row->DeliveryStatus==2){ 
+            if($row->DeliveryStatus==2){
                 $status .= '
-                    <span class=" pointertext-head-3 badge text-bg-success text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Completed</span>
-                    </span> ';  
+                    <button class="bg-success-focus text-success-main px-8 py-2 rounded-3 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
+                        <span class="me-1 " data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status"  >Completed</span>
+                    </button> ';  
             }
-            if($row->DeliveryStatus==3){ 
+            if($row->DeliveryStatus==3){
                 $status .=  '
-                    <span class="pointer text-head-3 badge text-bg-danger text-head-3 dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status">
-                        <span class="me-1 " >Cancel</span>
-                    </span> ';  
+                    <button class="bg-danger-focus text-danger-main px-8 py-2 rounded-3 fw-medium text-xxs dropend dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"  >
+                        <span class="me-1 " data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-custom-class="custom-tooltip" data-bs-html="true" data-bs-title="Update Status"  >Cancel</span>
+                    </button> ';  
             }
             $status .= '  
             <ul class="dropdown-menu shadow drop-status ">
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(0,'.$row->DeliveryId.',this)">
+                    <a class="dropdown-item m-0 px-2 text-xs" onclick="update_status(0,'.$row->DeliveryId.',this)">
                         New
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(1,'.$row->DeliveryId.',this)">
+                    <a class="dropdown-item m-0 px-2 text-xs" onclick="update_status(1,'.$row->DeliveryId.',this)">
                         </i>Proses
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(2,'.$row->DeliveryId.',this)">
+                    <a class="dropdown-item m-0 px-2 text-xs" onclick="update_status(2,'.$row->DeliveryId.',this)">
                         Completed
                     </a>
                 </li> 
                 <li>
-                    <a class="dropdown-item m-0 px-2" onclick="update_status(3,'.$row->DeliveryId.',this)">
+                    <a class="dropdown-item m-0 px-2 text-xs" onclick="update_status(3,'.$row->DeliveryId.',this)">
                         Cancel
                     </a>
                 </li>  
@@ -217,51 +217,36 @@ class DeliveryModel extends Model
             $htmldetail = '      
             <div class="view-detail" style="display:none">
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-1">  
-                        <span class="fa-stack small">
-                            <i class="fa-regular fa-circle fa-stack-2x"></i>
-                            <i class="fa-solid fa-table-list fa-stack-1x fa-inverse"></i> 
-                        </span>
-                        <span>Produk</span>
-                    </div> 
+                    <div class="text-primary-600 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                        <iconify-icon icon="ix:box-closed" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Detail Produk 
+                    </div>  
                     '.$this->get_data_detail_delivery($row->DeliveryId).'
                 </div>
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-1"> 
-                        <span class="fa-stack small">
-                            <i class="fa-regular fa-circle fa-stack-2x"></i>
-                            <i class="fa-solid fa-money-bill fa-stack-1x fa-inverse"></i> 
-                        </span>
-                        <span>Pembayaran</span> 
+                    <div class="text-primary-600 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                        <iconify-icon icon="hugeicons:payment-02" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Pembayaran 
                     </div> 
                     '.$this->get_data_payment_delivery($row).'
                 </div> 
                 <div class="list-detail pb-3">
-                    <div class="text-head-2 py-1">
-                        <span class="fa-stack small">
-                            <i class="fa-regular fa-circle fa-stack-2x"></i>
-                            <i class="fa-solid fa-truck fa-stack-1x fa-inverse"></i> 
-                        </span>
-                        <span>Progress</span> 
-                        '.$this->get_data_status_delivery($row).'
+                    <div class="text-primary-600 py-2 fw-bold text-sm d-flex align-items-center text-lg">
+                        <iconify-icon icon="hugeicons:progress" class="text-xl menu-icon d-inline me-4"> </iconify-icon>Progress
+                    </div>
+                    '.$this->get_data_status_delivery($row).'
                     </div>  
                 </div>  
             </div>'; 
             // MENGAMBIL DATA Toko 
             $store = '
-                    <div class="d-flex align-items-center ">  
-                        <div class="flex-grow-1 ms-1">
-                            <div class="d-flex flex-column"> 
-                                <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>
-                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1">'.$row->StoreName.'</span>  
-                                <span class="text-detail-2 text-wrap overflow-none ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><i class="fa-solid fa-diagram-project pe-1 "></i>Document Project</span>  
-                            </div>   
-                        </div>
+                    <div class="d-flex align-items-center ">   
+                        <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span> 
+                        <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><i class="fa-solid fa-diagram-project pe-1 "></i>Document Project</span>   
                     </div>';
             $data_row = array( 
                 "delivery" => $row, 
+                "doc" =>$store.'<div class="text-neutral-400 text-xxs" style="line-height:1">'.$row->DeliveryCode.'</span>',
                 "code" => $row->DeliveryCode,
-                "date" =>date_format(date_create($row->DeliveryDate),"d M Y"),
+                "date" =>  '<div class="text-head-3" style="line-height:1">'.date_format(date_create($row->DeliveryDate),"d M Y").'</div>', 
                 "status" => $status,
                 "store" => $store,
                 "admin" => ucwords($row->username),  
@@ -292,6 +277,8 @@ class DeliveryModel extends Model
         );
 
     } 
+
+
     function get_data_delivery($id){
         $builder = $this->db->table("delivery");
         $builder->join('store',"store.StoreId=delivery.StoreId","left"); 
