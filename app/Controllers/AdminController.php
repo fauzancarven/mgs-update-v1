@@ -162,7 +162,7 @@ class AdminController extends BaseController
         return view('app/04_master/produk/index', $data);
         
     }
-    public function project()
+    public function projectold()
     {    
         $modelsstore = new StoreModel();
         $modelsuser = new UserModel();
@@ -177,6 +177,23 @@ class AdminController extends BaseController
             'admin' => $modelsuser->get()->getResult()
         ]; 
         return view('app/project/index', $data); 
+    }
+
+    public function project()
+    {    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Project',
+            'menu' => "Sales",
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('app/02_sales/project/index', $data); 
     }
     
     public function survey()

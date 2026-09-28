@@ -531,7 +531,7 @@ li[data-list="bullet"]:before {
                             <tr> 
                                 <td class="td-center">'.$no.'</td>
                                  '.($postdata["image"] == 1 ? ($item["image"] == "" ? "<td class='td-center image'></td>" : "<td class='td-center image'><img style='width:50px;height:50px;margin:3px;' src='".$item["image"]."'/></td>") : "").'
-                                <td class="ps-2 text">'.$item["text"].$arr_badge.'</td>
+                                <td class="ps-2 text">'.nl2br($item["text"]).$arr_badge.'</td>
                                 <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
                                 <td class="td-center">Rp. '.number_format($item["price"], 0, ',', '.').'</td>
                                 '.($discShow ? "<td class='td-center'>Rp. ".number_format($item["disc"], 0, ',', '.')."</td>" : "").'
@@ -542,7 +542,7 @@ li[data-list="bullet"]:before {
                             
                           
                             $html_items .= '    <tr>
-                                                    <td class="td-group" colspan="'.   $col + 1 .'">'.$huruf.'. '.$item["text"].'</td>
+                                                    <td class="td-group" colspan="'.   $col + 1 .'">'.$huruf.'. '.nl2br($item["text"]).'</td>
                                                 </tr>';
                             $huruf++;
                             $no = 1;

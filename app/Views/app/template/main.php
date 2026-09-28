@@ -162,7 +162,7 @@ $version = "V2.1";
 
 
                                         <li class="sidebar-menu-group-title">Sales</li>
-                                        <!-- <li>
+                                        <li>
                                                   <a href="<?= base_url(); ?>admin/sales/project">
                                                             <iconify-icon icon="cuida:subtask-outline"
                                                                       class="menu-icon">
@@ -170,6 +170,7 @@ $version = "V2.1";
                                                             <span>Project</span>
                                                   </a>
                                         </li>
+                                        <!-- 
                                         <li>
                                                   <a href="<?= base_url(); ?>admin/sales/survey">
                                                             <iconify-icon icon="cuida:map-outline" class="menu-icon">

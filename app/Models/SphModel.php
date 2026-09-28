@@ -639,7 +639,7 @@ class SphModel extends Model
                     </td>
                     <td class="detail">
                         <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
-                            <span class="fw-medium mb-0">'.$row_data->SphDetailText.'</span> 
+                            <span class="fw-medium mb-0">'.nl2br($row_data->SphDetailText).'</span> 
                             <span class="text-detail-2 text-truncate text-xs">'.$row_data->SphDetailGroup.'</span> 
                             <div class="d-flex gap-1 flex-wrap">'.$arr_badge.'</div>
                         </div>
@@ -656,7 +656,7 @@ class SphModel extends Model
                     <td  class="detail fw-bold">'.$abjad.'.</td>
                     <td colspan="6" class="detail">
                         <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
-                            <span class="text-head-3">'.$row_data->SphDetailText.'</span>
+                            <span class="text-head-3">'.nl2br($row_data->SphDetailText).'</span>
                         </div>
                     </td>
                 </tr> ';

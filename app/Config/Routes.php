@@ -26,6 +26,7 @@ $routes->get('/admin/pettycash', 'AdminController::pettycash', ['filter' => 'log
 $routes->get('/admin/paymentrequest', 'AdminController::paymentrequest', ['filter' => 'login']);
 $routes->get('/admin/bukubesar', 'AdminController::bukubesar', ['filter' => 'login']);
 
+$routes->get('/admin/sales/project', 'AdminController::project', ['filter' => 'login']);
 $routes->get('/admin/sales/survey', 'AdminController::survey', ['filter' => 'login']);
 $routes->get('/admin/sales/sample', 'AdminController::sample', ['filter' => 'login']);
 $routes->get('/admin/sales/penawaran-new', 'AdminController::penawaran_new', ['filter' => 'login']);
@@ -45,7 +46,6 @@ $routes->get('/admin/sales/pengiriman', 'AdminController::pengiriman', ['filter'
 $routes->get('/admin/inventory/pembelian', 'AdminController::pembelian', ['filter' => 'login']);
 $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login']);
 $routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);
-$routes->get('/admin/sales/project', 'AdminController::chat', ['filter' => 'login']);
 $routes->get('/admin/accounting/coa', 'AdminController::coa', ['filter' => 'login']);
 $routes->get('/admin/accounting/transaction', 'AdminController::transaction', ['filter' => 'login']);
 $routes->get('/admin/produk/add', 'AdminController::produk_add', ['filter' => 'login']);
