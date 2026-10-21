@@ -49,9 +49,8 @@ class AdminController extends BaseController
 
     public function __construct()
     {
-        $this->model = new UserModel();
-        $this->helpers = ['form', 'url']; 
-         //
+        $this->model = new UserModel(); 
+        helper(['form', 'url', 'akuntansi']);
         $this->authgroup = new AuthgroupModel();
         $this->session = \Config\Services::session();
         $this->config = config('Auth');

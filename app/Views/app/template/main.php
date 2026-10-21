@@ -3,182 +3,175 @@
 <html lang="en" data-theme="light">
 
 <!-- Mirrored from wowdash.wowtheme7.com/bundlelive/demo/index-10.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 22 Jun 2025 08:53:54 GMT -->
-<?php
-$version = "V2.263.15";
+<?php 
+$version = "V2.1";
 ?>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MGSAPP - <?= $title ?? 'Default Title' ?></title>
-    <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png?ver=<?= $version ?>">
-    <!-- remix icon font css  -->
-    <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/remixicon.css?ver=<?= $version ?>">
-    <!-- BootStrap css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/bootstrap.min.css?ver=<?= $version ?>">
-    <!-- Apex Chart css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/apexcharts.css?ver=<?= $version ?>">
-    <!-- Data Table css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/dataTables.min.css?ver=<?= $version ?>">
-    <!-- Text Editor css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor-katex.min.css?ver=<?= $version ?>">
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor.atom-one-dark.min.css?ver=<?= $version ?>">
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor.quill.snow.css?ver=<?= $version ?>">
-    <!-- Date picker css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/flatpickr.min.css?ver=<?= $version ?>">
-    <!-- Calendar css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/full-calendar.css?ver=<?= $version ?>">
-    <!-- Vector Map css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/jquery-jvectormap-2.0.5.css?ver=<?= $version ?>">
-    <!-- Popup css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/magnific-popup.css?ver=<?= $version ?>">
-    <!-- Slick Slider css -->
-    <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/slick.css?ver=<?= $version ?>">
-    <!-- prism css -->
-    <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/prism.css?ver=<?= $version ?>">
-    <!-- file upload css -->
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/file-upload.css?ver=<?= $version ?>">
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>MGSAPP - <?= $title ?></title>
+          <link rel="shortcut icon" href="<?= base_url() ?>assets/images/logo/logo.png?ver=<?= $version?>">
+          <!-- remix icon font css  -->
+          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/remixicon.css?ver=<?= $version?>">
+          <!-- BootStrap css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/bootstrap.min.css?ver=<?= $version?>">
+          <!-- Apex Chart css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/apexcharts.css?ver=<?= $version?>">
+          <!-- Data Table css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/dataTables.min.css?ver=<?= $version?>">
+          <!-- Text Editor css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor-katex.min.css?ver=<?= $version?>">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor.atom-one-dark.min.css?ver=<?= $version?>">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/editor.quill.snow.css?ver=<?= $version?>">
+          <!-- Date picker css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/flatpickr.min.css?ver=<?= $version?>">
+          <!-- Calendar css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/full-calendar.css?ver=<?= $version?>">
+          <!-- Vector Map css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/jquery-jvectormap-2.0.5.css?ver=<?= $version?>">
+          <!-- Popup css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/magnific-popup.css?ver=<?= $version?>">
+          <!-- Slick Slider css -->
+          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/slick.css?ver=<?= $version?>">
+          <!-- prism css -->
+          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/lib/prism.css?ver=<?= $version?>">
+          <!-- file upload css -->
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/file-upload.css?ver=<?= $version?>">
 
-    <link rel="stylesheet"
-        href="<?= base_url() ?>assets/woowdash/assets/css/lib/audioplayer.css?ver=<?= $version ?>">
-    <!-- main css -->
-    <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/style.css?ver=<?= $version ?>">
+          <link rel="stylesheet"
+                    href="<?= base_url() ?>assets/woowdash/assets/css/lib/audioplayer.css?ver=<?= $version?>">
+          <!-- main css -->
+          <link rel="stylesheet" href="<?= base_url() ?>assets/woowdash/assets/css/style.css?ver=<?= $version?>">
 
-    <link rel="stylesheet" href="<?= base_url() ?>assets/css/daterangepicker.css?ver=<?= $version ?>">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/css/sweetalert2.min.css?ver=<?= $version ?>">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/css/select2.min.css?ver=<?= $version ?>">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/css/quill.bubble.css?ver=<?= $version ?>">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/css/croppie.css?ver=<?= $version ?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/daterangepicker.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/sweetalert2.min.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/select2.min.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/quill.bubble.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/croppie.css?ver=<?= $version?>">
+          <link rel="stylesheet" href="<?= base_url() ?>assets/css/chatbot.css?ver=<?= $version?>">
 
 </head>
 
 <body>
 
-    <!-- jQuery library js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-3.7.1.min.js?ver=<?= $version ?>">
-    </script>
-    <!-- Bootstrap js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/bootstrap.bundle.min.js?ver=<?= $version ?>">
-    </script>
-    <!-- Apex Chart js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/apexcharts.min.js?ver=<?= $version ?>">
-    </script>
-    <!-- Data Table js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/dataTables.min.js?ver=<?= $version ?>">
-    </script>
-    <!-- Iconify Font js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/iconify-icon.min.js?ver=<?= $version ?>">
-    </script>
-    <!-- jQuery UI js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-ui.min.js?ver=<?= $version ?>">
-    </script>
-    <!-- Vector Map js -->
-    <script
-        src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-jvectormap-2.0.5.min.js?ver=<?= $version ?>">
-    </script>
-    <script
-        src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-jvectormap-world-mill-en.js?ver=<?= $version ?>">
-    </script>
-    <!-- Popup js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/magnifc-popup.min.js?ver=<?= $version ?>">
-    </script>
-    <!-- Slick Slider js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/slick.min.js?ver=<?= $version ?>"></script>
-    <!-- prism js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/prism.js?ver=<?= $version ?>"></script>
-    <!-- file upload js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/file-upload.js?ver=<?= $version ?>"></script>
-    <!-- audioplayer -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/audioplayer.js?ver=<?= $version ?>"></script>
+          <!-- jQuery library js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-3.7.1.min.js?ver=<?= $version?>">
+          </script>
+          <!-- Bootstrap js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/bootstrap.bundle.min.js?ver=<?= $version?>">
+          </script>
+          <!-- Apex Chart js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/apexcharts.min.js?ver=<?= $version?>">
+          </script>
+          <!-- Data Table js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/dataTables.min.js?ver=<?= $version?>">
+          </script>
+          <!-- Iconify Font js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/iconify-icon.min.js?ver=<?= $version?>">
+          </script>
+          <!-- jQuery UI js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-ui.min.js?ver=<?= $version?>">
+          </script>
+          <!-- Vector Map js -->
+          <script
+                    src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-jvectormap-2.0.5.min.js?ver=<?= $version?>">
+          </script>
+          <script
+                    src="<?= base_url() ?>assets/woowdash/assets/js/lib/jquery-jvectormap-world-mill-en.js?ver=<?= $version?>">
+          </script>
+          <!-- Popup js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/magnifc-popup.min.js?ver=<?= $version?>">
+          </script>
+          <!-- Slick Slider js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/slick.min.js?ver=<?= $version?>"></script>
+          <!-- prism js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/prism.js?ver=<?= $version?>"></script>
+          <!-- file upload js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/file-upload.js?ver=<?= $version?>"></script>
+          <!-- audioplayer -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/audioplayer.js?ver=<?= $version?>"></script>
 
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/dataTables.responsive.js?ver=<?= $version ?>">
-    </script>
-    <script src="<?= base_url(); ?>assets/js/moment.min.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/jquery.redirect.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/daterangepicker.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/select2.min.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/sweetalert2.min.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/cleave.min.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/cleave-phone.id.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/quill.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/table.js?ver=<?= $version ?>"></script>
-    <script src="<?= base_url(); ?>assets/js/croppie.min.js?ver=<?= $version ?>"></script>
-
-
-    <script>
-        const BASEURL = "<?= base_url() ?>";
-
-        function select2OptionFormat(option) {
-            var originalOption = option.element;
-            if ($(originalOption).data('html')) {
-                return $(originalOption).data('html');
-            }
-            return option.text;
-        }
-        const rupiah = (number,koma = 0) => {
-            const cleanNumber = parseFloat(number);
-
-            // 2. Jika input bukan angka valid, kembalikan teks asli atau 0
-            if (isNaN(cleanNumber)) return "Rp. 0";
-
-            // 3. Format menggunakan Intl dengan minimum & maximum fraction digits
-            let formatted = new Intl.NumberFormat("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: koma,
-                maximumFractionDigits: koma
-            }).format(cleanNumber);
-            return formatted.replace("Rp", "Rp. ").replace(/\s+/g, ' ');
-        }
-    </script>
-    <aside class="sidebar">
-        <button type="button" class="sidebar-close-btn">
-            <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
-        </button>
-        <div>
-            <a href="<?= base_url() ?>" class="sidebar-logo">
-                <img src="<?= base_url() ?>assets/woowdash/assets/images/w-logo.png"
-                    alt="site logo" class="light-logo">
-                <img src="<?= base_url() ?>assets/woowdash/assets/images/w-logo-light.png"
-                    alt="site logo" class="dark-logo">
-                <img src="<?= base_url() ?>assets/woowdash/assets/images/w-logo-icon.png"
-                    alt="site logo" class="logo-icon">
-            </a>
-        </div>
-        <div class="sidebar-menu-area">
-            <ul class="sidebar-menu" id="sidebar-menu">
-                <li>
-                    <a href="<?= base_url() ?>">
-                        <iconify-icon
-                            icon="material-symbols-light:dashboard-outline-rounded" T
-                            class="menu-icon">
-                        </iconify-icon>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/lib/dataTables.responsive.js?ver=<?= $version?>">
+          </script>
+          <script src="<?= base_url(); ?>assets/js/moment.min.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/jquery.redirect.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/daterangepicker.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/select2.min.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/sweetalert2.min.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/cleave.min.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/cleave-phone.id.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/quill.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/table.js?ver=<?= $version?>"></script>
+          <script src="<?= base_url(); ?>assets/js/croppie.min.js?ver=<?= $version?>"></script>
 
 
-                <li class="sidebar-menu-group-title">Sales</li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/sales/project">
-                        <iconify-icon icon="cuida:subtask-outline"
-                            class="menu-icon">
-                        </iconify-icon>
-                        <span>Project</span>
-                    </a>
-                </li>
-                <!-- 
+          <script>
+          const BASEURL = "<?= base_url() ?>";
+
+          function select2OptionFormat(option) {
+                    var originalOption = option.element;
+                    if ($(originalOption).data('html')) {
+                              return $(originalOption).data('html');
+                    }
+                    return option.text;
+          }
+          const rupiah = (number) => {
+                    return new Intl.NumberFormat("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                              maximumFractionDigits: 0
+                    }).format(number);
+          }
+          </script>
+          <aside class="sidebar">
+                    <button type="button" class="sidebar-close-btn">
+                              <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
+                    </button>
+                    <div>
+                              <a href="<?= base_url() ?>" class="sidebar-logo">
+                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/w-logo.png"
+                                                  alt="site logo" class="light-logo">
+                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/w-logo-light.png"
+                                                  alt="site logo" class="dark-logo">
+                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/w-logo-icon.png"
+                                                  alt="site logo" class="logo-icon">
+                              </a>
+                    </div>
+                    <div class="sidebar-menu-area">
+                              <ul class="sidebar-menu" id="sidebar-menu">
+                                        <li>
+                                                  <a href="<?= base_url() ?>">
+                                                            <iconify-icon
+                                                                      icon="material-symbols-light:dashboard-outline-rounded"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Dashboard</span>
+                                                  </a>
+                                        </li>
+
+
+                                        <li class="sidebar-menu-group-title">Sales</li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/sales/project">
+                                                            <iconify-icon icon="cuida:subtask-outline"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Project</span>
+                                                  </a>
+                                        </li>
+                                        <!-- 
                                         <li>
                                                   <a href="<?= base_url(); ?>admin/sales/survey">
                                                             <iconify-icon icon="cuida:map-outline" class="menu-icon">
@@ -194,906 +187,924 @@ $version = "V2.263.15";
                                                             <span>Sampel</span>
                                                   </a>
                                         </li> -->
-                <li>
-                    <a href="<?= base_url(); ?>admin/sales/penawaran?status=0%2C1">
-                        <iconify-icon icon="ic:outline-handshake" class="menu-icon">
-                        </iconify-icon>
-                        <span>Penawaran</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/sales/invoice">
-                        <iconify-icon icon="hugeicons:invoice-03" class="menu-icon">
-                        </iconify-icon>
-                        <span>Invoice</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/sales/pembelian">
-                        <iconify-icon icon="hugeicons:shopping-bag-03" class="menu-icon">
-                        </iconify-icon>
-                        <span>Pembelian</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/sales/pengiriman">
-                        <iconify-icon icon="hugeicons:container-truck-01" class="menu-icon">
-                        </iconify-icon>
-                        <span>Pengiriman</span>
-                    </a>
-                </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/sales/penawaran">
+                                                            <iconify-icon icon="ic:outline-handshake" class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Penawaran</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/sales/invoice">
+                                                            <iconify-icon icon="hugeicons:invoice-03" class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Invoice</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/sales/pembelian">
+                                                            <iconify-icon icon="hugeicons:shopping-bag-03" class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Pembelian</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/sales/pengiriman">
+                                                            <iconify-icon icon="hugeicons:container-truck-01" class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Pengiriman</span>
+                                                  </a>
+                                        </li>
 
 
-                <li class="sidebar-menu-group-title">Accounting</li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/accounting/coa">
-                        <iconify-icon icon="cuida:hashtag-outline"
-                            class="menu-icon">
-                        </iconify-icon>
-                        <span>Chart of Account</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/accounting/transaction">
-                        <iconify-icon icon="cuida:swap-horizontal-arrows-outline"
-                            class="menu-icon">
-                        </iconify-icon>
-                        <span>Transaksi</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/accounting/cashbook">
-                        <iconify-icon icon="cuida:chart-column-outline"
-                            class="menu-icon">
-                        </iconify-icon>
-                        <span>Kas Besar</span>
-                    </a>
-                </li>
-                <li class="sidebar-menu-group-title">Master</li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/store">
-                        <iconify-icon
-                            icon="material-symbols-light:storefront-outline"
-                            class="menu-icon">
-                        </iconify-icon>
-                        <span>Store</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/account">
-                        <iconify-icon icon="flowbite:users-group-outline"
-                            class="menu-icon">
-                        </iconify-icon>
-                        <span>Account</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/customer">
-                        <iconify-icon
-                            icon="material-symbols-light:article-person-outline"
-                            class="menu-icon"></iconify-icon>
-                        <span>Customer</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/vendor">
-                        <iconify-icon
-                            icon="material-symbols-light:precision-manufacturing-outline"
-                            class="menu-icon"></iconify-icon>
-                        <span>Vendor</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= base_url(); ?>admin/produk">
-                        <iconify-icon icon="ix:box-closed" class="menu-icon">
-                        </iconify-icon>
-                        <span>Produk</span>
-                    </a>
-                </li>
+                                        <li class="sidebar-menu-group-title">Accounting</li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/coa">
+                                                            <iconify-icon icon="cuida:hashtag-outline"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Chart of Account</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/jurnal">
+                                                            <iconify-icon icon="solar:notebook-linear"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Jurnal Umum</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/bukubesar">
+                                                            <iconify-icon icon="solar:book-2-linear"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Buku Besar</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/neraca-saldo">
+                                                            <iconify-icon icon="solar:scale-linear"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Neraca Saldo</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/laba-rugi">
+                                                            <iconify-icon icon="solar:chart-2-linear"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Laba Rugi</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/neraca">
+                                                            <iconify-icon icon="solar:wallet-money-linear"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Neraca</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/transaction">
+                                                            <iconify-icon icon="cuida:swap-horizontal-arrows-outline"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Transaksi</span>
+                                                  </a>
+                                        </li>
+                                        <li class="sidebar-menu-group-title">Master</li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/store">
+                                                            <iconify-icon
+                                                                      icon="material-symbols-light:storefront-outline"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Store</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/account">
+                                                            <iconify-icon icon="flowbite:users-group-outline"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Account</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/customer">
+                                                            <iconify-icon
+                                                                      icon="material-symbols-light:article-person-outline"
+                                                                      class="menu-icon"></iconify-icon>
+                                                            <span>Customer</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/vendor">
+                                                            <iconify-icon
+                                                                      icon="material-symbols-light:precision-manufacturing-outline"
+                                                                      class="menu-icon"></iconify-icon>
+                                                            <span>Vendor</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/produk">
+                                                            <iconify-icon icon="ix:box-closed" class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Produk</span>
+                                                  </a>
+                                        </li>
 
-            </ul>
-        </div>
-    </aside>
-
-    <main class="dashboard-main">
-        <div class="navbar-header">
-            <div class="row align-items-center justify-content-between">
-                <div class="col-auto">
-                    <div class="d-flex flex-wrap align-items-center gap-4">
-                        <button type="button" class="sidebar-toggle">
-                            <iconify-icon icon="hugeicons:menu-collapse"
-                                class="icon text-2xl non-active">
-                            </iconify-icon>
-                            <iconify-icon icon="hugeicons:menu-01"
-                                class="icon text-2xl active">
-                            </iconify-icon>
-                        </button>
-                        <button type="button" class="sidebar-mobile-toggle">
-                            <iconify-icon icon="hugeicons:menu-collapse"
-                                class="icon"></iconify-icon>
-                        </button>
+                              </ul>
                     </div>
+          </aside>
+
+          <main class="dashboard-main">
+                    <div class="navbar-header">
+                              <div class="row align-items-center justify-content-between">
+                                        <div class="col-auto">
+                                                  <div class="d-flex flex-wrap align-items-center gap-4">
+                                                            <button type="button" class="sidebar-toggle">
+                                                                      <iconify-icon icon="hugeicons:menu-collapse"
+                                                                                class="icon text-2xl non-active">
+                                                                      </iconify-icon>
+                                                                      <iconify-icon icon="hugeicons:menu-01"
+                                                                                class="icon text-2xl active">
+                                                                      </iconify-icon>
+                                                            </button>
+                                                            <button type="button" class="sidebar-mobile-toggle">
+                                                                      <iconify-icon icon="hugeicons:menu-collapse"
+                                                                                class="icon"></iconify-icon>
+                                                            </button>
+                                                  </div>
+                                        </div>
+                                        <div class="col-auto">
+                                                  <div class="d-flex flex-wrap align-items-center gap-3">
+                                                            <button type="button" data-theme-toggle
+                                                                      class="w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
+                                                                      id="togle-dark-mode"></button>
+                                                            <div class="dropdown d-none  ">
+                                                                      <button class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
+                                                                                type="button" data-bs-toggle="dropdown">
+                                                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/lang-flag.png"
+                                                                                          alt="image"
+                                                                                          class="w-24 h-24 object-fit-cover rounded-circle">
+                                                                      </button>
+                                                                      <div
+                                                                                class="dropdown-menu to-top dropdown-menu-sm">
+                                                                                <div
+                                                                                          class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                                                                          <div>
+                                                                                                    <h6
+                                                                                                              class="text-lg text-primary-light fw-semibold mb-0">
+                                                                                                              Choose
+                                                                                                              Your
+                                                                                                              Language
+                                                                                                    </h6>
+                                                                                          </div>
+                                                                                </div>
+
+                                                                                <div
+                                                                                          class="max-h-400-px overflow-y-auto scroll-sm pe-8">
+                                                                                          <div
+                                                                                                    class="form-check style-check d-flex align-items-center justify-content-between mb-16">
+                                                                                                    <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                                              for="english">
+                                                                                                              <span
+                                                                                                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag1.png"
+                                                                                                                                  alt=""
+                                                                                                                                  class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
+                                                                                                                        <span
+                                                                                                                                  class="text-md fw-semibold mb-0">English</span>
+                                                                                                              </span>
+                                                                                                    </label>
+                                                                                                    <input class="form-check-input"
+                                                                                                              type="radio"
+                                                                                                              name="crypto"
+                                                                                                              id="english">
+                                                                                          </div>
+
+                                                                                          <div
+                                                                                                    class="form-check style-check d-flex align-items-center justify-content-between mb-16">
+                                                                                                    <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                                              for="japan">
+                                                                                                              <span
+                                                                                                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag2.png"
+                                                                                                                                  alt=""
+                                                                                                                                  class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
+                                                                                                                        <span
+                                                                                                                                  class="text-md fw-semibold mb-0">Japan</span>
+                                                                                                              </span>
+                                                                                                    </label>
+                                                                                                    <input class="form-check-input"
+                                                                                                              type="radio"
+                                                                                                              name="crypto"
+                                                                                                              id="japan">
+                                                                                          </div>
+
+                                                                                          <div
+                                                                                                    class="form-check style-check d-flex align-items-center justify-content-between mb-16">
+                                                                                                    <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                                              for="france">
+                                                                                                              <span
+                                                                                                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag3.png"
+                                                                                                                                  alt=""
+                                                                                                                                  class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
+                                                                                                                        <span
+                                                                                                                                  class="text-md fw-semibold mb-0">France</span>
+                                                                                                              </span>
+                                                                                                    </label>
+                                                                                                    <input class="form-check-input"
+                                                                                                              type="radio"
+                                                                                                              name="crypto"
+                                                                                                              id="france">
+                                                                                          </div>
+
+                                                                                          <div
+                                                                                                    class="form-check style-check d-flex align-items-center justify-content-between mb-16">
+                                                                                                    <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                                              for="germany">
+                                                                                                              <span
+                                                                                                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag4.png"
+                                                                                                                                  alt=""
+                                                                                                                                  class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
+                                                                                                                        <span
+                                                                                                                                  class="text-md fw-semibold mb-0">Germany</span>
+                                                                                                              </span>
+                                                                                                    </label>
+                                                                                                    <input class="form-check-input"
+                                                                                                              type="radio"
+                                                                                                              name="crypto"
+                                                                                                              id="germany">
+                                                                                          </div>
+
+                                                                                          <div
+                                                                                                    class="form-check style-check d-flex align-items-center justify-content-between mb-16">
+                                                                                                    <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                                              for="korea">
+                                                                                                              <span
+                                                                                                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag5.png"
+                                                                                                                                  alt=""
+                                                                                                                                  class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
+                                                                                                                        <span
+                                                                                                                                  class="text-md fw-semibold mb-0">South
+                                                                                                                                  Korea</span>
+                                                                                                              </span>
+                                                                                                    </label>
+                                                                                                    <input class="form-check-input"
+                                                                                                              type="radio"
+                                                                                                              name="crypto"
+                                                                                                              id="korea">
+                                                                                          </div>
+
+                                                                                          <div
+                                                                                                    class="form-check style-check d-flex align-items-center justify-content-between mb-16">
+                                                                                                    <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                                              for="bangladesh">
+                                                                                                              <span
+                                                                                                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag6.png"
+                                                                                                                                  alt=""
+                                                                                                                                  class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
+                                                                                                                        <span
+                                                                                                                                  class="text-md fw-semibold mb-0">Bangladesh</span>
+                                                                                                              </span>
+                                                                                                    </label>
+                                                                                                    <input class="form-check-input"
+                                                                                                              type="radio"
+                                                                                                              name="crypto"
+                                                                                                              id="bangladesh">
+                                                                                          </div>
+
+                                                                                          <div
+                                                                                                    class="form-check style-check d-flex align-items-center justify-content-between mb-16">
+                                                                                                    <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                                              for="india">
+                                                                                                              <span
+                                                                                                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag7.png"
+                                                                                                                                  alt=""
+                                                                                                                                  class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
+                                                                                                                        <span
+                                                                                                                                  class="text-md fw-semibold mb-0">India</span>
+                                                                                                              </span>
+                                                                                                    </label>
+                                                                                                    <input class="form-check-input"
+                                                                                                              type="radio"
+                                                                                                              name="crypto"
+                                                                                                              id="india">
+                                                                                          </div>
+                                                                                          <div
+                                                                                                    class="form-check style-check d-flex align-items-center justify-content-between">
+                                                                                                    <label class="form-check-label line-height-1 fw-medium text-secondary-light"
+                                                                                                              for="canada">
+                                                                                                              <span
+                                                                                                                        class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag8.png"
+                                                                                                                                  alt=""
+                                                                                                                                  class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
+                                                                                                                        <span
+                                                                                                                                  class="text-md fw-semibold mb-0">Canada</span>
+                                                                                                              </span>
+                                                                                                    </label>
+                                                                                                    <input class="form-check-input"
+                                                                                                              type="radio"
+                                                                                                              name="crypto"
+                                                                                                              id="canada">
+                                                                                          </div>
+                                                                                </div>
+                                                                      </div>
+                                                            </div><!-- Language dropdown end -->
+
+                                                            <div class="dropdown d-none">
+                                                                      <button class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
+                                                                                type="button" data-bs-toggle="dropdown">
+                                                                                <iconify-icon icon="mage:email"
+                                                                                          class="text-primary-light text-xl">
+                                                                                </iconify-icon>
+                                                                      </button>
+                                                                      <div
+                                                                                class="dropdown-menu to-top dropdown-menu-lg p-0">
+                                                                                <div
+                                                                                          class="m-16 py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                                                                          <div>
+                                                                                                    <h6
+                                                                                                              class="text-lg text-primary-light fw-semibold mb-0">
+                                                                                                              Message
+                                                                                                    </h6>
+                                                                                          </div>
+                                                                                          <span
+                                                                                                    class="text-primary-600 fw-semibold text-lg w-40-px h-40-px rounded-circle bg-base d-flex justify-content-center align-items-center">05</span>
+                                                                                </div>
+
+                                                                                <div
+                                                                                          class="max-h-400-px overflow-y-auto scroll-sm pe-4">
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-3.png"
+                                                                                                                                  alt="">
+                                                                                                                        <span
+                                                                                                                                  class="w-8-px h-8-px bg-success-main rounded-circle position-absolute end-0 bottom-0"></span>
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Kathryn
+                                                                                                                                  Murphy
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-100-px">
+                                                                                                                                  hey!
+                                                                                                                                  there
+                                                                                                                                  i’m...
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                              class="d-flex flex-column align-items-end">
+                                                                                                              <span
+                                                                                                                        class="text-sm text-secondary-light flex-shrink-0">12:30
+                                                                                                                        PM</span>
+                                                                                                              <span
+                                                                                                                        class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-warning-main rounded-circle">8</span>
+                                                                                                    </div>
+                                                                                          </a>
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-4.png"
+                                                                                                                                  alt="">
+                                                                                                                        <span
+                                                                                                                                  class="w-8-px h-8-px  bg-neutral-300 rounded-circle position-absolute end-0 bottom-0"></span>
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Kathryn
+                                                                                                                                  Murphy
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-100-px">
+                                                                                                                                  hey!
+                                                                                                                                  there
+                                                                                                                                  i’m...
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                              class="d-flex flex-column align-items-end">
+                                                                                                              <span
+                                                                                                                        class="text-sm text-secondary-light flex-shrink-0">12:30
+                                                                                                                        PM</span>
+                                                                                                              <span
+                                                                                                                        class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-warning-main rounded-circle">2</span>
+                                                                                                    </div>
+                                                                                          </a>
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between bg-neutral-50">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-5.png"
+                                                                                                                                  alt="">
+                                                                                                                        <span
+                                                                                                                                  class="w-8-px h-8-px bg-success-main rounded-circle position-absolute end-0 bottom-0"></span>
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Kathryn
+                                                                                                                                  Murphy
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-100-px">
+                                                                                                                                  hey!
+                                                                                                                                  there
+                                                                                                                                  i’m...
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                              class="d-flex flex-column align-items-end">
+                                                                                                              <span
+                                                                                                                        class="text-sm text-secondary-light flex-shrink-0">12:30
+                                                                                                                        PM</span>
+                                                                                                              <span
+                                                                                                                        class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-neutral-400 rounded-circle">0</span>
+                                                                                                    </div>
+                                                                                          </a>
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between bg-neutral-50">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-6.png"
+                                                                                                                                  alt="">
+                                                                                                                        <span
+                                                                                                                                  class="w-8-px h-8-px bg-neutral-300 rounded-circle position-absolute end-0 bottom-0"></span>
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Kathryn
+                                                                                                                                  Murphy
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-100-px">
+                                                                                                                                  hey!
+                                                                                                                                  there
+                                                                                                                                  i’m...
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                              class="d-flex flex-column align-items-end">
+                                                                                                              <span
+                                                                                                                        class="text-sm text-secondary-light flex-shrink-0">12:30
+                                                                                                                        PM</span>
+                                                                                                              <span
+                                                                                                                        class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-neutral-400 rounded-circle">0</span>
+                                                                                                    </div>
+                                                                                          </a>
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-7.png"
+                                                                                                                                  alt="">
+                                                                                                                        <span
+                                                                                                                                  class="w-8-px h-8-px bg-success-main rounded-circle position-absolute end-0 bottom-0"></span>
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Kathryn
+                                                                                                                                  Murphy
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-100-px">
+                                                                                                                                  hey!
+                                                                                                                                  there
+                                                                                                                                  i’m...
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                              class="d-flex flex-column align-items-end">
+                                                                                                              <span
+                                                                                                                        class="text-sm text-secondary-light flex-shrink-0">12:30
+                                                                                                                        PM</span>
+                                                                                                              <span
+                                                                                                                        class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-warning-main rounded-circle">8</span>
+                                                                                                    </div>
+                                                                                          </a>
+
+                                                                                </div>
+                                                                                <div class="text-center py-12 px-16">
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="text-primary-600 fw-semibold text-md">See
+                                                                                                    All Message</a>
+                                                                                </div>
+                                                                      </div>
+                                                            </div><!-- Message dropdown end -->
+
+                                                            <div class="dropdown d-none">
+                                                                      <button class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
+                                                                                type="button" data-bs-toggle="dropdown">
+                                                                                <iconify-icon icon="iconoir:bell"
+                                                                                          class="text-primary-light text-xl">
+                                                                                </iconify-icon>
+                                                                      </button>
+                                                                      <div
+                                                                                class="dropdown-menu to-top dropdown-menu-lg p-0">
+                                                                                <div
+                                                                                          class="m-16 py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                                                                          <div>
+                                                                                                    <h6
+                                                                                                              class="text-lg text-primary-light fw-semibold mb-0">
+                                                                                                              Notifications
+                                                                                                    </h6>
+                                                                                          </div>
+                                                                                          <span
+                                                                                                    class="text-primary-600 fw-semibold text-lg w-40-px h-40-px rounded-circle bg-base d-flex justify-content-center align-items-center">05</span>
+                                                                                </div>
+
+                                                                                <div
+                                                                                          class="max-h-400-px overflow-y-auto scroll-sm pe-4">
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-44-px h-44-px bg-success-subtle text-success-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
+                                                                                                                        <iconify-icon
+                                                                                                                                  icon="bitcoin-icons:verify-outline"
+                                                                                                                                  class="icon text-xxl">
+                                                                                                                        </iconify-icon>
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Congratulations
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-200-px">
+                                                                                                                                  Your
+                                                                                                                                  profile
+                                                                                                                                  has
+                                                                                                                                  been
+                                                                                                                                  Verified.
+                                                                                                                                  Your
+                                                                                                                                  profile
+                                                                                                                                  has
+                                                                                                                                  been
+                                                                                                                                  Verified
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <span
+                                                                                                              class="text-sm text-secondary-light flex-shrink-0">23
+                                                                                                              Mins
+                                                                                                              ago</span>
+                                                                                          </a>
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between bg-neutral-50">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-44-px h-44-px bg-success-subtle text-success-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-1.png"
+                                                                                                                                  alt="">
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Ronald
+                                                                                                                                  Richards
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-200-px">
+                                                                                                                                  You
+                                                                                                                                  can
+                                                                                                                                  stitch
+                                                                                                                                  between
+                                                                                                                                  artboards
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <span
+                                                                                                              class="text-sm text-secondary-light flex-shrink-0">23
+                                                                                                              Mins
+                                                                                                              ago</span>
+                                                                                          </a>
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-44-px h-44-px bg-info-subtle text-info-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
+                                                                                                                        AM
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Arlene
+                                                                                                                                  McCoy
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-200-px">
+                                                                                                                                  Invite
+                                                                                                                                  you
+                                                                                                                                  to
+                                                                                                                                  prototyping
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <span
+                                                                                                              class="text-sm text-secondary-light flex-shrink-0">23
+                                                                                                              Mins
+                                                                                                              ago</span>
+                                                                                          </a>
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between bg-neutral-50">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-44-px h-44-px bg-success-subtle text-success-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
+                                                                                                                        <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-2.png"
+                                                                                                                                  alt="">
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Annette
+                                                                                                                                  Black
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-200-px">
+                                                                                                                                  Invite
+                                                                                                                                  you
+                                                                                                                                  to
+                                                                                                                                  prototyping
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <span
+                                                                                                              class="text-sm text-secondary-light flex-shrink-0">23
+                                                                                                              Mins
+                                                                                                              ago</span>
+                                                                                          </a>
+
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
+                                                                                                    <div
+                                                                                                              class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
+                                                                                                              <span
+                                                                                                                        class="w-44-px h-44-px bg-info-subtle text-info-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
+                                                                                                                        DR
+                                                                                                              </span>
+                                                                                                              <div>
+                                                                                                                        <h6
+                                                                                                                                  class="text-md fw-semibold mb-4">
+                                                                                                                                  Darlene
+                                                                                                                                  Robertson
+                                                                                                                        </h6>
+                                                                                                                        <p
+                                                                                                                                  class="mb-0 text-sm text-secondary-light text-w-200-px">
+                                                                                                                                  Invite
+                                                                                                                                  you
+                                                                                                                                  to
+                                                                                                                                  prototyping
+                                                                                                                        </p>
+                                                                                                              </div>
+                                                                                                    </div>
+                                                                                                    <span
+                                                                                                              class="text-sm text-secondary-light flex-shrink-0">23
+                                                                                                              Mins
+                                                                                                              ago</span>
+                                                                                          </a>
+                                                                                </div>
+
+                                                                                <div class="text-center py-12 px-16">
+                                                                                          <a href="javascript:void(0)"
+                                                                                                    class="text-primary-600 fw-semibold text-md">See
+                                                                                                    All Notification</a>
+                                                                                </div>
+
+                                                                      </div>
+                                                            </div><!-- Notification dropdown end -->
+
+                                                            <div class="dropdown">
+                                                                      <button class="d-flex justify-content-center align-items-center rounded-circle"
+                                                                                type="button" data-bs-toggle="dropdown">
+                                                                                <img src="<?= base_url(); ?>assets/images/profile/user/<?= user()->code; ?>.png?ver=<?= $version?>"
+                                                                                          alt="image"
+                                                                                          class="w-40-px h-40-px object-fit-cover rounded-circle">
+                                                                      </button>
+                                                                      <div
+                                                                                class="dropdown-menu to-top dropdown-menu-sm">
+                                                                                <div
+                                                                                          class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                                                                          <div>
+                                                                                                    <h6
+                                                                                                              class="text-lg text-primary-light fw-semibold mb-2">
+                                                                                                              <?= ucwords(user()->username); ?>
+                                                                                                    </h6>
+                                                                                                    <span
+                                                                                                              class="text-secondary-light fw-medium text-sm">Admin</span>
+                                                                                          </div>
+                                                                                          <button type="button"
+                                                                                                    class="hover-text-danger">
+                                                                                                    <iconify-icon
+                                                                                                              icon="radix-icons:cross-1"
+                                                                                                              class="icon text-xl">
+                                                                                                    </iconify-icon>
+                                                                                          </button>
+                                                                                </div>
+                                                                                <ul class="to-top-list">
+                                                                                          <li>
+                                                                                                    <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3"
+                                                                                                              href="<?= base_url() ?>users/view">
+                                                                                                              <iconify-icon
+                                                                                                                        icon="solar:user-linear"
+                                                                                                                        class="icon text-xl">
+                                                                                                              </iconify-icon>
+                                                                                                              My Profile
+                                                                                                    </a>
+                                                                                          </li>
+                                                                                          <li>
+                                                                                                    <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3"
+                                                                                                              href="<?= base_url() ?>logout">
+                                                                                                              <iconify-icon
+                                                                                                                        icon="lucide:power"
+                                                                                                                        class="icon text-xl">
+                                                                                                              </iconify-icon>
+                                                                                                              Log Out
+                                                                                                    </a>
+                                                                                          </li>
+                                                                                </ul>
+                                                                      </div>
+                                                            </div><!-- Profile dropdown end -->
+                                                  </div>
+                                        </div>
+                              </div>
+                    </div>
+
+                    <div class="dashboard-main-body">
+                              <?= $this->renderSection('content'); ?>
+                    </div>
+                    <footer class="d-footer">
+                              <div class="row align-items-center justify-content-between">
+                                        <div class="col-auto">
+                                                  <p class="mb-0">© 2025 MGSAPP. All Rights Reserved.</p>
+                                        </div>
+                                        <div class="col-auto">
+                                                  <p class="mb-0">Made by <span
+                                                                      class="text-primary-600">Fauzancaren</span></p>
+                                        </div>
+                              </div>
+                    </footer>
+          </main>
+ 
+          <!-- main js -->
+          <script src="<?= base_url() ?>assets/woowdash/assets/js/app.js?version=1.0.0"></script>
+          <?= $this->renderSection('scriptjs'); ?>
+
+
+            <!-- ============================================== -->
+            <!-- HTML UNTUK AI CHAT WIDGET -->
+            <!-- ============================================== -->
+            <!-- Tombol Trigger -->
+            <div id="ai-chat-trigger" onclick="toggleChat()">
+                <!-- Icon Chat SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                <path d="M2.165 15.803l.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"/>
+                </svg>
+            </div>
+
+            <!-- Jendela Chatbox -->
+            <div id="ai-chat-window">
+                <div class="ai-chat-header">
+                    <span>🤖 AI Assistant</span>
+                    <button onclick="toggleChat()">✖</button>
                 </div>
-                <div class="col">
-                    <div class="d-flex d-md-none align-items-center gap-2 ">
-                        <span class="text-xl fw-bold text-black"><?= $title ?? 'Default Title' ?></span>
-                    </div>
+                <div class="ai-chat-body" id="ai-chat-body">
+                    <div class="chat-bubble chat-ai">Halo! Saya AI Agent MGS. Ada yang bisa saya bantu terkait sistem aplikasi ini?</div>
+                    <!-- Pesan akan ditambahkan di sini via JS -->
+                    <div class="typing-indicator" id="ai-typing">AI sedang mengetik...</div>
                 </div>
-                <div class="col-auto">
-                    <div class="d-flex flex-wrap align-items-center gap-3">
-                        <button type="button" data-theme-toggle
-                            class="w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
-                            id="togle-dark-mode"></button>
-                        <div class="dropdown d-none  ">
-                            <button class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
-                                type="button" data-bs-toggle="dropdown">
-                                <img src="<?= base_url() ?>assets/woowdash/assets/images/lang-flag.png"
-                                    alt="image"
-                                    class="w-24 h-24 object-fit-cover rounded-circle">
-                            </button>
-                            <div
-                                class="dropdown-menu to-top dropdown-menu-sm">
-                                <div
-                                    class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
-                                    <div>
-                                        <h6
-                                            class="text-lg text-primary-light fw-semibold mb-0">
-                                            Choose
-                                            Your
-                                            Language
-                                        </h6>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="max-h-400-px overflow-y-auto scroll-sm pe-8">
-                                    <div
-                                        class="form-check style-check d-flex align-items-center justify-content-between mb-16">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="english">
-                                            <span
-                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag1.png"
-                                                    alt=""
-                                                    class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
-                                                <span
-                                                    class="text-md fw-semibold mb-0">English</span>
-                                            </span>
-                                        </label>
-                                        <input class="form-check-input"
-                                            type="radio"
-                                            name="crypto"
-                                            id="english">
-                                    </div>
-
-                                    <div
-                                        class="form-check style-check d-flex align-items-center justify-content-between mb-16">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="japan">
-                                            <span
-                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag2.png"
-                                                    alt=""
-                                                    class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
-                                                <span
-                                                    class="text-md fw-semibold mb-0">Japan</span>
-                                            </span>
-                                        </label>
-                                        <input class="form-check-input"
-                                            type="radio"
-                                            name="crypto"
-                                            id="japan">
-                                    </div>
-
-                                    <div
-                                        class="form-check style-check d-flex align-items-center justify-content-between mb-16">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="france">
-                                            <span
-                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag3.png"
-                                                    alt=""
-                                                    class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
-                                                <span
-                                                    class="text-md fw-semibold mb-0">France</span>
-                                            </span>
-                                        </label>
-                                        <input class="form-check-input"
-                                            type="radio"
-                                            name="crypto"
-                                            id="france">
-                                    </div>
-
-                                    <div
-                                        class="form-check style-check d-flex align-items-center justify-content-between mb-16">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="germany">
-                                            <span
-                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag4.png"
-                                                    alt=""
-                                                    class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
-                                                <span
-                                                    class="text-md fw-semibold mb-0">Germany</span>
-                                            </span>
-                                        </label>
-                                        <input class="form-check-input"
-                                            type="radio"
-                                            name="crypto"
-                                            id="germany">
-                                    </div>
-
-                                    <div
-                                        class="form-check style-check d-flex align-items-center justify-content-between mb-16">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="korea">
-                                            <span
-                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag5.png"
-                                                    alt=""
-                                                    class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
-                                                <span
-                                                    class="text-md fw-semibold mb-0">South
-                                                    Korea</span>
-                                            </span>
-                                        </label>
-                                        <input class="form-check-input"
-                                            type="radio"
-                                            name="crypto"
-                                            id="korea">
-                                    </div>
-
-                                    <div
-                                        class="form-check style-check d-flex align-items-center justify-content-between mb-16">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="bangladesh">
-                                            <span
-                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag6.png"
-                                                    alt=""
-                                                    class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
-                                                <span
-                                                    class="text-md fw-semibold mb-0">Bangladesh</span>
-                                            </span>
-                                        </label>
-                                        <input class="form-check-input"
-                                            type="radio"
-                                            name="crypto"
-                                            id="bangladesh">
-                                    </div>
-
-                                    <div
-                                        class="form-check style-check d-flex align-items-center justify-content-between mb-16">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="india">
-                                            <span
-                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag7.png"
-                                                    alt=""
-                                                    class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
-                                                <span
-                                                    class="text-md fw-semibold mb-0">India</span>
-                                            </span>
-                                        </label>
-                                        <input class="form-check-input"
-                                            type="radio"
-                                            name="crypto"
-                                            id="india">
-                                    </div>
-                                    <div
-                                        class="form-check style-check d-flex align-items-center justify-content-between">
-                                        <label class="form-check-label line-height-1 fw-medium text-secondary-light"
-                                            for="canada">
-                                            <span
-                                                class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/flags/flag8.png"
-                                                    alt=""
-                                                    class="w-36-px h-36-px bg-success-subtle text-success-main rounded-circle flex-shrink-0">
-                                                <span
-                                                    class="text-md fw-semibold mb-0">Canada</span>
-                                            </span>
-                                        </label>
-                                        <input class="form-check-input"
-                                            type="radio"
-                                            name="crypto"
-                                            id="canada">
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- Language dropdown end -->
-
-                        <div class="dropdown d-none">
-                            <button class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
-                                type="button" data-bs-toggle="dropdown">
-                                <iconify-icon icon="mage:email"
-                                    class="text-primary-light text-xl">
-                                </iconify-icon>
-                            </button>
-                            <div
-                                class="dropdown-menu to-top dropdown-menu-lg p-0">
-                                <div
-                                    class="m-16 py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
-                                    <div>
-                                        <h6
-                                            class="text-lg text-primary-light fw-semibold mb-0">
-                                            Message
-                                        </h6>
-                                    </div>
-                                    <span
-                                        class="text-primary-600 fw-semibold text-lg w-40-px h-40-px rounded-circle bg-base d-flex justify-content-center align-items-center">05</span>
-                                </div>
-
-                                <div
-                                    class="max-h-400-px overflow-y-auto scroll-sm pe-4">
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-3.png"
-                                                    alt="">
-                                                <span
-                                                    class="w-8-px h-8-px bg-success-main rounded-circle position-absolute end-0 bottom-0"></span>
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Kathryn
-                                                    Murphy
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-100-px">
-                                                    hey!
-                                                    there
-                                                    i’m...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="d-flex flex-column align-items-end">
-                                            <span
-                                                class="text-sm text-secondary-light flex-shrink-0">12:30
-                                                PM</span>
-                                            <span
-                                                class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-warning-main rounded-circle">8</span>
-                                        </div>
-                                    </a>
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-4.png"
-                                                    alt="">
-                                                <span
-                                                    class="w-8-px h-8-px  bg-neutral-300 rounded-circle position-absolute end-0 bottom-0"></span>
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Kathryn
-                                                    Murphy
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-100-px">
-                                                    hey!
-                                                    there
-                                                    i’m...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="d-flex flex-column align-items-end">
-                                            <span
-                                                class="text-sm text-secondary-light flex-shrink-0">12:30
-                                                PM</span>
-                                            <span
-                                                class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-warning-main rounded-circle">2</span>
-                                        </div>
-                                    </a>
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between bg-neutral-50">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-5.png"
-                                                    alt="">
-                                                <span
-                                                    class="w-8-px h-8-px bg-success-main rounded-circle position-absolute end-0 bottom-0"></span>
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Kathryn
-                                                    Murphy
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-100-px">
-                                                    hey!
-                                                    there
-                                                    i’m...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="d-flex flex-column align-items-end">
-                                            <span
-                                                class="text-sm text-secondary-light flex-shrink-0">12:30
-                                                PM</span>
-                                            <span
-                                                class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-neutral-400 rounded-circle">0</span>
-                                        </div>
-                                    </a>
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between bg-neutral-50">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-6.png"
-                                                    alt="">
-                                                <span
-                                                    class="w-8-px h-8-px bg-neutral-300 rounded-circle position-absolute end-0 bottom-0"></span>
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Kathryn
-                                                    Murphy
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-100-px">
-                                                    hey!
-                                                    there
-                                                    i’m...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="d-flex flex-column align-items-end">
-                                            <span
-                                                class="text-sm text-secondary-light flex-shrink-0">12:30
-                                                PM</span>
-                                            <span
-                                                class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-neutral-400 rounded-circle">0</span>
-                                        </div>
-                                    </a>
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-40-px h-40-px rounded-circle flex-shrink-0 position-relative">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-7.png"
-                                                    alt="">
-                                                <span
-                                                    class="w-8-px h-8-px bg-success-main rounded-circle position-absolute end-0 bottom-0"></span>
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Kathryn
-                                                    Murphy
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-100-px">
-                                                    hey!
-                                                    there
-                                                    i’m...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="d-flex flex-column align-items-end">
-                                            <span
-                                                class="text-sm text-secondary-light flex-shrink-0">12:30
-                                                PM</span>
-                                            <span
-                                                class="mt-4 text-xs text-base w-16-px h-16-px d-flex justify-content-center align-items-center bg-warning-main rounded-circle">8</span>
-                                        </div>
-                                    </a>
-
-                                </div>
-                                <div class="text-center py-12 px-16">
-                                    <a href="javascript:void(0)"
-                                        class="text-primary-600 fw-semibold text-md">See
-                                        All Message</a>
-                                </div>
-                            </div>
-                        </div><!-- Message dropdown end -->
-
-                        <div class="dropdown d-none">
-                            <button class="has-indicator w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
-                                type="button" data-bs-toggle="dropdown">
-                                <iconify-icon icon="iconoir:bell"
-                                    class="text-primary-light text-xl">
-                                </iconify-icon>
-                            </button>
-                            <div
-                                class="dropdown-menu to-top dropdown-menu-lg p-0">
-                                <div
-                                    class="m-16 py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
-                                    <div>
-                                        <h6
-                                            class="text-lg text-primary-light fw-semibold mb-0">
-                                            Notifications
-                                        </h6>
-                                    </div>
-                                    <span
-                                        class="text-primary-600 fw-semibold text-lg w-40-px h-40-px rounded-circle bg-base d-flex justify-content-center align-items-center">05</span>
-                                </div>
-
-                                <div
-                                    class="max-h-400-px overflow-y-auto scroll-sm pe-4">
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-44-px h-44-px bg-success-subtle text-success-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
-                                                <iconify-icon
-                                                    icon="bitcoin-icons:verify-outline"
-                                                    class="icon text-xxl">
-                                                </iconify-icon>
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Congratulations
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-200-px">
-                                                    Your
-                                                    profile
-                                                    has
-                                                    been
-                                                    Verified.
-                                                    Your
-                                                    profile
-                                                    has
-                                                    been
-                                                    Verified
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <span
-                                            class="text-sm text-secondary-light flex-shrink-0">23
-                                            Mins
-                                            ago</span>
-                                    </a>
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between bg-neutral-50">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-44-px h-44-px bg-success-subtle text-success-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-1.png"
-                                                    alt="">
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Ronald
-                                                    Richards
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-200-px">
-                                                    You
-                                                    can
-                                                    stitch
-                                                    between
-                                                    artboards
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <span
-                                            class="text-sm text-secondary-light flex-shrink-0">23
-                                            Mins
-                                            ago</span>
-                                    </a>
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-44-px h-44-px bg-info-subtle text-info-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
-                                                AM
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Arlene
-                                                    McCoy
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-200-px">
-                                                    Invite
-                                                    you
-                                                    to
-                                                    prototyping
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <span
-                                            class="text-sm text-secondary-light flex-shrink-0">23
-                                            Mins
-                                            ago</span>
-                                    </a>
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between bg-neutral-50">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-44-px h-44-px bg-success-subtle text-success-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
-                                                <img src="<?= base_url() ?>assets/woowdash/assets/images/notification/profile-2.png"
-                                                    alt="">
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Annette
-                                                    Black
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-200-px">
-                                                    Invite
-                                                    you
-                                                    to
-                                                    prototyping
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <span
-                                            class="text-sm text-secondary-light flex-shrink-0">23
-                                            Mins
-                                            ago</span>
-                                    </a>
-
-                                    <a href="javascript:void(0)"
-                                        class="px-24 py-12 d-flex align-items-start gap-3 mb-2 justify-content-between">
-                                        <div
-                                            class="text-black hover-bg-transparent hover-text-primary d-flex align-items-center gap-3">
-                                            <span
-                                                class="w-44-px h-44-px bg-info-subtle text-info-main rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
-                                                DR
-                                            </span>
-                                            <div>
-                                                <h6
-                                                    class="text-md fw-semibold mb-4">
-                                                    Darlene
-                                                    Robertson
-                                                </h6>
-                                                <p
-                                                    class="mb-0 text-sm text-secondary-light text-w-200-px">
-                                                    Invite
-                                                    you
-                                                    to
-                                                    prototyping
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <span
-                                            class="text-sm text-secondary-light flex-shrink-0">23
-                                            Mins
-                                            ago</span>
-                                    </a>
-                                </div>
-
-                                <div class="text-center py-12 px-16">
-                                    <a href="javascript:void(0)"
-                                        class="text-primary-600 fw-semibold text-md">See
-                                        All Notification</a>
-                                </div>
-
-                            </div>
-                        </div><!-- Notification dropdown end -->
-
-                        <div class="dropdown">
-                            <button class="d-flex justify-content-center align-items-center rounded-circle"
-                                type="button" data-bs-toggle="dropdown">
-                                <img src="<?= base_url(); ?>assets/images/profile/user/<?= user()->code; ?>.png?ver=<?= $version ?>"
-                                    alt="image"
-                                    class="w-40-px h-40-px object-fit-cover rounded-circle">
-                            </button>
-                            <div
-                                class="dropdown-menu to-top dropdown-menu-sm">
-                                <div
-                                    class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
-                                    <div>
-                                        <h6
-                                            class="text-lg text-primary-light fw-semibold mb-2">
-                                            <?= ucwords(user()->username); ?>
-                                        </h6>
-                                        <span
-                                            class="text-secondary-light fw-medium text-sm">Admin</span>
-                                    </div>
-                                    <button type="button"
-                                        class="hover-text-danger">
-                                        <iconify-icon
-                                            icon="radix-icons:cross-1"
-                                            class="icon text-xl">
-                                        </iconify-icon>
-                                    </button>
-                                </div>
-                                <ul class="to-top-list">
-                                    <li>
-                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3"
-                                            href="<?= base_url() ?>users/view">
-                                            <iconify-icon
-                                                icon="solar:user-linear"
-                                                class="icon text-xl">
-                                            </iconify-icon>
-                                            My Profile
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3"
-                                            href="<?= base_url() ?>logout">
-                                            <iconify-icon
-                                                icon="lucide:power"
-                                                class="icon text-xl">
-                                            </iconify-icon>
-                                            Log Out
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div><!-- Profile dropdown end -->
-                    </div>
+                <div class="ai-chat-footer">
+                    <input type="text" id="ai-chat-input" placeholder="Tanya cara input data..." onkeypress="handleEnter(event)">
+                    <button onclick="sendMessage()">Kirim</button>
                 </div>
             </div>
-        </div>
 
-        <div class="dashboard-main-body">
-            <?= $this->renderSection('content'); ?>
-        </div>
-        <footer class="d-footer">
-            <div class="row align-items-center justify-content-between">
-                <div class="col-auto">
-                    <p class="mb-0">© 2025 MGSAPP. All Rights Reserved.</p>
-                </div>
-                <div class="col-auto">
-                    <p class="mb-0">Made by <span
-                            class="text-primary-600">Fauzancaren</span></p>
-                </div>
-            </div>
-        </footer>
-    </main>
+            <!-- ============================================== -->
+            <!-- JAVASCRIPT UNTUK LOGIKA CHAT -->
+            <!-- ============================================== -->
+            <script>
+                const chatWindow = document.getElementById('ai-chat-window');
+                const chatBody = document.getElementById('ai-chat-body');
+                const chatInput = document.getElementById('ai-chat-input');
+                const typingIndicator = document.getElementById('ai-typing');
 
-
-
-    <nav class="mobile-bottom-nav">
-        <!-- Menu Home -->
-        <a href="<?= base_url('/'); ?>" class="mobile-bottom-nav__item">
-
-            <iconify-icon
-                icon="material-symbols-light:dashboard-outline-rounded" T
-                class="menu-icon">
-            </iconify-icon>
-            <span>Home</span>
-        </a>
-
-        <a href="<?= base_url(); ?>admin/sales/penawaran" class="mobile-bottom-nav__item">
-            <iconify-icon icon="ic:outline-handshake" class="menu-icon">
-            </iconify-icon>
-            <span>Penawaran</span>
-        </a>
-
-        <a href="<?= base_url(); ?>admin/sales/invoice" class="mobile-bottom-nav__item ">
-            <iconify-icon icon="hugeicons:invoice-03" class="menu-icon">
-            </iconify-icon>
-            <span>Invoice</span>
-        </a>
-        <a href="<?= base_url(); ?>admin/sales/pembelian" class="mobile-bottom-nav__item">
-            <iconify-icon icon="hugeicons:shopping-bag-03" class="menu-icon">
-            </iconify-icon>
-            <span>Pembelian</span>
-        </a>
-        <a href="<?= base_url(); ?>admin/sales/pengiriman" class="mobile-bottom-nav__item">
-            <iconify-icon icon="hugeicons:container-truck-01" class="menu-icon">
-            </iconify-icon>
-            <span>Pengiriman</span>
-        </a>
-    </nav>
-
-    <!-- SCRIPT OTOMATIS ACTIVE BERDASARKAN URL -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Jalankan di dalam setTimeout agar dieksekusi tepat setelah render DOM benar-benar selesai
-            setTimeout(function() {
-                // 1. Ambil path URL saat ini dan bersihkan garis miring di akhir jika ada
-                let currentPath = window.location.pathname.replace(/\/$/, "");
-                if (currentPath === "") currentPath = "/";
-
-                // 2. Ambil semua elemen link menu bawah
-                const navItems = document.querySelectorAll('.mobile-bottom-nav__item');
-
-                navItems.forEach(item => {
-                    // Ambil path dari href menu dan bersihkan garis miring di akhir
-                    let itemPath = item.pathname.replace(/\/$/, "");
-                    if (itemPath === "") itemPath = "/";
-
-                    let isActive = false;
-
-                    // 3. Logika Evaluasi Menu Aktif
-                    if (itemPath === '/') {
-                        // Jika HOME, wajib cocok persis
-                        isActive = (currentPath === '/');
+                // Menampilkan/Menyembunyikan Jendela Chat
+                function toggleChat() {
+                    if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+                        chatWindow.style.display = 'flex';
+                        chatInput.focus();
                     } else {
-                        // Untuk menu modul (penawaran, invoice, dll)
-                        isActive = (currentPath === itemPath || currentPath.startsWith(itemPath + '/'));
+                        chatWindow.style.display = 'none';
                     }
-
-                    // 4. Manipulasi Class DOM secara paksa
-                    if (isActive) {
-                        item.classList.add('active');
-                        // Mengubah style warna teks/icon secara inline sebagai cadangan jika CSS Anda kalah prioritas
-                        item.style.setProperty('color', '#amber-600', 'important'); // Ganti warna hex sesuai tema Anda jika perlu
-
-                    } else {
-                        item.classList.remove('active');
-                    }
-                });
-            }, 50); // Delay 50ms untuk memastikan DOM stabil
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            // --- 1. LOGIK AUTO ACTIVE BERDASARKAN URL ---
-            const currentUrl = window.location.href;
-            const navItems = document.querySelectorAll('.mobile-bottom-nav__item');
-
-            navItems.forEach(item => {
-                if (currentUrl === item.href || currentUrl === item.href + '/') {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
                 }
 
-                // --- 2. LOGIK EFEK RIAK (RIPPLE EFFECT) ---
-                item.addEventListener('click', function(e) {
-                    // Hapus riak lama jika masih ada
-                    const oldRipple = this.querySelector('.ripple');
-                    if (oldRipple) {
-                        oldRipple.remove();
+                // Eksekusi kirim saat tekan "Enter"
+                function handleEnter(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
                     }
+                }
 
-                    // Buat elemen lingkaran riak baru
-                    const ripple = document.createElement('span');
-                    ripple.classList.add('ripple');
+                // Fungsi Mengirim Pesan
+                function sendMessage() {
+                    const text = chatInput.value.trim();
+                    if (!text) return;
 
-                    // Hitung ukuran diameter lingkaran riak berdasarkan tombol
-                    const diameter = Math.max(this.clientWidth, this.clientHeight);
-                    const radius = diameter / 2;
+                    // 1. Tampilkan pesan user di chat
+                    appendMessage('user', text);
+                    chatInput.value = '';
 
-                    ripple.style.width = ripple.style.height = `${diameter}px`;
+                    // 2. Tampilkan indikator loading (AI sedang mengetik)
+                    typingIndicator.style.display = 'block';
+                    chatBody.scrollTop = chatBody.scrollHeight;
 
-                    // Posisikan titik tengah lingkaran tepat di lokasi jari/mouse menekan
-                    const rect = this.getBoundingClientRect();
-                    ripple.style.left = `${e.clientX - rect.left - radius}px`;
-                    ripple.style.top = `${e.clientY - rect.top - radius}px`;
+                    // 3. Kirim ke Backend CI4 (Sesuaikan URL Controller Anda)
+                    // URL di bawah ini asumsi Anda menempatkannya di http://localhost:8080/aiagent/ask
+                    fetch('<?= base_url('aiagent/ask') ?>', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest' 
+                            // Jika CI4 Anda menggunakan CSRF, tambahkan header CSRF di sini:
+                            // 'X-CSRF-TOKEN': '<?= csrf_hash() ?>'
+                        },
+                        body: JSON.stringify({ prompt: text })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Sembunyikan indikator loading
+                        typingIndicator.style.display = 'none';
+                        
+                        // 4. Tampilkan balasan AI (asumsi format JSON respons dari CI4 Anda: { "status": "success", "data": "Jawaban AI..." })
+                        // Jika Controller Anda sebelumnya hanya me-return string biasa, ganti .json() menjadi .text() di atas
+                        const aiReply = data.data || data.response || data; 
+                        appendMessage('ai', aiReply);
+                    })
+                    .catch(error => {
+                        typingIndicator.style.display = 'none';
+                        appendMessage('ai', 'Maaf, terjadi kesalahan saat menghubungi server AI lokal.');
+                        console.error('Error:', error);
+                    });
+                }
 
-                    // Masukkan riak ke dalam tombol
-                    this.appendChild(ripple);
-                });
-            });
-        });
-    </script>
-
-    <!-- main js -->
-    <script src="<?= base_url() ?>assets/woowdash/assets/js/app.js?version=1.0.0"></script>
-    <?= $this->renderSection('scriptjs'); ?>
-
+                // Fungsi Pembantu untuk menambahkan balon chat
+                function appendMessage(sender, text) {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.classList.add('chat-bubble');
+                    msgDiv.classList.add(sender === 'user' ? 'chat-user' : 'chat-ai');
+                    msgDiv.textContent = text;
+                    
+                    // Sisipkan sebelum indikator typing
+                    chatBody.insertBefore(msgDiv, typingIndicator);
+                    chatBody.scrollTop = chatBody.scrollHeight; // Auto-scroll ke bawah
+                }
+            </script>
 
 </body>
 
