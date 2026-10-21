@@ -161,71 +161,75 @@ class AccountingModel extends Model
     }
 
     function load_datatable_coa($filter = null){
-        $filterdata = 0;
-        $countTotal = 0;
-        $count = 0;
-        $draw = $filter['draw'];  
-        $start = $filter['start'];
-        $length = $filter['length']; 
-        $datatable = array();
-        
-        $builder = $this->db->table("acc_coa");    
-        //mengambil total semua data
-        $builder1 = clone $builder; 
-        $countTotal = $builder1->get()->getNumRows(); 
-        
-        if($filter["search"]){ 
-            $builder->groupStart(); 
-            $builder->like("kode_akun",$filter["search"]);
-            $builder->orLike("nama_akun",$filter["search"]);
-            $builder->orLike("kategori",$filter["search"]);
-            $builder->orLike("saldo_normal",$filter["search"]);
-            $builder->orLike("keterangan",$filter["search"]); 
-            $builder->groupEnd();  
-            $filterdata = 1;
-        }
-        
-        // Order TAble
-        $columns = array(
-            0 => "kode_akun", // kolom action tidak dapat diurutkan
-            1 => "nama_akun", // kolom action tidak dapat diurutkan
-            2 => "kategori", // kolom name
-            3 => "saldo_normal", // kolom name
-            4 => "keterangan", // kolom action tidak dapat diurutkan
-            5 => "", // kolom image tidak dapat diurutkan 
-        );
-        if (isset($filter['order'][0]['column']) && $columns[$filter['order'][0]['column']] !== null) { 
-            $orderColumn = $columns[$filter['order'][0]['column']];
-            $orderDir = $filter['order'][0]['dir'];
-        
-            if ($orderDir != 'asc' && $orderDir != 'desc') {
-                $orderDir = 'asc';
-            } 
-            $builder->orderby($orderColumn,$orderDir);   
-        } 
+        helper('akuntansi');
+        $draw   = (int) ($filter['draw'] ?? 0);
+        $start  = max(0, (int) ($filter['start'] ?? 0));
+        $length = (int) ($filter['length'] ?? -1);
+        $search = trim((string) ($filter['search'] ?? ''));
 
-        $datafilter = clone $builder;  
-        $count = $datafilter->get()->getNumRows();
-        if($length > 0) $builder->limit($length,$start); 
-        $query = $builder->get();  
-        foreach($query->getResult() as $row){ 
-            $data_row = array( 
-                "kode_akun" => $row->kode_akun, 
-                "nama_akun" => $row->nama_akun,
-                "kategori" =>$row->kategori,
-                "saldo_normal" => $row->saldo_normal,
-                "keterangan" => $row->keterangan, 
-                "action" =>'  
-                <div class="d-flex align-items-center gap-1 justify-content-center"> 
-                <a onclick="edit_data('.$row->kode_akun.',this,\''.$row->kode_akun.'\')"
+        $builder = $this->db->table("acc_coa");
+        $countTotal = (clone $builder)->countAllResults();
+
+        if ($search !== '') {
+            $builder->groupStart();
+            $builder->like("kode_akun", $search);
+            $builder->orLike("nama_akun", $search);
+            $builder->orLike("kategori", $search);
+            $builder->orLike("saldo_normal", $search);
+            $builder->orLike("keterangan", $search);
+            $builder->groupEnd();
+        }
+        $count = (clone $builder)->countAllResults();
+
+        // Daftar akun selalu urut berdasarkan kode agar hierarki terbaca
+        $builder->orderBy("kode_akun", "ASC");
+        if ($length > 0) $builder->limit($length, $start);
+        $rows = $builder->get()->getResult();
+
+        // Peta induk untuk menentukan tingkat indentasi
+        $parent = [];
+        foreach ($this->db->table("acc_coa")->select("kode_akun, parent_kode")->get()->getResultArray() as $r) {
+            $parent[(string) $r['kode_akun']] = $r['parent_kode'];
+        }
+
+        $datatable = array();
+        foreach ($rows as $row) {
+            $level = 0;
+            for ($p = $parent[(string) $row->kode_akun] ?? null; $p && $level < 10; $level++) {
+                $p = $parent[(string) $p] ?? null;
+            }
+            $isHeader = (int) ($row->is_header ?? 0) === 1;
+            $aktif    = !isset($row->aktif) || (int) $row->aktif === 1;
+            $kode     = esc((string) $row->kode_akun);
+
+            $nama = '<div class="' . ($isHeader ? 'fw-bold' : '') . '" style="padding-left:' . ($level * 18) . 'px">'
+                . esc((string) $row->nama_akun)
+                . ($aktif ? '' : ' <span class="badge text-bg-secondary ms-1">Nonaktif</span>')
+                . '</div>';
+            $saldo = $row->saldo_normal === 'Debit'
+                ? '<span class="badge text-bg-info">Debit</span>'
+                : '<span class="badge text-bg-warning">Kredit</span>';
+            if ($isHeader) {
+                $saldo .= ' <span class="badge text-bg-dark">Header</span>';
+            }
+
+            $data_row = array(
+                "kode_akun" => '<span class="' . ($isHeader ? 'fw-bold' : '') . '">' . $kode . '</span>',
+                "nama_akun" => $nama,
+                "kategori" => esc((string) $row->kategori),
+                "saldo_normal" => $saldo,
+                "keterangan" => esc((string) $row->keterangan),
+                "action" => '
+                <div class="d-flex align-items-center gap-1 justify-content-center">
+                <a onclick="coa_edit(this)" data-kode="' . $kode . '" style="cursor:pointer"
                     class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Ubah Data">
                     <iconify-icon icon="lucide:edit"></iconify-icon>
                 </a>
-                <a onclick="delete_data('.$row->kode_akun.',this,\''.$row->kode_akun.'\')"
+                <a onclick="coa_delete(this)" data-kode="' . $kode . '" data-nama="' . esc((string) $row->nama_akun) . '" style="cursor:pointer"
                     class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center"  data-bs-toggle="tooltip"  data-bs-title="Hapus Data">
-                    <iconify-icon icon="lucide:trash-2">
-                    </iconify-icon>
-                </a> ',
+                    <iconify-icon icon="lucide:trash-2"></iconify-icon>
+                </a>
+                </div>',
             );
             array_push($datatable, $data_row);
         }
@@ -234,13 +238,12 @@ class AccountingModel extends Model
             array(
                 "draw"=>$draw,
                 "recordsTotal"=>$countTotal,
-                "recordsFiltered"=>($filterdata == 0 ? $countTotal : $count ),
-                "data"=>$datatable, 
+                "recordsFiltered"=>$count,
+                "data"=>$datatable,
             )
         );
+    }
 
-    } 
-    
     function load_datatable_jurnal($filter = null){
         $filterdata = 0;
         $countTotal = 0;
