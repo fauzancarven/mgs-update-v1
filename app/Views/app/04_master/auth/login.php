@@ -47,15 +47,23 @@
 
   <section class="auth bg-base d-flex flex-wrap">
     <div class="auth-left d-lg-block d-none">
-      <div class="d-flex align-items-center flex-column h-100 justify-content-center">
-        <img src="<?=base_url()?>assets/images/auth.png" alt="">
+      <div class="d-flex align-items-center flex-column h-100 justify-content-center background-auth">
+        <img src="<?=base_url()?>assets/images/auth.png" class="light-logo"> 
+        <img src="<?=base_url()?>assets/images/authdark.png" class="dark-logo">  
       </div>
     </div>
     <div class="auth-right py-32 px-24 d-flex flex-column justify-content-center">
       <div class="max-w-464-px mx-auto w-100">
+        <div class="d-flex justify-content-end">
+        <button type="button" data-theme-toggle
+                            class="w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center"
+                            id="togle-dark-mode"></button></div>
         <div>
-          <a href="<?=base_url()?>" class="mb-40 max-w-290-px">
-            <img src="<?=base_url()?>assets/woowdash/assets/images/w-logo.png" alt="">
+          <a href="<?=base_url()?>" class="mb-40 max-w-290-px logo-auth"> 
+                <img src="<?= base_url() ?>assets/woowdash/assets/images/w-logo.png"
+                    alt="site logo" class="light-logo">
+                <img src="<?= base_url() ?>assets/woowdash/assets/images/w-logo-light.png"
+                    alt="site logo" class="dark-logo"> 
           </a>
           <h4 class="mb-12">Login Aplikasi</h4>
           <p class="mb-32 text-secondary-light text-lg">Selamat datang kembali! silahkan masukan email dan password anda</p>
@@ -83,13 +91,11 @@
           <div class="">
             <div class="d-flex justify-content-between gap-2">
 
-              <?php if ($config->allowRemembering) : ?>
-              <div class="form-group ms-3 position-relative">
-                <input class="form-check-input" type="checkbox" name="remember" style="left: 20px;" id="flexCheckDefault" <?php if (old('remember')) : ?> checked <?php endif ?>>
-                <label class="form-check-label text-muted ps-4" for="flexCheckDefault" style="padding-left: 20px;">
-                  <?= lang('Auth.rememberMe') ?>
-                </label>
-              </div>
+              <?php if ($config->allowRemembering) : ?> 
+                <div class="form-switch switch-primary d-flex align-items-center gap-3">
+                    <input class="form-check-input" type="checkbox" name="remember"  role="switch" id="switch11" <?php if (old('remember')) : ?> checked <?php endif ?>>
+                    <label class="form-check-label line-height-1 fw-medium text-secondary-light" for="switch11"> <?= lang('Auth.rememberMe') ?></label>
+                </div>  
               <?php endif; ?>
             </div>
           </div>

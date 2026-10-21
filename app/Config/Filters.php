@@ -59,7 +59,7 @@ class Filters extends BaseFilters
      */
     public array $required = [
         'before' => [
-            'forcehttps', // Force Global Secure Requests
+            //'forcehttps', // Force Global Secure Requests
             'pagecache',  // Web Page Caching
         ],
         'after' => [
@@ -80,6 +80,8 @@ class Filters extends BaseFilters
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
+            // Jika Anda mengaktifkan 'login' dari Myth/Auth di sini, pastikan untuk mengecualikan API:
+            'login' => ['except' => ['api/v1/*']], 
         ],
         'after' => [
             // 'honeypot',

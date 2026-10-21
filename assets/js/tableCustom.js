@@ -643,7 +643,7 @@ class tableItemDelivery {
                                                     <div class="btn-group d-inline-block" role="group"> 
                                                         <button class="btn btn-sm btn-primary btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="up"><i class="fa-solid fa-arrow-up"></i></button>   
                                                         <button class="btn btn-sm btn-primary btn-action detail p-2 py-1 rounded" data-id="${i}" data-type="down"><i class="fa-solid fa-arrow-down"></i></button> 
-                                                    </div>
+                                 inputharga                   </div>
                                                 </div> 
                                                 <span class="no-urut text-head-3 order-md-2 order-1 p-2">${last_group_no}. </span> 
                                                 <div class="d-flex pe-2 order-md-3 order-2 ${this.dataitem[i]["id"] == "0" ? "d-none" : ""}">
@@ -675,14 +675,14 @@ class tableItemDelivery {
                                                 <div class="col-6 col-md-3  px-1">  
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Spare</span>
                                                     <div class="input-group">  
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargabeli" id="input-spare-${i}" data-id="${i}">
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-spare-${i}" data-id="${i}">
                                                         <span class="input-group-text font-std px-1">${this.dataitem[i]["satuan_text"]}</span> 
                                                     </div>   
                                                 </div> 
                                                 <div class="col-6 col-md-3  px-1">  
                                                     <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Rusak</span>
                                                     <div class="input-group"> 
-                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block hargajual" id="input-rusak-${i}" data-id="${i}">
+                                                        <input type="text"class="form-control form-control-sm  input-form d-inline-block" id="input-rusak-${i}" data-id="${i}">
                                                         <span class="input-group-text font-std px-1">${this.dataitem[i]["satuan_text"]}</span>
                                                     </div>   
                                                 </div>   
@@ -697,14 +697,14 @@ class tableItemDelivery {
             }
         } catch (error) {
         }
-    }
+    }inputharga
     setupDatahtml() {
 
         var self = this;
         var inputqty = [];
-        var inputharga = [];
-        var inputdisc = [];
-        var inputtotal = [];
+        var inputqtyreceive = [];
+        var inputqtyspare = [];
+        var inputqtycrash = [];
 
         for (var i = 0; self.dataitem.length > i; i++) {
             if (self.dataitem[i]["type"] == "product") {
@@ -763,19 +763,19 @@ class tableItemDelivery {
                     numeralDecimalScale: 3,
                     numeralThousandGroupStyle: "thousand"
                 });
-                inputharga[i] = new Cleave(`#input-diterima-${i}`, {
+                inputqtyreceive[i] = new Cleave(`#input-diterima-${i}`, {
                     numeral: true,
                     delimeter: ",",
                     numeralDecimalScale: 0,
                     numeralThousandGroupStyle: "thousand"
                 });
-                inputdisc[i] = new Cleave(`#input-spare-${i}`, {
+                inputqtyspare[i] = new Cleave(`#input-spare-${i}`, {
                     numeral: true,
                     delimeter: ",",
                     numeralDecimalScale: 0,
                     numeralThousandGroupStyle: "thousand"
                 });
-                inputtotal[i] = new Cleave(`#input-rusak-${i}`, {
+                inputqtycrash[i] = new Cleave(`#input-rusak-${i}`, {
                     numeral: true,
                     delimeter: ",",
                     numeralDecimalScale: 0,
@@ -790,23 +790,23 @@ class tableItemDelivery {
 
 
                 //event diterima
-                inputharga[i].setRawValue(self.dataitem[i]["qty"]);
+                inputqtyreceive[i].setRawValue(self.dataitem[i]["qty"]);
                 $(`#input-diterima-${i}`).on("keyup", function () {
-                    self.dataitem[$(this).data("id")]["qty"] = inputharga[$(this).data("id")].getRawValue();
+                    self.dataitem[$(this).data("id")]["qty"] = inputqtyreceive[$(this).data("id")].getRawValue();
                     if ($(`#input-diterima-${i}`).val() == "") $(`#input-diterima-${i}`).val(0)
                 });
 
                 //event spare
-                inputdisc[i].setRawValue(self.dataitem[i]["qty_spare"]);
+                inputqtyspare[i].setRawValue(self.dataitem[i]["qty_spare"]);
                 $(`#input-spare-${i}`).on("keyup", function () {
-                    self.dataitem[$(this).data("id")]["qty_spare"] = inputdisc[$(this).data("id")].getRawValue();
+                    self.dataitem[$(this).data("id")]["qty_spare"] = inputqtyspare[$(this).data("id")].getRawValue();
                     if ($(`#input-spare-${i}`).val() == "") $(`#input-spare-${i}`).val(0)
                 });
 
                 //event rusak
-                inputtotal[i].setRawValue(self.dataitem[i]["qty_waste"]);
+                inputqtycrash[i].setRawValue(self.dataitem[i]["qty_waste"]);
                 $(`#input-rusak-${i}`).on("keyup", function () {
-                    self.dataitem[$(this).data("id")]["qty_waste"] = inputtotal[$(this).data("id")].getRawValue();
+                    self.dataitem[$(this).data("id")]["qty_waste"] = inputqtycrash[$(this).data("id")].getRawValue();
                     if ($(`#input-rusak-${i}`).val() == "") $(`#input-rusak-${i}`).val(0)
                 });
 

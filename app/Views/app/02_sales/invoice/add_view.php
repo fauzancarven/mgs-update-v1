@@ -1085,7 +1085,66 @@ $('#InvDate').daterangepicker({
                     format: 'DD MMMM YYYY'
           }
 });
+get_ref_penawaran = function(id,isUrl = false){
+        $.ajax({
+            dataType: "json",
+            method: "POST",
+            url: "<?= base_url() ?>data/penawaran/" + id, 
+            success: function(response) {
+                console.log(response);
+                $('#StoreId').append(new Option(response.header.StoreCode + " - " + response.header.StoreName, response.header.StoreId, true, true)).trigger('change');
+                $('#InvProjectAddress').val(response.header.SphProjectAddress);
+                $('#CustomerId').append(new Option(response.header.CustomerCode + " - " + response.header.CustomerName, response.header.CustomerId, true, true)).trigger('change');
+                $("#InvCustName").val(response.header.SphCustName).prop("readonly",false);
+                $("#InvCustTelp").val(response.header.SphCustTelp).prop("readonly",false);
+                $("#InvAddress").val(response.header.SphAddress).prop("readonly",false);
 
+
+                if(isUrl){// 1. Buat elemen option baru
+                        var newOption = new Option(response.header.SphCode, response.header.SphId, true, true);
+
+                        // 2. Tambahkan atribut data-type dengan nilai "Penawaran"
+                        $(newOption).attr('data-type', 'Penawaran');
+
+                        // 3. Masukkan ke select element dan trigger perubahan
+                        $('#InvRef').append(newOption).trigger('change');
+
+                }
+                var responseDetail = response.detail;
+                responseDetail.forEach(function(item) {
+                        table_Inv_item.addDataRow({
+                                    "id": item.ProdukId,
+                                    "produkid": item.ProdukId,
+                                    "varian": JSON.parse(item.SphDetailVarian),
+                                    "text": item.SphDetailText,
+                                    "group":  item.SphDetailGroup,
+                                    "berat": "0",
+                                    "satuan_id": item.SphDetailSatuanId,
+                                    "satuan_text": item.SphDetailSatuanText,
+                                    "pcsM2": item.SphDetailSatuanText,
+                                    "price": item.SphDetailPrice,
+                                    "disc":  item.SphDetailDisc,
+                                    "qty": item.SphDetailQty,
+                                    "total": item.SphDetailTotal,
+                                    "image_url": item.imageurl,
+                                    "type":item.SphDetailType,
+                            }); 
+                }); 
+                table_Inv_item.render()
+
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                                icon: 'error',
+                                text: xhr["responseJSON"]
+                                            [
+                                                    'message'
+                                            ],
+                                confirmButtonColor: "var(--brand)",
+                        });
+            }
+        })
+}
 $("#InvRef").select2({
           placeholder: "Pilih Referensi dokumen",
           ajax: {
@@ -1136,9 +1195,18 @@ $("#InvRef").select2({
 }).on('select2:select', function(e) {
           var data = e.params.data;
           console.log(data);
-          data_detail_item = data["detail_item"];
-          load_produk();
+        get_ref_penawaran(data.id); 
 });
+// Mengambil query string dari URL aktif
+const urlParams = new URLSearchParams(window.location.search);
+// Mengambil nilai berdasarkan nama parameter
+const sphid = urlParams.get('sphid'); 
+if(sphid !== null && sphid !== undefined && sphid !== "") {
+        
+        get_ref_penawaran(sphid,true);
+        console.log(sphid);
+} 
+
 
 $("#InvAdmin").select2({
           placeholder: "Pilih Admin",

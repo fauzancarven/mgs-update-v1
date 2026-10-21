@@ -2,8 +2,8 @@
 
 <?php $this->section('content'); ?>
 
-<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-  <h6 class="fw-semibold mb-0">Dashboard</h6>
+<div class="d-flex flex-wrap align-items-center gap-3 mb-24">
+  <h6 class="fw-semibold mb-0 d-none d-md-flex align-items-center gap-2">Dashboard</h6>
   <ul class="d-flex align-items-center gap-2">
     <li class="fw-medium">
       <a href="<?= base_url() ?>" class="d-flex align-items-center gap-1 hover-text-primary">

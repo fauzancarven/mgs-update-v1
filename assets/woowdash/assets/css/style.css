@@ -3859,7 +3859,6 @@ html[data-theme=dark] .dark-bg-neutral-200 {
 .h-50-px {
   height: 3.125rem !important;
 }
-
 .h-56-px {
   height: 3.5rem !important;
 }
@@ -5665,6 +5664,21 @@ html[data-theme=dark] .dark-bg-neutral-200 {
 
 .ps-440 {
   padding-inline-start: var(--size-440) !important;
+}
+
+
+/* 2. Pastikan ps-md-0 Anda juga menggunakan penulisan yang benar */
+@media (min-width: 768px) {
+    .ps-md-0 {
+        padding-inline-start: 0 !important;
+    }
+}
+
+/* 3. TAMBAHKAN INI: Jika Anda ingin ps-md-24 buatan sendiri bisa berjalan */
+@media (min-width: 768px) {
+    .ps-md-24 {
+        padding-inline-start: var(--size-24) !important;
+    }
 }
 
 .pe-2 {
@@ -15261,10 +15275,18 @@ td.fc-header-center {
 .sidebar.active:hover .sidebar-logo img.light-logo {
   display: inline-block;
 }
-
+.logo-auth img.light-logo {
+  display: inline-block;
+}
+.background-auth img.light-logo {
+  display: inline-block;
+}
+.background-auth img {
+    height: 100vh;
+}
 .sidebar.active:hover .sidebar-logo img.logo-icon {
   display: none;
-}
+} 
 
 .sidebar.active:hover .sidebar-menu li a span {
   display: inline-block;
@@ -15291,7 +15313,20 @@ td.fc-header-center {
 .sidebar.active .sidebar-logo img.dark-logo {
   display: none;
 }
+ 
+.logo-auth img.dark-logo {
+  display: none;
+}
+.logo-auth img.logo-icon {
+  display: inline-block;
+}
 
+.background-auth img.dark-logo {
+  display: none;
+}
+.background-auth img.logo-icon {
+  display: inline-block;
+}
 .sidebar.active .sidebar-logo img.logo-icon {
   display: inline-block;
 }
@@ -15339,6 +15374,38 @@ td.fc-header-center {
   display: none;
 }
 
+
+.logo-auth img.dark-logo {
+  display: none;
+}
+
+.logo-auth img.logo-icon { 
+  display: none;
+}
+
+[data-theme=dark] .logo-auth img.light-logo {
+  display: none;
+}
+
+[data-theme=dark] .logo-auth img.dark-logo {
+  display: inline-block;
+}
+
+.background-auth img.dark-logo {
+  display: none;
+}
+
+.background-auth img.logo-icon { 
+  display: none;
+}
+
+[data-theme=dark] .background-auth img.light-logo {
+  display: none;
+}
+
+[data-theme=dark] .background-auth img.dark-logo {
+  display: inline-block;
+}
 .sidebar-menu-area {
   height: calc(100vh - 72px);
   padding: 0.75rem 1rem;
@@ -15378,6 +15445,7 @@ td.fc-header-center {
 [data-theme=dark] .sidebar-logo img.dark-logo {
   display: inline-block;
 }
+ 
 
 .sidebar-menu li.dropdown>a {
   position: relative;
@@ -15973,13 +16041,22 @@ h2.swal2-title {
   /* width: 15rem !important; */
 }
 
-.input-group-custom>i {
+.input-group-custom>iconify-icon {
   position: absolute;
   left: 0.75rem;
   top: 50%;
   transform: translatey(-50%);
   z-index: 10;
-  font-size: 0.75rem;
+  font-size: 1rem;
+  color: #6b6b6b;
+}
+.input-group>iconify-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translatey(-50%);
+  z-index: 10;
+  font-size: 1rem;
   color: #6b6b6b;
 }
 
@@ -15992,7 +16069,7 @@ h2.swal2-title {
   border: 1px solid #002247 !important;
 } */
 
-.input-group-custom>i.fa-caret-down {
+.input-group-custom>iconify-icon.dropdown {
   left: 92%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -16358,4 +16435,210 @@ table.table.detail-item {
   color: gray;
   position: absolute;
   bottom: 0;
+}
+
+   /* 1. SECARA DEFAULT SEMBUNYIKAN MENU DI LAYAR DESKTOP */
+    .mobile-bottom-nav {
+        display: none; 
+    }
+
+    /* 2. MENU HANYA MUNCUL JIKA UKURAN LAYAR MAKSIMAL 767px (HP & Tablet) */
+    @media (max-width: 767.98px) {
+       
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: var(--white);
+            display: flex; 
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px var(--neutral-200);
+            z-index: 1000;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+
+        .mobile-bottom-nav__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary-light);
+            text-decoration: none;
+            font-family: sans-serif;
+            font-size: 12px;
+            flex-grow: 1;
+            min-width: 50px;
+            padding: 5px 0;
+            transition: color 0.2s ease-in-out;
+            
+            /* WAJIB: Diperlukan agar efek riak tetap berada di dalam area tombol */
+            position: relative;
+            overflow: hidden; 
+        }
+
+        .mobile-bottom-nav__item i {
+            font-size: 20px;
+            margin-bottom: 2px;
+            pointer-events: none; /* Mencegah konflik koordinat klik */
+        }
+
+        .mobile-bottom-nav__item span {
+            pointer-events: none; /* Mencegah konflik koordinat klik */
+        }
+
+        .mobile-bottom-nav__item.active {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        /* STYLE UNTUK EFEK RIAK (RIPPLE) */
+        .ripple {
+            position: absolute;
+            background: rgba(0, 123, 255, 0.25); /* Warna biru riak transparan */
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-animation 0.5s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+  /* Class active yang akan ditambahkan otomatis */
+        .mobile-bottom-nav__item.active {
+            color: #007bff;
+            font-weight: bold;
+        } 
+        nav.mobile-bottom-nav iconify-icon {
+            font-size: 1.5rem;
+        }
+
+
+        .search-data>.input-group {
+          position: relative;
+          width: auto !important;
+        }
+
+        #action-button-doc.sticky {
+            left: 0;
+            width: 100%;
+            z-index: 1001;
+        }
+
+    }
+  
+@media (max-width: 767.98px) {
+    /* 1. Paksa element tabel utama dan body menjadi block agar tidak kaku */
+    .dataTable, 
+    .dataTable tbody, 
+    .dataTable tr {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* 2. Sembunyikan header tabel asli */
+    .dataTable thead {
+        display: none !important;
+    }
+    
+    /* 3. Paksa kolom pembungkus kartu agar melebar 100% penuh layar HP */
+    .dataTable tbody tr td.mobile-card-container {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 8px !important; /* Memberikan sedikit jarak di kanan-kiri layar */
+        box-sizing: border-box !important;
+        border: none !important;
+        background: none;
+        color: var(--black);
+    }
+
+    /* 4. Sembunyikan elemen bawaan DataTables di HP yang kosong/mengganggu */
+    .dataTable tbody tr td:not(.mobile-card-container) {
+        display: none !important;
+    }
+     /* Mencegah teks panjang merusak / mendesak layout kartu */
+    .text-wrap-mobile {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        display: block !important;
+        max-width: 250px !important;
+    }
+}
+
+/* Style Komponen Kartu agar presisi */
+.custom-mobile-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--input-form-light);
+    margin-bottom: 16px;
+    width: 100% !important;
+    display: block;
+} 
+.text-exp-red {
+    color: #ef4444;
+    font-size: 11px;
+}
+
+.icon-field .icon-end { 
+    display: none;
+    cursor: pointer;
+    left: calc(100% - 25px); 
+}
+
+/* Ketika area ditutup / collapsed, putar ikon panah ke arah kiri/atas */
+div[data-bs-toggle="collapse"].collapsed .collapse-arrow {
+    transform: rotate(-90deg);
+}
+
+/* Mengubah kursor saat diarahkan ke area judul */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+
+/* Membuat wadah 24 kolom */
+.row-24 {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.5rem; /* Sesuaikan dengan gutter Anda */
+  margin-left: -0.5rem;
+}
+
+/* Membuat skala persentase kolom kustom per 24 */
+.col-24-1  { flex: 0 0 auto; width: 4.16666667%; }
+.col-24-2  { flex: 0 0 auto; width: 8.33333333%; }
+.col-24-3  { flex: 0 0 auto; width: 12.5%; }
+.col-24-4  { flex: 0 0 auto; width: 16.66666667%; }
+.col-24-6  { flex: 0 0 auto; width: 25%; }
+.col-24-8  { flex: 0 0 auto; width: 33.33333333%; }
+.col-24-12 { flex: 0 0 auto; width: 50%; }
+.col-24-24 { flex: 0 0 auto; width: 100%; }
+
+/* Contoh variasi responsif untuk layar medium (md) ke atas */
+@media (min-width: 768px) {
+  .col-md-24-4 { flex: 0 0 auto; width: 16.66666667%; }
+  .col-md-24-8 { flex: 0 0 auto; width: 33.33333333%; }
+
+    .w-md-50-px {
+      width: 3.125rem !important;
+    }
+    .h-md-50-px {
+      height: 3.125rem !important;
+    }
 }

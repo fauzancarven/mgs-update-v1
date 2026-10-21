@@ -227,8 +227,7 @@ table.item td.image {
 
 table.item td.text {
           width: 30%;
-}
-
+} 
 table.item td:nth-child(4) {
           width: auto;
 }
@@ -240,7 +239,9 @@ table.item td:nth-child(5) {
 table.item td:last-child {
           width: auto;
 }
-
+table.item td.text.w-45 {
+          width: 45%;
+}
 .item th {
           /* background-color: #c6d9f0; */
 }
@@ -535,16 +536,27 @@ li[data-list="bullet"]:before {
                             $arr_badge .= '<br><span style="font-size:10px;">'.ucfirst($varian->varian).' : '.$varian->value.'</span>'; 
                         }
                         if($item["type"] == "product"){
-                            $html_items .= '
-                            <tr> 
+                            // 1. Buat penanda apakah kolom gambar akan ditampilkan atau tidak
+                            $showImageColumn = ($postdata["image"] == 1);
+
+                            // 2. Tentukan class tambahan untuk td.text. Jika tidak tampilkan gambar, beri class 'w-45'
+                            $textClass = !$showImageColumn ? 'w-45' : '';
+
+                            
+                            $html_items .=  '<tr> 
                                 <td class="td-center">'.$no.'</td>
-                                 '.($postdata["image"] == 1 ? ($item["image"] == "" ? "<td class='td-center image'></td>" : "<td class='td-center image'><img style='width:75px;height:75px;margin:3px;' src='".$item["image"]."'/></td>") : "").'
-                                <td class="ps-2 text">'.nl2br($item["text"]).$arr_badge.'</td>
+                                
+                                '.($showImageColumn ? ($item["image"] == "" ? "<td class='td-center image'></td>" : "<td class='td-center image'><img style='width:75px;height:75px;margin:3px;' src='".$item["image"]."'/></td>") : "").'
+                                
+                                <!-- Tambahkan variabel $textClass di sini -->
+                                <td class="ps-2 text '.$textClass.'">'.nl2br($item["text"]).$arr_badge.'</td>
+                                
                                 <td class="td-center">'.number_format($item["qty"], 2, ',', '.').' '.$item["satuan_text"].'</td>
                                 <td class="td-center">Rp. '.number_format($item["price"], 0, ',', '.').'</td>
                                 '.($discShow ? "<td class='td-center'>Rp. ".number_format($item["disc"], 0, ',', '.')."</td>" : "").'
                                 <td class="td-center">Rp. '.number_format($item["total"], 0, ',', '.').'</td>
                             </tr>';
+                            
                             $no++;
                         }else{
                             

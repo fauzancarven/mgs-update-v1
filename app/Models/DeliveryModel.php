@@ -363,7 +363,7 @@ class DeliveryModel extends Model
                         <div class="d-flex gap-1 flex-wrap pt-4">'.$arr_badge.'</div></div>
                     </td>
                     <td class="detail">'.number_format($row_data->DeliveryDetailQty, 2, ',', '.').' '.$row_data->DeliveryDetailSatuanText.'</td>
-                    <td class="detail">'.number_format($row_data->DeliveryDetailQtySpare, 2, ',', '.').'</td>
+                    <td class="detail">'.number_format($row_data->DeliveryDetailQtySpare, 2, ',', '.').' '.$row_data->DeliveryDetailSatuanText.'</td>
                     
                 </tr> ';
                 $number++;

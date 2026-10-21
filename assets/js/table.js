@@ -94,32 +94,90 @@ class tableItem {
                             <div class="row align-items-center mx-0 hr p-8">
                                 <div class="col-12 col-md-6 px-0">      
                                     <div class="d-flex">   
-                                        <span class="no-urut text-head-3 order-md-2 order-1 p-8 ms-16 me-4">${String.fromCharCode(last_group_abjad)}. </span>  
-                                        <div class="d-flex flex-column text-start flex-fill order-md-3 order-2 justify-content-center">
-                                            <span class="text-head-3 fw-medium span-custom-input px-9"  data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
+                                        
+
+                                        <span class="no-urut text-head-3 order-md-2 order-1 p-4 p-md-8 ms-2 ms-md-24 me-2">${String.fromCharCode(last_group_abjad)}. </span> 
+                                        <div class="d-flex pe-8 order-md-3 order-2 d-none">  </div> 
+                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                            <span class="text-md mb-0 fw-medium span-custom-input px-1"  data-id="${i}">${data_value.replaceAll(/\n/g, '<br>')}</span>
                                             <textarea class="text-custom-input px-8 py-0" data-id="${i}" style="display:none" rows="1">${this.dataitem[i]["text"].replace(/<br>/g, '\n')}</textarea> 
                                         </div>  
-                                        <div class="px-0 order-md-1 order-3"> 
-                                        <div class="d-flex align-items-center gap-1 justify-content-center">
-                                            <a class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="Pindahkan keatas" data-id="${i}" data-type="up">
-                                                <iconify-icon icon="lucide:chevron-up"></iconify-icon>
-                                            </a>
-                                            <a class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="Pindahkan kebawah" data-id="${i}" data-type="down">
-                                                <iconify-icon icon="lucide:chevron-down"></iconify-icon>
-                                            </a>
-                                            <a class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="hapus item" data-id="${i}" data-type="delete">
-                                                <iconify-icon icon="lucide:trash-2">
-                                                </iconify-icon>
-                                            </a> 
-                                            <a class="w-24-px h-24-px bg-warning-focus text-warning-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="ubah" data-id="${i}" data-type="edit">
-                                                <iconify-icon icon="lucide:edit">
-                                                </iconify-icon>
-                                            </a> 
-                                            <a class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-none align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="simpan" data-id="${i}" data-type="save">
-                                                <iconify-icon icon="lucide:save">
-                                                </iconify-icon>
-                                            </a> 
-                                        </div> 
+                                        <div class="px-0 order-md-1 order-3">  
+                                            <div class="dropdown d-block d-md-none">
+                                                <!-- Tombol Pemicu Dropdown (Tiga Titik / Elemen Aksi) -->
+                                                <button class="w-32-px h-32-px bg-neutral-100 hover:bg-neutral-200 text-secondary-main rounded-circle d-inline-flex align-items-center justify-content-center border-0 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="outline: none;">
+                                                    <iconify-icon icon="lucide:more-vertical" class="fs-5"></iconify-icon>
+                                                </button>
+                                                
+                                                <!-- Menu Dropdown -->
+                                                <ul class="dropdown-menu p-2 shadow-sm border-slate-100" style="min-width: 180px;">
+                                                    <!-- 1. Pindahkan Ke Atas -->
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 text-info-main hover:bg-info-focus cursor-pointer btn-action detail" data-id="${i}" data-type="up">
+                                                            <iconify-icon icon="lucide:chevron-up" class="fs-5"></iconify-icon>
+                                                            <span class="text-sm">Pindahkan ke atas</span>
+                                                        </a>
+                                                    </li>
+                                                    
+                                                    <!-- 2. Pindahkan Ke Bawah -->
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 text-info-main hover:bg-info-focus cursor-pointer btn-action detail" data-id="${i}" data-type="down">
+                                                            <iconify-icon icon="lucide:chevron-down" class="fs-5"></iconify-icon>
+                                                            <span class="text-sm">Pindahkan ke bawah</span>
+                                                        </a>
+                                                    </li>
+                                                    
+                                                    <!-- Garis Pembatas (Divider) -->
+                                                    <li><hr class="dropdown-divider my-1 text-slate-100"></li>
+                                                    
+                                                    <!-- 3. Ubah -->
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 text-warning-main hover:bg-warning-focus cursor-pointer btn-action detail" data-id="${i}" data-type="edit">
+                                                            <iconify-icon icon="lucide:edit" class="fs-5"></iconify-icon>
+                                                            <span class="text-sm">Ubah Item</span>
+                                                        </a>
+                                                    </li>
+
+                                                    <!-- 4. Simpan (Hidden / d-none) -->
+                                                    <li>
+                                                        <a class="dropdown-item d-none align-items-center gap-2 py-2 px-3 rounded-2 text-success-main hover:bg-success-focus cursor-pointer btn-action detail" data-id="${i}" data-type="save">
+                                                            <iconify-icon icon="lucide:save" class="fs-5"></iconify-icon>
+                                                            <span class="text-sm">Simpan</span>
+                                                        </a>
+                                                    </li>
+                                                    
+                                                    <!-- Garis Pembatas Menuju Tombol Hapus -->
+                                                    <li><hr class="dropdown-divider my-1 text-slate-100"></li>
+
+                                                    <!-- 5. Hapus -->
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 text-danger-main hover:bg-danger-focus cursor-pointer btn-action detail" data-id="${i}" data-type="delete">
+                                                            <iconify-icon icon="lucide:trash-2" class="fs-5"></iconify-icon>
+                                                            <span class="text-sm">Hapus Item</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="d-none d-md-flex align-items-center gap-1 justify-content-center">
+                                                <a class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="Pindahkan keatas" data-id="${i}" data-type="up">
+                                                    <iconify-icon icon="lucide:chevron-up"></iconify-icon>
+                                                </a>
+                                                <a class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="Pindahkan kebawah" data-id="${i}" data-type="down">
+                                                    <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+                                                </a>
+                                                <a class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="hapus item" data-id="${i}" data-type="delete">
+                                                    <iconify-icon icon="lucide:trash-2">
+                                                    </iconify-icon>
+                                                </a> 
+                                                <a class="w-24-px h-24-px bg-warning-focus text-warning-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="ubah" data-id="${i}" data-type="edit">
+                                                    <iconify-icon icon="lucide:edit">
+                                                    </iconify-icon>
+                                                </a> 
+                                                <a class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-none align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="simpan" data-id="${i}" data-type="save">
+                                                    <iconify-icon icon="lucide:save">
+                                                    </iconify-icon>
+                                                </a> 
+                                            </div> 
                                         </div>   
                                     </div> 
                                 </div> 
@@ -148,28 +206,83 @@ class tableItem {
                                         <div class="col-12 col-md-6 my-1 varian px-0">   
                                             <div class="d-flex">
                                                 <div class="px-0 order-md-1 order-4"> 
-                                                <div class="d-flex align-items-center gap-1 justify-content-center">
-                                                    <a class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="Pindahkan keatas" data-id="${i}" data-type="up">
-                                                        <iconify-icon icon="lucide:chevron-up"></iconify-icon>
-                                                    </a>
-                                                    <a class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="Pindahkan kebawah" data-id="${i}" data-type="down">
-                                                        <iconify-icon icon="lucide:chevron-down"></iconify-icon>
-                                                    </a>
-                                                    <a class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="hapus item" data-id="${i}" data-type="delete">
-                                                        <iconify-icon icon="lucide:trash-2">
-                                                        </iconify-icon>
-                                                    </a> 
-                                                    <a class="w-24-px h-24-px bg-warning-focus text-warning-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="ubah" data-id="${i}" data-type="edit">
-                                                        <iconify-icon icon="lucide:edit">
-                                                        </iconify-icon>
-                                                    </a> 
-                                                    <a class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-none align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="simpan" data-id="${i}" data-type="save">
-                                                        <iconify-icon icon="lucide:save">
-                                                        </iconify-icon>
-                                                    </a> 
+                                                    <div class="dropdown d-block d-md-none">
+                                                        <!-- Tombol Pemicu Dropdown (Tiga Titik / Elemen Aksi) -->
+                                                        <button class="w-32-px h-32-px bg-neutral-100 hover:bg-neutral-200 text-secondary-main rounded-circle d-inline-flex align-items-center justify-content-center border-0 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="outline: none;">
+                                                            <iconify-icon icon="lucide:more-vertical" class="fs-5"></iconify-icon>
+                                                        </button>
+                                                        
+                                                        <!-- Menu Dropdown -->
+                                                        <ul class="dropdown-menu p-2 shadow-sm border-slate-100" style="min-width: 180px;">
+                                                            <!-- 1. Pindahkan Ke Atas -->
+                                                            <li>
+                                                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 text-info-main hover:bg-info-focus cursor-pointer btn-action detail" data-id="${i}" data-type="up">
+                                                                    <iconify-icon icon="lucide:chevron-up" class="fs-5"></iconify-icon>
+                                                                    <span class="text-sm">Pindahkan ke atas</span>
+                                                                </a>
+                                                            </li>
+                                                            
+                                                            <!-- 2. Pindahkan Ke Bawah -->
+                                                            <li>
+                                                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 text-info-main hover:bg-info-focus cursor-pointer btn-action detail" data-id="${i}" data-type="down">
+                                                                    <iconify-icon icon="lucide:chevron-down" class="fs-5"></iconify-icon>
+                                                                    <span class="text-sm">Pindahkan ke bawah</span>
+                                                                </a>
+                                                            </li>
+                                                            
+                                                            <!-- Garis Pembatas (Divider) -->
+                                                            <li><hr class="dropdown-divider my-1 text-slate-100"></li>
+                                                            
+                                                            <!-- 3. Ubah -->
+                                                            <li>
+                                                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 text-warning-main hover:bg-warning-focus cursor-pointer btn-action detail" data-id="${i}" data-type="edit">
+                                                                    <iconify-icon icon="lucide:edit" class="fs-5"></iconify-icon>
+                                                                    <span class="text-sm">Ubah Item</span>
+                                                                </a>
+                                                            </li>
+
+                                                            <!-- 4. Simpan (Hidden / d-none) -->
+                                                            <li>
+                                                                <a class="dropdown-item d-none align-items-center gap-2 py-2 px-3 rounded-2 text-success-main hover:bg-success-focus cursor-pointer btn-action detail" data-id="${i}" data-type="save">
+                                                                    <iconify-icon icon="lucide:save" class="fs-5"></iconify-icon>
+                                                                    <span class="text-sm">Simpan</span>
+                                                                </a>
+                                                            </li>
+                                                            
+                                                            <!-- Garis Pembatas Menuju Tombol Hapus -->
+                                                            <li><hr class="dropdown-divider my-1 text-slate-100"></li>
+
+                                                            <!-- 5. Hapus -->
+                                                            <li>
+                                                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 rounded-2 text-danger-main hover:bg-danger-focus cursor-pointer btn-action detail" data-id="${i}" data-type="delete">
+                                                                    <iconify-icon icon="lucide:trash-2" class="fs-5"></iconify-icon>
+                                                                    <span class="text-sm">Hapus Item</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="d-none d-md-flex align-items-center gap-1 justify-content-center">
+                                                        <a class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="Pindahkan keatas" data-id="${i}" data-type="up">
+                                                            <iconify-icon icon="lucide:chevron-up"></iconify-icon>
+                                                        </a>
+                                                        <a class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="Pindahkan kebawah" data-id="${i}" data-type="down">
+                                                            <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+                                                        </a>
+                                                        <a class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="hapus item" data-id="${i}" data-type="delete">
+                                                            <iconify-icon icon="lucide:trash-2">
+                                                            </iconify-icon>
+                                                        </a> 
+                                                        <a class="w-24-px h-24-px bg-warning-focus text-warning-main rounded-circle d-inline-flex align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="ubah" data-id="${i}" data-type="edit">
+                                                            <iconify-icon icon="lucide:edit">
+                                                            </iconify-icon>
+                                                        </a> 
+                                                        <a class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-none align-items-center justify-content-center btn-action detail cursor-pointer"  data-bs-toggle="tooltip"  data-bs-title="simpan" data-id="${i}" data-type="save">
+                                                            <iconify-icon icon="lucide:save">
+                                                            </iconify-icon>
+                                                        </a> 
+                                                    </div> 
                                                 </div> 
-                                                </div> 
-                                                <span class="no-urut text-head-3 order-md-2 order-1 p-8  ms-24 me-2">${last_group_no}. </span> 
+                                                <span class="no-urut text-head-3 order-md-2 order-1 p-4 p-md-8 ms-2 ms-md-24 me-2">${last_group_no}. </span> 
                                                 <div class="d-flex pe-8 order-md-3 order-2 ${this.dataitem[i]["id"] == "0" ? "d-none" : ""}">
                                                     <img src="${this.dataitem[i]["image_url"]}" alt="Gambar" class="w-80-px h-80-px radius-8 object-fit-cover"> 
                                                 </div> 
@@ -182,41 +295,48 @@ class tableItem {
                                         </div>
                                         <div class="col-12 col-md-6 my-1 detail">
                                             <div class="row px-2">  
-                                                <div class="col-12 col-md-4 px-1 ">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
+                                                <div class="col-12 col-md-3 px-1 ps-24 ps-md-0">  
+                                                   
+                                                    <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                     <div class="input-group"> 
-                                                        <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
+                                                        <input type="text" class="form-control form-control-sm input-form berat px-1" id="input-qty-${i}" data-id="${i}">
                                                         <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${this.dataitem[i]["id"] != "-" ? "" : ""}></select>
                                                     </div>  
                                                 </div>  
-                                                <div class="col-12 col-md-8">  
-                                                    <div class="row">  
-                                                        <div class="col-6 col-md-4 px-1">  
-                                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text bg-base p-1">
-                                                                    Rp.
-                                                                </span>
-                                                                <input type="text" class="form-control form-control-sm  input-form d-inline-block text-start p-1"  id="input-harga-${i}" data-id="${i}" ${this.dataitem[i]["id"] != "0" ? "" : ""}>
+                                                <div class="col-12 col-md-9">  
+                                                    <div class="row gap-2 gap-md-0 mt-1 mt-md-0">  
+                                                        <div class="col-12 col-md-4 px-1 ps-24 ps-md-0">  
+                                                            <div class="label-head-dialog">
+                                                                <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text bg-base text-xs p-1">
+                                                                        Rp.
+                                                                    </span>
+                                                                    <input type="text" class="form-control form-control-sm  input-form d-inline-block text-start p-1"  id="input-harga-${i}" data-id="${i}" ${this.dataitem[i]["id"] != "0" ? "" : ""}>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-6 col-md-4  px-1">  
-                                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
-                                                            <div class="input-group">   
-                                                                <span class="input-group-text bg-base p-1">
-                                                                    Rp.
-                                                                </span>
-                                                                <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargabeli text-start" id="input-disc-${i}" data-id="${i}">
-                                                            </div>   
+                                                        <div class="col-12 col-md-4  px-1 ps-24 ps-md-0">  
+                                                            <div class="label-head-dialog">
+                                                                <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
+                                                                <div class="input-group">   
+                                                                    <span class="input-group-text bg-base text-xs p-1">
+                                                                        Rp.
+                                                                    </span>
+                                                                    <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargabeli text-start" id="input-disc-${i}" data-id="${i}">
+                                                                </div>   
+                                                            </div> 
                                                         </div> 
-                                                        <div class="col-12 col-md-4  px-1">  
-                                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start ">Total</span>
-                                                            <div class="input-group"> 
-                                                                <span class="input-group-text bg-base p-1">
-                                                                    Rp.
-                                                                </span>
-                                                                <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargajual text-start" id="input-total-${i}" data-id="${i}" readonly>
-                                                            </div>     
+                                                        <div class="col-12 col-md-4  px-1 ps-24 ps-md-0"> 
+                                                            <div class="label-head-dialog"> 
+                                                                <span class="d-inline-block d-md-none pe-2 pt-2 float-start ">Total</span>
+                                                                <div class="input-group"> 
+                                                                    <span class="input-group-text bg-base text-xs p-1">
+                                                                        Rp.
+                                                                    </span>
+                                                                    <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargajual text-start" id="input-total-${i}" data-id="${i}" readonly>
+                                                                </div>   
+                                                            </div>   
                                                         </div> 
                                                     </div>   
                                                 </div>   
@@ -444,10 +564,10 @@ class tableItem {
                 </div>
                 <div class="col-12 col-md-6 my-1">
                     <div class="row">
-                    <div class="col-4">
+                    <div class="col-3">
                         <span class="label-head-dialog">Qty | Satuan</span>
                     </div>
-                    <div class="col-8">
+                    <div class="col-9">
                         <div class="row">
                         <div class="col-4">
                             <span class="label-head-dialog">Harga</span>
@@ -974,31 +1094,31 @@ class tableItemDelivery {
                                   <div class="col-12 col-md-5 my-1 detail">
                                       <div class="row px-2">  
                                         <div class="${cssinput} ${(this.hideRef ? "d-none" : "")} ">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Invoice</span>
+                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Invoice</span>
                                             <div class="input-group"> 
                                                 <input type="text" class="form-control form-control-sm input-form berat text-start p-1" id="input-invoice-${i}" data-id="${i}" readonly>
-                                                <span class="input-group-text bg-base p-1">${this.dataitem[i]["satuan_text"]}</span>
+                                                <span class="input-group-text bg-base text-xs p-1">${this.dataitem[i]["satuan_text"]}</span>
                                             </div>  
                                         </div>   
                                         <div class="${cssinput} ${(this.hideRef ? "d-none" : "")}">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Terkirim</span>
+                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Terkirim</span>
                                             <div class="input-group">
                                                 <input type="text" class="form-control form-control-sm  input-form d-inline-block text-start p-1" id="input-terkirim-${i}" data-id="${i}" readonly>
-                                                <span class="input-group-text bg-base p-1">${this.dataitem[i]["satuan_text"]}</span>
+                                                <span class="input-group-text bg-base text-xs p-1">${this.dataitem[i]["satuan_text"]}</span>
                                             </div>
                                         </div>
                                         <div class="${cssinput}">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
+                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
                                             <div class="input-group">    
                                                 <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargabeli text-start" id="input-qty-${i}" data-id="${i}">
-                                                <span class="input-group-text bg-base p-1">${this.dataitem[i]["satuan_text"]}</span>
+                                                <span class="input-group-text bg-base text-xs p-1">${this.dataitem[i]["satuan_text"]}</span>
                                             </div>   
                                         </div> 
                                         <div class="${cssinput}">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start ">Total</span>
+                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start ">Total</span>
                                             <div class="input-group">  
                                                 <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargajual text-start" id="input-spare-${i}" data-id="${i}" >
-                                                <span class="input-group-text bg-base p-1">${this.dataitem[i]["satuan_text"]}</span>
+                                                <span class="input-group-text bg-base text-xs p-1">${this.dataitem[i]["satuan_text"]}</span>
                                             </div>     
                                         </div> 
                                       </div>    
@@ -1021,14 +1141,14 @@ class tableItemDelivery {
         for (var i = 0; self.dataitem.length > i; i++) {
             if (self.dataitem[i]["type"] == "product") {
 
-                function total_harga(id) {
-                    var total = (inputharga[id].getRawValue() - inputdisc[id]
-                        .getRawValue()) * inputqty[id]
-                            .getRawValue();
-                    self.dataitem[id]["total"] = total;
-                    inputtotal[id].setRawValue(total);
-                    self.getSubTotal();
-                }
+                // function total_harga(id) {
+                //     var total = (inputharga[id].getRawValue() - inputdisc[id]
+                //         .getRawValue()) * inputqty[id]
+                //             .getRawValue();
+                //     self.dataitem[id]["total"] = total;
+                //     inputtotal[id].setRawValue(total);
+                //     self.getSubTotal();
+                // }
 
                 //event qty
                 inputqty_ref[i] = new Cleave(`#input-invoice-${i}`, {
@@ -1102,13 +1222,13 @@ class tableItemDelivery {
                 $(`#input-spare-${i}`).on("keyup", function () {
                     self.dataitem[$(this).data("id")][
                         "qty_spare"
-                    ] = inputqty[$(this)
+                    ] = inputqty_spare[$(this)
                         .data("id")]
                         .getRawValue();
                     if ($(`#input-spare-${i}`).val() == "") $(
                         `#input-spare-${i}`)
-                        .val(0)
-                    total_harga($(this).data("id"));
+                        .val(0) 
+                    // total_harga($(this).data("id"));
                 });
             }
         }
@@ -1457,7 +1577,6 @@ class tableItemDelivery {
     }
 }
 
-
 class tableItemDeliveryReceive {
     constructor(elementId, options = {}) {
         this.elementId = elementId;
@@ -1648,24 +1767,24 @@ class tableItemDeliveryReceive {
                                   <div class="col-12 col-md-5 my-1 detail">
                                       <div class="row px-2">  
                                         <div class="${cssinput}">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty</span>
+                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty</span>
                                             <div class="input-group"> 
                                                 <input type="text" class="form-control form-control-sm input-form berat text-start p-1" id="input-qty-${i}" data-id="${i}">
-                                                <span class="input-group-text bg-base p-1">${this.dataitem[i]["satuan_text"]}</span>
+                                                <span class="input-group-text bg-base text-xs p-1">${this.dataitem[i]["satuan_text"]}</span>
                                             </div>  
                                         </div>    
                                         <div class="${cssinput}">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Spare</span>
+                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Spare</span>
                                             <div class="input-group">    
                                                 <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargabeli text-start" id="input-spare-${i}" data-id="${i}">
-                                                <span class="input-group-text bg-base p-1">${this.dataitem[i]["satuan_text"]}</span>
+                                                <span class="input-group-text bg-base text-xs p-1">${this.dataitem[i]["satuan_text"]}</span>
                                             </div>   
                                         </div> 
                                         <div class="${cssinput}">  
-                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Rusak</span>
+                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Rusak</span>
                                             <div class="input-group">  
                                                 <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargajual text-start" id="input-rusak-${i}" data-id="${i}" >
-                                                <span class="input-group-text bg-base p-1">${this.dataitem[i]["satuan_text"]}</span>
+                                                <span class="input-group-text bg-base text-xs p-1">${this.dataitem[i]["satuan_text"]}</span>
                                             </div>     
                                         </div> 
                                       </div>    
@@ -2104,7 +2223,6 @@ class tableItemDeliveryReceive {
     }
 }
 
-
 class tableItemPO {
     constructor(elementId, options = {}) {
         this.elementId = elementId;
@@ -2289,37 +2407,37 @@ class tableItemPO {
                                         </div>
                                         <div class="col-12 col-md-6 my-1 detail">
                                             <div class="row px-2">  
-                                                <div class="col-12 col-md-4 px-1 ">  
-                                                    <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
+                                                <div class="col-12 col-md-3 px-1 ">  
+                                                   <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Qty/Satuan</span>
                                                     <div class="input-group"> 
-                                                        <input type="text" class="form-control form-control-sm input-form berat" id="input-qty-${i}" data-id="${i}">
+                                                        <input type="text" class="form-control form-control-sm input-form berat px-1" id="input-qty-${i}" data-id="${i}">
                                                         <select class="form-select form-select-sm select-satuan" id="select-satuan-${i}" data-id="${i}" placeholder="Pilih" ${this.dataitem[i]["id"] != "-" ? "" : ""}></select>
                                                     </div>  
                                                 </div>  
-                                                <div class="col-12 col-md-8">  
+                                                <div class="col-12 col-md-9">  
                                                     <div class="row">  
                                                         <div class="col-6 col-md-4 px-1">  
-                                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
+                                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Harga</span>
                                                             <div class="input-group">
-                                                                <span class="input-group-text bg-base p-1">
+                                                                <span class="input-group-text bg-base text-xs p-1">
                                                                     Rp.
                                                                 </span>
                                                                 <input type="text" class="form-control form-control-sm  input-form d-inline-block text-start p-1"  id="input-harga-${i}" data-id="${i}" ${this.dataitem[i]["id"] != "0" ? "" : ""}>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-md-4  px-1">  
-                                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
+                                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start">Diskon</span>
                                                             <div class="input-group">   
-                                                                <span class="input-group-text bg-base p-1">
+                                                                <span class="input-group-text bg-base text-xs p-1">
                                                                     Rp.
                                                                 </span>
                                                                 <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargabeli text-start" id="input-disc-${i}" data-id="${i}">
                                                             </div>   
                                                         </div> 
                                                         <div class="col-12 col-md-4  px-1">  
-                                                            <span class="label-head-dialog"><span class="d-inline-block d-md-none pe-2 pt-2 float-start ">Total</span>
+                                                           <span class="d-inline-block d-md-none pe-2 pt-2 float-start ">Total</span>
                                                             <div class="input-group"> 
-                                                                <span class="input-group-text bg-base p-1">
+                                                                <span class="input-group-text bg-base text-xs p-1">
                                                                     Rp.
                                                                 </span>
                                                                 <input type="text" class="p-1 form-control form-control-sm  input-form d-inline-block hargajual text-start" id="input-total-${i}" data-id="${i}" readonly>
@@ -2550,11 +2668,8 @@ class tableItemPO {
                     </div>
                 </div>
                 <div class="col-12 col-md-6 my-1">
-                    <div class="row">
-                    <div class="col-4">
-                        <span class="label-head-dialog">Qty | Satuan</span>
-                    </div>
-                    <div class="col-8">
+                    <div class="row"> 
+                    <div class="col-9">
                         <div class="row">
                         <div class="col-4">
                             <span class="label-head-dialog">Harga</span>

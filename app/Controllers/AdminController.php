@@ -57,6 +57,17 @@ class AdminController extends BaseController
         $this->config = config('Auth');
         $this->auth   = service('authentication');
     }
+
+    public function notFound()
+    {  
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Page Not Found',
+            'menu' => "", 
+        ];  
+        return view('app/template/error', $data);
+    }
     public function index()
     {   
       
@@ -268,7 +279,7 @@ class AdminController extends BaseController
         $data = [
             'notif' => [],
             'session' => $this->session,
-            'title' => 'Penawaran',
+            'title' => 'Buat Penawaran',
             'menu' => "Sales",
             'store' => $modelsstore->get()->getResult(),
             'kategori' => $project->get()->getResult(),
@@ -493,7 +504,7 @@ class AdminController extends BaseController
                         "qty_ref"=> ($modelinvoice->get_data_invoice_detail($datainvoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian)->InvDetailQty ?? 0),
                         "qty_success"=>$modelinvoice->get_data_delivery_detail_by_ref($datainvoice->InvId,$row->ProdukId,$row->DeliveryDetailVarian,$id), 
                         "qty"=> $row->DeliveryDetailQty,
-                        "qty_spare"=> 0,
+                        "qty_spare"=> $row->DeliveryDetailQtySpare,
                         "text"=> $row->DeliveryDetailText,
                         "group"=> $row->DeliveryDetailGroup,
                         "type"=> $row->DeliveryDetailType,
@@ -734,6 +745,22 @@ class AdminController extends BaseController
         ]; 
         return view('app/03_accounting/transaction/index', $data); 
     }
+    public function cashbook(){    
+        $modelsstore = new StoreModel();
+        $modelsuser = new UserModel();
+        $project = new  ProjectcategoryModel();
+        $data = [
+            'notif' => [],
+            'session' => $this->session,
+            'title' => 'Accounting',
+            'menu' => "", 
+            'store' => $modelsstore->get()->getResult(),
+            'kategori' => $project->get()->getResult(),
+            'admin' => $modelsuser->get()->getResult()
+        ]; 
+        return view('app/03_accounting/transaction/index', $data); 
+    }
+
 
     
     public function produk_add()

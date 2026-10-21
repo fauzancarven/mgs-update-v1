@@ -24,6 +24,7 @@ class SphModel extends Model
         $builder->join("project","project.ProjectId = penawaran.ProjectId ","left");  
         $builder->join("users","users.id = penawaran.SphAdmin ","left"); 
         $builder->join("store","store.StoreId = penawaran.StoreId","left");  
+        
         if($filter["datestart"]){
             $builder->where("SphDate >=",$filter["datestart"]);
             $builder->where("SphDate <=",$filter["dateend"]); 
@@ -32,6 +33,7 @@ class SphModel extends Model
         $builder1 = clone $builder; 
         $countTotal = $builder1->get()->getNumRows();
 
+        $builder->join("penawaran_detail","penawaran_detail.SphDetailRef = penawaran.SphId","left"); 
         if(isset($filter["filter"])){ 
             $builder->whereIn("SphStatus",$filter["filter"]); 
             $filterdata = 1;
@@ -47,6 +49,7 @@ class SphModel extends Model
             $builder->orLike("SphCustName",$filter["search"]);
             $builder->orLike("SphCustTelp",$filter["search"]);
             $builder->orLike("SphCode",$filter["search"]);
+            $builder->orLike("SphDetailText",$filter["search"]); 
             $builder->groupEnd();  
             $filterdata = 1;
         }
@@ -76,6 +79,7 @@ class SphModel extends Model
             $builder->orderby("SphCode",'desc');   
         }
 
+        $builder->groupBy("SphCode");   
         $datafilter = clone $builder;  
         $count = $datafilter->get()->getNumRows();
 
@@ -158,27 +162,30 @@ class SphModel extends Model
             // MENGAMBIL DATA Toko 
             $store = ' 
                             <div class="d-flex flex-column"> 
-                                <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span>  
-                                <span class="text-detail-3 text-wrap overflow-none pt-1 ps-1 text-default '.($row->ProjectId == 0 ? "d-none" : "").'"><iconify-icon icon="cuida:subtask-outline" class="menu-icon">
-                                </iconify-icon>Document Project</span>  
+                                <span class="text-head-3 d-flex gap-0 align-items-center"><img src="'.$row->StoreLogo.'" alt="Gambar" class="logo">'.$row->StoreCode.'</span> 
                             </div>    ';
+            $project = '<div class="text-head-3 pt-4 '.($row->ProjectId > 0    ?  "d-flex ": "d-none").' text-primary-400" data-bs-toggle="tooltip" data-bs-title="Data ini termasuk dokument project"> 
+                            <iconify-icon icon="cuida:subtask-outline"" class="menu-icon d-inline-block pe-1"></iconify-icon>
+                            <a class="text-xxs pointer">Document Project</a>
+                        </div>    ';
             $data_row = array( 
                 "SphId" => $row->SphId,
                 "penawaran" => $row,
-                "doc" =>$store.'<div class="text-neutral-400 text-xxs" style="line-height:1">'.$row->SphCode.'</div>'.$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
-                "code" => '<span class="text-primary-600">'.$row->SphCode.'</span>'.$this->get_data_forward_penawaran($row->SphRefType,$row->SphRef).$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
+                "doc" =>$store.'<div class="text-neutral-400 text-xxs" style="line-height:1">'.$row->SphCode.'</div>'.$project.$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
+                "code" => '<span class="text-primary-600">'.$row->SphCode.'</span>'.$project.$this->get_data_forward_penawaran($row->SphRefType,$row->SphRef).$this->get_data_return_penawaran($row->SphId,$row->ProjectId,$row->SphStatus),
                 "date" => '<div class="text-head-3" style="line-height:1">'.date_format(date_create($row->SphDate),"d M Y")."</div><div class='text-danger-600 text-xxs'>".$statusExp."</div>",
                 "status" => $status,
                 "admin" => ucwords($row->username),
-                "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->SphGrandTotal,0)."</span></div>",
+                "total" => "<div class='d-flex'><span>Rp. </span><span class='flex-fill text-end'>".number_format($row->SphGrandTotal,0, ',', '.')."</span></div>",
                 "customer" => ucwords($row->SphCustName),
                 "customertelp" => ($row->SphCustTelp ? $row->SphCustTelp : ""), 
                 "customeraddress" => $row->SphAddress, 
                 "note" => $row->SphNote, 
                 "store"=>$store,
                 "detail" => $htmldetail, 
+                "detailmobile" => $this->get_data_detail_penawaran($row,true),
                 "action" =>'  
-                <div class="d-flex align-items-center gap-1 justify-content-center">
+                <div class="d-flex align-items-center gap-1 justify-content-end">
                         <a onclick="print_sph('.$row->SphId.',this,\''.$row->ProjectId.'\')"
                             class="w-24-px h-24-px bg-info-focus text-info-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip"  data-bs-title="Print Penawaran">
                             <iconify-icon icon="lucide:printer"></iconify-icon>
@@ -602,9 +609,10 @@ class SphModel extends Model
                             break;
         }
     }
-    function get_data_detail_penawaran($row){ 
-        $modelsproduk = new ProdukModel();
-        $detail = array(); 
+    function get_data_detail_penawaran($row,$mobile = false){ 
+       
+        $modelsproduk = new ProdukModel(); 
+        $detailhtmlmobile = '';
         $detailhtml = ' <table class="table detail-item m-0 shadow-7">
                             <thead>
                                 <tr>
@@ -650,6 +658,37 @@ class SphModel extends Model
                     <td class="detail">Rp. '.number_format($row_data->SphDetailTotal, 0, ',', '.').'</td>
                 </tr> ';
                 $number++;
+
+                $detailhtmlmobile .= '<div class="row align-items-center mx-0 hr p-2">
+                                <div class="col-12 my-1 varian px-0">   
+                                    <div class="d-flex">  
+                                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->SphDetailVarian,false).'" alt="Gambar" class="w-50-px h-50-px radius-8 object-fit-cover">  
+                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                            <span class="text-sm mb-0 fw-bold span-custom-input px-9 text-wrap-mobile" data-id="0" style="line-height: 1rem;">'.nl2br($row_data->SphDetailText).'</span> 
+                                            <span class="text-detail-2 text-truncate text-neutral-600 text-xs px-9">'.$row_data->SphDetailGroup.'</span>  
+                                        </div>   
+                                    </div>
+                                    <div class="d-flex gap-1 flex-wrap mt-2">'.$arr_badge.'</div>  
+                                    <div class="d-flex py-9"> 
+                                        <div class="d-flex flex-column text-start justify-content-center">
+                                            <span class="text-xxs px-9">Qty:</span> 
+                                            <span class="fw-bold text-neutral-600 text-xs px-9">'.number_format($row_data->SphDetailQty, 2, ',', '.').' '.$row_data->SphDetailSatuanText.'</span>
+                                        </div>    
+                                        <div class="d-flex flex-column text-start justify-content-center">
+                                            <span class="text-xxs px-9">Harga satuan:</span>  
+                                            <span class="text-xs px-9 '.($row_data->SphDetailDisc==0 ? "d-none" : "").'" style=" position: relative; display: inline-block; background: linear-gradient(10deg, transparent 47%, red 48%, red 52%, transparent 53%); margin-right: 0.25rem; ">Rp. '.number_format($row_data->SphDetailPrice, 2, ',', '.').'</span>
+                                            <span class="fw-bold text-neutral-600 text-xs px-9">Rp. '.number_format($row_data->SphDetailPrice-$row_data->SphDetailDisc, 2, ',', '.').'</span>
+                                                  
+                                        </div>      
+
+                                           
+                                        <div class="d-flex flex-column text-start justify-content-center">
+                                            <span class="text-xxs px-9">Total :</span> 
+                                            <span class="fw-bold text-neutral-600 text-xs px-9">Rp. '.number_format($row_data->SphDetailTotal, 2, ',', '.').'</span>
+                                        </div>  
+                                    </div>  
+                                </div>     
+                            </div> ';
             }else{
                 $number = 1;
                 $detailhtml .= ' <tr>
@@ -660,6 +699,16 @@ class SphModel extends Model
                         </div>
                     </td>
                 </tr> ';
+                  $detailhtmlmobile .= '<div class="row align-items-center mx-0 hr p-2">
+                                <div class="col-12 my-1 varian px-0">  
+                                    <div class="d-flex">   
+                                        <span  class="text-sm  fw-bold">'.$abjad.'.</span> 
+                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                            <span class="text-sm mb-0 fw-bold span-custom-input px-9 text-wrap-mobile" data-id="0" style="line-height: 1rem;">'.nl2br($row_data->SphDetailText).'</span> 
+                                        </div>   
+                                    </div>  
+                                </div>     
+                            </div> ';
                 $abjad++;
             }
         };
@@ -689,7 +738,7 @@ class SphModel extends Model
         </tfoot>
         </table>';
 
-        return $detailhtml;
+        return ($mobile ? $detailhtmlmobile : $detailhtml);
 
     } 
     function get_data_forward_penawaran($type = 0,$ref = 0){ 
@@ -741,14 +790,14 @@ class SphModel extends Model
             $builder = $this->db->table("invoice");
             $builder->select('*');
             $builder->where('InvRef',$id); 
-            $builder->where('InvRefType',"Sample");  
+            $builder->where('InvRefType',"Penawaran");  
             $builder->orderby('InvId', 'DESC'); 
             $queryref = $builder->get()->getRow();   
             if($queryref){
                 return '   
-                    <div class="text-head-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data diteruskan ke invoice">
-                        <i class="fa-solid fa-share-from-square text-success"></i>
-                        <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="survey_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->InvId.'\',\'Invoice\')">'.$queryref->InvCode.'</a>
+                    <div class="text-head-3 pt-4 d-flex text-primary-400" data-bs-toggle="tooltip" data-bs-title="Data diteruskan ke invoice"> 
+                        <iconify-icon icon="akar-icons:arrow-forward-thick-fill" class="menu-icon d-inline-block pe-1"></iconify-icon>
+                        <a class="text-xxs pointer" href="'.base_url("admin/sales/invoice?search=".$queryref->InvCode).'">'.$queryref->InvCode.'</a>
                     </div> 
                 ';
             }else{ 
@@ -797,9 +846,23 @@ class SphModel extends Model
         return $builder->get()->getRow();   
     }  
     function get_data_sph_detail($id){
+        
+        $modelsproduk = new ProdukModel();
         $builder = $this->db->table("penawaran_detail");
         $builder->where('SphDetailRef',$id); 
-        return $builder->get()->getResult();  
+        $results = $builder->get()->getResult();  
+
+        // Melakukan looping untuk menambahkan kolom imageurl secara dinamis
+        foreach ($results as $row_data) {
+            // Memanggil fungsi model produk dan memasukkannya sebagai properti baru
+            $row_data->imageurl = $modelsproduk->getProductImageDataVarian(
+                $row_data->ProdukId, 
+                $row_data->SphDetailVarian, 
+                false
+            );
+        }
+
+        return $results;  
     }
     function get_data_sph_ref($refid = null,$data = null){ 
         if(isset($data["searchTerm"])){

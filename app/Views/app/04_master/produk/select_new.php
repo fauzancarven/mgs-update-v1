@@ -1,9 +1,17 @@
+
+<?php
+$varian = $varian ?? [];
+$varian_detail = $varian_detail ?? [];
+$vendor = $vendor ?? [];
+$category = $category ?? [];
+$varianlist = $varianlist ?? '';
+?>
 <div class="modal fade" id="modal-select-item" data-type="sell" data-bs-backdrop="static" data-bs-keyboard="false"
           tabindex="-1" aria-labelledby="modal-select-item-label">
           <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                               <div class="modal-header">
-                                        <h2 class="modal-title fs-5 fw-bold" id="modal-select-item-label">Pilih Produk
+                                        <h2 class="modal-title fs-5 fw-bold d-flex align-items-center" id="modal-select-item-label"><iconify-icon icon="ix:box-closed" class="menu-icon pe-8"></iconify-icon>Pilih Produk
                                         </h2>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                   aria-label="Close"></button>
@@ -17,9 +25,9 @@
                                                                                 <input class="form-control form-control-sm input-form combo"
                                                                                           id="searchdatafilterselect"
                                                                                           placeholder="Varian" value=""
-                                                                                          type="text" readonly>
-                                                                                <i class="fa-solid fa-filter"></i>
-                                                                                <i class="fa-solid fa-caret-down"></i>
+                                                                                          type="text" readonly/>
+                                                                                <iconify-icon icon="clarity:blocks-group-outline-alerted" class="menu-icon"> </iconify-icon>
+                                                                                <iconify-icon icon="gridicons:dropdown" class="menu-icon dropdown"> </iconify-icon>
                                                                                 <div class="filter-data shadow-6"
                                                                                           for="searchdatafilterselect">
                                                                                           <ul class="list-group">
@@ -29,8 +37,7 @@
                                                                                                                         class="ms-2 me-auto">Vendor</span>
                                                                                                               <span class="badge text-bg-primary bg-primary-600 rounded-pill"
                                                                                                                         id="badge-Vendor"></span>
-                                                                                                              <i
-                                                                                                                        class="fa-solid fa-angle-right"></i>
+                                                                                                              <iconify-icon icon="akar-icons:chevron-right-small" class="menu-icon"> </iconify-icon> 
                                                                                                     </li>
                                                                                                     <?php 
                                                                                                         foreach($varian as $row){
@@ -38,7 +45,7 @@
                                                                                                             <li class="list-group-item d-flex align-items-center justify-content-between border text-secondary-light px-8 py-4 bg-base border-bottom-0 utama text-sm">
                                                                                                                 <span class="ms-2 me-auto ">'.$row->name.'</span>
                                                                                                                 <span class="badge text-bg-primary rounded-pill" id="badge-'.preg_replace("/\s+/", "", $row->name).'"></span>
-                                                                                                                <i class="fa-solid fa-angle-right"></i>
+                                                                                                                <iconify-icon icon="akar-icons:chevron-right-small" class="menu-icon"> </iconify-icon>
                                                                                                             </li>';
                                                                                                             $varianli = '';
                                                                                                             foreach($varian_detail as $rows){
@@ -57,7 +64,8 @@
                                                                                                                 <div class="search-filter p-2">
                                                                                                                     <div class="input-group flex-fill">  
                                                                                                                         <input class="form-control form-control-sm input-form" name="filter-list" id="search'.$row->name.'" data-name="'.$row->name.'" placeholder="Cari '.$row->name.'" value="" type="text" style="padding-left: 2rem; ">
-                                                                                                                        <i class="fa-solid fa-magnifying-glass" style="position: absolute;top: 50%;  transform: translate(50%, -50%);z-index: 10;"></i> 
+                                                                                                                       
+                                                                                                                        <iconify-icon icon="akar-icons:search" class="menu-icon"> </iconify-icon>  
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                                 <ul class="list-group"> 
@@ -82,8 +90,7 @@
                                                                                                                         value=""
                                                                                                                         type="text"
                                                                                                                         style="padding-left: 2rem;">
-                                                                                                              <i class="fa-solid fa-magnifying-glass"
-                                                                                                                        style="position: absolute;top: 50%;  transform: translate(50%, -50%);z-index: 10;"></i>
+                                                                                                                        <iconify-icon icon="akar-icons:search" class="menu-icon"> </iconify-icon> 
                                                                                                     </div>
                                                                                           </div>
                                                                                           <ul class="list-group">
@@ -111,8 +118,8 @@
                                                                                           value="" type="text"
                                                                                           data-start="" data-end=""
                                                                                           readonly>
-                                                                                <i class="fa-solid fa-filter"></i>
-                                                                                <i class="fa-solid fa-caret-down"></i>
+                                                                                <iconify-icon icon="carbon:db2-data-sharing-group" class="menu-icon"> </iconify-icon>
+                                                                                <iconify-icon icon="gridicons:dropdown" class="menu-icon dropdown"> </iconify-icon>
                                                                                 <div class="filter-data left"
                                                                                           style="width: 18rem;"
                                                                                           for="searchdatacategoryselect">
@@ -134,12 +141,12 @@
                                                                       </div>
                                                             </div>
                                                   </div>
-                                                  <div class="input-group-custom flex-fill w-75">
+                                                  <div class="input-group-custom flex-fill w-100 w-md-75">
                                                             <input class="form-control form-control-sm input-form"
                                                                       id="searchdataprodukselect"
                                                                       placeholder="Cari nama produk" value=""
                                                                       type="text">
-                                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                                            <iconify-icon icon="akar-icons:search" class="menu-icon"> </iconify-icon>
                                                   </div>
                                         </div>
                                         <div class="list-data-produk pe-2"
@@ -318,7 +325,7 @@ function load_data_produk() {
                                         }
                                         html += ` 
                                                 <div class="d-flex flex-row align-items-start gap-2 m-8"> 
-                                                    <img src="${data[i]["image"]}" alt="Gambar" class="produk w-50-px h-50-px radius-8  object-fit-cover">  
+                                                    <img src="${data[i]["image"]}" alt="Gambar" class="produk  w-120-px h-120-px w-md-50-px h-md-50-px radius-8  object-fit-cover">  
                                                     <div class="flex-fill"> 
                                                         <div class="d-flex flex-column flex-md-row gap-1"> 
                                                             <div class="d-flex flex-column flex-fill">

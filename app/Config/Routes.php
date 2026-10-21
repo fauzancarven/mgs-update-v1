@@ -6,12 +6,27 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */  
 
+/**
+ *  API N8N
+ */  
+$routes->group('api/v1', function($routes) {
+    $routes->get('reminders', '\App\Controllers\Api\ReminderController::index');
+    $routes->post('reminders', '\App\Controllers\Api\ReminderController::create');
+    $routes->put('reminders/(:num)', '\App\Controllers\Api\ReminderController::update/$1');
+});
+
+
 $routes->post('/api/get_produk', 'ApiController::get_produk');
 
 $routes->get('/', 'AdminController::index', ['filter' => 'login']); 
 
 
-
+$routes->set404Override(function() {
+    // Melakukan redirect langsung menggunakan header native PHP agar memintas engine 'echo' bawaan CI4
+    header('Location: https://devapp.mahieraglobalsolution.com/errorpage');
+    exit(); // Wajib ditambahkan agar script CI4 berhenti dan browser langsung berpindah halaman
+});
+$routes->get('/errorpage', 'AdminController::notFound', ['filter' => 'login']); 
 $routes->get('/users/view', 'AdminController::profile', ['filter' => 'login']); 
 
 $routes->get('/admin', 'AdminController::index', ['filter' => 'login']);
@@ -48,6 +63,7 @@ $routes->get('/admin/delivery', 'AdminController::delivery', ['filter' => 'login
 $routes->get('/admin/chat', 'AdminController::chat', ['filter' => 'login']);
 $routes->get('/admin/accounting/coa', 'AdminController::coa', ['filter' => 'login']);
 $routes->get('/admin/accounting/transaction', 'AdminController::transaction', ['filter' => 'login']);
+$routes->get('/admin/accounting/cashbook', 'AdminController::cashbook', ['filter' => 'login']);
 $routes->get('/admin/produk/add', 'AdminController::produk_add', ['filter' => 'login']);
 
 $routes->post('/admin/sidebar', 'AdminController::sidebar', ['filter' => 'login']);
@@ -348,3 +364,13 @@ $routes->get('/print/project/paymentA4/(:num)', 'PrintController::project_paymen
 
 $routes->get('/printhtml/project/sph/(:num)', 'PrintController::project_sph_html/$1'); 
 $routes->get('/project/surveyfinish', 'DownloadController::survey_finish'); 
+
+
+
+
+/**
+ *  GET DATA
+ */ 
+
+$routes->post('/data/penawaran/(:num)', 'DataController::get_data_sph/$1', ['filter' => 'login']);
+
