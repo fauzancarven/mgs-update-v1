@@ -9,7 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->post('/api/get_produk', 'ApiController::get_produk');
 
 $routes->get('/', 'AdminController::index', ['filter' => 'login']); 
-$routes->get('/api/agentai', 'AiagentController::ask', ['filter' => 'login']); 
+$routes->post('/aiagent/ask', 'AiagentController::ask', ['filter' => 'login']); 
 
 
 
@@ -369,3 +369,6 @@ $routes->post('/action/acc-coa-save', 'AccountingController::coa_save', ['filter
 $routes->post('/action/acc-coa-delete', 'AccountingController::coa_delete', ['filter' => 'login']);
 $routes->post('/action/acc-jurnal-save', 'AccountingController::jurnal_save', ['filter' => 'login']);
 $routes->post('/action/acc-jurnal-delete/(:num)', 'AccountingController::jurnal_delete/$1', ['filter' => 'login']);
+$routes->get('/admin/accounting/otomatis', 'AccountingController::otomatis', ['filter' => 'login']);
+$routes->post('/action/acc-otomatis-save', 'AccountingController::otomatis_save', ['filter' => 'login']);
+$routes->post('/action/acc-otomatis-sync', 'AccountingController::otomatis_sync', ['filter' => 'login']);

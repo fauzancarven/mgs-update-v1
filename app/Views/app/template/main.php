@@ -60,7 +60,6 @@ $version = "V2.1";
           <link rel="stylesheet" href="<?= base_url() ?>assets/css/select2.min.css?ver=<?= $version?>">
           <link rel="stylesheet" href="<?= base_url() ?>assets/css/quill.bubble.css?ver=<?= $version?>">
           <link rel="stylesheet" href="<?= base_url() ?>assets/css/croppie.css?ver=<?= $version?>">
-          <link rel="stylesheet" href="<?= base_url() ?>assets/css/chatbot.css?ver=<?= $version?>">
 
 </head>
 
@@ -264,6 +263,14 @@ $version = "V2.1";
                                                                       class="menu-icon">
                                                             </iconify-icon>
                                                             <span>Neraca</span>
+                                                  </a>
+                                        </li>
+                                        <li>
+                                                  <a href="<?= base_url(); ?>admin/accounting/otomatis">
+                                                            <iconify-icon icon="solar:refresh-circle-linear"
+                                                                      class="menu-icon">
+                                                            </iconify-icon>
+                                                            <span>Jurnal Otomatis</span>
                                                   </a>
                                         </li>
                                         <li>
@@ -995,116 +1002,6 @@ $version = "V2.1";
           <script src="<?= base_url() ?>assets/woowdash/assets/js/app.js?version=1.0.0"></script>
           <?= $this->renderSection('scriptjs'); ?>
 
-
-            <!-- ============================================== -->
-            <!-- HTML UNTUK AI CHAT WIDGET -->
-            <!-- ============================================== -->
-            <!-- Tombol Trigger -->
-            <div id="ai-chat-trigger" onclick="toggleChat()">
-                <!-- Icon Chat SVG -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                <path d="M2.165 15.803l.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"/>
-                </svg>
-            </div>
-
-            <!-- Jendela Chatbox -->
-            <div id="ai-chat-window">
-                <div class="ai-chat-header">
-                    <span>🤖 AI Assistant</span>
-                    <button onclick="toggleChat()">✖</button>
-                </div>
-                <div class="ai-chat-body" id="ai-chat-body">
-                    <div class="chat-bubble chat-ai">Halo! Saya AI Agent MGS. Ada yang bisa saya bantu terkait sistem aplikasi ini?</div>
-                    <!-- Pesan akan ditambahkan di sini via JS -->
-                    <div class="typing-indicator" id="ai-typing">AI sedang mengetik...</div>
-                </div>
-                <div class="ai-chat-footer">
-                    <input type="text" id="ai-chat-input" placeholder="Tanya cara input data..." onkeypress="handleEnter(event)">
-                    <button onclick="sendMessage()">Kirim</button>
-                </div>
-            </div>
-
-            <!-- ============================================== -->
-            <!-- JAVASCRIPT UNTUK LOGIKA CHAT -->
-            <!-- ============================================== -->
-            <script>
-                const chatWindow = document.getElementById('ai-chat-window');
-                const chatBody = document.getElementById('ai-chat-body');
-                const chatInput = document.getElementById('ai-chat-input');
-                const typingIndicator = document.getElementById('ai-typing');
-
-                // Menampilkan/Menyembunyikan Jendela Chat
-                function toggleChat() {
-                    if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
-                        chatWindow.style.display = 'flex';
-                        chatInput.focus();
-                    } else {
-                        chatWindow.style.display = 'none';
-                    }
-                }
-
-                // Eksekusi kirim saat tekan "Enter"
-                function handleEnter(e) {
-                    if (e.key === 'Enter') {
-                        sendMessage();
-                    }
-                }
-
-                // Fungsi Mengirim Pesan
-                function sendMessage() {
-                    const text = chatInput.value.trim();
-                    if (!text) return;
-
-                    // 1. Tampilkan pesan user di chat
-                    appendMessage('user', text);
-                    chatInput.value = '';
-
-                    // 2. Tampilkan indikator loading (AI sedang mengetik)
-                    typingIndicator.style.display = 'block';
-                    chatBody.scrollTop = chatBody.scrollHeight;
-
-                    // 3. Kirim ke Backend CI4 (Sesuaikan URL Controller Anda)
-                    // URL di bawah ini asumsi Anda menempatkannya di http://localhost:8080/aiagent/ask
-                    fetch('<?= base_url('aiagent/ask') ?>', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest' 
-                            // Jika CI4 Anda menggunakan CSRF, tambahkan header CSRF di sini:
-                            // 'X-CSRF-TOKEN': '<?= csrf_hash() ?>'
-                        },
-                        body: JSON.stringify({ prompt: text })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Sembunyikan indikator loading
-                        typingIndicator.style.display = 'none';
-                        
-                        // 4. Tampilkan balasan AI (asumsi format JSON respons dari CI4 Anda: { "status": "success", "data": "Jawaban AI..." })
-                        // Jika Controller Anda sebelumnya hanya me-return string biasa, ganti .json() menjadi .text() di atas
-                        const aiReply = data.data || data.response || data; 
-                        appendMessage('ai', aiReply);
-                    })
-                    .catch(error => {
-                        typingIndicator.style.display = 'none';
-                        appendMessage('ai', 'Maaf, terjadi kesalahan saat menghubungi server AI lokal.');
-                        console.error('Error:', error);
-                    });
-                }
-
-                // Fungsi Pembantu untuk menambahkan balon chat
-                function appendMessage(sender, text) {
-                    const msgDiv = document.createElement('div');
-                    msgDiv.classList.add('chat-bubble');
-                    msgDiv.classList.add(sender === 'user' ? 'chat-user' : 'chat-ai');
-                    msgDiv.textContent = text;
-                    
-                    // Sisipkan sebelum indikator typing
-                    chatBody.insertBefore(msgDiv, typingIndicator);
-                    chatBody.scrollTop = chatBody.scrollHeight; // Auto-scroll ke bawah
-                }
-            </script>
 
 </body>
 

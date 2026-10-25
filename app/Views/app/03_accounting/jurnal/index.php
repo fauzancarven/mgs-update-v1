@@ -21,6 +21,10 @@
     </ul>
 </div>
 
+<?php if (session()->getFlashdata('pesan')): ?>
+    <div class="alert alert-warning"><?= esc(session()->getFlashdata('pesan')) ?></div>
+<?php endif; ?>
+
 <div class="card">
     <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div class="d-flex flex-wrap align-items-center gap-2">
