@@ -105,8 +105,6 @@ class InvoiceModel extends Model
         $builder1 = clone $builder; 
         $countTotal = $builder1->get()->getNumRows(); 
 
-
-        $builder->join("invoice_detail","invoice_detail.InvDetailRef = invoice.InvId","left"); 
         if(isset($filter["filter"])){ 
             $builder->whereIn("InvStatus",$filter["filter"]); 
             $filterdata = 1;
@@ -122,7 +120,6 @@ class InvoiceModel extends Model
             $builder->orLike("InvAddress",$filter["search"]);
             $builder->orLike("InvNote",$filter["search"]);
             $builder->orLike("InvCode",$filter["search"]);
-            $builder->orLike("InvDetailText",$filter["search"]); 
             $builder->groupEnd();  
             $filterdata = 1;
         }
@@ -155,7 +152,6 @@ class InvoiceModel extends Model
 
         }
 
-        $builder->groupBy("InvCode");   
         $datafilter = clone $builder;  
         $count = $datafilter->get()->getNumRows();
 
@@ -260,18 +256,14 @@ class InvoiceModel extends Model
                 "note" => str_replace(array("\r\n", "\r", "\n"), '\n', $row->InvNote), 
                 "total" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->InvGrandTotal,0)."</span></div>", 
                 "delivery" => $this->get_data_delivery_invoice($row,true), 
-                "delivery_detail" => $this->get_data_delivery_invoice($row,false), 
                 "payment" => $this->get_data_payment_invoice($row,true), 
-                "payment_detail" => $this->get_data_payment_invoice($row,false), 
                 "pembelian" => $this->get_data_pembelian_invoice($row,true), 
-                "pembelian_detail" => $this->get_data_pembelian_invoice($row,false), 
                 "paymenttotal" => "<div class='d-flex'><span>Rp.</span><span class='flex-fill text-end'>".number_format($row->InvGrandTotal - $this->get_data_payment_invoice($row,true,true),0)."</span></div>", 
                 "customer" => $row->InvCustName, 
                 "customertelp" => ($row->InvCustTelp ? $row->InvCustTelp : ""),
                 "customeraddress" => $row->InvAddress, 
                 "store"=>$store,
                 "detail" => $htmldetail,
-                "detailmobile" => $this->get_data_detail_invoice($row,true),
                 // "detail" => '  <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1"><div class="col bg-light ms-4 me-2 py-2">'.$html_items.'</div></div>',
                 "action" =>' 
                 <div class="d-flex align-items-center gap-1 justify-content-center">
@@ -308,11 +300,10 @@ class InvoiceModel extends Model
             $builder->where('SurveyId',$ref); 
             $queryref = $builder->get()->getRow();  
             if($queryref){
-                return ' 
-                    <div class="text-head-3 pt-4 d-flex text-primary-400" data-bs-toggle="tooltip" data-bs-title="Data diteruskan dari survey"> 
-                        <iconify-icon icon="akar-icons:arrow-forward-thick-fill" class="menu-icon d-inline-block pe-1"></iconify-icon>
-                        <a class="text-xxs pointer" href="'.base_url("admin/sales/survey?search=".$queryref->SurveyCode).'">'.$queryref->SurveyCode.'</a>
-                    </div>  ';  
+                return ' <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari survey">
+                            <i class="fa-solid fa-street-view text-success"></i>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="invoice_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SurveyId.'\',\'Penawaran\')">'.$queryref->SurveyCode.'</a>
+                        </div>';  
             }
         }  
         if($type == "Penawaran"){
@@ -320,11 +311,10 @@ class InvoiceModel extends Model
             $builder->where('SphId',$ref); 
             $queryref = $builder->get()->getRow();  
             if($queryref){
-                return ' 
-                    <div class="text-head-3 pt-4 d-flex text-primary-400" data-bs-toggle="tooltip" data-bs-title="Data diteruskan dari peanawaran"> 
-                        <iconify-icon icon="akar-icons:arrow-forward-thick-fill" class="menu-icon d-inline-block pe-1"></iconify-icon>
-                        <a class="text-xxs pointer" href="'.base_url("admin/sales/penawaran?search=".$queryref->SphCode).'">'.$queryref->SphCode.'</a>
-                    </div>   '; 
+                return ' <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Survey">
+                            <i class="fa-solid fa-hand-holding-droplet text-success"></i>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="invoice_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SphId.'\',\'Penawaran\')">'.$queryref->SphCode.'</a>
+                        </div>'; 
             }
         } 
         if($type == "Sample"){
@@ -332,15 +322,16 @@ class InvoiceModel extends Model
             $builder->where('SampleId',$ref); 
             $queryref = $builder->get()->getRow();  
             if($queryref){
-                return ' 
-                    <div class="text-head-3 pt-4 d-flex text-primary-400" data-bs-toggle="tooltip" data-bs-title="Data diteruskan dari sampel"> 
-                        <iconify-icon icon="akar-icons:arrow-forward-thick-fill" class="menu-icon d-inline-block pe-1"></iconify-icon>
-                        <a class="text-xxs pointer" href="'.base_url("admin/sales/sampel?search=".$queryref->SampleCode).'">'.$queryref->SampleCode.'</a>
-                    </div>  
-                     '; 
+                return ' <div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Data referensi dari Survey">
+                            <i class="fa-solid fa-hand-holding-droplet text-success"></i>
+                            <a class="text-detail-3 pointer text-decoration-underline text-success" onclick="invoice_return_view_click(\''.$queryref->ProjectId.'\',\''.$queryref->SampleId.'\',\'Penawaran\')">'.$queryref->SampleCode.'</a>
+                        </div>'; 
             }
         } 
-        return ''; 
+        return '';
+        return '<div class="text-detail-3 pt-2" data-bs-toggle="tooltip" data-bs-title="Tidak ada referensi"> 
+            <a class="text-detail-3 pointer text-decoration-underline text-secondary">Tidak ada referensi</a>
+        </div>'; 
     }
     
     function customColor($number) {
@@ -365,11 +356,11 @@ class InvoiceModel extends Model
                             break;
         }
     }
-    function get_data_detail_invoice($row,$mobile = false){ 
+    function get_data_detail_invoice($row){ 
         helper('tool_helper'); 
 
         $modelsproduk = new ProdukModel();
-        $detailhtmlmobile = '';
+        $detail = array(); 
         $detailhtml = ' <table class="table detail-item m-0 shadow-7">
                             <thead>
                                 <tr>
@@ -431,36 +422,6 @@ class InvoiceModel extends Model
                     <td class="detail">Rp. '.number_format($row_data->InvDetailTotal, 0, ',', '.').'</td>
                 </tr> ';
                 $number++;
-                  $detailhtmlmobile .= '<div class="row align-items-center mx-0 hr p-2">
-                                <div class="col-12 my-1 varian px-0">   
-                                    <div class="d-flex">  
-                                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->InvDetailVarian,false).'" alt="Gambar" class="w-50-px h-50-px radius-8 object-fit-cover">  
-                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
-                                            <span class="text-sm mb-0 fw-bold span-custom-input px-9 text-wrap-mobile" data-id="0" style="line-height: 1rem;">'.nl2br($row_data->InvDetailText).'</span> 
-                                            <span class="text-detail-2 text-truncate text-neutral-600 text-xs px-9">'.$row_data->InvDetailGroup.'</span>  
-                                        </div>   
-                                    </div>
-                                    <div class="d-flex gap-1 flex-wrap mt-2">'.$arr_badge.'</div>  
-                                    <div class="d-flex py-9"> 
-                                        <div class="d-flex flex-column text-start justify-content-center">
-                                            <span class="text-xxs px-9">Qty:</span> 
-                                            <span class="fw-bold text-neutral-600 text-xs px-9">'.number_format($row_data->InvDetailQty, 2, ',', '.').' '.$row_data->InvDetailSatuanText.'</span>
-                                        </div>    
-                                        <div class="d-flex flex-column text-start justify-content-center">
-                                            <span class="text-xxs px-9">Harga satuan:</span>  
-                                            <span class="text-xs px-9 '.($row_data->InvDetailDisc==0 ? "d-none" : "").'" style=" position: relative; display: inline-block; background: linear-gradient(10deg, transparent 47%, red 48%, red 52%, transparent 53%); margin-right: 0.25rem; ">Rp. '.number_format($row_data->InvDetailPrice, 2, ',', '.').'</span>
-                                            <span class="fw-bold text-neutral-600 text-xs px-9">Rp. '.number_format($row_data->InvDetailPrice-$row_data->InvDetailDisc, 2, ',', '.').'</span>
-                                                  
-                                        </div>      
-
-                                           
-                                        <div class="d-flex flex-column text-start justify-content-center">
-                                            <span class="text-xxs px-9">Total :</span> 
-                                            <span class="fw-bold text-neutral-600 text-xs px-9">Rp. '.number_format($row_data->InvDetailTotal, 2, ',', '.').'</span>
-                                        </div>  
-                                    </div>  
-                                </div>     
-                            </div> ';
             }else{
                 $number = 1;
                 $detailhtml .= ' <tr>
@@ -471,16 +432,6 @@ class InvoiceModel extends Model
                         </div>
                     </td>
                 </tr> ';
-                  $detailhtmlmobile .= '<div class="row align-items-center mx-0 hr p-2">
-                                <div class="col-12 my-1 varian px-0">  
-                                    <div class="d-flex">   
-                                        <span  class="text-sm  fw-bold">'.$abjad.'.</span> 
-                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
-                                            <span class="text-sm mb-0 fw-bold span-custom-input px-9 text-wrap-mobile" data-id="0" style="line-height: 1rem;">'.nl2br($row_data->InvDetailText).'</span> 
-                                        </div>   
-                                    </div>  
-                                </div>     
-                            </div> ';
                 $abjad++;
             }
         };
@@ -510,7 +461,7 @@ class InvoiceModel extends Model
         </tfoot>
         </table>';
 
-        return ($mobile ? $detailhtmlmobile : $detailhtml);
+        return $detailhtml; 
     } 
     function get_data_payment_invoice($row,$header = false,$total = false){
         $html_payment = "";
@@ -1214,7 +1165,7 @@ class InvoiceModel extends Model
         LEFT JOIN project ON project.ProjectId = ref_join.ref 
          
         '. $querywhere.'
-        ORDER BY ref_join.date desc'); 
+        ORDER BY ref_join.date asc'); 
         return $builder->getResultArray();  
     }
     
@@ -1320,6 +1271,7 @@ class InvoiceModel extends Model
             $builder->insert($row); 
         }  
 
+        \App\Libraries\AccAutoJurnal::trySyncInvoice($query->InvId); // jurnal otomatis
         //create Log action 
         $activityModel = new ActivityModel();
         $activityModel->insert(
@@ -1332,11 +1284,6 @@ class InvoiceModel extends Model
                 "created_at"=>new RawSql('CURRENT_TIMESTAMP()'),  
             )
         );    
-        
-        if($header["InvRefType"] == "Penawaran") { 
-            $sphModel = new SphModel();
-            $sphModel->update_status_sph($header["InvRef"],2);
-        };
     } 
     
     function update_data_invoice($data,$id){ 
@@ -1383,6 +1330,7 @@ class InvoiceModel extends Model
         } 
          
 
+        \App\Libraries\AccAutoJurnal::trySyncInvoice($id); // jurnal otomatis
         //create Log action 
         $activityModel = new ActivityModel(); 
         $activityModel->insert(
@@ -1437,6 +1385,7 @@ class InvoiceModel extends Model
         // $modelssample = new SampleModel;
         // if( $result->InvRefType == "Sample") $modelssample->update_data_sample_status($result->InvRef);
         
+        \App\Libraries\AccAutoJurnal::trySyncInvoice($id); // jurnal otomatis (invoice batal -> jurnal dihapus)
         //create Log action 
         $activityModel = new ActivityModel(); 
         $activityModel->insert(
@@ -1470,6 +1419,7 @@ class InvoiceModel extends Model
             3 => "Cancel", // kolom name 
         );
 
+        \App\Libraries\AccAutoJurnal::trySyncInvoice($id); // jurnal otomatis (status Cancel <-> aktif)
         //create Log action 
         $activityModel = new ActivityModel(); 
         $activityModel->insert(

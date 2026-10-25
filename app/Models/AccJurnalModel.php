@@ -172,6 +172,9 @@ class AccJurnalModel extends Model
         if ($id !== null && !$this->db->table($this->table)->where('JurnalId', $id)->countAllResults()) {
             return ['ok' => false, 'msg' => 'Jurnal tidak ditemukan.'];
         }
+        if ($id !== null && ($sumber = $this->sumberOtomatis($id)) !== null) {
+            return ['ok' => false, 'msg' => $this->pesanOtomatis($sumber)];
+        }
 
         $db->transBegin();
         try {
@@ -220,6 +223,18 @@ class AccJurnalModel extends Model
         return ['ok' => true, 'msg' => 'Jurnal ' . $no . ' berhasil disimpan.', 'id' => $id, 'no' => $no];
     }
 
+    /** Jenis dokumen sumber bila jurnal dibuat otomatis (mis. 'Invoice'), null bila jurnal manual. */
+    public function sumberOtomatis(int $id): ?string
+    {
+        $t = $this->db->table($this->table)->select('JurnalRefType')->where('JurnalId', $id)->get()->getRow('JurnalRefType');
+        return ($t === null || $t === 'Manual') ? null : (string) $t;
+    }
+
+    public function pesanOtomatis(string $sumber): string
+    {
+        return 'Jurnal ini dibuat otomatis dari ' . $sumber . ' dan tidak bisa diubah atau dihapus manual. Ubah dokumen sumbernya, jurnal ikut menyesuaikan.';
+    }
+
     /** Jurnal beserta barisnya, atau null bila tidak ada. */
     public function ambil(int $id): ?array
     {
@@ -242,6 +257,9 @@ class AccJurnalModel extends Model
         $row = $this->db->table($this->table)->where('JurnalId', $id)->get()->getRowArray();
         if (!$row) {
             return ['ok' => false, 'msg' => 'Jurnal tidak ditemukan.'];
+        }
+        if (($row['JurnalRefType'] ?? 'Manual') !== 'Manual') {
+            return ['ok' => false, 'msg' => $this->pesanOtomatis((string) $row['JurnalRefType'])];
         }
         $db = $this->db;
         $db->transBegin();
@@ -340,16 +358,22 @@ class AccJurnalModel extends Model
             $child .= '</tbody></table>';
 
             $store = $r['StoreCode'] ? esc($r['StoreCode']) : '<span class="text-secondary-light">-</span>';
+            $sumber = (string) ($r['JurnalRefType'] ?? 'Manual');
+            $otomatis = $sumber !== '' && $sumber !== 'Manual';
+            $aksi = $otomatis
+                ? '<div class="d-flex align-items-center justify-content-center"><span class="w-24-px h-24-px bg-neutral-100 text-secondary-light rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-title="Jurnal otomatis dari ' . esc($sumber) . '. Ubah dokumen sumbernya."><iconify-icon icon="solar:lock-keyhole-linear"></iconify-icon></span></div>'
+                : '<div class="d-flex align-items-center gap-1 justify-content-center">'
+                    . '<a href="' . base_url('admin/accounting/jurnal/edit/' . $id) . '" class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-title="Ubah Data"><iconify-icon icon="lucide:edit"></iconify-icon></a>'
+                    . '<a onclick="jurnal_delete(' . $id . ',\'' . esc($r['JurnalNo'], 'js') . '\')" class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center" style="cursor:pointer" data-bs-toggle="tooltip" data-bs-title="Hapus Data"><iconify-icon icon="lucide:trash-2"></iconify-icon></a>'
+                    . '</div>';
             $data[] = [
-                'JurnalNo'   => '<a class="btn-detail-jurnal fw-semibold text-primary-600" style="cursor:pointer" title="Lihat baris jurnal"><iconify-icon icon="solar:alt-arrow-right-linear" class="me-1"></iconify-icon>' . esc($r['JurnalNo']) . '</a>',
+                'JurnalNo'   => '<a class="btn-detail-jurnal fw-semibold text-primary-600" style="cursor:pointer" title="Lihat baris jurnal"><iconify-icon icon="solar:alt-arrow-right-linear" class="me-1"></iconify-icon>' . esc($r['JurnalNo']) . '</a>'
+                    . ($otomatis ? ' <span class="badge text-bg-info ms-1">' . esc($sumber) . '</span>' : ''),
                 'JurnalDate' => esc(acc_date_id($r['JurnalDate'])),
                 'JurnalDesc' => esc((string) $r['JurnalDesc']),
                 'Store'      => $store,
                 'Total'      => '<div class="text-end">' . acc_fmt($tot) . '</div>',
-                'action'     => '<div class="d-flex align-items-center gap-1 justify-content-center">'
-                    . '<a href="' . base_url('admin/accounting/jurnal/edit/' . $id) . '" class="w-24-px h-24-px bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center" data-bs-toggle="tooltip" data-bs-title="Ubah Data"><iconify-icon icon="lucide:edit"></iconify-icon></a>'
-                    . '<a onclick="jurnal_delete(' . $id . ',\'' . esc($r['JurnalNo'], 'js') . '\')" class="w-24-px h-24-px bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center" style="cursor:pointer" data-bs-toggle="tooltip" data-bs-title="Hapus Data"><iconify-icon icon="lucide:trash-2"></iconify-icon></a>'
-                    . '</div>',
+                'action'     => $aksi,
                 'detail'     => $child,
             ];
         }

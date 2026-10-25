@@ -198,6 +198,7 @@ class PaymentModel extends Model
             $data_image = $this->simpan_gambar_base64($data['image'], $folder_utama, $query->PaymentId);  
         }  
 
+        \App\Libraries\AccAutoJurnal::trySyncPayment($query->PaymentId); // jurnal otomatis
         //update status
         if($data["PaymentRefType"] == "Invoice"){
             $builder = $this->db->table('invoice');
@@ -235,6 +236,7 @@ class PaymentModel extends Model
         $builder->where('PaymentId', $id); 
         $builder->update(); 
         
+        \App\Libraries\AccAutoJurnal::trySyncPayment($id); // jurnal otomatis
         //Buat folder utama
         $folder_utama = 'assets/images/payment'; 
         if (!file_exists($folder_utama)) {
@@ -339,6 +341,7 @@ class PaymentModel extends Model
         $builder->where('paymentId',$id);
         $builder->delete();   
  
+        \App\Libraries\AccAutoJurnal::tryHapusPayment($id); // jurnal otomatis (pembayaran dihapus)
         //create Log action 
         $activityModel = new ActivityModel(); 
         $activityModel->insert(

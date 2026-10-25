@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\AccCoaModel;
 use App\Models\AccJurnalModel;
+use App\Libraries\AccAutoJurnal;
 use App\Models\AccReportModel;
 use App\Models\master\StoreModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -47,6 +48,10 @@ class AccountingController extends BaseController
         $jurnal = (new AccJurnalModel())->ambil((int) $id);
         if (!$jurnal) {
             throw PageNotFoundException::forPageNotFound('Jurnal tidak ditemukan.');
+        }
+        $jm = new AccJurnalModel();
+        if (($sumber = $jm->sumberOtomatis((int) $id)) !== null) {
+            return redirect()->to(base_url('admin/accounting/jurnal'))->with('pesan', $jm->pesanOtomatis($sumber));
         }
         return view('app/03_accounting/jurnal/form', $this->pageData('Ubah Jurnal') + [
             'store' => $this->stores(),
@@ -174,6 +179,74 @@ class AccountingController extends BaseController
     {
         $res = (new AccJurnalModel())->hapus((int) $id);
         return $this->response->setJSON(['status' => $res['ok'], 'message' => $res['msg']]);
+    }
+
+    // ------------------------------------------------------------------
+    // Jurnal otomatis dari penjualan
+    // ------------------------------------------------------------------
+    public function otomatis()
+    {
+        $data = $this->pageData('Jurnal Otomatis') + [
+            'error' => null, 'labels' => AccAutoJurnal::SETTING,
+            'pengaturan' => [], 'metode' => [], 'ringkas' => null, 'akunList' => [],
+        ];
+        try {
+            $svc = new AccAutoJurnal();
+            $data['pengaturan'] = $svc->pengaturan();
+            $data['metode']     = $svc->daftarMetode();
+            $data['ringkas']    = $svc->ringkasan();
+            $data['akunList']   = db_connect()->table('acc_coa')
+                ->select('kode_akun, nama_akun, kategori')
+                ->where('is_header', 0)->where('aktif', 1)
+                ->orderBy('kode_akun', 'ASC')->get()->getResultArray();
+        } catch (\Throwable $e) {
+            log_message('error', 'Halaman jurnal otomatis: ' . $e->getMessage());
+            $data['error'] = 'Tabel pengaturan belum ada. Jalankan update_accounting_otomatis.sql di database, lalu muat ulang halaman ini.';
+        }
+        return view('app/03_accounting/otomatis/index', $data);
+    }
+
+    public function otomatis_save()
+    {
+        $in = $this->request->getPost() ?? [];
+        $akun = is_array($in['akun'] ?? null) ? $in['akun'] : [];
+        $metode = [];
+        $nama = is_array($in['metode'] ?? null) ? array_values($in['metode']) : [];
+        $kode = is_array($in['metode_akun'] ?? null) ? array_values($in['metode_akun']) : [];
+        foreach ($nama as $i => $m) {
+            $metode[] = ['metode' => (string) $m, 'akun' => (string) ($kode[$i] ?? '')];
+        }
+        try {
+            $res = (new AccAutoJurnal())->simpanPengaturan($akun, $metode);
+        } catch (\Throwable $e) {
+            log_message('error', 'Simpan pengaturan jurnal otomatis: ' . $e->getMessage());
+            $res = ['ok' => false, 'msg' => 'Pengaturan gagal disimpan. Pastikan update_accounting_otomatis.sql sudah dijalankan.'];
+        }
+        return $this->response->setJSON(['status' => $res['ok'], 'message' => $res['msg']]);
+    }
+
+    public function otomatis_sync()
+    {
+        $from = (string) $this->request->getPost('from');
+        $to   = (string) $this->request->getPost('to');
+        if (!acc_valid_date($from) || !acc_valid_date($to)) {
+            return $this->response->setJSON(['status' => false, 'message' => 'Tanggal awal dan akhir harus diisi dengan benar.']);
+        }
+        if ($from > $to) {
+            [$from, $to] = [$to, $from];
+        }
+        try {
+            @set_time_limit(300);
+            $svc = new AccAutoJurnal();
+            $hasil = $svc->syncSemua($from, $to);
+            return $this->response->setJSON([
+                'status' => true, 'message' => 'Sinkronisasi selesai.',
+                'hasil' => $hasil, 'ringkas' => $svc->ringkasan(),
+            ]);
+        } catch (\Throwable $e) {
+            log_message('error', 'Sinkron jurnal otomatis: ' . $e->getMessage());
+            return $this->response->setJSON(['status' => false, 'message' => 'Sinkronisasi gagal. Pastikan update_accounting_otomatis.sql sudah dijalankan.']);
+        }
     }
 
     // ------------------------------------------------------------------
