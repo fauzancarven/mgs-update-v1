@@ -1132,6 +1132,12 @@
             updateURLFilters();
             table.ajax.reload(null, false);
         });
+
+         // Terapkan nilai dari URL ke elemen UI visual & Variabel Global Anda
+        if (savedSearch) {
+            $("#searchdata").val(savedSearch);
+            $("#searchdata_mobile").val(savedSearch);
+        }
         // Fungsi pembantu untuk mengecek kondisi input search
         function toggleClearIcon(searchInput) { 
          var clearIcon = searchInput.closest(".icon-field").find(".icon-end");

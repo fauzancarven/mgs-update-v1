@@ -2,50 +2,53 @@
 
 namespace App\Controllers;
 
- 
-use App\Controllers\BaseController; 
-use App\Models\master\UserModel; 
+use App\Libraries\RagService;
+use Config\Services;
 
-use \App\Models\AuthgroupModel; 
- 
+/**
+ * POST /api/agentai/ask   body JSON: {"question": "...", "page": "/admin/sales/invoice"}
+ * Respons: {"answer": "...", "answered": true, "sources": [{"title": "...", "heading": "..."}]}
+ */
 class AiagentController extends BaseController
 {
-
-    public function __construct()
-    { 
-        helper(['form', 'url', 'akuntansi']); 
-    }
-
     public function ask()
-    { 
-        $request = \Config\Services::request();
-        $jsonInfo = $request->getJSON();
-        $userPrompt = $jsonInfo->prompt ?? '';
-
-        $client = \Config\Services::curlrequest(); 
-
-        // Payload untuk Ollama
-        $payload = [
-            'model'  => 'qwen2.5:3b', // Pastikan model ini sudah di-pull di Ollama
-            'prompt' => $userPrompt,
-            'stream' => false // Set false agar langsung menerima jawaban penuh, bukan per kata
-        ];
+    {
+        helper('auth');
 
         try {
-            $response = $client->post('http://localhost:11434/api/generate', [
-                'json' => $payload,
-                'timeout' => 60 // Beri waktu toleransi jika model loading
-            ]);
+            $json = $this->request->getJSON(true);
+        } catch (\Throwable $e) {
+            $json = null;
+        }
+        $json = is_array($json) ? $json : [];
 
-            $result = json_decode($response->getBody());
-            
-            return $this->response->setJSON([
-                'status' => 'success',
-                'response' => $result->response
-            ]);
+        $question = trim((string) ($json['question'] ?? $this->request->getPost('question') ?? ''));
+        $page     = substr(trim((string) ($json['page'] ?? $this->request->getPost('page') ?? '')), 0, 200);
 
-        } catch (\Exception $e) {
-            echo "Error: " . $e->getMessage();
+        if ($question === '' || mb_strlen($question) > 500) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'error' => 'Pertanyaan wajib diisi (maksimal 500 karakter).',
+            ]);
+        }
+
+        // GPU hanya satu: batasi 10 pertanyaan per menit per user agar tidak menumpuk.
+        $throttler = Services::throttler();
+        if ($throttler->check('ai_' . (user_id() ?? 0), 10, MINUTE) === false) {
+            return $this->response->setStatusCode(429)->setJSON([
+                'error' => 'Terlalu banyak pertanyaan. Coba lagi sebentar lagi.',
+            ]);
+        }
+
+        try {
+            $result = (new RagService())->answer($question, $page, user_id() ? (int) user_id() : null);
+
+            return $this->response->setJSON($result);
+        } catch (\Throwable $e) {
+            log_message('error', 'AI Asisten: ' . $e->getMessage());
+
+            return $this->response->setStatusCode(503)->setJSON([
+                'error' => 'Asisten AI sedang tidak tersedia. Silakan coba lagi nanti.',
+            ]);
         }
     }
 }
