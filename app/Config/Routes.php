@@ -8,9 +8,8 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->post('/api/get_produk', 'ApiController::get_produk');
 
-$routes->get('/', 'AdminController::index', ['filter' => 'login']); 
-$routes->post('/aiagent/ask', 'AiagentController::ask', ['filter' => 'login']); 
-
+$routes->get('/', 'AdminController::index', ['filter' => 'login']);  
+$routes->post('/api/agentai/ask', 'AiagentController::ask');
 
 
 $routes->get('/users/view', 'AdminController::profile', ['filter' => 'login']); 

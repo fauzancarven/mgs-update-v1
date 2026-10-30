@@ -1108,6 +1108,7 @@ class PembelianModel extends Model
             $builder->insert($row); 
         }  
 
+        \App\Libraries\AccAutoJurnal::trySyncPembelian($query->POId); // jurnal otomatis
 
         //update status
         if($header["PORefType"] == "Invoice"){
@@ -1164,6 +1165,8 @@ class PembelianModel extends Model
         $builder->insert($row);
         }
 
+        \App\Libraries\AccAutoJurnal::trySyncPembelian($id); // jurnal otomatis
+
         //update status
         if($header["PORefType"] == "Invoice"){
         $builder = $this->db->table('invoice_detail id');
@@ -1196,6 +1199,7 @@ class PembelianModel extends Model
         $builder->where('POId', $id);
         $builder->update();
 
+        \App\Libraries\AccAutoJurnal::trySyncPembelian($id); // jurnal otomatis (PO batal -> jurnal dihapus)
 
         $statuslist = array(
         0 => "New", // kolom action tidak dapat diurutkan
@@ -1228,6 +1232,8 @@ class PembelianModel extends Model
             $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));
             $builder->where('POId', $id);
             $builder->update();
+
+            \App\Libraries\AccAutoJurnal::trySyncPembelian($id); // jurnal otomatis (status Cancel <-> aktif)
 
             $statuslist = array(
             0 => "New", // kolom action tidak dapat diurutkan

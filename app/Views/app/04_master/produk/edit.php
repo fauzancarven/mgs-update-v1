@@ -114,7 +114,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
     <div class="modal-dialog modal-dialog-centered">  
         <div class="modal-content" name="form-action">
             <div class="modal-header">
-                <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
+                <h6 class="modal-title"><iconify-icon icon="andrsrxn:crop"></iconify-icon> &nbsp;Edit Gambar</h5>
                 <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0">
@@ -145,8 +145,8 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
         html_image +=`<div class="image-default-obi border" id="image-frame-${image_index}" >
                 <img src="${image_list[i]}" draggable="true" id="img-${image_index}" >
                 <div class="action">
-                    <a class="btn btn-sm btn-white p-1" onclick="crop_image('${image_index}')"><i class="fas fa-crop-alt"></i></a>
-                    <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><i class="fas fa-trash"></i></a>
+                    <a class="btn btn-sm btn-white p-1" onclick="crop_image('${image_index}')"><iconify-icon icon="andrsrxn:crop"></iconify-icon></a>
+                    <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><iconify-icon icon="akar-icons:trash-can"></iconify-icon></a>
                 </div>
                 <span class="badge text-bg-primary">Utama</span>
         </div>`;
@@ -207,8 +207,8 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                     <div class="image-default-obi border" id="image-frame-${image_index}">
                         <img src="${reader.result}" draggable="true" id="img-${image_index}"> 
                         <div class="action">
-                            <a class="btn btn-sm btn-white p-1" onclick="crop_image('${image_index}')"><i class="fas fa-crop-alt"></i></a>
-                            <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="crop_image('${image_index}')"><iconify-icon icon="andrsrxn:crop"></iconify-icon></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="delete_image('${image_index}')"><iconify-icon icon="akar-icons:trash-can"></iconify-icon></a>
                         </div>
                         <span class="badge text-bg-primary">Utama</span>
                     </div> 
@@ -908,7 +908,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
             headerVarian ="";
             var image = `<input type="file" id="image-input-${i}" style="display: none;" accept="image/*">
                         <div class="image-detail-produk border  ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? "no-image": "" }"  data-id="${i}">
-                            ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_detail[i]["ProdukDetailImage"] + '" id="img-detail-'+ i +'"/> <div class="action"> <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(' + i + ')"><i class="fas fa-crop-alt"></i></a>  <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(' + i + ')"><i class="fas fa-trash"></i></a>  </div>'}   
+                            ${arr_varian_detail[i]["ProdukDetailImage"] == "" ? '<i class="ti-image" style="font-size:1rem"></i><span>Tambah Foto</span>' : '<img src="' + arr_varian_detail[i]["ProdukDetailImage"] + '" id="img-detail-'+ i +'"/> <div class="action"> <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(' + i + ')"><iconify-icon icon="andrsrxn:crop"></iconify-icon></a>  <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(' + i + ')"><iconify-icon icon="akar-icons:trash-can"></iconify-icon></a>  </div>'}   
                         </div>`;
             detailhtml += `<div class="row m-2 border-bottom varian-item" data-id="${i}">
                                 <div class="col-2 col-md-1 my-2">  
@@ -1120,8 +1120,8 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                         $(".image-detail-produk[data-id='" + data_index + "']").removeClass("no-image");
                         $(".image-detail-produk[data-id='" + data_index + "']").html(`<img src="${reader.result}" id="img-detail-${data_index}"/>
                         <div class="action">
-                            <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(${data_index})"><i class="fas fa-crop-alt"></i></a>
-                            <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(${data_index})"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="crop_image_detail(${data_index})"><iconify-icon icon="andrsrxn:crop"></iconify-icon></a>
+                            <a class="btn btn-sm btn-white p-1" onclick="delete_image_detail(${data_index})"><iconify-icon icon="akar-icons:trash-can"></iconify-icon></a>
                         </div>`); 
 
                         crop_image_detail(data_index);
@@ -1156,7 +1156,7 @@ Roster dan lubang angin yang dirancang untuk meningkatkan ventilasi dan pencahay
                                 <div class="modal-dialog modal-dialog-centered">  
                                     <div class="modal-content" name="form-action">
                                         <div class="modal-header">
-                                            <h6 class="modal-title"><i class="fas fa-crop-alt"></i> &nbsp;Edit Gambar</h5>
+                                            <h6 class="modal-title"><iconify-icon icon="andrsrxn:crop"></iconify-icon> &nbsp;Edit Gambar</h5>
                                             <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body p-0">

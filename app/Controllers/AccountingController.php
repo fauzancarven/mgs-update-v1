@@ -188,10 +188,11 @@ class AccountingController extends BaseController
     {
         $data = $this->pageData('Jurnal Otomatis') + [
             'error' => null, 'labels' => AccAutoJurnal::SETTING,
-            'pengaturan' => [], 'metode' => [], 'ringkas' => null, 'akunList' => [],
+            'pengaturan' => [], 'metode' => [], 'ringkas' => null, 'akunList' => [], 'mulai' => null,
         ];
         try {
             $svc = new AccAutoJurnal();
+            $data['mulai']      = $svc->tglMulai();
             $data['pengaturan'] = $svc->pengaturan();
             $data['metode']     = $svc->daftarMetode();
             $data['ringkas']    = $svc->ringkasan();
@@ -216,8 +217,27 @@ class AccountingController extends BaseController
         foreach ($nama as $i => $m) {
             $metode[] = ['metode' => (string) $m, 'akun' => (string) ($kode[$i] ?? '')];
         }
+        // Tanggal mulai pembukuan: hanya diproses bila field-nya dikirim ('' = hapus batasan).
+        $kirimMulai = array_key_exists('tgl_mulai', $in);
+        $mulai = $kirimMulai ? trim((string) $in['tgl_mulai']) : '';
+        if ($kirimMulai && $mulai !== '' && !acc_valid_date($mulai)) {
+            return $this->response->setJSON(['status' => false, 'message' => 'Tanggal mulai pembukuan tidak valid.']);
+        }
         try {
-            $res = (new AccAutoJurnal())->simpanPengaturan($akun, $metode);
+            $svc = new AccAutoJurnal();
+            $res = $svc->simpanPengaturan($akun, $metode);
+            if ($res['ok'] && $kirimMulai) {
+                $r2 = $svc->simpanTanggalMulai($mulai);
+                if (!$r2['ok']) {
+                    $res = $r2;
+                } elseif ($mulai === '') {
+                    $res['msg'] .= ' Tanggal mulai pembukuan dikosongkan: semua tanggal akan dijurnal.';
+                } else {
+                    $n = $svc->bersihkanSebelumMulai();
+                    $res['msg'] .= ' Pembukuan dimulai ' . acc_date_id($mulai) . '.'
+                        . ($n > 0 ? ' ' . $n . ' jurnal otomatis sebelum tanggal itu dihapus (data invoice dan pembayaran tetap utuh).' : '');
+                }
+            }
         } catch (\Throwable $e) {
             log_message('error', 'Simpan pengaturan jurnal otomatis: ' . $e->getMessage());
             $res = ['ok' => false, 'msg' => 'Pengaturan gagal disimpan. Pastikan update_accounting_otomatis.sql sudah dijalankan.'];

@@ -369,6 +369,7 @@ class PaymentModel extends Model
         $builder->set('updated_at',new RawSql('CURRENT_TIMESTAMP()'));   
         $builder->where('PaymentId', $id); 
         $builder->update();  
+        \App\Libraries\AccAutoJurnal::trySyncPayment($id); // jurnal otomatis (request -> pembayaran vendor)
 
         //create Log action 
         $activityModel = new ActivityModel(); 
