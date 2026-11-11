@@ -39,7 +39,8 @@ class InvoiceModel extends Model
         //mengambil total semua data
         $builder1 = clone $builder; 
         $countTotal = $builder1->get()->getNumRows(); 
-
+        $builder->join("invoice_detail","invoice_detail.InvDetailRef = invoice.InvId","left"); 
+       
         if(isset($filter["filter"])){ 
             $builder->whereIn("InvStatus",$filter["filter"]); 
             $filterdata = 1;
@@ -55,6 +56,7 @@ class InvoiceModel extends Model
             $builder->orLike("InvAddress",$filter["search"]);
             $builder->orLike("InvNote",$filter["search"]);
             $builder->orLike("InvCode",$filter["search"]);
+            $builder->orLike("InvDetailText",$filter["search"]); 
             $builder->groupEnd();  
             $filterdata = 1;
         }
@@ -87,6 +89,7 @@ class InvoiceModel extends Model
 
         }
 
+        $builder->groupBy("InvCode");
         $datafilter = clone $builder;  
         $count = $datafilter->get()->getNumRows();
 
@@ -199,6 +202,7 @@ class InvoiceModel extends Model
                 "customeraddress" => $row->InvAddress, 
                 "store"=>$store,
                 "detail" => $htmldetail,
+                "detailmobile" => $this->get_data_detail_invoice($row,true),
                 // "detail" => '  <div class="row gx-0 gy-0 gx-md-4 gy-md-2 ps-3 pe-1"><div class="col bg-light ms-4 me-2 py-2">'.$html_items.'</div></div>',
                 "action" =>' 
                 <div class="d-flex align-items-center gap-1 justify-content-center">
@@ -267,11 +271,12 @@ class InvoiceModel extends Model
             <a class="text-detail-3 pointer text-decoration-underline text-secondary">Tidak ada referensi</a>
         </div>'; 
     } 
-    function get_data_detail_invoice($row){ 
+    function get_data_detail_invoice($row,$mobile = false){ 
         helper('tool_helper'); 
 
         $modelsproduk = new ProdukModel();
         $detail = array(); 
+        $detailhtmlmobile = '';
         $detailhtml = ' <table class="table detail-item m-0 shadow-7">
                             <thead>
                                 <tr>
@@ -333,6 +338,36 @@ class InvoiceModel extends Model
                     <td class="detail">Rp. '.number_format($row_data->InvDetailTotal, 0, ',', '.').'</td>
                 </tr> ';
                 $number++;
+                $detailhtmlmobile .= '<div class="row align-items-center mx-0 hr p-2">
+                                <div class="col-12 my-1 varian px-0">   
+                                    <div class="d-flex">  
+                                        <img src="'.$modelsproduk->getproductimagedatavarian($row_data->ProdukId,$row_data->InvDetailVarian,false).'" alt="Gambar" class="w-50-px h-50-px radius-8 object-fit-cover">  
+                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                            <span class="text-sm mb-0 fw-bold span-custom-input px-9 text-wrap-mobile" data-id="0" style="line-height: 1rem;">'.nl2br($row_data->InvDetailText).'</span> 
+                                            <span class="text-detail-2 text-truncate text-neutral-600 text-xs px-9">'.$row_data->InvDetailGroup.'</span>  
+                                        </div>   
+                                    </div>
+                                    <div class="d-flex gap-1 flex-wrap mt-2">'.$arr_badge.'</div>  
+                                    <div class="d-flex py-9"> 
+                                        <div class="d-flex flex-column text-start justify-content-center">
+                                            <span class="text-xxs px-9">Qty:</span> 
+                                            <span class="fw-bold text-neutral-600 text-xs px-9">'.number_format($row_data->InvDetailQty, 2, ',', '.').' '.$row_data->InvDetailSatuanText.'</span>
+                                        </div>    
+                                        <div class="d-flex flex-column text-start justify-content-center">
+                                            <span class="text-xxs px-9">Harga satuan:</span>  
+                                            <span class="text-xs px-9 '.($row_data->InvDetailDisc==0 ? "d-none" : "").'" style=" position: relative; display: inline-block; background: linear-gradient(10deg, transparent 47%, red 48%, red 52%, transparent 53%); margin-right: 0.25rem; ">Rp. '.number_format($row_data->InvDetailPrice, 2, ',', '.').'</span>
+                                            <span class="fw-bold text-neutral-600 text-xs px-9">Rp. '.number_format($row_data->InvDetailPrice-$row_data->InvDetailDisc, 2, ',', '.').'</span>
+                                                  
+                                        </div>      
+
+                                           
+                                        <div class="d-flex flex-column text-start justify-content-center">
+                                            <span class="text-xxs px-9">Total :</span> 
+                                            <span class="fw-bold text-neutral-600 text-xs px-9">Rp. '.number_format($row_data->InvDetailTotal, 2, ',', '.').'</span>
+                                        </div>  
+                                    </div>  
+                                </div>     
+                            </div> ';
             }else{
                 $number = 1;
                 $detailhtml .= ' <tr>
@@ -343,6 +378,16 @@ class InvoiceModel extends Model
                         </div>
                     </td>
                 </tr> ';
+                  $detailhtmlmobile .= '<div class="row align-items-center mx-0 hr p-2">
+                                <div class="col-12 my-1 varian px-0">  
+                                    <div class="d-flex">   
+                                        <span  class="text-sm  fw-bold">'.$abjad.'.</span> 
+                                        <div class="d-flex flex-column text-start flex-fill order-md-4 order-3 justify-content-center">
+                                            <span class="text-sm mb-0 fw-bold span-custom-input px-9 text-wrap-mobile" data-id="0" style="line-height: 1rem;">'.nl2br($row_data->InvDetailText).'</span> 
+                                        </div>   
+                                    </div>  
+                                </div>     
+                            </div> ';
                 $abjad++;
             }
         };
@@ -372,7 +417,7 @@ class InvoiceModel extends Model
         </tfoot>
         </table>';
 
-        return $detailhtml; 
+        return ($mobile ? $detailhtmlmobile : $detailhtml);
     } 
     function get_data_payment_invoice($row,$header = false,$total = false){
         $html_payment = "";
@@ -1063,7 +1108,7 @@ class InvoiceModel extends Model
                 FROM survey where SurveyStatus < 2 '.$querysurvey.'
             UNION 
             SELECT 
-                SphId refid,
+                InvId refid,
                 SphCode,
                 ProjectId ref,
                 SphDate date, 
